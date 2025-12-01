@@ -9,9 +9,10 @@
 2. Click **"New Project"**
 3. Select **"Deploy from GitHub repo"**
 4. Connect your GitHub account (if not already)
-5. Select your repository: `GAP_PROTOTYPE`
-6. Select the folder: `ag-mcp-chat-app/n8n`
-7. Railway will auto-detect the Dockerfile
+5. Select your repository: `eagleisbatman/ag-mcp-chat-app`
+   - Repository URL: https://github.com/eagleisbatman/ag-mcp-chat-app
+6. Select the folder: `n8n` (or leave root if deploying entire repo)
+7. Railway will auto-detect the Dockerfile in `n8n/` folder
 
 **Option B: Deploy from Dockerfile**
 1. Go to [Railway Dashboard](https://railway.app)
@@ -104,17 +105,20 @@ Railway will automatically deploy when you:
 
 ### 6. Import Workflows
 
-1. **Go to Workflows**
+1. **Go to Workflows** in n8n UI
 2. **Click "Import from File"**
-3. **Import these workflows:**
-   - `workflows/main-chat-workflow.json` - Main chat endpoint
-   - `workflows/intent-classification-workflow.json` - Intent routing
-   - `workflows/profile-memory-workflow.json` - User profiles
-   - `workflows/content-generation-workflow.json` - Content gen
+3. **Import these workflows from the repository:**
+   - Download `n8n/workflows/main-chat-workflow.json` from https://github.com/eagleisbatman/ag-mcp-chat-app
+   - Or clone repo and import locally:
+     ```bash
+     git clone https://github.com/eagleisbatman/ag-mcp-chat-app.git
+     # Then import n8n/workflows/main-chat-workflow.json
+     ```
+   - Main workflow: `n8n/workflows/main-chat-workflow.json` - Main chat endpoint with Gemini + MCP
 
 4. **Activate Workflows:**
    - Toggle "Active" switch on each workflow
-   - Copy webhook URLs
+   - Copy webhook URLs from webhook nodes
 
 ### 7. Get Webhook URL
 
@@ -222,16 +226,27 @@ N8N_BASIC_AUTH_PASSWORD=secure-password
 ## 📚 Next Steps
 
 1. ✅ Deploy n8n to Railway
-2. ✅ Import workflows
-3. ✅ Configure credentials
+2. ✅ Import workflows from GitHub repo
+3. ✅ Configure credentials (Gemini API key)
 4. ✅ Test workflows
 5. ✅ Update frontend URLs
 6. ✅ Monitor executions
 
 ---
 
+## 🔗 Repository Links
+
+- **GitHub Repository:** https://github.com/eagleisbatman/ag-mcp-chat-app
+- **Workflows Location:** `n8n/workflows/`
+- **Deployment Files:** `n8n/Dockerfile`, `n8n/railway.json`
+
+---
+
+## 📖 Additional Resources
+
 **Need Help?**
 - n8n Docs: https://docs.n8n.io
 - Railway Docs: https://docs.railway.app
 - Check workflow execution logs in n8n UI
+- Repository Issues: https://github.com/eagleisbatman/ag-mcp-chat-app/issues
 

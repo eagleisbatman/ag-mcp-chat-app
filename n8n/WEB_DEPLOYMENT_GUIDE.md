@@ -15,21 +15,12 @@ This guide shows you how to deploy n8n to Railway using only the web dashboard -
 
 ## 📋 Step-by-Step Deployment
 
-### Step 1: Prepare GitHub Repository
+### Step 1: GitHub Repository
 
-**If your code is already on GitHub:**
+**Repository is already on GitHub:**
+- ✅ Repository: https://github.com/eagleisbatman/ag-mcp-chat-app
+- ✅ Code is already committed and pushed
 - ✅ Skip to Step 2
-
-**If code is only local:**
-1. Create GitHub repository
-2. Push your code:
-   ```bash
-   git init
-   git add .
-   git commit -m "Add n8n deployment"
-   git remote add origin https://github.com/your-username/your-repo.git
-   git push -u origin main
-   ```
 
 ### Step 2: Create Railway Project
 
@@ -41,14 +32,14 @@ This guide shows you how to deploy n8n to Railway using only the web dashboard -
    - Click **"New Project"** button
    - Select **"Deploy from GitHub repo"**
    - Authorize Railway to access GitHub (if first time)
-   - Select your repository: `GAP_PROTOTYPE`
+   - Select your repository: `eagleisbatman/ag-mcp-chat-app`
    - Railway will scan for deployment files
 
 3. **Select Service:**
    - Railway may auto-detect the `n8n` folder
    - Or click **"Add Service"** → **"GitHub Repo"**
-   - Select folder: `ag-mcp-chat-app/n8n`
-   - Railway will detect the Dockerfile
+   - Select folder: `n8n` (from root of ag-mcp-chat-app repo)
+   - Railway will detect the Dockerfile in `n8n/` folder
 
 ### Step 3: Configure Environment Variables
 
@@ -125,14 +116,24 @@ This guide shows you how to deploy n8n to Railway using only the web dashboard -
 
 ### Step 6: Import Workflows
 
-1. **Download Workflow Files:**
-   - From your repo: `ag-mcp-chat-app/n8n/workflows/`
-   - Download `main-chat-workflow.json`
+1. **Get Workflow Files:**
+   - **Option A:** Download from GitHub:
+     - Go to https://github.com/eagleisbatman/ag-mcp-chat-app
+     - Navigate to `n8n/workflows/main-chat-workflow.json`
+     - Click **"Raw"** button
+     - Save file as `main-chat-workflow.json`
+   
+   - **Option B:** Clone repository:
+     ```bash
+     git clone https://github.com/eagleisbatman/ag-mcp-chat-app.git
+     cd ag-mcp-chat-app/n8n/workflows
+     # Files are in this directory
+     ```
 
 2. **Import in n8n:**
-   - Go to **"Workflows"** tab
+   - Go to **"Workflows"** tab in n8n UI
    - Click **"Import from File"**
-   - Select `main-chat-workflow.json`
+   - Select `main-chat-workflow.json` (downloaded from GitHub)
    - Workflow appears in list
 
 3. **Configure Credentials:**
@@ -256,6 +257,7 @@ fetch(API_URL, {
 
 ## 🔗 Useful Links
 
+- **GitHub Repository:** https://github.com/eagleisbatman/ag-mcp-chat-app
 - **Railway Dashboard:** https://railway.app
 - **n8n Official Docs:** https://docs.n8n.io/hosting/installation/docker/
 - **Generate Random Key:** https://www.random.org/strings/
@@ -268,4 +270,5 @@ fetch(API_URL, {
 - Railway Support: Check Railway dashboard help section
 - n8n Docs: https://docs.n8n.io
 - n8n Forum: https://community.n8n.io
+- Repository Issues: https://github.com/eagleisbatman/ag-mcp-chat-app/issues
 
