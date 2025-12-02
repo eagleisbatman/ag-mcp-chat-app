@@ -34,7 +34,7 @@ Railway can deploy n8n directly from the official Docker image:
    - Railway Dashboard → New Project → Empty Project
 
 2. **Add Service → Docker:**
-   - Image: `docker.n8n.io/n8nio/n8n:latest`
+   - Image: `n8nio/n8n:latest` (use Docker Hub - Railway can't access docker.n8n.io)
    - Port: `5678`
 
 3. **Set Environment Variables** (same as above)
@@ -50,7 +50,7 @@ Since our Dockerfile only sets env vars (which Railway can do), we can:
 1. **Delete the Dockerfile** (or ignore it)
 2. **Use Railway's Docker Image deployment:**
    - Service → Settings → Docker
-   - Image: `docker.n8n.io/n8nio/n8n:latest`
+   - Image: `n8nio/n8n:latest` (use Docker Hub - Railway can't access docker.n8n.io)
    - All env vars set in Railway dashboard
 
 This is the SIMPLEST way - no Dockerfile needed!
@@ -73,7 +73,7 @@ Our Dockerfile only sets environment variables:
 
 1. Railway Dashboard → New Project → Empty Project
 2. Add Service → Docker
-3. Image: `docker.n8n.io/n8nio/n8n:latest`
+3. Image: `n8nio/n8n:latest` (use Docker Hub - Railway can't access docker.n8n.io)
 4. Set all environment variables in Railway
 5. Deploy!
 

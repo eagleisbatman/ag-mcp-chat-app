@@ -49,5 +49,5 @@
 
 **DO use:**
 - ✅ "Docker" service type
-- ✅ Direct image: `docker.n8n.io/n8nio/n8n:latest`
+- ✅ Direct image: `n8nio/n8n:latest` (Docker Hub - Railway can't access docker.n8n.io)
 - ✅ Environment variables only
