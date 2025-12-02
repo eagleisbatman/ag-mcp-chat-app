@@ -1,17 +1,26 @@
 # n8n Deployment Guide for Railway
 
-## ⚡ SIMPLEST METHOD (Recommended)
+## ⚡ SIMPLEST METHOD (Recommended - NO DOCKERFILE!)
 
-**Skip Dockerfile complexity - Use Railway's Docker image directly:**
+**Railway keeps looking for Dockerfile? Use Railway's Docker service directly - NO Dockerfile needed!**
 
-1. Railway Dashboard → New Project → **Empty Project**
-2. Add Service → **Docker**
-3. **Image:** `docker.n8n.io/n8nio/n8n:latest`
+### Quick Steps:
+
+1. **Railway Dashboard** → **New Project** → **Empty Project**
+2. **Add Service** → **"Docker"** (NOT "Dockerfile"!)
+3. **Docker Image:** `docker.n8n.io/n8nio/n8n:latest`
 4. **Port:** `5678`
-5. Set environment variables (see below)
+5. **Set Environment Variables** (see Step 2 below)
 6. **Deploy!**
 
-**That's it!** No Dockerfile, no railway.json needed. Railway handles everything.
+**That's it!** 
+- ✅ No Dockerfile
+- ✅ No railway.json
+- ✅ No Root Directory settings
+- ✅ No build process
+- ✅ Just works!
+
+**See [`RAILWAY_DEPLOY_NO_DOCKERFILE.md`](RAILWAY_DEPLOY_NO_DOCKERFILE.md) for detailed steps.**
 
 ---
 
