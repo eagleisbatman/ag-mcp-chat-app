@@ -1,0 +1,223 @@
+{
+  "name": "AG-MCP Chat - Gemini Integration",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api/chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-chat",
+      "name": "Webhook - Chat",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "chat-endpoint"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "msg-1",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "msg-2",
+              "name": "device_id",
+              "value": "={{ $json.body.device_id || 'anonymous' }}",
+              "type": "string"
+            },
+            {
+              "id": "msg-3",
+              "name": "latitude",
+              "value": "={{ $json.body.latitude || -1.2864 }}",
+              "type": "number"
+            },
+            {
+              "id": "msg-4",
+              "name": "longitude",
+              "value": "={{ $json.body.longitude || 36.8172 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-data",
+      "name": "Extract Request Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const lat = parseFloat($input.item.json.latitude) || -1.2864;\nconst lon = parseFloat($input.item.json.longitude) || 36.8172;\nconst message = $input.item.json.message || '';\n\nlet region = 'global';\n\n// Ethiopia bounds\nif (lat >= 3.0 && lat <= 15.0 && lon >= 32.0 && lon <= 48.0) {\n  region = 'ethiopia';\n}\n// East Africa bounds\nelse if (lat >= -12.0 && lat <= 18.0 && lon >= 29.0 && lon <= 52.0) {\n  region = 'east-africa';\n}\n\n// Detect language\nconst swahiliWords = ['hali', 'hewa', 'mvua', 'joto', 'shamba'];\nconst hasSwahili = swahiliWords.some(word => message.toLowerCase().includes(word));\nconst language = hasSwahili ? 'sw' : 'en';\n\nreturn {\n  json: {\n    message: message,\n    device_id: $input.item.json.device_id,\n    region: region,\n    language: language,\n    latitude: lat,\n    longitude: lon\n  }\n};"
+      },
+      "id": "detect-region",
+      "name": "Detect Region",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "=You are a helpful farming assistant for farmers in the {{ $json.region }} region.\n\nUser location: {{ $json.latitude }}, {{ $json.longitude }}\nLanguage: {{ $json.language }}\n\nIMPORTANT RULES:\n1. Keep responses SHORT and farmer-friendly (2-4 sentences max)\n2. Never make up data - say \"I don't have that information\" if unsure\n3. Respond in the same language the user uses\n4. Be practical and conversational\n5. For weather questions, give general advice based on region\n6. For crop advice, give general best practices\n7. For soil questions, recommend getting soil tested\n\nBe helpful, friendly, and practical."
+        }
+      },
+      "id": "basic-llm-chain",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {
+          "temperature": 0.7,
+          "maxOutputTokens": 500
+        }
+      },
+      "id": "gemini-model",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [850, 500]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "resp-1",
+              "name": "response",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "resp-2",
+              "name": "region",
+              "value": "={{ $('Detect Region').item.json.region }}",
+              "type": "string"
+            },
+            {
+              "id": "resp-3",
+              "name": "language",
+              "value": "={{ $('Detect Region').item.json.language }}",
+              "type": "string"
+            },
+            {
+              "id": "resp-4",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Chat": {
+      "main": [
+        [
+          {
+            "node": "Extract Request Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Request Data": {
+      "main": [
+        [
+          {
+            "node": "Detect Region",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Region": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-02T00:00:00.000Z",
+  "versionId": "2"
+}
+
