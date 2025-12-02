@@ -1,0 +1,343 @@
+{
+  "name": "Main Chat - Gemini + MCP Integration",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api/chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-chat",
+      "name": "Webhook - Chat",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "chat-endpoint"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "message",
+              "value": "={{ $json.body.message }}"
+            },
+            {
+              "name": "device_id",
+              "value": "={{ $json.body.device_id }}"
+            },
+            {
+              "name": "latitude",
+              "value": "={{ $json.body.latitude || -1.2864 }}"
+            },
+            {
+              "name": "longitude",
+              "value": "={{ $json.body.longitude || 36.8172 }}"
+            },
+            {
+              "name": "conversation_history",
+              "value": "={{ $json.body.conversation_history || [] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-data",
+      "name": "Extract Request Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const lat = parseFloat($input.item.json.latitude) || -1.2864;\nconst lon = parseFloat($input.item.json.longitude) || 36.8172;\n\nlet region = 'global';\n\n// Ethiopia bounds\nif (lat >= 3.0 && lat <= 15.0 && lon >= 32.0 && lon <= 48.0) {\n  region = 'ethiopia';\n}\n// East Africa bounds\nelse if (lat >= -12.0 && lat <= 18.0 && lon >= 29.0 && lon <= 52.0) {\n  region = 'east-africa';\n}\n\n// Detect language (simple)\nconst message = ($input.item.json.message || '').toLowerCase();\nconst swahiliWords = ['hali', 'hewa', 'mvua', 'joto', 'shamba'];\nconst hasSwahili = swahiliWords.some(word => message.includes(word));\nconst language = hasSwahili ? 'sw' : 'en';\n\nreturn {\n  json: {\n    ...$input.item.json,\n    region: region,\n    language: language,\n    latitude: lat,\n    longitude: lon\n  }\n};"
+      },
+      "id": "detect-region",
+      "name": "Detect Region & Language",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.region }}",
+              "operation": "equal",
+              "value2": "ethiopia"
+            },
+            {
+              "value1": "={{ $json.region }}",
+              "operation": "equal",
+              "value2": "east-africa"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "route-by-region",
+      "name": "Route by Region",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "mcp_servers",
+              "value": "=[\n  {\n    \"name\": \"SSFR MCP\",\n    \"url\": \"https://ssfr-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_fertilizer_recommendation\", \"get_crop_advisory\"]\n  },\n  {\n    \"name\": \"ISDA Soil MCP\",\n    \"url\": \"https://isda-soil-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_isda_soil_properties\"]\n  },\n  {\n    \"name\": \"AgriVision MCP\",\n    \"url\": \"https://agrivision-mcp.up.railway.app/mcp\",\n    \"tools\": [\"diagnose_plant_health\"]\n  },\n  {\n    \"name\": \"AccuWeather MCP\",\n    \"url\": \"https://accuweather-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_accuweather_weather_forecast\"]\n  },\n  {\n    \"name\": \"Intent Classification MCP\",\n    \"url\": \"https://intent-classification-mcp.up.railway.app/mcp\",\n    \"tools\": [\"classify_intent\", \"extract_entities\"]\n  },\n  {\n    \"name\": \"Tips MCP\",\n    \"url\": \"https://tips-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_farming_tips\", \"get_tip_categories\"]\n  },\n  {\n    \"name\": \"Profile Memory MCP\",\n    \"url\": \"https://profile-memory-mcp.up.railway.app/mcp\",\n    \"tools\": [\"read_profile\", \"update_profile\", \"add_memory_event\"]\n  }\n]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-ethiopia-servers",
+      "name": "Set Ethiopia Servers",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "mcp_servers",
+              "value": "=[\n  {\n    \"name\": \"GAP Weather MCP\",\n    \"url\": \"https://gap-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_gap_weather_forecast\"]\n  },\n  {\n    \"name\": \"ISDA Soil MCP\",\n    \"url\": \"https://isda-soil-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_isda_soil_properties\"]\n  },\n  {\n    \"name\": \"AgriVision MCP\",\n    \"url\": \"https://agrivision-mcp.up.railway.app/mcp\",\n    \"tools\": [\"diagnose_plant_health\"]\n  },\n  {\n    \"name\": \"Decision Tree MCP\",\n    \"url\": \"https://decision-tree-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_crop_recommendation\"]\n  },\n  {\n    \"name\": \"Intent Classification MCP\",\n    \"url\": \"https://intent-classification-mcp.up.railway.app/mcp\",\n    \"tools\": [\"classify_intent\", \"extract_entities\"]\n  },\n  {\n    \"name\": \"Tips MCP\",\n    \"url\": \"https://tips-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_farming_tips\", \"get_tip_categories\"]\n  },\n  {\n    \"name\": \"Profile Memory MCP\",\n    \"url\": \"https://profile-memory-mcp.up.railway.app/mcp\",\n    \"tools\": [\"read_profile\", \"update_profile\", \"add_memory_event\"]\n  }\n]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-east-africa-servers",
+      "name": "Set East Africa Servers",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "mcp_servers",
+              "value": "=[\n  {\n    \"name\": \"AccuWeather MCP\",\n    \"url\": \"https://accuweather-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_accuweather_weather_forecast\"]\n  },\n  {\n    \"name\": \"AgriVision MCP\",\n    \"url\": \"https://agrivision-mcp.up.railway.app/mcp\",\n    \"tools\": [\"diagnose_plant_health\"]\n  },\n  {\n    \"name\": \"Feed Formulation MCP\",\n    \"url\": \"https://feed-formulation-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_diet_recommendation\"]\n  },\n  {\n    \"name\": \"Intent Classification MCP\",\n    \"url\": \"https://intent-classification-mcp.up.railway.app/mcp\",\n    \"tools\": [\"classify_intent\", \"extract_entities\"]\n  },\n  {\n    \"name\": \"Tips MCP\",\n    \"url\": \"https://tips-mcp.up.railway.app/mcp\",\n    \"tools\": [\"get_farming_tips\", \"get_tip_categories\"]\n  },\n  {\n    \"name\": \"Profile Memory MCP\",\n    \"url\": \"https://profile-memory-mcp.up.railway.app/mcp\",\n    \"tools\": [\"read_profile\", \"update_profile\", \"add_memory_event\"]\n  }\n]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-global-servers",
+      "name": "Set Global Servers",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a helpful farming assistant for farmers in {{ $json.region }} region.\n\nUser message: {{ $json.message }}\n\nYou have access to these MCP tools:\n{{ JSON.stringify($json.mcp_servers) }}\n\nIMPORTANT:\n- Always use MCP tools to get real agricultural data\n- Never make up weather forecasts, soil data, or crop advice\n- Keep responses SHORT and farmer-friendly (2-4 sentences)\n- Hide technical details (coordinates, tool names, MCP terminology)\n- Respond in the same language the user uses ({{ $json.language }})\n- For weather queries, use weather tools\n- For soil queries, use soil tools\n- For crop advice, use crop advisory tools\n- For plant diseases, use plant diagnosis tools\n- For farming tips, use tips tools\n\nBe conversational, helpful, and practical."
+      },
+      "id": "ai-chain",
+      "name": "AI Chain",
+      "type": "@n8n/n8n-nodes-langchain.chain",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.0-flash-exp",
+        "options": {
+          "temperature": 0.7,
+          "maxOutputTokens": 1000
+        }
+      },
+      "id": "call-gemini",
+      "name": "Call Gemini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [1450, 300],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "gemini-api-key",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const message = ($input.item.json.message || '').toLowerCase();\nconst geminiResponse = $input.item.json.output || $input.item.json.text || '';\nconst mcpServers = $('Set Ethiopia Servers').item?.json.mcp_servers || \n                    $('Set East Africa Servers').item?.json.mcp_servers ||\n                    $('Set Global Servers').item?.json.mcp_servers;\n\nlet toolToCall = null;\nlet toolName = null;\nlet mcpServerUrl = null;\n\n// Route based on message content\nif (message.includes('weather') || message.includes('forecast') || message.includes('rain')) {\n  toolToCall = mcpServers?.find(s => s.tools.some(t => t.includes('weather')));\n  toolName = toolToCall?.tools.find(t => t.includes('weather'));\n  mcpServerUrl = toolToCall?.url;\n} else if (message.includes('soil') || message.includes('fertility')) {\n  toolToCall = mcpServers?.find(s => s.tools.some(t => t.includes('soil')));\n  toolName = toolToCall?.tools.find(t => t.includes('soil'));\n  mcpServerUrl = toolToCall?.url;\n} else if (message.includes('tip') || message.includes('advice') || message.includes('suggestion')) {\n  toolToCall = mcpServers?.find(s => s.tools.some(t => t.includes('tip')));\n  toolName = toolToCall?.tools.find(t => t.includes('tip'));\n  mcpServerUrl = toolToCall?.url;\n} else if (message.includes('disease') || message.includes('sick') || message.includes('diagnose')) {\n  toolToCall = mcpServers?.find(s => s.tools.some(t => t.includes('diagnose') || t.includes('health')));\n  toolName = toolToCall?.tools.find(t => t.includes('diagnose') || t.includes('health'));\n  mcpServerUrl = toolToCall?.url;\n}\n\nreturn {\n  json: {\n    ...$('Detect Region & Language').item.json,\n    gemini_response: geminiResponse,\n    tool_to_call: toolToCall,\n    tool_name: toolName,\n    mcp_server_url: mcpServerUrl,\n    needs_mcp_call: !!toolToCall\n  }\n};"
+      },
+      "id": "check-mcp-call",
+      "name": "Check if MCP Call Needed",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.needs_mcp_call }}",
+              "value2": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "if-needs-mcp",
+      "name": "If Needs MCP Call",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.mcp_server_url }}/mcp",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Farm-Latitude",
+              "value": "={{ $json.latitude.toString() }}"
+            },
+            {
+              "name": "X-Farm-Longitude",
+              "value": "={{ $json.longitude.toString() }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"{{ $now }}\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"{{ $json.tool_name }}\",\n    \"arguments\": {\n      \"latitude\": {{ $json.latitude }},\n      \"longitude\": {{ $json.longitude }}\n    }\n  }\n}",
+        "options": {}
+      },
+      "id": "call-mcp-server",
+      "name": "Call MCP Server",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2050, 200]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "response",
+              "value": "={{ $json.gemini_response }}"
+            },
+            {
+              "name": "region",
+              "value": "={{ $('Detect Region & Language').item.json.region }}"
+            },
+            {
+              "name": "language",
+              "value": "={{ $('Detect Region & Language').item.json.language }}"
+            },
+            {
+              "name": "mcp_server",
+              "value": "={{ $json.tool_to_call?.name }}"
+            },
+            {
+              "name": "tool_used",
+              "value": "={{ $json.tool_name }}"
+            },
+            {
+              "name": "coordinates",
+              "value": "={\n  \"latitude\": {{ $('Detect Region & Language').item.json.latitude }},\n  \"longitude\": {{ $('Detect Region & Language').item.json.longitude }}\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [2050, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Chat": {
+      "main": [[{"node": "Extract Request Data", "type": "main", "index": 0}]]
+    },
+    "Extract Request Data": {
+      "main": [[{"node": "Detect Region & Language", "type": "main", "index": 0}]]
+    },
+    "Detect Region & Language": {
+      "main": [[{"node": "Route by Region", "type": "main", "index": 0}]]
+    },
+    "Route by Region": {
+      "main": [
+        [{"node": "Set Ethiopia Servers", "type": "main", "index": 0}],
+        [{"node": "Set East Africa Servers", "type": "main", "index": 0}],
+        [{"node": "Set Global Servers", "type": "main", "index": 0}]
+      ]
+    },
+    "Set Ethiopia Servers": {
+      "main": [[{"node": "AI Chain", "type": "main", "index": 0}]]
+    },
+    "Set East Africa Servers": {
+      "main": [[{"node": "AI Chain", "type": "main", "index": 0}]]
+    },
+    "Set Global Servers": {
+      "main": [[{"node": "AI Chain", "type": "main", "index": 0}]]
+    },
+    "AI Chain": {
+      "ai_languageModel": [[{"node": "Call Gemini", "type": "ai_languageModel", "index": 0}]]
+    },
+    "Call Gemini": {
+      "main": [[{"node": "Check if MCP Call Needed", "type": "main", "index": 0}]]
+    },
+    "Check if MCP Call Needed": {
+      "main": [[{"node": "If Needs MCP Call", "type": "main", "index": 0}]]
+    },
+    "If Needs MCP Call": {
+      "main": [
+        [{"node": "Call MCP Server", "type": "main", "index": 0}],
+        [{"node": "Format Response", "type": "main", "index": 0}]
+      ]
+    },
+    "Call MCP Server": {
+      "main": [[{"node": "Format Response", "type": "main", "index": 0}]]
+    },
+    "Format Response": {
+      "main": [[{"node": "Webhook Response", "type": "main", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-27T00:00:00.000Z",
+  "versionId": "1"
+}
+
