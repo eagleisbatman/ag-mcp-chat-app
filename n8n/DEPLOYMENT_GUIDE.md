@@ -11,8 +11,11 @@
 4. Connect your GitHub account (if not already)
 5. Select your repository: `eagleisbatman/ag-mcp-chat-app`
    - Repository URL: https://github.com/eagleisbatman/ag-mcp-chat-app
-6. Select the folder: `n8n` (or leave root if deploying entire repo)
-7. Railway will auto-detect the Dockerfile in `n8n/` folder
+6. **IMPORTANT:** After selecting repo, Railway will show service options
+   - Click **"Add Service"** → **"GitHub Repo"**
+   - In service settings, set **Root Directory** to `n8n`
+   - Railway will auto-detect the Dockerfile in `n8n/` folder
+7. Railway will start building automatically
 
 **Option B: Deploy from Dockerfile**
 1. Go to [Railway Dashboard](https://railway.app)
