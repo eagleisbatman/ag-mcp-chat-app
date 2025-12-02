@@ -70,13 +70,15 @@ N8N_RUNNERS_ENABLED=true           # Already in Dockerfile
 **Optional (for workflow persistence with PostgreSQL):**
 ```
 DB_TYPE=postgresdb
-DB_POSTGRESDB_DATABASE=n8n
-DB_POSTGRESDB_HOST=your-postgres-host
-DB_POSTGRESDB_PORT=5432
-DB_POSTGRESDB_USER=your-user
+DB_POSTGRESDB_DATABASE=${{Postgres.POSTGRES_DATABASE}}
+DB_POSTGRESDB_HOST=${{Postgres.POSTGRES_HOST}}
+DB_POSTGRESDB_PORT=${{Postgres.POSTGRES_PORT}}
+DB_POSTGRESDB_USER=${{Postgres.POSTGRES_USER}}
 DB_POSTGRESDB_SCHEMA=public
-DB_POSTGRESDB_PASSWORD=your-password
+DB_POSTGRESDB_PASSWORD=${{Postgres.POSTGRES_PASSWORD}}
 ```
+
+**📖 See [`POSTGRESQL_SETUP.md`](POSTGRESQL_SETUP.md) for detailed PostgreSQL setup guide.**
 
 **Optional (for basic auth):**
 ```
