@@ -8,7 +8,7 @@
 
 1. **Railway Dashboard** → **New Project** → **Empty Project**
 2. **Add Service** → **"Docker"** (NOT "Dockerfile"!)
-3. **Docker Image:** `docker.n8n.io/n8nio/n8n:latest`
+3. **Docker Image:** `n8nio/n8n:latest` (use Docker Hub, Railway can't access docker.n8n.io)
 4. **Port:** `5678`
 5. **Set Environment Variables** (see Step 2 below)
 6. **Deploy!**
@@ -32,7 +32,7 @@
 1. Go to [Railway Dashboard](https://railway.app)
 2. Click **"New Project"** → **"Empty Project"**
 3. Click **"Add Service"** → **"Docker"**
-4. **Docker Image:** `docker.n8n.io/n8nio/n8n:latest`
+4. **Docker Image:** `n8nio/n8n:latest` (use Docker Hub - Railway can't access docker.n8n.io)
 5. **Port:** `5678`
 6. Set environment variables (see Step 2)
 7. **Deploy!**

@@ -15,7 +15,7 @@ Railway keeps looking for Dockerfile even when you don't need it. Here's how to 
 1. Click **"Add Service"**
 2. **IMPORTANT:** Select **"Docker"** (NOT "Dockerfile")
 3. In the Docker service settings:
-   - **Image:** `docker.n8n.io/n8nio/n8n:latest`
+   - **Image:** `n8nio/n8n:latest` (use Docker Hub, not docker.n8n.io)
    - **Port:** `5678`
    - Leave everything else default
 
@@ -54,7 +54,7 @@ Railway will:
 ## ✅ What TO Do
 
 - ✅ Use "Docker" service type
-- ✅ Specify image directly: `docker.n8n.io/n8nio/n8n:latest`
+- ✅ Specify image directly: `n8nio/n8n:latest` (Docker Hub)
 - ✅ Set environment variables
 - ✅ Deploy!
 
@@ -63,10 +63,12 @@ Railway will:
 ## Why This Works
 
 Railway's "Docker" service type:
-- Pulls images directly from Docker Hub
+- Pulls images directly from Docker Hub (`n8nio/n8n:latest`)
 - No build process needed
 - No Dockerfile needed
 - Just runs the container with your env vars
+
+**Note:** Use `n8nio/n8n:latest` from Docker Hub, not `docker.n8n.io` (Railway can't access that registry)
 
 This is the SIMPLEST and most reliable method!
 

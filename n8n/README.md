@@ -8,7 +8,7 @@
 
 1. **Railway Dashboard** → **New Project** → **Empty Project**
 2. **Add Service** → **"Docker"** (NOT "Dockerfile")
-3. **Image:** `docker.n8n.io/n8nio/n8n:latest`
+3. **Image:** `n8nio/n8n:latest` (Docker Hub - Railway can't access docker.n8n.io)
 4. **Port:** `5678`
 5. **Set Environment Variables:**
    - `N8N_ENCRYPTION_KEY` (generate 32-char key)
