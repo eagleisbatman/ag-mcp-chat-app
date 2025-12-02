@@ -1,28 +1,43 @@
 # n8n Deployment Guide for Railway
 
+## ⚡ SIMPLEST METHOD (Recommended)
+
+**Skip Dockerfile complexity - Use Railway's Docker image directly:**
+
+1. Railway Dashboard → New Project → **Empty Project**
+2. Add Service → **Docker**
+3. **Image:** `docker.n8n.io/n8nio/n8n:latest`
+4. **Port:** `5678`
+5. Set environment variables (see below)
+6. **Deploy!**
+
+**That's it!** No Dockerfile, no railway.json needed. Railway handles everything.
+
+---
+
 ## 🚀 Step-by-Step Deployment (Web Dashboard)
 
 ### 1. Create Railway Project
 
-**Option A: Deploy from GitHub (Recommended)**
+**Option A: Deploy Docker Image Directly (SIMPLEST - No Dockerfile!)**
 1. Go to [Railway Dashboard](https://railway.app)
-2. Click **"New Project"**
-3. Select **"Deploy from GitHub repo"**
-4. Connect your GitHub account (if not already)
-5. Select your repository: `eagleisbatman/ag-mcp-chat-app`
-   - Repository URL: https://github.com/eagleisbatman/ag-mcp-chat-app
-6. **IMPORTANT:** After selecting repo, Railway will show service options
-   - Click **"Add Service"** → **"GitHub Repo"**
-   - In service settings, set **Root Directory** to `n8n`
-   - Railway will auto-detect the Dockerfile in `n8n/` folder
-7. Railway will start building automatically
+2. Click **"New Project"** → **"Empty Project"**
+3. Click **"Add Service"** → **"Docker"**
+4. **Docker Image:** `docker.n8n.io/n8nio/n8n:latest`
+5. **Port:** `5678`
+6. Set environment variables (see Step 2)
+7. **Deploy!**
 
-**Option B: Deploy from Dockerfile**
+**Option B: Deploy from GitHub (If you want to use Dockerfile)**
 1. Go to [Railway Dashboard](https://railway.app)
-2. Click **"New Project"**
-3. Select **"Empty Project"**
-4. Click **"Add Service"** → **"Dockerfile"**
-5. Upload or connect to your `n8n` folder
+2. Click **"New Project"** → **"Deploy from GitHub repo"**
+3. Select repository: `eagleisbatman/ag-mcp-chat-app`
+4. **IMPORTANT:** In service settings:
+   - Go to **Settings** tab
+   - Set **Root Directory** to: `n8n`
+   - Railway will find `n8n/Dockerfile` automatically
+5. Set environment variables
+6. Deploy!
 
 ### 2. Set Environment Variables
 
