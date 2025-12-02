@@ -13,6 +13,3 @@
   }
 }
 
-// Alternative: Use Railway's Nixpacks builder (simpler, no Dockerfile needed)
-// Just set environment variables and Railway will auto-detect n8n
-
