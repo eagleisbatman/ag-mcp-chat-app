@@ -1,53 +1,69 @@
-# n8n Deployment on Railway
+# n8n - AG-MCP Chat Backend
 
-## 🚀 SIMPLEST DEPLOYMENT (No Dockerfile!)
+## 🚀 Live Deployment
 
-**Railway keeps looking for Dockerfile? Use Railway's Docker service - NO Dockerfile needed!**
+**URL:** https://ag-mcp-app.up.railway.app
 
-### Quick Deploy:
+**Webhook Endpoint:**
+```
+POST https://ag-mcp-app.up.railway.app/webhook/api/chat
+```
 
-1. **Railway Dashboard** → **New Project** → **Empty Project**
-2. **Add Service** → **"Docker"** (NOT "Dockerfile")
-3. **Image:** `n8nio/n8n:latest` (Docker Hub - Railway can't access docker.n8n.io)
-4. **Port:** `5678`
-5. **Set Environment Variables:**
-   - `N8N_ENCRYPTION_KEY` (generate 32-char key)
-   - `WEBHOOK_URL` (get after deploy)
-   - `GEMINI_API_KEY` (your Gemini key)
-   - `GENERIC_TIMEZONE` = `America/New_York`
-   - `TZ` = `America/New_York`
-   - `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS` = `true`
-   - `N8N_RUNNERS_ENABLED` = `true`
-6. **Deploy!**
+## 📡 API Usage
 
-**No Dockerfile, no railway.json, no complexity - just works!**
+**Request:**
+```json
+{
+  "message": "What crops should I plant?",
+  "latitude": -1.2864,
+  "longitude": 36.8172
+}
+```
 
----
+**Response:**
+```json
+{
+  "response": "AI response here",
+  "region": "east-africa",
+  "language": "en",
+  "success": true
+}
+```
 
-## 📖 Detailed Guides
+## 📁 Files
 
-- **[RAILWAY_DEPLOY_NO_DOCKERFILE.md](RAILWAY_DEPLOY_NO_DOCKERFILE.md)** - Step-by-step guide (no Dockerfile)
-- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Complete deployment guide
-- **[WEB_DEPLOYMENT_GUIDE.md](WEB_DEPLOYMENT_GUIDE.md)** - Web dashboard guide
-- **[SIMPLE_DEPLOY.md](SIMPLE_DEPLOY.md)** - Simple deployment options
+```
+n8n/
+├── Dockerfile           # Railway deployment
+├── docker-compose.yml   # Local development
+├── README.md            # This file
+└── workflows/
+    ├── chat-workflow.json      # Main workflow (import this!)
+    └── MCP_SERVERS_CONFIG.md   # MCP server reference
+```
 
----
+## 🔧 Deploy to Railway
 
-## 🔗 Repository
+1. **Railway Dashboard** → **New Project** → **Docker**
+2. **Image:** `n8nio/n8n:latest`
+3. **Port:** `5678`
+4. **Environment Variables:**
+   - `N8N_ENCRYPTION_KEY` - Generate: `openssl rand -hex 16`
+   - `WEBHOOK_URL` - Your Railway URL
+   - `GENERIC_TIMEZONE` - `UTC`
 
-- **GitHub:** https://github.com/eagleisbatman/ag-mcp-chat-app
-- **Workflows:** `n8n/workflows/`
+## 📥 Import Workflow
 
----
+1. Open n8n UI
+2. **Workflows** → **Import from File**
+3. Select `workflows/chat-workflow.json`
+4. Configure Gemini credential
+5. Activate workflow
 
-## ⚠️ Important
+## 🏠 Local Development
 
-**DO NOT use:**
-- ❌ "Dockerfile" builder (causes Dockerfile not found errors)
-- ❌ railway.json files (they reference Dockerfile)
-- ❌ GitHub repo deployment with Dockerfile
-
-**DO use:**
-- ✅ "Docker" service type
-- ✅ Direct image: `n8nio/n8n:latest` (Docker Hub - Railway can't access docker.n8n.io)
-- ✅ Environment variables only
+```bash
+cd n8n
+docker-compose up -d
+# Open http://localhost:5678
+```

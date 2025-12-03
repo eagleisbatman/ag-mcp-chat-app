@@ -215,10 +215,9 @@
   "staticData": null,
   "tags": [],
   "active": false,
-  "versionId": "v3-correct",
+  "versionId": "v3",
   "meta": {
     "instanceId": "ag-mcp-chat-app"
   },
   "id": "ag-mcp-workflow"
 }
-
