@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // API Gateway URL (handles auth, proxies to n8n)
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://ag-mcp-gateway.up.railway.app/api/chat';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://ag-mcp-api-gateway.up.railway.app/api/chat';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 
 const BOT_USER = {

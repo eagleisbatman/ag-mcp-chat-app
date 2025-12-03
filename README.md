@@ -10,7 +10,7 @@ Mobile App → API Gateway (auth) → n8n (AI workflow)
 
 **API Endpoint:**
 ```
-POST https://ag-mcp-gateway.up.railway.app/api/chat
+POST https://ag-mcp-api-gateway.up.railway.app/api/chat
 Header: X-API-Key: your-api-key
 ```
 
