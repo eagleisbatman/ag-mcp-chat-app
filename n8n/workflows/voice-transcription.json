@@ -1,0 +1,72 @@
+{
+  "name": "AG-MCP Voice Transcription",
+  "nodes": [
+    {
+      "id": "webhook",
+      "name": "Transcription Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "aeb440bc-5505-44f0-acf8-540c45cee498",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api/transcribe",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "notes": "Receives audio transcription requests. Expects: { audio: base64, language, mimeType? }"
+    },
+    {
+      "id": "prepare",
+      "name": "Prepare Transcription",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "parameters": {
+        "jsCode": "const audioBase64 = $json.body?.audio || \"\";\nconst language = $json.body?.language || \"en\";\nconst mimeType = $json.body?.mimeType || \"audio/wav\";\n\nconst languageMap = {\n  \"hi\": \"Hindi\", \"te\": \"Telugu\", \"kn\": \"Kannada\",\n  \"mr\": \"Marathi\", \"gu\": \"Gujarati\", \"ta\": \"Tamil\",\n  \"bn\": \"Bengali\", \"ml\": \"Malayalam\", \"pa\": \"Punjabi\",\n  \"or\": \"Odia\", \"sw\": \"Swahili\", \"am\": \"Amharic\",\n  \"vi\": \"Vietnamese\", \"th\": \"Thai\", \"id\": \"Indonesian\",\n  \"en\": \"English\", \"es\": \"Spanish\", \"fr\": \"French\",\n  \"de\": \"German\", \"pt\": \"Portuguese\", \"ar\": \"Arabic\"\n};\n\nconst langName = languageMap[language] || language;\nconst prompt = `Transcribe this audio accurately. The speaker is likely using ${langName}. Return ONLY the transcribed text, no explanations.`;\n\nreturn {\n  json: {\n    audioBase64, language, mimeType, prompt,\n    requestBody: {\n      contents: [{\n        parts: [\n          { text: prompt },\n          { inlineData: { mimeType: mimeType, data: audioBase64 } }\n        ]\n      }]\n    }\n  }\n};"
+      },
+      "notes": "Maps language codes to names and prepares Gemini API request with inline audio data"
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini Transcription",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
+        "options": {}
+      },
+      "notes": "Calls Gemini 2.5 Flash with audio for transcription. Uses GEMINI_API_KEY environment variable."
+    },
+    {
+      "id": "response",
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "parameters": {
+        "jsCode": "const response = $json;\ntry {\n  const text = response.candidates?.[0]?.content?.parts?.[0]?.text || \"\";\n  const language = $(\"Prepare Transcription\").item.json.language;\n  return {\n    json: {\n      success: true,\n      text: text.trim(),\n      language: language\n    }\n  };\n} catch (e) {\n  return { json: { success: false, error: e.message, text: \"\" } };\n}"
+      },
+      "notes": "Extracts transcribed text from Gemini response"
+    }
+  ],
+  "connections": {
+    "Transcription Webhook": {
+      "main": [[{ "node": "Prepare Transcription", "type": "main", "index": 0 }]]
+    },
+    "Prepare Transcription": {
+      "main": [[{ "node": "Gemini Transcription", "type": "main", "index": 0 }]]
+    },
+    "Gemini Transcription": {
+      "main": [[{ "node": "Parse Response", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

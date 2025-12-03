@@ -1,0 +1,72 @@
+{
+  "name": "AG-MCP Image Upload (Cloudinary)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api/upload-image",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Image Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "notes": "Receives image upload requests. Expects: { image: base64, mimeType: string }"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Cloudinary image upload\nconst crypto = require('crypto');\n\nconst imageBase64 = $json.body?.image || '';\nconst mimeType = $json.body?.mimeType || 'image/jpeg';\n\nconst timestamp = Math.floor(Date.now() / 1000);\nconst publicId = `plants/image_${timestamp}`;\nconst apiSecret = $env.CLOUDINARY_API_SECRET;\n\nconst paramsToSign = `public_id=${publicId}&timestamp=${timestamp}`;\nconst signature = crypto\n  .createHash('sha1')\n  .update(paramsToSign + apiSecret)\n  .digest('hex');\n\nreturn {\n  json: {\n    timestamp,\n    publicId,\n    signature,\n    apiKey: $env.CLOUDINARY_API_KEY,\n    cloudName: $env.CLOUDINARY_CLOUD_NAME,\n    dataUri: `data:${mimeType};base64,${imageBase64}`\n  }\n};"
+      },
+      "id": "prepare",
+      "name": "Prepare Upload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "notes": "Generates Cloudinary signature for image upload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.cloudinary.com/v1_1/{{ $json.cloudName }}/image/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "file", "value": "={{ $json.dataUri }}" },
+            { "name": "public_id", "value": "={{ $json.publicId }}" },
+            { "name": "timestamp", "value": "={{ $json.timestamp }}" },
+            { "name": "api_key", "value": "={{ $json.apiKey }}" },
+            { "name": "signature", "value": "={{ $json.signature }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "upload",
+      "name": "Upload to Cloudinary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "notes": "Uploads image to Cloudinary"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format response with Cloudinary URLs\nconst response = $json;\n\nreturn {\n  json: {\n    success: true,\n    imageUrl: response.secure_url,\n    publicId: response.public_id,\n    width: response.width,\n    height: response.height,\n    format: response.format,\n    bytes: response.bytes,\n    // Transformed URLs for different sizes\n    thumbnailUrl: response.secure_url.replace('/upload/', '/upload/w_200,h_200,c_fill/'),\n    mediumUrl: response.secure_url.replace('/upload/', '/upload/w_800,c_scale/')\n  }\n};"
+      },
+      "id": "response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "notes": "Returns Cloudinary URLs with transformation options"
+    }
+  ],
+  "connections": {
+    "Image Webhook": { "main": [[{ "node": "Prepare Upload", "type": "main", "index": 0 }]] },
+    "Prepare Upload": { "main": [[{ "node": "Upload to Cloudinary", "type": "main", "index": 0 }]] },
+    "Upload to Cloudinary": { "main": [[{ "node": "Format Response", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}
+

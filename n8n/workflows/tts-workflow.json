@@ -1,0 +1,72 @@
+{
+  "name": "AG-MCP Text-to-Speech",
+  "nodes": [
+    {
+      "id": "webhook",
+      "name": "TTS Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "09387c0d-4d58-44a9-b384-b900387e186b",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api/tts",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "notes": "Receives TTS requests. Expects: { text, language }"
+    },
+    {
+      "id": "prepare",
+      "name": "Prepare TTS Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "parameters": {
+        "jsCode": "const text = $json.body?.text || \"\";\nconst language = $json.body?.language || \"en\";\nconst voiceName = \"Kore\";\nconst prompt = language !== \"en\" ? `Speak in ${language}:\\n${text}` : text;\n\nreturn {\n  json: {\n    text, language, prompt, voiceName,\n    requestBody: {\n      contents: [{ parts: [{ text: prompt }] }],\n      generationConfig: {\n        responseModalities: [\"AUDIO\"],\n        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName } } }\n      }\n    }\n  }\n};"
+      },
+      "notes": "Prepares Gemini TTS API request with voice configuration"
+    },
+    {
+      "id": "tts_api",
+      "name": "Gemini TTS API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
+        "options": {}
+      },
+      "notes": "Calls Gemini TTS API to generate audio. Returns PCM audio in base64."
+    },
+    {
+      "id": "response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "parameters": {
+        "jsCode": "const response = $json;\n\ntry {\n  const audioData = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;\n  if (!audioData) return { json: { success: false, error: \"No audio generated\" } };\n  \n  const sampleRate = 24000, numChannels = 1, bitsPerSample = 16;\n  const pcmBuffer = Buffer.from(audioData, \"base64\");\n  const dataSize = pcmBuffer.length;\n  \n  const wavHeader = Buffer.alloc(44);\n  wavHeader.write(\"RIFF\", 0);\n  wavHeader.writeUInt32LE(36 + dataSize, 4);\n  wavHeader.write(\"WAVE\", 8);\n  wavHeader.write(\"fmt \", 12);\n  wavHeader.writeUInt32LE(16, 16);\n  wavHeader.writeUInt16LE(1, 20);\n  wavHeader.writeUInt16LE(numChannels, 22);\n  wavHeader.writeUInt32LE(sampleRate, 24);\n  wavHeader.writeUInt32LE(sampleRate * numChannels * bitsPerSample / 8, 28);\n  wavHeader.writeUInt16LE(numChannels * bitsPerSample / 8, 32);\n  wavHeader.writeUInt16LE(bitsPerSample, 34);\n  wavHeader.write(\"data\", 36);\n  wavHeader.writeUInt32LE(dataSize, 40);\n  \n  const wavBuffer = Buffer.concat([wavHeader, pcmBuffer]);\n  const wavBase64 = wavBuffer.toString(\"base64\");\n  const duration = Math.round(dataSize / (sampleRate * numChannels * bitsPerSample / 8));\n  \n  return {\n    json: {\n      success: true,\n      audioBase64: wavBase64,\n      duration: duration,\n      mimeType: \"audio/wav\"\n    }\n  };\n} catch (e) { return { json: { success: false, error: e.message } }; }"
+      },
+      "notes": "Converts Gemini PCM audio to WAV format with proper headers"
+    }
+  ],
+  "connections": {
+    "TTS Webhook": {
+      "main": [[{ "node": "Prepare TTS Request", "type": "main", "index": 0 }]]
+    },
+    "Prepare TTS Request": {
+      "main": [[{ "node": "Gemini TTS API", "type": "main", "index": 0 }]]
+    },
+    "Gemini TTS API": {
+      "main": [[{ "node": "Format Response", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -2,222 +2,71 @@
   "name": "AG-MCP Chat - Gemini Integration",
   "nodes": [
     {
+      "id": "webhook",
+      "name": "Chat Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "chat-endpoint",
       "parameters": {
         "httpMethod": "POST",
         "path": "api/chat",
-        "responseMode": "responseNode",
+        "responseMode": "lastNode",
         "options": {}
       },
-      "id": "a1b2c3d4-webhook",
-      "name": "Webhook - Chat",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [100, 300],
-      "webhookId": "chat-endpoint"
+      "notes": "Receives chat requests from API Gateway. Expects: { message, language, history? }"
     },
     {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "msg-1",
-              "name": "message",
-              "value": "={{ $json.body.message }}",
-              "type": "string"
-            },
-            {
-              "id": "msg-2",
-              "name": "latitude",
-              "value": "={{ $json.body.latitude || -1.2864 }}",
-              "type": "number"
-            },
-            {
-              "id": "msg-3",
-              "name": "longitude",
-              "value": "={{ $json.body.longitude || 36.8172 }}",
-              "type": "number"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "a1b2c3d4-extract",
-      "name": "Extract Data",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [300, 300]
-    },
-    {
-      "parameters": {
-        "jsCode": "const lat = parseFloat($input.item.json.latitude) || -1.2864;\nconst lon = parseFloat($input.item.json.longitude) || 36.8172;\nconst message = $input.item.json.message || '';\n\nlet region = 'global';\nif (lat >= 3.0 && lat <= 15.0 && lon >= 32.0 && lon <= 48.0) {\n  region = 'ethiopia';\n} else if (lat >= -12.0 && lat <= 18.0 && lon >= 29.0 && lon <= 52.0) {\n  region = 'east-africa';\n}\n\nconst swahiliWords = ['hali', 'hewa', 'mvua', 'joto', 'shamba'];\nconst hasSwahili = swahiliWords.some(word => message.toLowerCase().includes(word));\nconst language = hasSwahili ? 'sw' : 'en';\n\nreturn {\n  json: {\n    message: message,\n    region: region,\n    language: language,\n    latitude: lat,\n    longitude: lon\n  }\n};"
-      },
-      "id": "a1b2c3d4-region",
-      "name": "Detect Region",
+      "id": "prepare",
+      "name": "Prepare Chat",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 300]
-    },
-    {
+      "position": [460, 300],
       "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.message }}",
-        "messages": {
-          "messageValues": [
-            {
-              "message": "=You are a helpful farming assistant for farmers in the {{ $json.region }} region.\n\nUser location: {{ $json.latitude }}, {{ $json.longitude }}\nLanguage preference: {{ $json.language }}\n\nIMPORTANT RULES:\n1. Keep responses SHORT and farmer-friendly (2-4 sentences max)\n2. Never make up data - say \"I don't have that information\" if unsure\n3. Respond in the same language the user uses\n4. Be practical and conversational\n5. For weather questions, give general advice based on region\n6. For crop advice, give general best practices\n7. For soil questions, recommend getting soil tested\n\nBe helpful, friendly, and practical."
-            }
-          ]
-        }
+        "jsCode": "const message = $json.body?.message || \"\";\nconst language = $json.body?.language || \"en\";\nconst history = $json.body?.history || [];\n\nconst languageMap = {\n  \"hi\": \"Hindi\", \"te\": \"Telugu\", \"kn\": \"Kannada\",\n  \"mr\": \"Marathi\", \"gu\": \"Gujarati\", \"ta\": \"Tamil\",\n  \"bn\": \"Bengali\", \"ml\": \"Malayalam\", \"pa\": \"Punjabi\",\n  \"or\": \"Odia\", \"sw\": \"Swahili\", \"am\": \"Amharic\",\n  \"vi\": \"Vietnamese\", \"th\": \"Thai\", \"id\": \"Indonesian\",\n  \"en\": \"English\", \"es\": \"Spanish\", \"fr\": \"French\",\n  \"de\": \"German\", \"pt\": \"Portuguese\", \"ar\": \"Arabic\"\n};\n\nconst langName = languageMap[language] || language;\n\nconst systemPrompt = `You are an expert agricultural advisor for smallholder farmers. IMPORTANT: You MUST respond in ${langName} language only.\n\nYour expertise includes:\n- Crop selection and rotation\n- Pest and disease management  \n- Weather-based farming advice\n- Soil health and fertilization\n- Irrigation and water management\n- Market timing and pricing\n\nProvide practical, actionable advice suitable for small-scale farmers. Keep responses concise but helpful. Always respond in ${langName}.`;\n\nconst contents = [\n  { role: \"user\", parts: [{ text: systemPrompt }] },\n  { role: \"model\", parts: [{ text: `I understand. I am your agricultural advisor and will respond in ${langName}.` }] }\n];\n\nfor (const msg of history.slice(-10)) {\n  contents.push({\n    role: msg.isBot ? \"model\" : \"user\",\n    parts: [{ text: msg.text }]\n  });\n}\n\ncontents.push({ role: \"user\", parts: [{ text: message }] });\n\nreturn {\n  json: {\n    message, language, langName,\n    requestBody: {\n      contents: contents,\n      generationConfig: {\n        temperature: 0.7,\n        maxOutputTokens: 1024\n      }\n    }\n  }\n};"
       },
-      "id": "a1b2c3d4-chain",
-      "name": "Chat with Gemini",
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.4,
-      "position": [700, 300]
+      "notes": "Prepares system prompt with language enforcement and builds conversation history for Gemini API"
     },
     {
+      "id": "gemini",
+      "name": "Gemini Chat API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
       "parameters": {
-        "modelName": "models/gemini-2.0-flash",
-        "options": {
-          "temperature": 0.7,
-          "maxOutputTokens": 500
-        }
-      },
-      "id": "a1b2c3d4-gemini",
-      "name": "Google Gemini Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [700, 520]
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "resp-1",
-              "name": "response",
-              "value": "={{ $json.text }}",
-              "type": "string"
-            },
-            {
-              "id": "resp-2",
-              "name": "region",
-              "value": "={{ $('Detect Region').item.json.region }}",
-              "type": "string"
-            },
-            {
-              "id": "resp-3",
-              "name": "language",
-              "value": "={{ $('Detect Region').item.json.language }}",
-              "type": "string"
-            },
-            {
-              "id": "resp-4",
-              "name": "success",
-              "value": true,
-              "type": "boolean"
-            }
-          ]
-        },
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
         "options": {}
       },
-      "id": "a1b2c3d4-format",
+      "notes": "Calls Gemini 2.5 Flash API with conversation context. Uses GEMINI_API_KEY environment variable."
+    },
+    {
+      "id": "response",
       "name": "Format Response",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [900, 300]
-    },
-    {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ $json }}",
-        "options": {}
+        "jsCode": "const response = $json;\ntry {\n  const text = response.candidates?.[0]?.content?.parts?.[0]?.text || \"Sorry, I could not generate a response.\";\n  const language = $(\"Prepare Chat\").item.json.language;\n  return {\n    json: {\n      success: true,\n      response: text.trim(),\n      language: language\n    }\n  };\n} catch (e) {\n  return { json: { success: false, response: \"An error occurred.\", error: e.message } };\n}"
       },
-      "id": "a1b2c3d4-respond",
-      "name": "Respond to Webhook",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.1,
-      "position": [1100, 300]
+      "notes": "Extracts response text from Gemini API response and formats for mobile app"
     }
   ],
   "connections": {
-    "Webhook - Chat": {
-      "main": [
-        [
-          {
-            "node": "Extract Data",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+    "Chat Webhook": {
+      "main": [[{ "node": "Prepare Chat", "type": "main", "index": 0 }]]
     },
-    "Extract Data": {
-      "main": [
-        [
-          {
-            "node": "Detect Region",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+    "Prepare Chat": {
+      "main": [[{ "node": "Gemini Chat API", "type": "main", "index": 0 }]]
     },
-    "Detect Region": {
-      "main": [
-        [
-          {
-            "node": "Chat with Gemini",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Gemini Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Chat with Gemini",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Chat with Gemini": {
-      "main": [
-        [
-          {
-            "node": "Format Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Format Response": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+    "Gemini Chat API": {
+      "main": [[{ "node": "Format Response", "type": "main", "index": 0 }]]
     }
   },
-  "pinData": {},
   "settings": {
     "executionOrder": "v1"
-  },
-  "staticData": null,
-  "tags": [],
-  "active": false,
-  "versionId": "v3",
-  "meta": {
-    "instanceId": "ag-mcp-chat-app"
-  },
-  "id": "ag-mcp-workflow"
+  }
 }
