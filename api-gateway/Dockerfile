@@ -1,5 +1,8 @@
 FROM node:20-alpine
 
+# Install OpenSSL and other dependencies required by Prisma
+RUN apk add --no-cache openssl openssl-dev libc6-compat
+
 WORKDIR /app
 
 # Copy package files and prisma schema first
