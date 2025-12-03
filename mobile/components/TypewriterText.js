@@ -82,7 +82,7 @@ export default function TypewriterText({
       {...textProps}
     >
       {displayedText}
-      {!isComplete && animate && <Text style={{ opacity: 0.5 }}>▌</Text>}
+      {!isComplete && animate && <Text style={{ opacity: 0.7 }}>●</Text>}
     </Text>
   );
 }

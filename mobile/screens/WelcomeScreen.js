@@ -1,13 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function WelcomeScreen({ navigation }) {
   const { theme } = useApp();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: Math.max(insets.top + 20, 60) }]}>
       {/* Hero Section */}
       <View style={styles.hero}>
         <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>
@@ -80,7 +82,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
     paddingBottom: 40,
   },
   hero: {

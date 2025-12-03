@@ -8,12 +8,14 @@ import {
   FlatList,
   SectionList,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
 import { LANGUAGES, REGIONS, searchLanguages } from '../constants/languages';
 
 export default function LanguageSelectScreen({ navigation }) {
   const { theme, language, setLanguage } = useApp();
+  const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState('');
 
   const displayData = useMemo(() => {
@@ -70,7 +72,7 @@ export default function LanguageSelectScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top + 10, 60) }]}>
         <TouchableOpacity 
           style={[styles.backButton, { backgroundColor: theme.surfaceVariant }]}
           onPress={() => navigation.goBack()}
@@ -141,7 +143,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 60,
     paddingBottom: 16,
   },
   backButton: {

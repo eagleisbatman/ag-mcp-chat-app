@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import { useApp } from '../contexts/AppContext';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function LocationScreen({ navigation }) {
   const { theme, setLocation } = useApp();
+  const insets = useSafeAreaInsets();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -48,7 +50,7 @@ export default function LocationScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: Math.max(insets.top + 20, 60) }]}>
       {/* Icon */}
       <View style={styles.iconSection}>
         <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>
@@ -138,7 +140,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
     paddingBottom: 40,
   },
   iconSection: {

@@ -8,12 +8,14 @@ import {
   FlatList,
   SectionList,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
 import { LANGUAGES, REGIONS, searchLanguages } from '../constants/languages';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function LanguageScreen({ navigation }) {
   const { theme, language, setLanguage, completeOnboarding } = useApp();
+  const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLang, setSelectedLang] = useState(language);
 
@@ -80,7 +82,7 @@ export default function LanguageScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top + 20, 60) }]}>
         <Text style={[styles.title, { color: theme.text }]}>
           Select Language
         </Text>
@@ -158,7 +160,6 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 60,
     paddingBottom: 16,
   },
   title: {

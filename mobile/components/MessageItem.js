@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
 import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio, isAudioPlaying } from '../utils/audioPlayer';
@@ -20,6 +21,85 @@ export default function MessageItem({ message, isNewMessage = false }) {
       minute: '2-digit',
       hour12: true 
     });
+  };
+
+  // Markdown styles based on theme
+  const markdownStyles = {
+    body: {
+      color: theme.text,
+      fontSize: 16,
+      lineHeight: 24,
+    },
+    heading1: {
+      color: theme.text,
+      fontSize: 22,
+      fontWeight: '700',
+      marginBottom: 8,
+      marginTop: 4,
+    },
+    heading2: {
+      color: theme.text,
+      fontSize: 20,
+      fontWeight: '600',
+      marginBottom: 6,
+      marginTop: 4,
+    },
+    heading3: {
+      color: theme.text,
+      fontSize: 18,
+      fontWeight: '600',
+      marginBottom: 4,
+    },
+    strong: {
+      fontWeight: '700',
+      color: theme.text,
+    },
+    em: {
+      fontStyle: 'italic',
+    },
+    bullet_list: {
+      marginVertical: 4,
+    },
+    ordered_list: {
+      marginVertical: 4,
+    },
+    list_item: {
+      marginVertical: 2,
+      flexDirection: 'row',
+    },
+    bullet_list_icon: {
+      color: theme.accent,
+      fontSize: 16,
+      marginRight: 8,
+    },
+    code_inline: {
+      backgroundColor: theme.surfaceVariant,
+      color: theme.accent,
+      paddingHorizontal: 4,
+      paddingVertical: 2,
+      borderRadius: 4,
+      fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+      fontSize: 14,
+    },
+    code_block: {
+      backgroundColor: theme.surfaceVariant,
+      padding: 12,
+      borderRadius: 8,
+      marginVertical: 8,
+    },
+    fence: {
+      backgroundColor: theme.surfaceVariant,
+      padding: 12,
+      borderRadius: 8,
+      marginVertical: 8,
+    },
+    link: {
+      color: theme.accent,
+      textDecorationLine: 'underline',
+    },
+    paragraph: {
+      marginVertical: 4,
+    },
   };
 
   // Handle speak button press
@@ -122,15 +202,22 @@ export default function MessageItem({ message, isNewMessage = false }) {
         />
       )}
       
-      {/* Use TypewriterText for new bot messages */}
+      {/* Message Content - Use Markdown for bot messages, plain text for user */}
       {isBot && isNewMessage ? (
+        // Typewriter for new bot messages (no markdown during animation)
         <TypewriterText
           text={message.text}
           style={[styles.messageText, { color: theme.text }]}
           speed={40}
           animate={true}
         />
+      ) : isBot ? (
+        // Markdown for completed bot messages
+        <Markdown style={markdownStyles}>
+          {message.text}
+        </Markdown>
       ) : (
+        // Plain text for user messages
         <Text style={[styles.messageText, { color: theme.text }]}>
           {message.text}
         </Text>
