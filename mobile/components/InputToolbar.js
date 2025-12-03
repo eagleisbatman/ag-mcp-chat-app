@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
+import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 
 export default function InputToolbar({ 
@@ -79,7 +80,7 @@ export default function InputToolbar({
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'], // Updated from deprecated MediaTypeOptions
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
@@ -88,6 +89,7 @@ export default function InputToolbar({
 
       if (!result.canceled && result.assets[0]) {
         const asset = result.assets[0];
+        Haptics.selectionAsync();
         onSendImage({
           uri: asset.uri,
           base64: asset.base64,
@@ -117,6 +119,7 @@ export default function InputToolbar({
 
       if (!result.canceled && result.assets[0]) {
         const asset = result.assets[0];
+        Haptics.selectionAsync();
         onSendImage({
           uri: asset.uri,
           base64: asset.base64,
@@ -151,6 +154,7 @@ export default function InputToolbar({
       recordingRef.current = recording;
       setIsRecording(true);
       setRecordingDuration(0);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
       // Start timer
       timerRef.current = setInterval(() => {
@@ -167,13 +171,19 @@ export default function InputToolbar({
     try {
       clearInterval(timerRef.current);
       setIsRecording(false);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
       await recordingRef.current.stopAndUnloadAsync();
       const uri = recordingRef.current.getURI();
 
-      // Read as base64
+      if (!uri) {
+        console.error('No recording URI');
+        return;
+      }
+
+      // Read as base64 - use string literal for encoding type
       const base64 = await FileSystem.readAsStringAsync(uri, {
-        encoding: FileSystem.EncodingType.Base64,
+        encoding: 'base64',
       });
 
       onSendVoice({

@@ -36,7 +36,7 @@ export const playAudio = async (source, onPlaybackStatusUpdate = null) => {
       // Base64 - write to temp file first
       tempFileUri = `${FileSystem.cacheDirectory}tts_audio_${Date.now()}.wav`;
       await FileSystem.writeAsStringAsync(tempFileUri, source, {
-        encoding: FileSystem.EncodingType.Base64,
+        encoding: 'base64', // Use string literal instead of EncodingType
       });
       audioSource = { uri: tempFileUri };
     }

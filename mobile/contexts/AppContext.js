@@ -1,42 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { registerUser, updatePreferences, saveLocation as saveLocationToDB, lookupLocation } from '../services/db';
+import { THEMES } from '../constants/themes';
 
-// Theme colors
-export const THEMES = {
-  light: {
-    name: 'light',
-    background: '#FAFAFA',
-    surface: '#FFFFFF',
-    surfaceVariant: '#F5F5F5',
-    text: '#1A1A1A',
-    textSecondary: '#666666',
-    textMuted: '#999999',
-    accent: '#2E7D32',
-    accentLight: '#E8F5E9',
-    border: '#E0E0E0',
-    userMessage: '#F0F0F0',
-    botMessage: '#FFFFFF',
-    inputBackground: '#F5F5F5',
-    statusBar: 'dark',
-  },
-  dark: {
-    name: 'dark',
-    background: '#121212',
-    surface: '#1E1E1E',
-    surfaceVariant: '#2A2A2A',
-    text: '#E0E0E0',
-    textSecondary: '#AAAAAA',
-    textMuted: '#777777',
-    accent: '#81C784',
-    accentLight: '#1B3D1C',
-    border: '#333333',
-    userMessage: '#2A2A2A',
-    botMessage: '#1E1E1E',
-    inputBackground: '#2A2A2A',
-    statusBar: 'light',
-  },
-};
+// Re-export THEMES for backward compatibility
+export { THEMES };
 
 const AppContext = createContext(null);
 
@@ -48,8 +17,12 @@ export const AppProvider = ({ children }) => {
   const [language, setLanguage] = useState({ code: 'en', name: 'English', nativeName: 'English' });
   const [location, setLocation] = useState({ latitude: null, longitude: null });
   const [locationStatus, setLocationStatus] = useState('pending'); // 'pending', 'granted', 'denied'
+  const [locationDetails, setLocationDetails] = useState(null); // L1-L6 location data
   const [onboardingComplete, setOnboardingComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
+  const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [isDbSynced, setIsDbSynced] = useState(false);
 
   // Computed theme
   const theme = themeMode === 'system' 
@@ -63,11 +36,12 @@ export const AppProvider = ({ children }) => {
 
   const loadPreferences = async () => {
     try {
-      const [savedTheme, savedLanguage, savedOnboarding, savedLocation] = await Promise.all([
+      const [savedTheme, savedLanguage, savedOnboarding, savedLocation, savedLocationDetails] = await Promise.all([
         AsyncStorage.getItem('themeMode'),
         AsyncStorage.getItem('language'),
         AsyncStorage.getItem('onboardingComplete'),
         AsyncStorage.getItem('location'),
+        AsyncStorage.getItem('locationDetails'),
       ]);
 
       if (savedTheme) setThemeMode(savedTheme);
@@ -78,6 +52,10 @@ export const AppProvider = ({ children }) => {
         setLocation(loc);
         setLocationStatus('granted');
       }
+      if (savedLocationDetails) setLocationDetails(JSON.parse(savedLocationDetails));
+
+      // Register user with backend (non-blocking)
+      registerUserInBackground();
     } catch (error) {
       console.log('Error loading preferences:', error);
     } finally {
@@ -85,14 +63,42 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // Register user with backend (runs in background)
+  const registerUserInBackground = async () => {
+    try {
+      const result = await registerUser();
+      if (result.success && result.userId) {
+        setUserId(result.userId);
+        setIsDbSynced(true);
+      }
+    } catch (error) {
+      console.log('Background user registration failed:', error);
+      // App continues to work offline
+    }
+  };
+
   const saveThemeMode = async (mode) => {
     setThemeMode(mode);
     await AsyncStorage.setItem('themeMode', mode);
+    
+    // Sync to DB
+    if (isDbSynced) {
+      updatePreferences({ themeMode: mode }).catch(e => console.log('DB sync error:', e));
+    }
   };
 
   const saveLanguage = async (lang) => {
     setLanguage(lang);
     await AsyncStorage.setItem('language', JSON.stringify(lang));
+    
+    // Sync to DB
+    if (isDbSynced) {
+      updatePreferences({
+        languageCode: lang.code,
+        languageName: lang.name,
+        languageNativeName: lang.nativeName,
+      }).catch(e => console.log('DB sync error:', e));
+    }
   };
 
   const saveLocation = async (loc, status) => {
@@ -100,6 +106,40 @@ export const AppProvider = ({ children }) => {
     setLocationStatus(status);
     if (status === 'granted') {
       await AsyncStorage.setItem('location', JSON.stringify(loc));
+      
+      // Lookup detailed location in background
+      lookupLocationDetails(loc.latitude, loc.longitude);
+    }
+  };
+
+  // Fetch L1-L6 location details from n8n workflow
+  const lookupLocationDetails = async (latitude, longitude) => {
+    try {
+      const result = await lookupLocation(latitude, longitude);
+      if (result.success) {
+        setLocationDetails(result);
+        await AsyncStorage.setItem('locationDetails', JSON.stringify(result));
+        
+        // Sync to DB
+        if (isDbSynced) {
+          await saveLocationToDB({
+            source: result.source,
+            latitude, longitude,
+            level1Country: result.level1Country,
+            level1CountryCode: result.level1CountryCode,
+            level2State: result.level2State,
+            level3District: result.level3District,
+            level4SubDistrict: result.level4SubDistrict,
+            level5City: result.level5City,
+            level6Locality: result.level6Locality,
+            displayName: result.displayName,
+            formattedAddress: result.formattedAddress,
+            isPrimary: true,
+          });
+        }
+      }
+    } catch (error) {
+      console.log('Location lookup failed:', error);
     }
   };
 
@@ -114,27 +154,11 @@ export const AppProvider = ({ children }) => {
   };
 
   const value = {
-    // Theme
-    theme,
-    themeMode,
-    setThemeMode: saveThemeMode,
-    isDark: theme.name === 'dark',
-    
-    // Language
-    language,
-    setLanguage: saveLanguage,
-    
-    // Location
-    location,
-    locationStatus,
-    setLocation: saveLocation,
-    
-    // Onboarding
-    onboardingComplete,
-    completeOnboarding,
-    resetOnboarding,
-    
-    // Loading
+    theme, themeMode, setThemeMode: saveThemeMode, isDark: theme.name === 'dark',
+    language, setLanguage: saveLanguage,
+    location, locationStatus, locationDetails, setLocation: saveLocation,
+    onboardingComplete, completeOnboarding, resetOnboarding,
+    userId, currentSessionId, setCurrentSessionId, isDbSynced,
     isLoading,
   };
 

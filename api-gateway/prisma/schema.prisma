@@ -1,0 +1,417 @@
+// Prisma Schema for AG-MCP Chat App
+// PostgreSQL database hosted on Railway
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// 1. USERS TABLE - Device-based identity
+// ============================================
+model User {
+  id              String   @id @default(uuid()) @db.Uuid
+  deviceId        String   @unique @map("device_id")
+  
+  // Device info
+  deviceName      String?  @map("device_name")
+  deviceBrand     String?  @map("device_brand")
+  deviceModel     String?  @map("device_model")
+  deviceOs        String?  @map("device_os")
+  deviceOsVersion String?  @map("device_os_version")
+  appVersion      String?  @map("app_version")
+  appBuildNumber  String?  @map("app_build_number")
+  
+  // Network/IP info
+  ipAddress       String?  @map("ip_address")
+  ipCountry       String?  @map("ip_country")
+  ipRegion        String?  @map("ip_region")
+  ipCity          String?  @map("ip_city")
+  ipIsp           String?  @map("ip_isp")
+  ipTimezone      String?  @map("ip_timezone")
+  
+  // Timestamps
+  firstSeenAt     DateTime @default(now()) @map("first_seen_at")
+  lastActiveAt    DateTime @default(now()) @map("last_active_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  preferences     UserPreference?
+  locations       UserLocation[]
+  sessions        ChatSession[]
+  messages        Message[]
+  mcpCalls        McpCall[]
+  mediaUploads    MediaUpload[]
+  analyticsEvents AnalyticsEvent[]
+
+  @@index([deviceId])
+  @@index([ipAddress])
+  @@map("users")
+}
+
+// ============================================
+// 2. USER PREFERENCES TABLE
+// ============================================
+model UserPreference {
+  id                    String   @id @default(uuid()) @db.Uuid
+  userId                String   @unique @map("user_id") @db.Uuid
+  
+  // Language
+  languageCode          String   @default("en") @map("language_code")
+  languageName          String?  @map("language_name")
+  languageNativeName    String?  @map("language_native_name")
+  
+  // Theme
+  themeMode             String   @default("system") @map("theme_mode")
+  
+  // GPS Location
+  gpsLatitude           Decimal? @map("gps_latitude") @db.Decimal(10, 8)
+  gpsLongitude          Decimal? @map("gps_longitude") @db.Decimal(11, 8)
+  gpsAccuracyMeters     Decimal? @map("gps_accuracy_meters") @db.Decimal(10, 2)
+  gpsStatus             String?  @map("gps_status") // granted/denied/unavailable
+  
+  // Features
+  notificationsEnabled  Boolean  @default(true) @map("notifications_enabled")
+  ttsEnabled            Boolean  @default(true) @map("tts_enabled")
+  autoPlayTts           Boolean  @default(false) @map("auto_play_tts")
+  
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+// ============================================
+// 3. USER LOCATIONS TABLE - Hierarchical L1-L6
+// ============================================
+model UserLocation {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @map("user_id") @db.Uuid
+  
+  // Source
+  source              String   // gps/ip/manual
+  
+  // Coordinates
+  latitude            Decimal? @db.Decimal(10, 8)
+  longitude           Decimal? @db.Decimal(11, 8)
+  accuracyMeters      Decimal? @map("accuracy_meters") @db.Decimal(10, 2)
+  
+  // Hierarchical location (L1-L6)
+  level1Country       String?  @map("level_1_country")
+  level1CountryCode   String?  @map("level_1_country_code") @db.VarChar(3)
+  level2State         String?  @map("level_2_state")
+  level3District      String?  @map("level_3_district")
+  level4SubDistrict   String?  @map("level_4_sub_district")
+  level5City          String?  @map("level_5_city")
+  level6Locality      String?  @map("level_6_locality")
+  
+  // Display
+  formattedAddress    String?  @map("formatted_address")
+  displayName         String?  @map("display_name")
+  
+  // Timezone
+  timezone            String?
+  utcOffset           Int?     @map("utc_offset") // Minutes from UTC
+  
+  isPrimary           Boolean  @default(false) @map("is_primary")
+  capturedAt          DateTime @default(now()) @map("captured_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions            ChatSession[]
+
+  @@index([userId])
+  @@index([level1Country])
+  @@map("user_locations")
+}
+
+// ============================================
+// 4. CHAT SESSIONS TABLE
+// ============================================
+model ChatSession {
+  id                    String    @id @default(uuid()) @db.Uuid
+  userId                String    @map("user_id") @db.Uuid
+  
+  // Session info
+  title                 String?
+  titleGeneratedAt      DateTime? @map("title_generated_at")
+  summary               String?
+  
+  // Language context
+  primaryLanguageCode   String?   @map("primary_language_code")
+  languagesUsed         String[]  @map("languages_used")
+  
+  // Location context
+  locationId            String?   @map("location_id") @db.Uuid
+  locationDisplay       String?   @map("location_display")
+  
+  // Stats
+  messageCount          Int       @default(0) @map("message_count")
+  userMessageCount      Int       @default(0) @map("user_message_count")
+  botMessageCount       Int       @default(0) @map("bot_message_count")
+  imageCount            Int       @default(0) @map("image_count")
+  voiceCount            Int       @default(0) @map("voice_count")
+  
+  // Timing
+  startedAt             DateTime  @default(now()) @map("started_at")
+  lastMessageAt         DateTime  @default(now()) @map("last_message_at")
+  totalDurationSeconds  Int       @default(0) @map("total_duration_seconds")
+  
+  // Status
+  status                String    @default("active") // active/archived/deleted
+  isStarred             Boolean   @default(false) @map("is_starred")
+  
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location              UserLocation? @relation(fields: [locationId], references: [id])
+  messages              Message[]
+  mcpCalls              McpCall[]
+  analyticsEvents       AnalyticsEvent[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([lastMessageAt(sort: Desc)])
+  @@map("chat_sessions")
+}
+
+// ============================================
+// 5. MESSAGES TABLE - Comprehensive
+// ============================================
+model Message {
+  id                      String    @id @default(uuid()) @db.Uuid
+  sessionId               String    @map("session_id") @db.Uuid
+  userId                  String    @map("user_id") @db.Uuid
+  
+  // Sequence
+  sequenceNumber          Int       @map("sequence_number")
+  parentMessageId         String?   @map("parent_message_id") @db.Uuid
+  
+  // Message content
+  role                    String    // user/assistant/system
+  content                 String
+  contentType             String    @default("text") @map("content_type") // text/image/voice/mixed
+  
+  // Language
+  queryLanguageCode       String?   @map("query_language_code")
+  queryLanguageName       String?   @map("query_language_name")
+  responseLanguageCode    String?   @map("response_language_code")
+  responseLanguageName    String?   @map("response_language_name")
+  wasTranslated           Boolean   @default(false) @map("was_translated")
+  
+  // Input method (for user messages)
+  inputMethod             String?   @map("input_method") // keyboard/voice/image/camera
+  
+  // Voice/ASR data
+  asrInputAudioUrl        String?   @map("asr_input_audio_url")
+  asrInputDurationSec     Decimal?  @map("asr_input_duration_sec") @db.Decimal(6, 2)
+  asrTranscription        String?   @map("asr_transcription")
+  asrConfidence           Decimal?  @map("asr_confidence") @db.Decimal(4, 3)
+  asrModel                String?   @map("asr_model")
+  asrProcessingMs         Int?      @map("asr_processing_ms")
+  
+  // Image data
+  imageLocalUri           String?   @map("image_local_uri")
+  imageCloudinaryUrl      String?   @map("image_cloudinary_url")
+  imageThumbnailUrl       String?   @map("image_thumbnail_url")
+  imageMediumUrl          String?   @map("image_medium_url")
+  imageWidth              Int?      @map("image_width")
+  imageHeight             Int?      @map("image_height")
+  imageFileSizeBytes      Int?      @map("image_file_size_bytes")
+  imageFormat             String?   @map("image_format")
+  
+  // TTS data (for bot messages)
+  ttsAudioUrl             String?   @map("tts_audio_url")
+  ttsDurationSec          Decimal?  @map("tts_duration_sec") @db.Decimal(6, 2)
+  ttsLanguageCode         String?   @map("tts_language_code")
+  ttsModel                String?   @map("tts_model")
+  ttsProcessingMs         Int?      @map("tts_processing_ms")
+  ttsWasPlayed            Boolean   @default(false) @map("tts_was_played")
+  ttsPlayCount            Int       @default(0) @map("tts_play_count")
+  
+  // Diagnosis data (for image messages)
+  diagnosisCrop           String?   @map("diagnosis_crop")
+  diagnosisHealthStatus   String?   @map("diagnosis_health_status")
+  diagnosisIssues         Json?     @map("diagnosis_issues")
+  diagnosisConfidence     String?   @map("diagnosis_confidence")
+  
+  // Feedback
+  userRating              Int?      @map("user_rating")
+  userFeedback            String?   @map("user_feedback")
+  wasHelpful              Boolean?  @map("was_helpful")
+  
+  // Processing
+  processingStartedAt     DateTime? @map("processing_started_at")
+  processingCompletedAt   DateTime? @map("processing_completed_at")
+  processingDurationMs    Int?      @map("processing_duration_ms")
+  
+  // Metadata
+  metadata                Json?
+  
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  session                 ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user                    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentMessage           Message?    @relation("MessageReplies", fields: [parentMessageId], references: [id])
+  replies                 Message[]   @relation("MessageReplies")
+  mcpCalls                McpCall[]
+  mediaUploads            MediaUpload[]
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@index([role])
+  @@map("messages")
+}
+
+// ============================================
+// 6. MCP CALLS TABLE - Full logging
+// ============================================
+model McpCall {
+  id                    String    @id @default(uuid()) @db.Uuid
+  messageId             String?   @map("message_id") @db.Uuid
+  userId                String    @map("user_id") @db.Uuid
+  sessionId             String?   @map("session_id") @db.Uuid
+  
+  // Server info
+  mcpServerName         String    @map("mcp_server_name")
+  mcpServerUrl          String?   @map("mcp_server_url")
+  mcpServerVersion      String?   @map("mcp_server_version")
+  
+  // Tool info
+  toolName              String    @map("tool_name")
+  toolDescription       String?   @map("tool_description")
+  
+  // Request
+  requestId             String?   @map("request_id")
+  requestParams         Json      @map("request_params")
+  requestLanguage       String?   @map("request_language")
+  
+  // Location context sent
+  requestLatitude       Decimal?  @map("request_latitude") @db.Decimal(10, 8)
+  requestLongitude      Decimal?  @map("request_longitude") @db.Decimal(11, 8)
+  requestLocationName   String?   @map("request_location_name")
+  
+  // Response
+  responseData          Json?     @map("response_data")
+  responseStatus        String?   @map("response_status") // success/error/timeout/rate_limited
+  responseErrorCode     String?   @map("response_error_code")
+  responseErrorMessage  String?   @map("response_error_message")
+  
+  // Performance
+  latencyMs             Int?      @map("latency_ms")
+  retryCount            Int       @default(0) @map("retry_count")
+  
+  // Timestamps
+  calledAt              DateTime  @default(now()) @map("called_at")
+  completedAt           DateTime? @map("completed_at")
+  
+  // Relations
+  message               Message?     @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session               ChatSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@index([mcpServerName])
+  @@index([toolName])
+  @@index([calledAt(sort: Desc)])
+  @@map("mcp_calls")
+}
+
+// ============================================
+// 7. MEDIA UPLOADS TABLE
+// ============================================
+model MediaUpload {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @map("user_id") @db.Uuid
+  messageId           String?  @map("message_id") @db.Uuid
+  
+  // Cloudinary
+  cloudinaryPublicId  String   @map("cloudinary_public_id")
+  cloudinaryUrl       String   @map("cloudinary_url")
+  cloudinarySecureUrl String?  @map("cloudinary_secure_url")
+  cloudinaryFolder    String?  @map("cloudinary_folder")
+  
+  // File info
+  mediaType           String   @map("media_type") // image/audio
+  mediaPurpose        String?  @map("media_purpose") // asr_input/tts_output/plant_image/profile
+  originalFilename    String?  @map("original_filename")
+  fileFormat          String?  @map("file_format")
+  fileSizeBytes       Int?     @map("file_size_bytes")
+  mimeType            String?  @map("mime_type")
+  
+  // Dimensions (images)
+  width               Int?
+  height              Int?
+  
+  // Duration (audio)
+  durationSeconds     Decimal? @map("duration_seconds") @db.Decimal(6, 2)
+  
+  uploadedAt          DateTime @default(now()) @map("uploaded_at")
+  
+  // Relations
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message             Message? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([mediaType])
+  @@map("media_uploads")
+}
+
+// ============================================
+// 8. LANGUAGES TABLE - Reference
+// ============================================
+model Language {
+  code            String   @id
+  name            String
+  nativeName      String?  @map("native_name")
+  region          String?
+  geminiSupported Boolean  @default(true) @map("gemini_supported")
+  ttsSupported    Boolean  @default(true) @map("tts_supported")
+  asrSupported    Boolean  @default(true) @map("asr_supported")
+  rtl             Boolean  @default(false)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("languages")
+}
+
+// ============================================
+// 9. ANALYTICS EVENTS TABLE
+// ============================================
+model AnalyticsEvent {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  sessionId       String?  @map("session_id") @db.Uuid
+  
+  eventName       String   @map("event_name")
+  eventCategory   String?  @map("event_category") // engagement/error/feature/navigation
+  eventData       Json?    @map("event_data")
+  
+  // Context
+  screenName      String?  @map("screen_name")
+  deviceOs        String?  @map("device_os")
+  appVersion      String?  @map("app_version")
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session         ChatSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@index([eventName])
+  @@index([createdAt(sort: Desc)])
+  @@map("analytics_events")
+}
+

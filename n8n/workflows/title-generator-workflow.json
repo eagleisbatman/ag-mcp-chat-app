@@ -1,0 +1,193 @@
+{
+  "name": "AG-MCP Title Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-title",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300],
+      "webhookId": "title-gen-webhook",
+      "notes": "Receives POST request with messages array and language code"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare prompt for title generation\nconst { messages, language } = $input.first().json.body;\n\n// Take first 10 messages for context\nconst contextMessages = (messages || []).slice(0, 10);\n\nconst conversationSummary = contextMessages\n  .map(m => `${m.role}: ${(m.content || '').slice(0, 200)}`)\n  .join('\\n');\n\nconst languageInstruction = language && language !== 'en' \n  ? `Write the title in ${language} language` \n  : 'Write in English';\n\nconst prompt = `Generate a short, descriptive title (maximum 50 characters) for this farming assistant conversation. The title should capture the main topic or question.\n\nConversation:\n${conversationSummary}\n\nRules:\n- Maximum 50 characters\n- Be specific (e.g., \"Maize leaf disease help\" not \"Plant problem\")\n- ${languageInstruction}\n- No quotes or special characters\n- Capitalize first letter of each major word\n\nReturn ONLY the title, nothing else.`;\n\nreturn {\n  prompt,\n  messages: contextMessages,\n  language: language || 'en',\n  hasSufficientContent: contextMessages.length >= 1\n};"
+      },
+      "id": "prepare-prompt",
+      "name": "Prepare Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300],
+      "notes": "Builds the prompt for Gemini with conversation context and language preference"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.hasSufficientContent }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "has-content",
+      "name": "Has Content?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [700, 300],
+      "notes": "Check if there are messages to generate title from"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": {{ JSON.stringify($json.prompt) }}\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"temperature\": 0.3,\n    \"maxOutputTokens\": 100\n  }\n}",
+        "options": {}
+      },
+      "id": "gemini-api",
+      "name": "Gemini API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [920, 200],
+      "notes": "Call Gemini API to generate session title"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and clean the title from Gemini response\nconst geminiResponse = $input.first().json;\n\nlet title = geminiResponse?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';\n\n// Clean up the title\ntitle = title\n  .replace(/^[\"']|[\"']$/g, '') // Remove quotes\n  .replace(/\\n/g, ' ')          // Remove newlines\n  .trim();\n\n// Truncate if too long\nif (title.length > 50) {\n  const lastSpace = title.slice(0, 50).lastIndexOf(' ');\n  if (lastSpace > 30) {\n    title = title.slice(0, lastSpace) + '...';\n  } else {\n    title = title.slice(0, 47) + '...';\n  }\n}\n\n// Fallback if empty\nif (!title) {\n  title = 'New Conversation';\n}\n\nreturn {\n  success: true,\n  title,\n  generatedAt: new Date().toISOString()\n};"
+      },
+      "id": "extract-title",
+      "name": "Extract Title",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 200],
+      "notes": "Clean and validate the generated title"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fallback title when no messages\nreturn {\n  success: true,\n  title: 'New Conversation',\n  generatedAt: new Date().toISOString(),\n  fallback: true\n};"
+      },
+      "id": "fallback-title",
+      "name": "Fallback Title",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 400],
+      "notes": "Return default title when no conversation content"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1360, 200],
+      "notes": "Return generated title to API Gateway"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-fallback",
+      "name": "Respond Fallback",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1140, 400],
+      "notes": "Return fallback title"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Prompt": {
+      "main": [
+        [
+          {
+            "node": "Has Content?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Content?": {
+      "main": [
+        [
+          {
+            "node": "Gemini API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fallback Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini API": {
+      "main": [
+        [
+          {
+            "node": "Extract Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Title": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fallback Title": {
+      "main": [
+        [
+          {
+            "node": "Respond Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}
+
