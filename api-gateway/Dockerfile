@@ -9,7 +9,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install all dependencies (including dev for prisma generate)
+# Install all dependencies
 RUN npm install
 
 # Generate Prisma client
@@ -18,8 +18,7 @@ RUN npx prisma generate
 # Copy remaining source files
 COPY . .
 
-# Remove dev dependencies for smaller image
-RUN npm prune --production
-
 EXPOSE 3000
-CMD ["node", "index.js"]
+
+# Start script will run prisma db push then node index.js
+CMD ["npm", "start"]
