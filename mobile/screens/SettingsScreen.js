@@ -150,6 +150,28 @@ export default function SettingsScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      {/* Conversations Section */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>CONVERSATIONS</Text>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: theme.surface }]}
+          onPress={() => navigation.navigate('History')}
+        >
+          <View style={styles.optionRow}>
+            <View style={styles.optionLeft}>
+              <Ionicons name="chatbubbles-outline" size={22} color={theme.accent} />
+              <View>
+                <Text style={[styles.optionText, { color: theme.text }]}>Chat History</Text>
+                <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
+                  View and continue past conversations
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
       {/* Location Section */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>LOCATION</Text>

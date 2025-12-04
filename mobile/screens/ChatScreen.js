@@ -1,9 +1,11 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, TouchableOpacity, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import * as Location from 'expo-location';
 import { useApp } from '../contexts/AppContext';
+import { useToast } from '../contexts/ToastContext';
 import useChat from '../hooks/useChat';
 import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
@@ -11,7 +13,8 @@ import ThemeToggle from '../components/ThemeToggle';
 import { SPACING } from '../constants/themes';
 
 export default function ChatScreen({ navigation, route }) {
-  const { theme, language, locationDetails } = useApp();
+  const { theme, language, locationDetails, setLocation } = useApp();
+  const { showSuccess, showError } = useToast();
   const insets = useSafeAreaInsets();
   const flatListRef = useRef(null);
   const scrollButtonAnim = useRef(new Animated.Value(0)).current;
@@ -25,15 +28,37 @@ export default function ChatScreen({ navigation, route }) {
     handleSendText, handleSendImage, handleSendVoice, startNewSession 
   } = useChat(sessionId);
   
-  const [showScrollButton, setShowScrollButton] = React.useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
   const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
 
   // Handle new session request
-  React.useEffect(() => {
+  useEffect(() => {
     if (isNewSession) {
       startNewSession();
     }
   }, [isNewSession, startNewSession]);
+
+  // Location refresh handler
+  const handleRefreshLocation = async () => {
+    setIsRefreshingLocation(true);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        showError('Location permission denied');
+        return;
+      }
+      const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      await setLocation({ latitude: loc.coords.latitude, longitude: loc.coords.longitude }, 'granted');
+      showSuccess('Location updated!');
+    } catch (error) {
+      console.log('Location refresh error:', error);
+      showError('Could not update location');
+    } finally {
+      setIsRefreshingLocation(false);
+    }
+  };
 
   useEffect(() => {
     Animated.spring(scrollButtonAnim, {
@@ -59,16 +84,24 @@ export default function ChatScreen({ navigation, route }) {
       <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border, paddingTop: headerPaddingTop }]}>
         <View style={styles.headerLeft}>
           <Ionicons name="leaf" size={28} color={theme.accent} />
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={[styles.headerTitle, { color: theme.text }]}>Farm Assistant</Text>
-            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>
-              {locationDetails?.displayName || language?.nativeName || 'English'}
+            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
+              {locationDetails?.displayName || 'Tap 📍 to set location'}
             </Text>
           </View>
         </View>
         <View style={styles.headerRight}>
-          <TouchableOpacity style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} onPress={() => navigation.navigate('History')}>
-            <Ionicons name="time-outline" size={20} color={theme.textSecondary} />
+          <TouchableOpacity 
+            style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} 
+            onPress={handleRefreshLocation}
+            disabled={isRefreshingLocation}
+          >
+            {isRefreshingLocation ? (
+              <ActivityIndicator size="small" color={theme.accent} />
+            ) : (
+              <Ionicons name="navigate" size={20} color={theme.accent} />
+            )}
           </TouchableOpacity>
           <ThemeToggle />
           <TouchableOpacity style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} onPress={() => navigation.navigate('Settings')}>
@@ -134,7 +167,7 @@ const styles = StyleSheet.create({
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   headerButton: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   messagesContainer: { flex: 1, position: 'relative' },
-  messagesList: { paddingVertical: 8 },
+  messagesList: { paddingVertical: 8, flexGrow: 1, justifyContent: 'flex-end' },
   typingIndicator: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
   typingText: { fontSize: 14 },
   scrollButtonContainer: { position: 'absolute', bottom: 16, alignSelf: 'center', zIndex: 100 },

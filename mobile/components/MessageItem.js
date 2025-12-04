@@ -16,6 +16,12 @@ export default function MessageItem({ message, isNewMessage = false }) {
   // TTS state
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Track if typewriter animation is complete
+  const [typewriterComplete, setTypewriterComplete] = useState(!isNewMessage);
+  
+  // Use plain text animation only for NEW messages
+  const shouldAnimate = isNewMessage && !typewriterComplete;
 
   const formatTime = (date) => {
     return new Date(date).toLocaleTimeString([], { 
@@ -211,16 +217,17 @@ export default function MessageItem({ message, isNewMessage = false }) {
       )}
       
       {/* Message Content - Use Markdown for bot messages, plain text for user */}
-      {isBot && isNewMessage ? (
-        // Typewriter for new bot messages (no markdown during animation)
+      {isBot && shouldAnimate ? (
+        // Typewriter for new bot messages - plain text during animation
         <TypewriterText
           text={message.text}
           style={[styles.messageText, { color: theme.text }]}
-          speed={40}
+          speed={50}
           animate={true}
+          onComplete={() => setTypewriterComplete(true)}
         />
       ) : isBot ? (
-        // Markdown for completed bot messages
+        // Markdown for completed bot messages (renders immediately after animation)
         <Markdown style={markdownStyles}>
           {message.text}
         </Markdown>
