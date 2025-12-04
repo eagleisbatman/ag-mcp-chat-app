@@ -70,12 +70,14 @@ export default function ChatScreen({ navigation, route }) {
   }, [showScrollButton, scrollButtonAnim]);
 
   const scrollToBottom = useCallback(() => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    flatListRef.current?.scrollToEnd({ animated: true });
     Haptics.selectionAsync();
   }, []);
 
   const handleScroll = useCallback((event) => {
-    setShowScrollButton(event.nativeEvent.contentOffset.y > 200);
+    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    const distanceFromBottom = contentSize.height - (contentOffset.y + layoutMeasurement.height);
+    setShowScrollButton(distanceFromBottom > 100);
   }, []);
 
   return (
@@ -120,15 +122,15 @@ export default function ChatScreen({ navigation, route }) {
         ) : (
         <FlatList
           ref={flatListRef}
-          data={messages}
+          data={[...messages].reverse()}
           renderItem={({ item }) => <MessageItem message={item} isNewMessage={item._id === newestBotMessageId} />}
           keyExtractor={(item) => item._id}
-          inverted
           contentContainerStyle={styles.messagesList}
           showsVerticalScrollIndicator={false}
           onScroll={handleScroll}
+          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
           scrollEventThrottle={16}
-          ListHeaderComponent={isTyping ? (
+          ListFooterComponent={isTyping ? (
             <View style={[styles.typingIndicator, { backgroundColor: theme.botMessage }]}>
               <ActivityIndicator size="small" color={theme.accent} />
               <Text style={[styles.typingText, { color: theme.textSecondary }]}>Thinking...</Text>
