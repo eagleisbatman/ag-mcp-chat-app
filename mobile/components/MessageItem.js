@@ -182,7 +182,7 @@ export default function MessageItem({ message, isNewMessage = false }) {
                 <Ionicons
                   name={isSpeaking ? 'stop-circle' : 'volume-high'}
                   size={18}
-                  color={isSpeaking ? theme.error || '#D32F2F' : theme.accent}
+                  color={isSpeaking ? theme.error : theme.accent}
                 />
               )}
             </TouchableOpacity>

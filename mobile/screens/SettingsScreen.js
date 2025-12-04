@@ -10,9 +10,11 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
+import { SPACING } from '../constants/themes';
 
 export default function SettingsScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
   const { 
     theme, 
     themeMode, 
@@ -20,6 +22,7 @@ export default function SettingsScreen({ navigation }) {
     language, 
     location, 
     locationStatus,
+    locationDetails,
     resetOnboarding 
   } = useApp();
 
@@ -56,7 +59,7 @@ export default function SettingsScreen({ navigation }) {
       contentContainerStyle={styles.content}
     >
       {/* Header */}
-      <View style={[styles.header, { paddingTop: Math.max(insets.top + 10, 60) }]}>
+      <View style={[styles.header, { paddingTop: headerPaddingTop }]}>
         <TouchableOpacity 
           style={[styles.backButton, { backgroundColor: theme.surfaceVariant }]}
           onPress={() => navigation.goBack()}
@@ -127,11 +130,11 @@ export default function SettingsScreen({ navigation }) {
               />
               <View>
                 <Text style={[styles.optionText, { color: theme.text }]}>
-                  {locationStatus === 'granted' ? 'Location enabled' : 'Location disabled'}
+                  {locationDetails?.displayName || (locationStatus === 'granted' ? 'Location enabled' : 'Location disabled')}
                 </Text>
                 {location?.latitude && (
                   <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
-                    {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
+                    {locationDetails?.formattedAddress || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`}
                   </Text>
                 )}
               </View>

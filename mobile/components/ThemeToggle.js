@@ -3,6 +3,7 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
+import { SPACING } from '../constants/themes';
 
 export default function ThemeToggle({ style }) {
   const { theme, themeMode, setThemeMode } = useApp();
@@ -21,7 +22,7 @@ export default function ThemeToggle({ style }) {
   const getIcon = () => {
     if (themeMode === 'light') return 'sunny';
     if (themeMode === 'dark') return 'moon';
-    return 'contrast-outline'; // system - better icon
+    return 'contrast-outline'; // system
   };
 
   return (
@@ -30,18 +31,18 @@ export default function ThemeToggle({ style }) {
       onPress={toggleTheme}
       activeOpacity={0.7}
     >
-      <Ionicons name={getIcon()} size={22} color={theme.accent} />
+      <Ionicons name={getIcon()} size={20} color={theme.accent} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: 40,
-    height: 40,
+    width: SPACING.iconButtonSize,
+    height: SPACING.iconButtonSize,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 20,
+    borderRadius: SPACING.iconButtonSize / 2,
   },
 });
 

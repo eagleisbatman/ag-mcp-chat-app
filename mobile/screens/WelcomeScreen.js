@@ -3,13 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
 import { Ionicons } from '@expo/vector-icons';
+import { SPACING } from '../constants/themes';
 
 export default function WelcomeScreen({ navigation }) {
   const { theme } = useApp();
   const insets = useSafeAreaInsets();
+  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: Math.max(insets.top + 20, 60) }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: headerPaddingTop }]}>
       {/* Hero Section */}
       <View style={styles.hero}>
         <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>

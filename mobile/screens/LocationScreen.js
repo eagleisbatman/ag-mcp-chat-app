@@ -4,10 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import { useApp } from '../contexts/AppContext';
 import { Ionicons } from '@expo/vector-icons';
+import { SPACING } from '../constants/themes';
 
 export default function LocationScreen({ navigation }) {
   const { theme, setLocation } = useApp();
   const insets = useSafeAreaInsets();
+  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -50,7 +52,7 @@ export default function LocationScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: Math.max(insets.top + 20, 60) }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: headerPaddingTop }]}>
       {/* Icon */}
       <View style={styles.iconSection}>
         <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>
@@ -69,9 +71,9 @@ export default function LocationScreen({ navigation }) {
         </Text>
 
         {error && (
-          <View style={[styles.errorBox, { backgroundColor: '#FFEBEE' }]}>
-            <Ionicons name="alert-circle" size={20} color="#D32F2F" />
-            <Text style={styles.errorText}>{error}</Text>
+          <View style={[styles.errorBox, { backgroundColor: theme.errorLight }]}>
+            <Ionicons name="alert-circle" size={20} color={theme.error} />
+            <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
           </View>
         )}
 
@@ -178,7 +180,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   errorText: {
-    color: '#D32F2F',
     fontSize: 14,
     flex: 1,
   },

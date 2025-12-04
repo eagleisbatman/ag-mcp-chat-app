@@ -12,10 +12,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
 import { LANGUAGES, REGIONS, searchLanguages } from '../constants/languages';
+import { SPACING } from '../constants/themes';
 
 export default function LanguageSelectScreen({ navigation }) {
   const { theme, language, setLanguage } = useApp();
   const insets = useSafeAreaInsets();
+  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
   const [searchQuery, setSearchQuery] = useState('');
 
   const displayData = useMemo(() => {
@@ -72,7 +74,7 @@ export default function LanguageSelectScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: Math.max(insets.top + 10, 60) }]}>
+      <View style={[styles.header, { paddingTop: headerPaddingTop }]}>
         <TouchableOpacity 
           style={[styles.backButton, { backgroundColor: theme.surfaceVariant }]}
           onPress={() => navigation.goBack()}

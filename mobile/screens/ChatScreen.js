@@ -8,9 +8,10 @@ import useChat from '../hooks/useChat';
 import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
 import ThemeToggle from '../components/ThemeToggle';
+import { SPACING } from '../constants/themes';
 
 export default function ChatScreen({ navigation }) {
-  const { theme, language } = useApp();
+  const { theme, language, locationDetails } = useApp();
   const insets = useSafeAreaInsets();
   const flatListRef = useRef(null);
   const scrollButtonAnim = useRef(new Animated.Value(0)).current;
@@ -18,7 +19,7 @@ export default function ChatScreen({ navigation }) {
   const { messages, isTyping, newestBotMessageId, handleSendText, handleSendImage, handleSendVoice } = useChat();
   const [showScrollButton, setShowScrollButton] = React.useState(false);
   
-  const headerPaddingTop = Math.max(insets.top, 20);
+  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
 
   useEffect(() => {
     Animated.spring(scrollButtonAnim, {
@@ -46,7 +47,9 @@ export default function ChatScreen({ navigation }) {
           <Ionicons name="leaf" size={28} color={theme.accent} />
           <View>
             <Text style={[styles.headerTitle, { color: theme.text }]}>Farm Assistant</Text>
-            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>{language?.nativeName || 'English'}</Text>
+            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>
+              {locationDetails?.displayName || language?.nativeName || 'English'}
+            </Text>
           </View>
         </View>
         <View style={styles.headerRight}>

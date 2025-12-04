@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AppProvider, useApp } from './contexts/AppContext';
+import OfflineIndicator from './components/OfflineIndicator';
 
 // Screens
 import WelcomeScreen from './screens/WelcomeScreen';
@@ -49,12 +50,13 @@ function AppNavigator() {
   }
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <StatusBar style={theme.statusBar} />
+      <OfflineIndicator />
       <NavigationContainer>
         {onboardingComplete ? <MainStack /> : <OnboardingStack />}
       </NavigationContainer>
-    </>
+    </View>
   );
 }
 
