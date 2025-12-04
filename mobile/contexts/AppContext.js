@@ -82,12 +82,39 @@ export const AppProvider = ({ children }) => {
         setUserId(result.userId);
         setIsDbSynced(true);
         console.log('✅ [AppContext] User registered successfully, userId:', result.userId);
+        
+        // Check for pending location sync
+        await syncPendingLocation();
       } else {
         console.log('⚠️ [AppContext] Registration returned but no userId:', result);
       }
     } catch (error) {
       console.log('❌ [AppContext] Background user registration failed:', error.message);
       // App continues to work offline
+    }
+  };
+
+  // Sync any pending location that was captured before registration completed
+  const syncPendingLocation = async () => {
+    try {
+      const pendingStr = await AsyncStorage.getItem('pendingLocationSync');
+      if (!pendingStr) return;
+      
+      const pending = JSON.parse(pendingStr);
+      const ageMs = Date.now() - pending.timestamp;
+      
+      // Only sync if less than 5 minutes old
+      if (ageMs < 5 * 60 * 1000) {
+        console.log('🔄 [AppContext] Found pending location sync, processing...');
+        await syncLocationToDb(pending.locationResult, pending.latitude, pending.longitude);
+        await AsyncStorage.removeItem('pendingLocationSync');
+        console.log('✅ [AppContext] Pending location synced and cleared');
+      } else {
+        console.log('⏰ [AppContext] Pending location too old, discarding');
+        await AsyncStorage.removeItem('pendingLocationSync');
+      }
+    } catch (error) {
+      console.log('❌ [AppContext] Error processing pending location:', error);
     }
   };
 
@@ -115,18 +142,36 @@ export const AppProvider = ({ children }) => {
       console.log('❌ [AppContext] AsyncStorage write error (language):', e);
     }
     
-    // Sync to DB (non-blocking)
-    if (isDbSynced) {
-      console.log('💾 [AppContext] Syncing language to database...');
-      updatePreferences({
+    // Sync to DB with retry if not yet synced
+    syncLanguageToDb(lang);
+  };
+
+  // Helper to sync language to DB with retry
+  const syncLanguageToDb = async (lang, retryCount = 0) => {
+    const maxRetries = 3;
+    const retryDelay = 2000;
+    
+    if (!userId && retryCount < maxRetries) {
+      console.log(`⏳ [AppContext] Waiting for user registration for language sync... (attempt ${retryCount + 1}/${maxRetries})`);
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      return syncLanguageToDb(lang, retryCount + 1);
+    }
+    
+    if (!userId) {
+      console.log('⚠️ [AppContext] Could not sync language - user not registered');
+      return;
+    }
+    
+    console.log('💾 [AppContext] Syncing language to database...');
+    try {
+      const result = await updatePreferences({
         languageCode: lang.code,
         languageName: lang.name,
         languageNativeName: lang.nativeName,
-      })
-        .then(r => console.log('💾 [AppContext] Language DB sync:', r.success ? 'Success' : r.error))
-        .catch(e => console.log('❌ [AppContext] Language DB sync error:', e));
-    } else {
-      console.log('⚠️ [AppContext] Skipping language DB sync - not synced yet');
+      });
+      console.log('💾 [AppContext] Language DB sync:', result.success ? 'Success' : result.error);
+    } catch (e) {
+      console.log('❌ [AppContext] Language DB sync error:', e);
     }
   };
 
@@ -166,32 +211,64 @@ export const AppProvider = ({ children }) => {
         await AsyncStorage.setItem('locationDetails', JSON.stringify(result));
         console.log('✅ [AppContext] Location details saved to AsyncStorage');
         
-        // Sync to DB
-        if (isDbSynced) {
-          console.log('💾 [AppContext] Syncing location to database...');
-          const dbResult = await saveLocationToDB({
-            source: result.source,
-            latitude, longitude,
-            level1Country: result.level1Country,
-            level1CountryCode: result.level1CountryCode,
-            level2State: result.level2State,
-            level3District: result.level3District,
-            level4SubDistrict: result.level4SubDistrict,
-            level5City: result.level5City,
-            level6Locality: result.level6Locality,
-            displayName: result.displayName,
-            formattedAddress: result.formattedAddress,
-            isPrimary: true,
-          });
-          console.log('💾 [AppContext] DB sync result:', dbResult.success ? 'Success' : dbResult.error);
-        } else {
-          console.log('⚠️ [AppContext] Skipping DB sync - not synced yet');
-        }
+        // Sync to DB - with retry if not yet synced
+        await syncLocationToDb(result, latitude, longitude);
       } else {
         console.log('⚠️ [AppContext] Location lookup failed:', result.error);
       }
     } catch (error) {
       console.log('❌ [AppContext] Location lookup failed:', error.message);
+    }
+  };
+
+  // Helper to sync location to DB with retry
+  const syncLocationToDb = async (locationResult, latitude, longitude, retryCount = 0) => {
+    const maxRetries = 3;
+    const retryDelay = 2000; // 2 seconds
+    
+    // Check if we have a userId (from registration)
+    const currentUserId = userId;
+    
+    if (!currentUserId && retryCount < maxRetries) {
+      console.log(`⏳ [AppContext] Waiting for user registration... (attempt ${retryCount + 1}/${maxRetries})`);
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      // Retry with incremented count - will pick up userId from state
+      return syncLocationToDb(locationResult, latitude, longitude, retryCount + 1);
+    }
+    
+    if (!currentUserId) {
+      console.log('⚠️ [AppContext] Could not sync location - user not registered after retries');
+      // Store pending location for later sync
+      try {
+        await AsyncStorage.setItem('pendingLocationSync', JSON.stringify({ 
+          locationResult, latitude, longitude, timestamp: Date.now() 
+        }));
+        console.log('💾 [AppContext] Saved pending location for later sync');
+      } catch (e) {
+        console.log('❌ [AppContext] Failed to save pending location:', e);
+      }
+      return;
+    }
+    
+    console.log('💾 [AppContext] Syncing location to database...');
+    try {
+      const dbResult = await saveLocationToDB({
+        source: locationResult.source,
+        latitude, longitude,
+        level1Country: locationResult.level1Country,
+        level1CountryCode: locationResult.level1CountryCode,
+        level2State: locationResult.level2State,
+        level3District: locationResult.level3District,
+        level4SubDistrict: locationResult.level4SubDistrict,
+        level5City: locationResult.level5City,
+        level6Locality: locationResult.level6Locality,
+        displayName: locationResult.displayName,
+        formattedAddress: locationResult.formattedAddress,
+        isPrimary: true,
+      });
+      console.log('💾 [AppContext] DB sync result:', dbResult.success ? 'Success' : dbResult.error);
+    } catch (error) {
+      console.log('❌ [AppContext] DB location sync error:', error.message);
     }
   };
 
