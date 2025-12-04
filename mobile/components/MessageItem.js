@@ -119,8 +119,8 @@ export default function MessageItem({ message, isNewMessage = false }) {
       // Get the text to speak (message text or diagnosis)
       const textToSpeak = message.diagnosis || message.text;
       
-      // Call TTS service
-      const result = await textToSpeech(textToSpeak, language);
+      // Call TTS service (pass language code, not object)
+      const result = await textToSpeech(textToSpeak, language?.code || 'en');
       
       // Use audioUrl (Cloudinary) or fallback to audioBase64
       const audioSource = result.audioUrl || result.audioBase64;

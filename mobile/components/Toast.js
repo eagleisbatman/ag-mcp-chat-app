@@ -56,7 +56,8 @@ export default function Toast({
         return () => clearTimeout(timer);
       }
     }
-  }, [visible, duration, type]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, duration, type]); // dismiss, translateY, opacity are refs/stable
 
   const dismiss = () => {
     Animated.parallel([

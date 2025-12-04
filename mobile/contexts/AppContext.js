@@ -79,9 +79,13 @@ export const AppProvider = ({ children }) => {
 
   const saveThemeMode = async (mode) => {
     setThemeMode(mode);
-    await AsyncStorage.setItem('themeMode', mode);
+    try {
+      await AsyncStorage.setItem('themeMode', mode);
+    } catch (e) {
+      console.log('AsyncStorage write error (theme):', e);
+    }
     
-    // Sync to DB
+    // Sync to DB (non-blocking)
     if (isDbSynced) {
       updatePreferences({ themeMode: mode }).catch(e => console.log('DB sync error:', e));
     }
@@ -89,9 +93,13 @@ export const AppProvider = ({ children }) => {
 
   const saveLanguage = async (lang) => {
     setLanguage(lang);
-    await AsyncStorage.setItem('language', JSON.stringify(lang));
+    try {
+      await AsyncStorage.setItem('language', JSON.stringify(lang));
+    } catch (e) {
+      console.log('AsyncStorage write error (language):', e);
+    }
     
-    // Sync to DB
+    // Sync to DB (non-blocking)
     if (isDbSynced) {
       updatePreferences({
         languageCode: lang.code,
@@ -104,8 +112,12 @@ export const AppProvider = ({ children }) => {
   const saveLocation = async (loc, status) => {
     setLocation(loc);
     setLocationStatus(status);
-    if (status === 'granted') {
-      await AsyncStorage.setItem('location', JSON.stringify(loc));
+    if (status === 'granted' && loc?.latitude && loc?.longitude) {
+      try {
+        await AsyncStorage.setItem('location', JSON.stringify(loc));
+      } catch (e) {
+        console.log('AsyncStorage write error (location):', e);
+      }
       
       // Lookup detailed location in background
       lookupLocationDetails(loc.latitude, loc.longitude);
@@ -145,12 +157,20 @@ export const AppProvider = ({ children }) => {
 
   const completeOnboarding = async () => {
     setOnboardingComplete(true);
-    await AsyncStorage.setItem('onboardingComplete', 'true');
+    try {
+      await AsyncStorage.setItem('onboardingComplete', 'true');
+    } catch (e) {
+      console.log('AsyncStorage write error (onboarding):', e);
+    }
   };
 
   const resetOnboarding = async () => {
     setOnboardingComplete(false);
-    await AsyncStorage.removeItem('onboardingComplete');
+    try {
+      await AsyncStorage.removeItem('onboardingComplete');
+    } catch (e) {
+      console.log('AsyncStorage remove error (onboarding):', e);
+    }
   };
 
   const value = {

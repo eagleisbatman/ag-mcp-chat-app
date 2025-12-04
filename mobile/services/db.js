@@ -30,13 +30,17 @@ export async function registerUser() {
       body: JSON.stringify(deviceInfo),
     });
     
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Registration failed`);
+    }
+    
     const data = await response.json();
     if (!data.success) throw new Error(data.error || 'Registration failed');
     
-    return data;
+    return { success: true, userId: data.id || data.userId, ...data };
   } catch (error) {
     console.error('User registration error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -47,6 +51,11 @@ export async function getCurrentUser() {
   try {
     const deviceId = await getDeviceId();
     const response = await fetch(`${API_BASE_URL}/api/users/me?deviceId=${deviceId}`, { headers });
+    
+    if (!response.ok) {
+      return null;
+    }
+    
     const data = await response.json();
     return data.success ? data.user : null;
   } catch (error) {
@@ -66,10 +75,15 @@ export async function updatePreferences(preferences) {
       headers,
       body: JSON.stringify({ deviceId, ...preferences }),
     });
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Update preferences error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -84,10 +98,15 @@ export async function saveLocation(locationData) {
       headers,
       body: JSON.stringify({ deviceId, ...locationData }),
     });
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Save location error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -103,10 +122,15 @@ export async function listSessions(options = {}) {
     const deviceId = await getDeviceId();
     const params = new URLSearchParams({ deviceId, ...options });
     const response = await fetch(`${API_BASE_URL}/api/sessions?${params}`, { headers });
+    
+    if (!response.ok) {
+      return { success: false, sessions: [], error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('List sessions error:', error);
-    return { success: false, sessions: [] };
+    return { success: false, sessions: [], error: error.message };
   }
 }
 
@@ -121,10 +145,15 @@ export async function createSession(options = {}) {
       headers,
       body: JSON.stringify({ deviceId, ...options }),
     });
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Create session error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -138,10 +167,15 @@ export async function getSession(sessionId, messageLimit = 50) {
       `${API_BASE_URL}/api/sessions/${sessionId}?deviceId=${deviceId}&messageLimit=${messageLimit}`,
       { headers }
     );
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Get session error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -156,10 +190,15 @@ export async function updateSession(sessionId, updates) {
       headers,
       body: JSON.stringify({ deviceId, ...updates }),
     });
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Update session error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -173,10 +212,15 @@ export async function deleteSession(sessionId) {
       `${API_BASE_URL}/api/sessions/${sessionId}?deviceId=${deviceId}`,
       { method: 'DELETE', headers }
     );
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Delete session error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -195,10 +239,15 @@ export async function saveMessage(messageData) {
       headers,
       body: JSON.stringify({ deviceId, ...messageData }),
     });
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Save message error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -210,10 +259,15 @@ export async function getMessages(sessionId, options = {}) {
     const deviceId = await getDeviceId();
     const params = new URLSearchParams({ deviceId, ...options });
     const response = await fetch(`${API_BASE_URL}/api/messages/${sessionId}?${params}`, { headers });
+    
+    if (!response.ok) {
+      return { success: false, messages: [], error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Get messages error:', error);
-    return { success: false, messages: [] };
+    return { success: false, messages: [], error: error.message };
   }
 }
 
@@ -228,10 +282,15 @@ export async function updateMessage(messageId, updates) {
       headers,
       body: JSON.stringify({ deviceId, ...updates }),
     });
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Update message error:', error);
-    throw error;
+    return { success: false, error: error.message };
   }
 }
 
@@ -249,6 +308,11 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
       headers,
       body: JSON.stringify({ latitude, longitude, ipAddress }),
     });
+    
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Location lookup error:', error);
@@ -270,10 +334,15 @@ export async function generateTitle(messages, language = 'en') {
       headers,
       body: JSON.stringify({ messages, language }),
     });
+    
+    if (!response.ok) {
+      return { success: false, title: 'New Conversation', error: `HTTP ${response.status}` };
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Title generation error:', error);
-    return { success: false, title: 'New Conversation' };
+    return { success: false, title: 'New Conversation', error: error.message };
   }
 }
 

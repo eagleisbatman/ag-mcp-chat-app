@@ -135,7 +135,9 @@ export default function useChat() {
     } catch (error) {
       console.error('Chat error:', error);
       const errorMsg = parseErrorMessage(error);
-      showError(errorMsg, isNetworkError(error) ? { label: 'Retry', onPress: () => handleSendText(text) } : null);
+      // Note: Retry uses the captured `text` value which is correct since we're retrying the same message
+      const retryAction = isNetworkError(error) ? { label: 'Retry', onPress: () => handleSendText(text) } : null;
+      showError(errorMsg, retryAction);
       addMessage({ _id: (Date.now() + 1).toString(), text: "Connection error. Please try again.", createdAt: new Date(), isBot: true });
     } finally {
       setIsTyping(false);
