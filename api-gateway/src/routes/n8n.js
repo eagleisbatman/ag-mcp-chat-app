@@ -34,32 +34,81 @@ router.post('/chat', async (req, res) => {
 router.post('/transcribe', async (req, res) => {
   try {
     const { audio, language, mimeType, saveAudio = false } = req.body;
-    let audioUrl = null;
     
-    if (saveAudio && audio) {
+    // Validate audio input
+    if (!audio) {
+      return res.status(400).json({ success: false, error: 'No audio data provided' });
+    }
+    
+    // Extract base64 from data URI if present
+    let audioBase64 = audio;
+    let detectedMimeType = mimeType || 'audio/m4a';
+    
+    if (audio.startsWith('data:')) {
+      const matches = audio.match(/^data:([^;]+);base64,(.+)$/);
+      if (matches) {
+        detectedMimeType = matches[1];
+        audioBase64 = matches[2];
+      }
+    }
+    
+    console.log(`Transcribe request: language=${language}, mimeType=${detectedMimeType}, audioLength=${audioBase64.length}`);
+    
+    let audioUrl = null;
+    if (saveAudio && audioBase64) {
       try {
         const uploadResult = await cloudinary.uploader.upload(
-          `data:${mimeType || 'audio/wav'};base64,${audio}`,
+          `data:${detectedMimeType};base64,${audioBase64}`,
           { folder: 'ag-mcp/voice-recordings', resource_type: 'video' }
         );
         audioUrl = uploadResult.secure_url;
       } catch (uploadError) {
-        console.error('Audio upload failed:', uploadError);
+        console.error('Audio upload failed:', uploadError.message);
       }
     }
 
     const response = await fetch(N8N_WHISPER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ audio, language, mimeType }),
+      body: JSON.stringify({ 
+        audio: audioBase64,  // Send raw base64, not data URI
+        language, 
+        mimeType: detectedMimeType 
+      }),
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`n8n transcribe error: ${response.status} - ${errorText}`);
+      return res.status(response.status).json({ 
+        success: false, 
+        error: `Transcription service error: ${response.status}` 
+      });
+    }
+
     const data = await response.json();
+    console.log('Transcribe response:', JSON.stringify(data).substring(0, 200));
+    
     if (audioUrl) data.audioUrl = audioUrl;
-    res.json(data);
+    
+    // Ensure consistent response format
+    if (data.text || data.transcription) {
+      res.json({
+        success: true,
+        text: data.text || data.transcription,
+        language: data.detected_language || language,
+        audioUrl,
+      });
+    } else {
+      res.json({
+        success: false,
+        error: data.error || 'No transcription returned',
+        audioUrl,
+      });
+    }
   } catch (error) {
-    console.error('Error calling n8n transcribe:', error);
-    res.status(500).json({ error: 'Failed to transcribe audio' });
+    console.error('Error calling n8n transcribe:', error.message);
+    res.status(500).json({ success: false, error: 'Failed to transcribe audio: ' + error.message });
   }
 });
 
