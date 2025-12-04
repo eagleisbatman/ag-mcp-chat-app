@@ -1,7 +1,7 @@
 // Audio Player utility for TTS playback using expo-av
 
 import { Audio } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 // Global sound object for managing playback
 let currentSound = null;
