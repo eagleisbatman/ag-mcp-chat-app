@@ -1,12 +1,14 @@
 // Chat hook - handles messages, sessions, and persistence
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
+import { useToast } from '../contexts/ToastContext';
 import { sendChatMessage } from '../services/api';
 import { diagnosePlantHealth, formatDiagnosis } from '../services/agrivision';
 import { transcribeAudio } from '../services/whisper';
 import { uploadImage } from '../services/upload';
 import { createSession, saveMessage, generateTitle, updateSession } from '../services/db';
+import { parseErrorMessage, isNetworkError } from '../utils/apiHelpers';
 
 const WELCOME_MESSAGE = {
   _id: 'welcome',
@@ -17,6 +19,7 @@ const WELCOME_MESSAGE = {
 
 export default function useChat() {
   const { language, location, locationDetails, currentSessionId, setCurrentSessionId, isDbSynced } = useApp();
+  const { showError, showWarning } = useToast();
   
   const [messages, setMessages] = useState([WELCOME_MESSAGE]);
   const [isTyping, setIsTyping] = useState(false);
@@ -106,17 +109,34 @@ export default function useChat() {
         longitude: location?.longitude,
         language: language?.code,
       });
-      const botMsg = {
-        _id: (Date.now() + 1).toString(),
-        text: result.success ? result.response : "Sorry, I couldn't process that.",
-        createdAt: new Date(),
-        isBot: true,
-      };
-      addMessage(botMsg);
-      persistMessage(botMsg, sessionId, { responseLanguageCode: language?.code });
-      maybeGenerateTitle(sessionId, [botMsg, userMessage, ...messages]);
-    } catch {
-      addMessage({ _id: (Date.now() + 1).toString(), text: "Connection error.", createdAt: new Date(), isBot: true });
+      
+      if (!result.success) {
+        const errorMsg = parseErrorMessage(result);
+        if (isNetworkError({ message: result.error })) {
+          showError('No internet connection. Please check your network.');
+        }
+        addMessage({ 
+          _id: (Date.now() + 1).toString(), 
+          text: `Sorry, I couldn't process that. ${errorMsg}`, 
+          createdAt: new Date(), 
+          isBot: true 
+        });
+      } else {
+        const botMsg = {
+          _id: (Date.now() + 1).toString(),
+          text: result.response,
+          createdAt: new Date(),
+          isBot: true,
+        };
+        addMessage(botMsg);
+        persistMessage(botMsg, sessionId, { responseLanguageCode: language?.code });
+        maybeGenerateTitle(sessionId, [botMsg, userMessage, ...messages]);
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+      const errorMsg = parseErrorMessage(error);
+      showError(errorMsg, isNetworkError(error) ? { label: 'Retry', onPress: () => handleSendText(text) } : null);
+      addMessage({ _id: (Date.now() + 1).toString(), text: "Connection error. Please try again.", createdAt: new Date(), isBot: true });
     } finally {
       setIsTyping(false);
     }
@@ -131,17 +151,36 @@ export default function useChat() {
     const sessionId = await ensureSession();
 
     try {
-      const [uploadResult, diagResult] = await Promise.all([uploadImage(imageData.base64), diagnosePlantHealth(imageData.base64)]);
+      const [uploadResult, diagResult] = await Promise.all([
+        uploadImage(imageData.base64),
+        diagnosePlantHealth(imageData.base64)
+      ]);
+      
+      // Handle upload result
       if (uploadResult.success) {
         setMessages(prev => prev.map(m => m._id === userMsg._id ? { ...m, cloudinaryUrl: uploadResult.url } : m));
         persistMessage({ ...userMsg, cloudinaryUrl: uploadResult.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: uploadResult.url });
+      } else {
+        console.warn('Image upload failed:', uploadResult.error);
+        // Continue with diagnosis even if upload failed
       }
-      const text = diagResult.success ? formatDiagnosis(diagResult.diagnosis) : `Analysis failed: ${diagResult.error}`;
-      const botMsg = { _id: (Date.now() + 1).toString(), text, createdAt: new Date(), isBot: true };
-      addMessage(botMsg);
-      persistMessage(botMsg, sessionId, { diagnosisCrop: diagResult.diagnosis?.crop, diagnosisHealthStatus: diagResult.diagnosis?.healthStatus });
-    } catch {
-      addMessage({ _id: (Date.now() + 1).toString(), text: "Image analysis failed.", createdAt: new Date(), isBot: true });
+      
+      // Handle diagnosis result
+      if (!diagResult.success) {
+        const errorMsg = parseErrorMessage(diagResult);
+        showWarning(`Plant analysis had issues: ${errorMsg}`);
+        addMessage({ _id: (Date.now() + 1).toString(), text: `Analysis couldn't complete. ${errorMsg}`, createdAt: new Date(), isBot: true });
+      } else {
+        const text = formatDiagnosis(diagResult.diagnosis);
+        const botMsg = { _id: (Date.now() + 1).toString(), text, createdAt: new Date(), isBot: true };
+        addMessage(botMsg);
+        persistMessage(botMsg, sessionId, { diagnosisCrop: diagResult.diagnosis?.crop, diagnosisHealthStatus: diagResult.diagnosis?.healthStatus });
+      }
+    } catch (error) {
+      console.error('Image analysis error:', error);
+      const errorMsg = parseErrorMessage(error);
+      showError(errorMsg);
+      addMessage({ _id: (Date.now() + 1).toString(), text: "Image analysis failed. Please try again.", createdAt: new Date(), isBot: true });
     } finally {
       setIsTyping(false);
     }
@@ -157,21 +196,40 @@ export default function useChat() {
 
     try {
       const transcription = await transcribeAudio(audioData.base64, language?.code);
+      
       if (!transcription.success || !transcription.text) {
-        addMessage({ _id: (Date.now() + 1).toString(), text: "Couldn't understand audio.", createdAt: new Date(), isBot: true });
+        const errorMsg = transcription.error || "Couldn't understand the audio";
+        showWarning(`Voice recognition: ${errorMsg}`);
+        addMessage({ _id: (Date.now() + 1).toString(), text: `Couldn't understand the audio. Please try speaking more clearly.`, createdAt: new Date(), isBot: true });
         setIsTyping(false);
         return;
       }
+      
+      // Update user message with transcription
       setMessages(prev => prev.map(m => m._id === userMsg._id ? { ...m, text: transcription.text } : m));
       persistMessage({ ...userMsg, text: transcription.text }, sessionId, { inputMethod: 'voice', asrTranscription: transcription.text });
 
-      const result = await sendChatMessage({ message: transcription.text, latitude: location?.latitude, longitude: location?.longitude, language: language?.code });
-      const botMsg = { _id: (Date.now() + 1).toString(), text: result.success ? result.response : "Processing failed.", createdAt: new Date(), isBot: true };
-      addMessage(botMsg);
-      persistMessage(botMsg, sessionId, { responseLanguageCode: language?.code });
-      maybeGenerateTitle(sessionId, [botMsg, userMsg, ...messages]);
-    } catch {
-      addMessage({ _id: (Date.now() + 1).toString(), text: "Voice processing failed.", createdAt: new Date(), isBot: true });
+      // Now send to chat
+      const result = await sendChatMessage({ 
+        message: transcription.text, 
+        latitude: location?.latitude, 
+        longitude: location?.longitude, 
+        language: language?.code 
+      });
+      
+      if (!result.success) {
+        showError(parseErrorMessage(result));
+        addMessage({ _id: (Date.now() + 1).toString(), text: "Sorry, I couldn't process your request. Please try again.", createdAt: new Date(), isBot: true });
+      } else {
+        const botMsg = { _id: (Date.now() + 1).toString(), text: result.response, createdAt: new Date(), isBot: true };
+        addMessage(botMsg);
+        persistMessage(botMsg, sessionId, { responseLanguageCode: language?.code });
+        maybeGenerateTitle(sessionId, [botMsg, userMsg, ...messages]);
+      }
+    } catch (error) {
+      console.error('Voice processing error:', error);
+      showError(parseErrorMessage(error));
+      addMessage({ _id: (Date.now() + 1).toString(), text: "Voice processing failed. Please try again.", createdAt: new Date(), isBot: true });
     } finally {
       setIsTyping(false);
     }

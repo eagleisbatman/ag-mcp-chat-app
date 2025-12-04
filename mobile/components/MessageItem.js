@@ -3,12 +3,14 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Pla
 import { Ionicons } from '@expo/vector-icons';
 import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
+import { useToast } from '../contexts/ToastContext';
 import { textToSpeech } from '../services/tts';
-import { playAudio, stopAudio, isAudioPlaying } from '../utils/audioPlayer';
+import { playAudio, stopAudio } from '../utils/audioPlayer';
 import TypewriterText from './TypewriterText';
 
 export default function MessageItem({ message, isNewMessage = false }) {
   const { theme, language } = useApp();
+  const { showError } = useToast();
   const isBot = message.isBot;
   
   // TTS state
@@ -127,17 +129,23 @@ export default function MessageItem({ message, isNewMessage = false }) {
         setIsSpeaking(true);
         
         // Play the audio (supports both URL and base64)
-        await playAudio(audioSource, (status) => {
+        const playSuccess = await playAudio(audioSource, (status) => {
           if (status.didJustFinish) {
             setIsSpeaking(false);
           }
         });
+        
+        if (!playSuccess) {
+          setIsSpeaking(false);
+          showError('Failed to play audio. Please try again.');
+        }
       } else {
         console.error('TTS failed:', result.error);
-        // Could show a toast/alert here
+        showError(result.error || 'Text-to-speech failed. Please try again.');
       }
     } catch (error) {
       console.error('Speak error:', error);
+      showError('Failed to generate speech. Please try again.');
     } finally {
       setIsLoading(false);
     }

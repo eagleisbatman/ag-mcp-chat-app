@@ -14,6 +14,7 @@ import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
+import { useToast } from '../contexts/ToastContext';
 
 export default function InputToolbar({ 
   onSendText, 
@@ -22,6 +23,7 @@ export default function InputToolbar({
   disabled = false,
 }) {
   const { theme } = useApp();
+  const { showError, showWarning } = useToast();
   const [text, setText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
@@ -75,12 +77,12 @@ export default function InputToolbar({
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
-        alert('Camera roll permission is needed to select images');
+        showWarning('Photo library access is needed to select images. Enable in Settings.');
         return;
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'], // Updated from deprecated MediaTypeOptions
+        mediaTypes: ['images'],
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
@@ -97,6 +99,7 @@ export default function InputToolbar({
       }
     } catch (error) {
       console.error('Image picker error:', error);
+      showError('Failed to pick image. Please try again.');
     }
   };
 
@@ -106,7 +109,7 @@ export default function InputToolbar({
     try {
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
       if (status !== 'granted') {
-        alert('Camera permission is needed to take photos');
+        showWarning('Camera access is needed to take photos. Enable in Settings.');
         return;
       }
 
@@ -127,6 +130,7 @@ export default function InputToolbar({
       }
     } catch (error) {
       console.error('Camera error:', error);
+      showError('Failed to access camera. Please try again.');
     }
   };
 
@@ -136,7 +140,7 @@ export default function InputToolbar({
     try {
       const { status } = await Audio.requestPermissionsAsync();
       if (status !== 'granted') {
-        alert('Microphone permission is needed to record voice');
+        showWarning('Microphone access is needed to record voice. Enable in Settings.');
         return;
       }
 
@@ -162,6 +166,7 @@ export default function InputToolbar({
       }, 1000);
     } catch (error) {
       console.error('Recording error:', error);
+      showError('Failed to start recording. Please try again.');
     }
   };
 
@@ -177,11 +182,13 @@ export default function InputToolbar({
       const uri = recordingRef.current.getURI();
 
       if (!uri) {
-        console.error('No recording URI');
+        showError('Recording failed. Please try again.');
+        recordingRef.current = null;
+        setRecordingDuration(0);
         return;
       }
 
-      // Read as base64 - use string literal for encoding type
+      // Read as base64
       const base64 = await FileSystem.readAsStringAsync(uri, {
         encoding: 'base64',
       });
@@ -196,6 +203,10 @@ export default function InputToolbar({
       setRecordingDuration(0);
     } catch (error) {
       console.error('Stop recording error:', error);
+      showError('Failed to process recording. Please try again.');
+      recordingRef.current = null;
+      setRecordingDuration(0);
+      setIsRecording(false);
     }
   };
 
@@ -209,9 +220,9 @@ export default function InputToolbar({
     <View style={[styles.container, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
       {/* Recording Indicator */}
       {isRecording && (
-        <View style={[styles.recordingBar, { backgroundColor: theme.accentLight }]}>
+        <View style={[styles.recordingBar, { backgroundColor: theme.errorLight }]}>
           <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-            <Ionicons name="radio-button-on" size={16} color="#D32F2F" />
+            <Ionicons name="radio-button-on" size={16} color={theme.error} />
           </Animated.View>
           <TextInput
             style={[styles.recordingText, { color: theme.text }]}
@@ -219,7 +230,7 @@ export default function InputToolbar({
             value={`Recording... ${formatDuration(recordingDuration)}`}
           />
           <TouchableOpacity onPress={stopRecording}>
-            <Ionicons name="stop-circle" size={28} color="#D32F2F" />
+            <Ionicons name="stop-circle" size={28} color={theme.error} />
           </TouchableOpacity>
         </View>
       )}
