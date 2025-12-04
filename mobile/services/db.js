@@ -23,6 +23,12 @@ const headers = {
 export async function registerUser() {
   try {
     const deviceInfo = await getDeviceInfo();
+    console.log('🔌 [DB] Registering user with device info:', {
+      deviceId: deviceInfo.deviceId,
+      deviceOs: deviceInfo.deviceOs,
+      appVersion: deviceInfo.appVersion,
+    });
+    console.log('🔌 [DB] API URL:', `${API_BASE_URL}/api/users/register`);
     
     const response = await fetch(`${API_BASE_URL}/api/users/register`, {
       method: 'POST',
@@ -30,16 +36,22 @@ export async function registerUser() {
       body: JSON.stringify(deviceInfo),
     });
     
+    console.log('🔌 [DB] Registration response status:', response.status);
+    
     if (!response.ok) {
+      const errorText = await response.text();
+      console.log('🔌 [DB] Registration error response:', errorText);
       throw new Error(`HTTP ${response.status}: Registration failed`);
     }
     
     const data = await response.json();
+    console.log('🔌 [DB] Registration data:', { success: data.success, userId: data.userId || data.id });
+    
     if (!data.success) throw new Error(data.error || 'Registration failed');
     
     return { success: true, userId: data.id || data.userId, ...data };
   } catch (error) {
-    console.error('User registration error:', error);
+    console.error('❌ [DB] User registration error:', error.message);
     return { success: false, error: error.message };
   }
 }
@@ -303,19 +315,32 @@ export async function updateMessage(messageId, updates) {
  */
 export async function lookupLocation(latitude, longitude, ipAddress = null) {
   try {
+    console.log('🔌 [DB] Looking up location:', { latitude, longitude, ipAddress });
+    
     const response = await fetch(`${API_BASE_URL}/api/location-lookup`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ latitude, longitude, ipAddress }),
     });
     
+    console.log('🔌 [DB] Location lookup response status:', response.status);
+    
     if (!response.ok) {
+      const errorText = await response.text();
+      console.log('🔌 [DB] Location lookup error:', errorText);
       return { success: false, error: `HTTP ${response.status}` };
     }
     
-    return await response.json();
+    const data = await response.json();
+    console.log('🔌 [DB] Location lookup result:', {
+      success: data.success,
+      source: data.source,
+      country: data.level1Country,
+    });
+    
+    return data;
   } catch (error) {
-    console.error('Location lookup error:', error);
+    console.error('❌ [DB] Location lookup error:', error.message);
     return { success: false, error: error.message };
   }
 }

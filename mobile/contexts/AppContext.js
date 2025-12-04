@@ -35,6 +35,7 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   const loadPreferences = async () => {
+    console.log('📱 [AppContext] Loading preferences from AsyncStorage...');
     try {
       const [savedTheme, savedLanguage, savedOnboarding, savedLocation, savedLocationDetails] = await Promise.all([
         AsyncStorage.getItem('themeMode'),
@@ -43,6 +44,14 @@ export const AppProvider = ({ children }) => {
         AsyncStorage.getItem('location'),
         AsyncStorage.getItem('locationDetails'),
       ]);
+
+      console.log('📱 [AppContext] Loaded from AsyncStorage:', {
+        themeMode: savedTheme,
+        language: savedLanguage ? 'set' : 'not set',
+        onboardingComplete: savedOnboarding,
+        location: savedLocation ? 'set' : 'not set',
+        locationDetails: savedLocationDetails ? 'set' : 'not set',
+      });
 
       if (savedTheme) setThemeMode(savedTheme);
       if (savedLanguage) setLanguage(JSON.parse(savedLanguage));
@@ -57,7 +66,7 @@ export const AppProvider = ({ children }) => {
       // Register user with backend (non-blocking)
       registerUserInBackground();
     } catch (error) {
-      console.log('Error loading preferences:', error);
+      console.log('❌ [AppContext] Error loading preferences:', error);
     } finally {
       setIsLoading(false);
     }
@@ -65,14 +74,19 @@ export const AppProvider = ({ children }) => {
 
   // Register user with backend (runs in background)
   const registerUserInBackground = async () => {
+    console.log('📱 [AppContext] Starting user registration...');
     try {
       const result = await registerUser();
+      console.log('📱 [AppContext] Registration result:', JSON.stringify(result, null, 2));
       if (result.success && result.userId) {
         setUserId(result.userId);
         setIsDbSynced(true);
+        console.log('✅ [AppContext] User registered successfully, userId:', result.userId);
+      } else {
+        console.log('⚠️ [AppContext] Registration returned but no userId:', result);
       }
     } catch (error) {
-      console.log('Background user registration failed:', error);
+      console.log('❌ [AppContext] Background user registration failed:', error.message);
       // App continues to work offline
     }
   };
@@ -92,49 +106,70 @@ export const AppProvider = ({ children }) => {
   };
 
   const saveLanguage = async (lang) => {
+    console.log('🌐 [AppContext] Saving language:', lang.name, `(${lang.code})`);
     setLanguage(lang);
     try {
       await AsyncStorage.setItem('language', JSON.stringify(lang));
+      console.log('✅ [AppContext] Language saved to AsyncStorage');
     } catch (e) {
-      console.log('AsyncStorage write error (language):', e);
+      console.log('❌ [AppContext] AsyncStorage write error (language):', e);
     }
     
     // Sync to DB (non-blocking)
     if (isDbSynced) {
+      console.log('💾 [AppContext] Syncing language to database...');
       updatePreferences({
         languageCode: lang.code,
         languageName: lang.name,
         languageNativeName: lang.nativeName,
-      }).catch(e => console.log('DB sync error:', e));
+      })
+        .then(r => console.log('💾 [AppContext] Language DB sync:', r.success ? 'Success' : r.error))
+        .catch(e => console.log('❌ [AppContext] Language DB sync error:', e));
+    } else {
+      console.log('⚠️ [AppContext] Skipping language DB sync - not synced yet');
     }
   };
 
   const saveLocation = async (loc, status) => {
+    console.log('📍 [AppContext] Saving location:', { loc, status });
     setLocation(loc);
     setLocationStatus(status);
     if (status === 'granted' && loc?.latitude && loc?.longitude) {
       try {
         await AsyncStorage.setItem('location', JSON.stringify(loc));
+        console.log('✅ [AppContext] Location saved to AsyncStorage');
       } catch (e) {
-        console.log('AsyncStorage write error (location):', e);
+        console.log('❌ [AppContext] AsyncStorage write error (location):', e);
       }
       
       // Lookup detailed location in background
+      console.log('🔍 [AppContext] Starting location lookup...');
       lookupLocationDetails(loc.latitude, loc.longitude);
     }
   };
 
   // Fetch L1-L6 location details from n8n workflow
   const lookupLocationDetails = async (latitude, longitude) => {
+    console.log('🌍 [AppContext] Looking up location details for:', { latitude, longitude });
     try {
       const result = await lookupLocation(latitude, longitude);
+      console.log('🌍 [AppContext] Location lookup result:', {
+        success: result.success,
+        source: result.source,
+        country: result.level1Country,
+        city: result.level5City,
+        displayName: result.displayName,
+      });
+      
       if (result.success) {
         setLocationDetails(result);
         await AsyncStorage.setItem('locationDetails', JSON.stringify(result));
+        console.log('✅ [AppContext] Location details saved to AsyncStorage');
         
         // Sync to DB
         if (isDbSynced) {
-          await saveLocationToDB({
+          console.log('💾 [AppContext] Syncing location to database...');
+          const dbResult = await saveLocationToDB({
             source: result.source,
             latitude, longitude,
             level1Country: result.level1Country,
@@ -148,19 +183,26 @@ export const AppProvider = ({ children }) => {
             formattedAddress: result.formattedAddress,
             isPrimary: true,
           });
+          console.log('💾 [AppContext] DB sync result:', dbResult.success ? 'Success' : dbResult.error);
+        } else {
+          console.log('⚠️ [AppContext] Skipping DB sync - not synced yet');
         }
+      } else {
+        console.log('⚠️ [AppContext] Location lookup failed:', result.error);
       }
     } catch (error) {
-      console.log('Location lookup failed:', error);
+      console.log('❌ [AppContext] Location lookup failed:', error.message);
     }
   };
 
   const completeOnboarding = async () => {
+    console.log('🎉 [AppContext] Completing onboarding...');
     setOnboardingComplete(true);
     try {
       await AsyncStorage.setItem('onboardingComplete', 'true');
+      console.log('✅ [AppContext] Onboarding status saved');
     } catch (e) {
-      console.log('AsyncStorage write error (onboarding):', e);
+      console.log('❌ [AppContext] AsyncStorage write error (onboarding):', e);
     }
   };
 

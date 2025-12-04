@@ -14,11 +14,14 @@ export default function LocationScreen({ navigation }) {
   const [error, setError] = useState(null);
 
   const requestLocation = async () => {
+    console.log('📍 [LocationScreen] User tapped "Enable Location"');
     setIsLoading(true);
     setError(null);
 
     try {
+      console.log('📍 [LocationScreen] Requesting location permission...');
       const { status } = await Location.requestForegroundPermissionsAsync();
+      console.log('📍 [LocationScreen] Permission status:', status);
       
       if (status !== 'granted') {
         setError('Location permission denied');
@@ -27,8 +30,13 @@ export default function LocationScreen({ navigation }) {
         return;
       }
 
+      console.log('📍 [LocationScreen] Getting current position...');
       const loc = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Balanced,
+      });
+      console.log('📍 [LocationScreen] Got position:', {
+        lat: loc.coords.latitude,
+        lon: loc.coords.longitude,
       });
 
       await setLocation(
@@ -36,10 +44,11 @@ export default function LocationScreen({ navigation }) {
         'granted'
       );
 
+      console.log('📍 [LocationScreen] Navigating to Language screen');
       navigation.navigate('Language');
     } catch (err) {
       setError('Could not get location. Please try again.');
-      console.log('Location error:', err);
+      console.log('❌ [LocationScreen] Location error:', err);
     } finally {
       setIsLoading(false);
     }

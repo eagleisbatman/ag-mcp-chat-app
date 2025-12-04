@@ -39,8 +39,11 @@ export default function LanguageScreen({ navigation }) {
   };
 
   const handleContinue = async () => {
+    console.log('🌐 [LanguageScreen] User selected:', selectedLang.name, `(${selectedLang.code})`);
     await setLanguage(selectedLang);
+    console.log('🌐 [LanguageScreen] Completing onboarding...');
     await completeOnboarding();
+    console.log('✅ [LanguageScreen] Onboarding complete! App will navigate to Chat');
     // Navigation will auto-redirect to Chat via App.js
   };
 
