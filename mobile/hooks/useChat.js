@@ -1,5 +1,5 @@
 // Chat hook - handles messages, sessions, and persistence
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -7,24 +7,65 @@ import { sendChatMessage } from '../services/api';
 import { diagnosePlantHealth, formatDiagnosis } from '../services/agrivision';
 import { transcribeAudio } from '../services/whisper';
 import { uploadImage } from '../services/upload';
-import { createSession, saveMessage, generateTitle, updateSession } from '../services/db';
+import { createSession, saveMessage, generateTitle, updateSession, getSession } from '../services/db';
 import { parseErrorMessage, isNetworkError } from '../utils/apiHelpers';
 
 const WELCOME_MESSAGE = {
   _id: 'welcome',
-  text: "Hello! 👋 I'm your farming assistant.\n\nI can help you with:\n• Weather forecasts\n• Crop recommendations\n• Plant disease diagnosis\n• Soil health advice\n\nHow can I help you today?",
+  text: "Hello! 👋 I'm your farming assistant.\n\nI can help you with:\n• Crops, vegetables, fruits, and flowers\n• Livestock, poultry, and fish farming\n• Pest and disease management\n• Weather and market advice\n\nHow can I help you today?",
   createdAt: new Date(),
   isBot: true,
 };
 
-export default function useChat() {
+export default function useChat(sessionIdParam = null) {
   const { language, location, locationDetails, currentSessionId, setCurrentSessionId, isDbSynced } = useApp();
-  const { showError, showWarning } = useToast();
+  const { showError, showWarning, showSuccess } = useToast();
   
   const [messages, setMessages] = useState([WELCOME_MESSAGE]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isLoadingSession, setIsLoadingSession] = useState(false);
   const [newestBotMessageId, setNewestBotMessageId] = useState(null);
   const titleGeneratedRef = useRef(false);
+
+  // Load existing session if provided
+  useEffect(() => {
+    if (sessionIdParam && isDbSynced) {
+      loadSession(sessionIdParam);
+    }
+  }, [sessionIdParam, isDbSynced]);
+
+  const loadSession = async (sessionId) => {
+    setIsLoadingSession(true);
+    try {
+      const result = await getSession(sessionId, 50);
+      if (result.success && result.session?.messages) {
+        const loadedMessages = result.session.messages.map(m => ({
+          _id: m.id,
+          text: m.content,
+          createdAt: new Date(m.createdAt),
+          isBot: m.role === 'assistant',
+          image: m.imageCloudinaryUrl,
+        })).reverse(); // Newest first for inverted FlatList
+        
+        setMessages([...loadedMessages, WELCOME_MESSAGE]);
+        setCurrentSessionId(sessionId);
+        titleGeneratedRef.current = true; // Already has title
+        console.log('📂 [useChat] Loaded session with', loadedMessages.length, 'messages');
+      }
+    } catch (error) {
+      console.error('Load session error:', error);
+      showError('Could not load conversation');
+    } finally {
+      setIsLoadingSession(false);
+    }
+  };
+
+  const startNewSession = useCallback(() => {
+    setMessages([WELCOME_MESSAGE]);
+    setCurrentSessionId(null);
+    titleGeneratedRef.current = false;
+    showSuccess('Started new conversation');
+  }, [setCurrentSessionId, showSuccess]);
 
   // Create a new session on first real message
   const ensureSession = useCallback(async () => {
@@ -108,6 +149,7 @@ export default function useChat() {
         latitude: location?.latitude,
         longitude: location?.longitude,
         language: language?.code,
+        history: messages, // Pass conversation history for context
       });
       
       if (!result.success) {
@@ -211,12 +253,13 @@ export default function useChat() {
       setMessages(prev => prev.map(m => m._id === userMsg._id ? { ...m, text: transcription.text } : m));
       persistMessage({ ...userMsg, text: transcription.text }, sessionId, { inputMethod: 'voice', asrTranscription: transcription.text });
 
-      // Now send to chat
+      // Now send to chat with history
       const result = await sendChatMessage({ 
         message: transcription.text, 
         latitude: location?.latitude, 
         longitude: location?.longitude, 
-        language: language?.code 
+        language: language?.code,
+        history: messages, // Pass conversation history for context
       });
       
       if (!result.success) {
@@ -237,6 +280,15 @@ export default function useChat() {
     }
   }, [location, language, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle]);
 
-  return { messages, isTyping, newestBotMessageId, handleSendText, handleSendImage, handleSendVoice };
+  return { 
+    messages, 
+    isTyping, 
+    isLoadingSession,
+    newestBotMessageId, 
+    handleSendText, 
+    handleSendImage, 
+    handleSendVoice,
+    startNewSession,
+  };
 }
 

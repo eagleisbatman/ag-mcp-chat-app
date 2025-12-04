@@ -10,16 +10,30 @@ import InputToolbar from '../components/InputToolbar';
 import ThemeToggle from '../components/ThemeToggle';
 import { SPACING } from '../constants/themes';
 
-export default function ChatScreen({ navigation }) {
+export default function ChatScreen({ navigation, route }) {
   const { theme, language, locationDetails } = useApp();
   const insets = useSafeAreaInsets();
   const flatListRef = useRef(null);
   const scrollButtonAnim = useRef(new Animated.Value(0)).current;
   
-  const { messages, isTyping, newestBotMessageId, handleSendText, handleSendImage, handleSendVoice } = useChat();
-  const [showScrollButton, setShowScrollButton] = React.useState(false);
+  // Get session params from navigation
+  const sessionId = route?.params?.sessionId;
+  const isNewSession = route?.params?.newSession;
   
+  const { 
+    messages, isTyping, isLoadingSession, newestBotMessageId, 
+    handleSendText, handleSendImage, handleSendVoice, startNewSession 
+  } = useChat(sessionId);
+  
+  const [showScrollButton, setShowScrollButton] = React.useState(false);
   const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
+
+  // Handle new session request
+  React.useEffect(() => {
+    if (isNewSession) {
+      startNewSession();
+    }
+  }, [isNewSession, startNewSession]);
 
   useEffect(() => {
     Animated.spring(scrollButtonAnim, {
@@ -53,8 +67,11 @@ export default function ChatScreen({ navigation }) {
           </View>
         </View>
         <View style={styles.headerRight}>
+          <TouchableOpacity style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} onPress={() => navigation.navigate('History')}>
+            <Ionicons name="time-outline" size={20} color={theme.textSecondary} />
+          </TouchableOpacity>
           <ThemeToggle />
-          <TouchableOpacity style={[styles.settingsButton, { backgroundColor: theme.surfaceVariant }]} onPress={() => navigation.navigate('Settings')}>
+          <TouchableOpacity style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} onPress={() => navigation.navigate('Settings')}>
             <Ionicons name="settings-outline" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
         </View>
@@ -62,6 +79,12 @@ export default function ChatScreen({ navigation }) {
 
       {/* Messages */}
       <View style={styles.messagesContainer}>
+        {isLoadingSession ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={theme.accent} />
+            <Text style={[styles.loadingText, { color: theme.textMuted }]}>Loading conversation...</Text>
+          </View>
+        ) : (
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -79,6 +102,7 @@ export default function ChatScreen({ navigation }) {
             </View>
           ) : null}
         />
+        )}
         <Animated.View
           style={[styles.scrollButtonContainer, {
             opacity: scrollButtonAnim,
@@ -108,11 +132,13 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 18, fontWeight: '700' },
   headerSubtitle: { fontSize: 13 },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  settingsButton: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  headerButton: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   messagesContainer: { flex: 1, position: 'relative' },
   messagesList: { paddingVertical: 8 },
   typingIndicator: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
   typingText: { fontSize: 14 },
   scrollButtonContainer: { position: 'absolute', bottom: 16, alignSelf: 'center', zIndex: 100 },
   scrollButton: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 },
+  loadingText: { fontSize: 15 },
 });

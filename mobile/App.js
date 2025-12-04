@@ -17,6 +17,7 @@ import LanguageScreen from './screens/LanguageScreen';
 import ChatScreen from './screens/ChatScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import LanguageSelectScreen from './screens/LanguageSelectScreen';
+import HistoryScreen from './screens/HistoryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ function MainStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="History" component={HistoryScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
     </Stack.Navigator>

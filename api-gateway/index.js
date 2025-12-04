@@ -45,7 +45,7 @@ app.get('/api/debug/stats', authenticate, async (req, res) => {
       prisma.userLocation.count(),
     ]);
     
-    // Get recent users
+    // Get recent users with their locations
     const recentUsers = await prisma.user.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
@@ -56,6 +56,8 @@ app.get('/api/debug/stats', authenticate, async (req, res) => {
         deviceOs: true,
         createdAt: true,
         lastActiveAt: true,
+        locations: { take: 1, orderBy: { createdAt: 'desc' } },
+        preferences: true,
       },
     });
     
@@ -67,6 +69,43 @@ app.get('/api/debug/stats', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Debug stats error:', error);
     res.status(500).json({ error: 'Failed to get stats' });
+  }
+});
+
+// Debug: Clear all test data (requires API key) - USE WITH CAUTION
+app.delete('/api/debug/clear-all', authenticate, async (req, res) => {
+  try {
+    const { prisma } = require('./src/db');
+    
+    // Delete in order to respect foreign keys
+    const deleted = await prisma.$transaction([
+      prisma.analyticsEvent.deleteMany(),
+      prisma.mcpCall.deleteMany(),
+      prisma.mediaUpload.deleteMany(),
+      prisma.message.deleteMany(),
+      prisma.chatSession.deleteMany(),
+      prisma.userLocation.deleteMany(),
+      prisma.userPreference.deleteMany(),
+      prisma.user.deleteMany(),
+    ]);
+    
+    res.json({
+      success: true,
+      message: 'All data cleared',
+      deleted: {
+        analyticsEvents: deleted[0].count,
+        mcpCalls: deleted[1].count,
+        mediaUploads: deleted[2].count,
+        messages: deleted[3].count,
+        sessions: deleted[4].count,
+        locations: deleted[5].count,
+        preferences: deleted[6].count,
+        users: deleted[7].count,
+      },
+    });
+  } catch (error) {
+    console.error('Clear all error:', error);
+    res.status(500).json({ error: 'Failed to clear data' });
   }
 });
 

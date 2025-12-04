@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,15 +6,20 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
+import { useToast } from '../contexts/ToastContext';
 import { SPACING } from '../constants/themes';
 
 export default function SettingsScreen({ navigation }) {
   const insets = useSafeAreaInsets();
   const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
+  const { showSuccess, showError } = useToast();
+  const [isUpdatingLocation, setIsUpdatingLocation] = useState(false);
   const { 
     theme, 
     themeMode, 
@@ -23,11 +28,39 @@ export default function SettingsScreen({ navigation }) {
     location, 
     locationStatus,
     locationDetails,
+    setLocation,
     resetOnboarding 
   } = useApp();
 
   const handleChangeLanguage = () => {
     navigation.navigate('LanguageSelect');
+  };
+
+  const handleUpdateLocation = async () => {
+    setIsUpdatingLocation(true);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        showError('Location permission denied');
+        return;
+      }
+      
+      const loc = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+      
+      await setLocation(
+        { latitude: loc.coords.latitude, longitude: loc.coords.longitude },
+        'granted'
+      );
+      
+      showSuccess('Location updated successfully!');
+    } catch (error) {
+      console.log('Location update error:', error);
+      showError('Could not update location. Please try again.');
+    } finally {
+      setIsUpdatingLocation(false);
+    }
   };
 
   const handleResetOnboarding = () => {
@@ -120,32 +153,43 @@ export default function SettingsScreen({ navigation }) {
       {/* Location Section */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>LOCATION</Text>
-        <View style={[styles.card, { backgroundColor: theme.surface }]}>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: theme.surface }]}
+          onPress={handleUpdateLocation}
+          disabled={isUpdatingLocation}
+        >
           <View style={styles.optionRow}>
             <View style={styles.optionLeft}>
-              <Ionicons 
-                name={locationStatus === 'granted' ? 'location' : 'location-outline'} 
-                size={22} 
-                color={locationStatus === 'granted' ? theme.accent : theme.textMuted} 
-              />
-              <View>
+              {isUpdatingLocation ? (
+                <ActivityIndicator size="small" color={theme.accent} />
+              ) : (
+                <Ionicons 
+                  name={locationStatus === 'granted' ? 'location' : 'location-outline'} 
+                  size={22} 
+                  color={locationStatus === 'granted' ? theme.accent : theme.textMuted} 
+                />
+              )}
+              <View style={{ flex: 1 }}>
                 <Text style={[styles.optionText, { color: theme.text }]}>
                   {locationDetails?.displayName || (locationStatus === 'granted' ? 'Location enabled' : 'Location disabled')}
                 </Text>
                 {location?.latitude && (
-                  <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
+                  <Text style={[styles.optionSubtext, { color: theme.textMuted }]} numberOfLines={2}>
                     {locationDetails?.formattedAddress || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`}
                   </Text>
                 )}
+                <Text style={[styles.optionHint, { color: theme.accent }]}>
+                  Tap to update location
+                </Text>
               </View>
             </View>
             <Ionicons 
-              name={locationStatus === 'granted' ? 'checkmark-circle' : 'close-circle'} 
+              name="refresh" 
               size={22} 
-              color={locationStatus === 'granted' ? theme.accent : theme.textMuted} 
+              color={theme.accent} 
             />
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/* Reset Section */}
@@ -238,6 +282,11 @@ const styles = StyleSheet.create({
   optionSubtext: {
     fontSize: 13,
     marginTop: 2,
+  },
+  optionHint: {
+    fontSize: 12,
+    marginTop: 4,
+    fontWeight: '500',
   },
   appInfo: {
     alignItems: 'center',
