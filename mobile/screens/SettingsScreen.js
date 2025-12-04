@@ -157,8 +157,8 @@ export default function SettingsScreen({ navigation }) {
         >
           <View style={styles.optionRow}>
             <View style={styles.optionLeft}>
-              <Ionicons name="refresh" size={22} color="#D32F2F" />
-              <Text style={[styles.optionText, { color: '#D32F2F' }]}>
+              <Ionicons name="refresh" size={22} color={theme.error} />
+              <Text style={[styles.optionText, { color: theme.error }]}>
                 Reset Onboarding
               </Text>
             </View>

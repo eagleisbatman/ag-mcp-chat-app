@@ -34,6 +34,15 @@ export const transcribeAudio = async (audioBase64, language = null) => {
     }
 
     const data = await response.json();
+    
+    // Check if API returned success: false
+    if (data.success === false) {
+      return {
+        success: false,
+        error: data.error || 'Transcription failed',
+      };
+    }
+    
     return {
       success: true,
       text: data.text || data.transcription || '',
