@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   headerButton: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   messagesContainer: { flex: 1, position: 'relative' },
-  messagesList: { paddingVertical: 8, flexGrow: 1, justifyContent: 'flex-end' },
+  messagesList: { paddingVertical: 8, flexGrow: 1 },
   typingIndicator: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
   typingText: { fontSize: 14 },
   scrollButtonContainer: { position: 'absolute', bottom: 16, alignSelf: 'center', zIndex: 100 },
