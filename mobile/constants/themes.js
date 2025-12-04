@@ -34,7 +34,7 @@ export const THEMES = {
     text: '#E0E0E0',
     textSecondary: '#AAAAAA',
     textMuted: '#777777',
-    accent: '#81C784',
+    accent: '#4CAF50',        // Vibrant green (was #81C784 - too faded)
     accentLight: '#1B3D1C',
     border: '#333333',
     userMessage: '#2A2A2A',
@@ -45,7 +45,7 @@ export const THEMES = {
     error: '#EF5350',
     errorLight: '#3D1C1C',
     // Success states
-    success: '#81C784',
+    success: '#4CAF50',       // Match accent
     successLight: '#1B3D1C',
     // Warning states
     warning: '#FFB74D',
