@@ -35,13 +35,15 @@
       "position": [680, 300],
       "parameters": {
         "method": "POST",
-        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
-        "options": {}
+        "options": {
+          "timeout": 60000
+        }
       },
-      "notes": "Calls Gemini TTS API to generate audio. Returns PCM audio in base64."
+      "notes": "Calls Gemini 2.5 Flash with response_modalities: ['AUDIO'] for TTS"
     },
     {
       "id": "response",
