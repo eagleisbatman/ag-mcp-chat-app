@@ -9,7 +9,6 @@ import { useToast } from '../contexts/ToastContext';
 import useChat from '../hooks/useChat';
 import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
-import ThemeToggle from '../components/ThemeToggle';
 import { SPACING } from '../constants/themes';
 
 export default function ChatScreen({ navigation, route }) {
@@ -89,7 +88,7 @@ export default function ChatScreen({ navigation, route }) {
           <View style={styles.headerTitleContainer}>
             <Text style={[styles.headerTitle, { color: theme.text }]}>Farm Assistant</Text>
             <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-              {locationDetails?.displayName || 'Tap 📍 to set location'}
+              {locationDetails?.level5City || locationDetails?.level3District || locationDetails?.level2State || 'Tap location to set'}
             </Text>
           </View>
         </View>
@@ -102,12 +101,17 @@ export default function ChatScreen({ navigation, route }) {
             {isRefreshingLocation ? (
               <ActivityIndicator size="small" color={theme.accent} />
             ) : (
-              <Ionicons name="navigate" size={20} color={theme.accent} />
+              <Ionicons name="location" size={20} color={theme.accent} />
             )}
           </TouchableOpacity>
-          <ThemeToggle />
+          <TouchableOpacity 
+            style={[styles.headerButton, { backgroundColor: theme.accentLight }]} 
+            onPress={startNewSession}
+          >
+            <Ionicons name="add" size={22} color={theme.accent} />
+          </TouchableOpacity>
           <TouchableOpacity style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} onPress={() => navigation.navigate('Settings')}>
-            <Ionicons name="settings-outline" size={20} color={theme.textSecondary} />
+            <Ionicons name="menu" size={22} color={theme.textSecondary} />
           </TouchableOpacity>
         </View>
       </View>

@@ -103,7 +103,95 @@ export default function SettingsScreen({ navigation }) {
         <View style={{ width: 40 }} />
       </View>
 
-      {/* Theme Section */}
+      {/* 1. Chat History Section */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>CONVERSATIONS</Text>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: theme.surface }]}
+          onPress={() => navigation.navigate('History')}
+        >
+          <View style={styles.optionRow}>
+            <View style={styles.optionLeft}>
+              <Ionicons name="chatbubbles-outline" size={22} color={theme.accent} />
+              <View style={styles.optionTextContainer}>
+                <Text style={[styles.optionText, { color: theme.text }]}>Chat History</Text>
+                <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
+                  View and continue past conversations
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      {/* 2. Location Section */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>LOCATION</Text>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: theme.surface }]}
+          onPress={handleUpdateLocation}
+          disabled={isUpdatingLocation}
+        >
+          <View style={styles.optionRow}>
+            <View style={styles.optionLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>
+                {isUpdatingLocation ? (
+                  <ActivityIndicator size="small" color={theme.accent} />
+                ) : (
+                  <Ionicons name="location" size={20} color={theme.accent} />
+                )}
+              </View>
+              <View style={styles.optionTextContainer}>
+                <Text style={[styles.optionText, { color: theme.text }]} numberOfLines={1}>
+                  {locationDetails?.displayName || (locationStatus === 'granted' ? 'Location enabled' : 'Tap to enable')}
+                </Text>
+                {location?.latitude && (
+                  <Text style={[styles.optionSubtext, { color: theme.textMuted }]} numberOfLines={1}>
+                    {locationDetails?.formattedAddress || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`}
+                  </Text>
+                )}
+                <Text style={[styles.optionHint, { color: theme.accent }]}>
+                  Tap to update location
+                </Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={[styles.refreshButton, { backgroundColor: theme.accentLight }]}
+              onPress={handleUpdateLocation}
+              disabled={isUpdatingLocation}
+            >
+              <Ionicons name="refresh" size={18} color={theme.accent} />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      {/* 3. Language Section */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>LANGUAGE</Text>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: theme.surface }]}
+          onPress={handleChangeLanguage}
+        >
+          <View style={styles.optionRow}>
+            <View style={styles.optionLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>
+                <Ionicons name="language" size={20} color={theme.accent} />
+              </View>
+              <View style={styles.optionTextContainer}>
+                <Text style={[styles.optionText, { color: theme.text }]}>{language?.name}</Text>
+                <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
+                  {language?.nativeName}
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      {/* 4. Appearance Section */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>APPEARANCE</Text>
         <View style={[styles.card, { backgroundColor: theme.surface }]}>
@@ -117,116 +205,37 @@ export default function SettingsScreen({ navigation }) {
               onPress={() => setThemeMode(option.value)}
             >
               <View style={styles.optionLeft}>
-                <Ionicons name={option.icon} size={22} color={theme.accent} />
+                <View style={[styles.iconContainer, { backgroundColor: theme.surfaceVariant }]}>
+                  <Ionicons name={option.icon} size={18} color={themeMode === option.value ? theme.accent : theme.textMuted} />
+                </View>
                 <Text style={[styles.optionText, { color: theme.text }]}>{option.label}</Text>
               </View>
               {themeMode === option.value && (
-                <Ionicons name="checkmark" size={22} color={theme.accent} />
+                <Ionicons name="checkmark-circle" size={22} color={theme.accent} />
               )}
             </TouchableOpacity>
           ))}
         </View>
       </View>
 
-      {/* Language Section */}
+      {/* 5. Reset Section */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>LANGUAGE</Text>
-        <TouchableOpacity 
-          style={[styles.card, { backgroundColor: theme.surface }]}
-          onPress={handleChangeLanguage}
-        >
-          <View style={styles.optionRow}>
-            <View style={styles.optionLeft}>
-              <Ionicons name="language" size={22} color={theme.accent} />
-              <View>
-                <Text style={[styles.optionText, { color: theme.text }]}>{language?.name}</Text>
-                <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
-                  {language?.nativeName}
-                </Text>
-              </View>
-            </View>
-            <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      {/* Conversations Section */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>CONVERSATIONS</Text>
-        <TouchableOpacity 
-          style={[styles.card, { backgroundColor: theme.surface }]}
-          onPress={() => navigation.navigate('History')}
-        >
-          <View style={styles.optionRow}>
-            <View style={styles.optionLeft}>
-              <Ionicons name="chatbubbles-outline" size={22} color={theme.accent} />
-              <View>
-                <Text style={[styles.optionText, { color: theme.text }]}>Chat History</Text>
-                <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
-                  View and continue past conversations
-                </Text>
-              </View>
-            </View>
-            <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      {/* Location Section */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>LOCATION</Text>
-        <TouchableOpacity 
-          style={[styles.card, { backgroundColor: theme.surface }]}
-          onPress={handleUpdateLocation}
-          disabled={isUpdatingLocation}
-        >
-          <View style={styles.optionRow}>
-            <View style={styles.optionLeft}>
-              {isUpdatingLocation ? (
-                <ActivityIndicator size="small" color={theme.accent} />
-              ) : (
-                <Ionicons 
-                  name={locationStatus === 'granted' ? 'location' : 'location-outline'} 
-                  size={22} 
-                  color={locationStatus === 'granted' ? theme.accent : theme.textMuted} 
-                />
-              )}
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.optionText, { color: theme.text }]}>
-                  {locationDetails?.displayName || (locationStatus === 'granted' ? 'Location enabled' : 'Location disabled')}
-                </Text>
-                {location?.latitude && (
-                  <Text style={[styles.optionSubtext, { color: theme.textMuted }]} numberOfLines={2}>
-                    {locationDetails?.formattedAddress || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`}
-                  </Text>
-                )}
-                <Text style={[styles.optionHint, { color: theme.accent }]}>
-                  Tap to update location
-                </Text>
-              </View>
-            </View>
-            <Ionicons 
-              name="refresh" 
-              size={22} 
-              color={theme.accent} 
-            />
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      {/* Reset Section */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>RESET</Text>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>DANGER ZONE</Text>
         <TouchableOpacity 
           style={[styles.card, { backgroundColor: theme.surface }]}
           onPress={handleResetOnboarding}
         >
           <View style={styles.optionRow}>
             <View style={styles.optionLeft}>
-              <Ionicons name="refresh" size={22} color={theme.error} />
-              <Text style={[styles.optionText, { color: theme.error }]}>
-                Reset Onboarding
-              </Text>
+              <View style={[styles.iconContainer, { backgroundColor: theme.errorLight }]}>
+                <Ionicons name="refresh" size={18} color={theme.error} />
+              </View>
+              <View style={styles.optionTextContainer}>
+                <Text style={[styles.optionText, { color: theme.error }]}>Reset Onboarding</Text>
+                <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
+                  Start fresh with setup wizard
+                </Text>
+              </View>
             </View>
             <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
           </View>
@@ -276,7 +285,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     marginBottom: 8,
     marginLeft: 4,
@@ -290,12 +299,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    padding: 14,
   },
   optionLeft: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+  },
+  optionTextContainer: {
+    flex: 1,
+  },
+  iconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   optionText: {
     fontSize: 16,
@@ -310,6 +330,14 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontWeight: '500',
   },
+  refreshButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+  },
   appInfo: {
     alignItems: 'center',
     marginTop: 48,
@@ -319,4 +347,3 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
-
