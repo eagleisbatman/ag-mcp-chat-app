@@ -4,15 +4,16 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://ag-mcp-api-gateway.u
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 
 /**
- * Send chat message with conversation history
+ * Send chat message with conversation history and location context
  * @param {object} params - Chat parameters
  * @param {string} params.message - Current user message
  * @param {number} params.latitude - User's latitude
  * @param {number} params.longitude - User's longitude
  * @param {string} params.language - Language code (e.g., 'en', 'hi')
+ * @param {object} params.locationDetails - Human-readable location (L1-L6)
  * @param {Array} params.history - Previous messages for context (last 10)
  */
-export const sendChatMessage = async ({ message, latitude, longitude, language, history = [] }) => {
+export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [] }) => {
   try {
     // Format history for n8n workflow
     const formattedHistory = history
@@ -24,7 +25,21 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
         isBot: m.isBot,
       }));
 
-    console.log('📤 [API] Sending chat with history:', formattedHistory.length, 'messages');
+    // Build location context string for AI
+    const locationContext = locationDetails ? {
+      country: locationDetails.level1Country,
+      state: locationDetails.level2State,
+      district: locationDetails.level3District,
+      city: locationDetails.level5City,
+      locality: locationDetails.level6Locality,
+      displayName: locationDetails.displayName,
+    } : null;
+
+    console.log('📤 [API] Sending chat with:', {
+      historyCount: formattedHistory.length,
+      location: locationContext?.displayName || `${latitude}, ${longitude}`,
+      language,
+    });
 
     const response = await fetch(API_URL, {
       method: 'POST',
@@ -37,6 +52,7 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
         latitude: latitude || -1.2864,
         longitude: longitude || 36.8172,
         language: language || 'en',
+        location: locationContext, // Human-readable location for AI context
         history: formattedHistory,
       }),
     });

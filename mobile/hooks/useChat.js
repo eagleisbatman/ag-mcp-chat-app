@@ -149,6 +149,7 @@ export default function useChat(sessionIdParam = null) {
         latitude: location?.latitude,
         longitude: location?.longitude,
         language: language?.code,
+        locationDetails, // Human-readable location for AI context
         history: messages, // Pass conversation history for context
       });
       
@@ -259,6 +260,7 @@ export default function useChat(sessionIdParam = null) {
         latitude: location?.latitude, 
         longitude: location?.longitude, 
         language: language?.code,
+        locationDetails, // Human-readable location for AI context
         history: messages, // Pass conversation history for context
       });
       
