@@ -48,19 +48,40 @@ router.post('/image', async (req, res) => {
 /**
  * Upload audio to Cloudinary
  * POST /api/upload/audio
+ * Supports: m4a (iOS default), wav, mp3, webm, ogg
  */
 router.post('/audio', async (req, res) => {
   try {
-    const { audio, folder = 'ag-mcp/audio', format = 'wav' } = req.body;
+    const { audio, folder = 'ag-mcp/voice', format = 'm4a' } = req.body;
     
     if (!audio) {
-      return res.status(400).json({ error: 'No audio provided' });
+      return res.status(400).json({ success: false, error: 'No audio provided' });
     }
 
+    console.log(`Audio upload request: format=${format}, folder=${folder}, length=${audio?.length}`);
+
+    // Map audio format to MIME type
+    const mimeTypes = {
+      'm4a': 'audio/mp4',
+      'mp4': 'audio/mp4',
+      'wav': 'audio/wav',
+      'mp3': 'audio/mpeg',
+      'webm': 'audio/webm',
+      'ogg': 'audio/ogg',
+      '3gp': 'audio/3gpp',
+    };
+    const mimeType = mimeTypes[format] || `audio/${format}`;
+
     const result = await cloudinary.uploader.upload(
-      `data:audio/${format};base64,${audio}`,
-      { folder, resource_type: 'video', format }
+      `data:${mimeType};base64,${audio}`,
+      { 
+        folder, 
+        resource_type: 'video',  // Cloudinary uses 'video' for audio files
+        format: format === 'm4a' ? 'mp4' : format,  // Cloudinary stores m4a as mp4
+      }
     );
+
+    console.log(`Audio uploaded successfully: ${result.public_id}`);
 
     res.json({
       success: true,
@@ -72,7 +93,7 @@ router.post('/audio', async (req, res) => {
     });
   } catch (error) {
     console.error('Audio upload error:', error);
-    res.status(500).json({ error: 'Failed to upload audio', details: error.message });
+    res.status(500).json({ success: false, error: 'Failed to upload audio', details: error.message });
   }
 });
 

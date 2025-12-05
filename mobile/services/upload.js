@@ -57,13 +57,15 @@ export const uploadImage = async (base64Image, folder = 'ag-mcp/images') => {
 
 /**
  * Upload audio to Cloudinary
- * @param {string} base64Audio - Base64 encoded audio
- * @param {string} format - Audio format (wav, mp3, etc.)
+ * @param {string} base64Audio - Base64 encoded audio (without data: prefix)
+ * @param {string} format - Audio format (m4a, wav, mp3, etc.) - defaults to m4a for mobile recordings
  * @param {string} folder - Cloudinary folder (optional)
  * @returns {Promise<{success: boolean, url?: string, duration?: number, error?: string}>}
  */
-export const uploadAudio = async (base64Audio, format = 'wav', folder = 'ag-mcp/audio') => {
+export const uploadAudio = async (base64Audio, format = 'm4a', folder = 'ag-mcp/voice') => {
   try {
+    console.log('📤 [Upload] Uploading audio:', { format, folder, length: base64Audio?.length });
+    
     const response = await fetch(`${API_BASE_URL}/api/upload/audio`, {
       method: 'POST',
       headers: {
@@ -78,12 +80,15 @@ export const uploadAudio = async (base64Audio, format = 'wav', folder = 'ag-mcp/
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Audio upload HTTP error:', response.status, errorText);
       throw new Error(`Upload error: ${response.status}`);
     }
 
     const data = await response.json();
     
     if (data.success) {
+      console.log('✅ [Upload] Audio uploaded successfully:', data.url);
       return {
         success: true,
         url: data.url,
@@ -91,6 +96,7 @@ export const uploadAudio = async (base64Audio, format = 'wav', folder = 'ag-mcp/
         duration: data.duration,
       };
     } else {
+      console.error('Audio upload failed:', data.error);
       return {
         success: false,
         error: data.error || 'Upload failed',

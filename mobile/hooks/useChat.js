@@ -1,5 +1,6 @@
 // Chat hook - handles messages, sessions, and persistence
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -262,13 +263,20 @@ export default function useChat(sessionIdParam = null) {
     if (!audioData?.base64) return { success: false };
     
     try {
-      console.log('📤 [useChat] Uploading voice audio in background...');
-      const result = await uploadAudio(audioData.base64, audioData.duration);
+      console.log('📤 [useChat] Uploading voice audio in background...', {
+        duration: audioData.duration,
+        hasBase64: !!audioData.base64,
+      });
+      
+      // iOS records as m4a, Android as m4a/3gp
+      const format = Platform.OS === 'ios' ? 'm4a' : 'm4a';
+      const result = await uploadAudio(audioData.base64, format);
       
       if (result.success) {
         console.log('✅ [useChat] Voice audio uploaded:', result.url);
-        // Optionally save to DB for analytics
-        // This audio is stored for record-keeping, not shown in chat
+        // Audio stored for record-keeping/analytics, not shown in chat
+      } else {
+        console.log('⚠️ [useChat] Voice audio upload failed:', result.error);
       }
       
       return result;
