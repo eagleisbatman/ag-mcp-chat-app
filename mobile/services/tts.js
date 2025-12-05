@@ -25,7 +25,11 @@ export const textToSpeech = async (text, language = 'en') => {
     });
 
     if (!response.ok) {
-      throw new Error(`TTS API error: ${response.status}`);
+      console.log(`TTS API returned status: ${response.status}`);
+      return {
+        success: false,
+        error: 'Speech service error - please try again',
+      };
     }
 
     const data = await response.json();
@@ -46,10 +50,11 @@ export const textToSpeech = async (text, language = 'en') => {
       };
     }
   } catch (error) {
-    console.error('TTS service error:', error);
+    // Use console.log instead of console.error to avoid system alerts
+    console.log('TTS service exception:', error.message);
     return {
       success: false,
-      error: error.message || 'Failed to generate speech',
+      error: 'Speech service temporarily unavailable',
     };
   }
 };

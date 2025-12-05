@@ -198,26 +198,54 @@ export const AppProvider = ({ children }) => {
     console.log('🌍 [AppContext] Looking up location details for:', { latitude, longitude });
     try {
       const result = await lookupLocation(latitude, longitude);
-      console.log('🌍 [AppContext] Location lookup result:', {
-        success: result.success,
-        source: result.source,
-        country: result.level1Country,
-        city: result.level5City,
-        displayName: result.displayName,
-      });
+      console.log('🌍 [AppContext] Location lookup full result:', JSON.stringify(result, null, 2));
       
       if (result.success) {
-        setLocationDetails(result);
-        await AsyncStorage.setItem('locationDetails', JSON.stringify(result));
-        console.log('✅ [AppContext] Location details saved to AsyncStorage');
+        // Create a normalized result with fallbacks
+        const normalizedResult = {
+          ...result,
+          displayName: result.displayName || result.level5City || result.level3District || result.level2State || result.level1Country || 'Location set',
+          level5City: result.level5City || result.city || null,
+          level3District: result.level3District || result.district || null,
+          level2State: result.level2State || result.state || result.regionName || null,
+          level1Country: result.level1Country || result.country || null,
+        };
+        
+        setLocationDetails(normalizedResult);
+        await AsyncStorage.setItem('locationDetails', JSON.stringify(normalizedResult));
+        console.log('✅ [AppContext] Location details saved:', normalizedResult.displayName);
         
         // Sync to DB - with retry if not yet synced
-        await syncLocationToDb(result, latitude, longitude);
+        await syncLocationToDb(normalizedResult, latitude, longitude);
       } else {
-        console.log('⚠️ [AppContext] Location lookup failed:', result.error);
+        // Even if lookup fails, set a basic location with coords
+        const basicLocation = {
+          success: true,
+          source: 'gps',
+          latitude,
+          longitude,
+          displayName: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
+          level5City: null,
+          level3District: null,
+          level2State: null,
+          level1Country: null,
+        };
+        setLocationDetails(basicLocation);
+        await AsyncStorage.setItem('locationDetails', JSON.stringify(basicLocation));
+        console.log('⚠️ [AppContext] Location lookup failed, using coords:', result.error);
       }
     } catch (error) {
-      console.log('❌ [AppContext] Location lookup failed:', error.message);
+      console.log('❌ [AppContext] Location lookup exception:', error.message);
+      // Still set basic coords on error
+      const basicLocation = {
+        success: true,
+        source: 'gps',
+        latitude,
+        longitude,
+        displayName: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
+      };
+      setLocationDetails(basicLocation);
+      await AsyncStorage.setItem('locationDetails', JSON.stringify(basicLocation));
     }
   };
 

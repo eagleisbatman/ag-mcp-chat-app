@@ -31,32 +31,41 @@ export default function MessageItem({ message, isNewMessage = false }) {
     });
   };
 
-  // Markdown styles based on theme
+  // Markdown styles based on theme - ensure proper text wrapping
   const markdownStyles = {
     body: {
       color: theme.text,
       fontSize: 16,
       lineHeight: 24,
+      flexWrap: 'wrap',
+      flexShrink: 1,
+    },
+    text: {
+      flexWrap: 'wrap',
+      flexShrink: 1,
     },
     heading1: {
       color: theme.text,
-      fontSize: 22,
-      fontWeight: '700',
-      marginBottom: 8,
-      marginTop: 4,
-    },
-    heading2: {
-      color: theme.text,
       fontSize: 20,
-      fontWeight: '600',
+      fontWeight: '700',
       marginBottom: 6,
       marginTop: 4,
+      flexWrap: 'wrap',
     },
-    heading3: {
+    heading2: {
       color: theme.text,
       fontSize: 18,
       fontWeight: '600',
       marginBottom: 4,
+      marginTop: 4,
+      flexWrap: 'wrap',
+    },
+    heading3: {
+      color: theme.text,
+      fontSize: 17,
+      fontWeight: '600',
+      marginBottom: 4,
+      flexWrap: 'wrap',
     },
     strong: {
       fontWeight: '700',
@@ -74,11 +83,13 @@ export default function MessageItem({ message, isNewMessage = false }) {
     list_item: {
       marginVertical: 2,
       flexDirection: 'row',
+      flexWrap: 'wrap',
+      flexShrink: 1,
     },
     bullet_list_icon: {
       color: theme.accent,
-      fontSize: 16,
-      marginRight: 8,
+      fontSize: 14,
+      marginRight: 6,
     },
     code_inline: {
       backgroundColor: theme.surfaceVariant,
@@ -87,19 +98,21 @@ export default function MessageItem({ message, isNewMessage = false }) {
       paddingVertical: 2,
       borderRadius: 4,
       fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-      fontSize: 14,
+      fontSize: 13,
     },
     code_block: {
       backgroundColor: theme.surfaceVariant,
-      padding: 12,
+      padding: 10,
       borderRadius: 8,
-      marginVertical: 8,
+      marginVertical: 6,
+      overflow: 'hidden',
     },
     fence: {
       backgroundColor: theme.surfaceVariant,
-      padding: 12,
+      padding: 10,
       borderRadius: 8,
-      marginVertical: 8,
+      marginVertical: 6,
+      overflow: 'hidden',
     },
     link: {
       color: theme.accent,
@@ -107,6 +120,8 @@ export default function MessageItem({ message, isNewMessage = false }) {
     },
     paragraph: {
       marginVertical: 4,
+      flexWrap: 'wrap',
+      flexShrink: 1,
     },
   };
 
@@ -143,15 +158,17 @@ export default function MessageItem({ message, isNewMessage = false }) {
         
         if (!playSuccess) {
           setIsSpeaking(false);
-          showError('Failed to play audio. Please try again.');
+          showError('Audio playback failed');
         }
       } else {
-        console.error('TTS failed:', result.error);
-        showError(result.error || 'Text-to-speech failed. Please try again.');
+        // Log error but don't use console.error (can trigger system alerts)
+        console.log('TTS service error:', result.error);
+        showError('Voice unavailable - please try again later');
       }
     } catch (error) {
-      console.error('Speak error:', error);
-      showError('Failed to generate speech. Please try again.');
+      // Log error but don't use console.error
+      console.log('TTS exception:', error.message);
+      showError('Voice unavailable - please try again');
     } finally {
       setIsLoading(false);
     }

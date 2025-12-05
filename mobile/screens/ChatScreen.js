@@ -12,7 +12,7 @@ import InputToolbar from '../components/InputToolbar';
 import { SPACING } from '../constants/themes';
 
 export default function ChatScreen({ navigation, route }) {
-  const { theme, language, locationDetails, setLocation } = useApp();
+  const { theme, language, location, locationDetails, setLocation } = useApp();
   const { showSuccess, showError } = useToast();
   const insets = useSafeAreaInsets();
   const flatListRef = useRef(null);
@@ -90,7 +90,7 @@ export default function ChatScreen({ navigation, route }) {
           <View style={styles.headerTitleContainer}>
             <Text style={[styles.headerTitle, { color: theme.text }]}>Farm Assistant</Text>
             <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-              {locationDetails?.level5City || locationDetails?.level3District || locationDetails?.level2State || 'Tap location to set'}
+              {locationDetails?.displayName || locationDetails?.level5City || locationDetails?.level3District || locationDetails?.level2State || (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : 'Tap location to set')}
             </Text>
           </View>
         </View>
