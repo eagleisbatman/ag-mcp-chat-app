@@ -1,13 +1,13 @@
-// Whisper Transcription Service - Voice to text via n8n workflow
+// Transcription Service - Voice to text via Gemini 2.5 Flash (n8n workflow)
 
 const WHISPER_URL = process.env.EXPO_PUBLIC_WHISPER_URL || 'https://ag-mcp-api-gateway.up.railway.app/api/transcribe';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 
 /**
- * Transcribe audio to text using OpenAI Whisper via n8n
+ * Transcribe audio to text using Gemini 2.5 Flash via n8n workflow
  * @param {string} audioBase64 - Base64 encoded audio file
- * @param {string} language - Optional language hint (ISO code)
- * @returns {Promise<object>} Transcription result
+ * @param {string} language - Optional language hint (ISO code, e.g., 'en', 'hi')
+ * @returns {Promise<{success: boolean, text?: string, language?: string, error?: string}>}
  */
 export const transcribeAudio = async (audioBase64, language = null) => {
   try {

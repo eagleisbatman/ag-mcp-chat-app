@@ -6,7 +6,7 @@ import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { sendChatMessage } from '../services/api';
 import { diagnosePlantHealth, formatDiagnosis } from '../services/agrivision';
-import { transcribeAudio as transcribeAudioService } from '../services/whisper';
+import { transcribeAudio as transcribeAudioService } from '../services/transcription';
 import { uploadImage, uploadAudio } from '../services/upload';
 import { createSession, saveMessage, generateTitle, updateSession, getSession } from '../services/db';
 import { parseErrorMessage, isNetworkError } from '../utils/apiHelpers';
