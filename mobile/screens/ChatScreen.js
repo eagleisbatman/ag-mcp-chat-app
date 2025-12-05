@@ -86,7 +86,7 @@ export default function ChatScreen({ navigation, route }) {
       <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border, paddingTop: headerPaddingTop }]}>
         <View style={styles.headerLeft}>
           <Ionicons name="leaf" size={28} color={theme.accent} />
-          <View style={{ flex: 1 }}>
+          <View style={styles.headerTitleContainer}>
             <Text style={[styles.headerTitle, { color: theme.text }]}>Farm Assistant</Text>
             <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
               {locationDetails?.displayName || 'Tap 📍 to set location'}
@@ -163,10 +163,11 @@ export default function ChatScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1 },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  headerLeft: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  headerTitleContainer: { flex: 1 },
   headerTitle: { fontSize: 18, fontWeight: '700' },
   headerSubtitle: { fontSize: 13 },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 0 },
   headerButton: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   messagesContainer: { flex: 1, position: 'relative' },
   messagesList: { paddingVertical: 8, flexGrow: 1 },
