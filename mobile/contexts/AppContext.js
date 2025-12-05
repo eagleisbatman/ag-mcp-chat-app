@@ -196,9 +196,14 @@ export const AppProvider = ({ children }) => {
   // Fetch L1-L6 location details from n8n workflow
   const lookupLocationDetails = async (latitude, longitude) => {
     console.log('🌍 [AppContext] Looking up location details for:', { latitude, longitude });
+    console.log('🌍 [AppContext] Coordinates valid:', { 
+      latValid: !isNaN(latitude) && latitude !== null, 
+      lonValid: !isNaN(longitude) && longitude !== null 
+    });
+    
     try {
       const result = await lookupLocation(latitude, longitude);
-      console.log('🌍 [AppContext] Location lookup full result:', JSON.stringify(result, null, 2));
+      console.log('🌍 [AppContext] Location lookup RAW result:', JSON.stringify(result, null, 2));
       
       if (result.success) {
         // Create a normalized result with fallbacks

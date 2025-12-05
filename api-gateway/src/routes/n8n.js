@@ -187,16 +187,36 @@ router.post('/generate-title', async (req, res) => {
  */
 router.post('/location-lookup', async (req, res) => {
   try {
+    const { latitude, longitude, ipAddress } = req.body;
+    console.log('📍 [Location] Looking up:', { latitude, longitude, ipAddress });
+    
     const response = await fetch(N8N_LOCATION_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req.body),
     });
+    
+    if (!response.ok) {
+      console.log('📍 [Location] n8n error:', response.status);
+      return res.status(response.status).json({ 
+        success: false, 
+        error: `n8n returned ${response.status}` 
+      });
+    }
+    
     const data = await response.json();
+    console.log('📍 [Location] Result:', { 
+      success: data.success, 
+      source: data.source, 
+      displayName: data.displayName,
+      country: data.level1Country,
+      city: data.level5City 
+    });
+    
     res.json(data);
   } catch (error) {
-    console.error('Error looking up location:', error);
-    res.status(500).json({ error: 'Failed to lookup location', success: false });
+    console.error('📍 [Location] Error:', error.message);
+    res.status(500).json({ success: false, error: 'Failed to lookup location' });
   }
 });
 
