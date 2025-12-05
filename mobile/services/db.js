@@ -354,19 +354,27 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
  */
 export async function generateTitle(messages, language = 'en') {
   try {
+    console.log('🔌 [DB] Generating title with', messages.length, 'messages, language:', language);
+    
     const response = await fetch(`${API_BASE_URL}/api/generate-title`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ messages, language }),
     });
     
+    console.log('🔌 [DB] Title generation response status:', response.status);
+    
     if (!response.ok) {
+      const errorText = await response.text();
+      console.log('🔌 [DB] Title generation error response:', errorText);
       return { success: false, title: 'New Conversation', error: `HTTP ${response.status}` };
     }
     
-    return await response.json();
+    const data = await response.json();
+    console.log('🔌 [DB] Title generation result:', data);
+    return data;
   } catch (error) {
-    console.error('Title generation error:', error);
+    console.log('❌ [DB] Title generation exception:', error.message);
     return { success: false, title: 'New Conversation', error: error.message };
   }
 }

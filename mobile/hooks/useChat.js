@@ -107,22 +107,38 @@ export default function useChat(sessionIdParam = null) {
     }
   }, [isDbSynced, language]);
 
-  // Generate title after 3+ messages
+  // Generate title after first exchange (user message + bot response)
   const maybeGenerateTitle = useCallback(async (sessionId, allMessages) => {
     if (titleGeneratedRef.current || !sessionId || !isDbSynced) return;
-    if (allMessages.filter(m => !m.isBot).length < 2) return;
+    
+    // Need at least 1 user message to generate a meaningful title
+    const userMessages = allMessages.filter(m => !m.isBot && m._id !== 'welcome');
+    if (userMessages.length < 1) return;
     
     titleGeneratedRef.current = true;
+    console.log('📝 [useChat] Generating title for session:', sessionId);
+    
     try {
-      const result = await generateTitle(
-        allMessages.slice(0, 6).map(m => ({ role: m.isBot ? 'assistant' : 'user', content: m.text })),
-        language?.code
-      );
-      if (result.success && result.title) {
+      // Get first few messages for context (user + bot)
+      const contextMessages = allMessages
+        .filter(m => m._id !== 'welcome')
+        .slice(0, 6)
+        .map(m => ({ role: m.isBot ? 'assistant' : 'user', content: m.text }));
+      
+      console.log('📝 [useChat] Sending', contextMessages.length, 'messages to title generator');
+      
+      const result = await generateTitle(contextMessages, language?.code);
+      
+      console.log('📝 [useChat] Title generation result:', result);
+      
+      if (result.success && result.title && result.title !== 'New Conversation') {
         await updateSession(sessionId, { title: result.title });
+        console.log('✅ [useChat] Title updated:', result.title);
+      } else {
+        console.log('⚠️ [useChat] Title generation returned fallback or failed');
       }
     } catch (e) {
-      console.log('Title generation error:', e);
+      console.log('❌ [useChat] Title generation error:', e.message);
     }
   }, [isDbSynced, language]);
 

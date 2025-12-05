@@ -156,16 +156,29 @@ router.post('/tts', async (req, res) => {
  */
 router.post('/generate-title', async (req, res) => {
   try {
+    console.log('📝 [Title] Generating title, messages:', req.body.messages?.length || 0);
+    
     const response = await fetch(N8N_TITLE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req.body),
     });
+    
+    if (!response.ok) {
+      console.log('📝 [Title] n8n error:', response.status);
+      return res.status(response.status).json({ 
+        success: false, 
+        error: `n8n returned ${response.status}`,
+        title: 'New Conversation' 
+      });
+    }
+    
     const data = await response.json();
+    console.log('📝 [Title] Generated:', data.title);
     res.json(data);
   } catch (error) {
-    console.error('Error generating title:', error);
-    res.status(500).json({ error: 'Failed to generate title', title: 'New Conversation' });
+    console.error('📝 [Title] Error:', error.message);
+    res.status(500).json({ success: false, error: 'Failed to generate title', title: 'New Conversation' });
   }
 });
 
