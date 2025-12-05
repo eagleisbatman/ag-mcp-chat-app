@@ -5,8 +5,8 @@ import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { sendChatMessage } from '../services/api';
 import { diagnosePlantHealth, formatDiagnosis } from '../services/agrivision';
-import { transcribeAudio } from '../services/whisper';
-import { uploadImage } from '../services/upload';
+import { transcribeAudio as transcribeAudioService } from '../services/whisper';
+import { uploadImage, uploadAudio } from '../services/upload';
 import { createSession, saveMessage, generateTitle, updateSession, getSession } from '../services/db';
 import { parseErrorMessage, isNetworkError } from '../utils/apiHelpers';
 
@@ -231,56 +231,52 @@ export default function useChat(sessionIdParam = null) {
     }
   }, [addMessage, ensureSession, persistMessage]);
 
-  const handleSendVoice = useCallback(async (audioData) => {
-    const userMsg = { _id: Date.now().toString(), text: `🎤 Voice (${audioData.duration}s) - Transcribing...`, createdAt: new Date(), isBot: false };
-    addMessage(userMsg);
-    setIsTyping(true);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    const sessionId = await ensureSession();
-
+  // Transcribe audio for the VoiceRecorder component
+  // Returns transcription text without sending to chat
+  const transcribeAudioForInput = useCallback(async (audioData) => {
     try {
-      const transcription = await transcribeAudio(audioData.base64, language?.code);
+      const result = await transcribeAudioService(audioData.base64, audioData.language || language?.code);
       
-      if (!transcription.success || !transcription.text) {
-        const errorMsg = transcription.error || "Couldn't understand the audio";
-        showWarning(`Voice recognition: ${errorMsg}`);
-        addMessage({ _id: (Date.now() + 1).toString(), text: `Couldn't understand the audio. Please try speaking more clearly.`, createdAt: new Date(), isBot: true });
-        setIsTyping(false);
-        return;
+      if (!result.success || !result.text) {
+        return { 
+          success: false, 
+          error: result.error || "Couldn't understand the audio" 
+        };
       }
       
-      // Update user message with transcription
-      setMessages(prev => prev.map(m => m._id === userMsg._id ? { ...m, text: transcription.text } : m));
-      persistMessage({ ...userMsg, text: transcription.text }, sessionId, { inputMethod: 'voice', asrTranscription: transcription.text });
-
-      // Now send to chat with history
-      const result = await sendChatMessage({ 
-        message: transcription.text, 
-        latitude: location?.latitude, 
-        longitude: location?.longitude, 
-        language: language?.code,
-        locationDetails, // Human-readable location for AI context
-        history: messages, // Pass conversation history for context
-      });
-      
-      if (!result.success) {
-        showError(parseErrorMessage(result));
-        addMessage({ _id: (Date.now() + 1).toString(), text: "Sorry, I couldn't process your request. Please try again.", createdAt: new Date(), isBot: true });
-      } else {
-        const botMsg = { _id: (Date.now() + 1).toString(), text: result.response, createdAt: new Date(), isBot: true };
-        addMessage(botMsg);
-        persistMessage(botMsg, sessionId, { responseLanguageCode: language?.code });
-        maybeGenerateTitle(sessionId, [botMsg, userMsg, ...messages]);
-      }
+      return { 
+        success: true, 
+        transcription: result.text 
+      };
     } catch (error) {
-      console.error('Voice processing error:', error);
-      showError(parseErrorMessage(error));
-      addMessage({ _id: (Date.now() + 1).toString(), text: "Voice processing failed. Please try again.", createdAt: new Date(), isBot: true });
-    } finally {
-      setIsTyping(false);
+      console.error('Transcription error:', error);
+      return { 
+        success: false, 
+        error: 'Transcription failed' 
+      };
     }
-  }, [location, language, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle]);
+  }, [language]);
+
+  // Upload audio to Cloudinary in background (not shown in chat)
+  const uploadAudioInBackground = useCallback(async (audioData) => {
+    if (!audioData?.base64) return { success: false };
+    
+    try {
+      console.log('📤 [useChat] Uploading voice audio in background...');
+      const result = await uploadAudio(audioData.base64, audioData.duration);
+      
+      if (result.success) {
+        console.log('✅ [useChat] Voice audio uploaded:', result.url);
+        // Optionally save to DB for analytics
+        // This audio is stored for record-keeping, not shown in chat
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Background audio upload error:', error);
+      return { success: false, error: error.message };
+    }
+  }, []);
 
   return { 
     messages, 
@@ -289,7 +285,8 @@ export default function useChat(sessionIdParam = null) {
     newestBotMessageId, 
     handleSendText, 
     handleSendImage, 
-    handleSendVoice,
+    transcribeAudioForInput, // For VoiceRecorder
+    uploadAudioInBackground, // For silent audio storage
     startNewSession,
   };
 }

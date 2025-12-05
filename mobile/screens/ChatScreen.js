@@ -24,7 +24,9 @@ export default function ChatScreen({ navigation, route }) {
   
   const { 
     messages, isTyping, isLoadingSession, newestBotMessageId, 
-    handleSendText, handleSendImage, handleSendVoice, startNewSession 
+    handleSendText, handleSendImage, 
+    transcribeAudioForInput, uploadAudioInBackground,
+    startNewSession 
   } = useChat(sessionId);
   
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -159,7 +161,13 @@ export default function ChatScreen({ navigation, route }) {
       </View>
 
       {/* Input */}
-      <InputToolbar onSendText={handleSendText} onSendImage={handleSendImage} onSendVoice={handleSendVoice} disabled={isTyping} />
+      <InputToolbar 
+        onSendText={handleSendText} 
+        onSendImage={handleSendImage} 
+        transcribeAudio={transcribeAudioForInput}
+        uploadAudioInBackground={uploadAudioInBackground}
+        disabled={isTyping} 
+      />
     </KeyboardAvoidingView>
   );
 }
