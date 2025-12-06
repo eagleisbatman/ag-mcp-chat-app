@@ -62,9 +62,15 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
     }
 
     const data = await response.json();
+    console.log('📥 [API] Chat response:', {
+      hasFollowUp: !!data.followUpQuestions?.length,
+      followUpCount: data.followUpQuestions?.length || 0,
+    });
+    
     return {
       success: true,
       response: data.response || data.text || 'No response received',
+      followUpQuestions: data.followUpQuestions || [], // ← THIS WAS MISSING!
       region: data.region,
       language: data.language,
     };
