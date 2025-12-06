@@ -9,7 +9,7 @@ import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
 import TypewriterText from './TypewriterText';
 
-export default function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
+function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const { theme, language } = useApp();
   const { showError } = useToast();
   const isBot = message.isBot;
@@ -374,4 +374,14 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
   },
+});
+
+// Memoize to prevent unnecessary re-renders (fixes VirtualizedList warning)
+export default React.memo(MessageItem, (prevProps, nextProps) => {
+  // Only re-render if these props change
+  return (
+    prevProps.message._id === nextProps.message._id &&
+    prevProps.message.text === nextProps.message.text &&
+    prevProps.isNewMessage === nextProps.isNewMessage
+  );
 });
