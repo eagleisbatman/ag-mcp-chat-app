@@ -17,22 +17,41 @@
       "notes": "Receives TTS requests. Expects: { text, language, voice? }"
     },
     {
+      "id": "fetch_mapping",
+      "name": "Fetch Voice Mapping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.API_GATEWAY_URL }}/api/languages/tts-mapping",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.API_GATEWAY_KEY }}" }
+          ]
+        },
+        "options": { "timeout": 5000 }
+      },
+      "notes": "Fetches language-to-voice mapping from database via API Gateway"
+    },
+    {
       "id": "prepare",
       "name": "Prepare TTS Request",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [460, 300],
+      "position": [680, 300],
       "parameters": {
-        "jsCode": "// Available Gemini TTS Voices:\n// Aoede - Bright, engaging\n// Charon - Informative, conversational\n// Fenrir - Expressive, narrative\n// Kore - Clear, professional\n// Leda - Youthful, approachable\n// Orus - Deep, authoritative\n// Perseus - Confident, dynamic\n// Puck - Upbeat, friendly\n// Zephyr - Smooth, calming\n// Orbit - Clear, neutral\n\nconst text = $json.body?.text || \"\";\nconst language = $json.body?.language || \"en\";\nconst userVoice = $json.body?.voice;\n\n// Language to Voice mapping - optimized for farming context\n// Using voices that sound warm, approachable, and trustworthy\nconst languageVoiceMap = {\n  // Indian languages - using voices that work well with these\n  'hi': 'Charon',    // Hindi - informative, conversational\n  'te': 'Kore',      // Telugu - clear, professional\n  'kn': 'Puck',      // Kannada - friendly, upbeat\n  'ta': 'Zephyr',    // Tamil - smooth, calming\n  'mr': 'Charon',    // Marathi - informative\n  'bn': 'Kore',      // Bengali - clear\n  'gu': 'Puck',      // Gujarati - friendly\n  'ml': 'Zephyr',    // Malayalam - smooth\n  'pa': 'Charon',    // Punjabi - conversational\n  'or': 'Kore',      // Odia - clear\n  \n  // African languages\n  'sw': 'Puck',      // Swahili - friendly\n  'am': 'Charon',    // Amharic - conversational\n  \n  // Southeast Asian\n  'vi': 'Kore',      // Vietnamese - clear\n  'th': 'Zephyr',    // Thai - smooth\n  \n  // European languages\n  'en': 'Puck',      // English - friendly, upbeat (good for farmers)\n  'es': 'Charon',    // Spanish - conversational\n  'fr': 'Zephyr',    // French - smooth\n  'pt': 'Puck',      // Portuguese - friendly\n  'de': 'Kore',      // German - clear\n  \n  // Default fallback\n  'default': 'Puck'  // Puck is universally friendly and engaging\n};\n\n// Determine voice: user preference > language mapping > default\nconst voiceName = userVoice || languageVoiceMap[language] || languageVoiceMap['default'];\n\n// Language names for more natural speech\nconst languageNames = {\n  'hi': 'Hindi',\n  'te': 'Telugu',\n  'kn': 'Kannada',\n  'ta': 'Tamil',\n  'mr': 'Marathi',\n  'bn': 'Bengali',\n  'gu': 'Gujarati',\n  'ml': 'Malayalam',\n  'pa': 'Punjabi',\n  'or': 'Odia',\n  'sw': 'Swahili',\n  'am': 'Amharic',\n  'vi': 'Vietnamese',\n  'th': 'Thai',\n  'en': 'English',\n  'es': 'Spanish',\n  'fr': 'French',\n  'pt': 'Portuguese',\n  'de': 'German'\n};\n\nconst langName = languageNames[language] || 'English';\n\n// Build prompt with natural speech instructions\n// For non-English, instruct to speak in that language\nlet prompt;\nif (language !== 'en') {\n  prompt = `Speak this in ${langName}, with a warm and friendly tone like a helpful agricultural advisor:\\n${text}`;\n} else {\n  prompt = `Speak with a warm and friendly tone like a helpful agricultural advisor:\\n${text}`;\n}\n\nreturn [{\n  json: {\n    text,\n    language,\n    voiceName,\n    prompt,\n    requestBody: {\n      contents: [{ parts: [{ text: prompt }] }],\n      generationConfig: {\n        responseModalities: [\"AUDIO\"],\n        speechConfig: {\n          voiceConfig: {\n            prebuiltVoiceConfig: { voiceName }\n          }\n        }\n      }\n    }\n  }\n}];"
+        "jsCode": "// Get the original request and the voice mapping\nconst originalRequest = $('TTS Webhook').first().json;\nconst mappingResponse = $json;\n\nconst text = originalRequest.body?.text || \"\";\nconst language = originalRequest.body?.language || \"en\";\nconst userVoice = originalRequest.body?.voice;\n\n// Get voice from database mapping or use default\nlet voiceName = userVoice;\nif (!voiceName) {\n  if (mappingResponse.success && mappingResponse.mapping && mappingResponse.mapping[language]) {\n    voiceName = mappingResponse.mapping[language].voiceId;\n  } else {\n    voiceName = mappingResponse.defaultVoice || 'Puck';\n  }\n}\n\n// Get language name for natural speech prompting\nconst langName = mappingResponse.mapping?.[language]?.languageName || 'English';\n\n// Build prompt with natural speech instructions\nlet prompt;\nif (language !== 'en') {\n  prompt = `Speak this in ${langName}, with a warm and friendly tone like a helpful agricultural advisor:\\n${text}`;\n} else {\n  prompt = `Speak with a warm and friendly tone like a helpful agricultural advisor:\\n${text}`;\n}\n\nreturn [{\n  json: {\n    text,\n    language,\n    voiceName,\n    languageName: langName,\n    prompt,\n    requestBody: {\n      contents: [{ parts: [{ text: prompt }] }],\n      generationConfig: {\n        responseModalities: [\"AUDIO\"],\n        speechConfig: {\n          voiceConfig: {\n            prebuiltVoiceConfig: { voiceName }\n          }\n        }\n      }\n    }\n  }\n}];"
       },
-      "notes": "Prepares Gemini TTS API request with language-based voice selection"
+      "notes": "Prepares Gemini TTS API request with database-driven voice selection"
     },
     {
       "id": "tts_api",
       "name": "Gemini TTS API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [680, 300],
+      "position": [900, 300],
       "parameters": {
         "method": "POST",
         "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key={{ $env.GEMINI_API_KEY }}",
@@ -43,14 +62,14 @@
           "timeout": 60000
         }
       },
-      "notes": "Calls Gemini 2.5 Flash Preview TTS with language-appropriate voice"
+      "notes": "Calls Gemini 2.5 Flash Preview TTS with database-selected voice"
     },
     {
       "id": "response",
       "name": "Format Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [900, 300],
+      "position": [1120, 300],
       "parameters": {
         "jsCode": "const response = $json;\n\ntry {\n  const audioData = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;\n  if (!audioData) {\n    return [{ json: { success: false, error: \"No audio generated\" } }];\n  }\n  \n  // WAV file parameters (Gemini outputs 24kHz 16-bit mono PCM)\n  const sampleRate = 24000;\n  const numChannels = 1;\n  const bitsPerSample = 16;\n  \n  // Convert base64 PCM to Buffer\n  const pcmBuffer = Buffer.from(audioData, \"base64\");\n  const dataSize = pcmBuffer.length;\n  \n  // Create WAV header (44 bytes)\n  const wavHeader = Buffer.alloc(44);\n  wavHeader.write(\"RIFF\", 0);                              // ChunkID\n  wavHeader.writeUInt32LE(36 + dataSize, 4);               // ChunkSize\n  wavHeader.write(\"WAVE\", 8);                              // Format\n  wavHeader.write(\"fmt \", 12);                             // Subchunk1ID\n  wavHeader.writeUInt32LE(16, 16);                         // Subchunk1Size (PCM)\n  wavHeader.writeUInt16LE(1, 20);                          // AudioFormat (PCM=1)\n  wavHeader.writeUInt16LE(numChannels, 22);                // NumChannels\n  wavHeader.writeUInt32LE(sampleRate, 24);                 // SampleRate\n  wavHeader.writeUInt32LE(sampleRate * numChannels * bitsPerSample / 8, 28); // ByteRate\n  wavHeader.writeUInt16LE(numChannels * bitsPerSample / 8, 32);              // BlockAlign\n  wavHeader.writeUInt16LE(bitsPerSample, 34);              // BitsPerSample\n  wavHeader.write(\"data\", 36);                             // Subchunk2ID\n  wavHeader.writeUInt32LE(dataSize, 40);                   // Subchunk2Size\n  \n  // Combine header and PCM data\n  const wavBuffer = Buffer.concat([wavHeader, pcmBuffer]);\n  const wavBase64 = wavBuffer.toString(\"base64\");\n  \n  // Calculate duration in seconds\n  const bytesPerSecond = sampleRate * numChannels * bitsPerSample / 8;\n  const duration = Math.round(dataSize / bytesPerSecond);\n  \n  return [{\n    json: {\n      success: true,\n      audioBase64: wavBase64,\n      duration: duration,\n      mimeType: \"audio/wav\"\n    }\n  }];\n} catch (e) {\n  return [{ json: { success: false, error: e.message } }];\n}"
       },
@@ -59,6 +78,9 @@
   ],
   "connections": {
     "TTS Webhook": {
+      "main": [[{ "node": "Fetch Voice Mapping", "type": "main", "index": 0 }]]
+    },
+    "Fetch Voice Mapping": {
       "main": [[{ "node": "Prepare TTS Request", "type": "main", "index": 0 }]]
     },
     "Prepare TTS Request": {

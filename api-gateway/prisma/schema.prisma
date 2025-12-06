@@ -371,7 +371,7 @@ model MediaUpload {
 }
 
 // ============================================
-// 8. LANGUAGES TABLE - Reference
+// 8. LANGUAGES TABLE - Reference with TTS mapping
 // ============================================
 model Language {
   code            String   @id
@@ -382,9 +382,40 @@ model Language {
   ttsSupported    Boolean  @default(true) @map("tts_supported")
   asrSupported    Boolean  @default(true) @map("asr_supported")
   rtl             Boolean  @default(false)
+  
+  // TTS Voice mapping
+  ttsVoiceId      String?  @map("tts_voice_id")
+  ttsVoice        TtsVoice? @relation(fields: [ttsVoiceId], references: [id])
+  
   createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@map("languages")
+}
+
+// ============================================
+// 8a. TTS VOICES TABLE - Available Gemini voices
+// ============================================
+model TtsVoice {
+  id              String   @id
+  name            String
+  displayName     String?  @map("display_name")
+  description     String?
+  style           String?  // friendly/professional/calm/energetic
+  gender          String?  // male/female/neutral
+  isActive        Boolean  @default(true) @map("is_active")
+  isDefault       Boolean  @default(false) @map("is_default")
+  
+  // Usage stats
+  usageCount      Int      @default(0) @map("usage_count")
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  languages       Language[]
+  
+  @@map("tts_voices")
 }
 
 // ============================================
