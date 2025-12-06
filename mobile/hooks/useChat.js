@@ -187,6 +187,7 @@ export default function useChat(sessionIdParam = null) {
           text: result.response,
           createdAt: new Date(),
           isBot: true,
+          followUpQuestions: result.followUpQuestions || [], // Store follow-up questions
         };
         addMessage(botMsg);
         persistMessage(botMsg, sessionId, { responseLanguageCode: language?.code });

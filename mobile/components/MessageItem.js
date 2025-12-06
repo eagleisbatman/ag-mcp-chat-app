@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -8,10 +9,11 @@ import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
 import TypewriterText from './TypewriterText';
 
-export default function MessageItem({ message, isNewMessage = false }) {
+export default function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const { theme, language } = useApp();
   const { showError } = useToast();
   const isBot = message.isBot;
+  const followUpQuestions = message.followUpQuestions || [];
   
   // TTS state
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -263,6 +265,40 @@ export default function MessageItem({ message, isNewMessage = false }) {
           </Text>
         </View>
       )}
+
+      {/* Follow-up Question Cards */}
+      {isBot && followUpQuestions.length > 0 && !shouldAnimate && (
+        <View style={styles.followUpContainer}>
+          <Text style={[styles.followUpLabel, { color: theme.textMuted }]}>
+            Tap to ask:
+          </Text>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.followUpScroll}
+          >
+            {followUpQuestions.map((question, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.followUpCard, { 
+                  backgroundColor: theme.accentLight,
+                  borderColor: theme.accent,
+                }]}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  onFollowUpPress?.(question);
+                }}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="chatbubble-outline" size={14} color={theme.accent} style={styles.followUpIcon} />
+                <Text style={[styles.followUpText, { color: theme.accent }]} numberOfLines={2}>
+                  {question}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      )}
     </View>
   );
 }
@@ -316,5 +352,35 @@ const styles = StyleSheet.create({
   diagnosisText: {
     fontSize: 14,
     lineHeight: 20,
+  },
+  // Follow-up question cards
+  followUpContainer: {
+    marginTop: 12,
+  },
+  followUpLabel: {
+    fontSize: 12,
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  followUpScroll: {
+    paddingRight: 16,
+    gap: 8,
+  },
+  followUpCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    maxWidth: 260,
+  },
+  followUpIcon: {
+    marginRight: 6,
+  },
+  followUpText: {
+    fontSize: 13,
+    fontWeight: '500',
+    flexShrink: 1,
   },
 });

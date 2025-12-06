@@ -129,7 +129,7 @@ export default function ChatScreen({ navigation, route }) {
         <FlatList
           ref={flatListRef}
           data={[...messages].reverse()}
-          renderItem={({ item }) => <MessageItem message={item} isNewMessage={item._id === newestBotMessageId} />}
+          renderItem={({ item }) => <MessageItem message={item} isNewMessage={item._id === newestBotMessageId} onFollowUpPress={handleSendText} />}
           keyExtractor={(item) => item._id}
           contentContainerStyle={styles.messagesList}
           showsVerticalScrollIndicator={false}
