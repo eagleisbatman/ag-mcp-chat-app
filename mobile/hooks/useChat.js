@@ -46,6 +46,7 @@ export default function useChat(sessionIdParam = null) {
           createdAt: new Date(m.createdAt),
           isBot: m.role === 'assistant',
           image: m.imageCloudinaryUrl,
+          followUpQuestions: m.followUpQuestions || [], // Load follow-up questions
         })).reverse(); // Newest first for inverted FlatList
         
         setMessages([...loadedMessages, WELCOME_MESSAGE]);
@@ -190,7 +191,10 @@ export default function useChat(sessionIdParam = null) {
           followUpQuestions: result.followUpQuestions || [], // Store follow-up questions
         };
         addMessage(botMsg);
-        persistMessage(botMsg, sessionId, { responseLanguageCode: language?.code });
+        persistMessage(botMsg, sessionId, { 
+          responseLanguageCode: language?.code,
+          followUpQuestions: result.followUpQuestions || [],
+        });
         maybeGenerateTitle(sessionId, [botMsg, userMessage, ...messages]);
       }
     } catch (error) {

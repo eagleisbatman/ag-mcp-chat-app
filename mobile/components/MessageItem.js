@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-markdown-display';
@@ -33,65 +33,61 @@ export default function MessageItem({ message, isNewMessage = false, onFollowUpP
     });
   };
 
-  // Markdown styles based on theme - ensure proper text wrapping
+  // Markdown styles - optimized to prevent text overflow
   const markdownStyles = {
     body: {
       color: theme.text,
-      fontSize: 16,
-      lineHeight: 24,
-      flexWrap: 'wrap',
-      flexShrink: 1,
-    },
-    text: {
-      flexWrap: 'wrap',
-      flexShrink: 1,
+      fontSize: 15,
+      lineHeight: 22,
     },
     heading1: {
       color: theme.text,
-      fontSize: 20,
+      fontSize: 18,
       fontWeight: '700',
       marginBottom: 6,
-      marginTop: 4,
-      flexWrap: 'wrap',
+      marginTop: 8,
     },
     heading2: {
-      color: theme.text,
-      fontSize: 18,
-      fontWeight: '600',
-      marginBottom: 4,
-      marginTop: 4,
-      flexWrap: 'wrap',
-    },
-    heading3: {
       color: theme.text,
       fontSize: 17,
       fontWeight: '600',
       marginBottom: 4,
-      flexWrap: 'wrap',
+      marginTop: 6,
+    },
+    heading3: {
+      color: theme.text,
+      fontSize: 16,
+      fontWeight: '600',
+      marginBottom: 4,
     },
     strong: {
       fontWeight: '700',
-      color: theme.text,
+      color: theme.accent, // Highlight bold facts in accent color
     },
     em: {
       fontStyle: 'italic',
     },
     bullet_list: {
       marginVertical: 4,
+      paddingLeft: 0,
     },
     ordered_list: {
       marginVertical: 4,
+      paddingLeft: 0,
     },
     list_item: {
-      marginVertical: 2,
+      marginVertical: 3,
       flexDirection: 'row',
-      flexWrap: 'wrap',
-      flexShrink: 1,
+      alignItems: 'flex-start',
     },
     bullet_list_icon: {
       color: theme.accent,
-      fontSize: 14,
-      marginRight: 6,
+      fontSize: 8,
+      marginRight: 8,
+      marginTop: 7,
+    },
+    bullet_list_content: {
+      flex: 1,
     },
     code_inline: {
       backgroundColor: theme.surfaceVariant,
@@ -107,14 +103,12 @@ export default function MessageItem({ message, isNewMessage = false, onFollowUpP
       padding: 10,
       borderRadius: 8,
       marginVertical: 6,
-      overflow: 'hidden',
     },
     fence: {
       backgroundColor: theme.surfaceVariant,
       padding: 10,
       borderRadius: 8,
       marginVertical: 6,
-      overflow: 'hidden',
     },
     link: {
       color: theme.accent,
@@ -122,8 +116,10 @@ export default function MessageItem({ message, isNewMessage = false, onFollowUpP
     },
     paragraph: {
       marginVertical: 4,
+    },
+    textgroup: {
+      flexDirection: 'row',
       flexWrap: 'wrap',
-      flexShrink: 1,
     },
   };
 
@@ -266,23 +262,19 @@ export default function MessageItem({ message, isNewMessage = false, onFollowUpP
         </View>
       )}
 
-      {/* Follow-up Question Cards */}
+      {/* Follow-up Questions - Vertical List */}
       {isBot && followUpQuestions.length > 0 && !shouldAnimate && (
         <View style={styles.followUpContainer}>
           <Text style={[styles.followUpLabel, { color: theme.textMuted }]}>
-            Tap to ask:
+            👆 Tap to ask next:
           </Text>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.followUpScroll}
-          >
+          <View style={styles.followUpList}>
             {followUpQuestions.map((question, index) => (
               <TouchableOpacity
                 key={index}
-                style={[styles.followUpCard, { 
-                  backgroundColor: theme.accentLight,
-                  borderColor: theme.accent,
+                style={[styles.followUpItem, { 
+                  backgroundColor: theme.surfaceVariant,
+                  borderLeftColor: theme.accent,
                 }]}
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -290,13 +282,13 @@ export default function MessageItem({ message, isNewMessage = false, onFollowUpP
                 }}
                 activeOpacity={0.7}
               >
-                <Ionicons name="chatbubble-outline" size={14} color={theme.accent} style={styles.followUpIcon} />
-                <Text style={[styles.followUpText, { color: theme.accent }]} numberOfLines={2}>
+                <Text style={[styles.followUpText, { color: theme.text }]}>
                   {question}
                 </Text>
+                <Ionicons name="arrow-forward" size={16} color={theme.textMuted} />
               </TouchableOpacity>
             ))}
-          </ScrollView>
+          </View>
         </View>
       )}
     </View>
@@ -353,34 +345,33 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  // Follow-up question cards
+  // Follow-up questions - vertical list
   followUpContainer: {
-    marginTop: 12,
+    marginTop: 16,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.05)',
   },
   followUpLabel: {
     fontSize: 12,
-    marginBottom: 8,
-    fontWeight: '500',
+    marginBottom: 10,
+    fontWeight: '600',
   },
-  followUpScroll: {
-    paddingRight: 16,
-    gap: 8,
+  followUpList: {
+    gap: 6,
   },
-  followUpCard: {
+  followUpItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    maxWidth: 260,
-  },
-  followUpIcon: {
-    marginRight: 6,
+    borderRadius: 8,
+    borderLeftWidth: 3,
   },
   followUpText: {
-    fontSize: 13,
-    fontWeight: '500',
-    flexShrink: 1,
+    fontSize: 14,
+    flex: 1,
+    marginRight: 8,
   },
 });

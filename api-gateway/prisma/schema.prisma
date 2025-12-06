@@ -246,6 +246,9 @@ model Message {
   diagnosisIssues         Json?     @map("diagnosis_issues")
   diagnosisConfidence     String?   @map("diagnosis_confidence")
   
+  // Follow-up questions (for bot messages)
+  followUpQuestions       String[]  @map("follow_up_questions")
+  
   // Feedback
   userRating              Int?      @map("user_rating")
   userFeedback            String?   @map("user_feedback")

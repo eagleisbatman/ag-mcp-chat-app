@@ -60,6 +60,8 @@ router.post('/', async (req, res) => {
       ttsAudioUrl, ttsDurationSec, ttsLanguageCode, ttsModel, ttsProcessingMs,
       // Diagnosis data
       diagnosisCrop, diagnosisHealthStatus, diagnosisIssues, diagnosisConfidence,
+      // Follow-up questions (for bot messages)
+      followUpQuestions,
       // Processing
       processingDurationMs,
       // Metadata
@@ -92,6 +94,7 @@ router.post('/', async (req, res) => {
         imageLocalUri, imageCloudinaryUrl, imageThumbnailUrl, imageMediumUrl, imageWidth, imageHeight,
         ttsAudioUrl, ttsDurationSec, ttsLanguageCode, ttsModel, ttsProcessingMs,
         diagnosisCrop, diagnosisHealthStatus, diagnosisIssues, diagnosisConfidence,
+        followUpQuestions: followUpQuestions || [],
         processingDurationMs, metadata,
       },
     });
