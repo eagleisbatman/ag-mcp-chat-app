@@ -1,65 +1,171 @@
-// Theme color definitions
+// Theme color definitions - Pure dark/light with vibrant accents
 
 export const THEMES = {
   light: {
     name: 'light',
-    background: '#FAFAFA',
+    // Pure bright white base
+    background: '#FFFFFF',
     surface: '#FFFFFF',
-    surfaceVariant: '#F5F5F5',
-    text: '#1A1A1A',
-    textSecondary: '#666666',
-    textMuted: '#999999',
-    accent: '#2E7D32',
-    accentLight: '#E8F5E9',
-    border: '#E0E0E0',
-    userMessage: '#F0F0F0',
+    surfaceVariant: '#F2F2F7',     // iOS-style subtle gray
+    surfaceElevated: '#FFFFFF',
+    
+    // Text hierarchy
+    text: '#000000',               // Pure black for max readability
+    textSecondary: '#3C3C43',      // iOS secondary label
+    textMuted: '#8E8E93',          // iOS tertiary label
+    
+    // Vibrant green accent (brighter than before)
+    accent: '#34C759',             // iOS green - bright and vibrant
+    accentBright: '#30D158',       // Even brighter for icons
+    accentLight: '#E3F9E5',        // Very light green tint
+    accentDark: '#248A3D',         // Darker green for pressed states
+    
+    // Borders & separators
+    border: '#E5E5EA',             // iOS separator
+    borderLight: '#F2F2F7',
+    
+    // Message bubbles
+    userMessage: '#F2F2F7',        // Subtle gray for user messages
+    userMessageText: '#000000',
     botMessage: '#FFFFFF',
-    inputBackground: '#F5F5F5',
+    botMessageText: '#000000',
+    
+    // Input
+    inputBackground: '#F2F2F7',
+    inputBorder: '#E5E5EA',
+    
+    // Status bar
     statusBar: 'dark',
-    // Error states
-    error: '#D32F2F',
-    errorLight: '#FFEBEE',
-    // Success states
-    success: '#2E7D32',
-    successLight: '#E8F5E9',
-    // Warning states
-    warning: '#F57C00',
-    warningLight: '#FFF3E0',
+    
+    // Semantic colors - brighter
+    error: '#FF3B30',              // iOS red
+    errorLight: '#FFEBE9',
+    success: '#34C759',            // iOS green
+    successLight: '#E3F9E5',
+    warning: '#FF9500',            // iOS orange
+    warningLight: '#FFF4E5',
+    info: '#007AFF',               // iOS blue
+    infoLight: '#E5F1FF',
+    
+    // Icon colors (brighter)
+    iconPrimary: '#34C759',        // Vibrant green
+    iconSecondary: '#8E8E93',      // Muted gray
+    iconAccent: '#007AFF',         // Blue accent
   },
+  
   dark: {
     name: 'dark',
-    background: '#121212',
-    surface: '#1E1E1E',
-    surfaceVariant: '#2A2A2A',
-    text: '#E0E0E0',
-    textSecondary: '#AAAAAA',
-    textMuted: '#777777',
-    accent: '#4CAF50',        // Vibrant green (was #81C784 - too faded)
-    accentLight: '#1B3D1C',
-    border: '#333333',
-    userMessage: '#2A2A2A',
-    botMessage: '#1E1E1E',
-    inputBackground: '#2A2A2A',
+    // Pure OLED black base
+    background: '#000000',         // Pure black for OLED
+    surface: '#1C1C1E',            // iOS dark surface
+    surfaceVariant: '#2C2C2E',     // Slightly elevated
+    surfaceElevated: '#3A3A3C',    // More elevated
+    
+    // Text hierarchy
+    text: '#FFFFFF',               // Pure white
+    textSecondary: '#EBEBF5',      // iOS dark secondary (99% opacity white)
+    textMuted: '#8E8E93',          // iOS dark tertiary
+    
+    // Vibrant green accent (extra bright for dark mode)
+    accent: '#30D158',             // iOS dark mode green - very vibrant
+    accentBright: '#32DE5A',       // Even brighter for icons
+    accentLight: '#0D3D14',        // Dark green tint
+    accentDark: '#28CD50',         // Slightly darker for pressed
+    
+    // Borders & separators
+    border: '#38383A',             // iOS dark separator
+    borderLight: '#2C2C2E',
+    
+    // Message bubbles
+    userMessage: '#2C2C2E',        // Subtle dark gray for user messages
+    userMessageText: '#FFFFFF',
+    botMessage: '#1C1C1E',
+    botMessageText: '#FFFFFF',
+    
+    // Input
+    inputBackground: '#1C1C1E',
+    inputBorder: '#38383A',
+    
+    // Status bar
     statusBar: 'light',
-    // Error states
-    error: '#EF5350',
-    errorLight: '#3D1C1C',
-    // Success states
-    success: '#4CAF50',       // Match accent
-    successLight: '#1B3D1C',
-    // Warning states
-    warning: '#FFB74D',
-    warningLight: '#3D2E1C',
+    
+    // Semantic colors - brighter for dark mode
+    error: '#FF453A',              // iOS dark red
+    errorLight: '#3D1C1A',
+    success: '#30D158',            // iOS dark green
+    successLight: '#0D3D14',
+    warning: '#FF9F0A',            // iOS dark orange
+    warningLight: '#3D2E0D',
+    info: '#0A84FF',               // iOS dark blue
+    infoLight: '#0D2840',
+    
+    // Icon colors (extra bright for dark mode)
+    iconPrimary: '#32DE5A',        // Extra vibrant green
+    iconSecondary: '#98989D',      // Brighter gray
+    iconAccent: '#0A84FF',         // Bright blue
+  },
+};
+
+// Typography system
+export const TYPOGRAPHY = {
+  // Font sizes
+  sizes: {
+    xs: 11,
+    sm: 13,
+    base: 15,
+    md: 16,
+    lg: 17,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 28,
+  },
+  // Line heights (multipliers)
+  lineHeights: {
+    tight: 1.2,
+    normal: 1.4,
+    relaxed: 1.5,
+    loose: 1.6,
+  },
+  // Font weights
+  weights: {
+    regular: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
   },
 };
 
 // Standard spacing/sizing constants
 export const SPACING = {
+  // Base spacing scale
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  '2xl': 24,
+  '3xl': 32,
+  
+  // Component-specific
   headerPaddingOffset: 16,
   headerMinPadding: 56,
   horizontalPadding: 16,
+  
+  // Border radius scale
+  radiusSm: 8,
+  radiusMd: 12,
+  radiusLg: 16,
+  radiusXl: 20,
+  radiusFull: 9999,
+  
+  // Legacy (for compatibility)
   borderRadius: 12,
   iconButtonSize: 36,
+  
+  // Input toolbar
+  inputHeight: 48,
+  inputPadding: 16,
+  floatingInputMargin: 12,
 };
 
 export default THEMES;

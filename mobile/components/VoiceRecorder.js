@@ -12,8 +12,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Haptics from 'expo-haptics';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const WAVEFORM_BARS = 30;
@@ -26,6 +28,8 @@ export default function VoiceRecorder({
 }) {
   const { theme, language } = useApp();
   const { showError } = useToast();
+  const insets = useSafeAreaInsets();
+  const isDark = theme.name === 'dark';
   
   // State
   const [isRecording, setIsRecording] = useState(false);
@@ -246,187 +250,205 @@ export default function VoiceRecorder({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const bottomPadding = Math.max(insets.bottom, SPACING.md);
+
   return (
-    <Animated.View 
-      style={[
-        styles.container, 
-        { 
-          backgroundColor: theme.surface,
-          borderTopColor: theme.border,
-          transform: [
-            { 
-              translateY: slideAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [100, 0],
-              })
-            }
-          ],
-          opacity: slideAnim,
-        }
-      ]}
-    >
-      {isTranscribing ? (
-        // Transcribing State
-        <View style={styles.transcribingContainer}>
-          <ActivityIndicator size="large" color={theme.accent} />
-          <Text style={[styles.transcribingText, { color: theme.text }]}>
-            Transcribing...
-          </Text>
-        </View>
-      ) : (
-        // Recording State
-        <>
-          {/* Header Row */}
-          <View style={styles.headerRow}>
-            <View style={styles.recordingIndicator}>
-              <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-                <View style={[styles.recordingDot, { backgroundColor: theme.error }]} />
-              </Animated.View>
-              <Text style={[styles.recordingLabel, { color: theme.error }]}>
-                Recording
-              </Text>
-            </View>
-            <Text style={[styles.duration, { color: theme.text }]}>
-              {formatDuration(recordingDuration)}
+    <View style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
+      <Animated.View 
+        style={[
+          styles.container, 
+          { 
+            backgroundColor: isDark ? 'rgba(28, 28, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+            borderColor: theme.border,
+            transform: [
+              { 
+                translateY: slideAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [100, 0],
+                })
+              }
+            ],
+            opacity: slideAnim,
+          }
+        ]}
+      >
+        {isTranscribing ? (
+          // Transcribing State
+          <View style={styles.transcribingContainer}>
+            <ActivityIndicator size="large" color={theme.iconPrimary || theme.accent} />
+            <Text style={[styles.transcribingText, { color: theme.text }]}>
+              Transcribing...
             </Text>
           </View>
+        ) : (
+          // Recording State
+          <>
+            {/* Header Row */}
+            <View style={styles.headerRow}>
+              <View style={styles.recordingIndicator}>
+                <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+                  <View style={[styles.recordingDot, { backgroundColor: theme.error }]} />
+                </Animated.View>
+                <Text style={[styles.recordingLabel, { color: theme.error }]}>
+                  Recording
+                </Text>
+              </View>
+              <Text style={[styles.duration, { color: theme.text }]}>
+                {formatDuration(recordingDuration)}
+              </Text>
+            </View>
 
-          {/* Waveform */}
-          <View style={styles.waveformContainer}>
-            {waveformAnims.map((anim, index) => (
-              <Animated.View
-                key={index}
-                style={[
-                  styles.waveformBar,
-                  {
-                    backgroundColor: theme.accent,
-                    transform: [
-                      {
-                        scaleY: anim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0.1, 1],
-                        }),
-                      },
-                    ],
-                  },
-                ]}
-              />
-            ))}
-          </View>
+            {/* Waveform */}
+            <View style={styles.waveformContainer}>
+              {waveformAnims.map((anim, index) => (
+                <Animated.View
+                  key={index}
+                  style={[
+                    styles.waveformBar,
+                    {
+                      backgroundColor: theme.accentBright || theme.accent,
+                      transform: [
+                        {
+                          scaleY: anim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0.1, 1],
+                          }),
+                        },
+                      ],
+                    },
+                  ]}
+                />
+              ))}
+            </View>
 
-          {/* Action Buttons */}
-          <View style={styles.actionsRow}>
-            <TouchableOpacity
-              style={[styles.cancelButton, { backgroundColor: theme.errorLight }]}
-              onPress={handleCancel}
-            >
-              <Ionicons name="close" size={28} color={theme.error} />
-              <Text style={[styles.buttonLabel, { color: theme.error }]}>Cancel</Text>
-            </TouchableOpacity>
+            {/* Action Buttons */}
+            <View style={styles.actionsRow}>
+              <TouchableOpacity
+                style={[styles.cancelButton, { backgroundColor: theme.errorLight }]}
+                onPress={handleCancel}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close" size={24} color={theme.error} />
+                <Text style={[styles.buttonLabel, { color: theme.error }]}>Cancel</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.doneButton, { backgroundColor: theme.accent }]}
-              onPress={handleDone}
-            >
-              <Ionicons name="checkmark" size={28} color="#FFFFFF" />
-              <Text style={[styles.buttonLabel, { color: '#FFFFFF' }]}>Done</Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                style={[styles.doneButton, { backgroundColor: theme.iconPrimary || theme.accent }]}
+                onPress={handleDone}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="checkmark" size={24} color="#FFFFFF" />
+                <Text style={[styles.buttonLabel, { color: '#FFFFFF' }]}>Done</Text>
+              </TouchableOpacity>
+            </View>
 
-          {/* Hint */}
-          <Text style={[styles.hint, { color: theme.textMuted }]}>
-            Tap Done to transcribe, or Cancel to discard
-          </Text>
-        </>
-      )}
-    </Animated.View>
+            {/* Hint */}
+            <Text style={[styles.hint, { color: theme.textMuted }]}>
+              Tap Done to transcribe, or Cancel to discard
+            </Text>
+          </>
+        )}
+      </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    // Removed absolute positioning for keyboard compatibility
+    paddingHorizontal: SPACING.floatingInputMargin,
+    paddingTop: SPACING.sm,
+  },
   container: {
-    borderTopWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    paddingBottom: 32,
+    borderRadius: SPACING.radiusXl,
+    borderWidth: 0.5,
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: SPACING.lg,
   },
   recordingIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: SPACING.sm,
   },
   recordingDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   recordingLabel: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
   duration: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: TYPOGRAPHY.sizes['2xl'],
+    fontWeight: TYPOGRAPHY.weights.bold,
     fontVariant: ['tabular-nums'],
+    letterSpacing: -0.5,
   },
   waveformContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 60,
+    height: 50,
     gap: 3,
-    marginBottom: 24,
+    marginBottom: SPACING.xl,
   },
   waveformBar: {
-    width: (SCREEN_WIDTH - 80) / WAVEFORM_BARS - 3,
-    height: 50,
+    width: (SCREEN_WIDTH - 100) / WAVEFORM_BARS - 3,
+    height: 40,
     borderRadius: 2,
   },
   actionsRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 40,
-    marginBottom: 12,
+    gap: SPACING['3xl'],
+    marginBottom: SPACING.md,
   },
   cancelButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    gap: 4,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING['2xl'],
+    borderRadius: SPACING.radiusMd,
+    gap: SPACING.xs,
   },
   doneButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    gap: 4,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING['2xl'],
+    borderRadius: SPACING.radiusMd,
+    gap: SPACING.xs,
   },
   buttonLabel: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
   hint: {
     textAlign: 'center',
-    fontSize: 13,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    lineHeight: TYPOGRAPHY.sizes.xs * TYPOGRAPHY.lineHeights.relaxed,
   },
   transcribingContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 40,
-    gap: 16,
+    paddingVertical: SPACING['3xl'],
+    gap: SPACING.lg,
   },
   transcribingText: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
 

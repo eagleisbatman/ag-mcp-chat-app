@@ -9,7 +9,7 @@ import { useToast } from '../contexts/ToastContext';
 import useChat from '../hooks/useChat';
 import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
-import { SPACING } from '../constants/themes';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
 
 export default function ChatScreen({ navigation, route }) {
   const { theme, language, location, locationDetails, setLocation } = useApp();
@@ -82,11 +82,17 @@ export default function ChatScreen({ navigation, route }) {
   }, []);
 
   return (
-    <KeyboardAvoidingView style={[styles.container, { backgroundColor: theme.background }]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={0}>
-      {/* Header */}
+    <KeyboardAvoidingView 
+      style={[styles.container, { backgroundColor: theme.background }]} 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
+    >
+      {/* Header - Cleaner design */}
       <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border, paddingTop: headerPaddingTop }]}>
         <View style={styles.headerLeft}>
-          <Ionicons name="leaf" size={28} color={theme.accent} />
+          <View style={[styles.logoContainer, { backgroundColor: theme.accentLight }]}>
+            <Ionicons name="leaf" size={22} color={theme.iconPrimary || theme.accent} />
+          </View>
           <View style={styles.headerTitleContainer}>
             <Text style={[styles.headerTitle, { color: theme.text }]}>Farm Assistant</Text>
             <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
@@ -99,26 +105,32 @@ export default function ChatScreen({ navigation, route }) {
             style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} 
             onPress={handleRefreshLocation}
             disabled={isRefreshingLocation}
+            activeOpacity={0.7}
           >
             {isRefreshingLocation ? (
-              <ActivityIndicator size="small" color={theme.accent} />
+              <ActivityIndicator size="small" color={theme.iconPrimary || theme.accent} />
             ) : (
-              <Ionicons name="location" size={20} color={theme.accent} />
+              <Ionicons name="location" size={18} color={theme.iconPrimary || theme.accent} />
             )}
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.headerButton, { backgroundColor: theme.accentLight }]} 
             onPress={startNewSession}
+            activeOpacity={0.7}
           >
-            <Ionicons name="add" size={22} color={theme.accent} />
+            <Ionicons name="add" size={20} color={theme.iconPrimary || theme.accent} />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} onPress={() => navigation.navigate('Settings')}>
-            <Ionicons name="menu" size={22} color={theme.textSecondary} />
+          <TouchableOpacity 
+            style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} 
+            onPress={() => navigation.navigate('Settings')}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="menu" size={20} color={theme.iconSecondary || theme.textSecondary} />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Messages */}
+      {/* Messages - with bottom padding for floating input */}
       <View style={styles.messagesContainer}>
         {isLoadingSession ? (
           <View style={styles.loadingContainer}>
@@ -126,41 +138,59 @@ export default function ChatScreen({ navigation, route }) {
             <Text style={[styles.loadingText, { color: theme.textMuted }]}>Loading conversation...</Text>
           </View>
         ) : (
-        <FlatList
-          ref={flatListRef}
-          data={[...messages].reverse()}
-          renderItem={({ item }) => <MessageItem message={item} isNewMessage={item._id === newestBotMessageId} onFollowUpPress={handleSendText} />}
-          keyExtractor={(item) => item._id}
-          contentContainerStyle={styles.messagesList}
-          showsVerticalScrollIndicator={false}
-          onScroll={handleScroll}
-          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
-          scrollEventThrottle={16}
-          ListFooterComponent={isTyping ? (
-            <View style={[styles.typingIndicator, { backgroundColor: theme.botMessage }]}>
-              <ActivityIndicator size="small" color={theme.accent} />
-              <Text style={[styles.typingText, { color: theme.textSecondary }]}>Thinking...</Text>
-            </View>
-          ) : null}
-        />
+          <FlatList
+            ref={flatListRef}
+            data={[...messages].reverse()}
+            renderItem={({ item }) => (
+              <MessageItem 
+                message={item} 
+                isNewMessage={item._id === newestBotMessageId} 
+                onFollowUpPress={handleSendText} 
+              />
+            )}
+            keyExtractor={(item) => item._id}
+            contentContainerStyle={styles.messagesList}
+            showsVerticalScrollIndicator={false}
+            onScroll={handleScroll}
+            onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+            scrollEventThrottle={16}
+            keyboardShouldPersistTaps="handled"
+            ListFooterComponent={isTyping ? (
+              <View style={[styles.typingIndicator, { backgroundColor: theme.botMessage }]}>
+                <View style={[styles.typingDot, { backgroundColor: theme.accent }]} />
+                <View style={[styles.typingDot, { backgroundColor: theme.accent, opacity: 0.7 }]} />
+                <View style={[styles.typingDot, { backgroundColor: theme.accent, opacity: 0.4 }]} />
+                <Text style={[styles.typingText, { color: theme.textSecondary }]}>Thinking...</Text>
+              </View>
+            ) : null}
+          />
         )}
+        
+        {/* Scroll to bottom button */}
         <Animated.View
-          style={[styles.scrollButtonContainer, {
-            opacity: scrollButtonAnim,
-            transform: [
-              { translateY: scrollButtonAnim.interpolate({ inputRange: [0, 1], outputRange: [60, 0] }) },
-              { scale: scrollButtonAnim.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) },
-            ],
-          }]}
+          style={[
+            styles.scrollButtonContainer, 
+            { 
+              opacity: scrollButtonAnim,
+              transform: [
+                { translateY: scrollButtonAnim.interpolate({ inputRange: [0, 1], outputRange: [60, 0] }) },
+                { scale: scrollButtonAnim.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) },
+              ],
+            }
+          ]}
           pointerEvents={showScrollButton ? 'auto' : 'none'}
         >
-          <TouchableOpacity style={[styles.scrollButton, { backgroundColor: theme.accent }]} onPress={scrollToBottom} activeOpacity={0.8}>
-            <Ionicons name="chevron-down" size={24} color="#FFFFFF" />
+          <TouchableOpacity 
+            style={[styles.scrollButton, { backgroundColor: theme.accent }]} 
+            onPress={scrollToBottom} 
+            activeOpacity={0.8}
+          >
+            <Ionicons name="chevron-down" size={22} color="#FFFFFF" />
           </TouchableOpacity>
         </Animated.View>
       </View>
 
-      {/* Input */}
+      {/* Floating Input */}
       <InputToolbar 
         onSendText={handleSendText} 
         onSendImage={handleSendImage} 
@@ -173,20 +203,105 @@ export default function ChatScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1 },
-  headerLeft: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 },
-  headerTitleContainer: { flex: 1 },
-  headerTitle: { fontSize: 18, fontWeight: '700' },
-  headerSubtitle: { fontSize: 13 },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 0 },
-  headerButton: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
-  messagesContainer: { flex: 1, position: 'relative' },
-  messagesList: { paddingVertical: 8, flexGrow: 1 },
-  typingIndicator: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
-  typingText: { fontSize: 14 },
-  scrollButtonContainer: { position: 'absolute', bottom: 16, alignSelf: 'center', zIndex: 100 },
-  scrollButton: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 },
-  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 },
-  loadingText: { fontSize: 15 },
+  container: { 
+    flex: 1,
+  },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: SPACING.lg, 
+    paddingVertical: SPACING.md, 
+    borderBottomWidth: 0.5,
+  },
+  headerLeft: { 
+    flex: 1, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    gap: SPACING.md,
+  },
+  logoContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: SPACING.radiusMd,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitleContainer: { 
+    flex: 1,
+  },
+  headerTitle: { 
+    fontSize: TYPOGRAPHY.sizes.lg, 
+    fontWeight: TYPOGRAPHY.weights.bold,
+    letterSpacing: -0.3,
+  },
+  headerSubtitle: { 
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginTop: 2,
+  },
+  headerRight: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    gap: SPACING.sm, 
+    flexShrink: 0,
+  },
+  headerButton: { 
+    width: 36, 
+    height: 36, 
+    borderRadius: SPACING.radiusMd, 
+    alignItems: 'center', 
+    justifyContent: 'center',
+  },
+  messagesContainer: { 
+    flex: 1, 
+    position: 'relative',
+  },
+  messagesList: { 
+    paddingTop: SPACING.sm,
+    paddingHorizontal: 0,
+    flexGrow: 1,
+  },
+  typingIndicator: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    paddingHorizontal: SPACING.lg, 
+    paddingVertical: SPACING.md, 
+    gap: 6,
+  },
+  typingDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  typingText: { 
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginLeft: SPACING.sm,
+  },
+  scrollButtonContainer: { 
+    position: 'absolute', 
+    bottom: 16,
+    alignSelf: 'center', 
+    zIndex: 100,
+  },
+  scrollButton: { 
+    width: 40, 
+    height: 40, 
+    borderRadius: 20, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 4 }, 
+    shadowOpacity: 0.2, 
+    shadowRadius: 8, 
+    elevation: 6,
+  },
+  loadingContainer: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    gap: SPACING.lg,
+  },
+  loadingText: { 
+    fontSize: TYPOGRAPHY.sizes.base,
+  },
 });

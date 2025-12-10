@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   TextInput,
@@ -11,24 +11,27 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import VoiceRecorder from './VoiceRecorder';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
 
 export default function InputToolbar({ 
   onSendText, 
   onSendImage, 
-  onSendVoiceText, // New: Send transcribed text (not voice bubble)
-  transcribeAudio, // Pass through transcription function
-  uploadAudioInBackground, // Silent audio upload
+  onSendVoiceText,
+  transcribeAudio,
+  uploadAudioInBackground,
   disabled = false,
 }) {
   const { theme } = useApp();
   const { showError, showWarning, showSuccess } = useToast();
+  const insets = useSafeAreaInsets();
   const [text, setText] = useState('');
   const [isRecordingMode, setIsRecordingMode] = useState(false);
-  const [pendingAudioData, setPendingAudioData] = useState(null); // For background upload
-  const [isFromVoice, setIsFromVoice] = useState(false); // Track if text came from voice
+  const [pendingAudioData, setPendingAudioData] = useState(null);
+  const [isFromVoice, setIsFromVoice] = useState(false);
   const textInputRef = useRef(null);
 
   const handleSendText = () => {
@@ -36,7 +39,6 @@ export default function InputToolbar({
     
     const messageText = text.trim();
     
-    // If this was from voice, upload audio in background
     if (isFromVoice && pendingAudioData && uploadAudioInBackground) {
       uploadAudioInBackground(pendingAudioData).catch(err => {
         console.log('Background audio upload failed:', err);
@@ -124,7 +126,6 @@ export default function InputToolbar({
     setPendingAudioData(audioData);
     setIsFromVoice(true);
     
-    // Focus the input so user can edit
     setTimeout(() => {
       textInputRef.current?.focus();
     }, 100);
@@ -156,143 +157,176 @@ export default function InputToolbar({
     );
   }
 
+  const bottomPadding = Math.max(insets.bottom, SPACING.md);
+  const isDark = theme.name === 'dark';
+
   return (
-    <View style={[styles.container, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
-      {/* Voice transcription indicator */}
-      {isFromVoice && (
-        <View style={[styles.voiceIndicator, { backgroundColor: theme.accentLight }]}>
-          <Ionicons name="mic" size={14} color={theme.accent} />
-          <Text style={[styles.voiceIndicatorText, { color: theme.accent }]}>
-            From voice — edit if needed
-          </Text>
-          <TouchableOpacity onPress={handleClearVoiceText}>
-            <Ionicons name="close-circle" size={18} color={theme.accent} />
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {/* Main Input Row */}
-      <View style={styles.inputRow}>
-        {/* Image Buttons */}
-        <TouchableOpacity
-          style={[styles.iconButton, { backgroundColor: theme.inputBackground }]}
-          onPress={handleTakePhoto}
-          disabled={disabled}
-        >
-          <Ionicons name="camera" size={22} color={theme.accent} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.iconButton, { backgroundColor: theme.inputBackground }]}
-          onPress={handlePickImage}
-          disabled={disabled}
-        >
-          <Ionicons name="image" size={22} color={theme.accent} />
-        </TouchableOpacity>
-
-        {/* Text Input */}
-        <View style={[styles.textInputContainer, { backgroundColor: theme.inputBackground }]}>
-          <TextInput
-            ref={textInputRef}
-            style={[styles.textInput, { color: theme.text }]}
-            placeholder="Type or use voice..."
-            placeholderTextColor={theme.textMuted}
-            value={text}
-            onChangeText={(newText) => {
-              setText(newText);
-              // If user edits the voice text, keep the audio data but allow changes
-            }}
-            multiline
-            maxLength={1000}
-            editable={!disabled}
-          />
-        </View>
-
-        {/* Voice / Send Button */}
-        {text.trim() ? (
-          <TouchableOpacity
-            style={[styles.sendButton, { backgroundColor: theme.accent }]}
-            onPress={handleSendText}
-            disabled={disabled}
-          >
-            {disabled ? (
-              <ActivityIndicator size="small" color="#FFFFFF" />
-            ) : (
-              <Ionicons name="send" size={20} color="#FFFFFF" />
-            )}
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.voiceButton, { backgroundColor: theme.accent }]}
-            onPress={handleStartRecording}
-            disabled={disabled}
-          >
-            <Ionicons name="mic" size={22} color="#FFFFFF" />
-          </TouchableOpacity>
+    <View style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
+      {/* Floating container with blur effect */}
+      <View style={[
+        styles.floatingContainer,
+        { 
+          backgroundColor: isDark ? 'rgba(28, 28, 30, 0.92)' : 'rgba(255, 255, 255, 0.92)',
+          borderColor: theme.border,
+        }
+      ]}>
+        {/* Voice transcription indicator */}
+        {isFromVoice && (
+          <View style={[styles.voiceIndicator, { backgroundColor: theme.accentLight }]}>
+            <Ionicons name="mic" size={14} color={theme.accent} />
+            <Text style={[styles.voiceIndicatorText, { color: theme.accent }]}>
+              From voice — edit if needed
+            </Text>
+            <TouchableOpacity onPress={handleClearVoiceText} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <Ionicons name="close-circle" size={18} color={theme.accent} />
+            </TouchableOpacity>
+          </View>
         )}
+
+        {/* Main Input Row */}
+        <View style={styles.inputRow}>
+          {/* Camera Button */}
+          <TouchableOpacity
+            style={[styles.iconButton, { backgroundColor: theme.surfaceVariant }]}
+            onPress={handleTakePhoto}
+            disabled={disabled}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="camera" size={20} color={theme.iconPrimary || theme.accent} />
+          </TouchableOpacity>
+
+          {/* Gallery Button */}
+          <TouchableOpacity
+            style={[styles.iconButton, { backgroundColor: theme.surfaceVariant }]}
+            onPress={handlePickImage}
+            disabled={disabled}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="image" size={20} color={theme.iconPrimary || theme.accent} />
+          </TouchableOpacity>
+
+          {/* Text Input - Pill shaped */}
+          <View style={[
+            styles.textInputContainer, 
+            { 
+              backgroundColor: theme.surfaceVariant,
+              borderColor: text.trim() ? theme.accent : 'transparent',
+            }
+          ]}>
+            <TextInput
+              ref={textInputRef}
+              style={[styles.textInput, { color: theme.text }]}
+              placeholder="Message..."
+              placeholderTextColor={theme.textMuted}
+              value={text}
+              onChangeText={setText}
+              multiline
+              maxLength={1000}
+              editable={!disabled}
+            />
+          </View>
+
+          {/* Voice / Send Button */}
+          {text.trim() ? (
+            <TouchableOpacity
+              style={[styles.sendButton, { backgroundColor: theme.accent }]}
+              onPress={handleSendText}
+              disabled={disabled}
+              activeOpacity={0.7}
+            >
+              {disabled ? (
+                <ActivityIndicator size="small" color="#FFFFFF" />
+              ) : (
+                <Ionicons name="arrow-up" size={22} color="#FFFFFF" />
+              )}
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[styles.voiceButton, { backgroundColor: theme.accent }]}
+              onPress={handleStartRecording}
+              disabled={disabled}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="mic" size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderTopWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    paddingBottom: Platform.OS === 'ios' ? 24 : 8,
+  wrapper: {
+    // Removed absolute positioning so keyboard avoidance works
+    paddingHorizontal: SPACING.floatingInputMargin,
+    paddingTop: SPACING.sm,
+  },
+  floatingContainer: {
+    borderRadius: SPACING.radiusXl,
+    borderWidth: 0.5,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    // Shadow for elevation
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
   },
   voiceIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingHorizontal: 12,
+    paddingHorizontal: SPACING.md,
     paddingVertical: 6,
-    borderRadius: 12,
-    marginBottom: 8,
+    borderRadius: SPACING.radiusMd,
+    marginBottom: SPACING.sm,
   },
   voiceIndicatorText: {
     flex: 1,
-    fontSize: 12,
-    fontWeight: '500',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    gap: 8,
+    gap: SPACING.sm,
   },
   iconButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
   textInputContainer: {
     flex: 1,
-    borderRadius: 22,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    minHeight: 44,
-    maxHeight: 120,
+    borderRadius: 24,
+    paddingHorizontal: SPACING.inputPadding,
+    paddingVertical: Platform.OS === 'ios' ? 10 : 8,
+    minHeight: 40,
+    maxHeight: 100,
     justifyContent: 'center',
+    borderWidth: 1.5,
   },
   textInput: {
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: TYPOGRAPHY.sizes.base,
+    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
     padding: 0,
+    maxHeight: 80,
   },
   sendButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
   voiceButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },

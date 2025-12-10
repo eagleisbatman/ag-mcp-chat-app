@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   features: {
-    flex: 1,
     gap: 20,
   },
   featureItem: {
@@ -137,13 +136,14 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingTop: 24,
+    marginTop: 'auto', // Push to bottom
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
-    borderRadius: 12,
+    borderRadius: 16,
     gap: 8,
   },
   buttonText: {

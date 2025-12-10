@@ -13,7 +13,7 @@ import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
-import { SPACING } from '../constants/themes';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
 
 export default function SettingsScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -107,12 +107,15 @@ export default function SettingsScreen({ navigation }) {
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>CONVERSATIONS</Text>
         <TouchableOpacity 
-          style={[styles.card, { backgroundColor: theme.surface }]}
+          style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
           onPress={() => navigation.navigate('History')}
+          activeOpacity={0.7}
         >
           <View style={styles.optionRow}>
             <View style={styles.optionLeft}>
-              <Ionicons name="chatbubbles-outline" size={22} color={theme.accent} />
+              <View style={[styles.iconContainer, { backgroundColor: theme.infoLight || theme.accentLight }]}>
+                <Ionicons name="chatbubbles" size={18} color={theme.iconAccent || theme.info || theme.accent} />
+              </View>
               <View style={styles.optionTextContainer}>
                 <Text style={[styles.optionText, { color: theme.text }]}>Chat History</Text>
                 <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
@@ -120,7 +123,32 @@ export default function SettingsScreen({ navigation }) {
                 </Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      {/* 1.5. AI Services Section */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>AI SERVICES</Text>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
+          onPress={() => navigation.navigate('McpServers')}
+          activeOpacity={0.7}
+        >
+          <View style={styles.optionRow}>
+            <View style={styles.optionLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: theme.warningLight }]}>
+                <Ionicons name="extension-puzzle" size={18} color={theme.warning} />
+              </View>
+              <View style={styles.optionTextContainer}>
+                <Text style={[styles.optionText, { color: theme.text }]}>Active Services</Text>
+                <Text style={[styles.optionSubtext, { color: theme.textMuted }]}>
+                  View AI services active for your region
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
           </View>
         </TouchableOpacity>
       </View>
@@ -129,17 +157,18 @@ export default function SettingsScreen({ navigation }) {
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>LOCATION</Text>
         <TouchableOpacity 
-          style={[styles.card, { backgroundColor: theme.surface }]}
+          style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
           onPress={handleUpdateLocation}
           disabled={isUpdatingLocation}
+          activeOpacity={0.7}
         >
           <View style={styles.optionRow}>
             <View style={styles.optionLeft}>
-              <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>
+              <View style={[styles.iconContainer, { backgroundColor: theme.successLight }]}>
                 {isUpdatingLocation ? (
-                  <ActivityIndicator size="small" color={theme.accent} />
+                  <ActivityIndicator size="small" color={theme.iconPrimary || theme.accent} />
                 ) : (
-                  <Ionicons name="location" size={20} color={theme.accent} />
+                  <Ionicons name="location" size={18} color={theme.iconPrimary || theme.accent} />
                 )}
               </View>
               <View style={styles.optionTextContainer}>
@@ -151,7 +180,7 @@ export default function SettingsScreen({ navigation }) {
                     {locationDetails?.formattedAddress || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`}
                   </Text>
                 )}
-                <Text style={[styles.optionHint, { color: theme.accent }]}>
+                <Text style={[styles.optionHint, { color: theme.iconPrimary || theme.accent }]}>
                   Tap to update location
                 </Text>
               </View>
@@ -160,8 +189,9 @@ export default function SettingsScreen({ navigation }) {
               style={[styles.refreshButton, { backgroundColor: theme.accentLight }]}
               onPress={handleUpdateLocation}
               disabled={isUpdatingLocation}
+              activeOpacity={0.7}
             >
-              <Ionicons name="refresh" size={18} color={theme.accent} />
+              <Ionicons name="refresh" size={16} color={theme.iconPrimary || theme.accent} />
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -171,13 +201,14 @@ export default function SettingsScreen({ navigation }) {
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>LANGUAGE</Text>
         <TouchableOpacity 
-          style={[styles.card, { backgroundColor: theme.surface }]}
+          style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
           onPress={handleChangeLanguage}
+          activeOpacity={0.7}
         >
           <View style={styles.optionRow}>
             <View style={styles.optionLeft}>
-              <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>
-                <Ionicons name="language" size={20} color={theme.accent} />
+              <View style={[styles.iconContainer, { backgroundColor: theme.infoLight || theme.accentLight }]}>
+                <Ionicons name="language" size={18} color={theme.iconAccent || theme.info || theme.accent} />
               </View>
               <View style={styles.optionTextContainer}>
                 <Text style={[styles.optionText, { color: theme.text }]}>{language?.name}</Text>
@@ -186,7 +217,7 @@ export default function SettingsScreen({ navigation }) {
                 </Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
           </View>
         </TouchableOpacity>
       </View>
@@ -194,24 +225,40 @@ export default function SettingsScreen({ navigation }) {
       {/* 4. Appearance Section */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>APPEARANCE</Text>
-        <View style={[styles.card, { backgroundColor: theme.surface }]}>
+        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           {themeOptions.map((option, index) => (
             <TouchableOpacity
               key={option.value}
               style={[
                 styles.optionRow,
-                index < themeOptions.length - 1 && { borderBottomWidth: 1, borderBottomColor: theme.border },
+                index < themeOptions.length - 1 && { borderBottomWidth: 0.5, borderBottomColor: theme.border },
               ]}
               onPress={() => setThemeMode(option.value)}
+              activeOpacity={0.7}
             >
               <View style={styles.optionLeft}>
-                <View style={[styles.iconContainer, { backgroundColor: theme.surfaceVariant }]}>
-                  <Ionicons name={option.icon} size={18} color={themeMode === option.value ? theme.accent : theme.textMuted} />
+                <View style={[
+                  styles.iconContainer, 
+                  { backgroundColor: themeMode === option.value ? theme.accentLight : theme.surfaceVariant }
+                ]}>
+                  <Ionicons 
+                    name={option.icon} 
+                    size={18} 
+                    color={themeMode === option.value ? (theme.iconPrimary || theme.accent) : theme.textMuted} 
+                  />
                 </View>
-                <Text style={[styles.optionText, { color: theme.text }]}>{option.label}</Text>
+                <Text style={[
+                  styles.optionText, 
+                  { 
+                    color: theme.text,
+                    fontWeight: themeMode === option.value ? TYPOGRAPHY.weights.semibold : TYPOGRAPHY.weights.medium,
+                  }
+                ]}>
+                  {option.label}
+                </Text>
               </View>
               {themeMode === option.value && (
-                <Ionicons name="checkmark-circle" size={22} color={theme.accent} />
+                <Ionicons name="checkmark-circle" size={22} color={theme.iconPrimary || theme.accent} />
               )}
             </TouchableOpacity>
           ))}
@@ -222,8 +269,9 @@ export default function SettingsScreen({ navigation }) {
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>DANGER ZONE</Text>
         <TouchableOpacity 
-          style={[styles.card, { backgroundColor: theme.surface }]}
+          style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
           onPress={handleResetOnboarding}
+          activeOpacity={0.7}
         >
           <View style={styles.optionRow}>
             <View style={styles.optionLeft}>
@@ -237,7 +285,7 @@ export default function SettingsScreen({ navigation }) {
                 </Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
           </View>
         </TouchableOpacity>
       </View>
@@ -247,7 +295,7 @@ export default function SettingsScreen({ navigation }) {
         <Text style={[styles.appInfoText, { color: theme.textMuted }]}>
           Farm Assistant v2.0.0
         </Text>
-        <Text style={[styles.appInfoText, { color: theme.textMuted }]}>
+        <Text style={[styles.appInfoSubtext, { color: theme.textMuted }]}>
           Powered by Gemini AI
         </Text>
       </View>
@@ -260,52 +308,55 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingBottom: 40,
+    paddingBottom: SPACING['3xl'],
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingHorizontal: SPACING.lg,
+    paddingBottom: SPACING.lg,
   },
   backButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: SPACING.radiusMd,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: TYPOGRAPHY.weights.bold,
+    letterSpacing: -0.3,
   },
   section: {
-    marginTop: 24,
-    paddingHorizontal: 16,
+    marginTop: SPACING['2xl'],
+    paddingHorizontal: SPACING.lg,
   },
   sectionTitle: {
-    fontSize: 12,
-    fontWeight: '600',
-    marginBottom: 8,
-    marginLeft: 4,
-    letterSpacing: 0.5,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    marginBottom: SPACING.sm,
+    marginLeft: SPACING.xs,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
   },
   card: {
-    borderRadius: 12,
+    borderRadius: SPACING.radiusMd,
     overflow: 'hidden',
+    borderWidth: 0.5,
   },
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 14,
+    padding: SPACING.md,
   },
   optionLeft: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: SPACING.md,
   },
   optionTextContainer: {
     flex: 1,
@@ -313,37 +364,42 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 36,
     height: 36,
-    borderRadius: 10,
+    borderRadius: SPACING.radiusSm,
     alignItems: 'center',
     justifyContent: 'center',
   },
   optionText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
   optionSubtext: {
-    fontSize: 13,
+    fontSize: TYPOGRAPHY.sizes.sm,
     marginTop: 2,
+    lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.normal,
   },
   optionHint: {
-    fontSize: 12,
-    marginTop: 4,
-    fontWeight: '500',
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: SPACING.xs,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
   refreshButton: {
     width: 32,
     height: 32,
-    borderRadius: 8,
+    borderRadius: SPACING.radiusSm,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 8,
+    marginLeft: SPACING.sm,
   },
   appInfo: {
     alignItems: 'center',
-    marginTop: 48,
-    gap: 4,
+    marginTop: SPACING['3xl'] + SPACING.lg,
+    gap: SPACING.xs,
   },
   appInfoText: {
-    fontSize: 13,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.medium,
+  },
+  appInfoSubtext: {
+    fontSize: TYPOGRAPHY.sizes.xs,
   },
 });

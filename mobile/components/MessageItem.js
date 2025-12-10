@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform, Animated, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-markdown-display';
@@ -7,23 +7,38 @@ import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
-import TypewriterText from './TypewriterText';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
 
 function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const { theme, language } = useApp();
   const { showError } = useToast();
+  const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
   const followUpQuestions = message.followUpQuestions || [];
+  
+  // Calculate max width for markdown content (screen - padding)
+  const contentMaxWidth = screenWidth - (SPACING.lg * 2);
   
   // TTS state
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
-  // Track if typewriter animation is complete
-  const [typewriterComplete, setTypewriterComplete] = useState(!isNewMessage);
+  // Animation state for smooth fade-in (replaces jarring typewriter)
+  const [fadeAnim] = useState(() => new Animated.Value(isNewMessage ? 0 : 1));
+  const [isAnimating, setIsAnimating] = useState(isNewMessage);
   
-  // Use plain text animation only for NEW messages
-  const shouldAnimate = isNewMessage && !typewriterComplete;
+  // Smooth fade-in animation for new messages
+  useEffect(() => {
+    if (isNewMessage && isBot) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        setIsAnimating(false);
+      });
+    }
+  }, [isNewMessage, isBot, fadeAnim]);
 
   const formatTime = (date) => {
     return new Date(date).toLocaleTimeString([], { 
@@ -33,95 +48,122 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
     });
   };
 
-  // Markdown styles - optimized to prevent text overflow
-  const markdownStyles = {
+  const textColor = theme.botMessageText || theme.text;
+
+  // Markdown styles - properly constrained for mobile
+  const markdownStyles = useMemo(() => ({
     body: {
-      color: theme.text,
+      color: textColor,
       fontSize: 15,
       lineHeight: 22,
     },
     heading1: {
-      color: theme.text,
-      fontSize: 18,
+      color: textColor,
+      fontSize: 20,
       fontWeight: '700',
-      marginBottom: 6,
-      marginTop: 8,
+      marginBottom: 8,
+      marginTop: 12,
     },
     heading2: {
-      color: theme.text,
-      fontSize: 17,
+      color: textColor,
+      fontSize: 18,
       fontWeight: '600',
-      marginBottom: 4,
-      marginTop: 6,
+      marginBottom: 6,
+      marginTop: 10,
     },
     heading3: {
-      color: theme.text,
+      color: textColor,
       fontSize: 16,
       fontWeight: '600',
       marginBottom: 4,
+      marginTop: 8,
     },
     strong: {
       fontWeight: '700',
-      color: theme.accent, // Highlight bold facts in accent color
+      color: textColor,
     },
     em: {
       fontStyle: 'italic',
     },
     bullet_list: {
-      marginVertical: 4,
-      paddingLeft: 0,
+      marginTop: 6,
+      marginBottom: 6,
     },
     ordered_list: {
-      marginVertical: 4,
-      paddingLeft: 0,
+      marginTop: 6,
+      marginBottom: 6,
     },
     list_item: {
-      marginVertical: 3,
       flexDirection: 'row',
       alignItems: 'flex-start',
+      marginTop: 3,
+      marginBottom: 3,
     },
     bullet_list_icon: {
       color: theme.accent,
-      fontSize: 8,
+      fontSize: 6,
+      lineHeight: 22,
       marginRight: 8,
-      marginTop: 7,
+      marginTop: 8,
     },
     bullet_list_content: {
       flex: 1,
+      flexShrink: 1,
+    },
+    ordered_list_icon: {
+      color: theme.accent,
+      fontSize: 14,
+      fontWeight: '600',
+      marginRight: 8,
+      lineHeight: 22,
+    },
+    ordered_list_content: {
+      flex: 1,
+      flexShrink: 1,
     },
     code_inline: {
       backgroundColor: theme.surfaceVariant,
       color: theme.accent,
       paddingHorizontal: 4,
-      paddingVertical: 2,
+      paddingVertical: 1,
       borderRadius: 4,
       fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
       fontSize: 13,
     },
     code_block: {
       backgroundColor: theme.surfaceVariant,
-      padding: 10,
+      padding: 12,
       borderRadius: 8,
-      marginVertical: 6,
+      marginVertical: 8,
     },
     fence: {
       backgroundColor: theme.surfaceVariant,
-      padding: 10,
+      padding: 12,
       borderRadius: 8,
-      marginVertical: 6,
+      marginVertical: 8,
     },
     link: {
       color: theme.accent,
       textDecorationLine: 'underline',
     },
     paragraph: {
-      marginVertical: 4,
+      marginTop: 6,
+      marginBottom: 6,
+    },
+    hr: {
+      backgroundColor: theme.border,
+      height: 1,
+      marginVertical: 12,
     },
     textgroup: {
       flexDirection: 'row',
       flexWrap: 'wrap',
+      alignItems: 'flex-start',
     },
-  };
+    text: {
+      color: textColor,
+    },
+  }), [theme, textColor]);
 
   // Handle speak button press
   const handleSpeak = async () => {
@@ -193,7 +235,7 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
     >
       {/* Sender Name */}
       <View style={styles.header}>
-        <Text style={[styles.senderName, { color: isBot ? theme.accent : theme.textSecondary }]}>
+        <Text style={[styles.senderName, { color: isBot ? (theme.iconPrimary || theme.accent) : theme.textSecondary }]}>
           {isBot ? 'Farm Assistant' : 'You'}
         </Text>
         <View style={styles.headerRight}>
@@ -232,23 +274,16 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
       )}
       
       {/* Message Content - Use Markdown for bot messages, plain text for user */}
-      {isBot && shouldAnimate ? (
-        // Typewriter for new bot messages - plain text during animation
-        <TypewriterText
-          text={message.text}
-          style={[styles.messageText, { color: theme.text }]}
-          speed={50}
-          animate={true}
-          onComplete={() => setTypewriterComplete(true)}
-        />
-      ) : isBot ? (
-        // Markdown for completed bot messages (renders immediately after animation)
-        <Markdown style={markdownStyles}>
-          {message.text}
-        </Markdown>
+      {isBot ? (
+        // Markdown for bot messages with smooth fade-in animation
+        <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
+          <Markdown style={markdownStyles}>
+            {message.text}
+          </Markdown>
+        </Animated.View>
       ) : (
         // Plain text for user messages
-        <Text style={[styles.messageText, { color: theme.text }]}>
+        <Text style={[styles.messageText, { color: theme.userMessageText || theme.text }]}>
           {message.text}
         </Text>
       )}
@@ -263,7 +298,7 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
       )}
 
       {/* Follow-up Questions - Vertical List */}
-      {isBot && followUpQuestions.length > 0 && !shouldAnimate && (
+      {isBot && followUpQuestions.length > 0 && !isAnimating && (
         <View style={styles.followUpContainer}>
           <Text style={[styles.followUpLabel, { color: theme.textMuted }]}>
             👆 Tap to ask next:
@@ -297,27 +332,28 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderTopWidth: 1,
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderTopWidth: 0.5,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: SPACING.sm,
   },
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: SPACING.sm,
   },
   senderName: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    letterSpacing: 0.2,
   },
   timestamp: {
-    fontSize: 12,
+    fontSize: TYPOGRAPHY.sizes.xs,
   },
   speakButton: {
     width: 32,
@@ -326,53 +362,59 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  markdownContainer: {
+    flex: 1,
+    width: '100%',
+  },
   messageText: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: 15,
+    lineHeight: 22,
   },
   image: {
     width: '100%',
     height: 200,
-    borderRadius: 8,
-    marginBottom: 8,
+    borderRadius: SPACING.radiusMd,
+    marginBottom: SPACING.sm,
   },
   diagnosisBox: {
-    marginTop: 8,
-    padding: 12,
-    borderRadius: 8,
+    marginTop: SPACING.sm,
+    padding: SPACING.md,
+    borderRadius: SPACING.radiusMd,
   },
   diagnosisText: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
   },
   // Follow-up questions - vertical list
   followUpContainer: {
-    marginTop: 16,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.05)',
+    marginTop: SPACING.lg,
+    paddingTop: SPACING.md,
+    borderTopWidth: 0.5,
   },
   followUpLabel: {
-    fontSize: 12,
-    marginBottom: 10,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginBottom: SPACING.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   followUpList: {
-    gap: 6,
+    gap: SPACING.sm,
   },
   followUpItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 8,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm + 2,
+    borderRadius: SPACING.radiusMd,
     borderLeftWidth: 3,
   },
   followUpText: {
-    fontSize: 14,
+    fontSize: TYPOGRAPHY.sizes.sm,
     flex: 1,
-    marginRight: 8,
+    marginRight: SPACING.sm,
+    lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.normal,
   },
 });
 
