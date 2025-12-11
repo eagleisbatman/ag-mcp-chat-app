@@ -394,6 +394,193 @@ router.get('/categories/list', async (req, res) => {
   }
 });
 
+// GET /api/mcp-servers/live-status - Real-time health check with active/inactive for region
+router.get('/live-status', async (req, res) => {
+  try {
+    const { lat, lon } = req.query;
+    
+    // 1. Get ALL servers
+    const allServers = await prisma.mcpServerRegistry.findMany({
+      orderBy: [{ isGlobal: 'desc' }, { category: 'asc' }, { name: 'asc' }],
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        category: true,
+        isGlobal: true,
+        tools: true,
+        capabilities: true,
+        icon: true,
+        color: true,
+        isActive: true,
+        isDeployed: true,
+        endpointEnvVar: true,
+      },
+    });
+
+    // 2. Determine which regional servers are active for user's location
+    let activeRegionalSlugs = new Set();
+    let detectedRegions = [];
+    
+    if (lat && lon) {
+      const latitude = parseFloat(lat);
+      const longitude = parseFloat(lon);
+      
+      const matchingRegions = await prisma.region.findMany({
+        where: {
+          isActive: true,
+          boundsMinLat: { lte: latitude },
+          boundsMaxLat: { gte: latitude },
+          boundsMinLon: { lte: longitude },
+          boundsMaxLon: { gte: longitude },
+        },
+        select: { id: true, name: true, code: true, level: true },
+        orderBy: { level: 'desc' },
+      });
+      
+      detectedRegions = matchingRegions.map(r => ({ name: r.name, code: r.code }));
+      
+      if (matchingRegions.length > 0) {
+        // Build full hierarchy (include parent regions)
+        const regionIds = [];
+        for (const region of matchingRegions) {
+          regionIds.push(region.id);
+          let currentId = (await prisma.region.findUnique({
+            where: { id: region.id },
+            select: { parentRegionId: true },
+          }))?.parentRegionId;
+          while (currentId) {
+            regionIds.push(currentId);
+            const parent = await prisma.region.findUnique({
+              where: { id: currentId },
+              select: { parentRegionId: true },
+            });
+            currentId = parent?.parentRegionId;
+          }
+        }
+        
+        const uniqueRegionIds = [...new Set(regionIds)];
+        const mappings = await prisma.regionMcpMapping.findMany({
+          where: { regionId: { in: uniqueRegionIds }, isActive: true },
+          include: { mcpServer: { select: { slug: true } } },
+        });
+        mappings.forEach(m => activeRegionalSlugs.add(m.mcpServer.slug));
+      }
+    }
+
+    // 3. Check real-time health for each server
+    const healthCheckPromises = allServers.map(async (server) => {
+      const isActiveForRegion = server.isGlobal ? server.isActive : activeRegionalSlugs.has(server.slug);
+      const endpoint = process.env[server.endpointEnvVar];
+      
+      let healthStatus = 'unknown';
+      let healthError = null;
+      let responseTime = null;
+      
+      // Only check health if server is active for this region and has endpoint
+      if (isActiveForRegion && endpoint && server.isDeployed) {
+        const startTime = Date.now();
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+          
+          const response = await fetch(`${endpoint}/health`, {
+            method: 'GET',
+            signal: controller.signal,
+          });
+          
+          clearTimeout(timeoutId);
+          responseTime = Date.now() - startTime;
+          
+          if (response.ok) {
+            healthStatus = 'healthy';
+          } else {
+            healthStatus = 'unhealthy';
+            healthError = `HTTP ${response.status}`;
+          }
+        } catch (error) {
+          responseTime = Date.now() - startTime;
+          healthStatus = 'unhealthy';
+          healthError = error.name === 'AbortError' ? 'Timeout' : error.message;
+        }
+      } else if (!endpoint || !server.isDeployed) {
+        healthStatus = 'not_deployed';
+      }
+      
+      // Determine final display status
+      let displayStatus;
+      let statusMessage;
+      
+      if (!isActiveForRegion) {
+        displayStatus = 'inactive';
+        statusMessage = 'Not available in your region';
+      } else if (healthStatus === 'healthy') {
+        displayStatus = 'active';
+        statusMessage = 'Available and working';
+      } else if (healthStatus === 'not_deployed') {
+        displayStatus = 'coming_soon';
+        statusMessage = 'Coming soon';
+      } else {
+        displayStatus = 'degraded';
+        statusMessage = healthError || 'Service temporarily unavailable';
+      }
+      
+      return {
+        id: server.id,
+        name: server.name,
+        slug: server.slug,
+        description: server.description,
+        category: server.category,
+        isGlobal: server.isGlobal,
+        tools: server.tools,
+        capabilities: server.capabilities,
+        icon: server.icon,
+        color: server.color,
+        // Status fields
+        displayStatus, // 'active' | 'degraded' | 'inactive' | 'coming_soon'
+        statusMessage,
+        healthStatus,
+        healthError,
+        responseTime,
+        isActiveForRegion,
+      };
+    });
+
+    const serversWithHealth = await Promise.all(healthCheckPromises);
+    
+    // 4. Group by status
+    const activeServers = serversWithHealth.filter(s => s.displayStatus === 'active');
+    const degradedServers = serversWithHealth.filter(s => s.displayStatus === 'degraded');
+    const inactiveServers = serversWithHealth.filter(s => s.displayStatus === 'inactive');
+    const comingSoon = serversWithHealth.filter(s => s.displayStatus === 'coming_soon');
+
+    res.json({
+      success: true,
+      timestamp: new Date().toISOString(),
+      location: lat && lon ? { latitude: parseFloat(lat), longitude: parseFloat(lon) } : null,
+      detectedRegions,
+      servers: serversWithHealth,
+      grouped: {
+        active: activeServers,
+        degraded: degradedServers,
+        inactive: inactiveServers,
+        comingSoon,
+      },
+      counts: {
+        total: serversWithHealth.length,
+        active: activeServers.length,
+        degraded: degradedServers.length,
+        inactive: inactiveServers.length,
+        comingSoon: comingSoon.length,
+      },
+    });
+  } catch (error) {
+    console.error('Live status check error:', error);
+    res.status(500).json({ error: 'Failed to check MCP server status' });
+  }
+});
+
 // GET /api/mcp-servers/health - Aggregated health check for all deployed MCP servers
 router.get('/health', async (req, res) => {
   try {

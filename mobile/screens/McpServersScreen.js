@@ -18,28 +18,39 @@ import api from '../services/api';
 // Better icon mapping using MaterialCommunityIcons (more options)
 const SERVER_ICONS = {
   // AI & Analytics
-  'agrivision': { icon: 'leaf-circle', family: 'mci' },
-  'intent-classification': { icon: 'robot', family: 'mci' },
-  'entity-extraction': { icon: 'tag-search', family: 'mci' },
-  'guardrails': { icon: 'shield-check', family: 'mci' },
+  'agrivision': { icon: 'leaf-circle' },
+  'intent-classification': { icon: 'robot' },
+  'entity-extraction': { icon: 'tag-search' },
+  'guardrails': { icon: 'shield-check' },
   
   // Agriculture
-  'ssfr': { icon: 'flask', family: 'mci' },
-  'feed-formulation': { icon: 'cow', family: 'mci' },
-  'isda-soil': { icon: 'shovel', family: 'mci' },
-  'decision-tree': { icon: 'graph', family: 'mci' },
-  'tips': { icon: 'lightbulb-on', family: 'mci' },
+  'nextgen': { icon: 'flask-outline' },      // Fertilizer recommendations
+  'ssfr': { icon: 'flask-outline' },          // Legacy alias
+  'feed-formulation': { icon: 'cow' },        // Livestock feed
+  'isda-soil': { icon: 'terrain' },           // Soil data
+  'decision-tree': { icon: 'source-branch' },
+  'tips': { icon: 'lightbulb-on' },
+  'gap-agriculture': { icon: 'sprout' },
   
-  // Weather
-  'accuweather': { icon: 'weather-partly-cloudy', family: 'mci' },
-  'gap-weather': { icon: 'weather-lightning-rainy', family: 'mci' },
-  'weatherapi': { icon: 'weather-sunny', family: 'mci' },
-  'tomorrow-io': { icon: 'cloud-sync', family: 'mci' },
+  // Weather & Climate
+  'accuweather': { icon: 'weather-partly-cloudy' },
+  'edacap': { icon: 'weather-cloudy-arrow-right' }, // Climate forecasts
+  'gap-weather': { icon: 'weather-lightning-rainy' },
+  'weatherapi': { icon: 'weather-sunny' },
+  'tomorrow-io': { icon: 'cloud-sync' },
   
   // Utility
-  'user-preferences': { icon: 'cog', family: 'mci' },
-  'profile-memory': { icon: 'account-circle', family: 'mci' },
-  'content': { icon: 'book-open-page-variant', family: 'mci' },
+  'user-preferences': { icon: 'cog' },
+  'profile-memory': { icon: 'account-circle' },
+  'content': { icon: 'book-open-page-variant' },
+};
+
+// Status colors and icons
+const STATUS_CONFIG = {
+  active: { icon: 'checkmark-circle', color: 'success', label: 'Active' },
+  degraded: { icon: 'warning', color: 'warning', label: 'Unavailable' },
+  inactive: { icon: 'remove-circle', color: 'textMuted', label: 'Not in region' },
+  coming_soon: { icon: 'time', color: 'info', label: 'Coming soon' },
 };
 
 // Category config
@@ -61,9 +72,11 @@ function ServerIcon({ slug, color, size = 24, theme }) {
   );
 }
 
-function McpServerCard({ server, theme, isActive }) {
-  const statusColor = isActive ? theme.success : theme.textMuted;
-  const cardOpacity = isActive ? 1 : 0.6;
+function McpServerCard({ server, theme }) {
+  const status = server.displayStatus || 'inactive';
+  const statusConfig = STATUS_CONFIG[status] || STATUS_CONFIG.inactive;
+  const statusColor = theme[statusConfig.color] || theme.textMuted;
+  const cardOpacity = status === 'inactive' ? 0.6 : 1;
 
   return (
     <View style={[styles.serverCard, { backgroundColor: theme.surface, opacity: cardOpacity }]}>
@@ -72,7 +85,7 @@ function McpServerCard({ server, theme, isActive }) {
         <View style={[styles.serverIconContainer, { backgroundColor: (server.color || theme.accent) + '15' }]}>
           <ServerIcon 
             slug={server.slug} 
-            color={server.color || theme.accent} 
+            color={status === 'active' ? (server.color || theme.accent) : theme.textMuted} 
             size={22}
             theme={theme}
           />
@@ -95,24 +108,16 @@ function McpServerCard({ server, theme, isActive }) {
           </Text>
         </View>
         
-        {/* Status */}
-        <View style={styles.statusContainer}>
-          {isActive ? (
-            <View style={[styles.activeIndicator, { backgroundColor: theme.success + '20' }]}>
-              <Ionicons name="checkmark" size={14} color={theme.success} />
-            </View>
-          ) : (
-            <View style={[styles.inactiveIndicator, { backgroundColor: theme.textMuted + '20' }]}>
-              <Ionicons name="remove" size={14} color={theme.textMuted} />
-            </View>
-          )}
+        {/* Status indicator */}
+        <View style={[styles.statusIndicator, { backgroundColor: statusColor + '20' }]}>
+          <Ionicons name={statusConfig.icon} size={14} color={statusColor} />
         </View>
       </View>
       
-      {/* Availability reason for inactive servers */}
-      {!isActive && server.availabilityReason && (
-        <Text style={[styles.availabilityReason, { color: theme.textMuted }]}>
-          {server.availabilityReason}
+      {/* Status message for non-active servers */}
+      {status !== 'active' && server.statusMessage && (
+        <Text style={[styles.statusMessage, { color: statusColor }]}>
+          {server.statusMessage}
         </Text>
       )}
     </View>
@@ -121,7 +126,8 @@ function McpServerCard({ server, theme, isActive }) {
 
 function CategorySection({ category, servers, theme }) {
   const config = CATEGORY_CONFIG[category] || { label: category, icon: 'puzzle', color: '#888' };
-  const activeCount = servers.filter(s => s.isActiveForUser).length;
+  const activeCount = servers.filter(s => s.displayStatus === 'active').length;
+  const degradedCount = servers.filter(s => s.displayStatus === 'degraded').length;
   
   return (
     <View style={styles.categorySection}>
@@ -133,7 +139,7 @@ function CategorySection({ category, servers, theme }) {
           {config.label}
         </Text>
         <Text style={[styles.categoryCount, { color: theme.textMuted }]}>
-          {activeCount}/{servers.length} active
+          {activeCount}{degradedCount > 0 ? ` (+${degradedCount} ⚠️)` : ''}/{servers.length}
         </Text>
       </View>
       
@@ -142,7 +148,6 @@ function CategorySection({ category, servers, theme }) {
           key={server.slug || index} 
           server={server} 
           theme={theme}
-          isActive={server.isActiveForUser}
         />
       ))}
     </View>
@@ -170,7 +175,8 @@ export default function McpServersScreen({ navigation }) {
         params.lon = location.longitude;
       }
       
-      const response = await api.getAllMcpServersWithStatus(params);
+      // Use live status API for real-time health checks
+      const response = await api.getMcpServersLiveStatus(params);
       
       if (response.success) {
         setMcpData(response);
@@ -198,21 +204,26 @@ export default function McpServersScreen({ navigation }) {
 
   // Group servers by category
   const serversByCategory = React.useMemo(() => {
-    if (!mcpData?.allServers) return {};
+    if (!mcpData?.servers) return {};
     const grouped = {};
-    mcpData.allServers.forEach(server => {
+    mcpData.servers.forEach(server => {
       const cat = server.category || 'utility';
       if (!grouped[cat]) grouped[cat] = [];
       grouped[cat].push(server);
     });
-    // Sort each category: active first
+    // Sort each category: active first, then degraded, then coming_soon, then inactive
+    const statusOrder = { active: 0, degraded: 1, coming_soon: 2, inactive: 3 };
     Object.keys(grouped).forEach(cat => {
-      grouped[cat].sort((a, b) => (b.isActiveForUser ? 1 : 0) - (a.isActiveForUser ? 1 : 0));
+      grouped[cat].sort((a, b) => {
+        const orderA = statusOrder[a.displayStatus] ?? 3;
+        const orderB = statusOrder[b.displayStatus] ?? 3;
+        return orderA - orderB;
+      });
     });
     return grouped;
   }, [mcpData]);
 
-  const counts = mcpData?.counts || { total: 0, activeForUser: 0, inactiveForUser: 0 };
+  const counts = mcpData?.counts || { total: 0, active: 0, degraded: 0, inactive: 0, comingSoon: 0 };
   const detectedRegions = mcpData?.detectedRegions || [];
 
   return (
@@ -290,12 +301,17 @@ export default function McpServersScreen({ navigation }) {
             {/* Stats */}
             <View style={[styles.statsRow, { borderTopColor: theme.border }]}>
               <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.success }]}>{counts.activeForUser}</Text>
+                <Text style={[styles.statNumber, { color: theme.success }]}>{counts.active}</Text>
                 <Text style={[styles.statLabel, { color: theme.textMuted }]}>Active</Text>
               </View>
               <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
               <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.textMuted }]}>{counts.inactiveForUser}</Text>
+                <Text style={[styles.statNumber, { color: theme.warning || '#FF9800' }]}>{counts.degraded}</Text>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>Issues</Text>
+              </View>
+              <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
+              <View style={styles.statItem}>
+                <Text style={[styles.statNumber, { color: theme.textMuted }]}>{counts.inactive}</Text>
                 <Text style={[styles.statLabel, { color: theme.textMuted }]}>Inactive</Text>
               </View>
               <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
@@ -512,24 +528,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
-  statusContainer: {
+  statusIndicator: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginLeft: 8,
   },
-  activeIndicator: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inactiveIndicator: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  availabilityReason: {
+  statusMessage: {
     fontSize: 11,
     marginTop: 8,
     marginLeft: 52,

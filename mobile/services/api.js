@@ -176,6 +176,53 @@ export const getAllMcpServersWithStatus = async ({ lat, lon } = {}) => {
 };
 
 /**
+ * Get LIVE status of all MCP servers with real-time health checks
+ * Returns: active (working), degraded (API issues), inactive (not in region), coming_soon
+ */
+export const getMcpServersLiveStatus = async ({ lat, lon } = {}) => {
+  try {
+    const queryParams = new URLSearchParams();
+    if (lat !== undefined) queryParams.append('lat', lat);
+    if (lon !== undefined) queryParams.append('lon', lon);
+    
+    const url = `${API_BASE_URL}/api/mcp-servers/live-status${queryParams.toString() ? `?${queryParams}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': API_KEY,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('📥 [API] MCP live status:', {
+      active: data.counts?.active || 0,
+      degraded: data.counts?.degraded || 0,
+      inactive: data.counts?.inactive || 0,
+    });
+    
+    return {
+      success: true,
+      ...data,
+    };
+  } catch (error) {
+    console.error('MCP live status API error:', error);
+    return {
+      success: false,
+      error: error.message || 'Failed to fetch MCP server status',
+      servers: [],
+      grouped: { active: [], degraded: [], inactive: [], comingSoon: [] },
+      counts: { total: 0, active: 0, degraded: 0, inactive: 0, comingSoon: 0 },
+    };
+  }
+};
+
+/**
  * Detect regions for a given location
  * @param {number} lat - Latitude
  * @param {number} lon - Longitude
@@ -210,6 +257,7 @@ export default {
   sendChatMessage, 
   getActiveMcpServers,
   getAllMcpServersWithStatus,
+  getMcpServersLiveStatus,
   detectRegions,
 };
 

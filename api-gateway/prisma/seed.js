@@ -274,17 +274,29 @@ const MCP_SERVERS = [
   
   // Ethiopia-specific
   {
-    name: 'SSFR Fertilizer Recommendations',
-    slug: 'ssfr',
-    description: 'Site-Specific Fertilizer Recommendations for Ethiopian farmers (wheat, maize)',
-    endpointEnvVar: 'MCP_SSFR_URL',
-    endpointUrl: 'https://ssfr-mcp.up.railway.app',
+    name: 'NextGen Fertilizer Recommendations',
+    slug: 'nextgen',
+    description: 'NextGen Agro Advisory - Site-Specific Fertilizer Recommendations for Ethiopian farmers (wheat, maize)',
+    endpointEnvVar: 'MCP_NEXTGEN_URL',
+    endpointUrl: 'https://nextgen-mcp.up.railway.app',
     category: 'agriculture',
     isGlobal: false,
     tools: ['get_fertilizer_recommendation'],
     capabilities: ['fertilizer', 'soil-nutrients', 'wheat', 'maize'],
     icon: 'science',
     color: '#8BC34A',
+  },
+  {
+    name: 'EDACaP Climate Advisory',
+    slug: 'edacap',
+    description: 'Climate forecasts and crop yield predictions for Ethiopian farmers via Aclimate',
+    endpointEnvVar: 'MCP_EDACAP_URL',
+    category: 'weather',
+    isGlobal: false,
+    tools: ['get_weather_stations', 'get_climate_forecast', 'get_crop_forecast'],
+    capabilities: ['climate', 'seasonal-forecast', 'crop-yield', 'weather-stations'],
+    icon: 'cloud',
+    color: '#00BCD4',
   },
   {
     name: 'Feed Formulation',
@@ -379,9 +391,10 @@ const REGION_MCP_MAPPINGS = [
   // These mappings are for regional servers only
   
   // Ethiopia
-  { regionCode: 'ETH', mcpSlug: 'ssfr', priority: 1 },
-  { regionCode: 'ETH', mcpSlug: 'feed-formulation', priority: 2 },
-  { regionCode: 'ETH', mcpSlug: 'decision-tree', priority: 3 },
+  { regionCode: 'ETH', mcpSlug: 'nextgen', priority: 1 },
+  { regionCode: 'ETH', mcpSlug: 'edacap', priority: 2 },
+  { regionCode: 'ETH', mcpSlug: 'feed-formulation', priority: 3 },
+  { regionCode: 'ETH', mcpSlug: 'decision-tree', priority: 4 },
   
   // East Africa (includes Ethiopia, Kenya, Tanzania, Uganda)
   { regionCode: 'EAST_AFRICA', mcpSlug: 'gap-weather', priority: 1 },
