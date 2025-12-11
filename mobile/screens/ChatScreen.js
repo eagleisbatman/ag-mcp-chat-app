@@ -83,18 +83,17 @@ export default function ChatScreen({ navigation, route }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Header - Cleaner design */}
+      {/* Header - Clean, logo-only design */}
       <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border, paddingTop: headerPaddingTop }]}>
         <View style={styles.headerLeft}>
+          {/* Logo only - replace Ionicons with Image when logo asset is provided */}
           <View style={[styles.logoContainer, { backgroundColor: theme.accentLight }]}>
-            <Ionicons name="leaf" size={22} color={theme.iconPrimary || theme.accent} />
+            <Ionicons name="leaf" size={24} color={theme.iconPrimary || theme.accent} />
           </View>
-          <View style={styles.headerTitleContainer}>
-            <Text style={[styles.headerTitle, { color: theme.text }]}>Farm Assistant</Text>
-            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-              {locationDetails?.displayName || locationDetails?.level5City || locationDetails?.level3District || locationDetails?.level2State || (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : 'Tap location to set')}
-            </Text>
-          </View>
+          {/* Location subtitle only, no brand name */}
+          <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
+            {locationDetails?.displayName || locationDetails?.level5City || locationDetails?.level3District || locationDetails?.level2State || (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : 'Tap location to set')}
+          </Text>
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity 
@@ -214,26 +213,18 @@ const styles = StyleSheet.create({
     flex: 1, 
     flexDirection: 'row', 
     alignItems: 'center', 
-    gap: SPACING.md,
+    gap: SPACING.sm,
   },
   logoContainer: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: SPACING.radiusMd,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitleContainer: { 
-    flex: 1,
-  },
-  headerTitle: { 
-    fontSize: TYPOGRAPHY.sizes.lg, 
-    fontWeight: TYPOGRAPHY.weights.bold,
-    letterSpacing: -0.3,
-  },
   headerSubtitle: { 
     fontSize: TYPOGRAPHY.sizes.sm,
-    marginTop: 2,
+    flex: 1,
   },
   headerRight: { 
     flexDirection: 'row', 

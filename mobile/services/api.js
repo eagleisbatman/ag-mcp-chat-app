@@ -97,8 +97,6 @@ export const getActiveMcpServers = async ({ lat, lon } = {}) => {
     if (lon !== undefined) queryParams.append('lon', lon);
     
     const url = `${API_BASE_URL}/api/mcp-servers/active${queryParams.toString() ? `?${queryParams}` : ''}`;
-    
-    console.log('📤 [API] Fetching MCP servers:', { lat, lon });
 
     const response = await fetch(url, {
       method: 'GET',
@@ -140,6 +138,44 @@ export const getActiveMcpServers = async ({ lat, lon } = {}) => {
 };
 
 /**
+ * Get ALL MCP servers with active/inactive status based on user's location
+ * Shows all available integrations with regional availability indicator
+ */
+export const getAllMcpServersWithStatus = async ({ lat, lon } = {}) => {
+  try {
+    const queryParams = new URLSearchParams();
+    if (lat !== undefined) queryParams.append('lat', lat);
+    if (lon !== undefined) queryParams.append('lon', lon);
+    
+    const url = `${API_BASE_URL}/api/mcp-servers/all-with-status${queryParams.toString() ? `?${queryParams}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': API_KEY,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('All MCP servers API error:', error);
+    return {
+      success: false,
+      error: error.message || 'Failed to fetch MCP servers',
+      allServers: [],
+      activeServers: [],
+      inactiveServers: [],
+      counts: { total: 0, activeForUser: 0, inactiveForUser: 0 },
+    };
+  }
+};
+
+/**
  * Detect regions for a given location
  * @param {number} lat - Latitude
  * @param {number} lon - Longitude
@@ -173,6 +209,7 @@ export const detectRegions = async (lat, lon) => {
 export default { 
   sendChatMessage, 
   getActiveMcpServers,
+  getAllMcpServersWithStatus,
   detectRegions,
 };
 

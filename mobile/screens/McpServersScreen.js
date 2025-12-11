@@ -9,99 +9,142 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
-import { SPACING } from '../constants/themes';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import api from '../services/api';
 
-// Icon mapping for MCP server categories
-const CATEGORY_ICONS = {
-  agriculture: 'leaf',
-  weather: 'cloud',
-  ai: 'hardware-chip',
-  utility: 'construct',
-};
-
-// Icon mapping for MCP server icons (Material Icons)
+// Better icon mapping using MaterialCommunityIcons (more options)
 const SERVER_ICONS = {
-  leaf: 'eco',
-  cloud: 'cloud',
-  brain: 'psychology',
-  settings: 'settings',
-  person: 'person',
-  book: 'menu_book',
-  shield: 'shield',
-  lightbulb: 'lightbulb',
-  science: 'science',
-  pets: 'pets',
-  terrain: 'terrain',
-  account_tree: 'account_tree',
-  wb_sunny: 'wb_sunny',
-  thunderstorm: 'thunderstorm',
+  // AI & Analytics
+  'agrivision': { icon: 'leaf-circle', family: 'mci' },
+  'intent-classification': { icon: 'robot', family: 'mci' },
+  'entity-extraction': { icon: 'tag-search', family: 'mci' },
+  'guardrails': { icon: 'shield-check', family: 'mci' },
+  
+  // Agriculture
+  'ssfr': { icon: 'flask', family: 'mci' },
+  'feed-formulation': { icon: 'cow', family: 'mci' },
+  'isda-soil': { icon: 'shovel', family: 'mci' },
+  'decision-tree': { icon: 'graph', family: 'mci' },
+  'tips': { icon: 'lightbulb-on', family: 'mci' },
+  
+  // Weather
+  'accuweather': { icon: 'weather-partly-cloudy', family: 'mci' },
+  'gap-weather': { icon: 'weather-lightning-rainy', family: 'mci' },
+  'weatherapi': { icon: 'weather-sunny', family: 'mci' },
+  'tomorrow-io': { icon: 'cloud-sync', family: 'mci' },
+  
+  // Utility
+  'user-preferences': { icon: 'cog', family: 'mci' },
+  'profile-memory': { icon: 'account-circle', family: 'mci' },
+  'content': { icon: 'book-open-page-variant', family: 'mci' },
 };
 
-function McpServerCard({ server, theme, isGlobal }) {
-  const iconName = SERVER_ICONS[server.icon] || 'extension';
-  const statusColor = server.healthStatus === 'healthy' 
-    ? theme.success 
-    : server.healthStatus === 'unhealthy' 
-      ? theme.error 
-      : theme.textMuted;
+// Category config
+const CATEGORY_CONFIG = {
+  ai: { label: 'AI & Intelligence', icon: 'brain', color: '#9C27B0' },
+  agriculture: { label: 'Agriculture', icon: 'sprout', color: '#4CAF50' },
+  weather: { label: 'Weather', icon: 'weather-sunny', color: '#FF9800' },
+  utility: { label: 'Utilities', icon: 'toolbox', color: '#607D8B' },
+};
+
+function ServerIcon({ slug, color, size = 24, theme }) {
+  const iconConfig = SERVER_ICONS[slug] || { icon: 'puzzle', family: 'mci' };
+  return (
+    <MaterialCommunityIcons 
+      name={iconConfig.icon} 
+      size={size} 
+      color={color || theme.accent} 
+    />
+  );
+}
+
+function McpServerCard({ server, theme, isActive }) {
+  const statusColor = isActive ? theme.success : theme.textMuted;
+  const cardOpacity = isActive ? 1 : 0.6;
 
   return (
-    <View style={[styles.serverCard, { backgroundColor: theme.surface }]}>
-      <View style={styles.serverHeader}>
-        <View style={[styles.serverIconContainer, { backgroundColor: server.color + '20' }]}>
-          <MaterialIcons 
-            name={iconName} 
-            size={24} 
+    <View style={[styles.serverCard, { backgroundColor: theme.surface, opacity: cardOpacity }]}>
+      <View style={styles.serverRow}>
+        {/* Icon */}
+        <View style={[styles.serverIconContainer, { backgroundColor: (server.color || theme.accent) + '15' }]}>
+          <ServerIcon 
+            slug={server.slug} 
             color={server.color || theme.accent} 
+            size={22}
+            theme={theme}
           />
         </View>
+        
+        {/* Info */}
         <View style={styles.serverInfo}>
-          <Text style={[styles.serverName, { color: theme.text }]} numberOfLines={1}>
-            {server.name}
-          </Text>
-          {server.sourceRegion && (
-            <Text style={[styles.serverSource, { color: theme.textMuted }]}>
-              via {server.sourceRegion}
+          <View style={styles.serverNameRow}>
+            <Text style={[styles.serverName, { color: theme.text }]} numberOfLines={1}>
+              {server.name?.replace(' MCP', '').replace(' Server', '')}
             </Text>
-          )}
+            {server.isGlobal && (
+              <View style={[styles.globalBadge, { backgroundColor: theme.info + '20' }]}>
+                <Ionicons name="globe-outline" size={10} color={theme.info} />
+              </View>
+            )}
+          </View>
+          <Text style={[styles.serverDescription, { color: theme.textMuted }]} numberOfLines={1}>
+            {server.description}
+          </Text>
         </View>
-        <View style={styles.serverStatus}>
-          <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
-          {isGlobal && (
-            <View style={[styles.globalBadge, { backgroundColor: theme.accentLight }]}>
-              <Text style={[styles.globalBadgeText, { color: theme.accent }]}>Global</Text>
+        
+        {/* Status */}
+        <View style={styles.statusContainer}>
+          {isActive ? (
+            <View style={[styles.activeIndicator, { backgroundColor: theme.success + '20' }]}>
+              <Ionicons name="checkmark" size={14} color={theme.success} />
+            </View>
+          ) : (
+            <View style={[styles.inactiveIndicator, { backgroundColor: theme.textMuted + '20' }]}>
+              <Ionicons name="remove" size={14} color={theme.textMuted} />
             </View>
           )}
         </View>
       </View>
       
-      <Text style={[styles.serverDescription, { color: theme.textMuted }]} numberOfLines={2}>
-        {server.description}
-      </Text>
-      
-      {server.capabilities && Array.isArray(server.capabilities) && (
-        <View style={styles.capabilitiesContainer}>
-          {server.capabilities.slice(0, 4).map((cap, index) => (
-            <View 
-              key={index} 
-              style={[styles.capabilityBadge, { backgroundColor: theme.surfaceVariant }]}
-            >
-              <Text style={[styles.capabilityText, { color: theme.textMuted }]}>
-                {cap}
-              </Text>
-            </View>
-          ))}
-          {server.capabilities.length > 4 && (
-            <Text style={[styles.moreCapabilities, { color: theme.textMuted }]}>
-              +{server.capabilities.length - 4} more
-            </Text>
-          )}
-        </View>
+      {/* Availability reason for inactive servers */}
+      {!isActive && server.availabilityReason && (
+        <Text style={[styles.availabilityReason, { color: theme.textMuted }]}>
+          {server.availabilityReason}
+        </Text>
       )}
+    </View>
+  );
+}
+
+function CategorySection({ category, servers, theme }) {
+  const config = CATEGORY_CONFIG[category] || { label: category, icon: 'puzzle', color: '#888' };
+  const activeCount = servers.filter(s => s.isActiveForUser).length;
+  
+  return (
+    <View style={styles.categorySection}>
+      <View style={styles.categoryHeader}>
+        <View style={[styles.categoryIcon, { backgroundColor: config.color + '15' }]}>
+          <MaterialCommunityIcons name={config.icon} size={16} color={config.color} />
+        </View>
+        <Text style={[styles.categoryLabel, { color: theme.text }]}>
+          {config.label}
+        </Text>
+        <Text style={[styles.categoryCount, { color: theme.textMuted }]}>
+          {activeCount}/{servers.length} active
+        </Text>
+      </View>
+      
+      {servers.map((server, index) => (
+        <McpServerCard 
+          key={server.slug || index} 
+          server={server} 
+          theme={theme}
+          isActive={server.isActiveForUser}
+        />
+      ))}
     </View>
   );
 }
@@ -121,24 +164,23 @@ export default function McpServersScreen({ navigation }) {
     try {
       setError(null);
       
-      // Build query params based on location
       const params = {};
       if (location?.latitude && location?.longitude) {
         params.lat = location.latitude;
         params.lon = location.longitude;
       }
       
-      const response = await api.getActiveMcpServers(params);
+      const response = await api.getAllMcpServersWithStatus(params);
       
       if (response.success) {
         setMcpData(response);
       } else {
-        throw new Error(response.error || 'Failed to fetch MCP servers');
+        throw new Error(response.error || 'Failed to fetch services');
       }
     } catch (err) {
       console.error('Fetch MCP servers error:', err);
       setError(err.message);
-      showError('Could not load MCP servers');
+      showError('Could not load services');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -154,22 +196,36 @@ export default function McpServersScreen({ navigation }) {
     fetchMcpServers();
   }, [fetchMcpServers]);
 
-  const globalServers = mcpData?.global || [];
-  const regionalServers = mcpData?.regional || [];
+  // Group servers by category
+  const serversByCategory = React.useMemo(() => {
+    if (!mcpData?.allServers) return {};
+    const grouped = {};
+    mcpData.allServers.forEach(server => {
+      const cat = server.category || 'utility';
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(server);
+    });
+    // Sort each category: active first
+    Object.keys(grouped).forEach(cat => {
+      grouped[cat].sort((a, b) => (b.isActiveForUser ? 1 : 0) - (a.isActiveForUser ? 1 : 0));
+    });
+    return grouped;
+  }, [mcpData]);
+
+  const counts = mcpData?.counts || { total: 0, activeForUser: 0, inactiveForUser: 0 };
   const detectedRegions = mcpData?.detectedRegions || [];
-  const totalActive = mcpData?.totalActive || 0;
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: headerPaddingTop }]}>
+      <View style={[styles.header, { paddingTop: headerPaddingTop, borderBottomColor: theme.border }]}>
         <TouchableOpacity 
           style={[styles.backButton, { backgroundColor: theme.surfaceVariant }]}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <Ionicons name="arrow-back" size={22} color={theme.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>AI Services</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>AI Integrations</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -177,15 +233,13 @@ export default function McpServersScreen({ navigation }) {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.accent} />
           <Text style={[styles.loadingText, { color: theme.textMuted }]}>
-            Loading services...
+            Loading integrations...
           </Text>
         </View>
       ) : error ? (
         <View style={styles.errorContainer}>
           <Ionicons name="alert-circle" size={48} color={theme.error} />
-          <Text style={[styles.errorText, { color: theme.text }]}>
-            {error}
-          </Text>
+          <Text style={[styles.errorText, { color: theme.text }]}>{error}</Text>
           <TouchableOpacity 
             style={[styles.retryButton, { backgroundColor: theme.accent }]}
             onPress={fetchMcpServers}
@@ -206,147 +260,71 @@ export default function McpServersScreen({ navigation }) {
             />
           }
         >
-          {/* Location & Stats Summary */}
+          {/* Summary Card */}
           <View style={[styles.summaryCard, { backgroundColor: theme.surface }]}>
-            <View style={styles.summaryHeader}>
-              <View style={[styles.summaryIconContainer, { backgroundColor: theme.accentLight }]}>
-                <Ionicons name="location" size={20} color={theme.accent} />
-              </View>
-              <View style={styles.summaryInfo}>
-                <Text style={[styles.summaryTitle, { color: theme.text }]}>
-                  Your Location
-                </Text>
-                <Text style={[styles.summarySubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-                  {locationDetails?.displayName || 
-                   (location ? `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}` : 'Not set')}
-                </Text>
-              </View>
+            {/* Location */}
+            <View style={styles.locationRow}>
+              <Ionicons name="location" size={16} color={theme.accent} />
+              <Text style={[styles.locationText, { color: theme.text }]} numberOfLines={1}>
+                {locationDetails?.displayName || 
+                 (location ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : 'Location not set')}
+              </Text>
             </View>
             
+            {/* Region badges */}
             {detectedRegions.length > 0 && (
-              <View style={styles.regionsContainer}>
-                <Text style={[styles.regionsLabel, { color: theme.textMuted }]}>
-                  Detected Regions:
-                </Text>
-                <View style={styles.regionBadges}>
-                  {detectedRegions.map((region, index) => (
-                    <View 
-                      key={index}
-                      style={[styles.regionBadge, { backgroundColor: theme.accentLight }]}
-                    >
-                      <Text style={[styles.regionBadgeText, { color: theme.accent }]}>
-                        {region.name}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
+              <View style={styles.regionBadges}>
+                {detectedRegions.slice(0, 3).map((region, index) => (
+                  <View 
+                    key={index}
+                    style={[styles.regionBadge, { backgroundColor: theme.accent + '15' }]}
+                  >
+                    <Text style={[styles.regionBadgeText, { color: theme.accent }]}>
+                      {region.name}
+                    </Text>
+                  </View>
+                ))}
               </View>
             )}
             
+            {/* Stats */}
             <View style={[styles.statsRow, { borderTopColor: theme.border }]}>
               <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.accent }]}>
-                  {totalActive}
-                </Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>
-                  Total Active
-                </Text>
+                <Text style={[styles.statNumber, { color: theme.success }]}>{counts.activeForUser}</Text>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>Active</Text>
               </View>
               <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
               <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.success }]}>
-                  {globalServers.length}
-                </Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>
-                  Global
-                </Text>
+                <Text style={[styles.statNumber, { color: theme.textMuted }]}>{counts.inactiveForUser}</Text>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>Inactive</Text>
               </View>
               <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
               <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.warning }]}>
-                  {regionalServers.length}
-                </Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>
-                  Regional
-                </Text>
+                <Text style={[styles.statNumber, { color: theme.text }]}>{counts.total}</Text>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>Total</Text>
               </View>
             </View>
           </View>
 
-          {/* Global Services Section */}
-          {globalServers.length > 0 && (
-            <View style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <Ionicons name="globe-outline" size={18} color={theme.textMuted} />
-                <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>
-                  GLOBAL SERVICES
-                </Text>
-                <Text style={[styles.sectionCount, { color: theme.textMuted }]}>
-                  {globalServers.length}
-                </Text>
-              </View>
-              <Text style={[styles.sectionDescription, { color: theme.textMuted }]}>
-                Available everywhere, regardless of location
-              </Text>
-              
-              {globalServers.map((server, index) => (
-                <McpServerCard 
-                  key={server.slug || index} 
-                  server={server} 
-                  theme={theme}
-                  isGlobal={true}
-                />
-              ))}
-            </View>
-          )}
+          {/* Category Sections - in preferred order */}
+          {['ai', 'agriculture', 'weather', 'utility'].map(category => {
+            const servers = serversByCategory[category];
+            if (!servers || servers.length === 0) return null;
+            return (
+              <CategorySection 
+                key={category} 
+                category={category} 
+                servers={servers} 
+                theme={theme} 
+              />
+            );
+          })}
 
-          {/* Regional Services Section */}
-          {regionalServers.length > 0 && (
-            <View style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <Ionicons name="map-outline" size={18} color={theme.textMuted} />
-                <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>
-                  REGIONAL SERVICES
-                </Text>
-                <Text style={[styles.sectionCount, { color: theme.textMuted }]}>
-                  {regionalServers.length}
-                </Text>
-              </View>
-              <Text style={[styles.sectionDescription, { color: theme.textMuted }]}>
-                Available in your detected region
-              </Text>
-              
-              {regionalServers.map((server, index) => (
-                <McpServerCard 
-                  key={server.slug || index} 
-                  server={server} 
-                  theme={theme}
-                  isGlobal={false}
-                />
-              ))}
-            </View>
-          )}
-
-          {/* No Regional Services */}
-          {regionalServers.length === 0 && !loading && (
-            <View style={[styles.emptySection, { backgroundColor: theme.surface }]}>
-              <Ionicons name="map-outline" size={32} color={theme.textMuted} />
-              <Text style={[styles.emptyTitle, { color: theme.text }]}>
-                No Regional Services
-              </Text>
-              <Text style={[styles.emptyText, { color: theme.textMuted }]}>
-                {location 
-                  ? 'No region-specific services available for your location yet.'
-                  : 'Enable location to see region-specific services.'}
-              </Text>
-            </View>
-          )}
-
-          {/* Info Footer */}
+          {/* Footer */}
           <View style={styles.footer}>
-            <Ionicons name="information-circle-outline" size={16} color={theme.textMuted} />
+            <Ionicons name="information-circle-outline" size={14} color={theme.textMuted} />
             <Text style={[styles.footerText, { color: theme.textMuted }]}>
-              Services activate automatically based on your location. Pull down to refresh.
+              Integrations activate based on your region. Pull to refresh.
             </Text>
           </View>
         </ScrollView>
@@ -363,8 +341,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingHorizontal: SPACING.lg,
+    paddingBottom: SPACING.md,
+    borderBottomWidth: 0.5,
   },
   backButton: {
     width: 40,
@@ -374,8 +353,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: TYPOGRAPHY.weights.bold,
   },
   loadingContainer: {
     flex: 1,
@@ -384,7 +363,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.sizes.base,
   },
   errorContainer: {
     flex: 1,
@@ -394,7 +373,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   errorText: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.sizes.base,
     textAlign: 'center',
   },
   retryButton: {
@@ -410,51 +389,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingHorizontal: 16,
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
     paddingBottom: 40,
   },
   summaryCard: {
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
+    borderRadius: 16,
+    padding: SPACING.md,
+    marginBottom: SPACING.lg,
   },
-  summaryHeader: {
+  locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
   },
-  summaryIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  summaryInfo: {
+  locationText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '500',
     flex: 1,
-  },
-  summaryTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  summarySubtitle: {
-    fontSize: 14,
-    marginTop: 2,
-  },
-  regionsContainer: {
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(128, 128, 128, 0.2)',
-  },
-  regionsLabel: {
-    fontSize: 12,
-    marginBottom: 8,
   },
   regionBadges: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: 6,
+    marginTop: SPACING.sm,
   },
   regionBadge: {
     paddingHorizontal: 10,
@@ -462,151 +420,130 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   regionBadgeText: {
-    fontSize: 12,
-    fontWeight: '500',
+    fontSize: 11,
+    fontWeight: '600',
   },
   statsRow: {
     flexDirection: 'row',
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 1,
+    marginTop: SPACING.md,
+    paddingTop: SPACING.md,
+    borderTopWidth: 0.5,
   },
   statItem: {
     flex: 1,
     alignItems: 'center',
   },
   statNumber: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
   },
   statLabel: {
-    fontSize: 12,
-    marginTop: 4,
+    fontSize: 11,
+    marginTop: 2,
   },
   statDivider: {
-    width: 1,
-    height: '100%',
+    width: 0.5,
+    height: '80%',
+    alignSelf: 'center',
   },
-  section: {
-    marginBottom: 24,
+  categorySection: {
+    marginBottom: SPACING.lg,
   },
-  sectionHeader: {
+  categoryHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 4,
+    marginBottom: SPACING.sm,
   },
-  sectionTitle: {
-    fontSize: 12,
+  categoryIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
-    letterSpacing: 0.5,
     flex: 1,
   },
-  sectionCount: {
+  categoryCount: {
     fontSize: 12,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    fontSize: 13,
-    marginBottom: 12,
   },
   serverCard: {
     borderRadius: 12,
-    padding: 14,
-    marginBottom: 10,
+    padding: 12,
+    marginBottom: 8,
   },
-  serverHeader: {
+  serverRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
   serverIconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   serverInfo: {
     flex: 1,
+    minWidth: 0,
+  },
+  serverNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   serverName: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
+    flexShrink: 1,
   },
-  serverSource: {
+  globalBadge: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  serverDescription: {
     fontSize: 12,
     marginTop: 2,
   },
-  serverStatus: {
-    flexDirection: 'row',
+  statusContainer: {
+    marginLeft: 8,
+  },
+  activeIndicator: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
   },
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  globalBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-  },
-  globalBadgeText: {
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  serverDescription: {
-    fontSize: 13,
-    lineHeight: 18,
-    marginTop: 10,
-  },
-  capabilitiesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 10,
-  },
-  capabilityBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  capabilityText: {
-    fontSize: 11,
-  },
-  moreCapabilities: {
-    fontSize: 11,
-    alignSelf: 'center',
-  },
-  emptySection: {
-    borderRadius: 12,
-    padding: 24,
+  inactiveIndicator: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
   },
-  emptyTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  emptyText: {
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
+  availabilityReason: {
+    fontSize: 11,
+    marginTop: 8,
+    marginLeft: 52,
+    fontStyle: 'italic',
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    marginTop: 16,
-    paddingHorizontal: 24,
+    gap: 6,
+    marginTop: SPACING.sm,
   },
   footerText: {
-    fontSize: 12,
+    fontSize: 11,
     textAlign: 'center',
-    lineHeight: 18,
   },
 });
-

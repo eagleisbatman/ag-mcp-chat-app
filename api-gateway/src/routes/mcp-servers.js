@@ -61,6 +61,100 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/mcp-servers/all-with-status - Get ALL servers with active/inactive status for user's location
+router.get('/all-with-status', async (req, res) => {
+  try {
+    const { lat, lon, countryCode } = req.query;
+    
+    // 1. Get ALL servers (active or not)
+    const allServers = await prisma.mcpServerRegistry.findMany({
+      orderBy: [{ isGlobal: 'desc' }, { category: 'asc' }, { name: 'asc' }],
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        category: true,
+        isGlobal: true,
+        tools: true,
+        capabilities: true,
+        icon: true,
+        color: true,
+        isActive: true,
+        isDeployed: true,
+        healthStatus: true,
+      },
+    });
+
+    // 2. Determine which regional servers are active for user's location
+    let activeRegionalSlugs = new Set();
+    let detectedRegions = [];
+    
+    if (lat && lon) {
+      const latitude = parseFloat(lat);
+      const longitude = parseFloat(lon);
+      
+      // Find regions containing this point
+      const matchingRegions = await prisma.region.findMany({
+        where: {
+          isActive: true,
+          boundsMinLat: { lte: latitude },
+          boundsMaxLat: { gte: latitude },
+          boundsMinLon: { lte: longitude },
+          boundsMaxLon: { gte: longitude },
+        },
+        select: { id: true, name: true, code: true, level: true },
+        orderBy: { level: 'desc' },
+      });
+      
+      detectedRegions = matchingRegions;
+      
+      // Get MCP servers mapped to these regions
+      if (matchingRegions.length > 0) {
+        const regionIds = matchingRegions.map(r => r.id);
+        const mappings = await prisma.regionMcpMapping.findMany({
+          where: { regionId: { in: regionIds } },
+          include: { mcpServer: { select: { slug: true } } },
+        });
+        mappings.forEach(m => activeRegionalSlugs.add(m.mcpServer.slug));
+      }
+    }
+
+    // 3. Build response with isActiveForUser flag
+    const serversWithStatus = allServers.map(server => ({
+      ...server,
+      isActiveForUser: server.isGlobal ? server.isActive : activeRegionalSlugs.has(server.slug),
+      availabilityReason: server.isGlobal 
+        ? 'Available globally' 
+        : activeRegionalSlugs.has(server.slug)
+          ? `Available in your region`
+          : 'Not available in your region',
+    }));
+
+    // 4. Group servers
+    const activeServers = serversWithStatus.filter(s => s.isActiveForUser);
+    const inactiveServers = serversWithStatus.filter(s => !s.isActiveForUser);
+
+    res.json({ 
+      success: true,
+      allServers: serversWithStatus,
+      activeServers,
+      inactiveServers,
+      detectedRegions,
+      counts: {
+        total: serversWithStatus.length,
+        activeForUser: activeServers.length,
+        inactiveForUser: inactiveServers.length,
+        global: serversWithStatus.filter(s => s.isGlobal).length,
+        regional: serversWithStatus.filter(s => !s.isGlobal).length,
+      },
+    });
+  } catch (error) {
+    console.error('Get all MCP servers with status error:', error);
+    res.status(500).json({ error: 'Failed to get MCP servers' });
+  }
+});
+
 // GET /api/mcp-servers/active - Get active servers for user's location
 router.get('/active', async (req, res) => {
   try {
