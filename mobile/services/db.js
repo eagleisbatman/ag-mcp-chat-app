@@ -23,12 +23,6 @@ const headers = {
 export async function registerUser() {
   try {
     const deviceInfo = await getDeviceInfo();
-    console.log('🔌 [DB] Registering user with device info:', {
-      deviceId: deviceInfo.deviceId,
-      deviceOs: deviceInfo.deviceOs,
-      appVersion: deviceInfo.appVersion,
-    });
-    console.log('🔌 [DB] API URL:', `${API_BASE_URL}/api/users/register`);
     
     const response = await fetch(`${API_BASE_URL}/api/users/register`, {
       method: 'POST',
@@ -36,22 +30,19 @@ export async function registerUser() {
       body: JSON.stringify(deviceInfo),
     });
     
-    console.log('🔌 [DB] Registration response status:', response.status);
-    
     if (!response.ok) {
       const errorText = await response.text();
-      console.log('🔌 [DB] Registration error response:', errorText);
-      throw new Error(`HTTP ${response.status}: Registration failed`);
+      console.log('🔌 [DB] Sync error response:', errorText);
+      throw new Error(`HTTP ${response.status}: Sync failed`);
     }
     
     const data = await response.json();
-    console.log('🔌 [DB] Registration data:', { success: data.success, userId: data.userId || data.id });
     
-    if (!data.success) throw new Error(data.error || 'Registration failed');
+    if (!data.success) throw new Error(data.error || 'Sync failed');
     
     return { success: true, userId: data.id || data.userId, ...data };
   } catch (error) {
-    console.error('❌ [DB] User registration error:', error.message);
+    console.error('❌ [DB] User sync error:', error.message);
     return { success: false, error: error.message };
   }
 }

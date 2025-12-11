@@ -72,24 +72,23 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Register user with backend (runs in background)
+  // Sync user with backend (runs in background)
   const registerUserInBackground = async () => {
-    console.log('📱 [AppContext] Starting user registration...');
+    console.log('📱 [AppContext] Syncing user with backend...');
     try {
       const result = await registerUser();
-      console.log('📱 [AppContext] Registration result:', JSON.stringify(result, null, 2));
       if (result.success && result.userId) {
         setUserId(result.userId);
         setIsDbSynced(true);
-        console.log('✅ [AppContext] User registered successfully, userId:', result.userId);
+        console.log('✅ [AppContext] User synced, userId:', result.userId);
         
         // Check for pending location sync
         await syncPendingLocation();
       } else {
-        console.log('⚠️ [AppContext] Registration returned but no userId:', result);
+        console.log('⚠️ [AppContext] Sync returned but no userId:', result);
       }
     } catch (error) {
-      console.log('❌ [AppContext] Background user registration failed:', error.message);
+      console.log('❌ [AppContext] Background user sync failed:', error.message);
       // App continues to work offline
     }
   };
