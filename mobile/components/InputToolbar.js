@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   Platform,
   Text,
+  Keyboard,
+  Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -33,6 +35,37 @@ export default function InputToolbar({
   const [pendingAudioData, setPendingAudioData] = useState(null);
   const [isFromVoice, setIsFromVoice] = useState(false);
   const textInputRef = useRef(null);
+  
+  // Keyboard animation - syncs with iOS keyboard animation
+  const keyboardHeight = useRef(new Animated.Value(0)).current;
+  
+  useEffect(() => {
+    // Use keyboard will show/hide for smooth animation sync
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+    
+    const keyboardWillShow = Keyboard.addListener(showEvent, (e) => {
+      // Animate in sync with keyboard (iOS provides duration)
+      Animated.timing(keyboardHeight, {
+        toValue: e.endCoordinates.height - insets.bottom,
+        duration: Platform.OS === 'ios' ? e.duration : 250,
+        useNativeDriver: false, // translateY would need true, but we need padding
+      }).start();
+    });
+    
+    const keyboardWillHide = Keyboard.addListener(hideEvent, (e) => {
+      Animated.timing(keyboardHeight, {
+        toValue: 0,
+        duration: Platform.OS === 'ios' ? e.duration : 250,
+        useNativeDriver: false,
+      }).start();
+    });
+    
+    return () => {
+      keyboardWillShow.remove();
+      keyboardWillHide.remove();
+    };
+  }, [keyboardHeight, insets.bottom]);
 
   const handleSendText = () => {
     if (!text.trim() || disabled) return;
@@ -161,7 +194,7 @@ export default function InputToolbar({
   const isDark = theme.name === 'dark';
 
   return (
-    <View style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
+    <Animated.View style={[styles.wrapper, { paddingBottom: Animated.add(bottomPadding, keyboardHeight) }]}>
       {/* Floating container with blur effect */}
       <View style={[
         styles.floatingContainer,
@@ -252,7 +285,7 @@ export default function InputToolbar({
           )}
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

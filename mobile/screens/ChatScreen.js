@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Platform, ActivityIndicator, TouchableOpacity, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -82,11 +82,7 @@ export default function ChatScreen({ navigation, route }) {
   }, []);
 
   return (
-    <KeyboardAvoidingView 
-      style={[styles.container, { backgroundColor: theme.background }]} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
-    >
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header - Cleaner design */}
       <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border, paddingTop: headerPaddingTop }]}>
         <View style={styles.headerLeft}>
@@ -198,7 +194,7 @@ export default function ChatScreen({ navigation, route }) {
         uploadAudioInBackground={uploadAudioInBackground}
         disabled={isTyping} 
       />
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

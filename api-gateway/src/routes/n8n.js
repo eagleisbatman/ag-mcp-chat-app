@@ -1,6 +1,7 @@
 // n8n workflow proxy routes
 const express = require('express');
 const cloudinary = require('cloudinary').v2;
+const { prisma } = require('../db');
 
 const router = express.Router();
 
@@ -9,22 +10,217 @@ const N8N_WHISPER_URL = process.env.N8N_WHISPER_URL || 'https://ag-mcp-app.up.ra
 const N8N_TTS_URL = process.env.N8N_TTS_URL || 'https://ag-mcp-app.up.railway.app/webhook/api/tts';
 const N8N_TITLE_URL = process.env.N8N_TITLE_URL || 'https://ag-mcp-app.up.railway.app/webhook/generate-title';
 const N8N_LOCATION_URL = process.env.N8N_LOCATION_URL || 'https://ag-mcp-app.up.railway.app/webhook/location-lookup';
+const CHAT_TIMEOUT_MS = parseInt(process.env.CHAT_TIMEOUT_MS || '60000'); // 60s default
 
 /**
- * Chat endpoint - routes to n8n Gemini chat workflow
+ * Get active MCP servers for a location (helper function)
+ */
+async function getActiveMcpServersForLocation(latitude, longitude) {
+  try {
+    // Get all global servers
+    const globalServers = await prisma.mcpServerRegistry.findMany({
+      where: { isGlobal: true, isActive: true, isDeployed: true },
+      select: {
+        slug: true,
+        name: true,
+        category: true,
+        tools: true,
+        capabilities: true,
+        endpointEnvVar: true,
+      },
+    });
+
+    let regionalServers = [];
+    let detectedRegions = [];
+
+    if (latitude && longitude) {
+      // Find matching regions
+      const matchingRegions = await prisma.region.findMany({
+        where: {
+          isActive: true,
+          boundsMinLat: { lte: latitude },
+          boundsMaxLat: { gte: latitude },
+          boundsMinLon: { lte: longitude },
+          boundsMaxLon: { gte: longitude },
+        },
+        orderBy: { level: 'desc' },
+      });
+
+      detectedRegions = matchingRegions.map(r => ({ name: r.name, code: r.code, level: r.level }));
+
+      if (matchingRegions.length > 0) {
+        // Build region hierarchy
+        const regionIds = [];
+        for (const region of matchingRegions) {
+          regionIds.push(region.id);
+          let currentId = region.parentRegionId;
+          while (currentId) {
+            regionIds.push(currentId);
+            const parent = await prisma.region.findUnique({
+              where: { id: currentId },
+              select: { parentRegionId: true },
+            });
+            currentId = parent?.parentRegionId;
+          }
+        }
+
+        const uniqueRegionIds = [...new Set(regionIds)];
+
+        // Get regional MCP servers
+        const mappings = await prisma.regionMcpMapping.findMany({
+          where: { regionId: { in: uniqueRegionIds }, isActive: true },
+          include: {
+            region: { select: { name: true, code: true } },
+            mcpServer: {
+              select: {
+                slug: true,
+                name: true,
+                category: true,
+                tools: true,
+                capabilities: true,
+                endpointEnvVar: true,
+                isActive: true,
+                isDeployed: true,
+              },
+            },
+          },
+          orderBy: { priority: 'asc' },
+        });
+
+        const seenSlugs = new Set();
+        for (const m of mappings) {
+          if (!seenSlugs.has(m.mcpServer.slug) && m.mcpServer.isActive && m.mcpServer.isDeployed) {
+            seenSlugs.add(m.mcpServer.slug);
+            regionalServers.push({
+              ...m.mcpServer,
+              sourceRegion: m.region.name,
+            });
+          }
+        }
+      }
+    }
+
+    // Format with endpoints
+    const formatServer = (server) => ({
+      slug: server.slug,
+      name: server.name,
+      category: server.category,
+      tools: server.tools,
+      capabilities: server.capabilities,
+      endpoint: process.env[server.endpointEnvVar] || null,
+      sourceRegion: server.sourceRegion,
+    });
+
+    return {
+      global: globalServers.map(formatServer).filter(s => s.endpoint),
+      regional: regionalServers.map(formatServer).filter(s => s.endpoint),
+      detectedRegions,
+    };
+  } catch (error) {
+    console.error('Error getting MCP servers for location:', error);
+    return { global: [], regional: [], detectedRegions: [] };
+  }
+}
+
+/**
+ * Chat endpoint - routes to n8n Gemini chat workflow with MCP context
  */
 router.post('/chat', async (req, res) => {
+  const startTime = Date.now();
   try {
-    const response = await fetch(N8N_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body),
+    const { latitude, longitude, language, location, message, history } = req.body;
+    
+    console.log('💬 [Chat] Request:', {
+      hasLocation: !!(latitude && longitude),
+      language: language || 'en',
+      messageLength: message?.length || 0,
+      historyCount: history?.length || 0,
     });
-    const data = await response.json();
-    res.json(data);
+
+    // Get active MCP servers for user's location
+    const mcpContext = await getActiveMcpServersForLocation(
+      latitude ? parseFloat(latitude) : null,
+      longitude ? parseFloat(longitude) : null
+    );
+
+    console.log('🔌 [Chat] MCP Context:', {
+      globalCount: mcpContext.global.length,
+      regionalCount: mcpContext.regional.length,
+      detectedRegions: mcpContext.detectedRegions.map(r => r.name).join(', '),
+    });
+
+    // Build enhanced request body for n8n
+    const enhancedBody = {
+      ...req.body,
+      mcpServers: {
+        global: mcpContext.global,
+        regional: mcpContext.regional,
+        allTools: [
+          ...mcpContext.global.flatMap(s => s.tools || []),
+          ...mcpContext.regional.flatMap(s => s.tools || []),
+        ],
+      },
+      detectedRegions: mcpContext.detectedRegions,
+      locationContext: location || null,
+    };
+
+    // Call n8n with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(enhancedBody),
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => 'Unknown error');
+        console.error('💬 [Chat] n8n error:', response.status, errorText);
+        throw new Error(`n8n returned ${response.status}`);
+      }
+      
+      const data = await response.json();
+      const duration = Date.now() - startTime;
+      
+      console.log('💬 [Chat] Response:', {
+        success: data.success !== false,
+        duration: `${duration}ms`,
+        hasFollowUp: !!(data.followUpQuestions?.length),
+      });
+      
+      res.json({
+        ...data,
+        _meta: {
+          duration,
+          mcpServersUsed: mcpContext.global.length + mcpContext.regional.length,
+          regions: mcpContext.detectedRegions.map(r => r.name),
+        },
+      });
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      
+      if (fetchError.name === 'AbortError') {
+        console.error('💬 [Chat] Timeout after', CHAT_TIMEOUT_MS, 'ms');
+        return res.status(504).json({
+          success: false,
+          error: 'Request timed out. Please try again.',
+          response: 'I apologize, but the request took too long. Please try again with a simpler question.',
+        });
+      }
+      throw fetchError;
+    }
   } catch (error) {
-    console.error('Error calling n8n chat:', error);
-    res.status(500).json({ error: 'Failed to process request' });
+    console.error('💬 [Chat] Error:', error.message);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to process request',
+      response: 'I apologize, but I encountered an error. Please try again.',
+    });
   }
 });
 

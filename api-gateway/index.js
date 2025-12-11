@@ -118,6 +118,8 @@ const messageRoutes = require('./src/routes/messages');
 const mcpRoutes = require('./src/routes/mcp');
 const analyticsRoutes = require('./src/routes/analytics');
 const languagesRoutes = require('./src/routes/languages');
+const regionsRoutes = require('./src/routes/regions');
+const mcpServersRoutes = require('./src/routes/mcp-servers');
 
 // Mount routes (all authenticated)
 app.use('/api/upload', authenticate, uploadRoutes);
@@ -128,6 +130,8 @@ app.use('/api/messages', authenticate, messageRoutes);
 app.use('/api/mcp', authenticate, mcpRoutes);
 app.use('/api/analytics', authenticate, analyticsRoutes);
 app.use('/api/languages', authenticate, languagesRoutes);
+app.use('/api/regions', authenticate, regionsRoutes);
+app.use('/api/mcp-servers', authenticate, mcpServersRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

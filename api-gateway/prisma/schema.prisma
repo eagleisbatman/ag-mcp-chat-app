@@ -422,7 +422,140 @@ model TtsVoice {
 }
 
 // ============================================
-// 9. ANALYTICS EVENTS TABLE
+// 9. REGIONS TABLE - Geographic regions for MCP activation
+// ============================================
+model Region {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String   @unique               // "Ethiopia", "East Africa", "Africa"
+  code            String   @unique               // "ETH", "EAST_AFRICA", "AFRICA", "GLOBAL"
+  description     String?
+  
+  // Geographic bounds (null for GLOBAL)
+  boundsMinLat    Decimal? @map("bounds_min_lat") @db.Decimal(10, 8)
+  boundsMaxLat    Decimal? @map("bounds_max_lat") @db.Decimal(10, 8)
+  boundsMinLon    Decimal? @map("bounds_min_lon") @db.Decimal(11, 8)
+  boundsMaxLon    Decimal? @map("bounds_max_lon") @db.Decimal(11, 8)
+  
+  // Hierarchy (optional parent region)
+  parentRegionId  String?  @map("parent_region_id") @db.Uuid
+  level           Int      @default(0)           // 0=Global, 1=Continent, 2=SubRegion, 3=Country
+  
+  isActive        Boolean  @default(true) @map("is_active")
+  displayOrder    Int      @default(0) @map("display_order")
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  parentRegion    Region?  @relation("RegionHierarchy", fields: [parentRegionId], references: [id])
+  childRegions    Region[] @relation("RegionHierarchy")
+  mcpMappings     RegionMcpMapping[]
+  countryMappings CountryRegionMapping[]
+
+  @@index([code])
+  @@index([isActive])
+  @@map("regions")
+}
+
+// ============================================
+// 10. MCP SERVERS TABLE - Registry of MCP servers
+// ============================================
+model McpServerRegistry {
+  id                String   @id @default(uuid()) @db.Uuid
+  name              String                        // "SSFR Fertilizer Recommendations"
+  slug              String   @unique              // "ssfr", "isda-soil", "agrivision"
+  description       String?
+  
+  // Endpoint configuration (from env vars at runtime)
+  endpointEnvVar    String   @map("endpoint_env_var")  // "MCP_SSFR_URL"
+  healthCheckPath   String   @default("/health") @map("health_check_path")
+  mcpEndpointPath   String   @default("/mcp") @map("mcp_endpoint_path")
+  
+  // Classification
+  category          String   @default("agriculture") // agriculture/weather/utility/ai
+  isGlobal          Boolean  @default(false) @map("is_global") // Always active everywhere
+  
+  // Tools provided
+  tools             Json?                         // ["get_fertilizer_recommendation"]
+  capabilities      Json?                         // ["fertilizer", "soil"]
+  
+  // UI display
+  icon              String?                       // "leaf", "cloud", "brain"
+  color             String?                       // "#4CAF50"
+  
+  // Status
+  isActive          Boolean  @default(true) @map("is_active")
+  isDeployed        Boolean  @default(false) @map("is_deployed")
+  deployedAt        DateTime? @map("deployed_at")
+  lastHealthCheck   DateTime? @map("last_health_check")
+  healthStatus      String?  @map("health_status") // healthy/unhealthy/unknown
+  
+  // Version
+  version           String?
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  regionMappings    RegionMcpMapping[]
+
+  @@index([slug])
+  @@index([isGlobal])
+  @@index([isActive])
+  @@map("mcp_server_registry")
+}
+
+// ============================================
+// 11. REGION-MCP MAPPING TABLE - Which MCP servers are active in which regions
+// ============================================
+model RegionMcpMapping {
+  id              String   @id @default(uuid()) @db.Uuid
+  regionId        String   @map("region_id") @db.Uuid
+  mcpServerId     String   @map("mcp_server_id") @db.Uuid
+  
+  isActive        Boolean  @default(true) @map("is_active")
+  priority        Int      @default(0)           // For ordering/precedence
+  
+  // Override settings for this region (optional)
+  configOverrides Json?    @map("config_overrides")
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  region          Region          @relation(fields: [regionId], references: [id], onDelete: Cascade)
+  mcpServer       McpServerRegistry @relation(fields: [mcpServerId], references: [id], onDelete: Cascade)
+
+  @@unique([regionId, mcpServerId])
+  @@index([regionId])
+  @@index([mcpServerId])
+  @@map("region_mcp_mappings")
+}
+
+// ============================================
+// 12. COUNTRY-REGION MAPPING TABLE - Which countries belong to which regions
+// ============================================
+model CountryRegionMapping {
+  id              String   @id @default(uuid()) @db.Uuid
+  countryCode     String   @map("country_code") @db.VarChar(3) // ISO 3166-1 alpha-3
+  countryName     String   @map("country_name")
+  regionId        String   @map("region_id") @db.Uuid
+  
+  isPrimary       Boolean  @default(true) @map("is_primary") // Country can be in multiple regions
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  region          Region   @relation(fields: [regionId], references: [id], onDelete: Cascade)
+
+  @@unique([countryCode, regionId])
+  @@index([countryCode])
+  @@index([regionId])
+  @@map("country_region_mappings")
+}
+
+// ============================================
+// 13. ANALYTICS EVENTS TABLE
 // ============================================
 model AnalyticsEvent {
   id              String   @id @default(uuid()) @db.Uuid

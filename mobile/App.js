@@ -18,6 +18,7 @@ import ChatScreen from './screens/ChatScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import LanguageSelectScreen from './screens/LanguageSelectScreen';
 import HistoryScreen from './screens/HistoryScreen';
+import McpServersScreen from './screens/McpServersScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ function MainStack() {
       <Stack.Screen name="History" component={HistoryScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
+      <Stack.Screen name="McpServers" component={McpServersScreen} />
     </Stack.Navigator>
   );
 }
