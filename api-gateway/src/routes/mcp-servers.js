@@ -306,95 +306,8 @@ router.get('/by-location', async (req, res) => {
   }
 });
 
-// GET /api/mcp-servers/:slug - Get specific MCP server
-router.get('/:slug', async (req, res) => {
-  try {
-    const { slug } = req.params;
-
-    const server = await prisma.mcpServerRegistry.findUnique({
-      where: { slug },
-      include: {
-        regionMappings: {
-          where: { isActive: true },
-          include: {
-            region: {
-              select: { name: true, code: true, level: true },
-            },
-          },
-        },
-      },
-    });
-
-    if (!server) {
-      return res.status(404).json({ error: 'MCP server not found' });
-    }
-
-    // Format regions
-    const activeRegions = server.regionMappings.map(m => m.region);
-
-    res.json({
-      success: true,
-      server: {
-        ...server,
-        endpointUrl: process.env[server.endpointEnvVar] || null,
-        endpointEnvVar: undefined,
-        regionMappings: undefined,
-        activeRegions,
-      },
-    });
-  } catch (error) {
-    console.error('Get MCP server error:', error);
-    res.status(500).json({ error: 'Failed to get MCP server' });
-  }
-});
-
-// POST /api/mcp-servers/:slug/health - Update health status
-router.post('/:slug/health', async (req, res) => {
-  try {
-    const { slug } = req.params;
-    const { status } = req.body;
-
-    if (!['healthy', 'unhealthy', 'unknown'].includes(status)) {
-      return res.status(400).json({ error: 'Invalid status' });
-    }
-
-    const server = await prisma.mcpServerRegistry.update({
-      where: { slug },
-      data: {
-        healthStatus: status,
-        lastHealthCheck: new Date(),
-      },
-    });
-
-    res.json({ success: true, server: { slug: server.slug, healthStatus: server.healthStatus } });
-  } catch (error) {
-    console.error('Update MCP server health error:', error);
-    res.status(500).json({ error: 'Failed to update health status' });
-  }
-});
-
-// GET /api/mcp-servers/categories/list - Get all categories
-router.get('/categories/list', async (req, res) => {
-  try {
-    const categories = await prisma.mcpServerRegistry.groupBy({
-      by: ['category'],
-      _count: true,
-    });
-
-    res.json({
-      success: true,
-      categories: categories.map(c => ({
-        name: c.category,
-        count: c._count,
-      })),
-    });
-  } catch (error) {
-    console.error('Get categories error:', error);
-    res.status(500).json({ error: 'Failed to get categories' });
-  }
-});
-
 // GET /api/mcp-servers/live-status - Real-time health check with active/inactive for region
+// NOTE: Must be defined BEFORE /:slug route to avoid route conflict
 router.get('/live-status', async (req, res) => {
   try {
     const { lat, lon } = req.query;
@@ -578,6 +491,94 @@ router.get('/live-status', async (req, res) => {
   } catch (error) {
     console.error('Live status check error:', error);
     res.status(500).json({ error: 'Failed to check MCP server status' });
+  }
+});
+
+// GET /api/mcp-servers/:slug - Get specific MCP server
+router.get('/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const server = await prisma.mcpServerRegistry.findUnique({
+      where: { slug },
+      include: {
+        regionMappings: {
+          where: { isActive: true },
+          include: {
+            region: {
+              select: { name: true, code: true, level: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!server) {
+      return res.status(404).json({ error: 'MCP server not found' });
+    }
+
+    // Format regions
+    const activeRegions = server.regionMappings.map(m => m.region);
+
+    res.json({
+      success: true,
+      server: {
+        ...server,
+        endpointUrl: process.env[server.endpointEnvVar] || null,
+        endpointEnvVar: undefined,
+        regionMappings: undefined,
+        activeRegions,
+      },
+    });
+  } catch (error) {
+    console.error('Get MCP server error:', error);
+    res.status(500).json({ error: 'Failed to get MCP server' });
+  }
+});
+
+// POST /api/mcp-servers/:slug/health - Update health status
+router.post('/:slug/health', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const { status } = req.body;
+
+    if (!['healthy', 'unhealthy', 'unknown'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    const server = await prisma.mcpServerRegistry.update({
+      where: { slug },
+      data: {
+        healthStatus: status,
+        lastHealthCheck: new Date(),
+      },
+    });
+
+    res.json({ success: true, server: { slug: server.slug, healthStatus: server.healthStatus } });
+  } catch (error) {
+    console.error('Update MCP server health error:', error);
+    res.status(500).json({ error: 'Failed to update health status' });
+  }
+});
+
+// GET /api/mcp-servers/categories/list - Get all categories
+router.get('/categories/list', async (req, res) => {
+  try {
+    const categories = await prisma.mcpServerRegistry.groupBy({
+      by: ['category'],
+      _count: true,
+    });
+
+    res.json({
+      success: true,
+      categories: categories.map(c => ({
+        name: c.category,
+        count: c._count,
+      })),
+    });
+  } catch (error) {
+    console.error('Get categories error:', error);
+    res.status(500).json({ error: 'Failed to get categories' });
   }
 });
 
