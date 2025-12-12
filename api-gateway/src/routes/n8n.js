@@ -10,6 +10,7 @@ const N8N_WHISPER_URL = process.env.N8N_WHISPER_URL || 'https://ag-mcp-app.up.ra
 const N8N_TTS_URL = process.env.N8N_TTS_URL || 'https://ag-mcp-app.up.railway.app/webhook/api/tts';
 const N8N_TITLE_URL = process.env.N8N_TITLE_URL || 'https://ag-mcp-app.up.railway.app/webhook/generate-title';
 const N8N_LOCATION_URL = process.env.N8N_LOCATION_URL || 'https://ag-mcp-app.up.railway.app/webhook/location-lookup';
+const INTENT_CLASSIFICATION_URL = process.env.INTENT_CLASSIFICATION_URL || 'https://intent-classification-mcp.up.railway.app';
 const CHAT_TIMEOUT_MS = parseInt(process.env.CHAT_TIMEOUT_MS || '60000'); // 60s default
 
 /**
@@ -158,92 +159,96 @@ async function callMcpTool(endpoint, toolName, args, extraHeaders = {}) {
 }
 
 /**
- * Multi-language intent keywords
- * Covers: English, Amharic (am), Hindi (hi), Kannada (kn), Telugu (te), Swahili (sw), Vietnamese (vi)
+ * Call Intent Classification MCP for multi-language intent detection
+ * Uses LLM-based classification that works with any language
  */
-const INTENT_KEYWORDS = {
-  weather: [
-    // English
-    'weather', 'forecast', 'rain', 'temperature', 'climate', 'sunny', 'cloudy', 'storm',
-    // Amharic (Ethiopia)
-    'የአየር', 'ዝናብ', 'ሙቀት', 'ቀዝቃዛ', 'ፀሐይ',
-    // Hindi
-    'मौसम', 'बारिश', 'तापमान', 'गर्मी', 'ठंड',
-    // Kannada
-    'ಹವಾಮಾನ', 'ಮಳೆ', 'ತಾಪಮಾನ',
-    // Telugu
-    'వాతావరణం', 'వర్షం', 'ఉష్ణోగ్రత',
-    // Swahili
-    'hali ya hewa', 'mvua', 'joto',
-  ],
-  soil: [
-    // English
-    'soil', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'nutrient', 'fertility', 'acidity',
-    // Amharic
-    'አፈር', 'ማዳበሪያ', 'ለምነት',
-    // Hindi
-    'मिट्टी', 'भूमि', 'उर्वरता', 'नाइट्रोजन',
-    // Kannada
-    'ಮಣ್ಣು', 'ಫಲವತ್ತತೆ',
-    // Telugu
-    'మట్టి', 'సారవంతత',
-    // Swahili
-    'udongo', 'rutuba',
-  ],
-  fertilizer: [
-    // English
-    'fertilizer', 'fertiliser', 'npk', 'urea', 'nps', 'compost', 'manure', 'dap',
-    // Amharic
-    'ማዳበሪያ', 'ኮምፖስት', 'ፍግ', 'ዩሪያ',
-    // Hindi
-    'खाद', 'उर्वरक', 'यूरिया', 'गोबर',
-    // Kannada
-    'ಗೊಬ್ಬರ', 'ಯೂರಿಯಾ',
-    // Telugu
-    'ఎరువు', 'యూరియా',
-    // Swahili
-    'mbolea', 'samadi',
-  ],
-  feed: [
-    // English
-    'feed', 'cow', 'cattle', 'dairy', 'livestock', 'milk', 'fodder', 'diet', 'ration', 'animal',
-    // Amharic
-    'ላም', 'ከብት', 'ወተት', 'መኖ', 'እንሰሳ', 'ለመመገብ', 'ላሞች',
-    // Hindi
-    'गाय', 'दूध', 'पशु', 'चारा', 'भैंस',
-    // Kannada
-    'ಹಸು', 'ಹಾಲು', 'ಜಾನುವಾರು', 'ಮೇವು',
-    // Telugu
-    'ఆవు', 'పాలు', 'పశువులు', 'దాణా',
-    // Swahili
-    'ng\'ombe', 'maziwa', 'mifugo', 'lishe',
-  ],
-};
+async function classifyIntent(message, language = 'en') {
+  try {
+    const response = await fetch(`${INTENT_CLASSIFICATION_URL}/tools/classify_intent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, language }),
+    });
+    
+    if (!response.ok) {
+      console.warn('[Intent] Classification failed, using fallback');
+      return null;
+    }
+    
+    const data = await response.json();
+    if (data.success && data.classification) {
+      console.log(`[Intent] Classified: ${data.classification.main_intent} (${data.classification.confidence})`);
+      return data.classification;
+    }
+    return null;
+  } catch (e) {
+    console.error('[Intent] Error calling classification MCP:', e.message);
+    return null;
+  }
+}
 
 /**
- * Detect intents from message in any supported language
+ * Map Intent Classification result to our MCP intents
  */
-function detectIntents(message) {
-  const lowerMessage = (message || '').toLowerCase();
+function mapClassificationToIntents(classification) {
   const intents = [];
+  if (!classification) return intents;
   
-  for (const [intent, keywords] of Object.entries(INTENT_KEYWORDS)) {
-    if (keywords.some(kw => lowerMessage.includes(kw.toLowerCase()))) {
-      intents.push(intent);
-    }
+  const mainIntent = classification.main_intent?.toLowerCase() || '';
+  const practices = (classification.practices || []).map(p => p.name?.toLowerCase());
+  const hasLivestock = (classification.livestock || []).length > 0;
+  const hasCrops = (classification.crops || []).length > 0;
+  
+  // Weather intent
+  if (mainIntent.includes('weather') || mainIntent.includes('forecast') || mainIntent.includes('climate')) {
+    intents.push('weather');
+  }
+  
+  // Soil intent
+  if (mainIntent.includes('soil') || practices.includes('soil_preparation') || 
+      mainIntent.includes('nutrient') || practices.includes('nutrient_deficiency')) {
+    intents.push('soil');
+  }
+  
+  // Fertilizer intent
+  if (mainIntent.includes('fertiliz') || practices.includes('fertilization') ||
+      practices.includes('nutrient_management') || mainIntent.includes('compost')) {
+    intents.push('fertilizer');
+  }
+  
+  // Feed/Livestock intent
+  if (hasLivestock || practices.includes('feeding') || mainIntent.includes('feeding') ||
+      mainIntent.includes('livestock') || mainIntent.includes('dairy') ||
+      practices.includes('milking') || practices.includes('breeding')) {
+    intents.push('feed');
+  }
+  
+  // If no specific intent detected but has crops, might be general crop advice
+  if (intents.length === 0 && hasCrops) {
+    // Could add crop-specific MCP calls here
   }
   
   return intents;
 }
 
 /**
- * Call MCP servers based on user intent
+ * Call MCP servers based on user intent (using Intent Classification MCP)
  */
-async function callMcpServersForIntent(message, latitude, longitude, mcpServers) {
+async function callMcpServersForIntent(message, latitude, longitude, mcpServers, language = 'en') {
   const lowerMessage = (message || '').toLowerCase();
   const allServers = [...(mcpServers.global || []), ...(mcpServers.regional || [])];
   const mcpResults = {};
-  const intentsDetected = detectIntents(message);
+  
+  // Use Intent Classification MCP for multi-language support
+  const classification = await classifyIntent(message, language);
+  const intentsDetected = mapClassificationToIntents(classification);
+  
+  // Extract crop from classification if available
+  const detectedCrop = classification?.crops?.[0]?.canonical_name?.toLowerCase() || 
+                       classification?.crops?.[0]?.name?.toLowerCase();
+  
+  console.log('[Intent] Detected intents:', intentsDetected.join(', ') || 'none');
+  console.log('[Intent] Detected crop:', detectedCrop || 'none');
 
   // Weather intent
   if (intentsDetected.includes('weather')) {
@@ -265,7 +270,8 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers)
   if (intentsDetected.includes('fertilizer')) {
     const server = allServers.find(s => s.slug === 'nextgen');
     if (server?.endpoint && latitude && longitude) {
-      const crop = lowerMessage.includes('maize') || lowerMessage.includes('በቆሎ') ? 'maize' : 'wheat';
+      // Use crop from classification or default to wheat
+      const crop = detectedCrop === 'maize' ? 'maize' : 'wheat';
       mcpResults.fertilizer = await callMcpTool(server.endpoint, 'get_fertilizer_recommendation', 
         { crop, latitude, longitude },
         { 'X-Farm-Latitude': String(latitude), 'X-Farm-Longitude': String(longitude) }
@@ -277,12 +283,13 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers)
   if (intentsDetected.includes('feed')) {
     const server = allServers.find(s => s.slug === 'feed-formulation');
     if (server?.endpoint) {
-      const feedQuery = lowerMessage.match(/maize|teff|noug|wheat|straw|bran|በቆሎ|ጤፍ|ኑግ/)?.[0] || 'dairy';
-      mcpResults.feed = await callMcpTool(server.endpoint, 'search_feeds', { query: feedQuery, limit: 5 });
+      // Use livestock from classification or default search
+      const livestock = classification?.livestock?.[0]?.canonical_name || 'dairy';
+      mcpResults.feed = await callMcpTool(server.endpoint, 'search_feeds', { query: livestock, limit: 5 });
     }
   }
 
-  return { mcpResults, intentsDetected };
+  return { mcpResults, intentsDetected, classification };
 }
 
 /**
@@ -312,12 +319,13 @@ router.post('/chat', async (req, res) => {
       detectedRegions: mcpContext.detectedRegions.map(r => r.name).join(', '),
     });
 
-    // Call MCP servers based on detected intents
-    const { mcpResults, intentsDetected } = await callMcpServersForIntent(
+    // Call MCP servers based on detected intents (using Intent Classification MCP)
+    const { mcpResults, intentsDetected, classification } = await callMcpServersForIntent(
       message,
       latitude ? parseFloat(latitude) : null,
       longitude ? parseFloat(longitude) : null,
-      { global: mcpContext.global, regional: mcpContext.regional }
+      { global: mcpContext.global, regional: mcpContext.regional },
+      language || 'en'
     );
 
     console.log('🔧 [Chat] MCP Results:', {
