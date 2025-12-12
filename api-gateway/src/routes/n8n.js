@@ -123,6 +123,94 @@ async function getActiveMcpServersForLocation(latitude, longitude) {
 }
 
 /**
+ * Call an MCP server tool
+ */
+async function callMcpTool(endpoint, toolName, args, extraHeaders = {}) {
+  try {
+    const response = await fetch(`${endpoint}/mcp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/event-stream',
+        ...extraHeaders,
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'tools/call',
+        params: { name: toolName, arguments: args },
+      }),
+    });
+    const text = await response.text();
+    const dataLine = text.split('\n').find(l => l.startsWith('data: '));
+    if (dataLine) {
+      const data = JSON.parse(dataLine.replace('data: ', ''));
+      if (data.result?.content?.[0]?.text) {
+        try { return JSON.parse(data.result.content[0].text); }
+        catch { return data.result.content[0].text; }
+      }
+    }
+    return null;
+  } catch (e) {
+    console.error(`[MCP] Error calling ${toolName}:`, e.message);
+    return { error: e.message };
+  }
+}
+
+/**
+ * Call MCP servers based on user intent
+ */
+async function callMcpServersForIntent(message, latitude, longitude, mcpServers) {
+  const lowerMessage = (message || '').toLowerCase();
+  const allServers = [...(mcpServers.global || []), ...(mcpServers.regional || [])];
+  const mcpResults = {};
+  const intentsDetected = [];
+
+  // Weather intent
+  if (lowerMessage.match(/weather|forecast|rain|temperature|climate/)) {
+    intentsDetected.push('weather');
+    const server = allServers.find(s => s.slug === 'accuweather');
+    if (server?.endpoint && latitude && longitude) {
+      mcpResults.weather = await callMcpTool(server.endpoint, 'get_accuweather_current_conditions', { latitude, longitude });
+    }
+  }
+
+  // Soil intent
+  if (lowerMessage.match(/soil|ph|nitrogen|phosphorus|potassium/)) {
+    intentsDetected.push('soil');
+    const server = allServers.find(s => s.slug === 'isda-soil');
+    if (server?.endpoint && latitude && longitude) {
+      mcpResults.soil = await callMcpTool(server.endpoint, 'get_isda_soil_properties', { latitude, longitude });
+    }
+  }
+
+  // Fertilizer intent
+  if (lowerMessage.match(/fertilizer|fertiliser|npk|urea|nps|compost/)) {
+    intentsDetected.push('fertilizer');
+    const server = allServers.find(s => s.slug === 'nextgen');
+    if (server?.endpoint && latitude && longitude) {
+      const crop = lowerMessage.includes('maize') ? 'maize' : 'wheat';
+      mcpResults.fertilizer = await callMcpTool(server.endpoint, 'get_fertilizer_recommendation', 
+        { crop, latitude, longitude },
+        { 'X-Farm-Latitude': String(latitude), 'X-Farm-Longitude': String(longitude) }
+      );
+    }
+  }
+
+  // Feed intent
+  if (lowerMessage.match(/feed|cow|cattle|dairy|livestock|milk|fodder|diet|ration/)) {
+    intentsDetected.push('feed');
+    const server = allServers.find(s => s.slug === 'feed-formulation');
+    if (server?.endpoint) {
+      const feedQuery = lowerMessage.match(/maize|teff|noug|wheat|straw|bran/)?.[0] || 'dairy';
+      mcpResults.feed = await callMcpTool(server.endpoint, 'search_feeds', { query: feedQuery, limit: 5 });
+    }
+  }
+
+  return { mcpResults, intentsDetected };
+}
+
+/**
  * Chat endpoint - routes to n8n Gemini chat workflow with MCP context
  */
 router.post('/chat', async (req, res) => {
@@ -149,6 +237,19 @@ router.post('/chat', async (req, res) => {
       detectedRegions: mcpContext.detectedRegions.map(r => r.name).join(', '),
     });
 
+    // Call MCP servers based on detected intents
+    const { mcpResults, intentsDetected } = await callMcpServersForIntent(
+      message,
+      latitude ? parseFloat(latitude) : null,
+      longitude ? parseFloat(longitude) : null,
+      { global: mcpContext.global, regional: mcpContext.regional }
+    );
+
+    console.log('🔧 [Chat] MCP Results:', {
+      intents: intentsDetected.join(', '),
+      toolsCalled: Object.keys(mcpResults).join(', '),
+    });
+
     // Build enhanced request body for n8n
     const enhancedBody = {
       ...req.body,
@@ -160,6 +261,8 @@ router.post('/chat', async (req, res) => {
           ...mcpContext.regional.flatMap(s => s.tools || []),
         ],
       },
+      mcpResults,
+      intentsDetected,
       detectedRegions: mcpContext.detectedRegions,
       locationContext: location || null,
     };
@@ -195,6 +298,8 @@ router.post('/chat', async (req, res) => {
       
       res.json({
         ...data,
+        mcpToolsUsed: Object.keys(mcpResults),
+        intentsDetected,
         _meta: {
           duration,
           mcpServersUsed: mcpContext.global.length + mcpContext.regional.length,
