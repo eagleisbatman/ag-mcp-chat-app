@@ -158,17 +158,95 @@ async function callMcpTool(endpoint, toolName, args, extraHeaders = {}) {
 }
 
 /**
+ * Multi-language intent keywords
+ * Covers: English, Amharic (am), Hindi (hi), Kannada (kn), Telugu (te), Swahili (sw), Vietnamese (vi)
+ */
+const INTENT_KEYWORDS = {
+  weather: [
+    // English
+    'weather', 'forecast', 'rain', 'temperature', 'climate', 'sunny', 'cloudy', 'storm',
+    // Amharic (Ethiopia)
+    'የአየር', 'ዝናብ', 'ሙቀት', 'ቀዝቃዛ', 'ፀሐይ',
+    // Hindi
+    'मौसम', 'बारिश', 'तापमान', 'गर्मी', 'ठंड',
+    // Kannada
+    'ಹವಾಮಾನ', 'ಮಳೆ', 'ತಾಪಮಾನ',
+    // Telugu
+    'వాతావరణం', 'వర్షం', 'ఉష్ణోగ్రత',
+    // Swahili
+    'hali ya hewa', 'mvua', 'joto',
+  ],
+  soil: [
+    // English
+    'soil', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'nutrient', 'fertility', 'acidity',
+    // Amharic
+    'አፈር', 'ማዳበሪያ', 'ለምነት',
+    // Hindi
+    'मिट्टी', 'भूमि', 'उर्वरता', 'नाइट्रोजन',
+    // Kannada
+    'ಮಣ್ಣು', 'ಫಲವತ್ತತೆ',
+    // Telugu
+    'మట్టి', 'సారవంతత',
+    // Swahili
+    'udongo', 'rutuba',
+  ],
+  fertilizer: [
+    // English
+    'fertilizer', 'fertiliser', 'npk', 'urea', 'nps', 'compost', 'manure', 'dap',
+    // Amharic
+    'ማዳበሪያ', 'ኮምፖስት', 'ፍግ', 'ዩሪያ',
+    // Hindi
+    'खाद', 'उर्वरक', 'यूरिया', 'गोबर',
+    // Kannada
+    'ಗೊಬ್ಬರ', 'ಯೂರಿಯಾ',
+    // Telugu
+    'ఎరువు', 'యూరియా',
+    // Swahili
+    'mbolea', 'samadi',
+  ],
+  feed: [
+    // English
+    'feed', 'cow', 'cattle', 'dairy', 'livestock', 'milk', 'fodder', 'diet', 'ration', 'animal',
+    // Amharic
+    'ላም', 'ከብት', 'ወተት', 'መኖ', 'እንሰሳ', 'ለመመገብ', 'ላሞች',
+    // Hindi
+    'गाय', 'दूध', 'पशु', 'चारा', 'भैंस',
+    // Kannada
+    'ಹಸು', 'ಹಾಲು', 'ಜಾನುವಾರು', 'ಮೇವು',
+    // Telugu
+    'ఆవు', 'పాలు', 'పశువులు', 'దాణా',
+    // Swahili
+    'ng\'ombe', 'maziwa', 'mifugo', 'lishe',
+  ],
+};
+
+/**
+ * Detect intents from message in any supported language
+ */
+function detectIntents(message) {
+  const lowerMessage = (message || '').toLowerCase();
+  const intents = [];
+  
+  for (const [intent, keywords] of Object.entries(INTENT_KEYWORDS)) {
+    if (keywords.some(kw => lowerMessage.includes(kw.toLowerCase()))) {
+      intents.push(intent);
+    }
+  }
+  
+  return intents;
+}
+
+/**
  * Call MCP servers based on user intent
  */
 async function callMcpServersForIntent(message, latitude, longitude, mcpServers) {
   const lowerMessage = (message || '').toLowerCase();
   const allServers = [...(mcpServers.global || []), ...(mcpServers.regional || [])];
   const mcpResults = {};
-  const intentsDetected = [];
+  const intentsDetected = detectIntents(message);
 
   // Weather intent
-  if (lowerMessage.match(/weather|forecast|rain|temperature|climate/)) {
-    intentsDetected.push('weather');
+  if (intentsDetected.includes('weather')) {
     const server = allServers.find(s => s.slug === 'accuweather');
     if (server?.endpoint && latitude && longitude) {
       mcpResults.weather = await callMcpTool(server.endpoint, 'get_accuweather_current_conditions', { latitude, longitude });
@@ -176,8 +254,7 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers)
   }
 
   // Soil intent
-  if (lowerMessage.match(/soil|ph|nitrogen|phosphorus|potassium/)) {
-    intentsDetected.push('soil');
+  if (intentsDetected.includes('soil')) {
     const server = allServers.find(s => s.slug === 'isda-soil');
     if (server?.endpoint && latitude && longitude) {
       mcpResults.soil = await callMcpTool(server.endpoint, 'get_isda_soil_properties', { latitude, longitude });
@@ -185,11 +262,10 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers)
   }
 
   // Fertilizer intent
-  if (lowerMessage.match(/fertilizer|fertiliser|npk|urea|nps|compost/)) {
-    intentsDetected.push('fertilizer');
+  if (intentsDetected.includes('fertilizer')) {
     const server = allServers.find(s => s.slug === 'nextgen');
     if (server?.endpoint && latitude && longitude) {
-      const crop = lowerMessage.includes('maize') ? 'maize' : 'wheat';
+      const crop = lowerMessage.includes('maize') || lowerMessage.includes('በቆሎ') ? 'maize' : 'wheat';
       mcpResults.fertilizer = await callMcpTool(server.endpoint, 'get_fertilizer_recommendation', 
         { crop, latitude, longitude },
         { 'X-Farm-Latitude': String(latitude), 'X-Farm-Longitude': String(longitude) }
@@ -198,11 +274,10 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers)
   }
 
   // Feed intent
-  if (lowerMessage.match(/feed|cow|cattle|dairy|livestock|milk|fodder|diet|ration/)) {
-    intentsDetected.push('feed');
+  if (intentsDetected.includes('feed')) {
     const server = allServers.find(s => s.slug === 'feed-formulation');
     if (server?.endpoint) {
-      const feedQuery = lowerMessage.match(/maize|teff|noug|wheat|straw|bran/)?.[0] || 'dairy';
+      const feedQuery = lowerMessage.match(/maize|teff|noug|wheat|straw|bran|በቆሎ|ጤፍ|ኑግ/)?.[0] || 'dairy';
       mcpResults.feed = await callMcpTool(server.endpoint, 'search_feeds', { query: feedQuery, limit: 5 });
     }
   }
