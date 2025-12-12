@@ -115,26 +115,49 @@ This document lists all technical outputs from MCP servers and how the LLM shoul
 
 ## 4. NextGen Fertilizer MCP (Ethiopia)
 
+### REQUIRED FORMAT (per SSFR Recommendations Format document):
+
+**Response must follow this structure:**
+
+```
+🌾 Fertilizer Recommendation for [CROP] at [LOCATION]
+
+1. Organic Fertilizers:
+   - Compost: X tons/ha (spread before plowing, improves soil health)
+   - Vermicompost: X tons/ha (worm compost, very nutrient-rich)
+
+2. Inorganic Fertilizers:
+   - NPS: X kg/ha (apply at planting - provides Nitrogen, Phosphorus, Sulfur)
+   - UREA: X kg/ha (apply 30-45 days after planting - provides Nitrogen for leaf growth)
+
+3. Expected Yield: X tons/ha (if recommendations followed)
+```
+
 ### Technical Outputs:
 | Field | Example | Farmer-Friendly Explanation |
 |-------|---------|----------------------------|
-| `urea: 100 kg/ha` | 100 kg/ha | "Urea: 100 kg per hectare - Apply in 2-3 splits during growth" |
-| `nps: 150 kg/ha` | 150 kg/ha | "NPS: 150 kg per hectare - Apply at planting for nitrogen, phosphorus, sulfur" |
-| `compost: 5 tons/ha` | 5 tons/ha | "Compost: 5 tons per hectare - Spread before plowing" |
-| `vermicompost: 2 tons/ha` | 2 tons/ha | "Worm compost: 2 tons per hectare - Very rich, use less than regular compost" |
-| `expected_yield: 4.5 t/ha` | 4.5 t/ha | "Expected harvest: 4.5 tons per hectare with this fertilizer plan" |
+| `urea: 265.67 kg/ha` | 265.67 kg/ha | "UREA: 265.67 kg per hectare - Apply 30-45 days after planting for leaf growth" |
+| `nps: 198.92 kg/ha` | 198.92 kg/ha | "NPS: 198.92 kg per hectare - Apply at planting (starter fertilizer with N-P-S)" |
+| `compost: 20 tons/ha` | 20 tons/ha | "Compost: 20 tons per hectare - Spread before plowing to improve soil health" |
+| `vermicompost: 2 tons/ha` | 2 tons/ha | "Vermicompost: 2 tons per hectare - Worm compost, very nutrient-rich" |
+| `expected_yield: 4.5 t/ha` | 4.5 t/ha | "Expected harvest: 4.5 tons per hectare if you follow this plan" |
+| `optimal_nitrogen: 180 kg/ha` | 180 kg/ha | This is converted to Urea amount (180 / 0.46 ≈ 391 kg/ha) |
 
 ### Fertilizer Explanations:
-- "Urea": "White granules, 46% nitrogen - makes leaves green and crops grow"
-- "NPS": "Nitrogen-Phosphorus-Sulfur blend - complete starter fertilizer for Ethiopia"
+- "Urea": "White granules, 46% nitrogen - makes leaves green and crops grow faster"
+- "NPS": "Nitrogen-Phosphorus-Sulfur blend - Ethiopia's main starter fertilizer"
 - "DAP": "Di-ammonium phosphate - good for root development"
-- "TSP": "Triple super phosphate - pure phosphorus for roots and flowers"
-- "Potash/MOP": "Muriate of potash - helps fruits, grains, and disease resistance"
+- "Compost": "Decomposed organic matter - improves soil structure and fertility"
+- "Vermicompost": "Worm-processed compost - concentrated nutrients, use less"
 
-### Application Timing:
-- "At planting": "Apply NPS/DAP in the planting hole or furrow"
-- "Top dressing": "Apply urea when plants are 30-45 days old"
-- "Split application": "Divide urea into 2-3 doses during growing season"
+### Application Timing (CRITICAL):
+- **At planting**: "Apply NPS in the planting hole or furrow before sowing"
+- **Top dressing (30-45 days)**: "Apply Urea when plants have 4-6 leaves"
+- **Split application**: "For best results, split Urea into 2 applications"
+
+### Location Context:
+- Always include the location name in the title
+- Example: "Fertilizer Recommendation for WHEAT at Yaliteseyeme Menigedi, Robe"
 
 ---
 
