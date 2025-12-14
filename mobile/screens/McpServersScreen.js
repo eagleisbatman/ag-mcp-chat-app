@@ -3,17 +3,23 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   RefreshControl,
   ActivityIndicator,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import api from '../services/api';
+import ScreenHeader from '../components/ui/ScreenHeader';
+import IconButton from '../components/ui/IconButton';
+import { withAlpha } from '../utils/color';
+import Card from '../components/ui/Card';
+import ListRow from '../components/ui/ListRow';
+import AppIcon from '../components/ui/AppIcon';
+import Button from '../components/ui/Button';
+import { t } from '../constants/strings';
 
 // Better icon mapping using MaterialCommunityIcons (more options)
 const SERVER_ICONS = {
@@ -72,82 +78,85 @@ function ServerIcon({ slug, color, size = 24, theme }) {
   );
 }
 
-function McpServerCard({ server, theme }) {
+function McpServerCard({ server, theme, onPress }) {
   const status = server.displayStatus || 'inactive';
   const statusConfig = STATUS_CONFIG[status] || STATUS_CONFIG.inactive;
   const statusColor = theme[statusConfig.color] || theme.textMuted;
   const cardOpacity = status === 'inactive' ? 0.6 : 1;
+  const displayName = server.name?.replace(' MCP', '').replace(' Server', '');
 
   return (
-    <View style={[styles.serverCard, { backgroundColor: theme.surface, opacity: cardOpacity }]}>
-      <View style={styles.serverRow}>
-        {/* Icon */}
-        <View style={[styles.serverIconContainer, { backgroundColor: (server.color || theme.accent) + '15' }]}>
-          <ServerIcon 
-            slug={server.slug} 
-            color={status === 'active' ? (server.color || theme.accent) : theme.textMuted} 
-            size={22}
-            theme={theme}
-          />
-        </View>
-        
-        {/* Info */}
-        <View style={styles.serverInfo}>
-          <View style={styles.serverNameRow}>
-            <Text style={[styles.serverName, { color: theme.text }]} numberOfLines={1}>
-              {server.name?.replace(' MCP', '').replace(' Server', '')}
-            </Text>
-            {server.isGlobal && (
-              <View style={[styles.globalBadge, { backgroundColor: theme.info + '20' }]}>
-                <Ionicons name="globe-outline" size={10} color={theme.info} />
-              </View>
-            )}
+    <Card style={[styles.serverCard, { opacity: cardOpacity }]}>
+      <ListRow
+        title={displayName}
+        subtitle={server.description}
+        onPress={onPress}
+        left={
+          <View style={styles.serverIconContainer}>
+            <ServerIcon
+              slug={server.slug}
+              color={status === 'active' ? (server.color || theme.accent) : theme.textMuted}
+              size={22}
+              theme={theme}
+            />
           </View>
-          <Text style={[styles.serverDescription, { color: theme.textMuted }]} numberOfLines={1}>
-            {server.description}
-          </Text>
-        </View>
-        
-        {/* Status indicator */}
-        <View style={[styles.statusIndicator, { backgroundColor: statusColor + '20' }]}>
-          <Ionicons name={statusConfig.icon} size={14} color={statusColor} />
-        </View>
-      </View>
-      
+        }
+        right={
+          <>
+            {server.isGlobal ? (
+              <View style={styles.globalBadge}>
+                <AppIcon name="globe-outline" size={10} color={theme.info} />
+              </View>
+            ) : null}
+            <View style={styles.statusIndicator}>
+              <AppIcon name={statusConfig.icon} size={14} color={statusColor} />
+            </View>
+          </>
+        }
+        showChevron={true}
+        paddingHorizontal={SPACING.md}
+        accessibilityLabel={t('mcp.service', { name: displayName })}
+      />
+
       {/* Status message for non-active servers */}
       {status !== 'active' && server.statusMessage && (
         <Text style={[styles.statusMessage, { color: statusColor }]}>
           {server.statusMessage}
         </Text>
       )}
-    </View>
+    </Card>
   );
 }
 
-function CategorySection({ category, servers, theme }) {
+function CategorySection({ category, servers, theme, onServerPress }) {
   const config = CATEGORY_CONFIG[category] || { label: category, icon: 'puzzle', color: '#888' };
   const activeCount = servers.filter(s => s.displayStatus === 'active').length;
   const degradedCount = servers.filter(s => s.displayStatus === 'degraded').length;
-  
+  const countLabel = `${activeCount}${degradedCount > 0 ? ` (+${degradedCount})` : ''}/${servers.length}`;
+
   return (
     <View style={styles.categorySection}>
-      <View style={styles.categoryHeader}>
-        <View style={[styles.categoryIcon, { backgroundColor: config.color + '15' }]}>
-          <MaterialCommunityIcons name={config.icon} size={16} color={config.color} />
-        </View>
-        <Text style={[styles.categoryLabel, { color: theme.text }]}>
-          {config.label}
-        </Text>
-        <Text style={[styles.categoryCount, { color: theme.textMuted }]}>
-          {activeCount}{degradedCount > 0 ? ` (+${degradedCount} ⚠️)` : ''}/{servers.length}
-        </Text>
-      </View>
-      
+      <ListRow
+        title={config.label}
+        left={
+          <View style={styles.categoryIcon}>
+            <MaterialCommunityIcons name={config.icon} size={16} color={config.color} />
+          </View>
+        }
+        right={<Text style={[styles.categoryCount, { color: theme.textMuted }]}>{countLabel}</Text>}
+        showChevron={false}
+        paddingHorizontal={0}
+        paddingVertical={SPACING.sm}
+        style={styles.categoryHeaderRow}
+        accessibilityLabel={t('mcp.serviceCategory', { name: config.label })}
+      />
+
       {servers.map((server, index) => (
-        <McpServerCard 
-          key={server.slug || index} 
-          server={server} 
+        <McpServerCard
+          key={server.slug || index}
+          server={server}
           theme={theme}
+          onPress={() => onServerPress(server.slug)}
         />
       ))}
     </View>
@@ -155,8 +164,6 @@ function CategorySection({ category, servers, theme }) {
 }
 
 export default function McpServersScreen({ navigation }) {
-  const insets = useSafeAreaInsets();
-  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
   const { theme, location, locationDetails } = useApp();
   const { showError } = useToast();
   
@@ -186,7 +193,7 @@ export default function McpServersScreen({ navigation }) {
     } catch (err) {
       console.error('Fetch MCP servers error:', err);
       setError(err.message);
-      showError('Could not load services');
+      showError(t('mcp.couldNotLoad'));
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -201,6 +208,10 @@ export default function McpServersScreen({ navigation }) {
     setRefreshing(true);
     fetchMcpServers();
   }, [fetchMcpServers]);
+
+  const handleServerPress = useCallback((slug) => {
+    navigation.navigate('McpServerDetail', { slug });
+  }, [navigation]);
 
   // Group servers by category
   const serversByCategory = React.useMemo(() => {
@@ -229,34 +240,37 @@ export default function McpServersScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: headerPaddingTop, borderBottomColor: theme.border }]}>
-        <TouchableOpacity 
-          style={[styles.backButton, { backgroundColor: theme.surfaceVariant }]}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={22} color={theme.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>AI Integrations</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <ScreenHeader
+        title={t('mcp.title')}
+        left={
+          <IconButton
+            icon="arrow-back"
+            onPress={() => navigation.goBack()}
+            backgroundColor="transparent"
+            color={theme.text}
+            accessibilityLabel={t('common.back')}
+          />
+        }
+        right={<View />}
+      />
 
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.accent} />
           <Text style={[styles.loadingText, { color: theme.textMuted }]}>
-            Loading integrations...
+            {t('mcp.loading')}
           </Text>
         </View>
       ) : error ? (
         <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle" size={48} color={theme.error} />
+          <AppIcon name="alert-circle" size={48} color={theme.error} />
           <Text style={[styles.errorText, { color: theme.text }]}>{error}</Text>
-          <TouchableOpacity 
-            style={[styles.retryButton, { backgroundColor: theme.accent }]}
+          <Button
+            title={t('common.retry')}
             onPress={fetchMcpServers}
-          >
-            <Text style={styles.retryButtonText}>Retry</Text>
-          </TouchableOpacity>
+            accessibilityLabel={t('a11y.retryLoadingIntegrations')}
+            style={styles.retryButton}
+          />
         </View>
       ) : (
         <ScrollView
@@ -272,13 +286,13 @@ export default function McpServersScreen({ navigation }) {
           }
         >
           {/* Summary Card */}
-          <View style={[styles.summaryCard, { backgroundColor: theme.surface }]}>
+          <Card style={styles.summaryCard}>
             {/* Location */}
             <View style={styles.locationRow}>
-              <Ionicons name="location" size={16} color={theme.accent} />
+              <AppIcon name="location" size={16} color={theme.accent} />
               <Text style={[styles.locationText, { color: theme.text }]} numberOfLines={1}>
                 {locationDetails?.displayName || 
-                 (location ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : 'Location not set')}
+                 (location ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('mcp.locationNotSet'))}
               </Text>
             </View>
             
@@ -286,10 +300,7 @@ export default function McpServersScreen({ navigation }) {
             {detectedRegions.length > 0 && (
               <View style={styles.regionBadges}>
                 {detectedRegions.slice(0, 3).map((region, index) => (
-                  <View 
-                    key={index}
-                    style={[styles.regionBadge, { backgroundColor: theme.accent + '15' }]}
-                  >
+                  <View key={index} style={styles.regionBadge}>
                     <Text style={[styles.regionBadgeText, { color: theme.accent }]}>
                       {region.name}
                     </Text>
@@ -302,45 +313,46 @@ export default function McpServersScreen({ navigation }) {
             <View style={[styles.statsRow, { borderTopColor: theme.border }]}>
               <View style={styles.statItem}>
                 <Text style={[styles.statNumber, { color: theme.success }]}>{counts.active}</Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>Active</Text>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t('mcp.stats.active')}</Text>
               </View>
               <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
               <View style={styles.statItem}>
                 <Text style={[styles.statNumber, { color: theme.warning || '#FF9800' }]}>{counts.degraded}</Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>Issues</Text>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t('mcp.stats.issues')}</Text>
               </View>
               <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
               <View style={styles.statItem}>
                 <Text style={[styles.statNumber, { color: theme.textMuted }]}>{counts.inactive}</Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>Inactive</Text>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t('mcp.stats.inactive')}</Text>
               </View>
               <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
               <View style={styles.statItem}>
                 <Text style={[styles.statNumber, { color: theme.text }]}>{counts.total}</Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>Total</Text>
+                <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t('mcp.stats.total')}</Text>
               </View>
             </View>
-          </View>
+          </Card>
 
           {/* Category Sections - in preferred order */}
           {['ai', 'agriculture', 'weather', 'utility'].map(category => {
             const servers = serversByCategory[category];
             if (!servers || servers.length === 0) return null;
             return (
-              <CategorySection 
-                key={category} 
-                category={category} 
-                servers={servers} 
-                theme={theme} 
+              <CategorySection
+                key={category}
+                category={category}
+                servers={servers}
+                theme={theme}
+                onServerPress={handleServerPress}
               />
             );
           })}
 
           {/* Footer */}
           <View style={styles.footer}>
-            <Ionicons name="information-circle-outline" size={14} color={theme.textMuted} />
+            <AppIcon name="information-circle-outline" size={14} color={theme.textMuted} />
             <Text style={[styles.footerText, { color: theme.textMuted }]}>
-              Integrations activate based on your region. Pull to refresh.
+              {t('mcp.footer')}
             </Text>
           </View>
         </ScrollView>
@@ -353,30 +365,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: SPACING.lg,
-    paddingBottom: SPACING.md,
-    borderBottomWidth: 0.5,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: TYPOGRAPHY.weights.bold,
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 16,
+    gap: SPACING.lg,
   },
   loadingText: {
     fontSize: TYPOGRAPHY.sizes.base,
@@ -385,21 +378,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
-    gap: 16,
+    padding: SPACING['2xl'],
+    gap: SPACING.lg,
   },
   errorText: {
     fontSize: TYPOGRAPHY.sizes.base,
     textAlign: 'center',
   },
   retryButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    paddingHorizontal: SPACING['2xl'],
   },
   scrollView: {
     flex: 1,
@@ -407,17 +394,17 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: SPACING.lg,
     paddingTop: SPACING.md,
-    paddingBottom: 40,
+    paddingBottom: SPACING['3xl'],
   },
   summaryCard: {
-    borderRadius: 16,
+    borderRadius: 0,
     padding: SPACING.md,
     marginBottom: SPACING.lg,
   },
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: SPACING.sm,
   },
   locationText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -433,113 +420,85 @@ const styles = StyleSheet.create({
   regionBadge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 0,
+    backgroundColor: 'transparent',
   },
   regionBadgeText: {
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
   statsRow: {
     flexDirection: 'row',
     marginTop: SPACING.md,
     paddingTop: SPACING.md,
-    borderTopWidth: 0.5,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   statItem: {
     flex: 1,
     alignItems: 'center',
   },
   statNumber: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: TYPOGRAPHY.sizes['2xl'],
+    fontWeight: TYPOGRAPHY.weights.bold,
   },
   statLabel: {
-    fontSize: 11,
-    marginTop: 2,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: SPACING.xs,
   },
   statDivider: {
-    width: 0.5,
+    width: StyleSheet.hairlineWidth,
     height: '80%',
     alignSelf: 'center',
   },
   categorySection: {
     marginBottom: SPACING.lg,
   },
-  categoryHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  categoryHeaderRow: {
     marginBottom: SPACING.sm,
   },
   categoryIcon: {
     width: 28,
     height: 28,
-    borderRadius: 8,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  categoryLabel: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
-    flex: 1,
+    backgroundColor: 'transparent',
   },
   categoryCount: {
-    fontSize: 12,
+    fontSize: TYPOGRAPHY.sizes.sm,
   },
   serverCard: {
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 8,
-  },
-  serverRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    marginBottom: SPACING.sm,
   },
   serverIconContainer: {
     width: 40,
     height: 40,
-    borderRadius: 10,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  serverInfo: {
-    flex: 1,
-    minWidth: 0,
-  },
-  serverNameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  serverName: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
-    flexShrink: 1,
+    backgroundColor: 'transparent',
   },
   globalBadge: {
     width: 18,
     height: 18,
-    borderRadius: 9,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  serverDescription: {
-    fontSize: 12,
-    marginTop: 2,
+    backgroundColor: 'transparent',
   },
   statusIndicator: {
     width: 26,
     height: 26,
-    borderRadius: 13,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 8,
+    backgroundColor: 'transparent',
   },
   statusMessage: {
-    fontSize: 11,
-    marginTop: 8,
-    marginLeft: 52,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: SPACING.xs,
+    paddingHorizontal: SPACING.md,
+    paddingBottom: SPACING.md,
     fontStyle: 'italic',
   },
   footer: {
@@ -550,7 +509,7 @@ const styles = StyleSheet.create({
     marginTop: SPACING.sm,
   },
   footerText: {
-    fontSize: 11,
+    fontSize: TYPOGRAPHY.sizes.xs,
     textAlign: 'center',
   },
 });

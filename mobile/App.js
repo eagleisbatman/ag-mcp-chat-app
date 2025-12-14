@@ -19,6 +19,7 @@ import SettingsScreen from './screens/SettingsScreen';
 import LanguageSelectScreen from './screens/LanguageSelectScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import McpServersScreen from './screens/McpServersScreen';
+import McpServerDetailScreen from './screens/McpServerDetailScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ function MainStack() {
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
       <Stack.Screen name="McpServers" component={McpServersScreen} />
+      <Stack.Screen name="McpServerDetail" component={McpServerDetailScreen} />
     </Stack.Navigator>
   );
 }
@@ -57,7 +59,7 @@ function AppNavigator() {
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar style={theme.statusBar} />
+      <StatusBar style={theme.statusBar} backgroundColor={theme.surface} translucent={false} />
       <OfflineIndicator />
       <NavigationContainer>
         {onboardingComplete ? <MainStack /> : <OnboardingStack />}

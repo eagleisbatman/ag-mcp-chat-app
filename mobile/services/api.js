@@ -223,6 +223,47 @@ export const getMcpServersLiveStatus = async ({ lat, lon } = {}) => {
 };
 
 /**
+ * Get a specific MCP server by slug with full marketing content
+ * @param {string} slug - Server slug (e.g., 'accuweather', 'nextgen')
+ */
+export const getMcpServer = async (slug) => {
+  try {
+    const url = `${API_BASE_URL}/api/mcp-servers/${slug}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': API_KEY,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('📥 [API] MCP server detail:', {
+      slug,
+      hasMarketing: !!data.server?.tagline,
+      healthStatus: data.server?.healthStatus,
+    });
+
+    return {
+      success: true,
+      server: data.server,
+    };
+  } catch (error) {
+    console.error('MCP server detail API error:', error);
+    return {
+      success: false,
+      error: error.message || 'Failed to fetch MCP server details',
+      server: null,
+    };
+  }
+};
+
+/**
  * Detect regions for a given location
  * @param {number} lat - Latitude
  * @param {number} lon - Longitude
@@ -253,11 +294,12 @@ export const detectRegions = async (lat, lon) => {
   }
 };
 
-export default { 
-  sendChatMessage, 
+export default {
+  sendChatMessage,
   getActiveMcpServers,
   getAllMcpServersWithStatus,
   getMcpServersLiveStatus,
+  getMcpServer,
   detectRegions,
 };
 
