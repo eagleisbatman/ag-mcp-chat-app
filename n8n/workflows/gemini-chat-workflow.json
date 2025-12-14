@@ -1,0 +1,383 @@
+{
+  "updatedAt": "2025-12-14T05:38:59.097Z",
+  "createdAt": "2025-12-02T13:22:07.073Z",
+  "id": "Mf5pU7OhvlV5HPXf",
+  "name": "AG-MCP Chat - Gemini with MCP Tools",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "webhook",
+      "name": "Chat Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "chat-endpoint",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api/chat",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "prepare",
+      "name": "Prepare Chat",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const body = $json.body || $json;\nconst message = body.message || '';\nconst language = body.language || 'en';\nconst history = body.history || [];\nconst latitude = body.latitude;\nconst longitude = body.longitude;\nconst location = body.location || null;\nconst mcpServers = body.mcpServers || { global: [], regional: [], allTools: [] };\nconst detectedRegions = body.detectedRegions || [];\nconst mcpResults = body.mcpResults || {};\nconst intentsDetected = body.intentsDetected || [];\n\nconst languageMap = {\n  'hi': 'Hindi', 'te': 'Telugu', 'kn': 'Kannada', 'mr': 'Marathi',\n  'gu': 'Gujarati', 'ta': 'Tamil', 'bn': 'Bengali', 'ml': 'Malayalam',\n  'pa': 'Punjabi', 'or': 'Odia', 'sw': 'Swahili', 'am': 'Amharic',\n  'vi': 'Vietnamese', 'th': 'Thai', 'id': 'Indonesian', 'en': 'English'\n};\nconst langName = languageMap[language] || language;\n\nlet locationContext = '';\nif (location) {\n  const parts = [location.locality, location.city, location.district, location.state, location.country].filter(Boolean);\n  locationContext = parts.join(', ') || location.displayName || '';\n}\n\nreturn {\n  json: {\n    message, language, langName, latitude, longitude, locationContext,\n    history, mcpServers, detectedRegions, location, mcpResults, intentsDetected\n  }\n};"
+      }
+    },
+    {
+      "id": "call_mcp",
+      "name": "Pass MCP Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Pass MCP data from API Gateway (already called MCP servers)\n// Just pass through the data received\nreturn { json: $json };"
+      }
+    },
+    {
+      "id": "build_prompt",
+      "name": "Build Gemini Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const langName = $json.langName;\nconst locationContext = $json.locationContext;\nconst history = $json.history || [];\nconst message = $json.message;\nconst mcpResults = $json.mcpResults || {};\nconst detectedRegions = $json.detectedRegions || [];\nconst intentsDetected = $json.intentsDetected || [];\n\nlet mcpContext = '';\n\n// Weather data with interpretation\nif (mcpResults.weather?.current) {\n  const w = mcpResults.weather.current;\n  let tempNote = w.temperature < 15 ? 'cool weather' : w.temperature > 32 ? 'hot, watch for heat stress' : 'comfortable for field work';\n  let humidNote = w.humidity > 80 ? 'high humidity, watch for fungal diseases' : w.humidity < 40 ? 'dry air, crops may need water' : 'moderate humidity';\n  let windNote = w.wind_speed > 25 ? 'too windy for spraying' : 'safe for spraying if needed';\n  mcpContext += `\\n\\n**WEATHER DATA:**\\n- Temperature: ${w.temperature}°C (${tempNote})\\n- Humidity: ${w.humidity}% (${humidNote})\\n- Wind: ${w.wind_speed} km/h from ${w.wind_direction} (${windNote})\\n- Conditions: ${w.conditions}\\n- Precipitation: ${w.has_precipitation ? 'Rain expected' : 'No rain expected'}`;\n}\n\n// Soil data with interpretation\nif (mcpResults.soil?.properties) {\n  const p = mcpResults.soil.properties;\n  const ph = p.ph?.[0]?.value?.value;\n  const n = p.nitrogen_total?.[0]?.value?.value;\n  const phos = p.phosphorous_extractable?.[0]?.value?.value;\n  const k = p.potassium_extractable?.[0]?.value?.value;\n  const texture = p.texture_class?.[0]?.value?.value;\n  \n  let phNote = ph < 5.5 ? 'too acidic, add lime' : ph > 7.5 ? 'alkaline, may need sulfur' : 'good for most crops';\n  let nNote = n < 1.0 ? 'low, add urea or compost' : n > 1.5 ? 'good nitrogen level' : 'medium, light fertilizer recommended';\n  let phosNote = phos < 10 ? 'low, add DAP or bone meal' : phos > 20 ? 'excellent' : 'adequate for most crops';\n  let kNote = k < 150 ? 'low, add potash' : k > 250 ? 'excellent for fruiting' : 'adequate';\n  \n  mcpContext += `\\n\\n**SOIL DATA:**\\n- pH: ${ph} (${phNote})\\n- Nitrogen: ${n} g/kg (${nNote})\\n- Phosphorus: ${phos} ppm (${phosNote})\\n- Potassium: ${k} ppm (${kNote})\\n- Soil Type: ${texture || 'Unknown'}`;\n}\n\n// Fertilizer data - SSFR Format per Google Doc requirements\nif (mcpResults.fertilizer?.fertilizers) {\n  const f = mcpResults.fertilizer;\n  const crop = f.crop || 'crop';\n  const loc = locationContext || 'your farm';\n  \n  mcpContext += `\\n\\n**FERTILIZER RECOMMENDATION for ${crop.toUpperCase()} at ${loc}:**`;\n  \n  // Organic fertilizers section\n  if (f.fertilizers.organic) {\n    mcpContext += `\\n\\n1. Organic Fertilizers:`;\n    if (f.fertilizers.organic.compost) {\n      mcpContext += `\\n   - Compost: ${f.fertilizers.organic.compost} tons/ha (spread before plowing, improves soil health)`;\n    }\n    if (f.fertilizers.organic.vermicompost) {\n      mcpContext += `\\n   - Vermicompost: ${f.fertilizers.organic.vermicompost} tons/ha (worm compost, very nutrient-rich)`;\n    }\n  }\n  \n  // Inorganic fertilizers section\n  if (f.fertilizers.inorganic) {\n    mcpContext += `\\n\\n2. Inorganic Fertilizers:`;\n    if (f.fertilizers.inorganic.nps) {\n      mcpContext += `\\n   - NPS: ${f.fertilizers.inorganic.nps} kg/ha (apply at planting - provides Nitrogen, Phosphorus, Sulfur)`;\n    }\n    if (f.fertilizers.inorganic.urea) {\n      mcpContext += `\\n   - UREA: ${f.fertilizers.inorganic.urea} kg/ha (apply 30-45 days after planting - provides Nitrogen for leaf growth)`;\n    }\n  }\n  \n  // Expected yield\n  if (f.expected_yield) {\n    mcpContext += `\\n\\n3. Expected Yield: ${f.expected_yield.value} ${f.expected_yield.unit} (if recommendations followed)`;\n  }\n}\n\n// Feed data with interpretation\nif (mcpResults.feed?.feeds?.feeds?.length > 0) {\n  const feeds = mcpResults.feed.feeds.feeds.slice(0, 5);\n  mcpContext += `\\n\\n**FEED DATABASE (Ethiopia):**`;\n  feeds.forEach(fd => {\n    let proteinNote = fd.fd_cp > 30 ? 'very high protein, excellent supplement' : fd.fd_cp > 18 ? 'high protein, good for milk production' : fd.fd_cp > 12 ? 'moderate protein' : 'low protein, use as filler';\n    let typeNote = fd.fd_type === 'Concentrate' ? 'energy-rich, give in small amounts' : fd.fd_type === 'Forage' ? 'bulk feed for fiber and stomach fill' : fd.fd_type;\n    mcpContext += `\\n- ${fd.fd_name}: Protein ${fd.fd_cp?.toFixed(1) || '?'}% (${proteinNote}), DM ${fd.fd_dm?.toFixed(1) || '?'}%, Type: ${typeNote}`;\n  });\n}\n\n// Plant Diagnosis data from AgriVision MCP\nif (mcpResults.diagnosis?.crop) {\n  const d = mcpResults.diagnosis;\n  mcpContext += `\\n\\n**PLANT HEALTH DIAGNOSIS (AI Analysis):**`;\n  mcpContext += `\\n- Crop Identified: ${d.crop.name}${d.crop.scientific_name ? ' (' + d.crop.scientific_name + ')' : ''} - Confidence: ${d.crop.confidence}`;\n  mcpContext += `\\n- Health Status: ${d.health_status} (${d.health_confidence} confidence)`;\n  if (d.growth_stage) mcpContext += `\\n- Growth Stage: ${d.growth_stage}`;\n  \n  if (d.issues && d.issues.length > 0) {\n    mcpContext += `\\n\\n**Issues Detected:**`;\n    d.issues.forEach((issue, i) => {\n      mcpContext += `\\n\\n${i + 1}. ${issue.name}${issue.scientific_name ? ' (' + issue.scientific_name + ')' : ''}`;\n      mcpContext += `\\n   - Category: ${issue.category}`;\n      mcpContext += `\\n   - Severity: ${issue.severity}${issue.stage ? ' (' + issue.stage + ' stage)' : ''}`;\n      mcpContext += `\\n   - Affected Parts: ${(issue.affected_parts || []).join(', ') || 'Unknown'}`;\n      mcpContext += `\\n   - Symptoms: ${(issue.symptoms || []).join(', ') || 'See image'}`;\n      if (issue.causal_agent) mcpContext += `\\n   - Cause: ${issue.causal_agent}`;\n    });\n  } else {\n    mcpContext += `\\n\\n✅ No diseases or pests detected. Plant appears healthy!`;\n  }\n  \n  if (d.diagnostic_notes) mcpContext += `\\n\\n**Notes:** ${d.diagnostic_notes}`;\n  if (d.requires_lab_test) mcpContext += `\\n\\n⚠️ Lab testing recommended for confirmation.`;\n}\n\nconst systemPrompt = `You are a friendly farming advisor helping smallholder farmers. RESPOND ONLY IN ${langName}.${locationContext ? `\\nFarmer location: ${locationContext}` : ''}${detectedRegions.length > 0 ? `\\nRegion: ${detectedRegions.map(r => r.name).join(', ')}` : ''}${mcpContext ? `\\n\\n## REAL-TIME DATA FROM AGRICULTURAL SERVICES:${mcpContext}` : ''}\n\n## HOW TO PRESENT DATA TO FARMERS (CRITICAL)\n\n1. **Always show the number AND a simple explanation:**\n   - GOOD: \"pH is 6.5 - slightly acidic to neutral, ideal for maize and wheat\"\n   - BAD: \"pH is 6.5\" (no explanation)\n\n2. **For FERTILIZER recommendations, use this EXACT format:**\n   - Title: \"Fertilizer Recommendation for [CROP] at [LOCATION]\"\n   - Section 1: Organic Fertilizers (compost, vermicompost)\n   - Section 2: Inorganic Fertilizers (NPS, UREA)\n   - Section 3: Expected Yield\n   - Explain WHEN to apply each fertilizer (at planting vs top dressing)\n   - Explain WHAT each fertilizer does (NPS = starter, UREA = growth)\n\n3. **Translate technical terms to farmer language:**\n   - \"NPS\" → \"NPS fertilizer (Nitrogen-Phosphorus-Sulfur blend)\"\n   - \"UREA\" → \"Urea (high-nitrogen fertilizer for leaf growth)\"\n   - \"tons/ha\" → \"tons per hectare\"\n\n4. **Add actionable farming advice:**\n   - \"Apply NPS at planting time in the furrow\"\n   - \"Apply Urea as top-dressing when plants are 30-45 days old\"\n   - \"Split Urea application into 2 doses if possible\"\n\n5. **Use local examples and context:**\n   - Ethiopia: Reference teff, maize, wheat, noug\n   - Use Ethiopian units and local fertilizer brands if known\n\n6. **When translating to local languages:**\n   - Keep numbers as-is (198.92 kg/ha stays \"198.92 kg/ha\")\n   - Translate the explanations fully\n   - Use local names for fertilizers when known (e.g., ማዳበሪያ for fertilizer in Amharic)\n\n## RESPONSE FORMAT\n1. Greeting with emoji relevant to topic (🌤️ weather, 🌱 soil, 🐄 feed, 🌾 fertilizer)\n2. Clear title for the recommendation\n3. Numbered sections with bullet points\n4. **Bold numbers** with simple explanations in parentheses\n5. End with encouragement and next step suggestion\n\n## RESPONSE LENGTH GUIDELINES (Context-Aware)\n- Simple factual questions: 2-4 sentences\n- How-to questions: Numbered steps (3-6 typical)\n- Diagnosis questions: Complete with problem, cause, treatment, prevention sections\n- Complex questions with data: Detailed sections with all relevant information\n\nIMPORTANT: Always complete your response fully. Never stop mid-sentence or mid-section.\n\n---FOLLOWUP---\n- Question 1\n- Question 2\n- Question 3`;\n\nconst contents = [\n  { role: 'user', parts: [{ text: systemPrompt }] },\n  { role: 'model', parts: [{ text: `I understand! I'll format fertilizer recommendations with clear sections (Organic, Inorganic), include application timing, and explain what each fertilizer does - all in ${langName}.` }] }\n];\n\nfor (const msg of history.slice(-10)) {\n  contents.push({ role: msg.isBot ? 'model' : 'user', parts: [{ text: msg.text }] });\n}\ncontents.push({ role: 'user', parts: [{ text: message }] });\n\nreturn { json: { ...$json, requestBody: { contents, generationConfig: { temperature: 0.7, maxOutputTokens: 2048 } } } };"
+      }
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini Chat API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const response = $json;\nconst prevData = $('Build Gemini Prompt').item.json;\n\ntry {\n  const fullText = response.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  let mainAnswer = fullText;\n  let followUpQuestions = [];\n  \n  const markerIndex = fullText.indexOf('---FOLLOWUP---');\n  if (markerIndex !== -1) {\n    mainAnswer = fullText.substring(0, markerIndex).trim();\n    const followupSection = fullText.substring(markerIndex + 14).trim();\n    followUpQuestions = followupSection.split('\\n').filter(l => l.trim().startsWith('- ')).map(l => l.replace(/^-\\s*/, '').trim()).slice(0, 3);\n  }\n  \n  const mcpServers = prevData.mcpServers || {};\n  const globalCount = mcpServers.global?.length || 0;\n  const regionalCount = mcpServers.regional?.length || 0;\n  \n  return {\n    json: {\n      success: true,\n      response: mainAnswer,\n      followUpQuestions,\n      language: prevData.language,\n      location: prevData.locationContext,\n      regions: prevData.detectedRegions?.map(r => r.name) || [],\n      mcpContext: { globalServices: globalCount, regionalServices: regionalCount, totalServices: globalCount + regionalCount },\n      mcpToolsUsed: Object.keys(prevData.mcpResults || {}),\n      intentsDetected: prevData.intentsDetected || []\n    }\n  };\n} catch (e) {\n  return { json: { success: false, response: 'An error occurred.', error: e.message } };\n}"
+      }
+    }
+  ],
+  "connections": {
+    "Chat Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Chat": {
+      "main": [
+        [
+          {
+            "node": "Pass MCP Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pass MCP Data": {
+      "main": [
+        [
+          {
+            "node": "Build Gemini Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Gemini Prompt": {
+      "main": [
+        [
+          {
+            "node": "Gemini Chat API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Chat API": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b6daa3ec-cb48-46cc-bd5e-0a368bf46ece",
+  "activeVersionId": "b6daa3ec-cb48-46cc-bd5e-0a368bf46ece",
+  "versionCounter": 78,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-12-02T13:22:07.073Z",
+      "createdAt": "2025-12-02T13:22:07.073Z",
+      "role": "workflow:owner",
+      "workflowId": "Mf5pU7OhvlV5HPXf",
+      "projectId": "xWj6BkZGxLBqIkKF",
+      "project": {
+        "updatedAt": "2025-12-02T08:28:43.165Z",
+        "createdAt": "2025-12-02T08:14:55.157Z",
+        "id": "xWj6BkZGxLBqIkKF",
+        "name": "Gautam Mandewalker <mandewalkergautam@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-12-02T08:14:55.157Z",
+            "createdAt": "2025-12-02T08:14:55.157Z",
+            "userId": "0d5a25e4-e9c8-4ce5-9472-096efcd9b998",
+            "projectId": "xWj6BkZGxLBqIkKF",
+            "user": {
+              "updatedAt": "2025-12-14T05:38:47.737Z",
+              "createdAt": "2025-12-02T08:14:53.557Z",
+              "id": "0d5a25e4-e9c8-4ce5-9472-096efcd9b998",
+              "email": "mandewalkergautam@gmail.com",
+              "firstName": "Gautam",
+              "lastName": "Mandewalker",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-12-02T08:29:09.581Z",
+                "personalization_survey_n8n_version": "1.122.4",
+                "companySize": "100-499",
+                "companyType": "saas",
+                "role": "other",
+                "roleOther": "Product",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "Mf5pU7OhvlV5HPXf",
+                "userActivatedAt": 1764682108577
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-14",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2025-12-14T05:38:59.081Z",
+    "createdAt": "2025-12-14T05:38:59.081Z",
+    "versionId": "b6daa3ec-cb48-46cc-bd5e-0a368bf46ece",
+    "workflowId": "Mf5pU7OhvlV5HPXf",
+    "nodes": [
+      {
+        "id": "webhook",
+        "name": "Chat Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          240,
+          300
+        ],
+        "webhookId": "chat-endpoint",
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "api/chat",
+          "responseMode": "lastNode",
+          "options": {}
+        }
+      },
+      {
+        "id": "prepare",
+        "name": "Prepare Chat",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          420,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const body = $json.body || $json;\nconst message = body.message || '';\nconst language = body.language || 'en';\nconst history = body.history || [];\nconst latitude = body.latitude;\nconst longitude = body.longitude;\nconst location = body.location || null;\nconst mcpServers = body.mcpServers || { global: [], regional: [], allTools: [] };\nconst detectedRegions = body.detectedRegions || [];\nconst mcpResults = body.mcpResults || {};\nconst intentsDetected = body.intentsDetected || [];\n\nconst languageMap = {\n  'hi': 'Hindi', 'te': 'Telugu', 'kn': 'Kannada', 'mr': 'Marathi',\n  'gu': 'Gujarati', 'ta': 'Tamil', 'bn': 'Bengali', 'ml': 'Malayalam',\n  'pa': 'Punjabi', 'or': 'Odia', 'sw': 'Swahili', 'am': 'Amharic',\n  'vi': 'Vietnamese', 'th': 'Thai', 'id': 'Indonesian', 'en': 'English'\n};\nconst langName = languageMap[language] || language;\n\nlet locationContext = '';\nif (location) {\n  const parts = [location.locality, location.city, location.district, location.state, location.country].filter(Boolean);\n  locationContext = parts.join(', ') || location.displayName || '';\n}\n\nreturn {\n  json: {\n    message, language, langName, latitude, longitude, locationContext,\n    history, mcpServers, detectedRegions, location, mcpResults, intentsDetected\n  }\n};"
+        }
+      },
+      {
+        "id": "call_mcp",
+        "name": "Pass MCP Data",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          600,
+          300
+        ],
+        "parameters": {
+          "jsCode": "// Pass MCP data from API Gateway (already called MCP servers)\n// Just pass through the data received\nreturn { json: $json };"
+        }
+      },
+      {
+        "id": "build_prompt",
+        "name": "Build Gemini Prompt",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          780,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const langName = $json.langName;\nconst locationContext = $json.locationContext;\nconst history = $json.history || [];\nconst message = $json.message;\nconst mcpResults = $json.mcpResults || {};\nconst detectedRegions = $json.detectedRegions || [];\nconst intentsDetected = $json.intentsDetected || [];\n\nlet mcpContext = '';\n\n// Weather data with interpretation\nif (mcpResults.weather?.current) {\n  const w = mcpResults.weather.current;\n  let tempNote = w.temperature < 15 ? 'cool weather' : w.temperature > 32 ? 'hot, watch for heat stress' : 'comfortable for field work';\n  let humidNote = w.humidity > 80 ? 'high humidity, watch for fungal diseases' : w.humidity < 40 ? 'dry air, crops may need water' : 'moderate humidity';\n  let windNote = w.wind_speed > 25 ? 'too windy for spraying' : 'safe for spraying if needed';\n  mcpContext += `\\n\\n**WEATHER DATA:**\\n- Temperature: ${w.temperature}°C (${tempNote})\\n- Humidity: ${w.humidity}% (${humidNote})\\n- Wind: ${w.wind_speed} km/h from ${w.wind_direction} (${windNote})\\n- Conditions: ${w.conditions}\\n- Precipitation: ${w.has_precipitation ? 'Rain expected' : 'No rain expected'}`;\n}\n\n// Soil data with interpretation\nif (mcpResults.soil?.properties) {\n  const p = mcpResults.soil.properties;\n  const ph = p.ph?.[0]?.value?.value;\n  const n = p.nitrogen_total?.[0]?.value?.value;\n  const phos = p.phosphorous_extractable?.[0]?.value?.value;\n  const k = p.potassium_extractable?.[0]?.value?.value;\n  const texture = p.texture_class?.[0]?.value?.value;\n  \n  let phNote = ph < 5.5 ? 'too acidic, add lime' : ph > 7.5 ? 'alkaline, may need sulfur' : 'good for most crops';\n  let nNote = n < 1.0 ? 'low, add urea or compost' : n > 1.5 ? 'good nitrogen level' : 'medium, light fertilizer recommended';\n  let phosNote = phos < 10 ? 'low, add DAP or bone meal' : phos > 20 ? 'excellent' : 'adequate for most crops';\n  let kNote = k < 150 ? 'low, add potash' : k > 250 ? 'excellent for fruiting' : 'adequate';\n  \n  mcpContext += `\\n\\n**SOIL DATA:**\\n- pH: ${ph} (${phNote})\\n- Nitrogen: ${n} g/kg (${nNote})\\n- Phosphorus: ${phos} ppm (${phosNote})\\n- Potassium: ${k} ppm (${kNote})\\n- Soil Type: ${texture || 'Unknown'}`;\n}\n\n// Fertilizer data - SSFR Format per Google Doc requirements\nif (mcpResults.fertilizer?.fertilizers) {\n  const f = mcpResults.fertilizer;\n  const crop = f.crop || 'crop';\n  const loc = locationContext || 'your farm';\n  \n  mcpContext += `\\n\\n**FERTILIZER RECOMMENDATION for ${crop.toUpperCase()} at ${loc}:**`;\n  \n  // Organic fertilizers section\n  if (f.fertilizers.organic) {\n    mcpContext += `\\n\\n1. Organic Fertilizers:`;\n    if (f.fertilizers.organic.compost) {\n      mcpContext += `\\n   - Compost: ${f.fertilizers.organic.compost} tons/ha (spread before plowing, improves soil health)`;\n    }\n    if (f.fertilizers.organic.vermicompost) {\n      mcpContext += `\\n   - Vermicompost: ${f.fertilizers.organic.vermicompost} tons/ha (worm compost, very nutrient-rich)`;\n    }\n  }\n  \n  // Inorganic fertilizers section\n  if (f.fertilizers.inorganic) {\n    mcpContext += `\\n\\n2. Inorganic Fertilizers:`;\n    if (f.fertilizers.inorganic.nps) {\n      mcpContext += `\\n   - NPS: ${f.fertilizers.inorganic.nps} kg/ha (apply at planting - provides Nitrogen, Phosphorus, Sulfur)`;\n    }\n    if (f.fertilizers.inorganic.urea) {\n      mcpContext += `\\n   - UREA: ${f.fertilizers.inorganic.urea} kg/ha (apply 30-45 days after planting - provides Nitrogen for leaf growth)`;\n    }\n  }\n  \n  // Expected yield\n  if (f.expected_yield) {\n    mcpContext += `\\n\\n3. Expected Yield: ${f.expected_yield.value} ${f.expected_yield.unit} (if recommendations followed)`;\n  }\n}\n\n// Feed data with interpretation\nif (mcpResults.feed?.feeds?.feeds?.length > 0) {\n  const feeds = mcpResults.feed.feeds.feeds.slice(0, 5);\n  mcpContext += `\\n\\n**FEED DATABASE (Ethiopia):**`;\n  feeds.forEach(fd => {\n    let proteinNote = fd.fd_cp > 30 ? 'very high protein, excellent supplement' : fd.fd_cp > 18 ? 'high protein, good for milk production' : fd.fd_cp > 12 ? 'moderate protein' : 'low protein, use as filler';\n    let typeNote = fd.fd_type === 'Concentrate' ? 'energy-rich, give in small amounts' : fd.fd_type === 'Forage' ? 'bulk feed for fiber and stomach fill' : fd.fd_type;\n    mcpContext += `\\n- ${fd.fd_name}: Protein ${fd.fd_cp?.toFixed(1) || '?'}% (${proteinNote}), DM ${fd.fd_dm?.toFixed(1) || '?'}%, Type: ${typeNote}`;\n  });\n}\n\n// Plant Diagnosis data from AgriVision MCP\nif (mcpResults.diagnosis?.crop) {\n  const d = mcpResults.diagnosis;\n  mcpContext += `\\n\\n**PLANT HEALTH DIAGNOSIS (AI Analysis):**`;\n  mcpContext += `\\n- Crop Identified: ${d.crop.name}${d.crop.scientific_name ? ' (' + d.crop.scientific_name + ')' : ''} - Confidence: ${d.crop.confidence}`;\n  mcpContext += `\\n- Health Status: ${d.health_status} (${d.health_confidence} confidence)`;\n  if (d.growth_stage) mcpContext += `\\n- Growth Stage: ${d.growth_stage}`;\n  \n  if (d.issues && d.issues.length > 0) {\n    mcpContext += `\\n\\n**Issues Detected:**`;\n    d.issues.forEach((issue, i) => {\n      mcpContext += `\\n\\n${i + 1}. ${issue.name}${issue.scientific_name ? ' (' + issue.scientific_name + ')' : ''}`;\n      mcpContext += `\\n   - Category: ${issue.category}`;\n      mcpContext += `\\n   - Severity: ${issue.severity}${issue.stage ? ' (' + issue.stage + ' stage)' : ''}`;\n      mcpContext += `\\n   - Affected Parts: ${(issue.affected_parts || []).join(', ') || 'Unknown'}`;\n      mcpContext += `\\n   - Symptoms: ${(issue.symptoms || []).join(', ') || 'See image'}`;\n      if (issue.causal_agent) mcpContext += `\\n   - Cause: ${issue.causal_agent}`;\n    });\n  } else {\n    mcpContext += `\\n\\n✅ No diseases or pests detected. Plant appears healthy!`;\n  }\n  \n  if (d.diagnostic_notes) mcpContext += `\\n\\n**Notes:** ${d.diagnostic_notes}`;\n  if (d.requires_lab_test) mcpContext += `\\n\\n⚠️ Lab testing recommended for confirmation.`;\n}\n\nconst systemPrompt = `You are a friendly farming advisor helping smallholder farmers. RESPOND ONLY IN ${langName}.${locationContext ? `\\nFarmer location: ${locationContext}` : ''}${detectedRegions.length > 0 ? `\\nRegion: ${detectedRegions.map(r => r.name).join(', ')}` : ''}${mcpContext ? `\\n\\n## REAL-TIME DATA FROM AGRICULTURAL SERVICES:${mcpContext}` : ''}\n\n## HOW TO PRESENT DATA TO FARMERS (CRITICAL)\n\n1. **Always show the number AND a simple explanation:**\n   - GOOD: \"pH is 6.5 - slightly acidic to neutral, ideal for maize and wheat\"\n   - BAD: \"pH is 6.5\" (no explanation)\n\n2. **For FERTILIZER recommendations, use this EXACT format:**\n   - Title: \"Fertilizer Recommendation for [CROP] at [LOCATION]\"\n   - Section 1: Organic Fertilizers (compost, vermicompost)\n   - Section 2: Inorganic Fertilizers (NPS, UREA)\n   - Section 3: Expected Yield\n   - Explain WHEN to apply each fertilizer (at planting vs top dressing)\n   - Explain WHAT each fertilizer does (NPS = starter, UREA = growth)\n\n3. **Translate technical terms to farmer language:**\n   - \"NPS\" → \"NPS fertilizer (Nitrogen-Phosphorus-Sulfur blend)\"\n   - \"UREA\" → \"Urea (high-nitrogen fertilizer for leaf growth)\"\n   - \"tons/ha\" → \"tons per hectare\"\n\n4. **Add actionable farming advice:**\n   - \"Apply NPS at planting time in the furrow\"\n   - \"Apply Urea as top-dressing when plants are 30-45 days old\"\n   - \"Split Urea application into 2 doses if possible\"\n\n5. **Use local examples and context:**\n   - Ethiopia: Reference teff, maize, wheat, noug\n   - Use Ethiopian units and local fertilizer brands if known\n\n6. **When translating to local languages:**\n   - Keep numbers as-is (198.92 kg/ha stays \"198.92 kg/ha\")\n   - Translate the explanations fully\n   - Use local names for fertilizers when known (e.g., ማዳበሪያ for fertilizer in Amharic)\n\n## RESPONSE FORMAT\n1. Greeting with emoji relevant to topic (🌤️ weather, 🌱 soil, 🐄 feed, 🌾 fertilizer)\n2. Clear title for the recommendation\n3. Numbered sections with bullet points\n4. **Bold numbers** with simple explanations in parentheses\n5. End with encouragement and next step suggestion\n\n## RESPONSE LENGTH GUIDELINES (Context-Aware)\n- Simple factual questions: 2-4 sentences\n- How-to questions: Numbered steps (3-6 typical)\n- Diagnosis questions: Complete with problem, cause, treatment, prevention sections\n- Complex questions with data: Detailed sections with all relevant information\n\nIMPORTANT: Always complete your response fully. Never stop mid-sentence or mid-section.\n\n---FOLLOWUP---\n- Question 1\n- Question 2\n- Question 3`;\n\nconst contents = [\n  { role: 'user', parts: [{ text: systemPrompt }] },\n  { role: 'model', parts: [{ text: `I understand! I'll format fertilizer recommendations with clear sections (Organic, Inorganic), include application timing, and explain what each fertilizer does - all in ${langName}.` }] }\n];\n\nfor (const msg of history.slice(-10)) {\n  contents.push({ role: msg.isBot ? 'model' : 'user', parts: [{ text: msg.text }] });\n}\ncontents.push({ role: 'user', parts: [{ text: message }] });\n\nreturn { json: { ...$json, requestBody: { contents, generationConfig: { temperature: 0.7, maxOutputTokens: 2048 } } } };"
+        }
+      },
+      {
+        "id": "gemini",
+        "name": "Gemini Chat API",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          960,
+          300
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
+          "options": {
+            "timeout": 30000
+          }
+        }
+      },
+      {
+        "id": "response",
+        "name": "Format Response",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1140,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const response = $json;\nconst prevData = $('Build Gemini Prompt').item.json;\n\ntry {\n  const fullText = response.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  let mainAnswer = fullText;\n  let followUpQuestions = [];\n  \n  const markerIndex = fullText.indexOf('---FOLLOWUP---');\n  if (markerIndex !== -1) {\n    mainAnswer = fullText.substring(0, markerIndex).trim();\n    const followupSection = fullText.substring(markerIndex + 14).trim();\n    followUpQuestions = followupSection.split('\\n').filter(l => l.trim().startsWith('- ')).map(l => l.replace(/^-\\s*/, '').trim()).slice(0, 3);\n  }\n  \n  const mcpServers = prevData.mcpServers || {};\n  const globalCount = mcpServers.global?.length || 0;\n  const regionalCount = mcpServers.regional?.length || 0;\n  \n  return {\n    json: {\n      success: true,\n      response: mainAnswer,\n      followUpQuestions,\n      language: prevData.language,\n      location: prevData.locationContext,\n      regions: prevData.detectedRegions?.map(r => r.name) || [],\n      mcpContext: { globalServices: globalCount, regionalServices: regionalCount, totalServices: globalCount + regionalCount },\n      mcpToolsUsed: Object.keys(prevData.mcpResults || {}),\n      intentsDetected: prevData.intentsDetected || []\n    }\n  };\n} catch (e) {\n  return { json: { success: false, response: 'An error occurred.', error: e.message } };\n}"
+        }
+      }
+    ],
+    "connections": {
+      "Chat Webhook": {
+        "main": [
+          [
+            {
+              "node": "Prepare Chat",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Prepare Chat": {
+        "main": [
+          [
+            {
+              "node": "Pass MCP Data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Pass MCP Data": {
+        "main": [
+          [
+            {
+              "node": "Build Gemini Prompt",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Build Gemini Prompt": {
+        "main": [
+          [
+            {
+              "node": "Gemini Chat API",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Gemini Chat API": {
+        "main": [
+          [
+            {
+              "node": "Format Response",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Gautam Mandewalker",
+    "name": null,
+    "description": null
+  }
+}
