@@ -1,29 +1,40 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Animated, Pressable, Platform, PanResponder } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
+import { ELEVATION } from '../constants/elevation';
+import AppIcon from './ui/AppIcon';
+import { TYPOGRAPHY } from '../constants/themes';
+import { t } from '../constants/strings';
 
 /**
  * Toast notification component
- * Displays at top of screen, auto-dismisses
+ * Displays near bottom of screen, auto-dismisses
  */
 export default function Toast({ 
+  toastId,
   visible, 
   message, 
   type = 'info', // 'success' | 'error' | 'warning' | 'info'
   duration = 3000,
   onDismiss,
   action = null, // { label: string, onPress: () => void }
+  queueCount = 0,
+  dismissToken = 0,
 }) {
   const { theme } = useApp();
   const insets = useSafeAreaInsets();
-  const translateY = useRef(new Animated.Value(-100)).current;
+  const translateY = useRef(new Animated.Value(100)).current;
   const opacity = useRef(new Animated.Value(0)).current;
+  const dragY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (visible) {
+      translateY.setValue(100);
+      dragY.setValue(0);
+      opacity.setValue(0);
+
       // Haptic feedback based on type
       if (type === 'error') {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -57,12 +68,12 @@ export default function Toast({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, duration, type]); // dismiss, translateY, opacity are refs/stable
+  }, [toastId, visible, duration, type]); // dismiss, translateY, opacity are refs/stable
 
   const dismiss = () => {
     Animated.parallel([
       Animated.timing(translateY, {
-        toValue: -100,
+        toValue: 140,
         duration: 200,
         useNativeDriver: true,
       }),
@@ -72,7 +83,7 @@ export default function Toast({
         useNativeDriver: true,
       }),
     ]).start(() => {
-      onDismiss?.();
+      if (toastId != null) onDismiss?.(toastId);
     });
   };
 
@@ -92,41 +103,98 @@ export default function Toast({
   };
 
   const config = getTypeConfig();
+  const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
+
+  useEffect(() => {
+    if (visible && dismissToken > 0) {
+      dismiss();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dismissToken]);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) => {
+        if (!visible) return false;
+        const absX = Math.abs(gesture.dx);
+        const absY = Math.abs(gesture.dy);
+        return absY > 6 && absY > absX;
+      },
+      onPanResponderMove: (_, gesture) => {
+        const clamped = Math.max(0, Math.min(80, gesture.dy));
+        dragY.setValue(clamped);
+      },
+      onPanResponderRelease: (_, gesture) => {
+        if (gesture.dy > 40 || gesture.vy > 1.2) {
+          dismiss();
+          return;
+        }
+        Animated.spring(dragY, { toValue: 0, useNativeDriver: true, friction: 8, tension: 80 }).start();
+      },
+      onPanResponderTerminate: () => {
+        Animated.spring(dragY, { toValue: 0, useNativeDriver: true, friction: 8, tension: 80 }).start();
+      },
+    })
+  ).current;
 
   return (
     <Animated.View
       style={[
         styles.container,
         {
-          top: insets.top + 8,
+          bottom: insets.bottom + 12,
           backgroundColor: config.bgLight,
           borderLeftColor: config.bg,
-          transform: [{ translateY }],
+          transform: [{ translateY: Animated.add(translateY, dragY) }],
           opacity,
         },
       ]}
+      accessibilityRole="alert"
+      {...panResponder.panHandlers}
     >
-      <TouchableOpacity 
-        style={styles.content} 
-        onPress={dismiss}
-        activeOpacity={0.9}
-      >
-        <Ionicons name={config.icon} size={22} color={config.bg} />
-        <Text style={[styles.message, { color: theme.text }]} numberOfLines={3}>
-          {message}
-        </Text>
+      <View style={styles.content}>
+        <Pressable
+          style={styles.body}
+          onPress={dismiss}
+          accessibilityRole="button"
+          accessibilityLabel={t('a11y.dismissNotification')}
+          android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
+        >
+          <AppIcon name={config.icon} size={22} color={config.bg} />
+          <Text
+            style={[styles.message, { color: theme.text }]}
+            numberOfLines={3}
+            accessibilityLiveRegion="polite"
+          >
+            {message}
+          </Text>
+        </Pressable>
         {action && (
-          <TouchableOpacity 
+          <Pressable
             onPress={() => { action.onPress(); dismiss(); }}
             style={[styles.actionButton, { backgroundColor: config.bg }]}
+            accessibilityRole="button"
+            accessibilityLabel={action.label}
+            android_ripple={Platform.OS === 'android' ? { color: 'rgba(255,255,255,0.12)' } : undefined}
           >
             <Text style={styles.actionText}>{action.label}</Text>
-          </TouchableOpacity>
+          </Pressable>
         )}
-        <TouchableOpacity onPress={dismiss} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-          <Ionicons name="close" size={20} color={theme.textMuted} />
-        </TouchableOpacity>
-      </TouchableOpacity>
+        {queueCount > 0 ? (
+          <Text style={[styles.queueCount, { color: theme.textMuted }]} accessibilityLabel={`${queueCount} more notifications`}>
+            +{queueCount}
+          </Text>
+        ) : null}
+        <Pressable
+          onPress={dismiss}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          accessibilityRole="button"
+          accessibilityLabel={t('a11y.dismiss')}
+          android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
+        >
+          <AppIcon name="close" size={20} color={theme.textMuted} />
+        </Pressable>
+      </View>
     </Animated.View>
   );
 }
@@ -136,13 +204,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 16,
     right: 16,
-    borderRadius: 12,
-    borderLeftWidth: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
+    borderRadius: 0,
+    borderLeftWidth: 0,
+    ...ELEVATION.md,
     zIndex: 9999,
   },
   content: {
@@ -151,20 +215,29 @@ const styles = StyleSheet.create({
     padding: 14,
     gap: 10,
   },
+  body: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
   message: {
     flex: 1,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: TYPOGRAPHY.sizes.base,
+    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
   },
   actionButton: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 6,
+    borderRadius: 0,
   },
   actionText: {
     color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+  },
+  queueCount: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
-

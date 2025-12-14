@@ -20,9 +20,9 @@ export const THEMES = {
     accentLight: '#E3F9E5',        // Very light green tint
     accentDark: '#248A3D',         // Darker green for pressed states
     
-    // Borders & separators
-    border: '#E5E5EA',             // iOS separator
-    borderLight: '#F2F2F7',
+    // Borders & separators (intentionally borderless UI)
+    border: 'transparent',
+    borderLight: 'transparent',
     
     // Message bubbles
     userMessage: '#F2F2F7',        // Subtle gray for user messages
@@ -57,9 +57,9 @@ export const THEMES = {
     name: 'dark',
     // Pure OLED black base
     background: '#000000',         // Pure black for OLED
-    surface: '#1C1C1E',            // iOS dark surface
-    surfaceVariant: '#2C2C2E',     // Slightly elevated
-    surfaceElevated: '#3A3A3C',    // More elevated
+    surface: '#000000',            // Keep surfaces pitch black
+    surfaceVariant: '#111111',     // Minimal tonal separation (Material-ish)
+    surfaceElevated: '#161616',    // Slightly elevated tone (still very dark)
     
     // Text hierarchy
     text: '#FFFFFF',               // Pure white
@@ -73,8 +73,8 @@ export const THEMES = {
     accentDark: '#28CD50',         // Slightly darker for pressed
     
     // Borders & separators
-    border: '#38383A',             // iOS dark separator
-    borderLight: '#2C2C2E',
+    border: 'transparent',
+    borderLight: 'transparent',
     
     // Message bubbles
     userMessage: '#2C2C2E',        // Subtle dark gray for user messages
@@ -110,14 +110,14 @@ export const THEMES = {
 export const TYPOGRAPHY = {
   // Font sizes
   sizes: {
-    xs: 11,
-    sm: 13,
-    base: 15,
-    md: 16,
-    lg: 17,
-    xl: 20,
-    '2xl': 24,
-    '3xl': 28,
+    xs: 12,
+    sm: 14,
+    base: 16,
+    md: 17,
+    lg: 18,
+    xl: 22,
+    '2xl': 26,
+    '3xl': 30,
   },
   // Line heights (multipliers)
   lineHeights: {
@@ -169,4 +169,3 @@ export const SPACING = {
 };
 
 export default THEMES;
-

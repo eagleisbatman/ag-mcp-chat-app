@@ -2,15 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   ActivityIndicator,
   Platform,
   Text,
   Keyboard,
   Animated,
+  Dimensions,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,6 +18,10 @@ import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import VoiceRecorder from './VoiceRecorder';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import { ELEVATION } from '../constants/elevation';
+import AppIcon from './ui/AppIcon';
+import IconButton from './ui/IconButton';
+import { t } from '../constants/strings';
 
 export default function InputToolbar({ 
   onSendText, 
@@ -35,6 +39,8 @@ export default function InputToolbar({
   const [pendingAudioData, setPendingAudioData] = useState(null);
   const [isFromVoice, setIsFromVoice] = useState(false);
   const textInputRef = useRef(null);
+  const windowHeightBaseline = useRef(Dimensions.get('window').height);
+  const keyboardVisible = useRef(false);
   
   // Keyboard animation - syncs with iOS keyboard animation
   const keyboardHeight = useRef(new Animated.Value(0)).current;
@@ -43,17 +49,33 @@ export default function InputToolbar({
     // Use keyboard will show/hide for smooth animation sync
     const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
     const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const dimSub = Dimensions.addEventListener('change', () => {
+      if (!keyboardVisible.current) {
+        windowHeightBaseline.current = Dimensions.get('window').height;
+      }
+    });
     
     const keyboardWillShow = Keyboard.addListener(showEvent, (e) => {
+      keyboardVisible.current = true;
+      const currentWindowHeight = Dimensions.get('window').height;
+      const windowResizedForKeyboard =
+        Platform.OS === 'android' && windowHeightBaseline.current - currentWindowHeight > 50;
+      const targetKeyboardPadding = windowResizedForKeyboard
+        ? 0
+        : Math.max(0, e.endCoordinates.height - insets.bottom);
+
       // Animate in sync with keyboard (iOS provides duration)
       Animated.timing(keyboardHeight, {
-        toValue: e.endCoordinates.height - insets.bottom,
+        toValue: targetKeyboardPadding,
         duration: Platform.OS === 'ios' ? e.duration : 250,
         useNativeDriver: false, // translateY would need true, but we need padding
       }).start();
     });
     
     const keyboardWillHide = Keyboard.addListener(hideEvent, (e) => {
+      keyboardVisible.current = false;
+      windowHeightBaseline.current = Dimensions.get('window').height;
       Animated.timing(keyboardHeight, {
         toValue: 0,
         duration: Platform.OS === 'ios' ? e.duration : 250,
@@ -64,6 +86,7 @@ export default function InputToolbar({
     return () => {
       keyboardWillShow.remove();
       keyboardWillHide.remove();
+      dimSub?.remove?.();
     };
   }, [keyboardHeight, insets.bottom]);
 
@@ -90,7 +113,7 @@ export default function InputToolbar({
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
-        showWarning('Photo library access is needed to select images. Enable in Settings.');
+        showWarning(t('media.photoLibraryPermission'));
         return;
       }
 
@@ -112,7 +135,7 @@ export default function InputToolbar({
       }
     } catch (error) {
       console.error('Image picker error:', error);
-      showError('Failed to pick image. Please try again.');
+      showError(t('media.pickImageFailed'));
     }
   };
 
@@ -122,7 +145,7 @@ export default function InputToolbar({
     try {
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
       if (status !== 'granted') {
-        showWarning('Camera access is needed to take photos. Enable in Settings.');
+        showWarning(t('media.cameraPermission'));
         return;
       }
 
@@ -143,7 +166,7 @@ export default function InputToolbar({
       }
     } catch (error) {
       console.error('Camera error:', error);
-      showError('Failed to access camera. Please try again.');
+      showError(t('media.cameraFailed'));
     }
   };
 
@@ -163,7 +186,7 @@ export default function InputToolbar({
       textInputRef.current?.focus();
     }, 100);
     
-    showSuccess('Voice transcribed! Edit if needed, then send.');
+    showSuccess(t('chat.voiceTranscribed'));
   };
 
   const handleCancelRecording = () => {
@@ -192,6 +215,7 @@ export default function InputToolbar({
 
   const bottomPadding = Math.max(insets.bottom, SPACING.md);
   const isDark = theme.name === 'dark';
+  const rippleColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
 
   return (
     <Animated.View style={[styles.wrapper, { paddingBottom: Animated.add(bottomPadding, keyboardHeight) }]}>
@@ -199,89 +223,99 @@ export default function InputToolbar({
       <View style={[
         styles.floatingContainer,
         { 
-          backgroundColor: isDark ? 'rgba(28, 28, 30, 0.92)' : 'rgba(255, 255, 255, 0.92)',
-          borderColor: theme.border,
+          backgroundColor: 'transparent',
+          borderColor: 'transparent',
         }
       ]}>
         {/* Voice transcription indicator */}
         {isFromVoice && (
-          <View style={[styles.voiceIndicator, { backgroundColor: theme.accentLight }]}>
-            <Ionicons name="mic" size={14} color={theme.accent} />
+          <View style={styles.voiceIndicator}>
+            <AppIcon name="mic" size={14} color={theme.accent} />
             <Text style={[styles.voiceIndicatorText, { color: theme.accent }]}>
-              From voice — edit if needed
+              {t('chat.fromVoice')}
             </Text>
-            <TouchableOpacity onPress={handleClearVoiceText} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Ionicons name="close-circle" size={18} color={theme.accent} />
-            </TouchableOpacity>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('a11y.clearVoiceTranscription')}
+              onPress={handleClearVoiceText}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
+            >
+              <AppIcon name="close-circle" size={18} color={theme.accent} />
+            </Pressable>
           </View>
         )}
 
         {/* Main Input Row */}
         <View style={styles.inputRow}>
           {/* Camera Button */}
-          <TouchableOpacity
-            style={[styles.iconButton, { backgroundColor: theme.surfaceVariant }]}
+          <IconButton
+            icon="camera"
             onPress={handleTakePhoto}
             disabled={disabled}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="camera" size={20} color={theme.iconPrimary || theme.accent} />
-          </TouchableOpacity>
+            size={40}
+            borderRadius={0}
+            backgroundColor={theme.inputBackground}
+            color={theme.iconPrimary || theme.accent}
+            accessibilityLabel={t('a11y.takePhoto')}
+          />
 
           {/* Gallery Button */}
-          <TouchableOpacity
-            style={[styles.iconButton, { backgroundColor: theme.surfaceVariant }]}
+          <IconButton
+            icon="image"
             onPress={handlePickImage}
             disabled={disabled}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="image" size={20} color={theme.iconPrimary || theme.accent} />
-          </TouchableOpacity>
+            size={40}
+            borderRadius={0}
+            backgroundColor={theme.inputBackground}
+            color={theme.iconPrimary || theme.accent}
+            accessibilityLabel={t('a11y.pickImage')}
+          />
 
-          {/* Text Input - Pill shaped */}
+          {/* Text Input */}
           <View style={[
             styles.textInputContainer, 
             { 
-              backgroundColor: theme.surfaceVariant,
-              borderColor: text.trim() ? theme.accent : 'transparent',
+              backgroundColor: theme.inputBackground,
             }
           ]}>
             <TextInput
               ref={textInputRef}
               style={[styles.textInput, { color: theme.text }]}
-              placeholder="Message..."
+              placeholder={t('chat.messagePlaceholder')}
               placeholderTextColor={theme.textMuted}
               value={text}
               onChangeText={setText}
               multiline
               maxLength={1000}
               editable={!disabled}
+              accessibilityLabel={t('a11y.messageInput')}
             />
           </View>
 
           {/* Voice / Send Button */}
           {text.trim() ? (
-            <TouchableOpacity
-              style={[styles.sendButton, { backgroundColor: theme.accent }]}
+            <IconButton
+              icon="arrow-up"
               onPress={handleSendText}
               disabled={disabled}
-              activeOpacity={0.7}
-            >
-              {disabled ? (
-                <ActivityIndicator size="small" color="#FFFFFF" />
-              ) : (
-                <Ionicons name="arrow-up" size={22} color="#FFFFFF" />
-              )}
-            </TouchableOpacity>
+              size={40}
+              borderRadius={0}
+              backgroundColor={theme.accent}
+              color="#FFFFFF"
+              accessibilityLabel={t('a11y.sendMessage')}
+            />
           ) : (
-            <TouchableOpacity
-              style={[styles.voiceButton, { backgroundColor: theme.accent }]}
+            <IconButton
+              icon="mic"
               onPress={handleStartRecording}
               disabled={disabled}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="mic" size={20} color="#FFFFFF" />
-            </TouchableOpacity>
+              size={40}
+              borderRadius={0}
+              backgroundColor={theme.accent}
+              color="#FFFFFF"
+              accessibilityLabel={t('a11y.recordVoice')}
+            />
           )}
         </View>
       </View>
@@ -296,16 +330,11 @@ const styles = StyleSheet.create({
     paddingTop: SPACING.sm,
   },
   floatingContainer: {
-    borderRadius: SPACING.radiusXl,
-    borderWidth: 0.5,
+    borderRadius: 0,
+    borderWidth: 0,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
-    // Shadow for elevation
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
+    ...ELEVATION.lg,
   },
   voiceIndicator: {
     flexDirection: 'row',
@@ -313,8 +342,9 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: SPACING.md,
     paddingVertical: 6,
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 0,
     marginBottom: SPACING.sm,
+    backgroundColor: 'transparent',
   },
   voiceIndicatorText: {
     flex: 1,
@@ -326,41 +356,23 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: SPACING.sm,
   },
-  iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   textInputContainer: {
     flex: 1,
-    borderRadius: 24,
+    borderRadius: 0,
     paddingHorizontal: SPACING.inputPadding,
     paddingVertical: Platform.OS === 'ios' ? 10 : 8,
     minHeight: 40,
     maxHeight: 100,
     justifyContent: 'center',
-    borderWidth: 1.5,
+    borderWidth: 0,
   },
   textInput: {
+    flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
     padding: 0,
     maxHeight: 80,
-  },
-  sendButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  voiceButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    textAlignVertical: 'center',
+    includeFontPadding: false,
   },
 });

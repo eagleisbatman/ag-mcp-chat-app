@@ -27,3 +27,6 @@ Thumbs.db
 # Railway
 .railway/
 
+# Documentation (generated/local)
+mobile/docs/
+

@@ -1,9 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
-import { SPACING } from '../constants/themes';
+import IconButton from './ui/IconButton';
 
 export default function ThemeToggle({ style }) {
   const { theme, themeMode, setThemeMode } = useApp();
@@ -26,23 +24,15 @@ export default function ThemeToggle({ style }) {
   };
 
   return (
-    <TouchableOpacity
-      style={[styles.container, { backgroundColor: theme.surfaceVariant }, style]}
+    <IconButton
+      icon={getIcon()}
       onPress={toggleTheme}
-      activeOpacity={0.7}
-    >
-      <Ionicons name={getIcon()} size={20} color={theme.accent} />
-    </TouchableOpacity>
+      size={36}
+      borderRadius={0}
+      backgroundColor="transparent"
+      color={theme.accent}
+      style={style}
+      accessibilityLabel={`Theme: ${themeMode}`}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: SPACING.iconButtonSize,
-    height: SPACING.iconButtonSize,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: SPACING.iconButtonSize / 2,
-  },
-});
-

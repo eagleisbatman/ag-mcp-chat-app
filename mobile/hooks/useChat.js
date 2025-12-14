@@ -10,10 +10,11 @@ import { transcribeAudio as transcribeAudioService } from '../services/transcrip
 import { uploadImage, uploadAudio } from '../services/upload';
 import { createSession, saveMessage, generateTitle, updateSession, getSession } from '../services/db';
 import { parseErrorMessage, isNetworkError } from '../utils/apiHelpers';
+import { t } from '../constants/strings';
 
 const WELCOME_MESSAGE = {
   _id: 'welcome',
-  text: "Hello! 👋 I'm your farming assistant.\n\nI can help you with:\n• Crops, vegetables, fruits, and flowers\n• Livestock, poultry, and fish farming\n• Pest and disease management\n• Weather and market advice\n\nHow can I help you today?",
+  text: t('chat.welcomeMessage'),
   createdAt: new Date(),
   isBot: true,
 };
@@ -56,7 +57,7 @@ export default function useChat(sessionIdParam = null) {
       }
     } catch (error) {
       console.error('Load session error:', error);
-      showError('Could not load conversation');
+      showError(t('chat.couldNotLoadConversation'));
     } finally {
       setIsLoadingSession(false);
     }
@@ -66,7 +67,7 @@ export default function useChat(sessionIdParam = null) {
     setMessages([WELCOME_MESSAGE]);
     setCurrentSessionId(null);
     titleGeneratedRef.current = false;
-    showSuccess('Started new conversation');
+    showSuccess(t('chat.startedNewConversation'));
   }, [setCurrentSessionId, showSuccess]);
 
   // Create a new session on first real message
@@ -174,11 +175,11 @@ export default function useChat(sessionIdParam = null) {
       if (!result.success) {
         const errorMsg = parseErrorMessage(result);
         if (isNetworkError({ message: result.error })) {
-          showError('No internet connection. Please check your network.');
+          showWarning(t('chat.noInternet'));
         }
         addMessage({ 
           _id: (Date.now() + 1).toString(), 
-          text: `Sorry, I couldn't process that. ${errorMsg}`, 
+          text: t('chat.sorryCouldNotProcess', { details: errorMsg }), 
           createdAt: new Date(), 
           isBot: true 
         });
@@ -201,16 +202,16 @@ export default function useChat(sessionIdParam = null) {
       console.error('Chat error:', error);
       const errorMsg = parseErrorMessage(error);
       // Note: Retry uses the captured `text` value which is correct since we're retrying the same message
-      const retryAction = isNetworkError(error) ? { label: 'Retry', onPress: () => handleSendText(text) } : null;
+      const retryAction = isNetworkError(error) ? { label: t('common.retry'), onPress: () => handleSendText(text) } : null;
       showError(errorMsg, retryAction);
-      addMessage({ _id: (Date.now() + 1).toString(), text: "Connection error. Please try again.", createdAt: new Date(), isBot: true });
+      addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.connectionErrorBot'), createdAt: new Date(), isBot: true });
     } finally {
       setIsTyping(false);
     }
   }, [location, language, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle]);
-
+  
   const handleSendImage = useCallback(async (imageData) => {
-    const userMsg = { _id: Date.now().toString(), text: "Analyzing plant image...", image: imageData.uri, createdAt: new Date(), isBot: false };
+    const userMsg = { _id: Date.now().toString(), text: t('chat.analyzingPlantImage'), image: imageData.uri, createdAt: new Date(), isBot: false };
     addMessage(userMsg);
     setIsTyping(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -235,8 +236,8 @@ export default function useChat(sessionIdParam = null) {
       // Handle diagnosis result
       if (!diagResult.success) {
         const errorMsg = parseErrorMessage(diagResult);
-        showWarning(`Plant analysis had issues: ${errorMsg}`);
-        addMessage({ _id: (Date.now() + 1).toString(), text: `Analysis couldn't complete. ${errorMsg}`, createdAt: new Date(), isBot: true });
+        showWarning(t('chat.plantAnalysisIssues', { details: errorMsg }));
+        addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.analysisCouldNotComplete', { details: errorMsg }), createdAt: new Date(), isBot: true });
       } else {
         const text = formatDiagnosis(diagResult.diagnosis);
         const botMsg = { _id: (Date.now() + 1).toString(), text, createdAt: new Date(), isBot: true };
@@ -247,7 +248,7 @@ export default function useChat(sessionIdParam = null) {
       console.error('Image analysis error:', error);
       const errorMsg = parseErrorMessage(error);
       showError(errorMsg);
-      addMessage({ _id: (Date.now() + 1).toString(), text: "Image analysis failed. Please try again.", createdAt: new Date(), isBot: true });
+      addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.imageAnalysisFailedBot'), createdAt: new Date(), isBot: true });
     } finally {
       setIsTyping(false);
     }
@@ -262,7 +263,7 @@ export default function useChat(sessionIdParam = null) {
       if (!result.success || !result.text) {
         return { 
           success: false, 
-          error: result.error || "Couldn't understand the audio" 
+          error: result.error || t('voice.couldNotTranscribeAudio')
         };
       }
       
@@ -274,7 +275,7 @@ export default function useChat(sessionIdParam = null) {
       console.error('Transcription error:', error);
       return { 
         success: false, 
-        error: 'Transcription failed' 
+        error: t('voice.transcriptionFailed')
       };
     }
   }, [language]);
@@ -319,4 +320,3 @@ export default function useChat(sessionIdParam = null) {
     startNewSession,
   };
 }
-

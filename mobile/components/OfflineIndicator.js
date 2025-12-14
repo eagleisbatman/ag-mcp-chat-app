@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import NetInfo from '@react-native-community/netinfo';
-import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
+import AppIcon from './ui/AppIcon';
+import { TYPOGRAPHY } from '../constants/themes';
+import { t } from '../constants/strings';
 
 /**
  * OfflineIndicator - Shows a banner when device is offline
@@ -45,8 +47,8 @@ export default function OfflineIndicator() {
         }
       ]}
     >
-      <Ionicons name="cloud-offline" size={18} color="#000000" />
-      <Text style={styles.text}>No internet connection</Text>
+      <AppIcon name="cloud-offline" size={18} color="#000000" />
+      <Text style={styles.text}>{t('system.offline')}</Text>
     </Animated.View>
   );
 }
@@ -67,8 +69,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#000000',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
-

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Pressable, Platform, Appearance } from 'react-native';
+import AppIcon from './ui/AppIcon';
+import { TYPOGRAPHY } from '../constants/themes';
+import { t } from '../constants/strings';
 
 /**
  * Error Boundary - Catches JavaScript errors in child components
@@ -27,28 +29,42 @@ export default class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      const scheme = Appearance.getColorScheme();
+      const isDark = scheme === 'dark';
+      const theme = {
+        background: isDark ? '#000000' : '#FFFFFF',
+        surface: isDark ? '#000000' : '#FFFFFF',
+        text: isDark ? '#FFFFFF' : '#000000',
+        textMuted: isDark ? '#8E8E93' : '#3C3C43',
+        accent: isDark ? '#30D158' : '#34C759',
+        accentLight: isDark ? 'rgba(48,209,88,0.14)' : 'rgba(52,199,89,0.14)',
+      };
+      const rippleColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
+
       return (
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="warning-outline" size={64} color="#F57C00" />
-            </View>
-            <Text style={styles.title}>Oops! Something went wrong</Text>
-            <Text style={styles.message}>
-              {this.state.error?.message || 'An unexpected error occurred'}
-            </Text>
-            <TouchableOpacity 
-              style={styles.button} 
-              onPress={this.handleRetry}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="refresh" size={20} color="#FFFFFF" />
-              <Text style={styles.buttonText}>Try Again</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      );
-    }
+	        <View style={[styles.container, { backgroundColor: theme.background }]}>
+	          <View style={styles.content}>
+	            <View style={styles.iconContainer}>
+	              <AppIcon name="warning-outline" size={64} color={theme.accent} />
+	            </View>
+	            <Text style={[styles.title, { color: theme.text }]}>{t('system.errorTitle')}</Text>
+	            <Text style={[styles.message, { color: theme.textMuted }]}>
+	              {this.state.error?.message || t('system.errorFallback')}
+	            </Text>
+	            <Pressable
+	              accessibilityRole="button"
+	              accessibilityLabel={t('system.tryAgain')}
+	              android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
+	              style={[styles.button, { backgroundColor: theme.accent }]}
+	              onPress={this.handleRetry}
+	            >
+	              <AppIcon name="refresh" size={20} color="#FFFFFF" />
+	              <Text style={styles.buttonText}>{t('system.tryAgain')}</Text>
+	            </Pressable>
+	          </View>
+	        </View>
+	      );
+	    }
 
     return this.props.children;
   }
@@ -57,7 +73,6 @@ export default class ErrorBoundary extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
@@ -69,39 +84,35 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 100,
     height: 100,
-    borderRadius: 50,
-    backgroundColor: '#FFF3E0',
+    borderRadius: 0,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
+    backgroundColor: 'transparent',
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#1A1A1A',
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: TYPOGRAPHY.weights.bold,
     textAlign: 'center',
     marginBottom: 12,
   },
   message: {
-    fontSize: 15,
-    color: '#666666',
+    fontSize: TYPOGRAPHY.sizes.base,
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.relaxed,
     marginBottom: 32,
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2E7D32',
     paddingVertical: 14,
     paddingHorizontal: 28,
-    borderRadius: 12,
+    borderRadius: 0,
     gap: 8,
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     color: '#FFFFFF',
   },
 });
-

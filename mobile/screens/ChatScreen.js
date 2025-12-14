@@ -1,7 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Platform, ActivityIndicator, TouchableOpacity, Animated } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated } from 'react-native';
+import AppIcon from '../components/ui/AppIcon';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 import { useApp } from '../contexts/AppContext';
@@ -10,11 +9,13 @@ import useChat from '../hooks/useChat';
 import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import ScreenHeader from '../components/ui/ScreenHeader';
+import IconButton from '../components/ui/IconButton';
+import { t } from '../constants/strings';
 
 export default function ChatScreen({ navigation, route }) {
   const { theme, language, location, locationDetails, setLocation } = useApp();
-  const { showSuccess, showError } = useToast();
-  const insets = useSafeAreaInsets();
+  const { showSuccess, showWarning, showError } = useToast();
   const flatListRef = useRef(null);
   const scrollButtonAnim = useRef(new Animated.Value(0)).current;
   
@@ -31,7 +32,6 @@ export default function ChatScreen({ navigation, route }) {
   
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
-  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
 
   // Handle new session request
   useEffect(() => {
@@ -47,15 +47,15 @@ export default function ChatScreen({ navigation, route }) {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        showError('Location permission denied');
+        showWarning(t('chat.locationDenied'));
         return;
       }
       const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       await setLocation({ latitude: loc.coords.latitude, longitude: loc.coords.longitude }, 'granted');
-      showSuccess('Location updated!');
+      showSuccess(t('chat.locationUpdated'));
     } catch (error) {
       console.log('Location refresh error:', error);
-      showError('Could not update location');
+      showError(t('chat.locationUpdateFailed'));
     } finally {
       setIsRefreshingLocation(false);
     }
@@ -84,53 +84,59 @@ export default function ChatScreen({ navigation, route }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header - Clean, logo-only design */}
-      <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border, paddingTop: headerPaddingTop }]}>
-        <View style={styles.headerLeft}>
-          {/* Logo only - replace Ionicons with Image when logo asset is provided */}
-          <View style={[styles.logoContainer, { backgroundColor: theme.accentLight }]}>
-            <Ionicons name="leaf" size={24} color={theme.iconPrimary || theme.accent} />
+      <ScreenHeader
+        align="left"
+        center={
+          <View style={styles.headerLeft}>
+            <View style={styles.logoContainer}>
+              <AppIcon name="leaf" size={24} color={theme.iconPrimary || theme.accent} />
+            </View>
+            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
+              {locationDetails?.displayName ||
+                locationDetails?.level5City ||
+                locationDetails?.level3District ||
+                locationDetails?.level2State ||
+                (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('chat.tapLocationToSet'))}
+            </Text>
           </View>
-          {/* Location subtitle only, no brand name */}
-          <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-            {locationDetails?.displayName || locationDetails?.level5City || locationDetails?.level3District || locationDetails?.level2State || (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : 'Tap location to set')}
-          </Text>
-        </View>
-        <View style={styles.headerRight}>
-          <TouchableOpacity 
-            style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} 
-            onPress={handleRefreshLocation}
-            disabled={isRefreshingLocation}
-            activeOpacity={0.7}
-          >
-            {isRefreshingLocation ? (
-              <ActivityIndicator size="small" color={theme.iconPrimary || theme.accent} />
-            ) : (
-              <Ionicons name="location" size={18} color={theme.iconPrimary || theme.accent} />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.headerButton, { backgroundColor: theme.accentLight }]} 
-            onPress={startNewSession}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="add" size={20} color={theme.iconPrimary || theme.accent} />
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.headerButton, { backgroundColor: theme.surfaceVariant }]} 
-            onPress={() => navigation.navigate('Settings')}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="menu" size={20} color={theme.iconSecondary || theme.textSecondary} />
-          </TouchableOpacity>
-        </View>
-      </View>
+        }
+        right={
+          <>
+            <IconButton
+              icon="location"
+              onPress={handleRefreshLocation}
+              disabled={isRefreshingLocation}
+              size={36}
+              backgroundColor="transparent"
+              color={theme.iconPrimary || theme.accent}
+              accessibilityLabel={t('a11y.refreshLocation')}
+            />
+            <IconButton
+              icon="add"
+              onPress={startNewSession}
+              size={36}
+              backgroundColor="transparent"
+              color={theme.iconPrimary || theme.accent}
+              accessibilityLabel={t('a11y.newChat')}
+            />
+            <IconButton
+              icon="menu"
+              onPress={() => navigation.navigate('Settings')}
+              size={36}
+              backgroundColor="transparent"
+              color={theme.iconSecondary || theme.textSecondary}
+              accessibilityLabel={t('a11y.openSettings')}
+            />
+          </>
+        }
+      />
 
       {/* Messages - with bottom padding for floating input */}
       <View style={styles.messagesContainer}>
         {isLoadingSession ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={theme.accent} />
-            <Text style={[styles.loadingText, { color: theme.textMuted }]}>Loading conversation...</Text>
+            <Text style={[styles.loadingText, { color: theme.textMuted }]}>{t('chat.loadingConversation')}</Text>
           </View>
         ) : (
           <FlatList
@@ -151,11 +157,11 @@ export default function ChatScreen({ navigation, route }) {
             scrollEventThrottle={16}
             keyboardShouldPersistTaps="handled"
             ListFooterComponent={isTyping ? (
-              <View style={[styles.typingIndicator, { backgroundColor: theme.botMessage }]}>
+              <View style={styles.typingIndicator}>
                 <View style={[styles.typingDot, { backgroundColor: theme.accent }]} />
                 <View style={[styles.typingDot, { backgroundColor: theme.accent, opacity: 0.7 }]} />
                 <View style={[styles.typingDot, { backgroundColor: theme.accent, opacity: 0.4 }]} />
-                <Text style={[styles.typingText, { color: theme.textSecondary }]}>Thinking...</Text>
+                <Text style={[styles.typingText, { color: theme.textSecondary }]}>{t('chat.thinking')}</Text>
               </View>
             ) : null}
           />
@@ -175,13 +181,14 @@ export default function ChatScreen({ navigation, route }) {
           ]}
           pointerEvents={showScrollButton ? 'auto' : 'none'}
         >
-          <TouchableOpacity 
-            style={[styles.scrollButton, { backgroundColor: theme.accent }]} 
-            onPress={scrollToBottom} 
-            activeOpacity={0.8}
-          >
-            <Ionicons name="chevron-down" size={22} color="#FFFFFF" />
-          </TouchableOpacity>
+          <IconButton
+            icon="chevron-down"
+            onPress={scrollToBottom}
+            size={40}
+            backgroundColor={theme.accent}
+            color="#FFFFFF"
+            accessibilityLabel={t('a11y.scrollToBottom')}
+          />
         </Animated.View>
       </View>
 
@@ -201,14 +208,6 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1,
   },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between', 
-    paddingHorizontal: SPACING.lg, 
-    paddingVertical: SPACING.md, 
-    borderBottomWidth: 0.5,
-  },
   headerLeft: { 
     flex: 1, 
     flexDirection: 'row', 
@@ -218,26 +217,13 @@ const styles = StyleSheet.create({
   logoContainer: {
     width: 36,
     height: 36,
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerSubtitle: { 
     fontSize: TYPOGRAPHY.sizes.sm,
     flex: 1,
-  },
-  headerRight: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: SPACING.sm, 
-    flexShrink: 0,
-  },
-  headerButton: { 
-    width: 36, 
-    height: 36, 
-    borderRadius: SPACING.radiusMd, 
-    alignItems: 'center', 
-    justifyContent: 'center',
   },
   messagesContainer: { 
     flex: 1, 
@@ -269,18 +255,6 @@ const styles = StyleSheet.create({
     bottom: 16,
     alignSelf: 'center', 
     zIndex: 100,
-  },
-  scrollButton: { 
-    width: 40, 
-    height: 40, 
-    borderRadius: 20, 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 4 }, 
-    shadowOpacity: 0.2, 
-    shadowRadius: 8, 
-    elevation: 6,
   },
   loadingContainer: { 
     flex: 1, 

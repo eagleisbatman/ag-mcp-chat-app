@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   Animated,
   ActivityIndicator,
   Dimensions,
+  Platform,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Haptics from 'expo-haptics';
@@ -16,6 +16,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import { ELEVATION } from '../constants/elevation';
+import AppIcon from './ui/AppIcon';
+import { t } from '../constants/strings';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const WAVEFORM_BARS = 30;
@@ -110,7 +113,7 @@ export default function VoiceRecorder({
     try {
       const { status } = await Audio.requestPermissionsAsync();
       if (status !== 'granted') {
-        showError('Microphone permission required');
+        showError(t('voice.microphonePermission'));
         onCancel();
         return;
       }
@@ -156,7 +159,7 @@ export default function VoiceRecorder({
 
     } catch (error) {
       console.error('Recording start error:', error);
-      showError('Failed to start recording');
+      showError(t('voice.startRecordingFailed'));
       onCancel();
     }
   };
@@ -211,7 +214,7 @@ export default function VoiceRecorder({
       const uri = recordingRef.current.getURI();
 
       if (!uri) {
-        showError('Recording failed');
+        showError(t('voice.recordingFailed'));
         onCancel();
         return;
       }
@@ -233,13 +236,13 @@ export default function VoiceRecorder({
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         onTranscriptionComplete(result.transcription, { uri, base64, duration: recordingDuration });
       } else {
-        showError(result.error || 'Could not transcribe audio');
+        showError(result.error || t('voice.couldNotTranscribeAudio'));
         onCancel();
       }
 
     } catch (error) {
       console.error('Transcription error:', error);
-      showError('Failed to process recording');
+      showError(t('voice.transcriptionFailed'));
       onCancel();
     }
   }, [recordingDuration, isTranscribing, onTranscriptionComplete, onCancel, transcribeAudio, language]);
@@ -251,6 +254,7 @@ export default function VoiceRecorder({
   };
 
   const bottomPadding = Math.max(insets.bottom, SPACING.md);
+  const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
   return (
     <View style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
@@ -277,7 +281,7 @@ export default function VoiceRecorder({
           <View style={styles.transcribingContainer}>
             <ActivityIndicator size="large" color={theme.iconPrimary || theme.accent} />
             <Text style={[styles.transcribingText, { color: theme.text }]}>
-              Transcribing...
+              {t('voice.transcribing')}
             </Text>
           </View>
         ) : (
@@ -290,7 +294,7 @@ export default function VoiceRecorder({
                   <View style={[styles.recordingDot, { backgroundColor: theme.error }]} />
                 </Animated.View>
                 <Text style={[styles.recordingLabel, { color: theme.error }]}>
-                  Recording
+                  {t('voice.recording')}
                 </Text>
               </View>
               <Text style={[styles.duration, { color: theme.text }]}>
@@ -323,28 +327,32 @@ export default function VoiceRecorder({
 
             {/* Action Buttons */}
             <View style={styles.actionsRow}>
-              <TouchableOpacity
+              <Pressable
                 style={[styles.cancelButton, { backgroundColor: theme.errorLight }]}
                 onPress={handleCancel}
-                activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={t('a11y.cancelRecording')}
+                android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
               >
-                <Ionicons name="close" size={24} color={theme.error} />
-                <Text style={[styles.buttonLabel, { color: theme.error }]}>Cancel</Text>
-              </TouchableOpacity>
+                <AppIcon name="close" size={24} color={theme.error} />
+                <Text style={[styles.buttonLabel, { color: theme.error }]}>{t('voice.cancel')}</Text>
+              </Pressable>
 
-              <TouchableOpacity
+              <Pressable
                 style={[styles.doneButton, { backgroundColor: theme.iconPrimary || theme.accent }]}
                 onPress={handleDone}
-                activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={t('a11y.finishRecording')}
+                android_ripple={Platform.OS === 'android' ? { color: 'rgba(255,255,255,0.12)' } : undefined}
               >
-                <Ionicons name="checkmark" size={24} color="#FFFFFF" />
-                <Text style={[styles.buttonLabel, { color: '#FFFFFF' }]}>Done</Text>
-              </TouchableOpacity>
+                <AppIcon name="checkmark" size={24} color="#FFFFFF" />
+                <Text style={[styles.buttonLabel, { color: '#FFFFFF' }]}>{t('voice.done')}</Text>
+              </Pressable>
             </View>
 
             {/* Hint */}
             <Text style={[styles.hint, { color: theme.textMuted }]}>
-              Tap Done to transcribe, or Cancel to discard
+              {t('voice.recordingHint')}
             </Text>
           </>
         )}
@@ -360,15 +368,11 @@ const styles = StyleSheet.create({
     paddingTop: SPACING.sm,
   },
   container: {
-    borderRadius: SPACING.radiusXl,
-    borderWidth: 0.5,
+    borderRadius: 0,
+    borderWidth: 0,
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.lg,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
+    ...ELEVATION.lg,
   },
   headerRow: {
     flexDirection: 'row',
@@ -420,7 +424,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING['2xl'],
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 0,
     gap: SPACING.xs,
   },
   doneButton: {
@@ -428,7 +432,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING['2xl'],
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 0,
     gap: SPACING.xs,
   },
   buttonLabel: {
@@ -451,4 +455,3 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
-

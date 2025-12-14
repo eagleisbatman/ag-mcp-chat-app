@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import { useApp } from '../contexts/AppContext';
-import { Ionicons } from '@expo/vector-icons';
-import { SPACING } from '../constants/themes';
+import { useToast } from '../contexts/ToastContext';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import AppIcon from '../components/ui/AppIcon';
+import Button from '../components/ui/Button';
+import { t } from '../constants/strings';
 
 export default function LocationScreen({ navigation }) {
   const { theme, setLocation } = useApp();
+  const { showWarning, showError } = useToast();
   const insets = useSafeAreaInsets();
   const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
+  const bottomPadding = Math.max(insets.bottom + 24, 40);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -24,7 +29,8 @@ export default function LocationScreen({ navigation }) {
       console.log('📍 [LocationScreen] Permission status:', status);
       
       if (status !== 'granted') {
-        setError('Location permission denied');
+        setError(t('onboarding.locationDenied'));
+        showWarning(t('onboarding.locationDenied'));
         setLocation({ latitude: null, longitude: null }, 'denied');
         setIsLoading(false);
         return;
@@ -47,7 +53,8 @@ export default function LocationScreen({ navigation }) {
       console.log('📍 [LocationScreen] Navigating to Language screen');
       navigation.navigate('Language');
     } catch (err) {
-      setError('Could not get location. Please try again.');
+      setError(t('onboarding.locationError'));
+      showError(t('onboarding.locationError'));
       console.log('❌ [LocationScreen] Location error:', err);
     } finally {
       setIsLoading(false);
@@ -61,27 +68,27 @@ export default function LocationScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: headerPaddingTop }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: headerPaddingTop, paddingBottom: bottomPadding }]}>
       {/* Icon */}
       <View style={styles.iconSection}>
-        <View style={[styles.iconContainer, { backgroundColor: theme.accentLight }]}>
-          <Ionicons name="location" size={64} color={theme.accent} />
+        <View style={styles.iconContainer}>
+          <AppIcon name="location" size={64} color={theme.accent} />
         </View>
       </View>
 
       {/* Content */}
       <View style={styles.content}>
         <Text style={[styles.title, { color: theme.text }]}>
-          Enable Location
+          {t('onboarding.locationTitle')}
         </Text>
         
         <Text style={[styles.description, { color: theme.textSecondary }]}>
-          Share your location to get accurate weather forecasts and region-specific farming advice.
+          {t('onboarding.locationDescription')}
         </Text>
 
         {error && (
-          <View style={[styles.errorBox, { backgroundColor: theme.errorLight }]}>
-            <Ionicons name="alert-circle" size={20} color={theme.error} />
+          <View style={styles.errorBox}>
+            <AppIcon name="alert-circle" size={20} color={theme.error} />
             <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
           </View>
         )}
@@ -90,17 +97,17 @@ export default function LocationScreen({ navigation }) {
         <View style={styles.benefits}>
           <BenefitItem
             icon="rainy-outline"
-            text="Local weather forecasts"
+            text={t('onboarding.benefits.weather')}
             theme={theme}
           />
           <BenefitItem
             icon="earth-outline"
-            text="Region-specific crop advice"
+            text={t('onboarding.benefits.regionAdvice')}
             theme={theme}
           />
           <BenefitItem
             icon="analytics-outline"
-            text="Soil data for your area"
+            text={t('onboarding.benefits.soilData')}
             theme={theme}
           />
         </View>
@@ -108,31 +115,29 @@ export default function LocationScreen({ navigation }) {
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.primaryButton, { backgroundColor: theme.accent }]}
+        <Button
+          title={isLoading ? t('common.loading') : t('onboarding.enableLocation')}
           onPress={requestLocation}
           disabled={isLoading}
-          activeOpacity={0.8}
-        >
-          {isLoading ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <>
-              <Ionicons name="navigate" size={20} color="#FFFFFF" />
-              <Text style={styles.primaryButtonText}>Enable Location</Text>
-            </>
-          )}
-        </TouchableOpacity>
+          left={
+            isLoading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <AppIcon name="navigate" size={20} color="#FFFFFF" />
+            )
+          }
+          accessibilityLabel={t('onboarding.enableLocation')}
+          style={styles.primaryButton}
+        />
 
-        <TouchableOpacity
-          style={[styles.secondaryButton, { borderColor: theme.border }]}
+        <Button
+          title={t('common.skipForNow')}
           onPress={skipLocation}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.secondaryButtonText, { color: theme.textSecondary }]}>
-            Skip for now
-          </Text>
-        </TouchableOpacity>
+          variant="secondary"
+          accessibilityLabel={t('common.skipForNow')}
+          style={styles.secondaryButton}
+          textStyle={[styles.secondaryButtonText, { color: theme.textSecondary }]}
+        />
       </View>
     </View>
   );
@@ -141,7 +146,7 @@ export default function LocationScreen({ navigation }) {
 function BenefitItem({ icon, text, theme }) {
   return (
     <View style={styles.benefitItem}>
-      <Ionicons name={icon} size={20} color={theme.accent} />
+      <AppIcon name={icon} size={20} color={theme.accent} />
       <Text style={[styles.benefitText, { color: theme.text }]}>{text}</Text>
     </View>
   );
@@ -150,85 +155,71 @@ function BenefitItem({ icon, text, theme }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingBottom: 40,
+    paddingHorizontal: SPACING['2xl'],
   },
   iconSection: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: SPACING['3xl'],
   },
   iconContainer: {
     width: 120,
     height: 120,
-    borderRadius: 60,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
   content: {
     flex: 1,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
-    marginBottom: 12,
+    fontSize: TYPOGRAPHY.sizes['3xl'],
+    fontWeight: TYPOGRAPHY.weights.bold,
+    marginBottom: SPACING.md,
     textAlign: 'center',
     letterSpacing: -0.5,
   },
   description: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.sizes.base,
     textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 32,
+    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.relaxed,
+    marginBottom: SPACING['3xl'],
   },
   errorBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 24,
-    gap: 8,
+    padding: SPACING.md,
+    borderRadius: 0,
+    marginBottom: SPACING['2xl'],
+    gap: SPACING.sm,
+    backgroundColor: 'transparent',
   },
   errorText: {
-    fontSize: 14,
+    fontSize: TYPOGRAPHY.sizes.sm,
     flex: 1,
   },
   benefits: {
-    gap: 16,
+    gap: SPACING.lg,
   },
   benefitItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: SPACING.md,
   },
   benefitText: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.sizes.base,
   },
   buttonContainer: {
-    gap: 12,
+    gap: SPACING.md,
   },
   primaryButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    gap: 8,
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
+    paddingVertical: SPACING.lg,
   },
   secondaryButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
-    borderWidth: 1,
+    paddingVertical: SPACING.md,
   },
   secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
 });
-

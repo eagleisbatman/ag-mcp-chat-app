@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform, Animated, useWindowDimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Platform, Animated, useWindowDimensions } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
@@ -8,6 +7,8 @@ import { useToast } from '../contexts/ToastContext';
 import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import AppIcon from './ui/AppIcon';
+import { t } from '../constants/strings';
 
 function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const { theme, language } = useApp();
@@ -15,6 +16,7 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
   const followUpQuestions = message.followUpQuestions || [];
+  const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
   
   // Calculate max width for markdown content (screen - padding)
   const contentMaxWidth = screenWidth - (SPACING.lg * 2);
@@ -48,38 +50,38 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
     });
   };
 
-  const textColor = theme.botMessageText || theme.text;
+  const textColor = theme.text;
 
   // Markdown styles - properly constrained for mobile
   const markdownStyles = useMemo(() => ({
     body: {
       color: textColor,
-      fontSize: 15,
-      lineHeight: 22,
+      fontSize: TYPOGRAPHY.sizes.base,
+      lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
     },
     heading1: {
       color: textColor,
-      fontSize: 20,
-      fontWeight: '700',
-      marginBottom: 8,
-      marginTop: 12,
+      fontSize: TYPOGRAPHY.sizes.xl,
+      fontWeight: TYPOGRAPHY.weights.bold,
+      marginBottom: SPACING.sm,
+      marginTop: SPACING.md,
     },
     heading2: {
       color: textColor,
-      fontSize: 18,
-      fontWeight: '600',
-      marginBottom: 6,
-      marginTop: 10,
+      fontSize: TYPOGRAPHY.sizes.lg,
+      fontWeight: TYPOGRAPHY.weights.semibold,
+      marginBottom: SPACING.sm,
+      marginTop: SPACING.md,
     },
     heading3: {
       color: textColor,
-      fontSize: 16,
-      fontWeight: '600',
-      marginBottom: 4,
-      marginTop: 8,
+      fontSize: TYPOGRAPHY.sizes.md,
+      fontWeight: TYPOGRAPHY.weights.semibold,
+      marginBottom: SPACING.xs,
+      marginTop: SPACING.sm,
     },
     strong: {
-      fontWeight: '700',
+      fontWeight: TYPOGRAPHY.weights.bold,
       color: textColor,
     },
     em: {
@@ -101,10 +103,10 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
     },
     bullet_list_icon: {
       color: theme.accent,
-      fontSize: 6,
-      lineHeight: 22,
-      marginRight: 8,
-      marginTop: 8,
+      fontSize: TYPOGRAPHY.sizes.xs,
+      lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
+      marginRight: SPACING.sm,
+      marginTop: SPACING.sm,
     },
     bullet_list_content: {
       flex: 1,
@@ -112,48 +114,48 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
     },
     ordered_list_icon: {
       color: theme.accent,
-      fontSize: 14,
-      fontWeight: '600',
-      marginRight: 8,
-      lineHeight: 22,
+      fontSize: TYPOGRAPHY.sizes.sm,
+      fontWeight: TYPOGRAPHY.weights.semibold,
+      marginRight: SPACING.sm,
+      lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
     },
     ordered_list_content: {
       flex: 1,
       flexShrink: 1,
     },
     code_inline: {
-      backgroundColor: theme.surfaceVariant,
+      backgroundColor: 'transparent',
       color: theme.accent,
       paddingHorizontal: 4,
       paddingVertical: 1,
-      borderRadius: 4,
+      borderRadius: 0,
       fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-      fontSize: 13,
+      fontSize: TYPOGRAPHY.sizes.sm,
     },
     code_block: {
-      backgroundColor: theme.surfaceVariant,
-      padding: 12,
-      borderRadius: 8,
-      marginVertical: 8,
+      backgroundColor: 'transparent',
+      padding: SPACING.md,
+      borderRadius: 0,
+      marginVertical: SPACING.sm,
     },
     fence: {
-      backgroundColor: theme.surfaceVariant,
-      padding: 12,
-      borderRadius: 8,
-      marginVertical: 8,
+      backgroundColor: 'transparent',
+      padding: SPACING.md,
+      borderRadius: 0,
+      marginVertical: SPACING.sm,
     },
     link: {
       color: theme.accent,
       textDecorationLine: 'underline',
     },
     paragraph: {
-      marginTop: 6,
-      marginBottom: 6,
+      marginTop: SPACING.sm,
+      marginBottom: SPACING.sm,
     },
     hr: {
       backgroundColor: theme.border,
       height: 1,
-      marginVertical: 12,
+      marginVertical: SPACING.md,
     },
     textgroup: {
       flexDirection: 'row',
@@ -198,17 +200,17 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
         
         if (!playSuccess) {
           setIsSpeaking(false);
-          showError('Audio playback failed');
+          showError(t('voice.audioPlaybackFailed'));
         }
       } else {
         // Log error but don't use console.error (can trigger system alerts)
         console.log('TTS service error:', result.error);
-        showError('Voice unavailable - please try again later');
+        showError(t('voice.voiceUnavailableLater'));
       }
     } catch (error) {
       // Log error but don't use console.error
       console.log('TTS exception:', error.message);
-      showError('Voice unavailable - please try again');
+      showError(t('voice.voiceUnavailable'));
     } finally {
       setIsLoading(false);
     }
@@ -227,36 +229,35 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
     <View
       style={[
         styles.container,
-        { 
-          backgroundColor: isBot ? theme.botMessage : theme.userMessage,
-          borderTopColor: theme.border,
-        },
+        { backgroundColor: 'transparent' },
       ]}
     >
       {/* Sender Name */}
       <View style={styles.header}>
         <Text style={[styles.senderName, { color: isBot ? (theme.iconPrimary || theme.accent) : theme.textSecondary }]}>
-          {isBot ? 'Farm Assistant' : 'You'}
+          {isBot ? t('chat.senderAssistant') : t('chat.senderYou')}
         </Text>
         <View style={styles.headerRight}>
           {/* Speak button - only for bot messages */}
           {isBot && (
-            <TouchableOpacity
-              style={[styles.speakButton, { backgroundColor: theme.surfaceVariant }]}
+            <Pressable
+              style={styles.speakButton}
               onPress={handleSpeak}
               disabled={isLoading}
-              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel={isSpeaking ? 'Stop voice playback' : 'Play voice'}
+              android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: false } : undefined}
             >
               {isLoading ? (
                 <ActivityIndicator size="small" color={theme.accent} />
               ) : (
-                <Ionicons
+                <AppIcon
                   name={isSpeaking ? 'stop-circle' : 'volume-high'}
                   size={18}
                   color={isSpeaking ? theme.error : theme.accent}
                 />
               )}
-            </TouchableOpacity>
+            </Pressable>
           )}
           <Text style={[styles.timestamp, { color: theme.textMuted }]}>
             {formatTime(message.createdAt)}
@@ -283,14 +284,14 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
         </Animated.View>
       ) : (
         // Plain text for user messages
-        <Text style={[styles.messageText, { color: theme.userMessageText || theme.text }]}>
+        <Text style={[styles.messageText, { color: theme.text }]}>
           {message.text}
         </Text>
       )}
 
       {/* Diagnosis Result (for image analysis) */}
       {message.diagnosis && (
-        <View style={[styles.diagnosisBox, { backgroundColor: theme.surfaceVariant }]}>
+        <View style={styles.diagnosisBox}>
           <Text style={[styles.diagnosisText, { color: theme.text }]}>
             {message.diagnosis}
           </Text>
@@ -301,27 +302,26 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
       {isBot && followUpQuestions.length > 0 && !isAnimating && (
         <View style={styles.followUpContainer}>
           <Text style={[styles.followUpLabel, { color: theme.textMuted }]}>
-            👆 Tap to ask next:
+            {t('chat.tapToAskNext')}
           </Text>
           <View style={styles.followUpList}>
             {followUpQuestions.map((question, index) => (
-              <TouchableOpacity
+              <Pressable
                 key={index}
-                style={[styles.followUpItem, { 
-                  backgroundColor: theme.surfaceVariant,
-                  borderLeftColor: theme.accent,
-                }]}
+                style={styles.followUpItem}
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   onFollowUpPress?.(question);
                 }}
-                activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={`Ask: ${question}`}
+                android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: false } : undefined}
               >
                 <Text style={[styles.followUpText, { color: theme.text }]}>
                   {question}
                 </Text>
-                <Ionicons name="arrow-forward" size={16} color={theme.textMuted} />
-              </TouchableOpacity>
+                <AppIcon name="arrow-forward" size={16} color={theme.textMuted} />
+              </Pressable>
             ))}
           </View>
         </View>
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
-    borderTopWidth: 0.5,
+    borderTopWidth: 0,
   },
   header: {
     flexDirection: 'row',
@@ -358,28 +358,30 @@ const styles = StyleSheet.create({
   speakButton: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
   markdownContainer: {
     flex: 1,
     width: '100%',
   },
   messageText: {
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: TYPOGRAPHY.sizes.base,
+    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
   },
   image: {
     width: '100%',
     height: 200,
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 0,
     marginBottom: SPACING.sm,
   },
   diagnosisBox: {
     marginTop: SPACING.sm,
     padding: SPACING.md,
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 0,
+    backgroundColor: 'transparent',
   },
   diagnosisText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -389,7 +391,7 @@ const styles = StyleSheet.create({
   followUpContainer: {
     marginTop: SPACING.lg,
     paddingTop: SPACING.md,
-    borderTopWidth: 0.5,
+    borderTopWidth: 0,
   },
   followUpLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -407,8 +409,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm + 2,
-    borderRadius: SPACING.radiusMd,
-    borderLeftWidth: 3,
+    borderRadius: 0,
+    backgroundColor: 'transparent',
   },
   followUpText: {
     fontSize: TYPOGRAPHY.sizes.sm,

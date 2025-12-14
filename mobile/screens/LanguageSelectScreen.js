@@ -3,22 +3,24 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
   TextInput,
   FlatList,
   SectionList,
+  Platform,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
 import { LANGUAGES, REGIONS, searchLanguages } from '../constants/languages';
-import { SPACING } from '../constants/themes';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import ScreenHeader from '../components/ui/ScreenHeader';
+import IconButton from '../components/ui/IconButton';
+import AppIcon from '../components/ui/AppIcon';
+import { t } from '../constants/strings';
 
 export default function LanguageSelectScreen({ navigation }) {
   const { theme, language, setLanguage } = useApp();
-  const insets = useSafeAreaInsets();
-  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
   const [searchQuery, setSearchQuery] = useState('');
+  const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
   const displayData = useMemo(() => {
     if (searchQuery) {
@@ -39,17 +41,18 @@ export default function LanguageSelectScreen({ navigation }) {
     const isSelected = language.code === item.code;
     
     return (
-      <TouchableOpacity
+      <Pressable
         style={[
           styles.languageItem,
-          { backgroundColor: isSelected ? theme.accentLight : theme.surface },
-          { borderColor: isSelected ? theme.accent : theme.border },
+          { backgroundColor: 'transparent' },
         ]}
         onPress={() => handleSelectLanguage(item)}
-        activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel={`Language ${item.name}`}
+        android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
       >
         <View style={styles.languageInfo}>
-          <Text style={[styles.languageName, { color: theme.text }]}>
+          <Text style={[styles.languageName, { color: theme.text }, isSelected && styles.languageNameSelected]}>
             {item.name}
           </Text>
           <Text style={[styles.nativeName, { color: theme.textSecondary }]}>
@@ -57,9 +60,9 @@ export default function LanguageSelectScreen({ navigation }) {
           </Text>
         </View>
         {isSelected && (
-          <Ionicons name="checkmark-circle" size={24} color={theme.accent} />
+          <AppIcon name="checkmark-circle" size={24} color={theme.accent} />
         )}
-      </TouchableOpacity>
+      </Pressable>
     );
   };
 
@@ -74,23 +77,26 @@ export default function LanguageSelectScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: headerPaddingTop }]}>
-        <TouchableOpacity 
-          style={[styles.backButton, { backgroundColor: theme.surfaceVariant }]}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>Select Language</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <ScreenHeader
+        title={t('onboarding.languageTitle')}
+        left={
+          <IconButton
+            icon="arrow-back"
+            onPress={() => navigation.goBack()}
+            backgroundColor="transparent"
+            color={theme.text}
+            accessibilityLabel={t('common.back')}
+          />
+        }
+        right={<View />}
+      />
 
       {/* Search */}
       <View style={[styles.searchContainer, { backgroundColor: theme.inputBackground }]}>
-        <Ionicons name="search" size={20} color={theme.textMuted} />
+        <AppIcon name="search" size={20} color={theme.textMuted} />
         <TextInput
           style={[styles.searchInput, { color: theme.text }]}
-          placeholder="Search languages..."
+          placeholder={t('onboarding.searchLanguages')}
           placeholderTextColor={theme.textMuted}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -98,9 +104,15 @@ export default function LanguageSelectScreen({ navigation }) {
           autoCorrect={false}
         />
         {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')}>
-            <Ionicons name="close-circle" size={20} color={theme.textMuted} />
-          </TouchableOpacity>
+          <IconButton
+            icon="close-circle"
+            onPress={() => setSearchQuery('')}
+            size={32}
+            borderRadius={0}
+            backgroundColor="transparent"
+            color={theme.textMuted}
+            accessibilityLabel={t('a11y.clearSearch')}
+          />
         )}
       </View>
 
@@ -113,12 +125,12 @@ export default function LanguageSelectScreen({ navigation }) {
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <View style={styles.emptyState}>
-              <Ionicons name="search-outline" size={48} color={theme.textMuted} />
-              <Text style={[styles.emptyText, { color: theme.textMuted }]}>
-                No languages found
-              </Text>
-            </View>
+          <View style={styles.emptyState}>
+            <AppIcon name="search-outline" size={48} color={theme.textMuted} />
+            <Text style={[styles.emptyText, { color: theme.textMuted }]}>
+              {t('onboarding.noLanguagesFound')}
+            </Text>
+          </View>
           }
         />
       ) : (
@@ -140,37 +152,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 0,
     gap: 12,
     marginBottom: 8,
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.sizes.base,
     padding: 0,
   },
   listContent: {
@@ -182,8 +176,8 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   sectionTitle: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -192,20 +186,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
-    borderRadius: 12,
-    borderWidth: 1.5,
+    borderRadius: 0,
+    borderWidth: 0,
     marginBottom: 8,
   },
   languageInfo: {
     flex: 1,
   },
   languageName: {
-    fontSize: 17,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     marginBottom: 2,
   },
+  languageNameSelected: {
+    fontWeight: TYPOGRAPHY.weights.bold,
+  },
   nativeName: {
-    fontSize: 15,
+    fontSize: TYPOGRAPHY.sizes.base,
   },
   emptyState: {
     alignItems: 'center',
@@ -213,7 +210,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.sizes.base,
   },
 });
-

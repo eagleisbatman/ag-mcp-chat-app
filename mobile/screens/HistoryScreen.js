@@ -3,22 +3,24 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   RefreshControl,
   Alert,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { listSessions, deleteSession } from '../services/db';
-import { SPACING } from '../constants/themes';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import ScreenHeader from '../components/ui/ScreenHeader';
+import IconButton from '../components/ui/IconButton';
+import Card from '../components/ui/Card';
+import ListRow from '../components/ui/ListRow';
+import AppIcon from '../components/ui/AppIcon';
+import Button from '../components/ui/Button';
+import { t } from '../constants/strings';
 
 export default function HistoryScreen({ navigation }) {
-  const insets = useSafeAreaInsets();
-  const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
   const { theme, setCurrentSessionId, isDbSynced } = useApp();
   const { showSuccess, showError } = useToast();
   
@@ -68,24 +70,24 @@ export default function HistoryScreen({ navigation }) {
 
   const handleDeleteSession = (session) => {
     Alert.alert(
-      'Delete Conversation',
-      `Delete "${session.title || 'Untitled'}"? This cannot be undone.`,
+      t('history.deleteTitle'),
+      t('history.deleteMessage', { title: session.title || t('history.untitled') }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: async () => {
             try {
               const result = await deleteSession(session.id);
               if (result.success) {
                 setSessions(prev => prev.filter(s => s.id !== session.id));
-                showSuccess('Conversation deleted');
+                showSuccess(t('history.deleted'));
               } else {
-                showError('Could not delete conversation');
+                showError(t('history.couldNotDelete'));
               }
             } catch (error) {
-              showError('Delete failed');
+              showError(t('history.deleteFailed'));
             }
           },
         },
@@ -101,7 +103,7 @@ export default function HistoryScreen({ navigation }) {
     if (diffDays === 0) {
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     } else if (diffDays === 1) {
-      return 'Yesterday';
+      return t('history.yesterday');
     } else if (diffDays < 7) {
       return date.toLocaleDateString([], { weekday: 'short' });
     } else {
@@ -110,66 +112,67 @@ export default function HistoryScreen({ navigation }) {
   };
 
   const renderSession = ({ item }) => (
-    <TouchableOpacity
-      style={[styles.sessionItem, { backgroundColor: theme.surface }]}
-      onPress={() => handleSelectSession(item)}
-      onLongPress={() => handleDeleteSession(item)}
-      activeOpacity={0.7}
-    >
-      <View style={styles.sessionContent}>
-        <View style={[styles.sessionIcon, { backgroundColor: theme.accentLight }]}>
-          <Ionicons name="chatbubbles-outline" size={20} color={theme.accent} />
-        </View>
-        <View style={styles.sessionInfo}>
-          <Text style={[styles.sessionTitle, { color: theme.text }]} numberOfLines={1}>
-            {item.title || 'New Conversation'}
-          </Text>
-          <Text style={[styles.sessionMeta, { color: theme.textMuted }]}>
-            {item.messageCount || 0} messages • {formatDate(item.lastMessageAt || item.createdAt)}
-          </Text>
-        </View>
-        <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
-      </View>
-    </TouchableOpacity>
+    <Card style={styles.sessionCard}>
+      <ListRow
+        title={item.title || t('history.newConversation')}
+        subtitle={`${item.messageCount || 0} messages • ${formatDate(item.lastMessageAt || item.createdAt)}`}
+        left={
+          <View style={styles.sessionIcon}>
+            <AppIcon name="chatbubbles-outline" size={20} color={theme.accent} />
+          </View>
+        }
+        onPress={() => handleSelectSession(item)}
+        onLongPress={() => handleDeleteSession(item)}
+        delayLongPress={350}
+        paddingHorizontal={SPACING.md}
+        accessibilityLabel={`${t('history.title')}: ${item.title || t('history.newConversation')}`}
+      />
+    </Card>
   );
 
   const renderEmpty = () => (
     <View style={styles.emptyState}>
-      <Ionicons name="chatbubbles-outline" size={64} color={theme.textMuted} />
+      <AppIcon name="chatbubbles-outline" size={64} color={theme.textMuted} />
       <Text style={[styles.emptyTitle, { color: theme.text }]}>
-        No conversations yet
+        {t('history.noConversations')}
       </Text>
       <Text style={[styles.emptyText, { color: theme.textMuted }]}>
-        Start a new chat to get farming advice
+        {t('history.noConversationsHint')}
       </Text>
-      <TouchableOpacity
-        style={[styles.newChatButton, { backgroundColor: theme.accent }]}
+      <Button
+        title={t('history.newChat')}
         onPress={handleNewChat}
-      >
-        <Ionicons name="add" size={20} color="#FFFFFF" />
-        <Text style={styles.newChatButtonText}>New Chat</Text>
-      </TouchableOpacity>
+        left={<AppIcon name="add" size={20} color="#FFFFFF" />}
+        accessibilityLabel={t('a11y.startNewChat')}
+        style={styles.newChatButton}
+      />
     </View>
   );
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: headerPaddingTop }]}>
-        <TouchableOpacity
-          style={[styles.backButton, { backgroundColor: theme.surfaceVariant }]}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>Conversations</Text>
-        <TouchableOpacity
-          style={[styles.newButton, { backgroundColor: theme.accentLight }]}
-          onPress={handleNewChat}
-        >
-          <Ionicons name="add" size={24} color={theme.accent} />
-        </TouchableOpacity>
-      </View>
+      <ScreenHeader
+        title={t('history.title')}
+        left={
+          <IconButton
+            icon="arrow-back"
+            onPress={() => navigation.goBack()}
+            backgroundColor="transparent"
+            color={theme.text}
+            accessibilityLabel={t('common.back')}
+          />
+        }
+        right={
+          <IconButton
+            icon="add"
+            onPress={handleNewChat}
+            backgroundColor="transparent"
+            color={theme.accent}
+            accessibilityLabel={t('history.newChat')}
+          />
+        }
+      />
 
       {/* Content */}
       {isLoading ? (
@@ -178,12 +181,12 @@ export default function HistoryScreen({ navigation }) {
         </View>
       ) : !isDbSynced ? (
         <View style={styles.emptyState}>
-          <Ionicons name="cloud-offline-outline" size={64} color={theme.textMuted} />
+          <AppIcon name="cloud-offline-outline" size={64} color={theme.textMuted} />
           <Text style={[styles.emptyTitle, { color: theme.text }]}>
-            Not connected
+            {t('history.notConnectedTitle')}
           </Text>
           <Text style={[styles.emptyText, { color: theme.textMuted }]}>
-            Conversation history requires an internet connection
+            {t('history.notConnectedHint')}
           </Text>
         </View>
       ) : (
@@ -214,31 +217,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  newButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -250,64 +228,33 @@ const styles = StyleSheet.create({
   emptyListContent: {
     flex: 1,
   },
-  sessionItem: {
-    borderRadius: 12,
-    marginBottom: 8,
-    overflow: 'hidden',
-  },
-  sessionContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    gap: 12,
+  sessionCard: {
+    marginBottom: SPACING.sm,
   },
   sessionIcon: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  sessionInfo: {
-    flex: 1,
-  },
-  sessionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  sessionMeta: {
-    fontSize: 13,
   },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
-    gap: 12,
+    paddingHorizontal: SPACING['3xl'],
+    gap: SPACING.md,
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginTop: 8,
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    marginTop: SPACING.sm,
   },
   emptyText: {
-    fontSize: 15,
+    fontSize: TYPOGRAPHY.sizes.base,
     textAlign: 'center',
   },
   newChatButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 24,
-    marginTop: 16,
-    gap: 8,
-  },
-  newChatButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+    marginTop: SPACING.lg,
   },
 });
-
