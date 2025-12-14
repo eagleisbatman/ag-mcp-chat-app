@@ -77,31 +77,11 @@ const INTENT_TO_OUTPUT_WIDGET = {
 
 /**
  * Determine if we should suggest an input widget based on query analysis
+ * Uses intents detected by the intent classification system (intents.json patterns + LLM fallback)
  * Returns widget suggestion only when it would genuinely help the user
  */
 function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults) {
   const lowerMessage = (message || '').toLowerCase();
-
-  // Keyword-based fallback detection for widget-specific terms
-  // This catches cases where intents.json patterns don't match
-  const keywordIntents = {
-    climate: ['climate', 'seasonal forecast', 'season outlook', 'rainy season', 'dry season'],
-    advisory: ['advisory', 'growth stage', 'flowering', 'germination', 'harvesting', 'crop management', 'crop stage'],
-    soil: ['soil', 'nutrient', 'ph level', 'nitrogen', 'phosphorus', 'potassium'],
-    feed: ['feed', 'cattle', 'livestock', 'dairy', 'milk production', 'nutrition', 'diet'],
-    fertilizer: ['fertilizer', 'urea', 'nps', 'compost', 'manure'],
-    weather: ['weather', 'rain', 'temperature', 'forecast'],
-  };
-
-  // Augment detected intents with keyword matches
-  const augmentedIntents = [...intentsDetected];
-  for (const [intent, keywords] of Object.entries(keywordIntents)) {
-    if (!augmentedIntents.includes(intent)) {
-      if (keywords.some(kw => lowerMessage.includes(kw))) {
-        augmentedIntents.push(intent);
-      }
-    }
-  }
 
   // Phrases that indicate user wants to explore/customize (suggest input widget)
   const exploratoryPhrases = [
@@ -119,10 +99,10 @@ function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults) {
   const isExploratory = exploratoryPhrases.some(p => lowerMessage.includes(p));
   const isDirect = directPhrases.some(p => lowerMessage.includes(p));
 
-  // Analyze each detected intent (including keyword-augmented ones)
+  // Analyze each detected intent from the classification system
   const suggestions = [];
 
-  for (const intent of augmentedIntents) {
+  for (const intent of intentsDetected) {
     const inputWidget = INTENT_TO_INPUT_WIDGET[intent];
     const outputWidget = INTENT_TO_OUTPUT_WIDGET[intent];
     const hasData = mcpResults && mcpResults[intent] && !mcpResults[intent]?.error;
@@ -833,12 +813,33 @@ async function detectIntents(message, country = 'ethiopia', language = 'en') {
     const mainIntent = llmResult.main_intent?.toLowerCase() || '';
     const practices = (llmResult.practices || []).map(p => p.name?.toLowerCase());
     const hasLivestock = (llmResult.livestock || []).length > 0;
-    
-    if (mainIntent.includes('weather') || mainIntent.includes('forecast')) mcpIntents.push('weather');
-    if (mainIntent.includes('soil') || practices.includes('soil_preparation')) mcpIntents.push('soil');
-    if (mainIntent.includes('fertiliz') || practices.includes('fertilization')) mcpIntents.push('fertilizer');
-    if (hasLivestock || practices.includes('feeding') || mainIntent.includes('feeding')) mcpIntents.push('feed');
-    
+
+    // Weather (short-term forecasts)
+    if (mainIntent.includes('weather') || (mainIntent.includes('forecast') && !mainIntent.includes('seasonal') && !mainIntent.includes('climate'))) {
+      mcpIntents.push('weather');
+    }
+    // Climate (seasonal/long-term forecasts from EDACaP)
+    if (mainIntent.includes('climate') || mainIntent.includes('seasonal') || mainIntent.includes('season outlook')) {
+      mcpIntents.push('climate');
+    }
+    // Soil
+    if (mainIntent.includes('soil') || practices.includes('soil_preparation') || practices.includes('soil_analysis')) {
+      mcpIntents.push('soil');
+    }
+    // Fertilizer
+    if (mainIntent.includes('fertiliz') || practices.includes('fertilization')) {
+      mcpIntents.push('fertilizer');
+    }
+    // Feed/Livestock
+    if (hasLivestock || practices.includes('feeding') || mainIntent.includes('feeding') || mainIntent.includes('feed') || mainIntent.includes('nutrition')) {
+      mcpIntents.push('feed');
+    }
+    // Advisory/Crop Management (growth stages, crop recommendations from TomorrowNow)
+    if (mainIntent.includes('advisory') || mainIntent.includes('growth stage') || mainIntent.includes('crop management') ||
+        practices.includes('harvesting') || practices.includes('pest_management') || practices.includes('disease_management')) {
+      mcpIntents.push('advisory');
+    }
+
     return {
       intents: mcpIntents,
       rawIntents: [mainIntent],
