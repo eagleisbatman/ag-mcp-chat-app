@@ -494,7 +494,7 @@ router.get('/live-status', async (req, res) => {
   }
 });
 
-// GET /api/mcp-servers/:slug - Get specific MCP server
+// GET /api/mcp-servers/:slug - Get specific MCP server with full marketing content
 router.get('/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
@@ -520,13 +520,75 @@ router.get('/:slug', async (req, res) => {
     // Format regions
     const activeRegions = server.regionMappings.map(m => m.region);
 
+    // Check real-time health status
+    let healthStatus = 'unknown';
+    let responseTime = null;
+    let healthError = null;
+
+    const endpoint = process.env[server.endpointEnvVar];
+    if (endpoint && server.isDeployed && server.isActive) {
+      const startTime = Date.now();
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch(`${endpoint}/health`, {
+          method: 'GET',
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+        responseTime = Date.now() - startTime;
+        healthStatus = response.ok ? 'healthy' : 'unhealthy';
+        if (!response.ok) {
+          healthError = `HTTP ${response.status}`;
+        }
+      } catch (error) {
+        responseTime = Date.now() - startTime;
+        healthStatus = 'unhealthy';
+        healthError = error.name === 'AbortError' ? 'Timeout' : error.message;
+      }
+    } else if (!server.isDeployed) {
+      healthStatus = 'not_deployed';
+    }
+
     res.json({
       success: true,
       server: {
-        ...server,
-        endpointUrl: process.env[server.endpointEnvVar] || null,
-        endpointEnvVar: undefined,
-        regionMappings: undefined,
+        // Core info
+        id: server.id,
+        name: server.name,
+        slug: server.slug,
+        description: server.description,
+        category: server.category,
+        isGlobal: server.isGlobal,
+        tools: server.tools,
+        capabilities: server.capabilities,
+        icon: server.icon,
+        color: server.color,
+
+        // Marketing content
+        tagline: server.tagline,
+        longDescription: server.longDescription,
+        features: server.features,
+        useCases: server.useCases,
+        dataSource: server.dataSource,
+        supportedCrops: server.supportedCrops,
+        supportedRegions: server.supportedRegions,
+        heroColor: server.heroColor,
+        contentUpdatedAt: server.contentUpdatedAt,
+
+        // Status
+        isActive: server.isActive,
+        isDeployed: server.isDeployed,
+        healthStatus,
+        healthError,
+        responseTime,
+
+        // Endpoint
+        endpointUrl: endpoint || null,
+
+        // Regions
         activeRegions,
       },
     });

@@ -465,37 +465,48 @@ model McpServerRegistry {
   name              String                        // "SSFR Fertilizer Recommendations"
   slug              String   @unique              // "ssfr", "isda-soil", "agrivision"
   description       String?
-  
+
   // Endpoint configuration (from env vars at runtime)
   endpointEnvVar    String   @map("endpoint_env_var")  // "MCP_SSFR_URL"
   healthCheckPath   String   @default("/health") @map("health_check_path")
   mcpEndpointPath   String   @default("/mcp") @map("mcp_endpoint_path")
-  
+
   // Classification
   category          String   @default("agriculture") // agriculture/weather/utility/ai
   isGlobal          Boolean  @default(false) @map("is_global") // Always active everywhere
-  
+
   // Tools provided
   tools             Json?                         // ["get_fertilizer_recommendation"]
   capabilities      Json?                         // ["fertilizer", "soil"]
-  
+
   // UI display
   icon              String?                       // "leaf", "cloud", "brain"
   color             String?                       // "#4CAF50"
-  
+
+  // Marketing content (for detail view)
+  tagline           String?                       // Short catchy phrase
+  longDescription   String?  @map("long_description") // Extended marketing description
+  features          Json?                         // [{icon, title, description}]
+  useCases          Json?    @map("use_cases")    // Array of use case strings
+  dataSource        String?  @map("data_source")  // "AccuWeather API", "NextGen Agro"
+  supportedCrops    String[] @map("supported_crops") // Crop types supported
+  supportedRegions  Json?    @map("supported_regions") // Region names for display
+  heroColor         String?  @map("hero_color")   // Gradient/theme color for detail
+  contentUpdatedAt  DateTime? @map("content_updated_at") // Marketing content last updated
+
   // Status
   isActive          Boolean  @default(true) @map("is_active")
   isDeployed        Boolean  @default(false) @map("is_deployed")
   deployedAt        DateTime? @map("deployed_at")
   lastHealthCheck   DateTime? @map("last_health_check")
   healthStatus      String?  @map("health_status") // healthy/unhealthy/unknown
-  
+
   // Version
   version           String?
-  
+
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
-  
+
   // Relations
   regionMappings    RegionMcpMapping[]
 
