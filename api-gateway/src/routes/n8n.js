@@ -27,6 +27,183 @@ const AGRIVISION_URL = process.env.AGRIVISION_URL || 'https://agrivision-mcp-ser
 const CHAT_TIMEOUT_MS = parseInt(process.env.CHAT_TIMEOUT_MS || '60000'); // 60s default
 const AGRIVISION_TIMEOUT_MS = parseInt(process.env.AGRIVISION_TIMEOUT_MS || '45000'); // 45s for image analysis
 
+// Widget type mappings
+const WIDGET_TYPES = {
+  // Input Widgets
+  WEATHER_INPUT: 'weather_input',
+  FEED_FORM: 'feed_formulation_input',
+  SOIL_QUERY: 'soil_query_input',
+  FERTILIZER_INPUT: 'fertilizer_input',
+  CLIMATE_QUERY: 'climate_query_input',
+  DECISION_TREE: 'decision_tree_input',
+  // Output Widgets
+  WEATHER_FORECAST: 'weather_forecast_card',
+  DIET_RESULT: 'diet_result_card',
+  SOIL_PROFILE: 'soil_profile_card',
+  FERTILIZER_RESULT: 'fertilizer_result_card',
+  CLIMATE_FORECAST: 'climate_forecast_card',
+  RECOMMENDATIONS: 'recommendations_card',
+};
+
+// Map input widget types to output widget types
+const INPUT_TO_OUTPUT_MAP = {
+  [WIDGET_TYPES.WEATHER_INPUT]: WIDGET_TYPES.WEATHER_FORECAST,
+  [WIDGET_TYPES.FEED_FORM]: WIDGET_TYPES.DIET_RESULT,
+  [WIDGET_TYPES.SOIL_QUERY]: WIDGET_TYPES.SOIL_PROFILE,
+  [WIDGET_TYPES.FERTILIZER_INPUT]: WIDGET_TYPES.FERTILIZER_RESULT,
+  [WIDGET_TYPES.CLIMATE_QUERY]: WIDGET_TYPES.CLIMATE_FORECAST,
+  [WIDGET_TYPES.DECISION_TREE]: WIDGET_TYPES.RECOMMENDATIONS,
+};
+
+// Map MCP categories to input widget types
+const INTENT_TO_INPUT_WIDGET = {
+  weather: WIDGET_TYPES.WEATHER_INPUT,
+  feed: WIDGET_TYPES.FEED_FORM,
+  soil: WIDGET_TYPES.SOIL_QUERY,
+  fertilizer: WIDGET_TYPES.FERTILIZER_INPUT,
+  climate: WIDGET_TYPES.CLIMATE_QUERY,
+  advisory: WIDGET_TYPES.DECISION_TREE,
+};
+
+// Map MCP categories to output widget types
+const INTENT_TO_OUTPUT_WIDGET = {
+  weather: WIDGET_TYPES.WEATHER_FORECAST,
+  feed: WIDGET_TYPES.DIET_RESULT,
+  soil: WIDGET_TYPES.SOIL_PROFILE,
+  fertilizer: WIDGET_TYPES.FERTILIZER_RESULT,
+  climate: WIDGET_TYPES.CLIMATE_FORECAST,
+  advisory: WIDGET_TYPES.RECOMMENDATIONS,
+};
+
+/**
+ * Determine if we should suggest an input widget based on query analysis
+ * Returns widget suggestion only when it would genuinely help the user
+ */
+function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults) {
+  const lowerMessage = (message || '').toLowerCase();
+
+  // Phrases that indicate user wants to explore/customize (suggest input widget)
+  const exploratoryPhrases = [
+    'help me with', 'i want to', 'can you help', 'how do i', 'what should i',
+    'recommend', 'advice', 'suggest', 'calculate', 'formulate', 'plan',
+    'i need', 'show me options', 'let me', 'i\'d like to',
+  ];
+
+  // Phrases that indicate user wants immediate answer (show output widget)
+  const directPhrases = [
+    'what is', 'what\'s', 'tell me', 'show me', 'get me', 'give me',
+    'today', 'now', 'current', 'right now', 'at the moment',
+  ];
+
+  const isExploratory = exploratoryPhrases.some(p => lowerMessage.includes(p));
+  const isDirect = directPhrases.some(p => lowerMessage.includes(p));
+
+  // Analyze each detected intent
+  const suggestions = [];
+
+  for (const intent of intentsDetected) {
+    const inputWidget = INTENT_TO_INPUT_WIDGET[intent];
+    const outputWidget = INTENT_TO_OUTPUT_WIDGET[intent];
+    const hasData = mcpResults && mcpResults[intent] && !mcpResults[intent]?.error;
+
+    if (!inputWidget) continue;
+
+    // Decision logic for natural suggestions
+    if (intent === 'feed') {
+      // Feed formulation always needs structured input - it's complex
+      suggestions.push({
+        type: 'input',
+        widget: inputWidget,
+        reason: 'Feed formulation requires specific cattle and feed details for accurate results.',
+        prompt: 'Would you like to use our feed calculator for a personalized diet recommendation?',
+      });
+    } else if (intent === 'fertilizer') {
+      // Fertilizer always needs structured input - requires location AND crop selection
+      suggestions.push({
+        type: 'input',
+        widget: inputWidget,
+        reason: 'Site-specific fertilizer recommendations need your field location and crop type.',
+        prompt: 'I can calculate fertilizer recommendations for wheat or maize. Want to use the calculator?',
+      });
+    } else if (isExploratory && !isDirect) {
+      // User is exploring - offer input widget
+      suggestions.push({
+        type: 'input',
+        widget: inputWidget,
+        reason: 'You can customize the parameters for more specific results.',
+        prompt: getWidgetPrompt(intent),
+      });
+    } else if (hasData) {
+      // We have data - include output widget
+      suggestions.push({
+        type: 'output',
+        widget: outputWidget,
+        data: formatWidgetData(intent, mcpResults[intent]),
+      });
+    }
+  }
+
+  return suggestions;
+}
+
+/**
+ * Get a natural prompt for suggesting a widget
+ */
+function getWidgetPrompt(intent) {
+  const prompts = {
+    weather: 'Want to see a detailed forecast? You can customize the number of days.',
+    soil: 'I can show you detailed soil analysis. Want to explore different depths?',
+    fertilizer: 'For precise fertilizer recommendations, I can calculate based on your exact location.',
+    climate: 'Want to see the seasonal forecast? I can show climate predictions for your area.',
+    advisory: 'I can give you crop-specific recommendations based on growth stage.',
+  };
+  return prompts[intent] || 'Would you like to use our interactive tool for more details?';
+}
+
+/**
+ * Format MCP result data for output widget
+ */
+function formatWidgetData(intent, mcpResult) {
+  if (!mcpResult) return {};
+
+  switch (intent) {
+    case 'weather':
+      return {
+        current: mcpResult,
+        forecast: mcpResult.forecast || [],
+      };
+    case 'soil':
+      return {
+        properties: mcpResult.properties || mcpResult,
+        depth: mcpResult.depth || '0-20cm',
+      };
+    case 'fertilizer':
+      return {
+        organic: mcpResult.organic || {},
+        inorganic: mcpResult.inorganic || {},
+        expected_yield: mcpResult.expected_yield,
+        timing: mcpResult.timing || [],
+      };
+    case 'feed':
+      return {
+        diet: mcpResult.diet || mcpResult,
+        total_cost: mcpResult.total_cost,
+      };
+    case 'climate':
+      return {
+        climate_forecasts: mcpResult.forecasts || [],
+        station: mcpResult.station,
+      };
+    case 'advisory':
+      return {
+        recommendations: mcpResult.recommendations || [],
+        growth_stage: mcpResult.growth_stage,
+      };
+    default:
+      return mcpResult;
+  }
+}
+
 /**
  * Get active MCP servers for a location (helper function)
  */
@@ -169,6 +346,232 @@ async function callMcpTool(endpoint, toolName, args, extraHeaders = {}) {
   } catch (e) {
     console.error(`[MCP] Error calling ${toolName}:`, e.message);
     return { error: e.message };
+  }
+}
+
+/**
+ * Process widget data and call appropriate MCP servers
+ * Returns structured data for output widget rendering
+ */
+async function processWidgetData(widgetData, mcpServers, options = {}) {
+  const { latitude, longitude } = options;
+  const widgetType = widgetData?.widget_type;
+  const data = widgetData?.data || {};
+  const allServers = [...(mcpServers.global || []), ...(mcpServers.regional || [])];
+
+  console.log(`🔧 [Widget] Processing ${widgetType}:`, JSON.stringify(data).substring(0, 200));
+
+  let result = null;
+  let outputWidgetType = INPUT_TO_OUTPUT_MAP[widgetType];
+  let widgetResult = { type: outputWidgetType, data: {} };
+
+  try {
+    switch (widgetType) {
+      case WIDGET_TYPES.WEATHER_INPUT: {
+        const server = allServers.find(s => s.slug === 'accuweather');
+        if (server?.endpoint) {
+          const lat = data.latitude || latitude;
+          const lon = data.longitude || longitude;
+          const days = data.days || 5;
+
+          // Get current conditions
+          const current = await callMcpTool(server.endpoint, 'get_accuweather_current_conditions', {
+            latitude: lat,
+            longitude: lon,
+          });
+
+          // Get forecast
+          const forecast = await callMcpTool(server.endpoint, 'get_accuweather_forecast', {
+            latitude: lat,
+            longitude: lon,
+            days: days,
+          });
+
+          widgetResult.data = {
+            location: data.location || { latitude: lat, longitude: lon },
+            current: current,
+            forecast: forecast?.forecast || forecast,
+            days: days,
+          };
+          result = { current, forecast };
+        }
+        break;
+      }
+
+      case WIDGET_TYPES.FEED_FORM: {
+        const server = allServers.find(s => s.slug === 'feed-formulation');
+        if (server?.endpoint) {
+          // Call feed formulation with cattle and feed data
+          const formulation = await callMcpTool(server.endpoint, 'formulate_diet', {
+            cattle: {
+              is_lactating: data.cattle?.is_lactating ?? true,
+              target_milk: data.cattle?.target_milk || 12,
+              body_weight: data.cattle?.body_weight || 400,
+              breed: data.cattle?.breed || 'Local Zebu',
+              days_in_milk: data.cattle?.days_in_milk || 100,
+              parity: data.cattle?.parity || 2,
+              days_pregnant: data.cattle?.days_pregnant || 0,
+            },
+            feeds: data.feeds || [],
+          });
+
+          widgetResult.data = {
+            cattle: data.cattle,
+            diet: formulation?.diet || formulation,
+            total_cost: formulation?.total_cost,
+            expected_yield: formulation?.expected_yield,
+            nutrient_balance: formulation?.nutrient_balance,
+            warnings: formulation?.warnings || [],
+          };
+          result = formulation;
+        }
+        break;
+      }
+
+      case WIDGET_TYPES.SOIL_QUERY: {
+        const server = allServers.find(s => s.slug === 'isda-soil');
+        if (server?.endpoint) {
+          const lat = data.latitude || latitude;
+          const lon = data.longitude || longitude;
+          const depth = data.depth || '0-20';
+
+          const soilData = await callMcpTool(server.endpoint, 'get_isda_soil_properties', {
+            latitude: lat,
+            longitude: lon,
+            depth: depth,
+          });
+
+          widgetResult.data = {
+            location: { latitude: lat, longitude: lon },
+            depth: depth,
+            properties: soilData?.properties || soilData,
+            suitability: soilData?.crop_suitability,
+            confidence: soilData?.confidence,
+          };
+          result = soilData;
+        }
+        break;
+      }
+
+      case WIDGET_TYPES.FERTILIZER_INPUT: {
+        const server = allServers.find(s => s.slug === 'nextgen');
+        if (server?.endpoint) {
+          const lat = data.latitude || latitude;
+          const lon = data.longitude || longitude;
+          const crop = data.crop || 'wheat';
+
+          const recommendation = await callMcpTool(
+            server.endpoint,
+            'get_fertilizer_recommendation',
+            { crop, latitude: lat, longitude: lon },
+            { 'X-Farm-Latitude': String(lat), 'X-Farm-Longitude': String(lon) }
+          );
+
+          widgetResult.data = {
+            crop: crop,
+            location: { latitude: lat, longitude: lon },
+            organic: recommendation?.organic || {},
+            inorganic: recommendation?.inorganic || {},
+            expected_yield: recommendation?.expected_yield,
+            timing: recommendation?.timing || [],
+            notes: recommendation?.notes || [],
+          };
+          result = recommendation;
+        }
+        break;
+      }
+
+      case WIDGET_TYPES.CLIMATE_QUERY: {
+        const server = allServers.find(s => s.slug === 'edacap');
+        if (server?.endpoint) {
+          const lat = data.latitude || latitude;
+          const lon = data.longitude || longitude;
+          const forecastType = data.forecastType || 'climate';
+
+          let climateData = null;
+          let cropData = null;
+
+          if (forecastType === 'climate' || forecastType === 'both') {
+            climateData = await callMcpTool(server.endpoint, 'get_climate_forecast', {
+              latitude: lat,
+              longitude: lon,
+            });
+          }
+
+          if (forecastType === 'crop' || forecastType === 'both') {
+            cropData = await callMcpTool(server.endpoint, 'get_crop_forecast', {
+              latitude: lat,
+              longitude: lon,
+            });
+          }
+
+          widgetResult.data = {
+            station: climateData?.station || cropData?.station,
+            confidence: climateData?.confidence,
+            climate_forecasts: climateData?.forecasts || [],
+            crop_forecasts: cropData?.forecasts || [],
+            message: (!climateData && !cropData) ? 'Forecast data not available for this location' : null,
+          };
+          result = { climate: climateData, crop: cropData };
+        }
+        break;
+      }
+
+      case WIDGET_TYPES.DECISION_TREE: {
+        const server = allServers.find(s => s.slug === 'tomorrowio' || s.slug === 'tomorrowio-decision-tree');
+        if (server?.endpoint) {
+          const lat = data.latitude || latitude;
+          const lon = data.longitude || longitude;
+
+          const recommendations = await callMcpTool(server.endpoint, 'get_crop_recommendations', {
+            crop: data.crop || 'maize',
+            growth_stage: data.growth_stage || 'vegetative',
+            gdd: data.gdd || 500,
+            latitude: lat,
+            longitude: lon,
+            weather: data.weather || {},
+          });
+
+          widgetResult.data = {
+            crop: data.crop,
+            growth_stage: data.growth_stage,
+            recommendations: recommendations?.recommendations || [],
+            weather_summary: recommendations?.weather_summary,
+          };
+          result = recommendations;
+        }
+        break;
+      }
+
+      default:
+        console.warn(`[Widget] Unknown widget type: ${widgetType}`);
+        return { success: false, error: `Unknown widget type: ${widgetType}` };
+    }
+
+    // Check if we got valid data
+    if (!result || result.error) {
+      console.warn(`[Widget] No data from MCP for ${widgetType}:`, result?.error);
+      return {
+        success: false,
+        error: result?.error || 'No data available',
+        widget: { ...widgetResult, data: { message: 'Data not available for this request' } },
+      };
+    }
+
+    console.log(`[Widget] ✅ Processed ${widgetType} successfully`);
+    return {
+      success: true,
+      widget: widgetResult,
+      rawResult: result,
+    };
+
+  } catch (error) {
+    console.error(`[Widget] Error processing ${widgetType}:`, error.message);
+    return {
+      success: false,
+      error: error.message,
+      widget: { type: outputWidgetType, data: { message: 'Error processing request' } },
+    };
   }
 }
 
@@ -603,7 +1006,7 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
 router.post('/chat', async (req, res) => {
   const startTime = Date.now();
   try {
-    const { latitude, longitude, language, location, message, history, image } = req.body;
+    const { latitude, longitude, language, location, message, history, image, widget_data } = req.body;
 
     console.log('💬 [Chat] Request:', {
       hasLocation: !!(latitude && longitude),
@@ -611,6 +1014,8 @@ router.post('/chat', async (req, res) => {
       messageLength: message?.length || 0,
       historyCount: history?.length || 0,
       hasImage: !!image,
+      hasWidgetData: !!widget_data,
+      widgetType: widget_data?.widget_type,
     });
 
     // Get active MCP servers for user's location
@@ -624,6 +1029,82 @@ router.post('/chat', async (req, res) => {
       regionalCount: mcpContext.regional.length,
       detectedRegions: mcpContext.detectedRegions.map(r => r.name).join(', '),
     });
+
+    // If widget_data is provided, process it directly without intent detection
+    if (widget_data?.widget_type) {
+      console.log('🔧 [Chat] Processing widget submission:', widget_data.widget_type);
+
+      const widgetResult = await processWidgetData(widget_data, mcpContext, {
+        latitude: latitude ? parseFloat(latitude) : null,
+        longitude: longitude ? parseFloat(longitude) : null,
+      });
+
+      // Build enhanced body with widget result for n8n
+      const enhancedBody = {
+        ...req.body,
+        mcpServers: {
+          global: mcpContext.global,
+          regional: mcpContext.regional,
+        },
+        mcpResults: widgetResult.rawResult ? { [widget_data.widget_type]: widgetResult.rawResult } : {},
+        intentsDetected: [widget_data.widget_type.replace('_input', '')],
+        detectedRegions: mcpContext.detectedRegions,
+        locationContext: location || null,
+        widgetProcessed: true,
+        widgetSuccess: widgetResult.success,
+      };
+
+      // Call n8n for response generation
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
+
+      try {
+        const response = await fetch(N8N_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(enhancedBody),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`n8n returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        const duration = Date.now() - startTime;
+
+        console.log('💬 [Chat] Widget response:', {
+          success: data.success !== false,
+          duration: `${duration}ms`,
+          hasWidget: !!widgetResult.widget,
+        });
+
+        return res.json({
+          ...data,
+          widget: widgetResult.widget, // Include widget for mobile rendering
+          mcpToolsUsed: [widget_data.widget_type],
+          intentsDetected: [widget_data.widget_type.replace('_input', '')],
+          _meta: {
+            duration,
+            widgetType: widget_data.widget_type,
+            widgetSuccess: widgetResult.success,
+          },
+        });
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === 'AbortError') {
+          return res.status(504).json({
+            success: false,
+            error: 'Request timed out',
+            widget: widgetResult.widget,
+            response: 'Request timed out. Please try again.',
+          });
+        }
+        throw fetchError;
+      }
+    }
 
     // Call MCP servers based on detected intents (pattern matching + LLM fallback)
     const { mcpResults, intentsDetected, classification, intentSource, rawIntents, noDataFallbacks } = await callMcpServersForIntent(
@@ -658,6 +1139,16 @@ router.post('/chat', async (req, res) => {
     console.log('🔧 [Chat] MCP Results:', {
       intents: intentsDetected.join(', '),
       toolsCalled: Object.keys(mcpResults).join(', '),
+    });
+
+    // Analyze query for natural widget suggestions
+    const widgetSuggestions = analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults);
+    const inputSuggestions = widgetSuggestions.filter(s => s.type === 'input');
+    const outputWidgets = widgetSuggestions.filter(s => s.type === 'output');
+
+    console.log('🎯 [Chat] Widget analysis:', {
+      inputSuggestions: inputSuggestions.map(s => s.widget),
+      outputWidgets: outputWidgets.map(s => s.widget),
     });
 
     // Build enhanced request body for n8n
@@ -706,9 +1197,12 @@ router.post('/chat', async (req, res) => {
         success: data.success !== false,
         duration: `${duration}ms`,
         hasFollowUp: !!(data.followUpQuestions?.length),
+        hasSuggestedWidget: inputSuggestions.length > 0,
+        hasOutputWidget: outputWidgets.length > 0,
       });
-      
-      res.json({
+
+      // Build response with widget information
+      const responseData = {
         ...data,
         mcpToolsUsed: Object.keys(mcpResults),
         intentsDetected,
@@ -717,7 +1211,26 @@ router.post('/chat', async (req, res) => {
           mcpServersUsed: mcpContext.global.length + mcpContext.regional.length,
           regions: mcpContext.detectedRegions.map(r => r.name),
         },
-      });
+      };
+
+      // Add output widget if we have MCP data to display
+      if (outputWidgets.length > 0) {
+        responseData.widget = {
+          type: outputWidgets[0].widget,
+          data: outputWidgets[0].data,
+        };
+      }
+
+      // Add suggested input widget if query would benefit from structured input
+      if (inputSuggestions.length > 0) {
+        responseData.suggestedWidget = {
+          type: inputSuggestions[0].widget,
+          prompt: inputSuggestions[0].prompt,
+          reason: inputSuggestions[0].reason,
+        };
+      }
+
+      res.json(responseData);
     } catch (fetchError) {
       clearTimeout(timeoutId);
       

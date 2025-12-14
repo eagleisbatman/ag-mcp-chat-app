@@ -13,8 +13,9 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
  * @param {string} params.language - Language code (e.g., 'en', 'hi')
  * @param {object} params.locationDetails - Human-readable location (L1-L6)
  * @param {Array} params.history - Previous messages for context (last 10)
+ * @param {object} params.widget_data - Structured widget input data (optional)
  */
-export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [] }) => {
+export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [], widget_data = null }) => {
   try {
     // Format history for n8n workflow
     const formattedHistory = history
@@ -40,7 +41,23 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       historyCount: formattedHistory.length,
       location: locationContext?.displayName || `${latitude}, ${longitude}`,
       language,
+      hasWidgetData: !!widget_data,
+      widgetType: widget_data?.widget_type,
     });
+
+    const requestBody = {
+      message,
+      latitude: latitude || -1.2864,
+      longitude: longitude || 36.8172,
+      language: language || 'en',
+      location: locationContext, // Human-readable location for AI context
+      history: formattedHistory,
+    };
+
+    // Add widget_data if provided
+    if (widget_data) {
+      requestBody.widget_data = widget_data;
+    }
 
     const response = await fetch(API_URL, {
       method: 'POST',
@@ -48,14 +65,7 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
         'Content-Type': 'application/json',
         'X-API-Key': API_KEY,
       },
-      body: JSON.stringify({
-        message,
-        latitude: latitude || -1.2864,
-        longitude: longitude || 36.8172,
-        language: language || 'en',
-        location: locationContext, // Human-readable location for AI context
-        history: formattedHistory,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
@@ -66,12 +76,18 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
     console.log('📥 [API] Chat response:', {
       hasFollowUp: !!data.followUpQuestions?.length,
       followUpCount: data.followUpQuestions?.length || 0,
+      hasWidget: !!data.widget,
+      widgetType: data.widget?.type,
+      hasSuggestedWidget: !!data.suggestedWidget,
+      suggestedType: data.suggestedWidget?.type,
     });
-    
+
     return {
       success: true,
       response: data.response || data.text || 'No response received',
-      followUpQuestions: data.followUpQuestions || [], // ← THIS WAS MISSING!
+      followUpQuestions: data.followUpQuestions || [],
+      widget: data.widget || null, // Output widget with MCP data
+      suggestedWidget: data.suggestedWidget || null, // Suggested input widget for user
       region: data.region,
       language: data.language,
     };

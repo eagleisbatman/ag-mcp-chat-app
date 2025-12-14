@@ -12,6 +12,7 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import { t } from '../constants/strings';
+import { ToolsMenu } from '../widgets';
 
 export default function ChatScreen({ navigation, route }) {
   const { theme, language, location, locationDetails, setLocation } = useApp();
@@ -23,15 +24,16 @@ export default function ChatScreen({ navigation, route }) {
   const sessionId = route?.params?.sessionId;
   const isNewSession = route?.params?.newSession;
   
-  const { 
-    messages, isTyping, isLoadingSession, newestBotMessageId, 
-    handleSendText, handleSendImage, 
+  const {
+    messages, isTyping, isLoadingSession, newestBotMessageId,
+    handleSendText, handleSendImage, handleSendWidget, showInputWidget,
     transcribeAudioForInput, uploadAudioInBackground,
-    startNewSession 
+    startNewSession,
   } = useChat(sessionId);
   
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
+  const [showToolsMenu, setShowToolsMenu] = useState(false);
 
   // Handle new session request
   useEffect(() => {
@@ -81,6 +83,17 @@ export default function ChatScreen({ navigation, route }) {
     setShowScrollButton(distanceFromBottom > 100);
   }, []);
 
+  // Handle widget selection from tools menu
+  const handleSelectWidget = useCallback((widget) => {
+    // Show the input widget directly in the chat
+    showInputWidget(widget.type);
+  }, [showInputWidget]);
+
+  // Handle accepting a widget suggestion from a bot message
+  const handleWidgetSuggestionAccept = useCallback((widgetType) => {
+    showInputWidget(widgetType);
+  }, [showInputWidget]);
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header - Clean, logo-only design */}
@@ -102,6 +115,14 @@ export default function ChatScreen({ navigation, route }) {
         }
         right={
           <>
+            <IconButton
+              icon="apps"
+              onPress={() => setShowToolsMenu(true)}
+              size={36}
+              backgroundColor="transparent"
+              color={theme.iconPrimary || theme.accent}
+              accessibilityLabel="Open tools menu"
+            />
             <IconButton
               icon="location"
               onPress={handleRefreshLocation}
@@ -143,10 +164,12 @@ export default function ChatScreen({ navigation, route }) {
             ref={flatListRef}
             data={[...messages].reverse()}
             renderItem={({ item }) => (
-              <MessageItem 
-                message={item} 
-                isNewMessage={item._id === newestBotMessageId} 
-                onFollowUpPress={handleSendText} 
+              <MessageItem
+                message={item}
+                isNewMessage={item._id === newestBotMessageId}
+                onFollowUpPress={handleSendText}
+                onWidgetSubmit={handleSendWidget}
+                onWidgetSuggestionAccept={handleWidgetSuggestionAccept}
               />
             )}
             keyExtractor={(item) => item._id}
@@ -193,12 +216,19 @@ export default function ChatScreen({ navigation, route }) {
       </View>
 
       {/* Floating Input */}
-      <InputToolbar 
-        onSendText={handleSendText} 
-        onSendImage={handleSendImage} 
+      <InputToolbar
+        onSendText={handleSendText}
+        onSendImage={handleSendImage}
         transcribeAudio={transcribeAudioForInput}
         uploadAudioInBackground={uploadAudioInBackground}
-        disabled={isTyping} 
+        disabled={isTyping}
+      />
+
+      {/* Tools Menu Modal */}
+      <ToolsMenu
+        visible={showToolsMenu}
+        onClose={() => setShowToolsMenu(false)}
+        onSelectWidget={handleSelectWidget}
       />
     </View>
   );

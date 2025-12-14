@@ -9,13 +9,16 @@ import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
+import { WidgetRenderer, WidgetSuggestion } from '../widgets';
 
-function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
+function MessageItem({ message, isNewMessage = false, onFollowUpPress, onWidgetSubmit, onWidgetSuggestionAccept }) {
   const { theme, language } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
   const followUpQuestions = message.followUpQuestions || [];
+  const hasWidget = message.widget && message.widget.type;
+  const hasSuggestedWidget = message.suggestedWidget && message.suggestedWidget.type;
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
   
   // Calculate max width for markdown content (screen - padding)
@@ -274,8 +277,24 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
         />
       )}
       
-      {/* Message Content - Use Markdown for bot messages, plain text for user */}
-      {isBot ? (
+      {/* Message Content - Widget, Markdown, or plain text */}
+      {hasWidget ? (
+        // Render widget if message has widget data
+        <Animated.View style={[styles.widgetContainer, { opacity: fadeAnim }]}>
+          {message.text && (
+            <View style={styles.widgetIntroText}>
+              <Markdown style={markdownStyles}>
+                {message.text}
+              </Markdown>
+            </View>
+          )}
+          <WidgetRenderer
+            widget={message.widget}
+            onSubmit={onWidgetSubmit}
+            loading={message.widgetLoading}
+          />
+        </Animated.View>
+      ) : isBot ? (
         // Markdown for bot messages with smooth fade-in animation
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
           <Markdown style={markdownStyles}>
@@ -296,6 +315,14 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
             {message.diagnosis}
           </Text>
         </View>
+      )}
+
+      {/* Widget Suggestion - Non-intrusive prompt for structured input */}
+      {isBot && hasSuggestedWidget && !hasWidget && !isAnimating && (
+        <WidgetSuggestion
+          suggestion={message.suggestedWidget}
+          onAccept={onWidgetSuggestionAccept}
+        />
       )}
 
       {/* Follow-up Questions - Vertical List */}
@@ -367,6 +394,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
+  widgetContainer: {
+    flex: 1,
+    width: '100%',
+  },
+  widgetIntroText: {
+    marginBottom: SPACING.md,
+  },
   messageText: {
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
@@ -426,6 +460,9 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
   return (
     prevProps.message._id === nextProps.message._id &&
     prevProps.message.text === nextProps.message.text &&
+    prevProps.message.widget === nextProps.message.widget &&
+    prevProps.message.widgetLoading === nextProps.message.widgetLoading &&
+    prevProps.message.suggestedWidget === nextProps.message.suggestedWidget &&
     prevProps.isNewMessage === nextProps.isNewMessage
   );
 });
