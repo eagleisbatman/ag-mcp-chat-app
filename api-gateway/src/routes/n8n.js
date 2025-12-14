@@ -82,6 +82,27 @@ const INTENT_TO_OUTPUT_WIDGET = {
 function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults) {
   const lowerMessage = (message || '').toLowerCase();
 
+  // Keyword-based fallback detection for widget-specific terms
+  // This catches cases where intents.json patterns don't match
+  const keywordIntents = {
+    climate: ['climate', 'seasonal forecast', 'season outlook', 'rainy season', 'dry season'],
+    advisory: ['advisory', 'growth stage', 'flowering', 'germination', 'harvesting', 'crop management', 'crop stage'],
+    soil: ['soil', 'nutrient', 'ph level', 'nitrogen', 'phosphorus', 'potassium'],
+    feed: ['feed', 'cattle', 'livestock', 'dairy', 'milk production', 'nutrition', 'diet'],
+    fertilizer: ['fertilizer', 'urea', 'nps', 'compost', 'manure'],
+    weather: ['weather', 'rain', 'temperature', 'forecast'],
+  };
+
+  // Augment detected intents with keyword matches
+  const augmentedIntents = [...intentsDetected];
+  for (const [intent, keywords] of Object.entries(keywordIntents)) {
+    if (!augmentedIntents.includes(intent)) {
+      if (keywords.some(kw => lowerMessage.includes(kw))) {
+        augmentedIntents.push(intent);
+      }
+    }
+  }
+
   // Phrases that indicate user wants to explore/customize (suggest input widget)
   const exploratoryPhrases = [
     'help me with', 'i want to', 'can you help', 'how do i', 'what should i',
@@ -98,10 +119,10 @@ function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults) {
   const isExploratory = exploratoryPhrases.some(p => lowerMessage.includes(p));
   const isDirect = directPhrases.some(p => lowerMessage.includes(p));
 
-  // Analyze each detected intent
+  // Analyze each detected intent (including keyword-augmented ones)
   const suggestions = [];
 
-  for (const intent of intentsDetected) {
+  for (const intent of augmentedIntents) {
     const inputWidget = INTENT_TO_INPUT_WIDGET[intent];
     const outputWidget = INTENT_TO_OUTPUT_WIDGET[intent];
     const hasData = mcpResults && mcpResults[intent] && !mcpResults[intent]?.error;
@@ -748,23 +769,36 @@ async function classifyIntentWithLLM(message, language = 'en') {
  */
 function mapIntentToMcpCategory(intentName) {
   const mapping = {
-    // Weather
+    // Weather (short-term forecasts)
     'weather_forecast': 'weather',
     'weather': 'weather',
+    // Climate (seasonal/long-term forecasts)
+    'climate_forecast': 'climate',
+    'climate': 'climate',
+    'seasonal_forecast': 'climate',
+    'seasonal': 'climate',
     // Soil
     'soil_analysis': 'soil',
     'soil': 'soil',
+    'soil_nutrients': 'soil',
     // Fertilizer
     'fertilizer_recommendation': 'fertilizer',
     'fertilization': 'fertilizer',
+    'fertilizer': 'fertilizer',
     // Feed/Livestock
     'feeding': 'feed',
     'livestock': 'feed',
     'dairy': 'feed',
-    // Planting/Irrigation (can trigger weather)
+    'feed': 'feed',
+    'nutrition': 'feed',
+    // Advisory/Decision Tree (crop management)
+    'crop_advisory': 'advisory',
+    'advisory': 'advisory',
+    'growth_stage': 'advisory',
+    'crop_management': 'advisory',
+    // Planting/Irrigation (can trigger weather for timing)
     'planting_advice': 'weather',
     'irrigation_advice': 'weather',
-    'crop_advisory': 'weather',
   };
   return mapping[intentName] || null;
 }
