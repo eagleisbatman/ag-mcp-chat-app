@@ -506,14 +506,25 @@ const MCP_SERVERS = [
   {
     name: 'GAP Weather Intelligence',
     slug: 'gap-weather',
-    description: 'Satellite weather data for agriculture in East Africa via TomorrowNow GAP',
+    description: 'Weather forecasts for East Africa via TomorrowNow GAP - includes CBAM daily, Google GenCast ensemble, and Nowcast precipitation',
     endpointEnvVar: 'MCP_GAP_URL',
     category: 'weather',
     isGlobal: false,
-    tools: ['get_gap_weather_forecast'],
-    capabilities: ['weather', 'forecast', 'satellite-data'],
+    tools: ['get_gap_weather_forecast', 'get_cbam_daily_forecast', 'get_gencast_forecast', 'get_nowcast_precipitation'],
+    capabilities: ['weather', 'forecast', 'satellite-data', 'nowcast', 'ensemble-forecast'],
     icon: 'cloud',
     color: '#03A9F4',
+    // Widget Configuration
+    widgetCategory: 'weather',
+    requiresInput: false,
+    inputWidget: {
+      type: 'weather_input',
+      prompt: 'Want detailed weather forecasts? Choose forecast type and duration.',
+      reason: 'You can select CBAM (1-10 days), GenCast AI (1-15 days), or Nowcast (0-12 hours).',
+    },
+    outputWidget: {
+      type: 'weather_forecast_card',
+    },
   },
   {
     name: 'TomorrowNow Decision Tree',
