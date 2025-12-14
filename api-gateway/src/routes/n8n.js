@@ -426,6 +426,63 @@ function getCountryFromRegions(detectedRegions) {
 }
 
 /**
+ * Check if MCP result indicates an error or no data
+ */
+function isErrorOrNoData(result) {
+  if (!result) return true;
+  if (result.error) return true;
+  if (typeof result === 'string' && (
+    result.includes('error') ||
+    result.includes('no data') ||
+    result.includes('not available') ||
+    result.includes('having trouble')
+  )) return true;
+  return false;
+}
+
+/**
+ * Build a helpful fallback context for AI when MCP data is unavailable
+ */
+function buildFallbackContext(type, options = {}) {
+  const { region, serviceProvider, crop, livestock, reason } = options;
+
+  const fallbackTemplates = {
+    fertilizer: {
+      serviceProvider: 'NextGen Agro Advisory (SSFR)',
+      instruction: `I don't have site-specific fertilizer data for ${region || 'your location'} from ${serviceProvider || 'NextGen Agro Advisory'}. ${reason ? `Reason: ${reason}. ` : ''}However, I can provide general recommendations based on agricultural best practices for ${crop || 'your crop'} farming in ${region || 'your region'}.
+
+When providing fertilizer recommendations, please structure them as:
+1. **Organic Fertilizers**: List compost and vermicompost amounts in tons/ha
+2. **Inorganic Fertilizers**: List Urea and NPS/DAP amounts in kg/ha (don't mention Nitrogen/Phosphorus - farmers understand Urea and NPS better)
+3. **Expected Yield**: Provide estimated yield in quintals/ha or kg/ha
+
+You can also mention that farmers can use a combination of organic and inorganic fertilizers in proportional amounts.`,
+      useGeneralKnowledge: true,
+    },
+    weather: {
+      serviceProvider: 'AccuWeather',
+      instruction: `I don't have real-time weather data for ${region || 'your location'} from ${serviceProvider || 'AccuWeather'}. ${reason ? `Reason: ${reason}. ` : ''}However, I can provide general seasonal weather patterns and farming advice for ${region || 'your region'} based on historical climate data.`,
+      useGeneralKnowledge: true,
+    },
+    soil: {
+      serviceProvider: 'ISDA Soil Intelligence',
+      instruction: `I don't have specific soil analysis data for ${region || 'your location'} from ${serviceProvider || 'ISDA Soil'}. ${reason ? `Reason: ${reason}. ` : ''}However, I can provide general soil management advice based on typical soil conditions in ${region || 'your region'}.`,
+      useGeneralKnowledge: true,
+    },
+    feed: {
+      serviceProvider: 'Feed Formulation Service',
+      instruction: `I don't have specific feed formulation data from our database right now. ${reason ? `Reason: ${reason}. ` : ''}However, I can provide general feeding recommendations for ${livestock || 'your livestock'} based on standard nutritional guidelines.`,
+      useGeneralKnowledge: true,
+    },
+  };
+
+  return fallbackTemplates[type] || {
+    instruction: `Service data unavailable. Providing general recommendations based on agricultural knowledge.`,
+    useGeneralKnowledge: true,
+  };
+}
+
+/**
  * Call MCP servers based on user intent
  * Uses pattern matching from intents.json, falls back to LLM
  */
@@ -433,20 +490,22 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
   const lowerMessage = (message || '').toLowerCase();
   const allServers = [...(mcpServers.global || []), ...(mcpServers.regional || [])];
   const mcpResults = {};
-  
-  // Determine country for pattern matching
+  const noDataFallbacks = {}; // Track which services have no data and need AI fallback
+
+  // Determine country/region for pattern matching and fallback messages
   const country = getCountryFromRegions(detectedRegions);
-  
+  const regionName = detectedRegions?.[0]?.name || country.charAt(0).toUpperCase() + country.slice(1);
+
   // Unified intent detection (patterns first, LLM fallback)
   const intentResult = await detectIntents(message, country, language);
   const intentsDetected = intentResult.intents;
   const classification = intentResult.classification;
-  
+
   // Extract crop from classification if available
-  const detectedCrop = classification?.crops?.[0]?.canonical_name?.toLowerCase() || 
+  const detectedCrop = classification?.crops?.[0]?.canonical_name?.toLowerCase() ||
                        classification?.crops?.[0]?.name?.toLowerCase();
-  
-  console.log(`[Intent] Country: ${country}, Source: ${intentResult.source}`);
+
+  console.log(`[Intent] Country: ${country}, Region: ${regionName}, Source: ${intentResult.source}`);
   console.log(`[Intent] MCP intents: ${intentsDetected.join(', ') || 'none'}`);
 
   // Weather intent
@@ -454,6 +513,17 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
     const server = allServers.find(s => s.slug === 'accuweather');
     if (server?.endpoint && latitude && longitude) {
       mcpResults.weather = await callMcpTool(server.endpoint, 'get_accuweather_current_conditions', { latitude, longitude });
+      if (isErrorOrNoData(mcpResults.weather)) {
+        noDataFallbacks.weather = buildFallbackContext('weather', {
+          region: regionName,
+          reason: 'Service temporarily unavailable',
+        });
+      }
+    } else if (!latitude || !longitude) {
+      noDataFallbacks.weather = buildFallbackContext('weather', {
+        region: regionName,
+        reason: 'Location coordinates not provided',
+      });
     }
   }
 
@@ -462,6 +532,17 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
     const server = allServers.find(s => s.slug === 'isda-soil');
     if (server?.endpoint && latitude && longitude) {
       mcpResults.soil = await callMcpTool(server.endpoint, 'get_isda_soil_properties', { latitude, longitude });
+      if (isErrorOrNoData(mcpResults.soil)) {
+        noDataFallbacks.soil = buildFallbackContext('soil', {
+          region: regionName,
+          reason: 'This location is outside ISDA coverage area (Africa only)',
+        });
+      }
+    } else if (!latitude || !longitude) {
+      noDataFallbacks.soil = buildFallbackContext('soil', {
+        region: regionName,
+        reason: 'Location coordinates not provided',
+      });
     }
   }
 
@@ -470,10 +551,23 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
     const server = allServers.find(s => s.slug === 'nextgen');
     if (server?.endpoint && latitude && longitude) {
       const crop = detectedCrop === 'maize' ? 'maize' : 'wheat';
-      mcpResults.fertilizer = await callMcpTool(server.endpoint, 'get_fertilizer_recommendation', 
+      mcpResults.fertilizer = await callMcpTool(server.endpoint, 'get_fertilizer_recommendation',
         { crop, latitude, longitude },
         { 'X-Farm-Latitude': String(latitude), 'X-Farm-Longitude': String(longitude) }
       );
+      if (isErrorOrNoData(mcpResults.fertilizer)) {
+        noDataFallbacks.fertilizer = buildFallbackContext('fertilizer', {
+          region: regionName,
+          crop: crop,
+          reason: `Site-specific ${crop} data not available for these coordinates`,
+        });
+      }
+    } else if (!latitude || !longitude) {
+      noDataFallbacks.fertilizer = buildFallbackContext('fertilizer', {
+        region: regionName,
+        crop: detectedCrop || 'your crop',
+        reason: 'Location coordinates not provided for site-specific recommendations',
+      });
     }
   }
 
@@ -481,17 +575,25 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
   if (intentsDetected.includes('feed')) {
     const server = allServers.find(s => s.slug === 'feed-formulation');
     if (server?.endpoint) {
-      const livestock = classification?.livestock?.[0]?.canonical_name || 'dairy';
+      const livestock = classification?.livestock?.[0]?.canonical_name || 'dairy cattle';
       mcpResults.feed = await callMcpTool(server.endpoint, 'search_feeds', { query: livestock, limit: 5 });
+      if (isErrorOrNoData(mcpResults.feed)) {
+        noDataFallbacks.feed = buildFallbackContext('feed', {
+          region: regionName,
+          livestock: livestock,
+          reason: 'Feed database temporarily unavailable',
+        });
+      }
     }
   }
 
-  return { 
-    mcpResults, 
-    intentsDetected, 
+  return {
+    mcpResults,
+    intentsDetected,
     classification,
     intentSource: intentResult.source,
     rawIntents: intentResult.rawIntents,
+    noDataFallbacks, // Track which services need AI fallback with rich context
   };
 }
 
@@ -524,7 +626,7 @@ router.post('/chat', async (req, res) => {
     });
 
     // Call MCP servers based on detected intents (pattern matching + LLM fallback)
-    const { mcpResults, intentsDetected, classification, intentSource, rawIntents } = await callMcpServersForIntent(
+    const { mcpResults, intentsDetected, classification, intentSource, rawIntents, noDataFallbacks } = await callMcpServersForIntent(
       message,
       latitude ? parseFloat(latitude) : null,
       longitude ? parseFloat(longitude) : null,
@@ -573,6 +675,8 @@ router.post('/chat', async (req, res) => {
       intentsDetected,
       detectedRegions: mcpContext.detectedRegions,
       locationContext: location || null,
+      // NEW: Fallback instructions when MCP data is unavailable
+      noDataFallbacks: Object.keys(noDataFallbacks).length > 0 ? noDataFallbacks : null,
     };
 
     // Call n8n with timeout
