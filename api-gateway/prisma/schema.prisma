@@ -466,8 +466,9 @@ model McpServerRegistry {
   slug              String   @unique              // "ssfr", "isda-soil", "agrivision"
   description       String?
 
-  // Endpoint configuration (from env vars at runtime)
+  // Endpoint configuration
   endpointEnvVar    String   @map("endpoint_env_var")  // "MCP_SSFR_URL"
+  endpointUrl       String?  @map("endpoint_url")      // Actual URL for display/health checks
   healthCheckPath   String   @default("/health") @map("health_check_path")
   mcpEndpointPath   String   @default("/mcp") @map("mcp_endpoint_path")
 
