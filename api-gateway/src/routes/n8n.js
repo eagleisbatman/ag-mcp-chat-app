@@ -23,7 +23,9 @@ const N8N_TTS_URL = process.env.N8N_TTS_URL || 'https://ag-mcp-app.up.railway.ap
 const N8N_TITLE_URL = process.env.N8N_TITLE_URL || 'https://ag-mcp-app.up.railway.app/webhook/generate-title';
 const N8N_LOCATION_URL = process.env.N8N_LOCATION_URL || 'https://ag-mcp-app.up.railway.app/webhook/location-lookup';
 const INTENT_CLASSIFICATION_URL = process.env.INTENT_CLASSIFICATION_URL || 'https://intent-classification-mcp.up.railway.app';
+const AGRIVISION_URL = process.env.AGRIVISION_URL || 'https://agrivision-mcp-server.up.railway.app';
 const CHAT_TIMEOUT_MS = parseInt(process.env.CHAT_TIMEOUT_MS || '60000'); // 60s default
+const AGRIVISION_TIMEOUT_MS = parseInt(process.env.AGRIVISION_TIMEOUT_MS || '45000'); // 45s for image analysis
 
 /**
  * Get active MCP servers for a location (helper function)
@@ -166,6 +168,77 @@ async function callMcpTool(endpoint, toolName, args, extraHeaders = {}) {
     return null;
   } catch (e) {
     console.error(`[MCP] Error calling ${toolName}:`, e.message);
+    return { error: e.message };
+  }
+}
+
+/**
+ * Call AgriVision MCP for plant health diagnosis
+ * Triggered when user sends an image with their message
+ */
+async function callAgriVisionDiagnosis(imageBase64, expectedCrop = null) {
+  try {
+    console.log('[AgriVision] Starting plant diagnosis...');
+    console.log('[AgriVision] Image size:', Math.round(imageBase64.length / 1024), 'KB');
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), AGRIVISION_TIMEOUT_MS);
+
+    const args = { image: imageBase64 };
+    if (expectedCrop) {
+      args.crop = expectedCrop;
+    }
+
+    const response = await fetch(`${AGRIVISION_URL}/mcp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/event-stream',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'tools/call',
+        params: { name: 'diagnose_plant_health', arguments: args },
+      }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    const text = await response.text();
+    const dataLine = text.split('\n').find(l => l.startsWith('data: '));
+
+    if (dataLine) {
+      const data = JSON.parse(dataLine.replace('data: ', ''));
+      if (data.result?.content?.[0]?.text) {
+        const diagnosisText = data.result.content[0].text;
+
+        // Try to parse as JSON (AgriVision returns JSON in json output mode)
+        try {
+          const diagnosis = JSON.parse(diagnosisText);
+          console.log('[AgriVision] ✅ Diagnosis complete:', {
+            crop: diagnosis.crop?.name,
+            health: diagnosis.health_status,
+            issues: diagnosis.issues?.length || 0,
+          });
+          return diagnosis;
+        } catch {
+          // If not JSON, return as structured text
+          console.log('[AgriVision] ✅ Diagnosis complete (text format)');
+          return { text: diagnosisText, format: 'text' };
+        }
+      }
+    }
+
+    console.warn('[AgriVision] No diagnosis data in response');
+    return null;
+  } catch (e) {
+    if (e.name === 'AbortError') {
+      console.error('[AgriVision] ❌ Timeout after', AGRIVISION_TIMEOUT_MS / 1000, 'seconds');
+      return { error: 'timeout', message: 'Plant diagnosis timed out. Please try again.' };
+    }
+    console.error('[AgriVision] ❌ Error:', e.message);
     return { error: e.message };
   }
 }
@@ -428,13 +501,14 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
 router.post('/chat', async (req, res) => {
   const startTime = Date.now();
   try {
-    const { latitude, longitude, language, location, message, history } = req.body;
-    
+    const { latitude, longitude, language, location, message, history, image } = req.body;
+
     console.log('💬 [Chat] Request:', {
       hasLocation: !!(latitude && longitude),
       language: language || 'en',
       messageLength: message?.length || 0,
       historyCount: history?.length || 0,
+      hasImage: !!image,
     });
 
     // Get active MCP servers for user's location
@@ -458,6 +532,26 @@ router.post('/chat', async (req, res) => {
       language || 'en',
       mcpContext.detectedRegions
     );
+
+    // If user sent an image, call AgriVision for plant diagnosis
+    if (image) {
+      console.log('🌿 [Chat] Image detected, calling AgriVision...');
+
+      // Extract expected crop from classification if available
+      const expectedCrop = classification?.crops?.[0]?.canonical_name?.toLowerCase();
+
+      const diagnosis = await callAgriVisionDiagnosis(image, expectedCrop);
+
+      if (diagnosis && !diagnosis.error) {
+        mcpResults.diagnosis = diagnosis;
+        intentsDetected.push('diagnosis');
+        console.log('🌿 [Chat] AgriVision diagnosis added to context');
+      } else if (diagnosis?.error) {
+        console.warn('🌿 [Chat] AgriVision error:', diagnosis.error);
+        // Still add partial data so user knows diagnosis was attempted
+        mcpResults.diagnosis = { error: diagnosis.error, message: diagnosis.message || 'Could not analyze plant image' };
+      }
+    }
 
     console.log('🔧 [Chat] MCP Results:', {
       intents: intentsDetected.join(', '),
