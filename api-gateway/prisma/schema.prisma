@@ -505,6 +505,13 @@ model McpServerRegistry {
   // Version
   version           String?
 
+  // Widget Configuration - Dynamic widget mappings per server
+  // Each server defines what input widget it needs and what output widget it produces
+  inputWidget       Json?    @map("input_widget")    // { type: "weather_input", prompt: "...", reason: "..." }
+  outputWidget      Json?    @map("output_widget")   // { type: "weather_forecast_card" }
+  widgetCategory    String?  @map("widget_category") // Maps to intent category: "weather", "feed", "soil", etc.
+  requiresInput     Boolean  @default(false) @map("requires_input") // Always suggest input widget (like feed formulation)
+
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
@@ -514,6 +521,7 @@ model McpServerRegistry {
   @@index([slug])
   @@index([isGlobal])
   @@index([isActive])
+  @@index([widgetCategory])
   @@map("mcp_server_registry")
 }
 

@@ -27,7 +27,7 @@ const AGRIVISION_URL = process.env.AGRIVISION_URL || 'https://agrivision-mcp-ser
 const CHAT_TIMEOUT_MS = parseInt(process.env.CHAT_TIMEOUT_MS || '60000'); // 60s default
 const AGRIVISION_TIMEOUT_MS = parseInt(process.env.AGRIVISION_TIMEOUT_MS || '45000'); // 45s for image analysis
 
-// Widget type mappings
+// Widget type constants (for reference only, actual mappings come from DB)
 const WIDGET_TYPES = {
   // Input Widgets
   WEATHER_INPUT: 'weather_input',
@@ -45,42 +45,45 @@ const WIDGET_TYPES = {
   RECOMMENDATIONS: 'recommendations_card',
 };
 
-// Map input widget types to output widget types
-const INPUT_TO_OUTPUT_MAP = {
-  [WIDGET_TYPES.WEATHER_INPUT]: WIDGET_TYPES.WEATHER_FORECAST,
-  [WIDGET_TYPES.FEED_FORM]: WIDGET_TYPES.DIET_RESULT,
-  [WIDGET_TYPES.SOIL_QUERY]: WIDGET_TYPES.SOIL_PROFILE,
-  [WIDGET_TYPES.FERTILIZER_INPUT]: WIDGET_TYPES.FERTILIZER_RESULT,
-  [WIDGET_TYPES.CLIMATE_QUERY]: WIDGET_TYPES.CLIMATE_FORECAST,
-  [WIDGET_TYPES.DECISION_TREE]: WIDGET_TYPES.RECOMMENDATIONS,
-};
+/**
+ * Build widget mappings dynamically from MCP server configurations
+ * This replaces the hardcoded INTENT_TO_INPUT_WIDGET and INTENT_TO_OUTPUT_WIDGET maps
+ * Widget configurations are stored in the McpServerRegistry table
+ */
+function buildWidgetMappings(mcpServers) {
+  const allServers = [...(mcpServers.global || []), ...(mcpServers.regional || [])];
+  const inputWidgetMap = {};
+  const outputWidgetMap = {};
+  const inputToOutputMap = {};
+  const serverRequiresInput = {};
 
-// Map MCP categories to input widget types
-const INTENT_TO_INPUT_WIDGET = {
-  weather: WIDGET_TYPES.WEATHER_INPUT,
-  feed: WIDGET_TYPES.FEED_FORM,
-  soil: WIDGET_TYPES.SOIL_QUERY,
-  fertilizer: WIDGET_TYPES.FERTILIZER_INPUT,
-  climate: WIDGET_TYPES.CLIMATE_QUERY,
-  advisory: WIDGET_TYPES.DECISION_TREE,
-};
+  for (const server of allServers) {
+    if (server.widgetCategory) {
+      // Map widget category (intent) to input/output widgets
+      if (server.inputWidget?.type) {
+        inputWidgetMap[server.widgetCategory] = server.inputWidget;
+        serverRequiresInput[server.widgetCategory] = server.requiresInput || false;
+      }
+      if (server.outputWidget?.type) {
+        outputWidgetMap[server.widgetCategory] = server.outputWidget;
+      }
+      // Build input-to-output mapping
+      if (server.inputWidget?.type && server.outputWidget?.type) {
+        inputToOutputMap[server.inputWidget.type] = server.outputWidget.type;
+      }
+    }
+  }
 
-// Map MCP categories to output widget types
-const INTENT_TO_OUTPUT_WIDGET = {
-  weather: WIDGET_TYPES.WEATHER_FORECAST,
-  feed: WIDGET_TYPES.DIET_RESULT,
-  soil: WIDGET_TYPES.SOIL_PROFILE,
-  fertilizer: WIDGET_TYPES.FERTILIZER_RESULT,
-  climate: WIDGET_TYPES.CLIMATE_FORECAST,
-  advisory: WIDGET_TYPES.RECOMMENDATIONS,
-};
+  return { inputWidgetMap, outputWidgetMap, inputToOutputMap, serverRequiresInput };
+}
 
 /**
  * Determine if we should suggest an input widget based on query analysis
  * Uses intents detected by the intent classification system (intents.json patterns + LLM fallback)
+ * Widget configurations are now fetched dynamically from the MCP Server Registry
  * Returns widget suggestion only when it would genuinely help the user
  */
-function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults) {
+function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults, widgetMappings) {
   const lowerMessage = (message || '').toLowerCase();
 
   // Phrases that indicate user wants to explore/customize (suggest input widget)
@@ -99,46 +102,44 @@ function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults) {
   const isExploratory = exploratoryPhrases.some(p => lowerMessage.includes(p));
   const isDirect = directPhrases.some(p => lowerMessage.includes(p));
 
+  // Get dynamic widget mappings from MCP servers
+  const { inputWidgetMap, outputWidgetMap, serverRequiresInput } = widgetMappings;
+
   // Analyze each detected intent from the classification system
   const suggestions = [];
 
   for (const intent of intentsDetected) {
-    const inputWidget = INTENT_TO_INPUT_WIDGET[intent];
-    const outputWidget = INTENT_TO_OUTPUT_WIDGET[intent];
+    // Use dynamic widget mappings from database
+    const inputWidgetConfig = inputWidgetMap[intent];
+    const outputWidgetConfig = outputWidgetMap[intent];
+    const requiresInput = serverRequiresInput[intent] || false;
     const hasData = mcpResults && mcpResults[intent] && !mcpResults[intent]?.error;
 
-    if (!inputWidget) continue;
+    if (!inputWidgetConfig) continue;
 
     // Decision logic for natural suggestions
-    if (intent === 'feed') {
-      // Feed formulation always needs structured input - it's complex
+    // Use requiresInput flag from database instead of hardcoded intent checks
+    if (requiresInput) {
+      // This server always needs structured input (e.g., feed formulation, fertilizer)
       suggestions.push({
         type: 'input',
-        widget: inputWidget,
-        reason: 'Feed formulation requires specific cattle and feed details for accurate results.',
-        prompt: 'Would you like to use our feed calculator for a personalized diet recommendation?',
-      });
-    } else if (intent === 'fertilizer') {
-      // Fertilizer always needs structured input - requires location AND crop selection
-      suggestions.push({
-        type: 'input',
-        widget: inputWidget,
-        reason: 'Site-specific fertilizer recommendations need your field location and crop type.',
-        prompt: 'I can calculate fertilizer recommendations for wheat or maize. Want to use the calculator?',
+        widget: inputWidgetConfig.type,
+        reason: inputWidgetConfig.reason || 'This feature requires specific details for accurate results.',
+        prompt: inputWidgetConfig.prompt || 'Would you like to use our interactive tool?',
       });
     } else if (isExploratory && !isDirect) {
       // User is exploring - offer input widget
       suggestions.push({
         type: 'input',
-        widget: inputWidget,
-        reason: 'You can customize the parameters for more specific results.',
-        prompt: getWidgetPrompt(intent),
+        widget: inputWidgetConfig.type,
+        reason: inputWidgetConfig.reason || 'You can customize the parameters for more specific results.',
+        prompt: inputWidgetConfig.prompt || getWidgetPrompt(intent),
       });
-    } else if (hasData) {
+    } else if (hasData && outputWidgetConfig) {
       // We have data - include output widget
       suggestions.push({
         type: 'output',
-        widget: outputWidget,
+        widget: outputWidgetConfig.type,
         data: formatWidgetData(intent, mcpResults[intent]),
       });
     }
@@ -210,7 +211,7 @@ function formatWidgetData(intent, mcpResult) {
  */
 async function getActiveMcpServersForLocation(latitude, longitude) {
   try {
-    // Get all global servers
+    // Get all global servers with widget configuration
     const globalServers = await prisma.mcpServerRegistry.findMany({
       where: { isGlobal: true, isActive: true, isDeployed: true },
       select: {
@@ -220,6 +221,11 @@ async function getActiveMcpServersForLocation(latitude, longitude) {
         tools: true,
         capabilities: true,
         endpointEnvVar: true,
+        // Widget configuration fields
+        inputWidget: true,
+        outputWidget: true,
+        widgetCategory: true,
+        requiresInput: true,
       },
     });
 
@@ -259,7 +265,7 @@ async function getActiveMcpServersForLocation(latitude, longitude) {
 
         const uniqueRegionIds = [...new Set(regionIds)];
 
-        // Get regional MCP servers
+        // Get regional MCP servers with widget configuration
         const mappings = await prisma.regionMcpMapping.findMany({
           where: { regionId: { in: uniqueRegionIds }, isActive: true },
           include: {
@@ -274,6 +280,11 @@ async function getActiveMcpServersForLocation(latitude, longitude) {
                 endpointEnvVar: true,
                 isActive: true,
                 isDeployed: true,
+                // Widget configuration fields
+                inputWidget: true,
+                outputWidget: true,
+                widgetCategory: true,
+                requiresInput: true,
               },
             },
           },
@@ -293,7 +304,7 @@ async function getActiveMcpServersForLocation(latitude, longitude) {
       }
     }
 
-    // Format with endpoints
+    // Format with endpoints and widget configuration
     const formatServer = (server) => ({
       slug: server.slug,
       name: server.name,
@@ -302,6 +313,11 @@ async function getActiveMcpServersForLocation(latitude, longitude) {
       capabilities: server.capabilities,
       endpoint: process.env[server.endpointEnvVar] || null,
       sourceRegion: server.sourceRegion,
+      // Widget configuration from database
+      inputWidget: server.inputWidget || null,
+      outputWidget: server.outputWidget || null,
+      widgetCategory: server.widgetCategory || null,
+      requiresInput: server.requiresInput || false,
     });
 
     return {
@@ -353,9 +369,10 @@ async function callMcpTool(endpoint, toolName, args, extraHeaders = {}) {
 /**
  * Process widget data and call appropriate MCP servers
  * Returns structured data for output widget rendering
+ * Uses dynamic widget mappings from MCP Server Registry
  */
 async function processWidgetData(widgetData, mcpServers, options = {}) {
-  const { latitude, longitude } = options;
+  const { latitude, longitude, widgetMappings } = options;
   const widgetType = widgetData?.widget_type;
   const data = widgetData?.data || {};
   const allServers = [...(mcpServers.global || []), ...(mcpServers.regional || [])];
@@ -363,7 +380,9 @@ async function processWidgetData(widgetData, mcpServers, options = {}) {
   console.log(`🔧 [Widget] Processing ${widgetType}:`, JSON.stringify(data).substring(0, 200));
 
   let result = null;
-  let outputWidgetType = INPUT_TO_OUTPUT_MAP[widgetType];
+  // Use dynamic input-to-output mapping from database
+  const { inputToOutputMap } = widgetMappings || buildWidgetMappings(mcpServers);
+  let outputWidgetType = inputToOutputMap[widgetType] || widgetType.replace('_input', '_card');
   let widgetResult = { type: outputWidgetType, data: {} };
 
   try {
@@ -1065,6 +1084,10 @@ router.post('/chat', async (req, res) => {
       detectedRegions: mcpContext.detectedRegions.map(r => r.name).join(', '),
     });
 
+    // Build dynamic widget mappings from MCP server configurations
+    const widgetMappings = buildWidgetMappings(mcpContext);
+    console.log('🎨 [Chat] Widget mappings:', Object.keys(widgetMappings.inputWidgetMap).join(', ') || 'none');
+
     // If widget_data is provided, process it directly without intent detection
     if (widget_data?.widget_type) {
       console.log('🔧 [Chat] Processing widget submission:', widget_data.widget_type);
@@ -1072,6 +1095,7 @@ router.post('/chat', async (req, res) => {
       const widgetResult = await processWidgetData(widget_data, mcpContext, {
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,
+        widgetMappings, // Pass dynamic widget mappings
       });
 
       // Build enhanced body with widget result for n8n
@@ -1176,8 +1200,8 @@ router.post('/chat', async (req, res) => {
       toolsCalled: Object.keys(mcpResults).join(', '),
     });
 
-    // Analyze query for natural widget suggestions
-    const widgetSuggestions = analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults);
+    // Analyze query for natural widget suggestions using dynamic mappings from DB
+    const widgetSuggestions = analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults, widgetMappings);
     const inputSuggestions = widgetSuggestions.filter(s => s.type === 'input');
     const outputWidgets = widgetSuggestions.filter(s => s.type === 'output');
 

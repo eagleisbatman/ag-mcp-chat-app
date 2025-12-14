@@ -293,6 +293,17 @@ const MCP_SERVERS = [
     supportedCrops: [],
     supportedRegions: ['Global - Available everywhere'],
     heroColor: '#FF6F00',
+    // Widget Configuration
+    widgetCategory: 'weather',
+    requiresInput: false,
+    inputWidget: {
+      type: 'weather_input',
+      prompt: 'Want to see a detailed forecast? You can customize the number of days.',
+      reason: 'You can customize the forecast parameters for more specific results.',
+    },
+    outputWidget: {
+      type: 'weather_forecast_card',
+    },
   },
   {
     name: 'Entity Extraction',
@@ -344,6 +355,17 @@ const MCP_SERVERS = [
     supportedCrops: ['Wheat', 'Maize'],
     supportedRegions: ['Ethiopia'],
     heroColor: '#8BC34A',
+    // Widget Configuration
+    widgetCategory: 'fertilizer',
+    requiresInput: true, // Always needs location + crop selection
+    inputWidget: {
+      type: 'fertilizer_input',
+      prompt: 'I can calculate fertilizer recommendations for wheat or maize. Want to use the calculator?',
+      reason: 'Site-specific fertilizer recommendations need your field location and crop type.',
+    },
+    outputWidget: {
+      type: 'fertilizer_result_card',
+    },
   },
   {
     name: 'EDACaP Climate Advisory',
@@ -377,6 +399,17 @@ const MCP_SERVERS = [
     supportedCrops: ['Wheat', 'Maize', 'Teff', 'Sorghum'],
     supportedRegions: ['Ethiopia'],
     heroColor: '#00BCD4',
+    // Widget Configuration
+    widgetCategory: 'climate',
+    requiresInput: false,
+    inputWidget: {
+      type: 'climate_query_input',
+      prompt: 'Want to see the seasonal forecast? I can show climate predictions for your area.',
+      reason: 'You can customize the climate query for specific stations or forecast types.',
+    },
+    outputWidget: {
+      type: 'climate_forecast_card',
+    },
   },
   {
     name: 'Feed Formulation',
@@ -410,6 +443,17 @@ const MCP_SERVERS = [
     supportedCrops: [],
     supportedRegions: ['Ethiopia'],
     heroColor: '#795548',
+    // Widget Configuration
+    widgetCategory: 'feed',
+    requiresInput: true, // Always needs cattle details and feed selection
+    inputWidget: {
+      type: 'feed_formulation_input',
+      prompt: 'Would you like to use our feed calculator for a personalized diet recommendation?',
+      reason: 'Feed formulation requires specific cattle and feed details for accurate results.',
+    },
+    outputWidget: {
+      type: 'diet_result_card',
+    },
   },
   
   // Africa-wide
@@ -445,6 +489,17 @@ const MCP_SERVERS = [
     supportedCrops: [],
     supportedRegions: ['Africa - All countries'],
     heroColor: '#6D4C41',
+    // Widget Configuration
+    widgetCategory: 'soil',
+    requiresInput: false,
+    inputWidget: {
+      type: 'soil_query_input',
+      prompt: 'I can show you detailed soil analysis. Want to explore different depths?',
+      reason: 'You can customize the soil query for specific depths and properties.',
+    },
+    outputWidget: {
+      type: 'soil_profile_card',
+    },
   },
   
   // East Africa
@@ -471,6 +526,17 @@ const MCP_SERVERS = [
     capabilities: ['decision-support', 'crop-advice', 'growth-stages'],
     icon: 'account_tree',
     color: '#009688',
+    // Widget Configuration
+    widgetCategory: 'advisory',
+    requiresInput: false,
+    inputWidget: {
+      type: 'decision_tree_input',
+      prompt: 'I can give you crop-specific recommendations based on growth stage.',
+      reason: 'Advisory recommendations are more accurate with crop and growth stage details.',
+    },
+    outputWidget: {
+      type: 'recommendations_card',
+    },
   },
   
   // Vietnam/Global weather
@@ -790,6 +856,11 @@ async function main() {
         supportedRegions: server.supportedRegions,
         heroColor: server.heroColor,
         contentUpdatedAt: server.tagline ? new Date() : null,
+        // Widget configuration
+        inputWidget: server.inputWidget || null,
+        outputWidget: server.outputWidget || null,
+        widgetCategory: server.widgetCategory || null,
+        requiresInput: server.requiresInput || false,
       },
       create: {
         name: server.name,
@@ -815,6 +886,11 @@ async function main() {
         supportedRegions: server.supportedRegions,
         heroColor: server.heroColor,
         contentUpdatedAt: server.tagline ? new Date() : null,
+        // Widget configuration
+        inputWidget: server.inputWidget || null,
+        outputWidget: server.outputWidget || null,
+        widgetCategory: server.widgetCategory || null,
+        requiresInput: server.requiresInput || false,
       },
     });
     mcpServerMap.set(server.slug, created.id);
