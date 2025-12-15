@@ -306,12 +306,22 @@ function formatWidgetData(intent, mcpResult) {
 
   switch (intent) {
     case 'weather':
-      // mcpResult structure: { current: {...}, forecast: [...], location: {...}, error: bool }
-      // Extract properly for WeatherForecastCard (exclude internal error flag)
+      // mcpResult structure: { current: {location, current: {...}, data_source}, forecast: [...], location: {...}, error: bool }
+      // AccuWeather returns nested structure - flatten for WeatherForecastCard
+      const accuWeatherResponse = mcpResult.current || {};
+      // Extract the inner 'current' object (contains temperature, humidity, etc.)
+      const currentWeather = accuWeatherResponse.current || accuWeatherResponse;
+
+      console.log('🌤️ [Widget] Formatting weather data:', {
+        hasNestedCurrent: !!accuWeatherResponse.current,
+        temperature: currentWeather.temperature,
+        forecastCount: Array.isArray(mcpResult.forecast) ? mcpResult.forecast.length : 0,
+      });
+
       return {
-        current: mcpResult.current || {},
+        current: currentWeather,
         forecast: Array.isArray(mcpResult.forecast) ? mcpResult.forecast : [],
-        location: mcpResult.location || {},
+        location: accuWeatherResponse.location || mcpResult.location || {},
       };
     case 'soil':
       return {
