@@ -7,17 +7,17 @@ let currentLocale = DEFAULT_LOCALE;
 // Uncomment languages as translation files are created
 // After running: node scripts/translate-strings.js <lang_code>
 const TRANSLATION_REGISTRY = {
-  // Priority Languages (Digital Green focus regions)
-  // hi: () => require('./translations/strings-hi.json'),    // Hindi
-  // te: () => require('./translations/strings-te.json'),    // Telugu
-  // kn: () => require('./translations/strings-kn.json'),    // Kannada
-  // sw: () => require('./translations/strings-sw.json'),    // Swahili
-  // am: () => require('./translations/strings-am.json'),    // Amharic
-  // om: () => require('./translations/strings-om.json'),    // Oromo
-  // vi: () => require('./translations/strings-vi.json'),    // Vietnamese
-  // fr: () => require('./translations/strings-fr.json'),    // French
-  // es: () => require('./translations/strings-es.json'),    // Spanish
-  // ar: () => require('./translations/strings-ar.json'),    // Arabic
+  // Priority Languages (Digital Green focus regions) - TRANSLATED
+  hi: () => require('./translations/strings-hi.json'),    // Hindi
+  te: () => require('./translations/strings-te.json'),    // Telugu
+  kn: () => require('./translations/strings-kn.json'),    // Kannada
+  sw: () => require('./translations/strings-sw.json'),    // Swahili
+  am: () => require('./translations/strings-am.json'),    // Amharic
+  om: () => require('./translations/strings-om.json'),    // Oromo
+  vi: () => require('./translations/strings-vi.json'),    // Vietnamese
+  fr: () => require('./translations/strings-fr.json'),    // French
+  es: () => require('./translations/strings-es.json'),    // Spanish
+  ar: () => require('./translations/strings-ar.json'),    // Arabic
 
   // Indian Languages
   // mr: () => require('./translations/strings-mr.json'),    // Marathi

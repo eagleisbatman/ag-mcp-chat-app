@@ -161,21 +161,30 @@ function unflattenObject(obj) {
 }
 
 async function translateStrings(strings, section) {
-  const prompt = `Translate these UI strings from English to ${langInfo.name} (${langInfo.nativeName}).
+  const prompt = `You are translating UI labels for a mobile farming assistant app called "FarmerChat".
+Translate these strings from English to ${langInfo.name} (${langInfo.nativeName}).
+
+CONTEXT:
+- This is a mobile app for farmers in rural areas
+- Strings are used for: buttons, labels, error messages, tooltips, accessibility
+- Users are farmers who may have basic literacy
+- Keep translations SHORT and CONCISE (similar length to English)
+- Use simple, everyday language that farmers understand
 
 SOURCE STRINGS (English):
 ${JSON.stringify(strings, null, 2)}
 
-REQUIREMENTS:
-1. Use the correct ${langInfo.script}
-2. Keep the JSON structure and keys EXACTLY the same
-3. Only translate the VALUES, not the keys
-4. Keep any {placeholder} variables unchanged (e.g., {active}, {total})
-5. Keep technical terms like "FarmerChat" unchanged
-6. Translations should be natural and conversational
-7. Context: This is for a mobile farming assistant app
+STRICT REQUIREMENTS:
+1. Use the correct ${langInfo.script} - this is critical
+2. Keep JSON structure and keys EXACTLY the same (only translate values)
+3. Keep {placeholder} variables unchanged: {active}, {total}, {title}, {details}, {count}, {mode}, {question}, {name}
+4. Keep "FarmerChat" unchanged (brand name)
+5. Keep emoji characters unchanged (👋, etc.)
+6. Translations must be natural and culturally appropriate
+7. For section "${section}": these are ${section === 'a11y' ? 'accessibility labels for screen readers' : section === 'errors' ? 'error messages shown to users' : 'UI labels and messages'}
+8. Keep button labels short (1-3 words ideally)
 
-Return ONLY valid JSON with translated values.`;
+Return ONLY valid JSON with translated values. No explanation needed.`;
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {

@@ -1,0 +1,321 @@
+{
+  "common": {
+    "back": "Rudi",
+    "retry": "Jaribu Tena",
+    "cancel": "Ghairi",
+    "delete": "Futa",
+    "continue": "Endelea",
+    "dismiss": "Funga",
+    "refresh": "Onyesha Upya",
+    "clear": "Futa",
+    "loading": "Inapakia…",
+    "skipForNow": "Ruka kwa sasa"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Mwandani wako wa kilimo mwenye akili",
+    "getStarted": "Anza",
+    "features": {
+      "weatherTitle": "Utabiri wa Hali ya Hewa",
+      "weatherDescription": "Pata utabiri sahihi wa hali ya hewa kwa shamba lako",
+      "diagnosisTitle": "Utambuzi wa Mazao",
+      "diagnosisDescription": "Tambua magonjwa ya mimea kwa picha",
+      "voiceTitle": "Usaidizi wa Sauti",
+      "voiceDescription": "Ongea kwa uhuru kwa lugha yako"
+    },
+    "locationTitle": "Washa Mahali",
+    "locationDescription": "Shiriki eneo lako kupata utabiri wa hali ya hewa na ushauri wa kilimo kulingana na eneo.",
+    "enableLocation": "Washa Mahali",
+    "locationDenied": "Ruhusa ya mahali imekataliwa",
+    "locationError": "Imeshindwa kupata mahali. Tafadhali jaribu tena.",
+    "benefits": {
+      "weather": "Utabiri wa hali ya hewa wa eneo lako",
+      "regionAdvice": "Ushauri wa mazao kulingana na eneo",
+      "soilData": "Data ya udongo kwa eneo lako"
+    },
+    "languageTitle": "Chagua Lugha",
+    "languageSubtitle": "Chagua lugha unayopendelea kwa msaidizi",
+    "searchLanguages": "Tafuta lugha...",
+    "noLanguagesFound": "Hakuna lugha zilizopatikana"
+  },
+  "chat": {
+    "welcomeMessage": "Habari! 👋 Mimi ni msaidizi wako wa kilimo.\n\nNinaweza kukusaidia na:\n• Mazao, mboga, matunda, na maua\n• Mifugo, kuku, na ufugaji wa samaki\n• Udhibiti wa wadudu na magonjwa\n• Hali ya hewa na ushauri wa soko\n\nNinaweza kukusaidiaje leo?",
+    "locationDenied": "Ruhusa ya eneo imekataliwa",
+    "locationUpdated": "Eneo limesasishwa!",
+    "locationUpdateFailed": "Imeshindwa kusasisha eneo",
+    "loadingConversation": "Inapakia mazungumzo...",
+    "thinking": "Inawaza...",
+    "messagePlaceholder": "Ujumbe...",
+    "fromVoice": "Kutoka sauti — hariri ikihitajika",
+    "voiceTranscribed": "Sauti imeandikwa! Hariri ikihitajika, kisha tuma.",
+    "noInternet": "Hakuna intaneti. Tafadhali angalia mtandao wako.",
+    "couldNotLoadConversation": "Imeshindwa kupakia mazungumzo",
+    "startedNewConversation": "Mazungumzo mapya yameanza",
+    "connectionErrorBot": "Hitilafu ya muunganisho. Tafadhali jaribu tena.",
+    "analyzingPlantImage": "Inachanganua picha ya mmea...",
+    "imageAnalysisFailedBot": "Uchanganuzi wa picha umeshindwa. Tafadhali jaribu tena.",
+    "sorryCouldNotProcess": "Samahani, sikuweza kushughulikia hilo. {details}",
+    "analysisCouldNotComplete": "Uchanganuzi haukuweza kukamilika. {details}",
+    "plantAnalysisIssues": "Uchanganuzi wa mmea ulikuwa na matatizo: {details}",
+    "tapLocationToSet": "Gusa eneo kuweka",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Wewe",
+    "tapToAskNext": "Gusa kuuliza ijayo:"
+  },
+  "media": {
+    "photoLibraryPermission": "Ufikiaji wa maktaba ya picha unahitajika kuchagua picha. Washa kwenye Mipangilio.",
+    "cameraPermission": "Ufikiaji wa kamera unahitajika kupiga picha. Washa kwenye Mipangilio.",
+    "pickImageFailed": "Imeshindwa kuchagua picha. Jaribu tena.",
+    "cameraFailed": "Imeshindwa kufikia kamera. Jaribu tena.",
+    "camera": "Kamera",
+    "gallery": "Maktaba ya Picha"
+  },
+  "voice": {
+    "microphonePermission": "Ruhusa ya Maikrofoni Inahitajika",
+    "startRecordingFailed": "Imeshindwa Kuanza Kurekodi",
+    "recordingFailed": "Kurekodi Kumeshindwa",
+    "transcriptionFailed": "Ufasiri Umeshindwa",
+    "couldNotTranscribeAudio": "Imeshindwa Kutafsiri Sauti",
+    "voiceUnavailableLater": "Sauti Haipatikani - Jaribu Baadaye",
+    "voiceUnavailable": "Sauti Haipatikani - Jaribu Tena",
+    "audioPlaybackFailed": "Kupiga Sauti Kumeshindwa",
+    "recording": "Inarekodi",
+    "cancel": "Ghairi",
+    "done": "Nimemaliza",
+    "transcribing": "Inatafsiri...",
+    "recordingHint": "Gusa Nimemaliza kutafsiri, au Ghairi"
+  },
+  "history": {
+    "title": "Mazungumzo",
+    "noConversations": "Bado hakuna mazungumzo",
+    "noConversationsHint": "Anzisha gumzo jipya upate ushauri wa kilimo",
+    "newChat": "Gumzo Jipya",
+    "newConversation": "Mazungumzo Mapya",
+    "deleteTitle": "Futa Mazungumzo",
+    "deleteMessage": "Futa \"{title}\"? Hii haiwezi kutenguliwa.",
+    "untitled": "Isiyo na Jina",
+    "deleted": "Mazungumzo yamefutwa",
+    "deleteFailed": "Kufuta kumeshindwa",
+    "couldNotDelete": "Imeshindwa kufuta mazungumzo",
+    "notConnectedTitle": "Hakuna muunganisho",
+    "notConnectedHint": "Historia ya mazungumzo inahitaji muunganisho wa intaneti",
+    "yesterday": "Jana"
+  },
+  "settings": {
+    "title": "Mipangilio",
+    "sectionConversations": "MAZUNGUMZO",
+    "sectionAiServices": "HUDUMA ZA AI",
+    "sectionLocation": "ENEO",
+    "sectionLanguage": "LUGHA",
+    "sectionAppearance": "MUONEKANO",
+    "sectionDanger": "SEHEMU HATARI",
+    "chatHistory": "Historia ya Gumzo",
+    "chatHistorySubtitle": "Tazama na endeleza mazungumzo yaliyopita",
+    "aiServices": "Huduma Amilifu",
+    "aiServicesSubtitle": "Tazama huduma za AI zinazoendelea kwa eneo lako",
+    "locationPermissionDenied": "Ruhusa ya eneo imekataliwa",
+    "locationUpdated": "Eneo limehuishwa kwa ufanisi!",
+    "locationUpdateFailed": "Imeshindikana kuhuisha eneo. Tafadhali jaribu tena.",
+    "locationEnabled": "Eneo limewashwa",
+    "tapToEnable": "Gusa kuwasha",
+    "tapToUpdateLocation": "Gusa kuhuisha eneo",
+    "themeLight": "Mwangaza",
+    "themeDark": "Giza",
+    "themeSystem": "Mfumo",
+    "language": "Lugha",
+    "resetOnboarding": "Weka Upya Utangulizi",
+    "resetOnboardingSubtitle": "Anza upya na msaidizi wa usanidi",
+    "resetConfirmTitle": "Weka Upya Usanidi",
+    "resetConfirmMessage": "Hii itaanza upya mchakato wa utangulizi. Endelea?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Imewezeshwa na Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "Huduma za AI",
+    "loading": "Inapakia huduma...",
+    "loadingDetails": "Inapakia...",
+    "footer": "Upatikanaji wa huduma hutegemea eneo lako",
+    "couldNotLoad": "Imeshindwa kupakia huduma",
+    "couldNotLoadDetails": "Imeshindwa kupakia maelezo ya huduma",
+    "failedToFetch": "Imeshindwa kupata huduma",
+    "serviceCategory": "Kitengo {name}",
+    "service": "Huduma {name}",
+    "servicesAvailable": "Huduma {active} kati ya {total} zinapatikana kwa eneo lako",
+    "activeCount": "{active}/{total} zinazotumika",
+    "statusActive": "Inatumika",
+    "statusUnavailable": "Haipatikani katika eneo lako",
+    "locationNotSet": "Eneo halijawekwa",
+    "sectionAbout": "Kuhusu",
+    "sectionFeatures": "Vipengele",
+    "sectionAvailableIn": "Inapatikana Katika",
+    "sectionSupportedCrops": "Mazao Yanayosaidiwa",
+    "categories": {
+      "plantHealth": "Afya ya Mimea",
+      "soil": "Uchambuzi wa Udongo",
+      "weather": "Hali ya Hewa na Tabianchi",
+      "livestock": "Lishe ya Mifugo",
+      "agriculture": "Ushauri wa Kilimo"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Utambuzi wa magonjwa ya mimea kwa AI",
+        "description": "Chambua picha za mimea kutambua magonjwa, wadudu, na upungufu wa virutubisho. Pata utambuzi wa haraka na mapendekezo ya matibabu na kinga."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "Sifa za udongo na uchambuzi wa virutubisho kwa Afrika",
+        "description": "Pata maelezo kamili ya udongo ikiwemo pH, naitrojeni, fosforasi, potasiamu, na virutubisho vingine. Inapatikana Afrika nzima kwa usahihi wa mita 30."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Hali ya hewa ya sasa na utabiri duniani kote",
+        "description": "Pata data ya hali ya hewa ya muda halisi ikiwemo joto, unyevunyevu, kasi ya upepo, na mvua. Utabiri unapatikana hadi siku 15."
+      },
+      "gapWeather": {
+        "name": "Hali ya Hewa ya GAP",
+        "tagline": "Utabiri wa hali ya hewa kwa kilimo Kenya",
+        "description": "Utabiri maalum wa hali ya hewa kwa kilimo nchini Kenya. Inajumuisha utabiri wa uvukizi-jasho, mionzi ya jua, na mvua kwa ajili ya maamuzi ya kilimo."
+      },
+      "edacap": {
+        "name": "Tabianchi ya EDACaP",
+        "tagline": "Utabiri wa tabianchi wa msimu kwa Ethiopia",
+        "description": "Mwongozo wa tabianchi wa msimu ikiwemo utabiri wa joto na mvua. Huwasaidia wakulima kupanga ratiba za kupanda na kuvuna."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Data ya hali ya hewa kwa maeneo duniani",
+        "description": "Huduma kamili ya data ya hali ya hewa inayotoa hali ya sasa na utabiri kwa maeneo duniani kote."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Ujuzi na utabiri wa hali ya hewa",
+        "description": "Mfumo wa hali ya hewa wa hali ya juu wenye utabiri sahihi na uwezo wa kutabiri wa karibu."
+      },
+      "feedFormulation": {
+        "name": "Fomula ya Lishe",
+        "tagline": "Hesabu za lishe bora kwa ng'ombe wa maziwa",
+        "description": "Hesabu mchanganyiko wa chakula chenye ufanisi zaidi kwa ng'ombe wako wa maziwa. Huzingatia malengo ya uzalishaji wa maziwa, uzito wa mwili, na vyakula vinavyopatikana kienyeji."
+      },
+      "nextgen": {
+        "name": "Mbolea ya Kizazi Kijacho",
+        "tagline": "Mapendekezo ya mbolea kulingana na eneo kwa Ethiopia",
+        "description": "Pata mapendekezo sahihi ya mbolea kulingana na eneo lako kamili. Inajumuisha mapendekezo ya mbolea za asili (mboji, samadi ya minyoo) na zile za viwandani (Urea, NPS)."
+      },
+      "decisionTree": {
+        "name": "Mti wa Maamuzi ya Mazao",
+        "tagline": "Mapendekezo ya hatua za ukuaji kwa Kenya",
+        "description": "Pata mapendekezo ya usimamizi wa mazao kulingana na hatua ya ukuaji na hali ya hewa ya sasa. Hukusaidia kufanya maamuzi sahihi kwa udhibiti wa wadudu, umwagiliaji, na uvunaji."
+      },
+      "gapAgriculture": {
+        "name": "Kilimo cha GAP",
+        "tagline": "Huduma za ushauri wa kilimo",
+        "description": "Huduma za jumla za ushauri wa kilimo kwa usimamizi wa mazao na mifugo."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Utambuzi wa Magonjwa",
+      "pestIdentification": "Utambuzi wa Wadudu",
+      "nutrientAnalysis": "Uchambuzi wa Virutubisho",
+      "treatmentAdvice": "Ushauri wa Tiba",
+      "soilPh": "pH ya Udongo",
+      "nitrogen": "Naitrojeni",
+      "phosphorus": "Fosforasi",
+      "potassium": "Potasiamu",
+      "currentWeather": "Hali ya Hewa ya Sasa",
+      "temperature": "Joto",
+      "humidity": "Unyevunyevu",
+      "forecast": "Utabiri",
+      "precipitation": "Mvua",
+      "evapotranspiration": "Uvukizi-jasho",
+      "solarRadiation": "Mionzi ya Jua",
+      "wind": "Upepo",
+      "seasonalOutlook": "Mwongozo wa Msimu",
+      "rainfallProbability": "Uwezekano wa Mvua",
+      "temperatureTrend": "Mwenendo wa Joto",
+      "cropForecasts": "Utabiri wa Mazao",
+      "historical": "Historia",
+      "astronomy": "Unajimu",
+      "nowcast": "Utabiri wa Karibu",
+      "forecasts": "Utabiri",
+      "alerts": "Arifa",
+      "dietOptimization": "Lishe Bora",
+      "nutrientBalance": "Mlingano wa Virutubisho",
+      "localFeeds": "Chakula cha Kienyeji",
+      "costCalculation": "Hesabu ya Gharama",
+      "organicFertilizers": "Mbolea za Asili",
+      "inorganicFertilizers": "Mbolea za Viwandani",
+      "expectedYield": "Mavuno Tarajiwa",
+      "siteSpecific": "Kulingana na Eneo",
+      "growthStage": "Hatua ya Ukuaji",
+      "recommendations": "Mapendekezo",
+      "weatherBased": "Kulingana na Hali ya Hewa",
+      "actions": "Vitendo",
+      "cropAdvice": "Ushauri wa Mazao",
+      "bestPractices": "Mbinu Bora",
+      "seasonalTips": "Vidokezo vya Msimu",
+      "localKnowledge": "Maarifa ya Kienyeji"
+    },
+    "fallback": {
+      "service": "Huduma ya kilimo",
+      "description": "Maelezo ya huduma hayapatikani."
+    },
+    "regions": {
+      "worldwide": "Dunia Nzima",
+      "africa": "Afrika",
+      "eastAfrica": "Afrika Mashariki",
+      "ethiopia": "Ethiopia",
+      "kenya": "Kenya"
+    },
+    "crops": {
+      "all": "Mazao yote",
+      "wheat": "Ngano",
+      "maize": "Mahindi",
+      "beans": "Maharagwe"
+    }
+  },
+  "system": {
+    "offline": "Hakuna intaneti",
+    "errorTitle": "Samahani! Kuna tatizo",
+    "errorFallback": "Kuna tatizo lisilotarajiwa",
+    "tryAgain": "Jaribu Tena"
+  },
+  "errors": {
+    "syncFailed": "Imeshindwa kuunganisha na seva. Baadhi ya huduma zinaweza kuwa chache.",
+    "weatherUnavailable": "Huduma ya hali ya hewa haipatikani kwa muda. Jaribu tena baadaye.",
+    "diagnosisTimeout": "Uchunguzi wa mimea unachukua muda mrefu. Tafadhali jaribu tena.",
+    "uploadFailed": "Imeshindwa kupakia picha. Angalia muunganisho wako na ujaribu tena.",
+    "transcriptionFailed": "Imeshindwa kutafsiri sauti. Jaribu kuongea tena.",
+    "serverError": "Hitilafu ya seva. Tafadhali jaribu tena baadaye.",
+    "requestTimeout": "Muda wa ombi umekwisha. Angalia muunganisho wako.",
+    "locationLookupFailed": "Imeshindwa kubaini eneo lako."
+  },
+  "a11y": {
+    "startNewChat": "Anzisha gumzo jipya",
+    "retryLoadingIntegrations": "Jaribu tena kupakia huduma",
+    "dismissNotification": "Ondoa arifa",
+    "dismiss": "Ondoa",
+    "clearSearch": "Futa utafutaji",
+    "cancelRecording": "Ghairi kurekodi",
+    "finishRecording": "Maliza kurekodi",
+    "refreshLocation": "Sasisha eneo",
+    "newChat": "Gumzo jipya",
+    "openSettings": "Fungua mipangilio",
+    "scrollToBottom": "Sogeza chini",
+    "clearVoiceTranscription": "Futa maandishi ya sauti",
+    "takePhoto": "Piga picha",
+    "pickImage": "Chagua picha",
+    "messageInput": "Andika ujumbe",
+    "sendMessage": "Tuma ujumbe",
+    "recordVoice": "Rekodi sauti",
+    "attachMedia": "Ambatanisha faili",
+    "closeMenu": "Funga menyu",
+    "playVoice": "Cheza sauti",
+    "stopVoicePlayback": "Acha kucheza sauti",
+    "moreNotifications": "Arifa {count} zaidi",
+    "themeMode": "Mandhari: {mode}",
+    "copyMessage": "Nakili ujumbe",
+    "askQuestion": "Uliza: {question}",
+    "selectLanguage": "Lugha {name}"
+  }
+}
