@@ -3,6 +3,16 @@ const DEFAULT_LOCALE = 'en';
 // Current locale - can be updated dynamically
 let currentLocale = DEFAULT_LOCALE;
 
+// Static import registry for translations
+// Add new languages here as they become available
+const TRANSLATION_REGISTRY = {
+  // Example: uncomment when translation files are created
+  // am: () => require('./translations/strings-am.json'),
+  // om: () => require('./translations/strings-om.json'),
+  // sw: () => require('./translations/strings-sw.json'),
+  // hi: () => require('./translations/strings-hi.json'),
+};
+
 // Loaded translations cache
 const translationsCache = {};
 
@@ -23,12 +33,16 @@ export async function loadTranslations(locale) {
   // Check cache first
   if (translationsCache[locale]) return;
 
-  try {
-    // Dynamic import of translation file
-    const translations = await import(`./translations/strings-${locale}.json`);
-    translationsCache[locale] = translations.default || translations;
-  } catch (error) {
-    console.log(`Translation file for ${locale} not found, using English`);
+  // Check if translation is available in registry
+  const loader = TRANSLATION_REGISTRY[locale];
+  if (loader) {
+    try {
+      translationsCache[locale] = loader();
+    } catch (error) {
+      console.log(`Failed to load translation for ${locale}, using English`);
+    }
+  } else {
+    console.log(`Translation for ${locale} not available yet, using English`);
   }
 }
 
