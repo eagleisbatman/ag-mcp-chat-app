@@ -21,7 +21,7 @@ import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
 export default function HistoryScreen({ navigation }) {
-  const { theme, language, setCurrentSessionId, isDbSynced } = useApp();
+  const { theme, setCurrentSessionId, isDbSynced } = useApp();
   const { showSuccess, showError } = useToast();
   
   const [sessions, setSessions] = useState([]);
@@ -99,16 +99,20 @@ export default function HistoryScreen({ navigation }) {
     const date = new Date(dateString);
     const now = new Date();
     const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-    const locale = language?.code || 'en';
 
     if (diffDays === 0) {
-      return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+      // Today: show 24-hour time (universal format)
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
     } else if (diffDays === 1) {
       return t('history.yesterday');
     } else if (diffDays < 7) {
-      return date.toLocaleDateString(locale, { weekday: 'short' });
+      // Use numeric day format (universal)
+      return `${date.getDate()}/${date.getMonth() + 1}`;
     } else {
-      return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
+      // Use numeric date format (universal)
+      return `${date.getDate()}/${date.getMonth() + 1}`;
     }
   };
 
