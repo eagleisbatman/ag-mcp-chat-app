@@ -29,11 +29,16 @@ const INTERNAL_SERVERS = [
   'user-preferences',
   'guardrails',
   'entity-extraction',
-  'agrivision', // Plant diagnosis is accessed via camera, not services list
 ];
 
 // Service category configuration
 const SERVICE_CATEGORIES = {
+  plant_health: {
+    label: 'Plant Health',
+    icon: 'leaf-circle',
+    color: '#4CAF50',
+    servers: ['agrivision'],
+  },
   soil: {
     label: 'Soil Analysis',
     icon: 'terrain',
@@ -49,7 +54,7 @@ const SERVICE_CATEGORIES = {
   livestock: {
     label: 'Livestock Nutrition',
     icon: 'cow',
-    color: '#4CAF50',
+    color: '#66BB6A',
     servers: ['feed-formulation'],
   },
   agriculture: {
@@ -62,6 +67,11 @@ const SERVICE_CATEGORIES = {
 
 // Server display info
 const SERVER_INFO = {
+  'agrivision': {
+    name: 'AgriVision',
+    description: 'AI-powered plant disease detection and diagnosis',
+    icon: 'leaf-circle',
+  },
   'isda-soil': {
     name: 'ISDA Soil',
     description: 'Soil properties and nutrient analysis for Africa',
@@ -311,7 +321,7 @@ export default function McpServersScreen({ navigation }) {
           </View>
 
           {/* Category Sections */}
-          {['soil', 'weather', 'livestock', 'agriculture'].map(category => (
+          {['plant_health', 'soil', 'weather', 'livestock', 'agriculture'].map(category => (
             <CategorySection
               key={category}
               category={category}

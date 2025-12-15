@@ -21,6 +21,21 @@ import { t } from '../constants/strings';
 
 // Server display info with consistent descriptions
 const SERVER_INFO = {
+  'agrivision': {
+    name: 'AgriVision',
+    tagline: 'AI-powered plant disease detection and diagnosis',
+    description: 'Analyze plant images to identify diseases, pests, and nutrient deficiencies. Get instant diagnosis with treatment recommendations and prevention tips.',
+    icon: 'leaf-circle',
+    color: '#4CAF50',
+    features: [
+      { title: 'Disease Detection', description: 'Identify plant diseases from photos' },
+      { title: 'Pest Identification', description: 'Recognize common crop pests' },
+      { title: 'Nutrient Analysis', description: 'Detect deficiency symptoms' },
+      { title: 'Treatment Advice', description: 'Get actionable recommendations' },
+    ],
+    coverage: ['Worldwide'],
+    crops: ['All crops'],
+  },
   'isda-soil': {
     name: 'ISDA Soil',
     tagline: 'Soil properties and nutrient analysis for Africa',
