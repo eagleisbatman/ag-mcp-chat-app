@@ -21,7 +21,7 @@ import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
 export default function HistoryScreen({ navigation }) {
-  const { theme, setCurrentSessionId, isDbSynced } = useApp();
+  const { theme, language, setCurrentSessionId, isDbSynced } = useApp();
   const { showSuccess, showError } = useToast();
   
   const [sessions, setSessions] = useState([]);
@@ -99,15 +99,16 @@ export default function HistoryScreen({ navigation }) {
     const date = new Date(dateString);
     const now = new Date();
     const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-    
+    const locale = language?.code || 'en';
+
     if (diffDays === 0) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
     } else if (diffDays === 1) {
       return t('history.yesterday');
     } else if (diffDays < 7) {
-      return date.toLocaleDateString([], { weekday: 'short' });
+      return date.toLocaleDateString(locale, { weekday: 'short' });
     } else {
-      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
     }
   };
 

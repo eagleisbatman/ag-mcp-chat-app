@@ -43,10 +43,12 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   }, [isNewMessage, isBot, fadeAnim]);
 
   const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString([], { 
-      hour: '2-digit', 
+    // Use app language for locale-aware time formatting
+    const locale = language?.code || 'en';
+    return new Date(date).toLocaleTimeString(locale, {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: true 
+      hour12: true
     });
   };
 
