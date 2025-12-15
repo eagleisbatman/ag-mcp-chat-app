@@ -39,7 +39,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Allow AG-MCP to use your location for regional farming advice."
+          "locationWhenInUsePermission": "Allow FarmerChat to use your location for regional farming advice."
         }
       ],
       "expo-font"

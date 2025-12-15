@@ -15,7 +15,7 @@ export const STRINGS = {
       skipForNow: 'Skip for now',
     },
     onboarding: {
-      appName: 'Farm Assistant',
+      appName: 'FarmerChat',
       tagline: 'Your AI-powered farming companion',
       getStarted: 'Get Started',
       features: {
@@ -63,7 +63,7 @@ export const STRINGS = {
       analysisCouldNotComplete: "Analysis couldn't complete. {details}",
       plantAnalysisIssues: 'Plant analysis had issues: {details}',
       tapLocationToSet: 'Tap location to set',
-      senderAssistant: 'Farm Assistant',
+      senderAssistant: 'FarmerChat',
       senderYou: 'You',
       tapToAskNext: 'Tap to ask next:',
     },
@@ -133,8 +133,8 @@ export const STRINGS = {
       resetOnboardingSubtitle: 'Start fresh with setup wizard',
       resetConfirmTitle: 'Reset Setup',
       resetConfirmMessage: 'This will restart the onboarding process. Continue?',
-      appInfoVersion: 'Farm Assistant v2.0.0',
-      appInfoPoweredBy: 'Powered by Gemini AI',
+      appInfoVersion: 'FarmerChat v2.0.0',
+      appInfoPoweredBy: 'Powered by Digital Green Foundation',
     },
     mcp: {
       title: 'AI Integrations',

@@ -49,7 +49,7 @@ export default class ErrorBoundary extends Component {
 	            </View>
 	            <Text style={[styles.title, { color: theme.text }]}>{t('system.errorTitle')}</Text>
 	            <Text style={[styles.message, { color: theme.textMuted }]}>
-	              {this.state.error?.message || t('system.errorFallback')}
+	              {t('system.errorFallback')}
 	            </Text>
 	            <Pressable
 	              accessibilityRole="button"
