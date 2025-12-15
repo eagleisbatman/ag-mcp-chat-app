@@ -149,6 +149,8 @@ export const STRINGS = {
       languageSubtitle: 'Choose your preferred language for the assistant',
       searchLanguages: 'Search languages...',
       noLanguagesFound: 'No languages found',
+      suggestedForYou: 'Suggested for You',
+      currentLanguage: 'Current',
     },
     chat: {
       welcomeMessage:

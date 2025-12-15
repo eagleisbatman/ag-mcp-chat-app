@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { useApp } from '../contexts/AppContext';
-import { LANGUAGES, REGIONS, searchLanguages } from '../constants/languages';
+import { LANGUAGES, REGIONS, searchLanguages, getLanguagesWithSuggestions } from '../constants/languages';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import AppIcon from '../components/ui/AppIcon';
@@ -19,23 +19,24 @@ import IconButton from '../components/ui/IconButton';
 import { t } from '../constants/strings';
 
 export default function LanguageScreen({ navigation }) {
-  const { theme, language, setLanguage, completeOnboarding } = useApp();
+  const { theme, language, setLanguage, completeOnboarding, locationDetails } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLang, setSelectedLang] = useState(language);
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
+  // Get country from location details for smart suggestions
+  const countryName = locationDetails?.level1Country || null;
+
   // Group languages by region or filter by search
+  // Shows "Suggested for You" at top based on user's location
   const displayData = useMemo(() => {
     if (searchQuery) {
       return searchLanguages(searchQuery);
     }
-    
-    // Group by region for section list
-    return REGIONS.map(region => ({
-      title: region,
-      data: LANGUAGES.filter(lang => lang.region === region),
-    }));
-  }, [searchQuery]);
+
+    // Use smart ordering with location-based suggestions
+    return getLanguagesWithSuggestions(countryName, selectedLang?.code);
+  }, [searchQuery, countryName, selectedLang?.code]);
 
   const handleSelectLanguage = (lang) => {
     setSelectedLang(lang);
@@ -80,13 +81,23 @@ export default function LanguageScreen({ navigation }) {
     );
   };
 
-  const renderSectionHeader = ({ section }) => (
-    <View style={[styles.sectionHeader, { backgroundColor: theme.background }]}>
-      <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>
-        {section.title}
-      </Text>
-    </View>
-  );
+  const renderSectionHeader = ({ section }) => {
+    // Translate special section titles
+    let title = section.title;
+    if (section.title === 'Suggested for You') {
+      title = t('onboarding.suggestedForYou');
+    } else if (section.title === 'Current') {
+      title = t('onboarding.currentLanguage');
+    }
+
+    return (
+      <View style={[styles.sectionHeader, { backgroundColor: theme.background }]}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>
+          {title}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
