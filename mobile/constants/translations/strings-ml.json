@@ -101,7 +101,9 @@
     "couldNotDelete": "സംഭാഷണം ഇല്ലാതാക്കാൻ കഴിഞ്ഞില്ല",
     "notConnectedTitle": "ബന്ധിപ്പിച്ചിട്ടില്ല",
     "notConnectedHint": "സംഭാഷണ ചരിത്രത്തിന് ഇന്റർനെറ്റ് കണക്ഷൻ ആവശ്യമാണ്",
-    "yesterday": "ഇന്നലെ"
+    "yesterday": "ഇന്നലെ",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ക്രമീകരണങ്ങൾ",

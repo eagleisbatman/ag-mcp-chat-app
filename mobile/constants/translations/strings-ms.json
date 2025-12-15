@@ -101,7 +101,9 @@
     "couldNotDelete": "Tidak dapat padam perbualan",
     "notConnectedTitle": "Tiada sambungan",
     "notConnectedHint": "Sejarah perbualan memerlukan sambungan internet",
-    "yesterday": "Semalam"
+    "yesterday": "Semalam",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Tetapan",

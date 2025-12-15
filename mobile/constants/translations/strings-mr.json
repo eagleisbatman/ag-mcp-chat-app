@@ -101,7 +101,9 @@
     "couldNotDelete": "गप्पा हटवता आली नाही",
     "notConnectedTitle": "जोडणी नाही",
     "notConnectedHint": "गप्पांचा इतिहास पाहण्यासाठी इंटरनेट जोडणी आवश्यक आहे.",
-    "yesterday": "काल"
+    "yesterday": "काल",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "सेटिंग्ज",

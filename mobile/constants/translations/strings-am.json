@@ -101,7 +101,9 @@
     "couldNotDelete": "ውይይቱን መሰረዝ አልተቻለም",
     "notConnectedTitle": "አልተገናኘም",
     "notConnectedHint": "የውይይት ታሪክ ኢንተርኔት ግንኙነት ያስፈልገዋል",
-    "yesterday": "ትናንት"
+    "yesterday": "ትናንት",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ቅንብሮች",

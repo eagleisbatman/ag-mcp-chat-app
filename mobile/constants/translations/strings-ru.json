@@ -101,7 +101,9 @@
     "couldNotDelete": "Не удалось удалить беседу",
     "notConnectedTitle": "Нет соединения",
     "notConnectedHint": "Для истории бесед требуется интернет",
-    "yesterday": "Вчера"
+    "yesterday": "Вчера",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Настройки",

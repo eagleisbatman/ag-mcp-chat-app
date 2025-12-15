@@ -101,7 +101,9 @@
     "couldNotDelete": "Не вдалося видалити розмову",
     "notConnectedTitle": "Не підключено",
     "notConnectedHint": "Історія розмов вимагає підключення до інтернету",
-    "yesterday": "Вчора"
+    "yesterday": "Вчора",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Налаштування",

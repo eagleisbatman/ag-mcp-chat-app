@@ -101,7 +101,9 @@
     "couldNotDelete": "ไม่สามารถลบการสนทนาได้",
     "notConnectedTitle": "ไม่ได้เชื่อมต่อ",
     "notConnectedHint": "ประวัติการสนทนาต้องใช้อินเทอร์เน็ต",
-    "yesterday": "เมื่อวาน"
+    "yesterday": "เมื่อวาน",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "การตั้งค่า",

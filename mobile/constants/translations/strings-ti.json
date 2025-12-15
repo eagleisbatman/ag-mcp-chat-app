@@ -101,7 +101,9 @@
     "couldNotDelete": "ዕላል ክድምሰስ ኣይካኣለን",
     "notConnectedTitle": "ኣይተራኸበን",
     "notConnectedHint": "ታሪኽ ዕላል ኢንተርነት የድልዮ።",
-    "yesterday": "ትማሊ"
+    "yesterday": "ትማሊ",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ቅንብራት",

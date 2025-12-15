@@ -101,7 +101,9 @@
     "couldNotDelete": "Magaala qasaw maaxiginnih",
     "notConnectedTitle": "Qawannu mayan",
     "notConnectedHint": "Magaala taariikitte net qawannu le",
-    "yesterday": "Akah"
+    "yesterday": "Akah",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Doohoobi",

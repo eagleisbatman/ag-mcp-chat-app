@@ -101,7 +101,9 @@
     "couldNotDelete": "ਗੱਲਬਾਤ ਮਿਟਾਈ ਨਹੀਂ ਜਾ ਸਕੀ",
     "notConnectedTitle": "ਕਨੈਕਟ ਨਹੀਂ",
     "notConnectedHint": "ਗੱਲਬਾਤ ਦੇ ਇਤਿਹਾਸ ਲਈ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਦੀ ਲੋੜ ਹੈ",
-    "yesterday": "ਕੱਲ੍ਹ"
+    "yesterday": "ਕੱਲ੍ਹ",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ਸੈਟਿੰਗਾਂ",

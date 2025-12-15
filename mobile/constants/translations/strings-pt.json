@@ -101,7 +101,9 @@
     "couldNotDelete": "Não foi possível excluir a conversa",
     "notConnectedTitle": "Sem conexão",
     "notConnectedHint": "O histórico de conversas requer conexão com a internet",
-    "yesterday": "Ontem"
+    "yesterday": "Ontem",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Configurações",

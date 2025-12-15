@@ -101,7 +101,9 @@
     "couldNotDelete": "कुराकानी मेटाउन सकिएन",
     "notConnectedTitle": "सम्पर्क छैन",
     "notConnectedHint": "कुराकानीको इतिहासका लागि इन्टरनेट जडान चाहिन्छ।",
-    "yesterday": "हिजो"
+    "yesterday": "हिजो",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "सेटिंग्स",

@@ -101,7 +101,9 @@
     "couldNotDelete": "உரையாடலை நீக்க முடியவில்லை",
     "notConnectedTitle": "இணைப்பு இல்லை",
     "notConnectedHint": "உரையாடல் வரலாற்றிற்கு இணைய இணைப்பு தேவை",
-    "yesterday": "நேற்று"
+    "yesterday": "நேற்று",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "அமைப்புகள்",

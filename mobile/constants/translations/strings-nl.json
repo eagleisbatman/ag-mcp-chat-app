@@ -101,7 +101,9 @@
     "couldNotDelete": "Kon gesprek niet verwijderen",
     "notConnectedTitle": "Niet verbonden",
     "notConnectedHint": "Voor gespreksgeschiedenis is een internetverbinding nodig",
-    "yesterday": "Gisteren"
+    "yesterday": "Gisteren",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Instellingen",

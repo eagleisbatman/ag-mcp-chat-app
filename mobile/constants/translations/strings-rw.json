@@ -101,7 +101,9 @@
     "couldNotDelete": "Kusiba ikiganiro byaranze",
     "notConnectedTitle": "Ntabwo ihujwe",
     "notConnectedHint": "Amateka y'ibiganiro asaba umurongo wa internet",
-    "yesterday": "Ejo hashize"
+    "yesterday": "Ejo hashize",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Amasetingsi",

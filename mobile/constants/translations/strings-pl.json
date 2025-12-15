@@ -101,7 +101,9 @@
     "couldNotDelete": "Nie można usunąć rozmowy",
     "notConnectedTitle": "Brak połączenia",
     "notConnectedHint": "Historia rozmów wymaga połączenia z internetem",
-    "yesterday": "Wczoraj"
+    "yesterday": "Wczoraj",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Ustawienia",

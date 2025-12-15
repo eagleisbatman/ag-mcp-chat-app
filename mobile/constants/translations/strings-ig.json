@@ -101,7 +101,9 @@
     "couldNotDelete": "Enweghị ike ihichapụ mkparịta ụka",
     "notConnectedTitle": "Enweghị njikọ",
     "notConnectedHint": "Akụkọ mkparịta ụka chọrọ njikọ ịntanetị",
-    "yesterday": "Ụnyaahụ"
+    "yesterday": "Ụnyaahụ",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Ntọala",

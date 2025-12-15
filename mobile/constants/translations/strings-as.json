@@ -101,7 +101,9 @@
     "couldNotDelete": "কথা-বতৰা মচিব পৰা নগ’ল",
     "notConnectedTitle": "সংযুক্ত নহয়",
     "notConnectedHint": "কথা-বতৰাৰ ইতিহাসৰ বাবে ইণ্টাৰনেট সংযোগৰ প্ৰয়োজন",
-    "yesterday": "কালি"
+    "yesterday": "কালি",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ছেটিংছ",

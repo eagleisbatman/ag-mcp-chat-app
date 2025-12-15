@@ -101,7 +101,9 @@
     "couldNotDelete": "לא ניתן למחוק את השיחה",
     "notConnectedTitle": "אין חיבור",
     "notConnectedHint": "היסטוריית השיחות דורשת חיבור לאינטרנט",
-    "yesterday": "אתמול"
+    "yesterday": "אתמול",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "הגדרות",

@@ -101,7 +101,9 @@
     "couldNotDelete": "ບໍ່ສາມາດລຶບການສົນທະນາໄດ້",
     "notConnectedTitle": "ບໍ່ໄດ້ເຊື່ອມຕໍ່",
     "notConnectedHint": "ປະຫວັດການສົນທະນາ ຕ້ອງການອິນເຕີເນັດ",
-    "yesterday": "ມື້ວານນີ້"
+    "yesterday": "ມື້ວານນີ້",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ການຕັ້ງຄ່າ",

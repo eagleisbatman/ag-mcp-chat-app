@@ -101,7 +101,9 @@
     "couldNotDelete": "Δεν ήταν δυνατή η διαγραφή της συνομιλίας",
     "notConnectedTitle": "Δεν υπάρχει σύνδεση",
     "notConnectedHint": "Το ιστορικό συνομιλιών απαιτεί σύνδεση στο διαδίκτυο",
-    "yesterday": "Χθες"
+    "yesterday": "Χθες",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Ρυθμίσεις",

@@ -101,7 +101,9 @@
     "couldNotDelete": "会話を削除できませんでした",
     "notConnectedTitle": "未接続",
     "notConnectedHint": "会話履歴にはインターネット接続が必要です",
-    "yesterday": "昨日"
+    "yesterday": "昨日",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "設定",

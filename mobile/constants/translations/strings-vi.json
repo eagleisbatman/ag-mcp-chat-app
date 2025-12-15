@@ -101,7 +101,9 @@
     "couldNotDelete": "Không thể xóa cuộc trò chuyện",
     "notConnectedTitle": "Không có kết nối",
     "notConnectedHint": "Lịch sử trò chuyện cần có kết nối internet",
-    "yesterday": "Hôm qua"
+    "yesterday": "Hôm qua",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Cài đặt",

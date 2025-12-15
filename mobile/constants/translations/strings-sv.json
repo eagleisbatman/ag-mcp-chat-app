@@ -101,7 +101,9 @@
     "couldNotDelete": "Kunde inte radera samtal",
     "notConnectedTitle": "Inte ansluten",
     "notConnectedHint": "Samtalshistorik kräver internetanslutning",
-    "yesterday": "Igår"
+    "yesterday": "Igår",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Inställningar",

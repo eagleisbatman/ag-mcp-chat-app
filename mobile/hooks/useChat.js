@@ -12,18 +12,19 @@ import { createSession, saveMessage, generateTitle, updateSession, getSession } 
 import { parseErrorMessage, isNetworkError, isServerError } from '../utils/apiHelpers';
 import { t } from '../constants/strings';
 
-const WELCOME_MESSAGE = {
+// Create welcome message dynamically so it uses current language
+const createWelcomeMessage = () => ({
   _id: 'welcome',
   text: t('chat.welcomeMessage'),
   createdAt: new Date(),
   isBot: true,
-};
+});
 
 export default function useChat(sessionIdParam = null) {
   const { language, location, locationDetails, currentSessionId, setCurrentSessionId, isDbSynced } = useApp();
   const { showError, showWarning, showSuccess } = useToast();
   
-  const [messages, setMessages] = useState([WELCOME_MESSAGE]);
+  const [messages, setMessages] = useState(() => [createWelcomeMessage()]);
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingSession, setIsLoadingSession] = useState(false);
   const [newestBotMessageId, setNewestBotMessageId] = useState(null);
@@ -50,7 +51,7 @@ export default function useChat(sessionIdParam = null) {
           followUpQuestions: m.followUpQuestions || [], // Load follow-up questions
         })).reverse(); // Newest first for inverted FlatList
         
-        setMessages([...loadedMessages, WELCOME_MESSAGE]);
+        setMessages([...loadedMessages, createWelcomeMessage()]);
         setCurrentSessionId(sessionId);
         titleGeneratedRef.current = true; // Already has title
         console.log('📂 [useChat] Loaded session with', loadedMessages.length, 'messages');
@@ -64,7 +65,7 @@ export default function useChat(sessionIdParam = null) {
   };
 
   const startNewSession = useCallback(() => {
-    setMessages([WELCOME_MESSAGE]);
+    setMessages([createWelcomeMessage()]);
     setCurrentSessionId(null);
     titleGeneratedRef.current = false;
     showSuccess(t('chat.startedNewConversation'));

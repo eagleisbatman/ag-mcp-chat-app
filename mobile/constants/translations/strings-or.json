@@ -101,7 +101,9 @@
     "couldNotDelete": "କଥାବାର୍ତ୍ତା ଡିଲିଟ୍ କରିହେଲା ନାହିଁ",
     "notConnectedTitle": "ସଂଯୋଗ ନାହିଁ",
     "notConnectedHint": "କଥାବାର୍ତ୍ତା ଦେଖିବା ପାଇଁ ଇଣ୍ଟରନେଟ୍ ସଂଯୋଗ ଆବଶ୍ୟକ।",
-    "yesterday": "ଗତକାଲି"
+    "yesterday": "ଗତକାଲି",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ସେଟିଂସ",

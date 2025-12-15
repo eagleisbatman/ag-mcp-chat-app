@@ -101,7 +101,9 @@
     "couldNotDelete": "Imeshindwa kufuta mazungumzo",
     "notConnectedTitle": "Hakuna muunganisho",
     "notConnectedHint": "Historia ya mazungumzo inahitaji muunganisho wa intaneti",
-    "yesterday": "Jana"
+    "yesterday": "Jana",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Mipangilio",

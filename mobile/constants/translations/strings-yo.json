@@ -101,7 +101,9 @@
     "couldNotDelete": "Kò lè pa ìjíròrò rẹ́.",
     "notConnectedTitle": "Kò sí àsopọ̀.",
     "notConnectedHint": "Ìtàn àwọn ìjíròrò nílò àsopọ̀ ayélujára.",
-    "yesterday": "Lánàá"
+    "yesterday": "Lánàá",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Ètò",

@@ -101,7 +101,9 @@
     "couldNotDelete": "Sohbet silinemedi",
     "notConnectedTitle": "Bağlantı yok",
     "notConnectedHint": "Sohbet geçmişi için internet bağlantısı gerekli",
-    "yesterday": "Dün"
+    "yesterday": "Dün",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Ayarlar",

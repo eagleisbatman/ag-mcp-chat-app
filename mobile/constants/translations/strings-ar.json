@@ -101,7 +101,9 @@
     "couldNotDelete": "تعذر حذف المحادثة",
     "notConnectedTitle": "غير متصل",
     "notConnectedHint": "سجل المحادثات يتطلب اتصالاً بالإنترنت",
-    "yesterday": "أمس"
+    "yesterday": "أمس",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "إعدادات",

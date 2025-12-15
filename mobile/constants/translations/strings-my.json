@@ -101,7 +101,9 @@
     "couldNotDelete": "စကားဝိုင်းကို ဖျက်မရခဲ့ပါ",
     "notConnectedTitle": "အင်တာနက်မရှိ",
     "notConnectedHint": "စကားဝိုင်းမှတ်တမ်း ကြည့်ဖို့ အင်တာနက် လိုအပ်ပါတယ်",
-    "yesterday": "မနေ့က"
+    "yesterday": "မနေ့က",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ဆက်တင်များ",

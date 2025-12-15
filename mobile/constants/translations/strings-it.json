@@ -101,7 +101,9 @@
     "couldNotDelete": "Impossibile eliminare la conversazione",
     "notConnectedTitle": "Non connesso",
     "notConnectedHint": "La cronologia delle conversazioni richiede una connessione internet",
-    "yesterday": "Ieri"
+    "yesterday": "Ieri",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Impostazioni",

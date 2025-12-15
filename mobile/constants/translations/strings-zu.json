@@ -101,7 +101,9 @@
     "couldNotDelete": "Ayikwazanga ukususwa ingxoxo",
     "notConnectedTitle": "Akuxhunyiwe",
     "notConnectedHint": "Umlando wengxoxo udinga uxhumano lwe-inthanethi.",
-    "yesterday": "Izolo"
+    "yesterday": "Izolo",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Izilungiselelo",

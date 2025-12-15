@@ -101,7 +101,9 @@
     "couldNotDelete": "대화를 삭제할 수 없습니다",
     "notConnectedTitle": "연결 안 됨",
     "notConnectedHint": "대화 기록은 인터넷 연결이 필요합니다",
-    "yesterday": "어제"
+    "yesterday": "어제",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "설정",

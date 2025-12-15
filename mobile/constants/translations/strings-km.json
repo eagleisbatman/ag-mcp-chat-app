@@ -101,7 +101,9 @@
     "couldNotDelete": "មិនអាចលុបការសន្ទនាបានទេ",
     "notConnectedTitle": "គ្មានអ៊ីនធឺណិត",
     "notConnectedHint": "ប្រវត្តិការសន្ទនា ត្រូវការអ៊ីនធឺណិត",
-    "yesterday": "ម្សិលមិញ"
+    "yesterday": "ម្សិលមិញ",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ការកំណត់",

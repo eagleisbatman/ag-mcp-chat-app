@@ -101,7 +101,9 @@
     "couldNotDelete": "আলাপ মোছা যায়নি",
     "notConnectedTitle": "সংযোগ নেই",
     "notConnectedHint": "আলাপের ইতিহাস দেখতে ইন্টারনেট সংযোগ প্রয়োজন",
-    "yesterday": "গতকাল"
+    "yesterday": "গতকাল",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "সেটিংস",

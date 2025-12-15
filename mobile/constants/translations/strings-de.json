@@ -101,7 +101,9 @@
     "couldNotDelete": "Gespräch konnte nicht gelöscht werden.",
     "notConnectedTitle": "Keine Verbindung",
     "notConnectedHint": "Gesprächsverlauf benötigt Internetverbindung.",
-    "yesterday": "Gestern"
+    "yesterday": "Gestern",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Einstellungen",

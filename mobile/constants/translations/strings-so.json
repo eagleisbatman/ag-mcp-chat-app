@@ -101,7 +101,9 @@
     "couldNotDelete": "Lama tirtiri karin wada hadalka",
     "notConnectedTitle": "Ma xidhna",
     "notConnectedHint": "Taariikhda wada hadalku waxay u baahan tahay xidhiidh internet.",
-    "yesterday": "Shalay"
+    "yesterday": "Shalay",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Goobaha",

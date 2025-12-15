@@ -101,7 +101,9 @@
     "couldNotDelete": "بات چیت حذف نہیں کی جا سکی",
     "notConnectedTitle": "منسلک نہیں",
     "notConnectedHint": "بات چیت کی تاریخ کے لیے انٹرنیٹ کنکشن درکار ہے",
-    "yesterday": "کل"
+    "yesterday": "کل",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ترتیبات",

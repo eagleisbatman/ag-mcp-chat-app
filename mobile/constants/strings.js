@@ -216,6 +216,8 @@ export const STRINGS = {
       notConnectedTitle: 'Not connected',
       notConnectedHint: 'Conversation history requires an internet connection',
       yesterday: 'Yesterday',
+      messageCount: '{count} messages',
+      messageCountSingular: '1 message',
     },
     settings: {
       title: 'Settings',

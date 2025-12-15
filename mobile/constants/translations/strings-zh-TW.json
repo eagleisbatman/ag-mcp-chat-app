@@ -101,7 +101,9 @@
     "couldNotDelete": "無法刪除對話",
     "notConnectedTitle": "未連線",
     "notConnectedHint": "聊天紀錄需要網路連線",
-    "yesterday": "昨天"
+    "yesterday": "昨天",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "設定",

@@ -101,7 +101,9 @@
     "couldNotDelete": "ಸಂಭಾಷಣೆ ಅಳಿಸಲು ಆಗಲಿಲ್ಲ",
     "notConnectedTitle": "ಸಂಪರ್ಕವಿಲ್ಲ",
     "notConnectedHint": "ಸಂಭಾಷಣೆ ಇತಿಹಾಸಕ್ಕೆ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಬೇಕು",
-    "yesterday": "ನಿನ್ನೆ"
+    "yesterday": "ನಿನ್ನೆ",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",

@@ -101,7 +101,9 @@
     "couldNotDelete": "Hindi mabura ang usapan",
     "notConnectedTitle": "Walang Koneksyon",
     "notConnectedHint": "Kailangan ng koneksyon sa internet para sa kasaysayan ng usapan.",
-    "yesterday": "Kahapon"
+    "yesterday": "Kahapon",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Mga Setting",

@@ -101,7 +101,9 @@
     "couldNotDelete": "无法删除对话",
     "notConnectedTitle": "未联网",
     "notConnectedHint": "对话记录需要连接互联网",
-    "yesterday": "昨天"
+    "yesterday": "昨天",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "设置",

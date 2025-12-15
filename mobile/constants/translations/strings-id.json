@@ -101,7 +101,9 @@
     "couldNotDelete": "Tidak bisa menghapus percakapan",
     "notConnectedTitle": "Tidak terhubung",
     "notConnectedHint": "Riwayat percakapan perlu koneksi internet",
-    "yesterday": "Kemarin"
+    "yesterday": "Kemarin",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Pengaturan",

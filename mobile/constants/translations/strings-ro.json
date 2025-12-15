@@ -101,7 +101,9 @@
     "couldNotDelete": "Nu s-a putut șterge conversația",
     "notConnectedTitle": "Deconectat",
     "notConnectedHint": "Istoricul conversațiilor necesită conexiune la internet",
-    "yesterday": "Ieri"
+    "yesterday": "Ieri",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Setări",

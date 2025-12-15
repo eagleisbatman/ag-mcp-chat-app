@@ -101,7 +101,9 @@
     "couldNotDelete": "సంభాషణను తొలగించడం కుదరలేదు",
     "notConnectedTitle": "కనెక్ట్ అవ్వలేదు",
     "notConnectedHint": "సంభాషణ చరిత్రకు ఇంటర్నెట్ కనెక్షన్ అవసరం",
-    "yesterday": "నిన్న"
+    "yesterday": "నిన్న",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "సెట్టింగ్‌లు",

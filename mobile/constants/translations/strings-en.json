@@ -101,7 +101,9 @@
     "couldNotDelete": "Could not delete conversation",
     "notConnectedTitle": "Not connected",
     "notConnectedHint": "Conversation history requires an internet connection",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Settings",

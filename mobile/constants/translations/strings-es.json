@@ -101,7 +101,9 @@
     "couldNotDelete": "No se pudo eliminar la conversación",
     "notConnectedTitle": "Sin conexión",
     "notConnectedHint": "El historial de conversaciones requiere conexión a internet",
-    "yesterday": "Ayer"
+    "yesterday": "Ayer",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Ajustes",

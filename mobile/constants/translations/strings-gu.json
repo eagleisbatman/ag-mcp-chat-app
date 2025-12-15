@@ -101,7 +101,9 @@
     "couldNotDelete": "વાતચીત કાઢી શકાઈ નથી",
     "notConnectedTitle": "જોડાયેલ નથી",
     "notConnectedHint": "વાતચીતનો ઇતિહાસ જોવા માટે ઇન્ટરનેટ કનેક્શન જરૂરી છે",
-    "yesterday": "ગઈકાલે"
+    "yesterday": "ગઈકાલે",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "સેટિંગ્સ",

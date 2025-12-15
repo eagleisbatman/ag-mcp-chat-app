@@ -101,7 +101,9 @@
     "couldNotDelete": "Ba a iya goge tattaunawar ba",
     "notConnectedTitle": "Babu Haɗi",
     "notConnectedHint": "Tarihin tattaunawa yana buƙatar haɗin intanet",
-    "yesterday": "Jiya"
+    "yesterday": "Jiya",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Saituna",

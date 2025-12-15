@@ -115,7 +115,7 @@ export default function HistoryScreen({ navigation }) {
     <Card style={styles.sessionCard}>
       <ListRow
         title={item.title || t('history.newConversation')}
-        subtitle={`${item.messageCount || 0} messages • ${formatDate(item.lastMessageAt || item.createdAt)}`}
+        subtitle={`${item.messageCount === 1 ? t('history.messageCountSingular') : t('history.messageCount', { count: item.messageCount || 0 })} • ${formatDate(item.lastMessageAt || item.createdAt)}`}
         left={
           <View style={styles.sessionIcon}>
             <AppIcon name="chatbubbles-outline" size={20} color={theme.accent} />

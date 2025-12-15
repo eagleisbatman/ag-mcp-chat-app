@@ -101,7 +101,9 @@
     "couldNotDelete": "Nepodařilo se smazat rozhovor",
     "notConnectedTitle": "Nepřipojeno",
     "notConnectedHint": "Historie rozhovorů vyžaduje připojení k internetu",
-    "yesterday": "Včera"
+    "yesterday": "Včera",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Nastavení",

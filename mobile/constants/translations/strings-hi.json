@@ -101,7 +101,9 @@
     "couldNotDelete": "बातचीत मिटा नहीं सके",
     "notConnectedTitle": "कनेक्ट नहीं है",
     "notConnectedHint": "बातचीत के इतिहास के लिए इंटरनेट कनेक्शन चाहिए",
-    "yesterday": "कल"
+    "yesterday": "कल",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "सेटिंग्स",

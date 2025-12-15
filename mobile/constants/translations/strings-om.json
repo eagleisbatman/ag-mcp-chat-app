@@ -101,7 +101,9 @@
     "couldNotDelete": "Haasaa hawaasuu hin dandeenye.",
     "notConnectedTitle": "Wal Qunnamtiin Hin Jiru",
     "notConnectedHint": "Seenaan haasawaa wal qunnamtii intarneetii barbaada.",
-    "yesterday": "Kaleessa"
+    "yesterday": "Kaleessa",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "Qindaa'ina",

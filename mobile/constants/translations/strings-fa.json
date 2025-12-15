@@ -101,7 +101,9 @@
     "couldNotDelete": "گفتگو حذف نشد",
     "notConnectedTitle": "متصل نیستید",
     "notConnectedHint": "تاریخچه گفتگو نیاز به اینترنت دارد.",
-    "yesterday": "دیروز"
+    "yesterday": "دیروز",
+    "messageCount": "{count} messages",
+    "messageCountSingular": "1 message"
   },
   "settings": {
     "title": "تنظیمات",
