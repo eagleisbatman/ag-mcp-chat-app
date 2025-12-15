@@ -510,13 +510,13 @@ async function processWidgetData(widgetData, mcpServers, options = {}) {
           const days = data.days || 5;
 
           // Get current conditions
-          const current = await callMcpTool(server.endpoint, 'get_current_conditions', {
+          const current = await callMcpTool(server.endpoint, 'get_accuweather_current_conditions', {
             latitude: lat,
             longitude: lon,
           });
 
           // Get forecast
-          const forecast = await callMcpTool(server.endpoint, 'get_forecast', {
+          const forecast = await callMcpTool(server.endpoint, 'get_accuweather_weather_forecast', {
             latitude: lat,
             longitude: lon,
             days: days,
@@ -1150,8 +1150,8 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
     if (server?.endpoint && latitude && longitude) {
       // Call both current conditions and forecast for complete weather data
       const [current, forecast] = await Promise.all([
-        callMcpTool(server.endpoint, 'get_current_conditions', { latitude, longitude }),
-        callMcpTool(server.endpoint, 'get_forecast', { latitude, longitude, days: 5 }),
+        callMcpTool(server.endpoint, 'get_accuweather_current_conditions', { latitude, longitude }),
+        callMcpTool(server.endpoint, 'get_accuweather_weather_forecast', { latitude, longitude, days: 5 }),
       ]);
 
       // Combine results for widget rendering
