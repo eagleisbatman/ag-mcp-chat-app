@@ -1259,11 +1259,16 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
 
 /**
  * Chat endpoint - routes to n8n Gemini chat workflow with MCP context
+ *
+ * SIMPLIFIED TEXT-ONLY MODE:
+ * - Intent classification determines which MCP servers to call
+ * - MCP data is passed to n8n for AI response generation
+ * - Returns pure text responses (no widgets)
  */
 router.post('/chat', async (req, res) => {
   const startTime = Date.now();
   try {
-    const { latitude, longitude, language, location, message, history, image, widget_data } = req.body;
+    const { latitude, longitude, language, location, message, history, image } = req.body;
 
     console.log('💬 [Chat] Request:', {
       hasLocation: !!(latitude && longitude),
@@ -1271,8 +1276,6 @@ router.post('/chat', async (req, res) => {
       messageLength: message?.length || 0,
       historyCount: history?.length || 0,
       hasImage: !!image,
-      hasWidgetData: !!widget_data,
-      widgetType: widget_data?.widget_type,
     });
 
     // Get active MCP servers for user's location
@@ -1286,87 +1289,6 @@ router.post('/chat', async (req, res) => {
       regionalCount: mcpContext.regional.length,
       detectedRegions: mcpContext.detectedRegions.map(r => r.name).join(', '),
     });
-
-    // Build dynamic widget mappings from MCP server configurations
-    const widgetMappings = buildWidgetMappings(mcpContext);
-    console.log('🎨 [Chat] Widget mappings:', Object.keys(widgetMappings.inputWidgetMap).join(', ') || 'none');
-
-    // If widget_data is provided, process it directly without intent detection
-    if (widget_data?.widget_type) {
-      console.log('🔧 [Chat] Processing widget submission:', widget_data.widget_type);
-
-      const widgetResult = await processWidgetData(widget_data, mcpContext, {
-        latitude: latitude ? parseFloat(latitude) : null,
-        longitude: longitude ? parseFloat(longitude) : null,
-        widgetMappings, // Pass dynamic widget mappings
-      });
-
-      // Build enhanced body with widget result for n8n
-      const enhancedBody = {
-        ...req.body,
-        mcpServers: {
-          global: mcpContext.global,
-          regional: mcpContext.regional,
-        },
-        mcpResults: widgetResult.rawResult ? { [widget_data.widget_type]: widgetResult.rawResult } : {},
-        intentsDetected: [widget_data.widget_type.replace('_input', '')],
-        detectedRegions: mcpContext.detectedRegions,
-        locationContext: location || null,
-        widgetProcessed: true,
-        widgetSuccess: widgetResult.success,
-      };
-
-      // Call n8n for response generation
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
-
-      try {
-        const response = await fetch(N8N_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(enhancedBody),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          throw new Error(`n8n returned ${response.status}`);
-        }
-
-        const data = await response.json();
-        const duration = Date.now() - startTime;
-
-        console.log('💬 [Chat] Widget response:', {
-          success: data.success !== false,
-          duration: `${duration}ms`,
-          hasWidget: !!widgetResult.widget,
-        });
-
-        return res.json({
-          ...data,
-          widget: widgetResult.widget, // Include widget for mobile rendering
-          mcpToolsUsed: [widget_data.widget_type],
-          intentsDetected: [widget_data.widget_type.replace('_input', '')],
-          _meta: {
-            duration,
-            widgetType: widget_data.widget_type,
-            widgetSuccess: widgetResult.success,
-          },
-        });
-      } catch (fetchError) {
-        clearTimeout(timeoutId);
-        if (fetchError.name === 'AbortError') {
-          return res.status(504).json({
-            success: false,
-            error: 'Request timed out',
-            widget: widgetResult.widget,
-            response: 'Request timed out. Please try again.',
-          });
-        }
-        throw fetchError;
-      }
-    }
 
     // Call MCP servers based on detected intents (pattern matching + LLM fallback)
     const { mcpResults, intentsDetected, classification, intentSource, rawIntents, noDataFallbacks } = await callMcpServersForIntent(
@@ -1393,27 +1315,17 @@ router.post('/chat', async (req, res) => {
         console.log('🌿 [Chat] AgriVision diagnosis added to context');
       } else if (diagnosis?.error) {
         console.warn('🌿 [Chat] AgriVision error:', diagnosis.error);
-        // Still add partial data so user knows diagnosis was attempted
         mcpResults.diagnosis = { error: diagnosis.error, message: diagnosis.message || 'Could not analyze plant image' };
       }
     }
 
     console.log('🔧 [Chat] MCP Results:', {
-      intents: intentsDetected.join(', '),
-      toolsCalled: Object.keys(mcpResults).join(', '),
+      intents: intentsDetected.join(', ') || 'none',
+      toolsCalled: Object.keys(mcpResults).join(', ') || 'none',
+      intentSource,
     });
 
-    // Analyze query for natural widget suggestions using dynamic mappings from DB
-    const widgetSuggestions = analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults, widgetMappings);
-    const inputSuggestions = widgetSuggestions.filter(s => s.type === 'input');
-    const outputWidgets = widgetSuggestions.filter(s => s.type === 'output');
-
-    console.log('🎯 [Chat] Widget analysis:', {
-      inputSuggestions: inputSuggestions.map(s => s.widget),
-      outputWidgets: outputWidgets.map(s => s.widget),
-    });
-
-    // Build enhanced request body for n8n
+    // Build enhanced request body for n8n (text-only, no widgets)
     const enhancedBody = {
       ...req.body,
       mcpServers: {
@@ -1428,7 +1340,7 @@ router.post('/chat', async (req, res) => {
       intentsDetected,
       detectedRegions: mcpContext.detectedRegions,
       locationContext: location || null,
-      // NEW: Fallback instructions when MCP data is unavailable
+      // Fallback instructions when MCP data is unavailable
       noDataFallbacks: Object.keys(noDataFallbacks).length > 0 ? noDataFallbacks : null,
     };
 
@@ -1443,72 +1355,50 @@ router.post('/chat', async (req, res) => {
         body: JSON.stringify(enhancedBody),
         signal: controller.signal,
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       if (!response.ok) {
         const errorText = await response.text().catch(() => 'Unknown error');
         console.error('💬 [Chat] n8n error:', response.status, errorText);
         throw new Error(`n8n returned ${response.status}`);
       }
-      
+
       const data = await response.json();
       const duration = Date.now() - startTime;
-      
+
       console.log('💬 [Chat] Response:', {
         success: data.success !== false,
         duration: `${duration}ms`,
         hasFollowUp: !!(data.followUpQuestions?.length),
-        hasSuggestedWidget: inputSuggestions.length > 0,
-        hasOutputWidget: outputWidgets.length > 0,
+        responseLength: data.response?.length || 0,
       });
 
-      // Build response with widget information
-      const responseData = {
-        ...data,
+      // Return pure text response - explicitly remove ALL widget-related fields
+      // Widget fields may come from n8n workflow, filter them out for text-only mode
+      const {
+        widget,
+        widgetPrompt,
+        widgetReason,
+        suggestedWidget,
+        widgetData,
+        ...cleanData
+      } = data;
+
+      res.json({
+        ...cleanData,
         mcpToolsUsed: Object.keys(mcpResults),
         intentsDetected,
         _meta: {
           duration,
           mcpServersUsed: mcpContext.global.length + mcpContext.regional.length,
           regions: mcpContext.detectedRegions.map(r => r.name),
+          intentSource,
         },
-      };
-
-      // INPUT-FIRST UX: For text queries, show input widget directly (not as suggestion)
-      // This lets users customize their request before seeing results
-      if (inputSuggestions.length > 0) {
-        // Return input widget as `widget` so it renders directly in chat
-        responseData.widget = {
-          type: inputSuggestions[0].widget,
-          data: {}, // Empty data for input widget form
-        };
-        // Also include the prompt/reason for context
-        responseData.widgetPrompt = inputSuggestions[0].prompt;
-        responseData.widgetReason = inputSuggestions[0].reason;
-
-        console.log('📋 [Chat] Returning INPUT widget directly:', inputSuggestions[0].widget);
-      }
-      // FALLBACK: Show output widget only if no input widget and we have data
-      else if (outputWidgets.length > 0) {
-        // Enhance widget data with location name if available
-        const widgetData = { ...outputWidgets[0].data };
-        if (location?.displayName || location?.city) {
-          widgetData.locationName = location.displayName || location.city;
-        }
-
-        responseData.widget = {
-          type: outputWidgets[0].widget,
-          data: widgetData,
-        };
-
-        console.log('📊 [Chat] Returning OUTPUT widget:', outputWidgets[0].widget);
-      }
-
-      res.json(responseData);
+      });
     } catch (fetchError) {
       clearTimeout(timeoutId);
-      
+
       if (fetchError.name === 'AbortError') {
         console.error('💬 [Chat] Timeout after', CHAT_TIMEOUT_MS, 'ms');
         return res.status(504).json({
@@ -1521,7 +1411,7 @@ router.post('/chat', async (req, res) => {
     }
   } catch (error) {
     console.error('💬 [Chat] Error:', error.message);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       error: 'Failed to process request',
       response: 'I apologize, but I encountered an error. Please try again.',
