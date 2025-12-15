@@ -289,20 +289,20 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress, onWidgetS
       
       {/* Message Content - Widget, Markdown, or plain text */}
       {hasWidget ? (
-        // Render widget if message has widget data
+        // Render widget FIRST, then explanatory text below
         <Animated.View style={[styles.widgetContainer, { opacity: fadeAnim }]}>
-          {message.text && (
-            <View style={styles.widgetIntroText}>
-              <Markdown style={markdownStyles}>
-                {message.text}
-              </Markdown>
-            </View>
-          )}
           <WidgetRenderer
             widget={message.widget}
             onSubmit={onWidgetSubmit}
             loading={message.widgetLoading}
           />
+          {message.text && (
+            <View style={styles.widgetExplainText}>
+              <Markdown style={markdownStyles}>
+                {message.text}
+              </Markdown>
+            </View>
+          )}
         </Animated.View>
       ) : isBot ? (
         // Markdown for bot messages with smooth fade-in animation
@@ -408,8 +408,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  widgetIntroText: {
-    marginBottom: SPACING.md,
+  widgetExplainText: {
+    marginTop: SPACING.md,
   },
   messageText: {
     fontSize: TYPOGRAPHY.sizes.base,
