@@ -7,62 +7,62 @@
     "continue": "Pokračovat",
     "dismiss": "Zavřít",
     "refresh": "Obnovit",
-    "clear": "Vymazat",
+    "clear": "Vyčistit",
     "loading": "Načítání…",
     "skipForNow": "Přeskočit prozatím"
   },
   "onboarding": {
     "appName": "FarmerChat",
-    "tagline": "Váš chytrý zemědělský pomocník",
+    "tagline": "Váš zemědělský pomocník s AI",
     "getStarted": "Začít",
     "features": {
       "weatherTitle": "Předpověď počasí",
-      "weatherDescription": "Získejte přesné předpovědi počasí pro vaše hospodářství",
+      "weatherDescription": "Získejte přesné předpovědi počasí pro vaši farmu",
       "diagnosisTitle": "Diagnostika plodin",
-      "diagnosisDescription": "Identifikujte choroby rostlin z fotek",
+      "diagnosisDescription": "Rozpoznejte choroby rostlin pomocí fotek",
       "voiceTitle": "Hlasová podpora",
-      "voiceDescription": "Mluvte přirozeně ve svém jazyce"
+      "voiceDescription": "Mluvte přirozeně ve vašem jazyce"
     },
     "locationTitle": "Povolit polohu",
-    "locationDescription": "Sdílejte svou polohu pro přesné předpovědi počasí a rady pro vaši oblast.",
+    "locationDescription": "Sdílejte svou polohu pro přesnou předpověď počasí a regionální zemědělské rady.",
     "enableLocation": "Povolit polohu",
-    "locationDenied": "Přístup k poloze odepřen",
+    "locationDenied": "Povolení k poloze zamítnuto",
     "locationError": "Nepodařilo se získat polohu. Zkuste to prosím znovu.",
     "benefits": {
-      "weather": "Místní předpovědi počasí",
-      "regionAdvice": "Rady pro plodiny dle regionu",
+      "weather": "Místní předpověď počasí",
+      "regionAdvice": "Regionální rady pro plodiny",
       "soilData": "Údaje o půdě pro vaši oblast"
     },
     "languageTitle": "Vyberte jazyk",
-    "languageSubtitle": "Zvolte preferovaný jazyk pro asistenta",
+    "languageSubtitle": "Vyberte si preferovaný jazyk pro asistenta",
     "searchLanguages": "Hledat jazyky...",
     "noLanguagesFound": "Žádné jazyky nenalezeny",
     "suggestedForYou": "Doporučeno pro vás",
     "currentLanguage": "Aktuální"
   },
   "chat": {
-    "welcomeMessage": "Ahoj! 👋 Jsem tvůj farmářský asistent.\n\nMohu ti pomoci s:\n• Plodiny, zelenina, ovoce a květiny\n• Živočišná výroba, drůbež a chov ryb\n• Správa škůdců a chorob\n• Poradenství ohledně počasí a trhu\n\nJak ti dnes mohu pomoci?",
-    "locationDenied": "Přístup k poloze odepřen",
+    "welcomeMessage": "Ahoj! 👋 Jsem váš zemědělský asistent.\n\nMohu vám pomoci s:\n• Plodinami, zeleninou, ovocem a květinami\n• Chovem hospodářských zvířat, drůbeže a ryb\n• Ochronou proti škůdcům a nemocem\n• Počasím a tržními radami\n\nJak vám dnes mohu pomoci?",
+    "locationDenied": "Poloha odepřena",
     "locationUpdated": "Poloha aktualizována!",
-    "locationUpdateFailed": "Nepodařilo se aktualizovat polohu",
+    "locationUpdateFailed": "Aktualizace polohy se nezdařila",
     "loadingConversation": "Načítám konverzaci...",
     "thinking": "Přemýšlím...",
     "messagePlaceholder": "Zpráva...",
-    "fromVoice": "Z hlasu – uprav, pokud je třeba",
-    "voiceTranscribed": "Hlas přepsán! Uprav, pokud je třeba, pak odešli.",
-    "noInternet": "Žádné připojení k internetu. Zkontroluj svou síť.",
-    "couldNotLoadConversation": "Nepodařilo se načíst konverzaci",
-    "startedNewConversation": "Začata nová konverzace",
-    "connectionErrorBot": "Chyba připojení. Zkus to znovu.",
+    "fromVoice": "Z hlasu – upravte dle potřeby",
+    "voiceTranscribed": "Hlas přepsán! Upravte dle potřeby, pak odešlete.",
+    "noInternet": "Bez internetu. Zkontrolujte síť.",
+    "couldNotLoadConversation": "Konverzaci se nepodařilo načíst.",
+    "startedNewConversation": "Nová konverzace zahájena.",
+    "connectionErrorBot": "Chyba připojení. Zkuste znovu.",
     "analyzingPlantImage": "Analyzuji snímek rostliny...",
-    "imageAnalysisFailedBot": "Analýza snímku selhala. Zkus to znovu.",
-    "sorryCouldNotProcess": "Omlouvám se, to jsem nedokázal zpracovat. {details}",
-    "analysisCouldNotComplete": "Analýza se nepodařila dokončit. {details}",
-    "plantAnalysisIssues": "Analýza rostliny měla problémy: {details}",
-    "tapLocationToSet": "Klepnutím nastav polohu",
+    "imageAnalysisFailedBot": "Analýza snímku selhala. Zkuste znovu.",
+    "sorryCouldNotProcess": "Omlouvám se, to se nepodařilo zpracovat. {details}",
+    "analysisCouldNotComplete": "Analýza se nedokončila. {details}",
+    "plantAnalysisIssues": "Analýza rostliny měla potíže: {details}",
+    "tapLocationToSet": "Klepnutím nastavte polohu.",
     "senderAssistant": "FarmerChat",
-    "senderYou": "Ty",
-    "tapToAskNext": "Klepnutím se zeptej dál:"
+    "senderYou": "Vy",
+    "tapToAskNext": "Klepnutím se zeptejte dále:"
   },
   "media": {
     "photoLibraryPermission": "K výběru fotek je nutný přístup do galerie. Povolte v Nastavení.",
@@ -73,37 +73,37 @@
     "gallery": "Galerie"
   },
   "voice": {
-    "microphonePermission": "Je potřeba povolení mikrofonu",
+    "microphonePermission": "Vyžadováno povolení mikrofonu",
     "startRecordingFailed": "Nepodařilo se spustit nahrávání",
     "recordingFailed": "Nahrávání se nezdařilo",
     "transcriptionFailed": "Přepis se nezdařil",
     "couldNotTranscribeAudio": "Nepodařilo se přepsat zvuk",
-    "voiceUnavailableLater": "Hlas nedostupný – zkuste později",
-    "voiceUnavailable": "Hlas nedostupný – zkuste znovu",
+    "voiceUnavailableLater": "Hlas není k dispozici – zkuste to později",
+    "voiceUnavailable": "Hlas není k dispozici – zkuste to znovu",
     "audioPlaybackFailed": "Přehrávání zvuku se nezdařilo",
     "recording": "Nahrávání",
     "cancel": "Zrušit",
     "done": "Hotovo",
     "transcribing": "Přepisuji...",
-    "recordingHint": "Klepněte na Hotovo pro přepis, nebo na Zrušit pro smazání"
+    "recordingHint": "Klepněte na Hotovo pro přepis, nebo Zrušit pro zahození"
   },
   "history": {
-    "title": "Rozhovory",
-    "noConversations": "Zatím žádné rozhovory",
-    "noConversationsHint": "Začněte nový chat pro zemědělské rady.",
+    "title": "Konverzace",
+    "noConversations": "Zatím žádné konverzace",
+    "noConversationsHint": "Začněte nový chat pro zemědělské rady",
     "newChat": "Nový chat",
-    "newConversation": "Nový rozhovor",
-    "deleteTitle": "Smazat rozhovor",
-    "deleteMessage": "Smazat „{title}“? To nelze vrátit.",
+    "newConversation": "Nová konverzace",
+    "deleteTitle": "Smazat konverzaci",
+    "deleteMessage": "Smazat „{title}“? Toto nelze vrátit zpět.",
     "untitled": "Bez názvu",
-    "deleted": "Rozhovor smazán",
+    "deleted": "Konverzace smazána",
     "deleteFailed": "Smazání selhalo",
-    "couldNotDelete": "Nepodařilo se smazat rozhovor",
-    "notConnectedTitle": "Nepřipojeno",
-    "notConnectedHint": "Historie rozhovorů vyžaduje připojení k internetu",
+    "couldNotDelete": "Nepodařilo se smazat konverzaci",
+    "notConnectedTitle": "Nejste připojeni",
+    "notConnectedHint": "Historie konverzací vyžaduje připojení k internetu",
     "yesterday": "Včera",
-    "messageCount": "{count} messages",
-    "messageCountSingular": "1 message"
+    "messageCount": "{count} zpráv",
+    "messageCountSingular": "1 zpráva"
   },
   "settings": {
     "title": "Nastavení",
@@ -127,17 +127,17 @@
     "themeDark": "Tmavý",
     "themeSystem": "Systémový",
     "language": "Jazyk",
-    "resetOnboarding": "Resetovat úvodní nastavení",
+    "resetOnboarding": "Obnovit úvodní nastavení",
     "resetOnboardingSubtitle": "Začít znovu s průvodcem nastavením",
-    "resetConfirmTitle": "Resetovat nastavení",
-    "resetConfirmMessage": "Tím se restartuje úvodní proces. Pokračovat?",
+    "resetConfirmTitle": "Obnovit nastavení",
+    "resetConfirmMessage": "Tímto se restartuje úvodní proces. Pokračovat?",
     "appInfoVersion": "FarmerChat v2.0.0",
     "appInfoPoweredBy": "Pohání Digital Green Foundation"
   },
   "mcp": {
-    "title": "Služby AI",
+    "title": "AI Služby",
     "loading": "Načítání služeb...",
-    "loadingDetails": "Načítání...",
+    "loadingDetails": "Načítám...",
     "footer": "Dostupnost služeb závisí na vaší poloze",
     "couldNotLoad": "Nepodařilo se načíst služby",
     "couldNotLoadDetails": "Nepodařilo se načíst detaily služby",
@@ -147,7 +147,7 @@
     "servicesAvailable": "{active} z {total} služeb dostupných pro vaši polohu",
     "activeCount": "{active}/{total} aktivních",
     "statusActive": "Aktivní",
-    "statusUnavailable": "Není dostupné ve vašem regionu",
+    "statusUnavailable": "Zde nedostupné",
     "locationNotSet": "Poloha nenastavena",
     "sectionAbout": "O službě",
     "sectionFeatures": "Funkce",
@@ -158,70 +158,70 @@
       "soil": "Analýza půdy",
       "weather": "Počasí a klima",
       "livestock": "Výživa hospodářských zvířat",
-      "agriculture": "Poradenství pro plodiny"
+      "agriculture": "Rostlinné poradenství"
     },
     "services": {
       "agrivision": {
         "name": "AgriVision",
-        "tagline": "Detekce chorob rostlin s AI",
-        "description": "Analyzuje snímky rostlin pro identifikaci chorob, škůdců a nedostatků živin. Získejte okamžitou diagnózu s doporučeními léčby a tipy na prevenci."
+        "tagline": "AI detekce a diagnostika chorob rostlin",
+        "description": "Analyzujte snímky rostlin pro identifikaci chorob, škůdců a nedostatku živin. Získejte okamžitou diagnózu s doporučením léčby a tipy na prevenci."
       },
       "isdaSoil": {
-        "name": "ISDA Soil",
-        "tagline": "Analýza půdních vlastností a živin pro Afriku",
-        "description": "Získejte podrobné informace o půdě, včetně pH, dusíku, fosforu, draslíku a dalších živin. Pokrytí zahrnuje celou Afriku s rozlišením 30 metrů."
+        "name": "ISDA Půda",
+        "tagline": "Vlastnosti půdy a analýza živin pro Afriku",
+        "description": "Získejte podrobné informace o půdě, včetně pH, dusíku, fosforu, draslíku a dalších živin. Pokrytí celé Afriky s rozlišením 30 metrů."
       },
       "accuweather": {
         "name": "AccuWeather",
-        "tagline": "Aktuální počasí a předpovědi celosvětově",
+        "tagline": "Aktuální podmínky a předpověď počasí celosvětově",
         "description": "Přístup k aktuálním datům o počasí, včetně teploty, vlhkosti, rychlosti větru a srážek. Předpovědi dostupné až na 15 dní."
       },
       "gapWeather": {
-        "name": "GAP Weather",
+        "name": "GAP Počasí",
         "tagline": "Zemědělské předpovědi počasí pro Keňu",
         "description": "Specializované předpovědi počasí pro zemědělství v Keni. Zahrnuje předpovědi evapotranspirace, slunečního záření a srážek přizpůsobené pro zemědělská rozhodnutí."
       },
       "edacap": {
-        "name": "EDACaP Climate",
+        "name": "EDACaP Klima",
         "tagline": "Sezónní klimatické předpovědi pro Etiopii",
-        "description": "Sezónní klimatický výhled včetně předpovědí teploty a srážek. Pomáhá zemědělcům plánovat výsadbu a sklizňové termíny."
+        "description": "Sezónní klimatický výhled včetně předpovědi teplot a srážek. Pomáhá zemědělcům plánovat výsadbu a sklizňové termíny."
       },
       "weatherapi": {
         "name": "WeatherAPI",
-        "tagline": "Data o počasí pro lokality po celém světě",
-        "description": "Komplexní služba pro data o počasí poskytující aktuální podmínky a předpovědi pro lokality po celém světě."
+        "tagline": "Data o počasí pro globální lokality",
+        "description": "Komplexní služba pro počasí poskytující aktuální podmínky a předpovědi pro lokality po celém světě."
       },
       "tomorrowIo": {
         "name": "Tomorrow.io",
-        "tagline": "Chytré počasí a předpovědi",
-        "description": "Pokročilá platforma pro chytré počasí s vysoce přesnými předpověďmi a okamžitými předpověďmi."
+        "tagline": "Povětrnostní informace a předpovědi",
+        "description": "Pokročilá platforma s vysokým rozlišením předpovědí a aktuálními daty o počasí."
       },
       "feedFormulation": {
-        "name": "Feed Formulation",
+        "name": "Složení krmiva",
         "tagline": "Výpočet optimální diety pro dojnice",
-        "description": "Vypočítejte nejefektivnější krmnou směs pro vaše dojnice. Zohledňuje cíle produkce mléka, tělesnou hmotnost a dostupné místní krmivo."
+        "description": "Vypočítejte nákladově nejefektivnější krmnou směs pro vaše dojnice. Zohledňuje cíle produkce mléka, tělesnou hmotnost a dostupné místní krmivo."
       },
       "nextgen": {
-        "name": "NextGen Fertilizer",
-        "tagline": "Doporučení hnojiv pro konkrétní místa v Etiopii",
-        "description": "Získejte přesná doporučení hnojiv na základě vaší přesné polohy. Zahrnuje doporučení organických (kompost, vermikompost) i anorganických (močovina, NPS) hnojiv."
+        "name": "NextGen Hnojivo",
+        "tagline": "Doporučení hnojení dle místa pro Etiopii",
+        "description": "Získejte přesná doporučení hnojení na základě vaší přesné polohy. Zahrnuje organická (kompost, vermikompost) i anorganická (močovina, NPS) doporučení."
       },
       "decisionTree": {
-        "name": "Crop Decision Tree",
-        "tagline": "Doporučení pro fáze růstu plodin pro Keňu",
-        "description": "Získejte doporučení pro řízení plodin na základě fáze růstu a aktuálních povětrnostních podmínek. Pomáhá vám dělat včasná rozhodnutí ohledně kontroly škůdců, závlahy a sklizně."
+        "name": "Rozhodovací strom plodin",
+        "tagline": "Doporučení pro růstové fáze pro Keňu",
+        "description": "Získejte doporučení pro řízení plodin na základě růstové fáze a aktuálních povětrnostních podmínek. Pomůže vám včasně rozhodovat o kontrole škůdců, zavlažování a sklizni."
       },
       "gapAgriculture": {
-        "name": "GAP Agriculture",
+        "name": "GAP Zemědělství",
         "tagline": "Zemědělské poradenské služby",
-        "description": "Obecné zemědělské poradenské služby pro řízení plodin a hospodářských zvířat."
+        "description": "Všeobecné zemědělské poradenské služby pro řízení plodin a hospodářských zvířat."
       }
     },
     "features": {
       "diseaseDetection": "Detekce chorob",
       "pestIdentification": "Identifikace škůdců",
       "nutrientAnalysis": "Analýza živin",
-      "treatmentAdvice": "Poradenství k léčbě",
+      "treatmentAdvice": "Doporučení léčby",
       "soilPh": "pH půdy",
       "nitrogen": "Dusík",
       "phosphorus": "Fosfor",
@@ -236,21 +236,21 @@
       "wind": "Vítr",
       "seasonalOutlook": "Sezónní výhled",
       "rainfallProbability": "Pravděpodobnost srážek",
-      "temperatureTrend": "Trend teplot",
+      "temperatureTrend": "Vývoj teploty",
       "cropForecasts": "Předpovědi plodin",
-      "historical": "Historická data",
+      "historical": "Historie",
       "astronomy": "Astronomie",
-      "nowcast": "Okamžitá předpověď",
+      "nowcast": "Aktuální info",
       "forecasts": "Předpovědi",
       "alerts": "Upozornění",
-      "dietOptimization": "Optimalizace diety",
-      "nutrientBalance": "Nutriční rovnováha",
+      "dietOptimization": "Optimalizace stravy",
+      "nutrientBalance": "Rovnováha živin",
       "localFeeds": "Místní krmiva",
       "costCalculation": "Výpočet nákladů",
       "organicFertilizers": "Organická hnojiva",
       "inorganicFertilizers": "Anorganická hnojiva",
       "expectedYield": "Očekávaný výnos",
-      "siteSpecific": "Pro konkrétní místo",
+      "siteSpecific": "Dle polohy",
       "growthStage": "Fáze růstu",
       "recommendations": "Doporučení",
       "weatherBased": "Na základě počasí",
@@ -262,7 +262,7 @@
     },
     "fallback": {
       "service": "Zemědělská služba",
-      "description": "Detaily služby nejsou k dispozici."
+      "description": "Detaily služby nejsou dostupné."
     },
     "regions": {
       "worldwide": "Celosvětově",
@@ -279,24 +279,24 @@
     }
   },
   "system": {
-    "offline": "Bez internetu",
-    "errorTitle": "Něco se pokazilo",
-    "errorFallback": "Došlo k neočekávané chybě",
+    "offline": "Není připojení k internetu",
+    "errorTitle": "Jejda! Něco se pokazilo",
+    "errorFallback": "Vyskytla se neočekávaná chyba",
     "tryAgain": "Zkusit znovu"
   },
   "errors": {
-    "syncFailed": "Nelze se připojit k serveru. Některé funkce mohou být omezeny.",
-    "weatherUnavailable": "Služba počasí je dočasně nedostupná. Zkuste to prosím později.",
+    "syncFailed": "Nepodařilo se připojit k serveru. Některé funkce mohou být omezeny.",
+    "weatherUnavailable": "Služba počasí je dočasně nedostupná. Zkuste to později.",
     "diagnosisTimeout": "Diagnostika rostlin trvá příliš dlouho. Zkuste to prosím znovu.",
     "uploadFailed": "Nepodařilo se nahrát obrázek. Zkontrolujte připojení a zkuste to znovu.",
-    "transcriptionFailed": "Přepis hlasu se nezdařil. Zkuste mluvit znovu.",
+    "transcriptionFailed": "Přepis řeči se nezdařil. Zkuste to říct znovu.",
     "serverError": "Chyba serveru. Zkuste to prosím později.",
     "requestTimeout": "Požadavek vypršel. Zkontrolujte připojení.",
-    "locationLookupFailed": "Nelze zjistit vaši polohu."
+    "locationLookupFailed": "Nepodařilo se určit vaši polohu."
   },
   "a11y": {
-    "startNewChat": "Spustit nový chat",
-    "retryLoadingIntegrations": "Zkusit znovu načíst doplňky",
+    "startNewChat": "Zahájit nový chat",
+    "retryLoadingIntegrations": "Zkusit znovu načíst integrace",
     "dismissNotification": "Zavřít oznámení",
     "dismiss": "Zavřít",
     "clearSearch": "Vymazat hledání",
@@ -305,21 +305,21 @@
     "refreshLocation": "Obnovit polohu",
     "newChat": "Nový chat",
     "openSettings": "Otevřít nastavení",
-    "scrollToBottom": "Přejít na konec",
-    "clearVoiceTranscription": "Vymazat přepis hlasu",
+    "scrollToBottom": "Posunout na konec",
+    "clearVoiceTranscription": "Vymazat hlasový přepis",
     "takePhoto": "Vyfotit",
     "pickImage": "Vybrat obrázek",
     "messageInput": "Pole pro zprávu",
     "sendMessage": "Odeslat zprávu",
     "recordVoice": "Nahrát hlas",
     "attachMedia": "Připojit média",
-    "closeMenu": "Zavřít nabídku",
+    "closeMenu": "Zavřít menu",
     "playVoice": "Přehrát hlas",
     "stopVoicePlayback": "Zastavit přehrávání hlasu",
     "moreNotifications": "{count} dalších oznámení",
-    "themeMode": "Motiv: {mode}",
+    "themeMode": "Téma: {mode}",
     "copyMessage": "Zkopírovat zprávu",
-    "askQuestion": "Dotaz: {question}",
+    "askQuestion": "Zeptat se: {question}",
     "selectLanguage": "Jazyk {name}"
   }
 }

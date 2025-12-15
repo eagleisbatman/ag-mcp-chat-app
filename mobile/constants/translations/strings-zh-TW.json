@@ -13,97 +13,97 @@
   },
   "onboarding": {
     "appName": "FarmerChat",
-    "tagline": "您的AI智慧農作好幫手",
+    "tagline": "您的AI務農好幫手",
     "getStarted": "開始使用",
     "features": {
       "weatherTitle": "天氣預報",
-      "weatherDescription": "取得精準農場天氣預報",
+      "weatherDescription": "獲取您的農場天氣預測",
       "diagnosisTitle": "作物診斷",
-      "diagnosisDescription": "透過照片辨識作物病害",
-      "voiceTitle": "語音支援",
-      "voiceDescription": "用您的語言自然說話"
+      "diagnosisDescription": "透過照片辨識植物病害",
+      "voiceTitle": "語音協助",
+      "voiceDescription": "用您的語言自然對話"
     },
-    "locationTitle": "啟用定位",
-    "locationDescription": "分享您的位置，以獲取精準天氣預報和在地農業建議。",
-    "enableLocation": "啟用定位",
+    "locationTitle": "開啟定位",
+    "locationDescription": "分享您的位置，以取得準確天氣預報及地區務農建議。",
+    "enableLocation": "開啟定位",
     "locationDenied": "定位權限已拒絕",
     "locationError": "無法取得定位。請再試一次。",
     "benefits": {
-      "weather": "本地天氣預報",
-      "regionAdvice": "在地作物建議",
+      "weather": "當地天氣預報",
+      "regionAdvice": "地區農作建議",
       "soilData": "您地區的土壤資料"
     },
     "languageTitle": "選擇語言",
-    "languageSubtitle": "選擇助理的偏好語言",
+    "languageSubtitle": "選擇您偏好的助理語言",
     "searchLanguages": "搜尋語言...",
-    "noLanguagesFound": "未找到語言",
-    "suggestedForYou": "推薦給您",
+    "noLanguagesFound": "未找到任何語言",
+    "suggestedForYou": "為您推薦",
     "currentLanguage": "目前"
   },
   "chat": {
-    "welcomeMessage": "你好！👋 我是您的農業助理。\n\n我可以協助您：\n• 作物、蔬菜、水果和花卉\n• 畜牧、家禽和水產養殖\n• 病蟲害管理\n• 天氣和市場建議\n\n今天有什麼可以幫您的嗎？",
+    "welcomeMessage": "你好！👋 我是您的務農小幫手。\n\n我可以幫您處理：\n• 作物、蔬菜、水果和花卉\n• 畜牧、家禽和養魚\n• 病蟲害防治\n• 天氣與市場建議\n\n今天需要什麼協助呢？",
     "locationDenied": "位置權限已拒絕",
     "locationUpdated": "位置已更新！",
     "locationUpdateFailed": "無法更新位置",
     "loadingConversation": "正在載入對話...",
     "thinking": "思考中...",
     "messagePlaceholder": "訊息...",
-    "fromVoice": "來自語音 — 如有需要請編輯",
-    "voiceTranscribed": "語音已轉錄！如有需要請編輯，然後傳送。",
-    "noInternet": "沒有網路連線。請檢查您的網路。",
+    "fromVoice": "來自語音 — 可編輯",
+    "voiceTranscribed": "語音已轉換！若需修改請編輯後再傳送。",
+    "noInternet": "無網路連線。請檢查網路設定。",
     "couldNotLoadConversation": "無法載入對話",
     "startedNewConversation": "已開始新對話",
     "connectionErrorBot": "連線錯誤。請再試一次。",
     "analyzingPlantImage": "正在分析植物圖片...",
     "imageAnalysisFailedBot": "圖片分析失敗。請再試一次。",
     "sorryCouldNotProcess": "抱歉，我無法處理。{details}",
-    "analysisCouldNotComplete": "無法完成分析。{details}",
+    "analysisCouldNotComplete": "分析未能完成。{details}",
     "plantAnalysisIssues": "植物分析出現問題：{details}",
-    "tapLocationToSet": "輕觸以設定位置",
+    "tapLocationToSet": "輕觸設定位置",
     "senderAssistant": "FarmerChat",
     "senderYou": "您",
-    "tapToAskNext": "輕觸以繼續提問："
+    "tapToAskNext": "輕觸以提出下一個問題："
   },
   "media": {
-    "photoLibraryPermission": "選擇圖片需相簿權限。請到設定啟用。",
-    "cameraPermission": "拍照需相機權限。請到設定啟用。",
-    "pickImageFailed": "選取圖片失敗。請再試一次。",
-    "cameraFailed": "無法存取相機。請再試一次。",
+    "photoLibraryPermission": "選取圖片需要相簿權限，請在設定中開啟。",
+    "cameraPermission": "拍照需要相機權限，請在設定中開啟。",
+    "pickImageFailed": "選取圖片失敗，請再試一次。",
+    "cameraFailed": "無法存取相機，請再試一次。",
     "camera": "相機",
-    "gallery": "相簿"
+    "gallery": "圖庫"
   },
   "voice": {
     "microphonePermission": "需要麥克風權限",
-    "startRecordingFailed": "無法開始錄音",
+    "startRecordingFailed": "無法啟動錄音",
     "recordingFailed": "錄音失敗",
     "transcriptionFailed": "轉寫失敗",
-    "couldNotTranscribeAudio": "無法轉寫語音",
-    "voiceUnavailableLater": "語音功能暫不可用，請稍後再試",
-    "voiceUnavailable": "語音功能暫不可用，請再試一次",
-    "audioPlaybackFailed": "語音播放失敗",
+    "couldNotTranscribeAudio": "無法轉寫聲音",
+    "voiceUnavailableLater": "語音功能不可用，請稍後再試。",
+    "voiceUnavailable": "語音功能不可用，請再試。",
+    "audioPlaybackFailed": "聲音播放失敗",
     "recording": "錄音中",
     "cancel": "取消",
     "done": "完成",
     "transcribing": "轉寫中...",
-    "recordingHint": "點擊「完成」進行轉寫，或「取消」以捨棄"
+    "recordingHint": "點擊「完成」轉寫，或「取消」捨棄。"
   },
   "history": {
-    "title": "聊天紀錄",
-    "noConversations": "暫無聊天紀錄",
-    "noConversationsHint": "開始新聊天，取得耕種建議",
+    "title": "聊天記錄",
+    "noConversations": "暫無對話",
+    "noConversationsHint": "發起新聊天以取得農業建議",
     "newChat": "新聊天",
     "newConversation": "新對話",
     "deleteTitle": "刪除對話",
-    "deleteMessage": "刪除「{title}」？此操作無法復原。",
+    "deleteMessage": "刪除「{title}」嗎？此操作無法復原。",
     "untitled": "未命名",
     "deleted": "對話已刪除",
     "deleteFailed": "刪除失敗",
     "couldNotDelete": "無法刪除對話",
     "notConnectedTitle": "未連線",
-    "notConnectedHint": "聊天紀錄需要網路連線",
+    "notConnectedHint": "聊天記錄需要網路連線",
     "yesterday": "昨天",
-    "messageCount": "{count} messages",
-    "messageCountSingular": "1 message"
+    "messageCount": "{count} 則訊息",
+    "messageCountSingular": "1 則訊息"
   },
   "settings": {
     "title": "設定",
@@ -112,43 +112,43 @@
     "sectionLocation": "位置",
     "sectionLanguage": "語言",
     "sectionAppearance": "外觀",
-    "sectionDanger": "危險區域",
-    "chatHistory": "對話記錄",
-    "chatHistorySubtitle": "檢視並繼續過去的對話",
+    "sectionDanger": "危險區",
+    "chatHistory": "聊天記錄",
+    "chatHistorySubtitle": "查看並接續舊對話",
     "aiServices": "啟用服務",
-    "aiServicesSubtitle": "檢視您所在區域已啟用的AI服務",
-    "locationPermissionDenied": "位置權限已拒絕",
-    "locationUpdated": "位置已成功更新！",
-    "locationUpdateFailed": "無法更新位置。請再試一次。",
+    "aiServicesSubtitle": "查看您地區可用的 AI 服務",
+    "locationPermissionDenied": "位置權限遭拒",
+    "locationUpdated": "位置更新成功！",
+    "locationUpdateFailed": "位置更新失敗。請重試。",
     "locationEnabled": "位置已啟用",
-    "tapToEnable": "輕觸啟用",
-    "tapToUpdateLocation": "輕觸更新位置",
+    "tapToEnable": "點擊啟用",
+    "tapToUpdateLocation": "點擊更新位置",
     "themeLight": "淺色",
     "themeDark": "深色",
     "themeSystem": "系統",
     "language": "語言",
-    "resetOnboarding": "重設引導流程",
-    "resetOnboardingSubtitle": "重新開始設定精靈",
+    "resetOnboarding": "重設入門",
+    "resetOnboardingSubtitle": "從設定精靈重新開始",
     "resetConfirmTitle": "重設設定",
-    "resetConfirmMessage": "這將重新啟動引導流程。是否繼續？",
+    "resetConfirmMessage": "這會重新開始入門流程。要繼續嗎？",
     "appInfoVersion": "FarmerChat v2.0.0",
-    "appInfoPoweredBy": "由 Digital Green Foundation 提供技術支援"
+    "appInfoPoweredBy": "由 Digital Green Foundation 支援"
   },
   "mcp": {
     "title": "AI 服務",
-    "loading": "服務載入中...",
-    "loadingDetails": "載入中...",
-    "footer": "服務可用性視您的位置而定",
+    "loading": "正在載入服務...",
+    "loadingDetails": "正在載入...",
+    "footer": "服務依您位置而定",
     "couldNotLoad": "無法載入服務",
     "couldNotLoadDetails": "無法載入服務詳情",
     "failedToFetch": "無法取得服務",
-    "serviceCategory": "類別 {name}",
-    "service": "服務 {name}",
-    "servicesAvailable": "您的位置有 {active}/{total} 項服務可用",
+    "serviceCategory": "類別：{name}",
+    "service": "服務：{name}",
+    "servicesAvailable": "您位置有 {active}/{total} 項服務可用",
     "activeCount": "{active}/{total} 項啟用中",
     "statusActive": "啟用中",
-    "statusUnavailable": "此區域無法使用",
-    "locationNotSet": "位置未設定",
+    "statusUnavailable": "您地區不適用",
+    "locationNotSet": "未設定位置",
     "sectionAbout": "關於",
     "sectionFeatures": "功能",
     "sectionAvailableIn": "適用地區",
@@ -157,70 +157,70 @@
       "plantHealth": "作物健康",
       "soil": "土壤分析",
       "weather": "天氣與氣候",
-      "livestock": "畜牧營養",
-      "agriculture": "作物諮詢"
+      "livestock": "牲畜營養",
+      "agriculture": "作物建議"
     },
     "services": {
       "agrivision": {
         "name": "AgriVision",
-        "tagline": "AI 植物病害偵測診斷",
-        "description": "分析植物影像，識別病害、蟲害和養分缺乏。即時診斷並提供治療建議和預防技巧。"
+        "tagline": "AI 驅動作物病害檢測與診斷",
+        "description": "分析作物影像以識別病害、蟲害及營養不足。即時診斷並提供治療建議與預防技巧。"
       },
       "isdaSoil": {
-        "name": "ISDA Soil",
-        "tagline": "非洲土壤特性與養分分析",
-        "description": "獲取詳細土壤資訊，包含酸鹼值、氮、磷、鉀及其他養分。覆蓋整個非洲，解析度達 30 公尺。"
+        "name": "ISDA 土壤",
+        "tagline": "非洲土壤特性與營養分析",
+        "description": "獲取詳細土壤資訊，包含酸鹼值、氮、磷、鉀及其他營養素。涵蓋全非洲，解析度達 30 公尺。"
       },
       "accuweather": {
         "name": "AccuWeather",
-        "tagline": "全球即時天氣狀況與預報",
-        "description": "取得即時天氣數據，包括溫度、濕度、風速和降水。提供長達 15 天的預報。"
+        "tagline": "全球即時天氣與預報",
+        "description": "獲取即時天氣資料，包含溫度、濕度、風速與降水。提供長達 15 天的預報。"
       },
       "gapWeather": {
-        "name": "GAP Weather",
+        "name": "GAP 天氣",
         "tagline": "肯亞農業天氣預報",
-        "description": "肯亞農業專用天氣預報。包括蒸散量、太陽輻射和降水預報，為農業決策量身打造。"
+        "description": "肯亞農業專用天氣預報。包含蒸發散、太陽輻射及降水預報，專為農業決策訂製。"
       },
       "edacap": {
-        "name": "EDACaP Climate",
+        "name": "EDACaP 氣候",
         "tagline": "衣索比亞季節性氣候預報",
-        "description": "季節性氣候展望，包括溫度和降雨預測。幫助農民規劃種植和收穫時間。"
+        "description": "季節性氣候展望，包含溫度與降雨預測。協助農民規劃種植與收穫時間表。"
       },
       "weatherapi": {
         "name": "WeatherAPI",
-        "tagline": "全球地點天氣數據",
-        "description": "提供全球地點即時天氣狀況和預報的綜合天氣數據服務。"
+        "tagline": "全球各地天氣資料",
+        "description": "全面天氣資料服務，提供全球各地即時天氣狀況與預報。"
       },
       "tomorrowIo": {
         "name": "Tomorrow.io",
         "tagline": "天氣智慧與預報",
-        "description": "先進的天氣智慧平台，具備高解析度預報和即時預測功能。"
+        "description": "先進天氣智慧平台，提供高解析度預報與臨近預報功能。"
       },
       "feedFormulation": {
         "name": "飼料配方",
-        "tagline": "乳牛最佳飲食計算",
-        "description": "計算乳牛最具成本效益的飼料配方。考量產奶目標、體重和當地可用飼料。"
+        "tagline": "乳牛最佳飼料配方計算",
+        "description": "計算乳牛最具成本效益的飼料配方。考量產奶目標、體重及當地可用飼料。"
       },
       "nextgen": {
-        "name": "次世代肥料",
+        "name": "NextGen 肥料",
         "tagline": "衣索比亞特定地點肥料建議",
-        "description": "根據您的確切位置獲取精準肥料建議。包含有機（堆肥、蚯蚓糞）和無機（尿素、NPS）肥料建議。"
+        "description": "根據您的確切位置，獲取精準肥料建議。包含有機（堆肥、蚯蚓堆肥）與無機（尿素、NPS）肥料建議。"
       },
       "decisionTree": {
         "name": "作物決策樹",
         "tagline": "肯亞生長階段建議",
-        "description": "根據生長階段和即時天氣狀況，獲取作物管理建議。幫助您及時做出病蟲害防治、灌溉和收穫決策。"
+        "description": "根據生長階段和當前天氣狀況，獲取作物管理建議。協助您適時決策病蟲害防治、灌溉與收穫。"
       },
       "gapAgriculture": {
-        "name": "GAP Agriculture",
+        "name": "GAP 農業",
         "tagline": "農業諮詢服務",
-        "description": "針對作物和牲畜管理的一般農業諮詢服務。"
+        "description": "作物與牲畜管理的一般農業諮詢服務。"
       }
     },
     "features": {
-      "diseaseDetection": "病害偵測",
+      "diseaseDetection": "病害檢測",
       "pestIdentification": "蟲害識別",
-      "nutrientAnalysis": "養分分析",
+      "nutrientAnalysis": "營養分析",
       "treatmentAdvice": "治療建議",
       "soilPh": "土壤酸鹼值",
       "nitrogen": "氮",
@@ -231,20 +231,20 @@
       "humidity": "濕度",
       "forecast": "預報",
       "precipitation": "降水",
-      "evapotranspiration": "蒸散量",
+      "evapotranspiration": "蒸發散",
       "solarRadiation": "太陽輻射",
       "wind": "風",
       "seasonalOutlook": "季節展望",
       "rainfallProbability": "降雨機率",
       "temperatureTrend": "溫度趨勢",
-      "cropForecasts": "作物預測",
+      "cropForecasts": "作物預報",
       "historical": "歷史資料",
       "astronomy": "天文",
-      "nowcast": "即時預測",
+      "nowcast": "臨近預報",
       "forecasts": "預報",
       "alerts": "警報",
-      "dietOptimization": "飲食最佳化",
-      "nutrientBalance": "養分平衡",
+      "dietOptimization": "飲食優化",
+      "nutrientBalance": "營養平衡",
       "localFeeds": "當地飼料",
       "costCalculation": "成本計算",
       "organicFertilizers": "有機肥料",
@@ -254,15 +254,15 @@
       "growthStage": "生長階段",
       "recommendations": "建議",
       "weatherBased": "天氣相關",
-      "actions": "行動",
+      "actions": "措施",
       "cropAdvice": "作物建議",
-      "bestPractices": "最佳做法",
-      "seasonalTips": "季節小撇步",
+      "bestPractices": "最佳實踐",
+      "seasonalTips": "季節性提示",
       "localKnowledge": "當地知識"
     },
     "fallback": {
       "service": "農業服務",
-      "description": "服務詳情無法取得。"
+      "description": "服務詳情不可用。"
     },
     "regions": {
       "worldwide": "全球",
@@ -280,23 +280,23 @@
   },
   "system": {
     "offline": "沒有網路連線",
-    "errorTitle": "哎呀！出錯了",
-    "errorFallback": "發生了意外錯誤",
-    "tryAgain": "重試"
+    "errorTitle": "出錯了",
+    "errorFallback": "發生不明錯誤",
+    "tryAgain": "再試一次"
   },
   "errors": {
     "syncFailed": "無法連線到伺服器。部分功能可能受限。",
     "weatherUnavailable": "天氣服務暫時無法使用。請稍後再試。",
-    "diagnosisTimeout": "植物診斷時間過長。請再試一次。",
+    "diagnosisTimeout": "植物診斷處理過久。請再試一次。",
     "uploadFailed": "無法上傳圖片。請檢查連線並重試。",
     "transcriptionFailed": "語音辨識失敗。請再說一次。",
     "serverError": "伺服器錯誤。請稍後再試。",
-    "requestTimeout": "請求逾時。請檢查連線。",
-    "locationLookupFailed": "無法判斷您的位置。"
+    "requestTimeout": "要求逾時。請檢查連線。",
+    "locationLookupFailed": "無法取得您的位置資訊。"
   },
   "a11y": {
     "startNewChat": "開始新聊天",
-    "retryLoadingIntegrations": "重試載入功能",
+    "retryLoadingIntegrations": "重新載入整合",
     "dismissNotification": "關閉通知",
     "dismiss": "關閉",
     "clearSearch": "清除搜尋",
@@ -305,10 +305,10 @@
     "refreshLocation": "更新位置",
     "newChat": "新聊天",
     "openSettings": "開啟設定",
-    "scrollToBottom": "捲到底部",
-    "clearVoiceTranscription": "清除語音轉錄",
+    "scrollToBottom": "滑動到底部",
+    "clearVoiceTranscription": "清除語音轉寫",
     "takePhoto": "拍照",
-    "pickImage": "選取圖片",
+    "pickImage": "選擇圖片",
     "messageInput": "訊息輸入",
     "sendMessage": "傳送訊息",
     "recordVoice": "錄音",
