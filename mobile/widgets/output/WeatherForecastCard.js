@@ -82,13 +82,15 @@ export default function WeatherForecastCard({ data = {} }) {
   const humidity = current.humidity ?? '--';
   const windSpeed = current.wind_speed ?? current.windSpeed ?? '--';
 
-  // Get high/low from first forecast day
+  // Get high/low from first forecast day (handle empty forecast gracefully)
   const todayHigh = forecast[0]?.max_temp ?? forecast[0]?.temperatureMax ?? temperature;
-  const todayLow = forecast[0]?.min_temp ?? forecast[0]?.temperatureMin ?? '--';
+  const todayLow = forecast.length > 0
+    ? (forecast[0]?.min_temp ?? forecast[0]?.temperatureMin ?? '--')
+    : null; // Don't show low temp if no forecast data
 
-  // Location name
-  const locationName = location.name || location.displayName ||
-    (location.latitude ? `${location.latitude.toFixed(1)}°, ${location.longitude.toFixed(1)}°` : 'Your Location');
+  // Location name - prefer display name over coordinates
+  const locationName = location.name || location.displayName || location.city ||
+    data.locationName || 'Your Location';
 
   const gradientColors = getGradientColors(conditions);
   const weatherIcon = getWeatherIcon(current.icon, conditions);
@@ -111,7 +113,9 @@ export default function WeatherForecastCard({ data = {} }) {
         <AppIcon name={weatherIcon} size={56} color="#FFFFFF" />
         <View style={styles.tempContainer}>
           <Text style={styles.tempLarge}>{Math.round(todayHigh)}°</Text>
-          <Text style={styles.tempSmall}>{Math.round(todayLow)}°</Text>
+          {todayLow !== null && (
+            <Text style={styles.tempSmall}>{Math.round(todayLow)}°</Text>
+          )}
         </View>
       </View>
 

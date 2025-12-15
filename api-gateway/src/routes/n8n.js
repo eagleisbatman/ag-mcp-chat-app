@@ -1511,9 +1511,15 @@ router.post('/chat', async (req, res) => {
 
       // Add output widget if we have MCP data to display
       if (outputWidgets.length > 0) {
+        // Enhance widget data with location name if available
+        const widgetData = { ...outputWidgets[0].data };
+        if (location?.displayName || location?.city) {
+          widgetData.locationName = location.displayName || location.city;
+        }
+
         responseData.widget = {
           type: outputWidgets[0].widget,
-          data: outputWidgets[0].data,
+          data: widgetData,
         };
       }
 
