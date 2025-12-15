@@ -33,3 +33,6 @@ mobile/docs/
 # Claude Code local files
 .claude/
 
+
+# Expo
+mobile/.expo/
