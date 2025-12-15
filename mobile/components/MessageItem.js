@@ -9,27 +9,14 @@ import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
-import { WidgetRenderer, WidgetSuggestion } from '../widgets';
 
-function MessageItem({ message, isNewMessage = false, onFollowUpPress, onWidgetSubmit, onWidgetSuggestionAccept }) {
+function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const { theme, language } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
   const followUpQuestions = message.followUpQuestions || [];
-  const hasWidget = message.widget && message.widget.type;
-  const hasSuggestedWidget = message.suggestedWidget && message.suggestedWidget.type;
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
-
-  // Debug logging for widget rendering
-  if (isBot && message.widget) {
-    console.log('🎨 [MessageItem] Widget detected:', {
-      type: message.widget?.type,
-      hasData: !!message.widget?.data,
-      dataKeys: message.widget?.data ? Object.keys(message.widget.data) : [],
-      currentTemp: message.widget?.data?.current?.temperature,
-    });
-  }
   
   // Calculate max width for markdown content (screen - padding)
   const contentMaxWidth = screenWidth - (SPACING.lg * 2);
@@ -287,32 +274,14 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress, onWidgetS
         />
       )}
       
-      {/* Message Content - Widget, Markdown, or plain text */}
-      {hasWidget ? (
-        // Render widget FIRST, then explanatory text below
-        <Animated.View style={[styles.widgetContainer, { opacity: fadeAnim }]}>
-          <WidgetRenderer
-            widget={message.widget}
-            onSubmit={onWidgetSubmit}
-            loading={message.widgetLoading}
-          />
-          {message.text && (
-            <View style={styles.widgetExplainText}>
-              <Markdown style={markdownStyles}>
-                {message.text}
-              </Markdown>
-            </View>
-          )}
-        </Animated.View>
-      ) : isBot ? (
-        // Markdown for bot messages with smooth fade-in animation
+      {/* Message Content - Text-only mode (Markdown for bot, plain text for user) */}
+      {isBot ? (
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
           <Markdown style={markdownStyles}>
             {message.text}
           </Markdown>
         </Animated.View>
       ) : (
-        // Plain text for user messages
         <Text style={[styles.messageText, { color: theme.text }]}>
           {message.text}
         </Text>
@@ -327,13 +296,6 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress, onWidgetS
         </View>
       )}
 
-      {/* Widget Suggestion - Non-intrusive prompt for structured input */}
-      {isBot && hasSuggestedWidget && !hasWidget && !isAnimating && (
-        <WidgetSuggestion
-          suggestion={message.suggestedWidget}
-          onAccept={onWidgetSuggestionAccept}
-        />
-      )}
 
       {/* Follow-up Questions - Vertical List */}
       {isBot && followUpQuestions.length > 0 && !isAnimating && (
@@ -404,13 +366,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  widgetContainer: {
-    flex: 1,
-    width: '100%',
-  },
-  widgetExplainText: {
-    marginTop: SPACING.md,
-  },
   messageText: {
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
@@ -470,9 +425,6 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
   return (
     prevProps.message._id === nextProps.message._id &&
     prevProps.message.text === nextProps.message.text &&
-    prevProps.message.widget === nextProps.message.widget &&
-    prevProps.message.widgetLoading === nextProps.message.widgetLoading &&
-    prevProps.message.suggestedWidget === nextProps.message.suggestedWidget &&
     prevProps.isNewMessage === nextProps.isNewMessage
   );
 });

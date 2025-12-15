@@ -19,106 +19,162 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
-// Icon mapping for features
-const FEATURE_ICONS = {
-  // Weather
-  'thermometer': 'thermometer',
-  'calendar': 'calendar-month',
-  'water': 'water',
-  'air': 'weather-windy',
-  'calendar_month': 'calendar-month',
-  'water_drop': 'water-outline',
-  'grain': 'grain',
-  'location_on': 'map-marker',
-  // Agriculture
-  'my_location': 'crosshairs-gps',
-  'science': 'flask-outline',
-  'grass': 'grass',
-  'savings': 'cash-multiple',
-  'pets': 'cow',
-  'restaurant': 'food-apple',
-  'balance': 'scale-balance',
-  'attach_money': 'currency-usd',
-  // Soil
-  'terrain': 'terrain',
-  'map': 'map',
-  'layers': 'layers-triple',
-  'public': 'earth',
-  // AI
-  'translate': 'translate',
-  'speed': 'speedometer',
-  'category': 'shape',
-  'auto_fix_high': 'auto-fix',
-  // Default
-  'default': 'checkbox-blank-circle-outline',
+// Server display info with consistent descriptions
+const SERVER_INFO = {
+  'isda-soil': {
+    name: 'ISDA Soil',
+    tagline: 'Soil properties and nutrient analysis for Africa',
+    description: 'Get detailed soil information including pH, nitrogen, phosphorus, potassium, and other nutrients. Coverage includes all of Africa with 30-meter resolution.',
+    icon: 'terrain',
+    color: '#8B4513',
+    features: [
+      { title: 'Soil pH', description: 'Acidity/alkalinity levels' },
+      { title: 'Nitrogen', description: 'Total nitrogen content' },
+      { title: 'Phosphorus', description: 'Available phosphorus' },
+      { title: 'Potassium', description: 'Exchangeable potassium' },
+    ],
+    coverage: ['Africa'],
+  },
+  'accuweather': {
+    name: 'AccuWeather',
+    tagline: 'Current conditions and weather forecasts worldwide',
+    description: 'Access real-time weather data including temperature, humidity, wind speed, and precipitation. Forecasts available up to 15 days.',
+    icon: 'weather-partly-cloudy',
+    color: '#2196F3',
+    features: [
+      { title: 'Current Weather', description: 'Real-time conditions' },
+      { title: 'Temperature', description: 'Current and feels-like' },
+      { title: 'Humidity', description: 'Relative humidity levels' },
+      { title: 'Forecast', description: 'Up to 15-day forecast' },
+    ],
+    coverage: ['Worldwide'],
+  },
+  'gap-weather': {
+    name: 'GAP Weather',
+    tagline: 'Agricultural weather forecasts for East Africa',
+    description: 'Specialized weather forecasts for agriculture in East Africa. Includes evapotranspiration, solar radiation, and precipitation forecasts tailored for farming decisions.',
+    icon: 'weather-lightning-rainy',
+    color: '#1565C0',
+    features: [
+      { title: 'Precipitation', description: 'Rainfall forecasts' },
+      { title: 'Evapotranspiration', description: 'ET estimates for irrigation' },
+      { title: 'Solar Radiation', description: 'For crop growth modeling' },
+      { title: 'Wind', description: 'Speed and direction' },
+    ],
+    coverage: ['Kenya', 'East Africa'],
+  },
+  'edacap': {
+    name: 'EDACaP Climate',
+    tagline: 'Seasonal climate forecasts for Ethiopia',
+    description: 'Seasonal climate outlook including temperature and rainfall predictions. Helps farmers plan planting and harvesting schedules.',
+    icon: 'weather-cloudy-arrow-right',
+    color: '#0D47A1',
+    features: [
+      { title: 'Seasonal Outlook', description: 'Multi-month forecasts' },
+      { title: 'Rainfall Probability', description: 'Below/Normal/Above' },
+      { title: 'Temperature Trend', description: 'Expected deviations' },
+      { title: 'Crop Forecasts', description: 'Yield predictions' },
+    ],
+    coverage: ['Ethiopia'],
+  },
+  'weatherapi': {
+    name: 'WeatherAPI',
+    tagline: 'Weather data for global locations',
+    description: 'Comprehensive weather data service providing current conditions and forecasts for locations worldwide.',
+    icon: 'weather-sunny',
+    color: '#FF9800',
+    features: [
+      { title: 'Current Weather', description: 'Real-time conditions' },
+      { title: 'Forecast', description: 'Multi-day forecasts' },
+      { title: 'Historical', description: 'Past weather data' },
+      { title: 'Astronomy', description: 'Sunrise/sunset times' },
+    ],
+    coverage: ['Worldwide'],
+  },
+  'tomorrow-io': {
+    name: 'Tomorrow.io',
+    tagline: 'Weather intelligence and forecasting',
+    description: 'Advanced weather intelligence platform with high-resolution forecasts and nowcasting capabilities.',
+    icon: 'cloud-sync',
+    color: '#673AB7',
+    features: [
+      { title: 'Nowcast', description: 'Minute-by-minute forecasts' },
+      { title: 'Forecasts', description: 'Hourly and daily' },
+      { title: 'Alerts', description: 'Severe weather warnings' },
+      { title: 'Historical', description: 'Climate data' },
+    ],
+    coverage: ['Worldwide'],
+  },
+  'feed-formulation': {
+    name: 'Feed Formulation',
+    tagline: 'Optimal diet calculations for dairy cattle',
+    description: 'Calculate the most cost-effective feed mix for your dairy cattle. Takes into account milk production targets, body weight, and available local feeds.',
+    icon: 'cow',
+    color: '#4CAF50',
+    features: [
+      { title: 'Diet Optimization', description: 'Cost-effective feed mix' },
+      { title: 'Nutrient Balance', description: 'Protein, energy, minerals' },
+      { title: 'Local Feeds', description: 'Ethiopia feed database' },
+      { title: 'Cost Calculation', description: 'Daily feeding costs' },
+    ],
+    coverage: ['Ethiopia'],
+  },
+  'nextgen': {
+    name: 'NextGen Fertilizer',
+    tagline: 'Site-specific fertilizer recommendations for Ethiopia',
+    description: 'Get precise fertilizer recommendations based on your exact location. Includes both organic (compost, vermicompost) and inorganic (Urea, NPS) recommendations.',
+    icon: 'flask-outline',
+    color: '#E91E63',
+    features: [
+      { title: 'Organic Fertilizers', description: 'Compost, vermicompost (tons/ha)' },
+      { title: 'Inorganic Fertilizers', description: 'Urea, NPS amounts (kg/ha)' },
+      { title: 'Expected Yield', description: 'Predicted harvest' },
+      { title: 'Site-Specific', description: 'Based on your GPS location' },
+    ],
+    coverage: ['Ethiopia'],
+    crops: ['Wheat', 'Maize'],
+  },
+  'decision-tree': {
+    name: 'Crop Decision Tree',
+    tagline: 'Growth stage recommendations for Kenya',
+    description: 'Get crop management recommendations based on growth stage and current weather conditions. Helps you make timely decisions for pest control, irrigation, and harvesting.',
+    icon: 'source-branch',
+    color: '#009688',
+    features: [
+      { title: 'Growth Stage', description: 'Track crop development' },
+      { title: 'Recommendations', description: 'Timely advice' },
+      { title: 'Weather-Based', description: 'Adjusted for conditions' },
+      { title: 'Actions', description: 'What to do now' },
+    ],
+    coverage: ['Kenya'],
+    crops: ['Maize', 'Beans'],
+  },
+  'gap-agriculture': {
+    name: 'GAP Agriculture',
+    tagline: 'Agricultural advisory services',
+    description: 'General agricultural advisory services for crop and livestock management.',
+    icon: 'sprout',
+    color: '#8BC34A',
+    features: [
+      { title: 'Crop Advice', description: 'Planting and harvesting' },
+      { title: 'Best Practices', description: 'Agricultural guidance' },
+      { title: 'Seasonal Tips', description: 'Timely recommendations' },
+      { title: 'Local Knowledge', description: 'Region-specific advice' },
+    ],
+    coverage: ['East Africa'],
+  },
 };
 
-// Server icons (same as list screen)
-const SERVER_ICONS = {
-  'agrivision': 'leaf-circle',
-  'intent-classification': 'robot',
-  'nextgen': 'flask-outline',
-  'edacap': 'weather-cloudy-arrow-right',
-  'feed-formulation': 'cow',
-  'isda-soil': 'terrain',
-  'accuweather': 'weather-partly-cloudy',
-  'gap-weather': 'weather-lightning-rainy',
-  'weatherapi': 'weather-sunny',
-  'decision-tree': 'source-branch',
-  'tips': 'lightbulb-on',
-  'guardrails': 'shield-check',
-  'user-preferences': 'cog',
-  'profile-memory': 'account-circle',
-  'content': 'book-open-page-variant',
-};
-
-function StatusBadge({ status, theme }) {
-  const statusConfig = {
-    healthy: { label: 'Active', color: theme.success, icon: 'checkmark-circle' },
-    unhealthy: { label: 'Issues', color: theme.warning, icon: 'warning' },
-    not_deployed: { label: 'Coming Soon', color: theme.info, icon: 'time' },
-    unknown: { label: 'Checking...', color: theme.textMuted, icon: 'help-circle' },
-  };
-
-  const config = statusConfig[status] || statusConfig.unknown;
-
+function FeatureItem({ feature, theme, color }) {
   return (
-    <View style={[styles.statusBadge, { backgroundColor: config.color + '20' }]}>
-      <AppIcon name={config.icon} size={14} color={config.color} />
-      <Text style={[styles.statusBadgeText, { color: config.color }]}>
-        {config.label}
-      </Text>
-    </View>
-  );
-}
-
-function FeatureCard({ feature, theme }) {
-  const iconName = FEATURE_ICONS[feature.icon] || FEATURE_ICONS.default;
-
-  return (
-    <View style={[styles.featureCard, { backgroundColor: theme.surface }]}>
-      <View style={[styles.featureIconContainer, { backgroundColor: theme.accent + '15' }]}>
-        <MaterialCommunityIcons name={iconName} size={22} color={theme.accent} />
+    <View style={styles.featureItem}>
+      <View style={[styles.featureIcon, { backgroundColor: color + '15' }]}>
+        <MaterialCommunityIcons name="check" size={16} color={color} />
       </View>
-      <Text style={[styles.featureTitle, { color: theme.text }]}>
-        {feature.title}
-      </Text>
-      <Text style={[styles.featureDescription, { color: theme.textMuted }]}>
-        {feature.description}
-      </Text>
-    </View>
-  );
-}
-
-function UseCaseItem({ useCase, theme, index }) {
-  return (
-    <View style={styles.useCaseItem}>
-      <View style={[styles.useCaseBullet, { backgroundColor: theme.accent }]}>
-        <Text style={styles.useCaseBulletText}>{index + 1}</Text>
+      <View style={styles.featureContent}>
+        <Text style={[styles.featureTitle, { color: theme.text }]}>{feature.title}</Text>
+        <Text style={[styles.featureDescription, { color: theme.textMuted }]}>{feature.description}</Text>
       </View>
-      <Text style={[styles.useCaseText, { color: theme.text }]}>
-        {useCase}
-      </Text>
     </View>
   );
 }
@@ -162,12 +218,22 @@ export default function McpServerDetailScreen({ navigation, route }) {
     fetchServerDetails();
   }, [fetchServerDetails]);
 
-  const serverIcon = SERVER_ICONS[slug] || 'puzzle';
-  const heroColor = server?.heroColor || server?.color || theme.accent;
+  // Get display info from our config or fallback to API data
+  const info = SERVER_INFO[slug] || {
+    name: server?.name?.replace(' MCP', '').replace(' Server', '') || slug,
+    tagline: server?.description || 'Agricultural service',
+    description: server?.longDescription || 'Service details not available.',
+    icon: 'puzzle',
+    color: theme.accent,
+    features: [],
+    coverage: [],
+  };
+
+  const isActive = server?.healthStatus === 'healthy';
+  const displayColor = info.color || theme.accent;
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Header */}
       <ScreenHeader
         title=""
         left={
@@ -185,21 +251,15 @@ export default function McpServerDetailScreen({ navigation, route }) {
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.accent} />
-          <Text style={[styles.loadingText, { color: theme.textMuted }]}>
-            Loading...
-          </Text>
+          <Text style={[styles.loadingText, { color: theme.textMuted }]}>Loading...</Text>
         </View>
       ) : error ? (
         <View style={styles.errorContainer}>
           <AppIcon name="alert-circle" size={48} color={theme.error} />
           <Text style={[styles.errorText, { color: theme.text }]}>{error}</Text>
-          <Button
-            title={t('common.retry')}
-            onPress={fetchServerDetails}
-            style={styles.retryButton}
-          />
+          <Button title={t('common.retry')} onPress={fetchServerDetails} style={styles.retryButton} />
         </View>
-      ) : server ? (
+      ) : (
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.content}
@@ -212,78 +272,50 @@ export default function McpServerDetailScreen({ navigation, route }) {
             />
           }
         >
-          {/* Hero Section */}
-          <View style={[styles.heroSection, { backgroundColor: heroColor + '12' }]}>
-            <View style={[styles.heroIconContainer, { backgroundColor: heroColor + '25' }]}>
-              <MaterialCommunityIcons name={serverIcon} size={48} color={heroColor} />
+          {/* Header */}
+          <View style={styles.headerSection}>
+            <View style={[styles.iconContainer, { backgroundColor: displayColor + '15' }]}>
+              <MaterialCommunityIcons name={info.icon} size={40} color={displayColor} />
             </View>
+            <Text style={[styles.title, { color: theme.text }]}>{info.name}</Text>
+            <Text style={[styles.tagline, { color: theme.textMuted }]}>{info.tagline}</Text>
 
-            <Text style={[styles.heroTitle, { color: theme.text }]}>
-              {server.name?.replace(' MCP', '').replace(' Server', '')}
-            </Text>
-
-            {server.tagline && (
-              <Text style={[styles.heroTagline, { color: theme.textMuted }]}>
-                {server.tagline}
+            {/* Status */}
+            <View style={[styles.statusBadge, { backgroundColor: isActive ? theme.success + '20' : theme.textMuted + '20' }]}>
+              <View style={[styles.statusDot, { backgroundColor: isActive ? theme.success : theme.textMuted }]} />
+              <Text style={[styles.statusText, { color: isActive ? theme.success : theme.textMuted }]}>
+                {isActive ? 'Active' : 'Not available in your region'}
               </Text>
-            )}
-
-            <View style={styles.heroBadges}>
-              <StatusBadge status={server.healthStatus} theme={theme} />
-              {server.isGlobal && (
-                <View style={[styles.globalBadge, { backgroundColor: theme.info + '20' }]}>
-                  <AppIcon name="globe-outline" size={12} color={theme.info} />
-                  <Text style={[styles.globalBadgeText, { color: theme.info }]}>Global</Text>
-                </View>
-              )}
             </View>
           </View>
 
           {/* Description */}
-          {server.longDescription && (
-            <Card style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>About</Text>
-              <Text style={[styles.descriptionText, { color: theme.textMuted }]}>
-                {server.longDescription}
-              </Text>
-            </Card>
-          )}
+          <Card style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>About</Text>
+            <Text style={[styles.descriptionText, { color: theme.textMuted }]}>{info.description}</Text>
+          </Card>
 
-          {/* Features Grid */}
-          {server.features && server.features.length > 0 && (
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.text, paddingHorizontal: SPACING.lg }]}>
-                Features
-              </Text>
-              <View style={styles.featuresGrid}>
-                {server.features.map((feature, index) => (
-                  <FeatureCard key={index} feature={feature} theme={theme} />
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* Use Cases */}
-          {server.useCases && server.useCases.length > 0 && (
+          {/* Features */}
+          {info.features && info.features.length > 0 && (
             <Card style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>What You Can Do</Text>
-              <View style={styles.useCasesList}>
-                {server.useCases.map((useCase, index) => (
-                  <UseCaseItem key={index} useCase={useCase} theme={theme} index={index} />
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>Features</Text>
+              <View style={styles.featuresList}>
+                {info.features.map((feature, index) => (
+                  <FeatureItem key={index} feature={feature} theme={theme} color={displayColor} />
                 ))}
               </View>
             </Card>
           )}
 
-          {/* Supported Regions */}
-          {server.supportedRegions && server.supportedRegions.length > 0 && (
+          {/* Coverage */}
+          {info.coverage && info.coverage.length > 0 && (
             <Card style={styles.section}>
               <Text style={[styles.sectionTitle, { color: theme.text }]}>Available In</Text>
-              <View style={styles.regionsList}>
-                {server.supportedRegions.map((region, index) => (
-                  <View key={index} style={[styles.regionTag, { backgroundColor: theme.accent + '15' }]}>
+              <View style={styles.tagsList}>
+                {info.coverage.map((region, index) => (
+                  <View key={index} style={[styles.tag, { backgroundColor: theme.accent + '15' }]}>
                     <AppIcon name="location" size={12} color={theme.accent} />
-                    <Text style={[styles.regionTagText, { color: theme.accent }]}>{region}</Text>
+                    <Text style={[styles.tagText, { color: theme.accent }]}>{region}</Text>
                   </View>
                 ))}
               </View>
@@ -291,41 +323,21 @@ export default function McpServerDetailScreen({ navigation, route }) {
           )}
 
           {/* Supported Crops */}
-          {server.supportedCrops && server.supportedCrops.length > 0 && (
+          {info.crops && info.crops.length > 0 && (
             <Card style={styles.section}>
               <Text style={[styles.sectionTitle, { color: theme.text }]}>Supported Crops</Text>
-              <View style={styles.cropsList}>
-                {server.supportedCrops.map((crop, index) => (
-                  <View key={index} style={[styles.cropTag, { backgroundColor: theme.success + '15' }]}>
+              <View style={styles.tagsList}>
+                {info.crops.map((crop, index) => (
+                  <View key={index} style={[styles.tag, { backgroundColor: theme.success + '15' }]}>
                     <MaterialCommunityIcons name="sprout" size={12} color={theme.success} />
-                    <Text style={[styles.cropTagText, { color: theme.success }]}>{crop}</Text>
+                    <Text style={[styles.tagText, { color: theme.success }]}>{crop}</Text>
                   </View>
                 ))}
               </View>
             </Card>
           )}
-
-          {/* Data Source Footer */}
-          {server.dataSource && (
-            <View style={styles.footer}>
-              <MaterialCommunityIcons name="database" size={14} color={theme.textMuted} />
-              <Text style={[styles.footerText, { color: theme.textMuted }]}>
-                Powered by {server.dataSource}
-              </Text>
-            </View>
-          )}
-
-          {/* Response Time */}
-          {server.responseTime && (
-            <View style={styles.responseTime}>
-              <MaterialCommunityIcons name="speedometer" size={14} color={theme.textMuted} />
-              <Text style={[styles.responseTimeText, { color: theme.textMuted }]}>
-                Response time: {server.responseTime}ms
-              </Text>
-            </View>
-          )}
         </ScrollView>
-      ) : null}
+      )}
     </View>
   );
 }
@@ -363,72 +375,54 @@ const styles = StyleSheet.create({
   content: {
     paddingBottom: SPACING['3xl'],
   },
-
-  // Hero Section
-  heroSection: {
+  headerSection: {
+    alignItems: 'center',
     paddingVertical: SPACING['2xl'],
     paddingHorizontal: SPACING.lg,
-    alignItems: 'center',
   },
-  heroIconContainer: {
-    width: 96,
-    height: 96,
-    borderRadius: 24,
+  iconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: SPACING.lg,
+    marginBottom: SPACING.md,
   },
-  heroTitle: {
+  title: {
     fontSize: TYPOGRAPHY.sizes['2xl'],
     fontWeight: TYPOGRAPHY.weights.bold,
     textAlign: 'center',
-    marginBottom: SPACING.sm,
+    marginBottom: SPACING.xs,
   },
-  heroTagline: {
-    fontSize: TYPOGRAPHY.sizes.md,
+  tagline: {
+    fontSize: TYPOGRAPHY.sizes.base,
     textAlign: 'center',
-    lineHeight: TYPOGRAPHY.sizes.md * 1.4,
-    paddingHorizontal: SPACING.lg,
     marginBottom: SPACING.md,
-  },
-  heroBadges: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
-    marginTop: SPACING.sm,
   },
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
     paddingHorizontal: SPACING.md,
-    paddingVertical: 6,
+    paddingVertical: SPACING.sm,
     borderRadius: 16,
+    gap: SPACING.sm,
   },
-  statusBadgeText: {
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  statusText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.medium,
   },
-  globalBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
-  globalBadgeText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium,
-  },
-
-  // Sections
   section: {
-    marginTop: SPACING.lg,
+    marginTop: SPACING.md,
     marginHorizontal: SPACING.lg,
     padding: SPACING.lg,
   },
   sectionTitle: {
-    fontSize: TYPOGRAPHY.sizes.lg,
+    fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: TYPOGRAPHY.weights.semibold,
     marginBottom: SPACING.md,
   },
@@ -436,120 +430,45 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: TYPOGRAPHY.sizes.base * 1.6,
   },
-
-  // Features Grid
-  featuresGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  featuresList: {
     gap: SPACING.md,
-    paddingHorizontal: SPACING.lg,
   },
-  featureCard: {
-    width: '47%',
-    padding: SPACING.md,
-    borderRadius: 12,
+  featureItem: {
+    flexDirection: 'row',
+    gap: SPACING.md,
   },
-  featureIconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+  featureIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: SPACING.sm,
+  },
+  featureContent: {
+    flex: 1,
   },
   featureTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-    marginBottom: 4,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
   featureDescription: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    lineHeight: TYPOGRAPHY.sizes.xs * 1.4,
   },
-
-  // Use Cases
-  useCasesList: {
-    gap: SPACING.md,
-  },
-  useCaseItem: {
-    flexDirection: 'row',
-    gap: SPACING.md,
-    alignItems: 'flex-start',
-  },
-  useCaseBullet: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  useCaseBulletText: {
-    color: '#fff',
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weights.bold,
-  },
-  useCaseText: {
-    flex: 1,
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: TYPOGRAPHY.sizes.sm * 1.5,
-  },
-
-  // Regions & Crops
-  regionsList: {
+  tagsList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: SPACING.sm,
   },
-  regionTag: {
+  tag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
     paddingHorizontal: SPACING.md,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingVertical: SPACING.sm,
+    borderRadius: 16,
+    gap: 6,
   },
-  regionTagText: {
+  tagText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.medium,
-  },
-  cropsList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: SPACING.sm,
-  },
-  cropTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  cropTagText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium,
-  },
-
-  // Footer
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginTop: SPACING['2xl'],
-    paddingHorizontal: SPACING.lg,
-  },
-  footerText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  responseTime: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    marginTop: SPACING.md,
-  },
-  responseTimeText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
   },
 });

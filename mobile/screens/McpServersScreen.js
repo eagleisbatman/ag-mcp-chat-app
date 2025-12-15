@@ -14,146 +14,160 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import api from '../services/api';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
-import { withAlpha } from '../utils/color';
 import Card from '../components/ui/Card';
 import ListRow from '../components/ui/ListRow';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
-// Better icon mapping using MaterialCommunityIcons (more options)
-const SERVER_ICONS = {
-  // AI & Analytics
-  'agrivision': { icon: 'leaf-circle' },
-  'intent-classification': { icon: 'robot' },
-  'entity-extraction': { icon: 'tag-search' },
-  'guardrails': { icon: 'shield-check' },
-  
-  // Agriculture
-  'nextgen': { icon: 'flask-outline' },      // Fertilizer recommendations
-  'ssfr': { icon: 'flask-outline' },          // Legacy alias
-  'feed-formulation': { icon: 'cow' },        // Livestock feed
-  'isda-soil': { icon: 'terrain' },           // Soil data
-  'decision-tree': { icon: 'source-branch' },
-  'tips': { icon: 'lightbulb-on' },
-  'gap-agriculture': { icon: 'sprout' },
-  
-  // Weather & Climate
-  'accuweather': { icon: 'weather-partly-cloudy' },
-  'edacap': { icon: 'weather-cloudy-arrow-right' }, // Climate forecasts
-  'gap-weather': { icon: 'weather-lightning-rainy' },
-  'weatherapi': { icon: 'weather-sunny' },
-  'tomorrow-io': { icon: 'cloud-sync' },
-  
-  // Utility
-  'user-preferences': { icon: 'cog' },
-  'profile-memory': { icon: 'account-circle' },
-  'content': { icon: 'book-open-page-variant' },
+// Internal servers that should be hidden from users
+const INTERNAL_SERVERS = [
+  'content',
+  'intent-classification',
+  'profile-memory',
+  'tips',
+  'user-preferences',
+  'guardrails',
+  'entity-extraction',
+  'agrivision', // Plant diagnosis is accessed via camera, not services list
+];
+
+// Service category configuration
+const SERVICE_CATEGORIES = {
+  soil: {
+    label: 'Soil Analysis',
+    icon: 'terrain',
+    color: '#8B4513',
+    servers: ['isda-soil'],
+  },
+  weather: {
+    label: 'Weather & Climate',
+    icon: 'weather-partly-cloudy',
+    color: '#2196F3',
+    servers: ['accuweather', 'gap-weather', 'edacap', 'weatherapi', 'tomorrow-io'],
+  },
+  livestock: {
+    label: 'Livestock Nutrition',
+    icon: 'cow',
+    color: '#4CAF50',
+    servers: ['feed-formulation'],
+  },
+  agriculture: {
+    label: 'Crop Advisory',
+    icon: 'sprout',
+    color: '#FF9800',
+    servers: ['nextgen', 'decision-tree', 'gap-agriculture'],
+  },
 };
 
-// Status colors and icons
-const STATUS_CONFIG = {
-  active: { icon: 'checkmark-circle', color: 'success', label: 'Active' },
-  degraded: { icon: 'warning', color: 'warning', label: 'Unavailable' },
-  inactive: { icon: 'remove-circle', color: 'textMuted', label: 'Not in region' },
-  coming_soon: { icon: 'time', color: 'info', label: 'Coming soon' },
+// Server display info
+const SERVER_INFO = {
+  'isda-soil': {
+    name: 'ISDA Soil',
+    description: 'Soil properties and nutrient analysis for Africa',
+    icon: 'terrain',
+  },
+  'accuweather': {
+    name: 'AccuWeather',
+    description: 'Current conditions and weather forecasts worldwide',
+    icon: 'weather-partly-cloudy',
+  },
+  'gap-weather': {
+    name: 'GAP Weather',
+    description: 'Agricultural weather forecasts for East Africa',
+    icon: 'weather-lightning-rainy',
+  },
+  'edacap': {
+    name: 'EDACaP Climate',
+    description: 'Seasonal climate forecasts for Ethiopia',
+    icon: 'weather-cloudy-arrow-right',
+  },
+  'weatherapi': {
+    name: 'WeatherAPI',
+    description: 'Weather data for global locations',
+    icon: 'weather-sunny',
+  },
+  'tomorrow-io': {
+    name: 'Tomorrow.io',
+    description: 'Weather intelligence and forecasting',
+    icon: 'cloud-sync',
+  },
+  'feed-formulation': {
+    name: 'Feed Formulation',
+    description: 'Optimal diet calculations for dairy cattle',
+    icon: 'cow',
+  },
+  'nextgen': {
+    name: 'NextGen Fertilizer',
+    description: 'Site-specific fertilizer recommendations for Ethiopia',
+    icon: 'flask-outline',
+  },
+  'decision-tree': {
+    name: 'Crop Decision Tree',
+    description: 'Growth stage recommendations for Kenya',
+    icon: 'source-branch',
+  },
+  'gap-agriculture': {
+    name: 'GAP Agriculture',
+    description: 'Agricultural advisory services',
+    icon: 'sprout',
+  },
 };
 
-// Category config
-const CATEGORY_CONFIG = {
-  ai: { label: 'AI & Intelligence', icon: 'brain', color: '#9C27B0' },
-  agriculture: { label: 'Agriculture', icon: 'sprout', color: '#4CAF50' },
-  weather: { label: 'Weather', icon: 'weather-sunny', color: '#FF9800' },
-  utility: { label: 'Utilities', icon: 'toolbox', color: '#607D8B' },
-};
+function ServiceCard({ server, theme, onPress }) {
+  const isActive = server.displayStatus === 'active';
+  const info = SERVER_INFO[server.slug] || {
+    name: server.name?.replace(' MCP', '').replace(' Server', ''),
+    description: server.description || 'Agricultural service',
+    icon: 'puzzle',
+  };
 
-function ServerIcon({ slug, color, size = 24, theme }) {
-  const iconConfig = SERVER_ICONS[slug] || { icon: 'puzzle', family: 'mci' };
   return (
-    <MaterialCommunityIcons 
-      name={iconConfig.icon} 
-      size={size} 
-      color={color || theme.accent} 
-    />
-  );
-}
-
-function McpServerCard({ server, theme, onPress }) {
-  const status = server.displayStatus || 'inactive';
-  const statusConfig = STATUS_CONFIG[status] || STATUS_CONFIG.inactive;
-  const statusColor = theme[statusConfig.color] || theme.textMuted;
-  const cardOpacity = status === 'inactive' ? 0.6 : 1;
-  const displayName = server.name?.replace(' MCP', '').replace(' Server', '');
-
-  return (
-    <Card style={[styles.serverCard, { opacity: cardOpacity }]}>
+    <Card style={[styles.serviceCard, !isActive && styles.serviceCardInactive]}>
       <ListRow
-        title={displayName}
-        subtitle={server.description}
+        title={info.name}
+        subtitle={info.description}
         onPress={onPress}
         left={
-          <View style={styles.serverIconContainer}>
-            <ServerIcon
-              slug={server.slug}
-              color={status === 'active' ? (server.color || theme.accent) : theme.textMuted}
-              size={22}
-              theme={theme}
+          <View style={[styles.serviceIcon, { backgroundColor: isActive ? theme.accent + '15' : theme.surfaceVariant }]}>
+            <MaterialCommunityIcons
+              name={info.icon}
+              size={20}
+              color={isActive ? theme.accent : theme.textMuted}
             />
           </View>
         }
         right={
-          <>
-            {server.isGlobal ? (
-              <View style={styles.globalBadge}>
-                <AppIcon name="globe-outline" size={10} color={theme.info} />
-              </View>
-            ) : null}
-            <View style={styles.statusIndicator}>
-              <AppIcon name={statusConfig.icon} size={14} color={statusColor} />
-            </View>
-          </>
+          <View style={[styles.statusDot, { backgroundColor: isActive ? theme.success : theme.textMuted }]} />
         }
         showChevron={true}
         paddingHorizontal={SPACING.md}
-        accessibilityLabel={t('mcp.service', { name: displayName })}
       />
-
-      {/* Status message for non-active servers */}
-      {status !== 'active' && server.statusMessage && (
-        <Text style={[styles.statusMessage, { color: statusColor }]}>
-          {server.statusMessage}
-        </Text>
-      )}
     </Card>
   );
 }
 
 function CategorySection({ category, servers, theme, onServerPress }) {
-  const config = CATEGORY_CONFIG[category] || { label: category, icon: 'puzzle', color: '#888' };
+  const config = SERVICE_CATEGORIES[category];
+  if (!config || servers.length === 0) return null;
+
   const activeCount = servers.filter(s => s.displayStatus === 'active').length;
-  const degradedCount = servers.filter(s => s.displayStatus === 'degraded').length;
-  const countLabel = `${activeCount}${degradedCount > 0 ? ` (+${degradedCount})` : ''}/${servers.length}`;
 
   return (
     <View style={styles.categorySection}>
-      <ListRow
-        title={config.label}
-        left={
-          <View style={styles.categoryIcon}>
-            <MaterialCommunityIcons name={config.icon} size={16} color={config.color} />
-          </View>
-        }
-        right={<Text style={[styles.categoryCount, { color: theme.textMuted }]}>{countLabel}</Text>}
-        showChevron={false}
-        paddingHorizontal={0}
-        paddingVertical={SPACING.sm}
-        style={styles.categoryHeaderRow}
-        accessibilityLabel={t('mcp.serviceCategory', { name: config.label })}
-      />
+      <View style={styles.categoryHeader}>
+        <View style={[styles.categoryIcon, { backgroundColor: config.color + '20' }]}>
+          <MaterialCommunityIcons name={config.icon} size={18} color={config.color} />
+        </View>
+        <Text style={[styles.categoryLabel, { color: theme.text }]}>{config.label}</Text>
+        <Text style={[styles.categoryCount, { color: theme.textMuted }]}>
+          {activeCount}/{servers.length} active
+        </Text>
+      </View>
 
-      {servers.map((server, index) => (
-        <McpServerCard
-          key={server.slug || index}
+      {servers.map((server) => (
+        <ServiceCard
+          key={server.slug}
           server={server}
           theme={theme}
           onPress={() => onServerPress(server.slug)}
@@ -166,7 +180,7 @@ function CategorySection({ category, servers, theme, onServerPress }) {
 export default function McpServersScreen({ navigation }) {
   const { theme, location, locationDetails } = useApp();
   const { showError } = useToast();
-  
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [mcpData, setMcpData] = useState(null);
@@ -175,16 +189,15 @@ export default function McpServersScreen({ navigation }) {
   const fetchMcpServers = useCallback(async () => {
     try {
       setError(null);
-      
+
       const params = {};
       if (location?.latitude && location?.longitude) {
         params.lat = location.latitude;
         params.lon = location.longitude;
       }
-      
-      // Use live status API for real-time health checks
+
       const response = await api.getMcpServersLiveStatus(params);
-      
+
       if (response.success) {
         setMcpData(response);
       } else {
@@ -213,33 +226,32 @@ export default function McpServersScreen({ navigation }) {
     navigation.navigate('McpServerDetail', { slug });
   }, [navigation]);
 
-  // Group servers by category
+  // Filter out internal servers and group by category
   const serversByCategory = React.useMemo(() => {
     if (!mcpData?.servers) return {};
+
+    // Filter out internal servers
+    const visibleServers = mcpData.servers.filter(
+      server => !INTERNAL_SERVERS.includes(server.slug)
+    );
+
+    // Group by our defined categories
     const grouped = {};
-    mcpData.servers.forEach(server => {
-      const cat = server.category || 'utility';
-      if (!grouped[cat]) grouped[cat] = [];
-      grouped[cat].push(server);
-    });
-    // Sort each category: active first, then degraded, then coming_soon, then inactive
-    const statusOrder = { active: 0, degraded: 1, coming_soon: 2, inactive: 3 };
-    Object.keys(grouped).forEach(cat => {
-      grouped[cat].sort((a, b) => {
-        const orderA = statusOrder[a.displayStatus] ?? 3;
-        const orderB = statusOrder[b.displayStatus] ?? 3;
-        return orderA - orderB;
-      });
-    });
+    for (const [category, config] of Object.entries(SERVICE_CATEGORIES)) {
+      grouped[category] = visibleServers.filter(server =>
+        config.servers.includes(server.slug)
+      );
+    }
+
     return grouped;
   }, [mcpData]);
 
-  const counts = mcpData?.counts || { total: 0, active: 0, degraded: 0, inactive: 0, comingSoon: 0 };
-  const detectedRegions = mcpData?.detectedRegions || [];
+  // Count only visible servers
+  const visibleServers = mcpData?.servers?.filter(s => !INTERNAL_SERVERS.includes(s.slug)) || [];
+  const activeCount = visibleServers.filter(s => s.displayStatus === 'active').length;
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Header */}
       <ScreenHeader
         title={t('mcp.title')}
         left={
@@ -268,7 +280,6 @@ export default function McpServersScreen({ navigation }) {
           <Button
             title={t('common.retry')}
             onPress={fetchMcpServers}
-            accessibilityLabel={t('a11y.retryLoadingIntegrations')}
             style={styles.retryButton}
           />
         </View>
@@ -285,76 +296,35 @@ export default function McpServersScreen({ navigation }) {
             />
           }
         >
-          {/* Summary Card */}
-          <Card style={styles.summaryCard}>
-            {/* Location */}
+          {/* Location Summary */}
+          <View style={styles.summarySection}>
             <View style={styles.locationRow}>
               <AppIcon name="location" size={16} color={theme.accent} />
               <Text style={[styles.locationText, { color: theme.text }]} numberOfLines={1}>
-                {locationDetails?.displayName || 
-                 (location ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('mcp.locationNotSet'))}
+                {locationDetails?.displayName ||
+                  (location ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : 'Location not set')}
               </Text>
             </View>
-            
-            {/* Region badges */}
-            {detectedRegions.length > 0 && (
-              <View style={styles.regionBadges}>
-                {detectedRegions.slice(0, 3).map((region, index) => (
-                  <View key={index} style={styles.regionBadge}>
-                    <Text style={[styles.regionBadgeText, { color: theme.accent }]}>
-                      {region.name}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            )}
-            
-            {/* Stats */}
-            <View style={[styles.statsRow, { borderTopColor: theme.border }]}>
-              <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.success }]}>{counts.active}</Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t('mcp.stats.active')}</Text>
-              </View>
-              <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
-              <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.warning || '#FF9800' }]}>{counts.degraded}</Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t('mcp.stats.issues')}</Text>
-              </View>
-              <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
-              <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.textMuted }]}>{counts.inactive}</Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t('mcp.stats.inactive')}</Text>
-              </View>
-              <View style={[styles.statDivider, { backgroundColor: theme.border }]} />
-              <View style={styles.statItem}>
-                <Text style={[styles.statNumber, { color: theme.text }]}>{counts.total}</Text>
-                <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t('mcp.stats.total')}</Text>
-              </View>
-            </View>
-          </Card>
-
-          {/* Category Sections - in preferred order */}
-          {['ai', 'agriculture', 'weather', 'utility'].map(category => {
-            const servers = serversByCategory[category];
-            if (!servers || servers.length === 0) return null;
-            return (
-              <CategorySection
-                key={category}
-                category={category}
-                servers={servers}
-                theme={theme}
-                onServerPress={handleServerPress}
-              />
-            );
-          })}
-
-          {/* Footer */}
-          <View style={styles.footer}>
-            <AppIcon name="information-circle-outline" size={14} color={theme.textMuted} />
-            <Text style={[styles.footerText, { color: theme.textMuted }]}>
-              {t('mcp.footer')}
+            <Text style={[styles.summaryText, { color: theme.textMuted }]}>
+              {activeCount} of {visibleServers.length} services available for your location
             </Text>
           </View>
+
+          {/* Category Sections */}
+          {['soil', 'weather', 'livestock', 'agriculture'].map(category => (
+            <CategorySection
+              key={category}
+              category={category}
+              servers={serversByCategory[category] || []}
+              theme={theme}
+              onServerPress={handleServerPress}
+            />
+          ))}
+
+          {/* Footer */}
+          <Text style={[styles.footerText, { color: theme.textMuted }]}>
+            Service availability depends on your location
+          </Text>
         </ScrollView>
       )}
     </View>
@@ -396,120 +366,68 @@ const styles = StyleSheet.create({
     paddingTop: SPACING.md,
     paddingBottom: SPACING['3xl'],
   },
-  summaryCard: {
-    borderRadius: 0,
-    padding: SPACING.md,
-    marginBottom: SPACING.lg,
+  summarySection: {
+    marginBottom: SPACING.xl,
   },
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.sm,
+    marginBottom: SPACING.xs,
   },
   locationText: {
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    flex: 1,
+  },
+  summaryText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
-    flex: 1,
-  },
-  regionBadges: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginTop: SPACING.sm,
-  },
-  regionBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 0,
-    backgroundColor: 'transparent',
-  },
-  regionBadgeText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    marginTop: SPACING.md,
-    paddingTop: SPACING.md,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  statItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontSize: TYPOGRAPHY.sizes['2xl'],
-    fontWeight: TYPOGRAPHY.weights.bold,
-  },
-  statLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    marginTop: SPACING.xs,
-  },
-  statDivider: {
-    width: StyleSheet.hairlineWidth,
-    height: '80%',
-    alignSelf: 'center',
   },
   categorySection: {
-    marginBottom: SPACING.lg,
+    marginBottom: SPACING.xl,
   },
-  categoryHeaderRow: {
-    marginBottom: SPACING.sm,
+  categoryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+    gap: SPACING.sm,
   },
   categoryIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 0,
+    width: 32,
+    height: 32,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+  },
+  categoryLabel: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    flex: 1,
   },
   categoryCount: {
     fontSize: TYPOGRAPHY.sizes.sm,
   },
-  serverCard: {
+  serviceCard: {
     marginBottom: SPACING.sm,
   },
-  serverIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 0,
+  serviceCardInactive: {
+    opacity: 0.6,
+  },
+  serviceIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
   },
-  globalBadge: {
-    width: 18,
-    height: 18,
-    borderRadius: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  statusIndicator: {
-    width: 26,
-    height: 26,
-    borderRadius: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  statusMessage: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    marginTop: SPACING.xs,
-    paddingHorizontal: SPACING.md,
-    paddingBottom: SPACING.md,
-    fontStyle: 'italic',
-  },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    marginTop: SPACING.sm,
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   footerText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     textAlign: 'center',
+    marginTop: SPACING.md,
   },
 });
