@@ -1,36 +1,44 @@
 /**
- * ClimateQueryWidget - Clean climate forecast input
+ * GapWeatherInputWidget - Clean GAP Weather input for Kenya
  *
  * UX Design:
+ * - Forecast type tabs at top
  * - Location status (not complex picker)
- * - Forecast type chips
+ * - Duration chips (when applicable)
  * - Single action button
  */
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import * as Location from 'expo-location';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import AppIcon from '../../components/ui/AppIcon';
 
-const FORECAST_TYPE_OPTIONS = [
-  { value: 'climate', label: 'Climate', icon: 'cloud' },
-  { value: 'crop', label: 'Crop Yield', icon: 'leaf' },
+// Forecast types with their configurations
+const FORECAST_TYPES = [
+  { id: 'salient', label: 'Weather', icon: 'sunny', days: [3, 7, 14], defaultDays: 7, tool: 'get_gap_weather_forecast' },
+  { id: 'cbam', label: 'Agricultural', icon: 'leaf', days: [3, 5, 10], defaultDays: 5, tool: 'get_cbam_daily_forecast' },
+  { id: 'nowcast', label: 'Rain Alert', icon: 'rainy', days: null, tool: 'get_nowcast_precipitation' },
 ];
 
-// Ethiopia boundary check (EDACaP coverage)
-const isInEthiopia = (lat, lon) => lat >= 3 && lat <= 15 && lon >= 33 && lon <= 48;
-
-export default function ClimateQueryWidget({ onSubmit }) {
+export default function GapWeatherInputWidget({ onSubmit }) {
   const { theme, location, locationDetails, setLocation } = useApp();
-  const [forecastType, setForecastType] = useState('climate');
+  const [forecastType, setForecastType] = useState('salient');
+  const [days, setDays] = useState(7);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
+  const currentConfig = FORECAST_TYPES.find(t => t.id === forecastType);
   const hasLocation = location?.latitude && location?.longitude;
-  const inEthiopia = hasLocation && isInEthiopia(location.latitude, location.longitude);
   const locationName = locationDetails?.displayName ||
                        locationDetails?.level5City ||
                        (hasLocation ? `${location.latitude.toFixed(2)}°, ${location.longitude.toFixed(2)}°` : null);
+
+  // Reset days when forecast type changes
+  useEffect(() => {
+    if (currentConfig?.days) {
+      setDays(currentConfig.defaultDays);
+    }
+  }, [forecastType]);
 
   const handleEnableLocation = async () => {
     setIsLoadingLocation(true);
@@ -48,62 +56,55 @@ export default function ClimateQueryWidget({ onSubmit }) {
   };
 
   const handleSubmit = () => {
-    if (!hasLocation || !inEthiopia) return;
+    if (!hasLocation) return;
     onSubmit({
-      widget_type: 'climate_query_input',
+      widget_type: 'gap_weather_input',
       data: {
+        forecast_type: forecastType,
+        tool: currentConfig.tool,
         latitude: location.latitude,
         longitude: location.longitude,
-        forecastType,
+        days: currentConfig.days ? days : undefined,
       },
     });
   };
 
-  const canSubmit = hasLocation && inEthiopia;
-
   return (
     <View style={[styles.container, { backgroundColor: theme.surface }]}>
-      {/* Forecast Type Selection */}
-      <View style={styles.typeSection}>
-        <Text style={[styles.sectionLabel, { color: theme.textMuted }]}>Forecast Type</Text>
-        <View style={styles.typeChips}>
-          {FORECAST_TYPE_OPTIONS.map((option) => {
-            const isSelected = forecastType === option.value;
+      {/* Forecast Type Tabs */}
+      <View style={styles.tabsContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabs}>
+          {FORECAST_TYPES.map((type) => {
+            const isSelected = forecastType === type.id;
             return (
               <TouchableOpacity
-                key={option.value}
+                key={type.id}
                 style={[
-                  styles.typeChip,
+                  styles.tab,
                   { backgroundColor: isSelected ? theme.accent : theme.surfaceVariant }
                 ]}
-                onPress={() => setForecastType(option.value)}
+                onPress={() => setForecastType(type.id)}
               >
-                <AppIcon name={option.icon} size={16} color={isSelected ? '#FFFFFF' : theme.textMuted} />
-                <Text style={[styles.typeText, { color: isSelected ? '#FFFFFF' : theme.text }]}>
-                  {option.label}
+                <AppIcon name={type.icon} size={16} color={isSelected ? '#FFFFFF' : theme.textMuted} />
+                <Text style={[styles.tabText, { color: isSelected ? '#FFFFFF' : theme.text }]}>
+                  {type.label}
                 </Text>
               </TouchableOpacity>
             );
           })}
-        </View>
+        </ScrollView>
       </View>
 
       {/* Location Status */}
       <View style={styles.locationSection}>
         {hasLocation ? (
           <View style={styles.locationActive}>
-            <AppIcon name="location" size={18} color={inEthiopia ? theme.success : theme.error} />
+            <AppIcon name="location" size={18} color={theme.success} />
             <Text style={[styles.locationText, { color: theme.text }]} numberOfLines={1}>
               {locationName}
             </Text>
-            <Text style={[
-              styles.regionBadge,
-              {
-                backgroundColor: inEthiopia ? theme.accentLight : theme.errorLight,
-                color: inEthiopia ? theme.accent : theme.error
-              }
-            ]}>
-              {inEthiopia ? 'Ethiopia' : 'Outside Coverage'}
+            <Text style={[styles.regionBadge, { backgroundColor: theme.accentLight, color: theme.accent }]}>
+              Kenya
             </Text>
           </View>
         ) : (
@@ -126,12 +127,41 @@ export default function ClimateQueryWidget({ onSubmit }) {
         )}
       </View>
 
-      {/* Coverage Notice */}
-      {hasLocation && !inEthiopia && (
-        <View style={[styles.noticeBox, { backgroundColor: theme.errorLight }]}>
-          <AppIcon name="alert-circle" size={16} color={theme.error} />
-          <Text style={[styles.noticeText, { color: theme.error }]}>
-            Seasonal forecasts are only available for Ethiopia
+      {/* Duration Chips (for non-nowcast) */}
+      {currentConfig?.days && (
+        <View style={styles.durationSection}>
+          <Text style={[styles.durationLabel, { color: theme.textMuted }]}>Duration</Text>
+          <View style={styles.durationChips}>
+            {currentConfig.days.map((d) => {
+              const isSelected = days === d;
+              return (
+                <TouchableOpacity
+                  key={d}
+                  style={[
+                    styles.chip,
+                    {
+                      backgroundColor: isSelected ? theme.accent : theme.surfaceVariant,
+                      borderColor: isSelected ? theme.accent : theme.border,
+                    }
+                  ]}
+                  onPress={() => setDays(d)}
+                >
+                  <Text style={[styles.chipText, { color: isSelected ? '#FFFFFF' : theme.text }]}>
+                    {d} Days
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+      )}
+
+      {/* Nowcast Info */}
+      {forecastType === 'nowcast' && (
+        <View style={[styles.infoBox, { backgroundColor: theme.infoLight || theme.accentLight }]}>
+          <AppIcon name="time-outline" size={16} color={theme.info || theme.accent} />
+          <Text style={[styles.infoText, { color: theme.text }]}>
+            Next 12 hours rain probability
           </Text>
         </View>
       )}
@@ -141,22 +171,22 @@ export default function ClimateQueryWidget({ onSubmit }) {
         style={[
           styles.submitBtn,
           {
-            backgroundColor: canSubmit ? theme.accent : theme.surfaceVariant,
-            opacity: canSubmit ? 1 : 0.5,
+            backgroundColor: hasLocation ? theme.accent : theme.surfaceVariant,
+            opacity: hasLocation ? 1 : 0.5,
           }
         ]}
         onPress={handleSubmit}
-        disabled={!canSubmit}
+        disabled={!hasLocation}
       >
-        <AppIcon name="calendar" size={20} color={canSubmit ? '#FFFFFF' : theme.textMuted} />
-        <Text style={[styles.submitText, { color: canSubmit ? '#FFFFFF' : theme.textMuted }]}>
-          Get Seasonal Forecast
+        <AppIcon name={currentConfig?.icon || 'sunny'} size={20} color={hasLocation ? '#FFFFFF' : theme.textMuted} />
+        <Text style={[styles.submitText, { color: hasLocation ? '#FFFFFF' : theme.textMuted }]}>
+          Get {currentConfig?.label || 'Forecast'}
         </Text>
       </TouchableOpacity>
 
       {/* Attribution */}
       <Text style={[styles.attribution, { color: theme.textMuted }]}>
-        EDACaP / Aclimate • Ethiopia
+        TomorrowNow GAP Platform
       </Text>
     </View>
   );
@@ -168,32 +198,25 @@ const styles = StyleSheet.create({
     padding: SPACING.lg,
     gap: SPACING.md,
   },
-  typeSection: {
-    gap: SPACING.sm,
+  tabsContainer: {
+    marginHorizontal: -SPACING.xs,
   },
-  sectionLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  typeChips: {
+  tabs: {
     flexDirection: 'row',
     gap: SPACING.sm,
+    paddingHorizontal: SPACING.xs,
   },
-  typeChip: {
-    flex: 1,
+  tab: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: 6,
-    paddingVertical: SPACING.md,
+    paddingVertical: SPACING.sm,
     paddingHorizontal: SPACING.md,
-    borderRadius: 12,
+    borderRadius: 20,
   },
-  typeText: {
+  tabText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
   locationSection: {
     minHeight: 44,
@@ -229,14 +252,39 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
-  noticeBox: {
+  durationSection: {
+    gap: SPACING.sm,
+  },
+  durationLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  durationChips: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+  },
+  chip: {
+    flex: 1,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  chipText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+  },
+  infoBox: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.sm,
     padding: SPACING.md,
     borderRadius: 12,
   },
-  noticeText: {
+  infoText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
   },

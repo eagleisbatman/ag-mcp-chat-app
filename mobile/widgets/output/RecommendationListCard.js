@@ -1,54 +1,51 @@
 /**
- * RecommendationListCard - Output widget for crop recommendations
+ * RecommendationListCard - Visually appealing crop recommendations
  *
- * Features:
- * - Growth stage indicator
- * - Recommendations list with icons
- * - Priority indicators
+ * Design: Teal/cyan gradient (agriculture theme)
+ * - Large crop & stage display
+ * - Visual growth progress
+ * - Priority-coded recommendations
  */
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import AppIcon from '../../components/ui/AppIcon';
 
-// Growth stage progress bar
-function GrowthStageBar({ stage, theme }) {
-  const stages = ['germination', 'vegetative', 'flowering', 'grain_filling', 'maturity'];
-  const currentIndex = stages.indexOf(stage);
-  const progress = currentIndex >= 0 ? ((currentIndex + 1) / stages.length) * 100 : 50;
+const STAGES = ['germination', 'vegetative', 'flowering', 'grain_filling', 'maturity'];
+const STAGE_LABELS = {
+  germination: 'Germination',
+  vegetative: 'Vegetative',
+  flowering: 'Flowering',
+  grain_filling: 'Grain Fill',
+  maturity: 'Maturity',
+};
 
-  const stageLabels = {
-    germination: 'Germination',
-    vegetative: 'Vegetative',
-    flowering: 'Flowering',
-    grain_filling: 'Grain Filling',
-    maturity: 'Maturity',
-  };
+// Priority colors
+const PRIORITY_COLORS = {
+  high: '#EF5350',
+  medium: '#FF9800',
+  low: '#4CAF50',
+};
+
+// Growth stage progress indicator
+function GrowthProgress({ stage }) {
+  const currentIndex = STAGES.indexOf(stage);
+  const progress = currentIndex >= 0 ? ((currentIndex + 1) / STAGES.length) * 100 : 50;
 
   return (
-    <View style={styles.stageContainer}>
-      <View style={styles.stageHeader}>
-        <Text style={[styles.stageLabel, { color: theme.textMuted }]}>Growth Stage</Text>
-        <Text style={[styles.stageName, { color: theme.accent }]}>
-          {stageLabels[stage] || stage}
-        </Text>
+    <View style={styles.progressContainer}>
+      <View style={styles.progressBar}>
+        <View style={[styles.progressFill, { width: `${progress}%` }]} />
       </View>
-      <View style={[styles.progressBar, { backgroundColor: theme.surfaceVariant }]}>
-        <View
-          style={[
-            styles.progressFill,
-            { width: `${progress}%`, backgroundColor: theme.accent },
-          ]}
-        />
-      </View>
-      <View style={styles.stageMarkers}>
-        {stages.map((s, i) => (
+      <View style={styles.progressMarkers}>
+        {STAGES.map((s, i) => (
           <View
             key={s}
             style={[
-              styles.stageMarker,
-              { backgroundColor: i <= currentIndex ? theme.accent : theme.surfaceVariant },
+              styles.marker,
+              { backgroundColor: i <= currentIndex ? '#FFFFFF' : 'rgba(255,255,255,0.3)' }
             ]}
           />
         ))}
@@ -57,48 +54,30 @@ function GrowthStageBar({ stage, theme }) {
   );
 }
 
-// Priority icon and color
-const getPriorityStyle = (priority, theme) => {
-  switch (priority) {
-    case 'high':
-      return { icon: 'alert-circle', color: theme.error };
-    case 'medium':
-      return { icon: 'warning', color: theme.warning };
-    case 'low':
-    default:
-      return { icon: 'information-circle', color: theme.info };
-  }
-};
-
-function RecommendationItem({ recommendation, theme }) {
-  const { icon, color } = getPriorityStyle(recommendation.priority, theme);
+// Recommendation item
+function RecommendationItem({ recommendation }) {
+  const priorityColor = PRIORITY_COLORS[recommendation.priority] || PRIORITY_COLORS.low;
 
   return (
-    <View style={[styles.recItem, { borderLeftColor: color }]}>
-      <View style={styles.recHeader}>
-        <AppIcon name={icon} size={18} color={color} />
-        <Text style={[styles.recTitle, { color: theme.text }]}>
-          {recommendation.title}
-        </Text>
-        {recommendation.priority && (
-          <View style={[styles.priorityBadge, { backgroundColor: color + '20' }]}>
-            <Text style={[styles.priorityText, { color }]}>
-              {recommendation.priority.toUpperCase()}
-            </Text>
+    <View style={styles.recItem}>
+      <View style={[styles.priorityDot, { backgroundColor: priorityColor }]} />
+      <View style={styles.recContent}>
+        <View style={styles.recHeader}>
+          <Text style={styles.recTitle}>{recommendation.title}</Text>
+          {recommendation.priority && (
+            <View style={[styles.priorityBadge, { backgroundColor: priorityColor }]}>
+              <Text style={styles.priorityText}>{recommendation.priority}</Text>
+            </View>
+          )}
+        </View>
+        <Text style={styles.recDescription}>{recommendation.description}</Text>
+        {recommendation.action && (
+          <View style={styles.actionRow}>
+            <AppIcon name="arrow-forward" size={12} color="#FFFFFF" />
+            <Text style={styles.actionText}>{recommendation.action}</Text>
           </View>
         )}
       </View>
-      <Text style={[styles.recDescription, { color: theme.textMuted }]}>
-        {recommendation.description}
-      </Text>
-      {recommendation.action && (
-        <View style={styles.actionRow}>
-          <AppIcon name="arrow-forward" size={14} color={theme.accent} />
-          <Text style={[styles.actionText, { color: theme.accent }]}>
-            {recommendation.action}
-          </Text>
-        </View>
-      )}
     </View>
   );
 }
@@ -115,193 +94,262 @@ export default function RecommendationListCard({ data = {} }) {
 
   if (!recommendations || recommendations.length === 0) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.surface }]}>
-        <View style={styles.header}>
-          <AppIcon name="leaf" size={24} color={theme.accent} />
-          <Text style={[styles.title, { color: theme.text }]}>Crop Recommendations</Text>
-        </View>
-        <Text style={[styles.noDataText, { color: theme.textMuted }]}>
-          No recommendations available. Please try adjusting your inputs.
+      <View style={[styles.errorContainer, { backgroundColor: theme.surfaceVariant }]}>
+        <AppIcon name="leaf" size={32} color={theme.textMuted} />
+        <Text style={[styles.errorText, { color: theme.textMuted }]}>
+          No recommendations available
         </Text>
       </View>
     );
   }
 
+  const cropName = crop ? crop.charAt(0).toUpperCase() + crop.slice(1) : 'Crop';
+  const stageName = STAGE_LABELS[growth_stage] || growth_stage || 'Unknown';
+
+  // Count by priority
+  const highCount = recommendations.filter(r => r.priority === 'high').length;
+  const mediumCount = recommendations.filter(r => r.priority === 'medium').length;
+
   return (
-    <View style={[styles.container, { backgroundColor: theme.surface }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <AppIcon name="leaf" size={24} color={theme.accent} />
-        <View style={styles.headerInfo}>
-          <Text style={[styles.title, { color: theme.text }]}>Crop Recommendations</Text>
-          {crop && (
-            <Text style={[styles.cropName, { color: theme.textMuted }]}>
-              {crop.charAt(0).toUpperCase() + crop.slice(1)}
-            </Text>
-          )}
+    <LinearGradient colors={['#00796B', '#009688', '#26A69A']} style={styles.container}>
+      {/* Main Display */}
+      <View style={styles.mainSection}>
+        <AppIcon name="leaf" size={48} color="#FFFFFF" />
+        <View style={styles.cropInfo}>
+          <Text style={styles.cropName}>{cropName}</Text>
+          <View style={styles.stageBadge}>
+            <Text style={styles.stageText}>{stageName}</Text>
+          </View>
         </View>
       </View>
 
-      {/* Growth Stage Bar */}
-      {growth_stage && <GrowthStageBar stage={growth_stage} theme={theme} />}
+      {/* Growth Progress */}
+      {growth_stage && <GrowthProgress stage={growth_stage} />}
+
+      {/* Summary Stats */}
+      <View style={styles.statsRow}>
+        <View style={styles.statItem}>
+          <Text style={styles.statValue}>{recommendations.length}</Text>
+          <Text style={styles.statLabel}>Total</Text>
+        </View>
+        {highCount > 0 && (
+          <View style={styles.statItem}>
+            <View style={[styles.statDot, { backgroundColor: PRIORITY_COLORS.high }]} />
+            <Text style={styles.statValue}>{highCount}</Text>
+            <Text style={styles.statLabel}>Urgent</Text>
+          </View>
+        )}
+        {mediumCount > 0 && (
+          <View style={styles.statItem}>
+            <View style={[styles.statDot, { backgroundColor: PRIORITY_COLORS.medium }]} />
+            <Text style={styles.statValue}>{mediumCount}</Text>
+            <Text style={styles.statLabel}>Important</Text>
+          </View>
+        )}
+      </View>
 
       {/* Weather Summary */}
       {weather_summary && (
-        <View style={[styles.weatherBox, { backgroundColor: theme.surfaceVariant }]}>
-          <AppIcon name="partly-sunny" size={16} color={theme.textMuted} />
-          <Text style={[styles.weatherText, { color: theme.textMuted }]}>
-            {weather_summary}
-          </Text>
+        <View style={styles.weatherBox}>
+          <AppIcon name="partly-sunny" size={14} color="rgba(255,255,255,0.8)" />
+          <Text style={styles.weatherText}>{weather_summary}</Text>
         </View>
       )}
 
-      {/* Recommendations List */}
-      <ScrollView style={styles.recList} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
-          {recommendations.length} Recommendation{recommendations.length !== 1 ? 's' : ''}
-        </Text>
-        {recommendations.map((rec, index) => (
-          <RecommendationItem key={index} recommendation={rec} theme={theme} />
-        ))}
-      </ScrollView>
+      {/* Recommendations */}
+      <View style={styles.recSection}>
+        <Text style={styles.sectionLabel}>Recommendations</Text>
+        <ScrollView style={styles.recScroll} showsVerticalScrollIndicator={false}>
+          {recommendations.map((rec, index) => (
+            <RecommendationItem key={index} recommendation={rec} />
+          ))}
+        </ScrollView>
+      </View>
 
-      {/* Source */}
-      <Text style={[styles.sourceText, { color: theme.textMuted }]}>
-        Source: TomorrowNow Decision Support System
-      </Text>
-    </View>
+      {/* Attribution */}
+      <Text style={styles.attribution}>TomorrowNow Decision Support</Text>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 20,
+    padding: SPACING.lg,
     overflow: 'hidden',
   },
-  header: {
+  mainSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: SPACING.md,
-    gap: SPACING.sm,
+    justifyContent: 'center',
+    gap: SPACING.md,
+    marginBottom: SPACING.sm,
   },
-  headerInfo: {
-    flex: 1,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: TYPOGRAPHY.weights.semibold,
+  cropInfo: {
+    alignItems: 'flex-start',
   },
   cropName: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: 32,
+    fontWeight: '300',
+    color: '#FFFFFF',
+    lineHeight: 40,
   },
-  stageContainer: {
-    paddingHorizontal: SPACING.md,
-    marginBottom: SPACING.md,
+  stageBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 4,
   },
-  stageHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.xs,
-  },
-  stageLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  stageName: {
+  stageText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.semibold,
+    color: '#FFFFFF',
+  },
+  progressContainer: {
+    marginBottom: SPACING.md,
   },
   progressBar: {
     height: 8,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 4,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
+    backgroundColor: '#FFFFFF',
     borderRadius: 4,
   },
-  stageMarkers: {
+  progressMarkers: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: SPACING.xs,
   },
-  stageMarker: {
+  marker: {
     width: 8,
     height: 8,
     borderRadius: 4,
   },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SPACING.xl,
+    marginBottom: SPACING.md,
+  },
+  statItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  statDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  statValue: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: TYPOGRAPHY.weights.bold,
+    color: '#FFFFFF',
+  },
+  statLabel: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.7)',
+  },
   weatherBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: SPACING.md,
+    gap: SPACING.sm,
+    backgroundColor: 'rgba(255,255,255,0.1)',
     padding: SPACING.sm,
-    borderRadius: SPACING.radiusSm,
-    gap: SPACING.xs,
+    borderRadius: 10,
     marginBottom: SPACING.md,
   },
   weatherText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
     flex: 1,
-  },
-  recList: {
-    maxHeight: 300,
-    paddingHorizontal: SPACING.md,
-  },
-  sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: 'rgba(255,255,255,0.9)',
+  },
+  recSection: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 12,
+    padding: SPACING.md,
+    marginBottom: SPACING.sm,
+  },
+  sectionLabel: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.7)',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: SPACING.sm,
   },
+  recScroll: {
+    maxHeight: 200,
+  },
   recItem: {
+    flexDirection: 'row',
     marginBottom: SPACING.md,
-    paddingLeft: SPACING.md,
-    borderLeftWidth: 3,
+  },
+  priorityDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginTop: 6,
+    marginRight: SPACING.sm,
+  },
+  recContent: {
+    flex: 1,
   },
   recHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.xs,
-    marginBottom: SPACING.xs,
+    justifyContent: 'space-between',
+    marginBottom: 2,
   },
   recTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.semibold,
+    color: '#FFFFFF',
     flex: 1,
   },
   priorityBadge: {
-    paddingHorizontal: SPACING.xs,
+    paddingHorizontal: 6,
     paddingVertical: 2,
-    borderRadius: SPACING.radiusFull,
+    borderRadius: 6,
   },
   priorityText: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: TYPOGRAPHY.weights.bold,
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
   },
   recDescription: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: TYPOGRAPHY.sizes.sm * 1.4,
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.8)',
+    lineHeight: 16,
   },
   actionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.xs,
-    marginTop: SPACING.xs,
+    gap: 4,
+    marginTop: 4,
   },
   actionText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: 11,
+    color: '#FFFFFF',
     fontWeight: TYPOGRAPHY.weights.medium,
   },
-  sourceText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
+  attribution: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.5)',
     textAlign: 'center',
-    padding: SPACING.sm,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0,0,0,0.1)',
   },
-  noDataText: {
-    padding: SPACING.lg,
-    textAlign: 'center',
+  errorContainer: {
+    borderRadius: 16,
+    padding: SPACING.xl,
+    alignItems: 'center',
+    gap: SPACING.md,
+  },
+  errorText: {
     fontSize: TYPOGRAPHY.sizes.sm,
   },
 });

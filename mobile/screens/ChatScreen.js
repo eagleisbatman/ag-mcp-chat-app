@@ -1,6 +1,8 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image } from 'react-native';
 import AppIcon from '../components/ui/AppIcon';
+
+const logoImage = require('../assets/logo.png');
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 import { useApp } from '../contexts/AppContext';
@@ -102,7 +104,7 @@ export default function ChatScreen({ navigation, route }) {
         center={
           <View style={styles.headerLeft}>
             <View style={styles.logoContainer}>
-              <AppIcon name="leaf" size={24} color={theme.iconPrimary || theme.accent} />
+              <Image source={logoImage} style={styles.headerLogo} resizeMode="contain" />
             </View>
             <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
               {locationDetails?.displayName ||
@@ -250,6 +252,10 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  headerLogo: {
+    width: 32,
+    height: 32,
   },
   headerSubtitle: { 
     fontSize: TYPOGRAPHY.sizes.sm,

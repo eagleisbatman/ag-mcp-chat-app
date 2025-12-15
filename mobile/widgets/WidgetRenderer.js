@@ -12,6 +12,7 @@ import { WIDGET_TYPES, isInputWidget, isOutputWidget, WIDGET_METADATA } from './
 
 // Input Widgets
 import WeatherInputWidget from './input/WeatherInputWidget';
+import GapWeatherInputWidget from './input/GapWeatherInputWidget';
 import FeedFormulationWidget from './input/FeedFormulationWidget';
 import SoilQueryWidget from './input/SoilQueryWidget';
 import FertilizerInputWidget from './input/FertilizerInputWidget';
@@ -20,6 +21,9 @@ import DecisionTreeWidget from './input/DecisionTreeWidget';
 
 // Output Widgets
 import WeatherForecastCard from './output/WeatherForecastCard';
+import SalientForecastCard from './output/SalientForecastCard';
+import CBAMDetailedCard from './output/CBAMDetailedCard';
+import NowcastAlertCard from './output/NowcastAlertCard';
 import DietRecommendationCard from './output/DietRecommendationCard';
 import SoilProfileCard from './output/SoilProfileCard';
 import FertilizerResultCard from './output/FertilizerResultCard';
@@ -33,6 +37,7 @@ const getWidgetComponent = (type) => {
   const widgetMap = {
     // Input Widgets
     [WIDGET_TYPES.WEATHER_INPUT]: WeatherInputWidget,
+    [WIDGET_TYPES.GAP_WEATHER_INPUT]: GapWeatherInputWidget,
     [WIDGET_TYPES.FEED_FORM]: FeedFormulationWidget,
     [WIDGET_TYPES.SOIL_QUERY]: SoilQueryWidget,
     [WIDGET_TYPES.FERTILIZER_INPUT]: FertilizerInputWidget,
@@ -41,6 +46,9 @@ const getWidgetComponent = (type) => {
 
     // Output Widgets
     [WIDGET_TYPES.WEATHER_FORECAST]: WeatherForecastCard,
+    [WIDGET_TYPES.SALIENT_FORECAST]: SalientForecastCard,
+    [WIDGET_TYPES.CBAM_DETAILED]: CBAMDetailedCard,
+    [WIDGET_TYPES.NOWCAST_ALERT]: NowcastAlertCard,
     [WIDGET_TYPES.DIET_RESULT]: DietRecommendationCard,
     [WIDGET_TYPES.SOIL_PROFILE]: SoilProfileCard,
     [WIDGET_TYPES.FERTILIZER_RESULT]: FertilizerResultCard,

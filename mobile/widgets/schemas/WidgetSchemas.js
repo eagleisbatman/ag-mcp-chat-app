@@ -9,6 +9,7 @@
 export const WIDGET_TYPES = {
   // Input Widgets - Collect structured data from users
   WEATHER_INPUT: 'weather_input',
+  GAP_WEATHER_INPUT: 'gap_weather_input',  // GAP Weather (Kenya)
   FEED_FORM: 'feed_formulation_input',
   SOIL_QUERY: 'soil_query_input',
   FERTILIZER_INPUT: 'fertilizer_input',
@@ -17,6 +18,9 @@ export const WIDGET_TYPES = {
 
   // Output Widgets - Display formatted results
   WEATHER_FORECAST: 'weather_forecast_card',
+  SALIENT_FORECAST: 'salient_forecast_card',  // GAP Salient Seasonal
+  CBAM_DETAILED: 'cbam_detailed_card',        // GAP CBAM Daily
+  NOWCAST_ALERT: 'nowcast_alert_card',        // GAP Nowcast
   DIET_RESULT: 'diet_result_card',
   SOIL_PROFILE: 'soil_profile_card',
   FERTILIZER_RESULT: 'fertilizer_result_card',
@@ -27,6 +31,7 @@ export const WIDGET_TYPES = {
 // Map input widgets to their corresponding output widgets
 export const INPUT_TO_OUTPUT_MAP = {
   [WIDGET_TYPES.WEATHER_INPUT]: WIDGET_TYPES.WEATHER_FORECAST,
+  [WIDGET_TYPES.GAP_WEATHER_INPUT]: WIDGET_TYPES.SALIENT_FORECAST,  // Default to Salient
   [WIDGET_TYPES.FEED_FORM]: WIDGET_TYPES.DIET_RESULT,
   [WIDGET_TYPES.SOIL_QUERY]: WIDGET_TYPES.SOIL_PROFILE,
   [WIDGET_TYPES.FERTILIZER_INPUT]: WIDGET_TYPES.FERTILIZER_RESULT,
@@ -52,6 +57,14 @@ export const WIDGET_METADATA = {
     category: WIDGET_CATEGORIES.WEATHER,
     description: 'Get weather forecast for your location',
     triggerKeywords: ['weather', 'forecast', 'rain', 'temperature', 'climate today'],
+  },
+  [WIDGET_TYPES.GAP_WEATHER_INPUT]: {
+    name: 'GAP Weather (Kenya)',
+    icon: 'partly-sunny',
+    category: WIDGET_CATEGORIES.WEATHER,
+    description: 'Detailed forecasts via TomorrowNow',
+    triggerKeywords: ['gap weather', 'kenya weather', 'nowcast', 'cbam', 'evapotranspiration', 'et', 'solar radiation', 'will it rain now'],
+    region: 'kenya',
   },
   [WIDGET_TYPES.FEED_FORM]: {
     name: 'Feed Calculator',

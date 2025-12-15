@@ -1,275 +1,235 @@
 /**
- * FertilizerResultCard - Output widget for NextGen fertilizer recommendations
+ * FertilizerResultCard - Visually appealing fertilizer recommendations
  *
- * Features:
- * - Three-section layout: Organic, Inorganic, Expected Yield
- * - Application timing recommendations
+ * Design: Green/lime gradient (agriculture theme)
+ * - Large yield display
+ * - Organic vs Inorganic sections
+ * - Application timing
  */
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import AppIcon from '../../components/ui/AppIcon';
-
-function FertilizerSection({ title, icon, items, theme, accentColor }) {
-  return (
-    <View style={[styles.section, { borderLeftColor: accentColor }]}>
-      <View style={styles.sectionHeader}>
-        <AppIcon name={icon} size={20} color={accentColor} />
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>{title}</Text>
-      </View>
-      {items.map((item, index) => (
-        <View key={index} style={styles.itemRow}>
-          <Text style={[styles.itemLabel, { color: theme.textSecondary }]}>{item.label}</Text>
-          <Text style={[styles.itemValue, { color: accentColor }]}>
-            {item.value} <Text style={styles.itemUnit}>{item.unit}</Text>
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
-}
 
 export default function FertilizerResultCard({ data = {} }) {
   const { theme } = useApp();
 
   const {
     crop,
-    location,
     organic = {},
     inorganic = {},
     expected_yield,
     timing = [],
-    notes = [],
   } = data;
 
   if (!organic.compost && !inorganic.urea) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.surface }]}>
+      <View style={[styles.errorContainer, { backgroundColor: theme.surfaceVariant }]}>
+        <AppIcon name="flask" size={32} color={theme.textMuted} />
         <Text style={[styles.errorText, { color: theme.textMuted }]}>
-          No fertilizer recommendation available
+          Fertilizer data unavailable
         </Text>
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.surface }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <AppIcon name="flask" size={24} color={theme.accent} />
-        <View style={styles.headerText}>
-          <Text style={[styles.title, { color: theme.text }]}>Fertilizer Recommendation</Text>
-          {crop && (
-            <Text style={[styles.cropBadge, { backgroundColor: theme.accentLight, color: theme.accent }]}>
-              {crop.charAt(0).toUpperCase() + crop.slice(1)}
-            </Text>
-          )}
+    <LinearGradient colors={['#558B2F', '#689F38', '#7CB342']} style={styles.container}>
+      {/* Main Yield Display */}
+      <View style={styles.mainSection}>
+        <AppIcon name="trending-up" size={48} color="#FFFFFF" />
+        <View style={styles.yieldContainer}>
+          <Text style={styles.yieldLarge}>{expected_yield?.toFixed(0) || '?'}</Text>
+          <View style={styles.yieldInfo}>
+            <Text style={styles.yieldUnit}>kg/ha</Text>
+            <Text style={styles.yieldAlt}>({((expected_yield || 0) / 100).toFixed(1)} q/ha)</Text>
+          </View>
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Organic Fertilizers */}
-        <FertilizerSection
-          title="Organic Fertilizers"
-          icon="leaf"
-          accentColor={theme.success}
-          theme={theme}
-          items={[
-            { label: 'Compost', value: organic.compost?.toFixed(1) || '0', unit: 'tons/ha' },
-            { label: 'Vermicompost', value: organic.vermicompost?.toFixed(1) || '0', unit: 'tons/ha' },
-          ]}
-        />
-
-        {/* Inorganic Fertilizers */}
-        <FertilizerSection
-          title="Inorganic Fertilizers"
-          icon="flask"
-          accentColor={theme.info}
-          theme={theme}
-          items={[
-            { label: 'Urea', value: inorganic.urea?.toFixed(0) || '0', unit: 'kg/ha' },
-            { label: 'NPS', value: inorganic.nps?.toFixed(0) || '0', unit: 'kg/ha' },
-          ]}
-        />
-
-        {/* Expected Yield */}
-        {expected_yield && (
-          <View style={[styles.yieldSection, { backgroundColor: theme.accentLight }]}>
-            <AppIcon name="trending-up" size={24} color={theme.accent} />
-            <View style={styles.yieldInfo}>
-              <Text style={[styles.yieldLabel, { color: theme.textMuted }]}>Expected Yield</Text>
-              <Text style={[styles.yieldValue, { color: theme.accent }]}>
-                {expected_yield.toFixed(0)} {' '}
-                <Text style={styles.yieldUnit}>kg/ha</Text>
-              </Text>
-              <Text style={[styles.yieldAlt, { color: theme.textMuted }]}>
-                ({(expected_yield / 100).toFixed(1)} quintals/ha)
-              </Text>
-            </View>
+      {/* Crop Badge */}
+      {crop && (
+        <View style={styles.cropRow}>
+          <View style={styles.cropBadge}>
+            <Text style={styles.cropText}>{crop.charAt(0).toUpperCase() + crop.slice(1)}</Text>
           </View>
-        )}
+          <Text style={styles.expectedText}>Expected Yield</Text>
+        </View>
+      )}
 
-        {/* Application Timing */}
-        {timing.length > 0 && (
-          <View style={styles.timingSection}>
-            <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
-              Application Timing
-            </Text>
+      {/* Fertilizer Sections */}
+      <View style={styles.fertilizerGrid}>
+        {/* Organic */}
+        <View style={styles.fertSection}>
+          <Text style={styles.sectionLabel}>Organic</Text>
+          <View style={styles.fertItem}>
+            <Text style={styles.fertValue}>{organic.compost?.toFixed(1) || '0'}</Text>
+            <Text style={styles.fertName}>Compost (t/ha)</Text>
+          </View>
+          <View style={styles.fertItem}>
+            <Text style={styles.fertValue}>{organic.vermicompost?.toFixed(1) || '0'}</Text>
+            <Text style={styles.fertName}>Vermicompost (t/ha)</Text>
+          </View>
+        </View>
+
+        {/* Inorganic */}
+        <View style={styles.fertSection}>
+          <Text style={styles.sectionLabel}>Inorganic</Text>
+          <View style={styles.fertItem}>
+            <Text style={styles.fertValue}>{inorganic.urea?.toFixed(0) || '0'}</Text>
+            <Text style={styles.fertName}>Urea (kg/ha)</Text>
+          </View>
+          <View style={styles.fertItem}>
+            <Text style={styles.fertValue}>{inorganic.nps?.toFixed(0) || '0'}</Text>
+            <Text style={styles.fertName}>NPS (kg/ha)</Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Application Timing */}
+      {timing.length > 0 && (
+        <View style={styles.timingSection}>
+          <Text style={styles.sectionLabel}>Application Timing</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.timingScroll}>
             {timing.map((item, index) => (
-              <View key={index} style={styles.timingItem}>
-                <View style={[styles.timingDot, { backgroundColor: theme.accent }]} />
-                <Text style={[styles.timingText, { color: theme.text }]}>{item}</Text>
+              <View key={index} style={styles.timingChip}>
+                <AppIcon name="time-outline" size={12} color="rgba(255,255,255,0.8)" />
+                <Text style={styles.timingText}>{item}</Text>
               </View>
             ))}
-          </View>
-        )}
+          </ScrollView>
+        </View>
+      )}
 
-        {/* Notes */}
-        {notes.length > 0 && (
-          <View style={styles.notesSection}>
-            <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Notes</Text>
-            {notes.map((note, index) => (
-              <Text key={index} style={[styles.noteText, { color: theme.textMuted }]}>
-                • {note}
-              </Text>
-            ))}
-          </View>
-        )}
-      </ScrollView>
-
-      {/* Source */}
-      <Text style={[styles.sourceText, { color: theme.textMuted }]}>
-        Source: NextGen SSFR (Site-Specific Fertilizer Recommendation)
-      </Text>
-    </View>
+      {/* Attribution */}
+      <Text style={styles.attribution}>NextGen SSFR Ethiopia</Text>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 20,
+    padding: SPACING.lg,
     overflow: 'hidden',
   },
-  header: {
+  mainSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: SPACING.md,
-    gap: SPACING.sm,
-  },
-  headerText: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-  },
-  cropBadge: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 2,
-    borderRadius: SPACING.radiusFull,
-    fontWeight: TYPOGRAPHY.weights.medium,
-  },
-  section: {
-    marginHorizontal: SPACING.md,
-    marginBottom: SPACING.md,
-    paddingLeft: SPACING.md,
-    borderLeftWidth: 3,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-    marginBottom: SPACING.sm,
-  },
-  sectionTitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  itemRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: SPACING.xs,
-  },
-  itemLabel: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  itemValue: {
-    fontSize: TYPOGRAPHY.sizes.base,
-    fontWeight: TYPOGRAPHY.weights.bold,
-  },
-  itemUnit: {
-    fontWeight: TYPOGRAPHY.weights.regular,
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  yieldSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: SPACING.md,
-    padding: SPACING.md,
-    borderRadius: SPACING.radiusMd,
+    justifyContent: 'center',
     gap: SPACING.md,
-  },
-  yieldInfo: {
-    flex: 1,
-  },
-  yieldLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    textTransform: 'uppercase',
-  },
-  yieldValue: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: TYPOGRAPHY.weights.bold,
-  },
-  yieldUnit: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.regular,
-  },
-  yieldAlt: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  timingSection: {
-    padding: SPACING.md,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-  },
-  timingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-    paddingVertical: SPACING.xs,
-  },
-  timingDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  timingText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  notesSection: {
-    padding: SPACING.md,
-  },
-  noteText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
     marginBottom: SPACING.xs,
   },
-  sourceText: {
+  yieldContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: SPACING.xs,
+  },
+  yieldLarge: {
+    fontSize: 52,
+    fontWeight: '300',
+    color: '#FFFFFF',
+    lineHeight: 60,
+  },
+  yieldInfo: {
+    alignItems: 'flex-start',
+  },
+  yieldUnit: {
+    fontSize: 16,
+    color: 'rgba(255,255,255,0.9)',
+  },
+  yieldAlt: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.7)',
+  },
+  cropRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.sm,
+    marginBottom: SPACING.lg,
+  },
+  cropBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  cropText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: '#FFFFFF',
+  },
+  expectedText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.8)',
+  },
+  fertilizerGrid: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    marginBottom: SPACING.md,
+  },
+  fertSection: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 12,
+    padding: SPACING.md,
+  },
+  sectionLabel: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.7)',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: SPACING.sm,
+  },
+  fertItem: {
+    marginBottom: SPACING.sm,
+  },
+  fertValue: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: TYPOGRAPHY.weights.bold,
+    color: '#FFFFFF',
+  },
+  fertName: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.7)',
+  },
+  timingSection: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 12,
+    padding: SPACING.md,
+    marginBottom: SPACING.sm,
+  },
+  timingScroll: {
+    gap: SPACING.sm,
+  },
+  timingChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  timingText: {
     fontSize: TYPOGRAPHY.sizes.xs,
+    color: '#FFFFFF',
+  },
+  attribution: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.5)',
     textAlign: 'center',
-    padding: SPACING.sm,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0,0,0,0.1)',
+  },
+  errorContainer: {
+    borderRadius: 16,
+    padding: SPACING.xl,
+    alignItems: 'center',
+    gap: SPACING.md,
   },
   errorText: {
-    padding: SPACING.lg,
-    textAlign: 'center',
     fontSize: TYPOGRAPHY.sizes.sm,
   },
 });

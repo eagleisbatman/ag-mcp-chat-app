@@ -10,9 +10,9 @@ import {
   Modal,
   Pressable,
   StyleSheet,
-  SafeAreaView,
   FlatList,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import AppIcon from '../components/ui/AppIcon';

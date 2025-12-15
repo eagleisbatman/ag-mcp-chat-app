@@ -4,7 +4,8 @@
  * Used for dropdown selections like breed, crop type, etc.
  */
 import React, { useState } from 'react';
-import { View, Text, Pressable, Modal, StyleSheet, FlatList, SafeAreaView } from 'react-native';
+import { View, Text, Pressable, Modal, StyleSheet, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../../contexts/AppContext';
 import AppIcon from '../../components/ui/AppIcon';

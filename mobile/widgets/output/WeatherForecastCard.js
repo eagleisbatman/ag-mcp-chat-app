@@ -1,274 +1,263 @@
 /**
- * WeatherForecastCard - Output widget for weather forecast display
+ * WeatherForecastCard - Visually appealing weather display
  *
- * Features:
- * - Current conditions header (temp, humidity, icon)
- * - Daily forecast list (date, high/low, conditions, rain%)
- * - Wind & humidity details
+ * Design inspired by ChatKit:
+ * - Gradient background
+ * - Large temperature with icon
+ * - Location name
+ * - Conditions description
+ * - 5-day forecast strip at bottom
  */
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import AppIcon from '../../components/ui/AppIcon';
 
-// Weather icon mapping
-const getWeatherIcon = (iconCode) => {
-  // AccuWeather icon codes
-  const iconMap = {
-    1: 'sunny', 2: 'sunny', 3: 'partly-sunny', 4: 'partly-sunny',
-    5: 'cloudy', 6: 'cloudy', 7: 'cloudy', 8: 'cloudy',
-    11: 'cloud', 12: 'rainy', 13: 'rainy', 14: 'rainy',
-    15: 'thunderstorm', 16: 'thunderstorm', 17: 'thunderstorm',
-    18: 'rainy', 19: 'snow', 20: 'snow', 21: 'snow',
-    22: 'snow', 23: 'snow', 24: 'snow', 25: 'snow',
-    26: 'rainy', 29: 'rainy', 30: 'sunny', 31: 'cloudy',
-    32: 'cloudy', 33: 'moon', 34: 'moon', 35: 'partly-sunny',
-    36: 'partly-sunny', 37: 'cloudy', 38: 'cloudy',
-    39: 'rainy', 40: 'rainy', 41: 'thunderstorm', 42: 'thunderstorm',
-    43: 'snow', 44: 'snow',
-  };
-  return iconMap[iconCode] || 'cloud';
+// Weather icon mapping for AccuWeather codes
+const getWeatherIcon = (iconCode, conditions) => {
+  if (typeof iconCode === 'number') {
+    const iconMap = {
+      1: 'sunny', 2: 'sunny', 3: 'partly-sunny', 4: 'partly-sunny',
+      5: 'cloudy', 6: 'cloudy', 7: 'cloudy', 8: 'cloudy',
+      11: 'cloud', 12: 'rainy', 13: 'rainy', 14: 'rainy',
+      15: 'thunderstorm', 16: 'thunderstorm', 17: 'thunderstorm',
+      18: 'rainy', 19: 'snow', 20: 'snow', 21: 'snow',
+      22: 'snow', 23: 'snow', 24: 'snow', 25: 'snow',
+      26: 'rainy', 29: 'rainy', 30: 'sunny', 31: 'cloudy',
+      32: 'cloudy', 33: 'moon', 34: 'moon', 35: 'partly-sunny',
+      36: 'partly-sunny', 37: 'cloudy', 38: 'cloudy',
+      39: 'rainy', 40: 'rainy', 41: 'thunderstorm', 42: 'thunderstorm',
+      43: 'snow', 44: 'snow',
+    };
+    return iconMap[iconCode] || 'partly-sunny';
+  }
+  // Fallback to conditions text
+  const cond = (conditions || '').toLowerCase();
+  if (cond.includes('sun') || cond.includes('clear')) return 'sunny';
+  if (cond.includes('cloud') || cond.includes('overcast')) return 'cloudy';
+  if (cond.includes('rain') || cond.includes('shower')) return 'rainy';
+  if (cond.includes('thunder') || cond.includes('storm')) return 'thunderstorm';
+  if (cond.includes('snow')) return 'snow';
+  return 'partly-sunny';
 };
 
-function CurrentConditions({ current, theme }) {
-  if (!current) return null;
+// Get gradient colors based on conditions
+const getGradientColors = (conditions) => {
+  const cond = (conditions || '').toLowerCase();
+  if (cond.includes('sun') || cond.includes('clear')) {
+    return ['#4A90E2', '#5CA0F2', '#74B0FF'];
+  }
+  if (cond.includes('cloud') || cond.includes('overcast')) {
+    return ['#6B7C93', '#8494A7', '#9DAABB'];
+  }
+  if (cond.includes('rain') || cond.includes('shower')) {
+    return ['#4A6FA5', '#5A7FB5', '#6A8FC5'];
+  }
+  if (cond.includes('thunder') || cond.includes('storm')) {
+    return ['#3D4F6F', '#4D5F7F', '#5D6F8F'];
+  }
+  return ['#4A90E2', '#5CA0F2', '#74B0FF']; // Default sunny blue
+};
 
-  return (
-    <View style={[styles.currentSection, { backgroundColor: theme.accentLight }]}>
-      <View style={styles.currentMain}>
-        <AppIcon
-          name={getWeatherIcon(current.icon)}
-          size={48}
-          color={theme.accent}
-        />
-        <View style={styles.currentTemp}>
-          <Text style={[styles.tempLarge, { color: theme.text }]}>
-            {Math.round(current.temperature)}°
-          </Text>
-          <Text style={[styles.feelsLike, { color: theme.textMuted }]}>
-            Feels like {Math.round(current.realFeelTemperature || current.temperature)}°
-          </Text>
-        </View>
-      </View>
-      <Text style={[styles.weatherText, { color: theme.text }]}>
-        {current.weatherText || 'Current conditions'}
-      </Text>
-      <View style={styles.currentDetails}>
-        <View style={styles.detailItem}>
-          <AppIcon name="water" size={16} color={theme.textMuted} />
-          <Text style={[styles.detailText, { color: theme.textMuted }]}>
-            {current.humidity}%
-          </Text>
-        </View>
-        <View style={styles.detailItem}>
-          <AppIcon name="speedometer" size={16} color={theme.textMuted} />
-          <Text style={[styles.detailText, { color: theme.textMuted }]}>
-            {current.windSpeed} km/h
-          </Text>
-        </View>
-        {current.uvIndex !== undefined && (
-          <View style={styles.detailItem}>
-            <AppIcon name="sunny" size={16} color={theme.textMuted} />
-            <Text style={[styles.detailText, { color: theme.textMuted }]}>
-              UV {current.uvIndex}
-            </Text>
-          </View>
-        )}
-      </View>
-    </View>
-  );
-}
-
-function DailyForecastItem({ day, theme }) {
-  const date = new Date(day.date);
-  const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
-  const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
-  return (
-    <View style={[styles.dayRow, { borderBottomColor: theme.border }]}>
-      <View style={styles.dayInfo}>
-        <Text style={[styles.dayName, { color: theme.text }]}>{dayName}</Text>
-        <Text style={[styles.dayDate, { color: theme.textMuted }]}>{dateStr}</Text>
-      </View>
-      <View style={styles.dayIcon}>
-        <AppIcon name={getWeatherIcon(day.icon)} size={24} color={theme.accent} />
-      </View>
-      <View style={styles.dayTemps}>
-        <Text style={[styles.tempHigh, { color: theme.text }]}>
-          {Math.round(day.temperatureMax)}°
-        </Text>
-        <Text style={[styles.tempLow, { color: theme.textMuted }]}>
-          {Math.round(day.temperatureMin)}°
-        </Text>
-      </View>
-      <View style={styles.dayRain}>
-        <AppIcon name="water" size={14} color={theme.info} />
-        <Text style={[styles.rainText, { color: theme.textMuted }]}>
-          {day.precipitationProbability || 0}%
-        </Text>
-      </View>
-    </View>
-  );
-}
+// Format day name
+const getDayName = (dateStr, index) => {
+  if (index === 0) return 'Today';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { weekday: 'short' });
+};
 
 export default function WeatherForecastCard({ data = {} }) {
   const { theme } = useApp();
 
-  const { current, daily, location } = data;
+  // Handle different data formats from API
+  const current = data.current || {};
+  const forecast = data.forecast || data.daily || [];
+  const location = data.location || {};
 
-  if (!daily || daily.length === 0) {
+  // Extract current weather info
+  const temperature = current.temperature ?? current.temp ?? forecast[0]?.max_temp ?? '--';
+  const conditions = current.conditions ?? current.weatherText ?? forecast[0]?.day_conditions ?? 'Weather';
+  const humidity = current.humidity ?? '--';
+  const windSpeed = current.wind_speed ?? current.windSpeed ?? '--';
+
+  // Get high/low from first forecast day
+  const todayHigh = forecast[0]?.max_temp ?? forecast[0]?.temperatureMax ?? temperature;
+  const todayLow = forecast[0]?.min_temp ?? forecast[0]?.temperatureMin ?? '--';
+
+  // Location name
+  const locationName = location.name || location.displayName ||
+    (location.latitude ? `${location.latitude.toFixed(1)}°, ${location.longitude.toFixed(1)}°` : 'Your Location');
+
+  const gradientColors = getGradientColors(conditions);
+  const weatherIcon = getWeatherIcon(current.icon, conditions);
+
+  if (!forecast.length && !current.temperature) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.surface }]}>
+      <View style={[styles.errorContainer, { backgroundColor: theme.surfaceVariant }]}>
+        <AppIcon name="cloud-offline" size={32} color={theme.textMuted} />
         <Text style={[styles.errorText, { color: theme.textMuted }]}>
-          No weather data available
+          Weather data unavailable
         </Text>
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.surface }]}>
-      {/* Location header */}
-      {location && (
-        <View style={styles.locationHeader}>
-          <AppIcon name="location" size={16} color={theme.accent} />
-          <Text style={[styles.locationText, { color: theme.text }]}>
-            {location.displayName || `${location.latitude?.toFixed(2)}, ${location.longitude?.toFixed(2)}`}
-          </Text>
+    <LinearGradient colors={gradientColors} style={styles.container}>
+      {/* Main Weather Display */}
+      <View style={styles.mainSection}>
+        <AppIcon name={weatherIcon} size={56} color="#FFFFFF" />
+        <View style={styles.tempContainer}>
+          <Text style={styles.tempLarge}>{Math.round(todayHigh)}°</Text>
+          <Text style={styles.tempSmall}>{Math.round(todayLow)}°</Text>
+        </View>
+      </View>
+
+      {/* Location */}
+      <Text style={styles.locationText}>{locationName}</Text>
+
+      {/* Conditions */}
+      <Text style={styles.conditionsText}>{conditions}</Text>
+
+      {/* Quick Stats */}
+      <View style={styles.statsRow}>
+        <View style={styles.statItem}>
+          <AppIcon name="water-outline" size={14} color="rgba(255,255,255,0.8)" />
+          <Text style={styles.statText}>{humidity}%</Text>
+        </View>
+        <View style={styles.statItem}>
+          <AppIcon name="speedometer-outline" size={14} color="rgba(255,255,255,0.8)" />
+          <Text style={styles.statText}>{windSpeed} km/h</Text>
+        </View>
+      </View>
+
+      {/* Forecast Strip */}
+      {forecast.length > 1 && (
+        <View style={styles.forecastStrip}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.forecastScroll}>
+            {forecast.slice(0, 5).map((day, index) => {
+              const dayIcon = getWeatherIcon(
+                day.icon || day.Day?.Icon,
+                day.day_conditions || day.Day?.IconPhrase
+              );
+              const high = day.max_temp ?? day.temperatureMax ?? day.Temperature?.Maximum?.Value;
+              return (
+                <View key={index} style={styles.forecastDay}>
+                  <Text style={styles.forecastDayName}>
+                    {getDayName(day.date || day.Date, index)}
+                  </Text>
+                  <AppIcon name={dayIcon} size={24} color="#FFFFFF" />
+                  <Text style={styles.forecastTemp}>{Math.round(high)}°</Text>
+                </View>
+              );
+            })}
+          </ScrollView>
         </View>
       )}
 
-      {/* Current conditions */}
-      <CurrentConditions current={current} theme={theme} />
-
-      {/* Daily forecast */}
-      <View style={styles.dailySection}>
-        <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
-          {daily.length}-Day Forecast
-        </Text>
-        <ScrollView style={styles.dailyList} showsVerticalScrollIndicator={false}>
-          {daily.map((day, index) => (
-            <DailyForecastItem key={index} day={day} theme={theme} />
-          ))}
-        </ScrollView>
-      </View>
-    </View>
+      {/* Source Attribution */}
+      <Text style={styles.attribution}>AccuWeather</Text>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: SPACING.radiusMd,
+    borderRadius: 20,
+    padding: SPACING.lg,
     overflow: 'hidden',
   },
-  locationHeader: {
+  mainSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: SPACING.md,
-    gap: SPACING.xs,
-  },
-  locationText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium,
-  },
-  currentSection: {
-    padding: SPACING.lg,
-    marginHorizontal: SPACING.md,
-    marginBottom: SPACING.md,
-    borderRadius: SPACING.radiusMd,
-  },
-  currentMain: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'center',
     gap: SPACING.md,
-  },
-  currentTemp: {
-    flex: 1,
-  },
-  tempLarge: {
-    fontSize: 48,
-    fontWeight: TYPOGRAPHY.weights.bold,
-    lineHeight: 56,
-  },
-  feelsLike: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  weatherText: {
-    fontSize: TYPOGRAPHY.sizes.base,
-    marginTop: SPACING.sm,
-    marginBottom: SPACING.md,
-  },
-  currentDetails: {
-    flexDirection: 'row',
-    gap: SPACING.lg,
-  },
-  detailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.xs,
-  },
-  detailText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  dailySection: {
-    padding: SPACING.md,
-  },
-  sectionTitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
     marginBottom: SPACING.sm,
   },
-  dailyList: {
-    maxHeight: 300,
-  },
-  dayRow: {
+  tempContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: SPACING.sm,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  dayInfo: {
-    width: 60,
-  },
-  dayName: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium,
-  },
-  dayDate: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  dayIcon: {
-    width: 40,
-    alignItems: 'center',
-  },
-  dayTemps: {
-    flex: 1,
-    flexDirection: 'row',
+    alignItems: 'flex-start',
     gap: SPACING.sm,
   },
-  tempHigh: {
+  tempLarge: {
+    fontSize: 56,
+    fontWeight: '300',
+    color: '#FFFFFF',
+    lineHeight: 64,
+  },
+  tempSmall: {
+    fontSize: 28,
+    fontWeight: '300',
+    color: 'rgba(255,255,255,0.7)',
+    marginTop: 8,
+  },
+  locationText: {
     fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.semibold,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginBottom: SPACING.xs,
   },
-  tempLow: {
-    fontSize: TYPOGRAPHY.sizes.base,
+  conditionsText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    textAlign: 'center',
+    marginBottom: SPACING.md,
   },
-  dayRain: {
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SPACING.xl,
+    marginBottom: SPACING.lg,
+  },
+  statItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    width: 50,
-    justifyContent: 'flex-end',
   },
-  rainText: {
+  statText: {
     fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.8)',
+  },
+  forecastStrip: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 12,
+    marginBottom: SPACING.sm,
+  },
+  forecastScroll: {
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.sm,
+  },
+  forecastDay: {
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    minWidth: 56,
+  },
+  forecastDayName: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255,255,255,0.8)',
+    marginBottom: 4,
+  },
+  forecastTemp: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: '#FFFFFF',
+    marginTop: 4,
+  },
+  attribution: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.5)',
+    textAlign: 'center',
+  },
+  errorContainer: {
+    borderRadius: 16,
+    padding: SPACING.xl,
+    alignItems: 'center',
+    gap: SPACING.md,
   },
   errorText: {
-    padding: SPACING.lg,
-    textAlign: 'center',
     fontSize: TYPOGRAPHY.sizes.sm,
   },
 });

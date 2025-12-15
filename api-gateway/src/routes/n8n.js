@@ -46,8 +46,88 @@ const WIDGET_TYPES = {
 };
 
 /**
+ * Default widget configurations for known MCP servers
+ * These serve as fallbacks if database configuration is missing
+ * Ensures widgets work out-of-the-box for core services
+ */
+const DEFAULT_WIDGET_CONFIGS = {
+  // AccuWeather - Global weather service
+  weather: {
+    inputWidget: {
+      type: 'weather_input',
+      reason: 'Customize your forecast duration and location.',
+      prompt: 'Want to see a detailed forecast?',
+    },
+    outputWidget: {
+      type: 'weather_forecast_card',
+    },
+    requiresInput: false, // Can work with just location
+  },
+  // Feed Formulation - Ethiopia
+  feed: {
+    inputWidget: {
+      type: 'feed_formulation_input',
+      reason: 'Feed formulation requires specific cattle and feed details.',
+      prompt: 'Let me help you calculate an optimal diet.',
+    },
+    outputWidget: {
+      type: 'diet_result_card',
+    },
+    requiresInput: true, // Needs cattle + feed data
+  },
+  // ISDA Soil - Africa
+  soil: {
+    inputWidget: {
+      type: 'soil_query_input',
+      reason: 'Select depth and location for soil analysis.',
+      prompt: 'Want to see detailed soil properties?',
+    },
+    outputWidget: {
+      type: 'soil_profile_card',
+    },
+    requiresInput: false,
+  },
+  // NextGen Fertilizer - Ethiopia
+  fertilizer: {
+    inputWidget: {
+      type: 'fertilizer_input',
+      reason: 'Fertilizer recommendations need crop type and exact location.',
+      prompt: 'Let me calculate fertilizer recommendations for your crop.',
+    },
+    outputWidget: {
+      type: 'fertilizer_result_card',
+    },
+    requiresInput: false,
+  },
+  // EDACaP Climate - Ethiopia
+  climate: {
+    inputWidget: {
+      type: 'climate_query_input',
+      reason: 'Get seasonal forecasts for your area.',
+      prompt: 'Want to see the seasonal climate outlook?',
+    },
+    outputWidget: {
+      type: 'climate_forecast_card',
+    },
+    requiresInput: false,
+  },
+  // TomorrowNow Decision Tree - Kenya
+  advisory: {
+    inputWidget: {
+      type: 'decision_tree_input',
+      reason: 'Crop recommendations depend on growth stage and conditions.',
+      prompt: 'Let me give you personalized crop advice.',
+    },
+    outputWidget: {
+      type: 'recommendations_card',
+    },
+    requiresInput: false,
+  },
+};
+
+/**
  * Build widget mappings dynamically from MCP server configurations
- * This replaces the hardcoded INTENT_TO_INPUT_WIDGET and INTENT_TO_OUTPUT_WIDGET maps
+ * Uses database configurations when available, falls back to DEFAULT_WIDGET_CONFIGS
  * Widget configurations are stored in the McpServerRegistry table
  */
 function buildWidgetMappings(mcpServers) {
@@ -57,6 +137,21 @@ function buildWidgetMappings(mcpServers) {
   const inputToOutputMap = {};
   const serverRequiresInput = {};
 
+  // First, apply default configurations as fallbacks
+  for (const [category, config] of Object.entries(DEFAULT_WIDGET_CONFIGS)) {
+    if (config.inputWidget?.type) {
+      inputWidgetMap[category] = config.inputWidget;
+      serverRequiresInput[category] = config.requiresInput || false;
+    }
+    if (config.outputWidget?.type) {
+      outputWidgetMap[category] = config.outputWidget;
+    }
+    if (config.inputWidget?.type && config.outputWidget?.type) {
+      inputToOutputMap[config.inputWidget.type] = config.outputWidget.type;
+    }
+  }
+
+  // Then override with database configurations if available
   for (const server of allServers) {
     if (server.widgetCategory) {
       // Map widget category (intent) to input/output widgets
@@ -79,8 +174,8 @@ function buildWidgetMappings(mcpServers) {
 
 /**
  * Determine if we should suggest an input widget based on query analysis
- * Uses intents detected by the intent classification system (intents.json patterns + LLM fallback)
- * Widget configurations are now fetched dynamically from the MCP Server Registry
+ * Uses intents detected by the intent classification system
+ * Widget configurations come from DEFAULT_WIDGET_CONFIGS + database overrides
  * Returns widget suggestion only when it would genuinely help the user
  */
 function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults, widgetMappings) {
@@ -102,49 +197,90 @@ function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults, w
   const isExploratory = exploratoryPhrases.some(p => lowerMessage.includes(p));
   const isDirect = directPhrases.some(p => lowerMessage.includes(p));
 
-  // Get dynamic widget mappings from MCP servers
+  // Get widget mappings (includes defaults + database overrides)
   const { inputWidgetMap, outputWidgetMap, serverRequiresInput } = widgetMappings;
 
-  // Analyze each detected intent from the classification system
+  // Debug logging
+  console.log('🎯 [Widget] Query analysis:', {
+    message: lowerMessage.substring(0, 50),
+    isExploratory,
+    isDirect,
+    intents: intentsDetected,
+    hasWidgetConfigs: Object.keys(inputWidgetMap),
+  });
+
+  // Analyze each detected intent
   const suggestions = [];
 
   for (const intent of intentsDetected) {
-    // Use dynamic widget mappings from database
     const inputWidgetConfig = inputWidgetMap[intent];
     const outputWidgetConfig = outputWidgetMap[intent];
     const requiresInput = serverRequiresInput[intent] || false;
-    const hasData = mcpResults && mcpResults[intent] && !mcpResults[intent]?.error;
+    const mcpData = mcpResults?.[intent];
+    const hasData = mcpData && !mcpData?.error;
 
-    if (!inputWidgetConfig) continue;
+    console.log(`🎯 [Widget] Intent "${intent}":`, {
+      hasInputConfig: !!inputWidgetConfig,
+      hasOutputConfig: !!outputWidgetConfig,
+      requiresInput,
+      hasData,
+      mcpError: mcpData?.error,
+    });
 
-    // Decision logic for natural suggestions
-    // Use requiresInput flag from database instead of hardcoded intent checks
-    if (requiresInput) {
-      // This server always needs structured input (e.g., feed formulation, fertilizer)
+    // Skip if no widget configuration for this intent
+    if (!inputWidgetConfig && !outputWidgetConfig) {
+      console.log(`🎯 [Widget] Skipping intent "${intent}" - no widget config`);
+      continue;
+    }
+
+    // Decision logic for widget suggestions
+    if (requiresInput && inputWidgetConfig) {
+      // This service ALWAYS needs structured input (e.g., feed formulation)
+      console.log(`🎯 [Widget] Suggesting input widget for "${intent}" (requiresInput=true)`);
       suggestions.push({
         type: 'input',
         widget: inputWidgetConfig.type,
         reason: inputWidgetConfig.reason || 'This feature requires specific details for accurate results.',
         prompt: inputWidgetConfig.prompt || 'Would you like to use our interactive tool?',
       });
-    } else if (isExploratory && !isDirect) {
-      // User is exploring - offer input widget
+    } else if (hasData && outputWidgetConfig) {
+      // We have MCP data - show output widget with results
+      console.log(`🎯 [Widget] Showing output widget for "${intent}" (hasData=true)`);
+      suggestions.push({
+        type: 'output',
+        widget: outputWidgetConfig.type,
+        data: formatWidgetData(intent, mcpData),
+      });
+    } else if (isDirect && outputWidgetConfig && mcpData) {
+      // Direct query with MCP error - still show output widget (it handles error state)
+      console.log(`🎯 [Widget] Showing output widget for "${intent}" (direct query, error state)`);
+      suggestions.push({
+        type: 'output',
+        widget: outputWidgetConfig.type,
+        data: formatWidgetData(intent, mcpData),
+      });
+    } else if (isExploratory && !isDirect && inputWidgetConfig) {
+      // Exploratory query - suggest input widget for customization
+      console.log(`🎯 [Widget] Suggesting input widget for "${intent}" (exploratory query)`);
       suggestions.push({
         type: 'input',
         widget: inputWidgetConfig.type,
         reason: inputWidgetConfig.reason || 'You can customize the parameters for more specific results.',
         prompt: inputWidgetConfig.prompt || getWidgetPrompt(intent),
       });
-    } else if (hasData && outputWidgetConfig) {
-      // We have data - include output widget
+    } else if (!hasData && inputWidgetConfig) {
+      // No data and no specific query type - suggest input widget as fallback
+      console.log(`🎯 [Widget] Suggesting input widget for "${intent}" (fallback, no data)`);
       suggestions.push({
-        type: 'output',
-        widget: outputWidgetConfig.type,
-        data: formatWidgetData(intent, mcpResults[intent]),
+        type: 'input',
+        widget: inputWidgetConfig.type,
+        reason: 'Service data unavailable. Try using the tool to retry.',
+        prompt: inputWidgetConfig.prompt || getWidgetPrompt(intent),
       });
     }
   }
 
+  console.log('🎯 [Widget] Final suggestions:', suggestions.map(s => `${s.type}:${s.widget}`));
   return suggestions;
 }
 
@@ -170,9 +306,12 @@ function formatWidgetData(intent, mcpResult) {
 
   switch (intent) {
     case 'weather':
+      // mcpResult structure: { current: {...}, forecast: [...], location: {...}, error: bool }
+      // Extract properly for WeatherForecastCard (exclude internal error flag)
       return {
-        current: mcpResult,
-        forecast: mcpResult.forecast || [],
+        current: mcpResult.current || {},
+        forecast: Array.isArray(mcpResult.forecast) ? mcpResult.forecast : [],
+        location: mcpResult.location || {},
       };
     case 'soil':
       return {
@@ -803,18 +942,82 @@ function mapIntentToMcpCategory(intentName) {
 }
 
 /**
- * Unified intent detection: Pattern-based first, LLM fallback if no matches
+ * Global keyword patterns for intent detection
+ * Works for ANY location - no country-specific entries needed
+ */
+const GLOBAL_INTENT_KEYWORDS = {
+  weather: [
+    'weather', 'forecast', 'temperature', 'rain', 'rainfall', 'precipitation',
+    'humidity', 'wind', 'will it rain', 'how hot', 'how cold', 'sunny', 'cloudy',
+    'storm', 'drought', 'flood', 'climate today', 'weather today', 'tomorrow weather',
+  ],
+  soil: [
+    'soil', 'ph', 'nitrogen', 'phosphorus', 'potassium', 'soil quality',
+    'soil test', 'soil analysis', 'soil nutrients', 'soil health', 'land quality',
+  ],
+  fertilizer: [
+    'fertilizer', 'fertiliser', 'urea', 'nps', 'dap', 'compost', 'manure',
+    'fertilizer recommendation', 'what fertilizer', 'which fertilizer',
+  ],
+  feed: [
+    'feed', 'cow', 'cattle', 'dairy', 'livestock', 'milk', 'fodder', 'diet',
+    'ration', 'animal feed', 'feeding', 'nutrition', 'lactating',
+  ],
+  climate: [
+    'seasonal', 'season', 'monsoon', 'long term', 'climate forecast',
+    'seasonal outlook', 'climate prediction', 'next season',
+  ],
+  advisory: [
+    'growth stage', 'crop stage', 'recommendation', 'advice', 'what should i do',
+    'pest', 'disease', 'harvest', 'planting advice', 'crop management',
+  ],
+};
+
+/**
+ * Simple keyword-based intent detection
+ * Works globally - no country-specific config needed
+ */
+function detectIntentsFromKeywords(message) {
+  if (!message) return [];
+
+  const lowerMessage = message.toLowerCase();
+  const detectedIntents = [];
+
+  for (const [intent, keywords] of Object.entries(GLOBAL_INTENT_KEYWORDS)) {
+    if (keywords.some(keyword => lowerMessage.includes(keyword))) {
+      detectedIntents.push(intent);
+    }
+  }
+
+  return detectedIntents;
+}
+
+/**
+ * Unified intent detection: Global keywords first, country patterns second, LLM fallback last
  */
 async function detectIntents(message, country = 'ethiopia', language = 'en') {
-  // Step 1: Try fast pattern matching from intents.json
+  // Step 1: Try fast global keyword detection (works for ALL locations)
+  const keywordIntents = detectIntentsFromKeywords(message);
+
+  if (keywordIntents.length > 0) {
+    console.log(`[Intent] Global keyword match: ${keywordIntents.join(', ')}`);
+    return {
+      intents: keywordIntents,
+      rawIntents: keywordIntents,
+      source: 'keywords',
+      classification: null,
+    };
+  }
+
+  // Step 2: Try country-specific pattern matching from intents.json (for regional tools)
   const patternResult = detectIntentsFromPatterns(message, country, language);
-  
+
   if (patternResult.intents.length > 0) {
     // Map to MCP categories
     const mcpIntents = patternResult.intents
       .map(i => mapIntentToMcpCategory(i))
       .filter(Boolean);
-    
+
     return {
       intents: [...new Set(mcpIntents)],
       rawIntents: patternResult.intents,
@@ -822,11 +1025,11 @@ async function detectIntents(message, country = 'ethiopia', language = 'en') {
       classification: null,
     };
   }
-  
-  // Step 2: Fallback to LLM classification
-  console.log('[Intent] No pattern match, falling back to LLM...');
+
+  // Step 3: Fallback to LLM classification (expensive, slower)
+  console.log('[Intent] No keyword/pattern match, falling back to LLM...');
   const llmResult = await classifyIntentWithLLM(message, language);
-  
+
   if (llmResult) {
     const mcpIntents = [];
     const mainIntent = llmResult.main_intent?.toLowerCase() || '';
@@ -866,7 +1069,7 @@ async function detectIntents(message, country = 'ethiopia', language = 'en') {
       classification: llmResult,
     };
   }
-  
+
   return { intents: [], rawIntents: [], source: 'none', classification: null };
 }
 
@@ -969,8 +1172,22 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
   if (intentsDetected.includes('weather')) {
     const server = allServers.find(s => s.slug === 'accuweather');
     if (server?.endpoint && latitude && longitude) {
-      mcpResults.weather = await callMcpTool(server.endpoint, 'get_accuweather_current_conditions', { latitude, longitude });
-      if (isErrorOrNoData(mcpResults.weather)) {
+      // Call both current conditions and forecast for complete weather data
+      const [current, forecast] = await Promise.all([
+        callMcpTool(server.endpoint, 'get_accuweather_current_conditions', { latitude, longitude }),
+        callMcpTool(server.endpoint, 'get_accuweather_forecast', { latitude, longitude, days: 5 }),
+      ]);
+
+      // Combine results for widget rendering
+      const weatherError = isErrorOrNoData(current) && isErrorOrNoData(forecast);
+      mcpResults.weather = {
+        current: current,
+        forecast: forecast?.forecast || forecast,
+        location: { latitude, longitude },
+        error: weatherError, // Flag to indicate data unavailable for widget logic
+      };
+
+      if (weatherError) {
         noDataFallbacks.weather = buildFallbackContext('weather', {
           region: regionName,
           reason: 'Service temporarily unavailable',
