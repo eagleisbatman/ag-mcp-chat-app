@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, I18nManager, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Updates from 'expo-updates';
 import { registerUser, updatePreferences, saveLocation as saveLocationToDB, lookupLocation } from '../services/db';
 import { THEMES } from '../constants/themes';
 import { setLocale, loadTranslations } from '../constants/strings';
+import { isRTLLanguage } from '../constants/languages';
 
 // Re-export THEMES for backward compatibility
 export { THEMES };
@@ -62,6 +64,14 @@ export const AppProvider = ({ children }) => {
         // Load translations for saved language
         setLocale(lang.code);
         await loadTranslations(lang.code);
+
+        // Ensure RTL setting is correct for saved language
+        const needsRTL = isRTLLanguage(lang.code);
+        if (I18nManager.isRTL !== needsRTL) {
+          console.log(`🔄 [AppContext] Correcting RTL setting on startup: ${I18nManager.isRTL} → ${needsRTL}`);
+          I18nManager.allowRTL(needsRTL);
+          I18nManager.forceRTL(needsRTL);
+        }
       }
       if (savedOnboarding === 'true') setOnboardingComplete(true);
       if (savedLocation) {
@@ -158,6 +168,47 @@ export const AppProvider = ({ children }) => {
       console.log('✅ [AppContext] Language saved to AsyncStorage');
     } catch (e) {
       console.log('❌ [AppContext] AsyncStorage write error (language):', e);
+    }
+
+    // Handle RTL layout changes
+    const needsRTL = isRTLLanguage(lang.code);
+    const currentlyRTL = I18nManager.isRTL;
+
+    if (needsRTL !== currentlyRTL) {
+      console.log(`🔄 [AppContext] RTL change needed: ${currentlyRTL} → ${needsRTL}`);
+
+      // Apply RTL setting
+      I18nManager.allowRTL(needsRTL);
+      I18nManager.forceRTL(needsRTL);
+
+      // Store RTL preference for next app launch
+      try {
+        await AsyncStorage.setItem('isRTL', JSON.stringify(needsRTL));
+      } catch (e) {
+        console.log('❌ [AppContext] Could not save RTL preference:', e);
+      }
+
+      // App needs to reload for RTL changes to take effect
+      // Show alert and reload
+      Alert.alert(
+        'App Restart Required',
+        `Switching to ${lang.name} requires restarting the app for layout changes.`,
+        [
+          {
+            text: 'Restart Now',
+            onPress: async () => {
+              try {
+                await Updates.reloadAsync();
+              } catch (e) {
+                console.log('⚠️ [AppContext] Could not reload app:', e);
+                // Fallback message if reload fails (dev mode)
+                Alert.alert('Please Restart', 'Please close and reopen the app for changes to take effect.');
+              }
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     }
 
     // Sync to DB with retry if not yet synced
