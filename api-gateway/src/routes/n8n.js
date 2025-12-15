@@ -173,58 +173,41 @@ function buildWidgetMappings(mcpServers) {
 }
 
 /**
- * Determine if we should suggest an input widget based on query analysis
- * Uses intents detected by the intent classification system
- * Widget configurations come from DEFAULT_WIDGET_CONFIGS + database overrides
- * Returns widget suggestion only when it would genuinely help the user
+ * Determine widget suggestions based on query analysis
+ *
+ * NEW FLOW (Input-First UX):
+ * - Text-based queries → ALWAYS show input widget first (let user customize)
+ * - Widget submissions → Show output widget with results
+ *
+ * This ensures users always get to customize their request before seeing results.
  */
-function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults, widgetMappings) {
+function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults, widgetMappings, isWidgetSubmission = false) {
   const lowerMessage = (message || '').toLowerCase();
 
-  // Phrases that indicate user wants to explore/customize (suggest input widget)
-  const exploratoryPhrases = [
-    'help me with', 'i want to', 'can you help', 'how do i', 'what should i',
-    'recommend', 'advice', 'suggest', 'calculate', 'formulate', 'plan',
-    'i need', 'show me options', 'let me', 'i\'d like to',
-  ];
-
-  // Phrases that indicate user wants immediate answer (show output widget)
-  const directPhrases = [
-    'what is', 'what\'s', 'tell me', 'show me', 'get me', 'give me',
-    'today', 'now', 'current', 'right now', 'at the moment',
-  ];
-
-  const isExploratory = exploratoryPhrases.some(p => lowerMessage.includes(p));
-  const isDirect = directPhrases.some(p => lowerMessage.includes(p));
-
   // Get widget mappings (includes defaults + database overrides)
-  const { inputWidgetMap, outputWidgetMap, serverRequiresInput } = widgetMappings;
+  const { inputWidgetMap, outputWidgetMap } = widgetMappings;
 
   // Debug logging
   console.log('🎯 [Widget] Query analysis:', {
     message: lowerMessage.substring(0, 50),
-    isExploratory,
-    isDirect,
     intents: intentsDetected,
+    isWidgetSubmission,
     hasWidgetConfigs: Object.keys(inputWidgetMap),
   });
 
-  // Analyze each detected intent
   const suggestions = [];
 
   for (const intent of intentsDetected) {
     const inputWidgetConfig = inputWidgetMap[intent];
     const outputWidgetConfig = outputWidgetMap[intent];
-    const requiresInput = serverRequiresInput[intent] || false;
     const mcpData = mcpResults?.[intent];
     const hasData = mcpData && !mcpData?.error;
 
     console.log(`🎯 [Widget] Intent "${intent}":`, {
       hasInputConfig: !!inputWidgetConfig,
       hasOutputConfig: !!outputWidgetConfig,
-      requiresInput,
       hasData,
-      mcpError: mcpData?.error,
+      isWidgetSubmission,
     });
 
     // Skip if no widget configuration for this intent
@@ -233,49 +216,32 @@ function analyzeQueryForWidgetSuggestion(message, intentsDetected, mcpResults, w
       continue;
     }
 
-    // Decision logic for widget suggestions
-    if (requiresInput && inputWidgetConfig) {
-      // This service ALWAYS needs structured input (e.g., feed formulation)
-      console.log(`🎯 [Widget] Suggesting input widget for "${intent}" (requiresInput=true)`);
-      suggestions.push({
-        type: 'input',
-        widget: inputWidgetConfig.type,
-        reason: inputWidgetConfig.reason || 'This feature requires specific details for accurate results.',
-        prompt: inputWidgetConfig.prompt || 'Would you like to use our interactive tool?',
-      });
-    } else if (hasData && outputWidgetConfig) {
-      // We have MCP data - show output widget with results
-      console.log(`🎯 [Widget] Showing output widget for "${intent}" (hasData=true)`);
+    // WIDGET SUBMISSION FLOW: Show output widget with results
+    if (isWidgetSubmission && hasData && outputWidgetConfig) {
+      console.log(`🎯 [Widget] Showing output widget for "${intent}" (widget submission)`);
       suggestions.push({
         type: 'output',
         widget: outputWidgetConfig.type,
         data: formatWidgetData(intent, mcpData),
       });
-    } else if (isDirect && outputWidgetConfig && mcpData) {
-      // Direct query with MCP error - still show output widget (it handles error state)
-      console.log(`🎯 [Widget] Showing output widget for "${intent}" (direct query, error state)`);
+    }
+    // TEXT QUERY FLOW: ALWAYS show input widget first
+    else if (!isWidgetSubmission && inputWidgetConfig) {
+      console.log(`🎯 [Widget] Showing input widget for "${intent}" (text query → input first)`);
+      suggestions.push({
+        type: 'input',
+        widget: inputWidgetConfig.type,
+        reason: inputWidgetConfig.reason || 'Customize your request for better results.',
+        prompt: inputWidgetConfig.prompt || getWidgetPrompt(intent),
+      });
+    }
+    // FALLBACK: Show output widget if we have data but no input widget
+    else if (hasData && outputWidgetConfig) {
+      console.log(`🎯 [Widget] Showing output widget for "${intent}" (fallback, has data)`);
       suggestions.push({
         type: 'output',
         widget: outputWidgetConfig.type,
         data: formatWidgetData(intent, mcpData),
-      });
-    } else if (isExploratory && !isDirect && inputWidgetConfig) {
-      // Exploratory query - suggest input widget for customization
-      console.log(`🎯 [Widget] Suggesting input widget for "${intent}" (exploratory query)`);
-      suggestions.push({
-        type: 'input',
-        widget: inputWidgetConfig.type,
-        reason: inputWidgetConfig.reason || 'You can customize the parameters for more specific results.',
-        prompt: inputWidgetConfig.prompt || getWidgetPrompt(intent),
-      });
-    } else if (!hasData && inputWidgetConfig) {
-      // No data and no specific query type - suggest input widget as fallback
-      console.log(`🎯 [Widget] Suggesting input widget for "${intent}" (fallback, no data)`);
-      suggestions.push({
-        type: 'input',
-        widget: inputWidgetConfig.type,
-        reason: 'Service data unavailable. Try using the tool to retry.',
-        prompt: inputWidgetConfig.prompt || getWidgetPrompt(intent),
       });
     }
   }
@@ -1509,8 +1475,22 @@ router.post('/chat', async (req, res) => {
         },
       };
 
-      // Add output widget if we have MCP data to display
-      if (outputWidgets.length > 0) {
+      // INPUT-FIRST UX: For text queries, show input widget directly (not as suggestion)
+      // This lets users customize their request before seeing results
+      if (inputSuggestions.length > 0) {
+        // Return input widget as `widget` so it renders directly in chat
+        responseData.widget = {
+          type: inputSuggestions[0].widget,
+          data: {}, // Empty data for input widget form
+        };
+        // Also include the prompt/reason for context
+        responseData.widgetPrompt = inputSuggestions[0].prompt;
+        responseData.widgetReason = inputSuggestions[0].reason;
+
+        console.log('📋 [Chat] Returning INPUT widget directly:', inputSuggestions[0].widget);
+      }
+      // FALLBACK: Show output widget only if no input widget and we have data
+      else if (outputWidgets.length > 0) {
         // Enhance widget data with location name if available
         const widgetData = { ...outputWidgets[0].data };
         if (location?.displayName || location?.city) {
@@ -1521,15 +1501,8 @@ router.post('/chat', async (req, res) => {
           type: outputWidgets[0].widget,
           data: widgetData,
         };
-      }
 
-      // Add suggested input widget if query would benefit from structured input
-      if (inputSuggestions.length > 0) {
-        responseData.suggestedWidget = {
-          type: inputSuggestions[0].widget,
-          prompt: inputSuggestions[0].prompt,
-          reason: inputSuggestions[0].reason,
-        };
+        console.log('📊 [Chat] Returning OUTPUT widget:', outputWidgets[0].widget);
       }
 
       res.json(responseData);
