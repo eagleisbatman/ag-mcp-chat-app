@@ -101,8 +101,16 @@ export default function WidgetRenderer({
 }) {
   const { theme } = useApp();
 
+  // Debug logging
+  console.log('🎯 [WidgetRenderer] Rendering:', {
+    type: widget?.type,
+    hasData: !!widget?.data,
+    loading,
+  });
+
   // Handle missing widget
   if (!widget || !widget.type) {
+    console.log('🎯 [WidgetRenderer] No widget to render');
     return null;
   }
 

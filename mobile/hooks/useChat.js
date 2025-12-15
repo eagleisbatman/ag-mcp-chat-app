@@ -185,6 +185,13 @@ export default function useChat(sessionIdParam = null) {
           isBot: true 
         });
       } else {
+        // Debug logging for widget data
+        console.log('🔔 [useChat] API result widget:', {
+          hasWidget: !!result.widget,
+          widgetType: result.widget?.type,
+          widgetDataKeys: result.widget?.data ? Object.keys(result.widget.data) : [],
+        });
+
         const botMsg = {
           _id: (Date.now() + 1).toString(),
           text: result.response,
@@ -194,6 +201,12 @@ export default function useChat(sessionIdParam = null) {
           widget: result.widget || null, // Output widget from API
           suggestedWidget: result.suggestedWidget || null, // Suggested input widget
         };
+
+        console.log('🔔 [useChat] Bot message created with widget:', {
+          hasWidget: !!botMsg.widget,
+          widgetType: botMsg.widget?.type,
+        });
+
         addMessage(botMsg);
         persistMessage(botMsg, sessionId, {
           responseLanguageCode: language?.code,

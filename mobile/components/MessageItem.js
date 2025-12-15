@@ -20,6 +20,16 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress, onWidgetS
   const hasWidget = message.widget && message.widget.type;
   const hasSuggestedWidget = message.suggestedWidget && message.suggestedWidget.type;
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
+
+  // Debug logging for widget rendering
+  if (isBot && message.widget) {
+    console.log('🎨 [MessageItem] Widget detected:', {
+      type: message.widget?.type,
+      hasData: !!message.widget?.data,
+      dataKeys: message.widget?.data ? Object.keys(message.widget.data) : [],
+      currentTemp: message.widget?.data?.current?.temperature,
+    });
+  }
   
   // Calculate max width for markdown content (screen - padding)
   const contentMaxWidth = screenWidth - (SPACING.lg * 2);

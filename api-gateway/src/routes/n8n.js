@@ -1189,11 +1189,21 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
       ]);
 
       // Combine results for widget rendering
+      // AccuWeather returns nested structure: { location, current: {...}, data_source }
+      // Flatten it so n8n can access weather data directly
       const weatherError = isErrorOrNoData(current) && isErrorOrNoData(forecast);
+      const currentWeatherData = current?.current || current; // Extract inner current object
+
+      console.log('🌤️ [Weather] Flattening AccuWeather data:', {
+        hasNestedCurrent: !!current?.current,
+        temperature: currentWeatherData?.temperature,
+        conditions: currentWeatherData?.conditions,
+      });
+
       mcpResults.weather = {
-        current: current,
+        current: currentWeatherData, // Flattened: { temperature, humidity, conditions, ... }
         forecast: forecast?.forecast || forecast,
-        location: { latitude, longitude },
+        location: current?.location || { latitude, longitude },
         error: weatherError, // Flag to indicate data unavailable for widget logic
       };
 
