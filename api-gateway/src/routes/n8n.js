@@ -1153,6 +1153,40 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
     }
   }
 
+  // Climate intent (seasonal forecasts - EDACaP for Ethiopia)
+  if (intentsDetected.includes('climate')) {
+    const server = allServers.find(s => s.slug === 'edacap');
+    if (server?.endpoint && latitude && longitude) {
+      const detectedCrop = classification?.crops?.[0]?.canonical_name;
+      mcpResults.climate = await callMcpTool(server.endpoint, 'get_climate_forecast', {
+        latitude,
+        longitude,
+      });
+      // Also get crop forecast if a crop was detected
+      if (detectedCrop) {
+        const cropForecast = await callMcpTool(server.endpoint, 'get_crop_forecast', {
+          latitude,
+          longitude,
+          crop: detectedCrop,
+        });
+        if (!isErrorOrNoData(cropForecast)) {
+          mcpResults.cropForecast = cropForecast;
+        }
+      }
+      if (isErrorOrNoData(mcpResults.climate)) {
+        noDataFallbacks.climate = buildFallbackContext('climate', {
+          region: regionName,
+          reason: 'Seasonal forecast data not available for this location',
+        });
+      }
+    } else if (!latitude || !longitude) {
+      noDataFallbacks.climate = buildFallbackContext('climate', {
+        region: regionName,
+        reason: 'Location coordinates required for seasonal forecasts',
+      });
+    }
+  }
+
   return {
     mcpResults,
     intentsDetected,
