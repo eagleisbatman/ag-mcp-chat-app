@@ -36,3 +36,6 @@ mobile/docs/
 
 # Expo
 mobile/.expo/
+
+# Test scripts
+*.sh
