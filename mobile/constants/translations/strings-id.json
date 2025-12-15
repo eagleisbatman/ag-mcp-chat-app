@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Kembali",
+    "retry": "Coba Lagi",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "continue": "Lanjut",
+    "dismiss": "Tutup",
+    "refresh": "Segarkan",
+    "clear": "Bersihkan",
+    "loading": "Memuat…",
+    "skipForNow": "Lewati Sekarang"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Asisten Tani AI Anda",
+    "getStarted": "Mulai",
+    "features": {
+      "weatherTitle": "Prakiraan Cuaca",
+      "weatherDescription": "Dapatkan prakiraan cuaca akurat untuk lahan Anda.",
+      "diagnosisTitle": "Diagnosa Tanaman",
+      "diagnosisDescription": "Kenali penyakit tanaman pakai foto.",
+      "voiceTitle": "Bantuan Suara",
+      "voiceDescription": "Bicara dengan bahasa Anda."
+    },
+    "locationTitle": "Aktifkan Lokasi",
+    "locationDescription": "Bagikan lokasi Anda untuk prakiraan cuaca akurat dan saran bertani sesuai daerah.",
+    "enableLocation": "Aktifkan Lokasi",
+    "locationDenied": "Izin lokasi ditolak",
+    "locationError": "Gagal mendapatkan lokasi. Coba lagi.",
+    "benefits": {
+      "weather": "Prakiraan cuaca lokal",
+      "regionAdvice": "Saran tanaman sesuai daerah",
+      "soilData": "Data tanah daerah Anda"
+    },
+    "languageTitle": "Pilih Bahasa",
+    "languageSubtitle": "Pilih bahasa untuk Asisten",
+    "searchLanguages": "Cari bahasa...",
+    "noLanguagesFound": "Tidak ada bahasa ditemukan",
+    "suggestedForYou": "Disarankan untuk Anda",
+    "currentLanguage": "Saat Ini"
+  },
+  "chat": {
+    "welcomeMessage": "Halo! 👋 Saya asisten pertanian Anda.\n\nSaya bisa membantu Anda tentang:\n• Tanaman, sayur, buah, dan bunga\n• Ternak, unggas, dan budidaya ikan\n• Penanganan hama dan penyakit\n• Cuaca dan saran pasar\n\nAda yang bisa saya bantu hari ini?",
+    "locationDenied": "Izin lokasi ditolak",
+    "locationUpdated": "Lokasi diperbarui!",
+    "locationUpdateFailed": "Gagal memperbarui lokasi",
+    "loadingConversation": "Memuat percakapan...",
+    "thinking": "Berpikir...",
+    "messagePlaceholder": "Pesan...",
+    "fromVoice": "Dari suara — edit jika perlu",
+    "voiceTranscribed": "Suara ditranskripsi! Edit jika perlu, lalu kirim.",
+    "noInternet": "Tidak ada koneksi internet. Mohon periksa jaringan Anda.",
+    "couldNotLoadConversation": "Gagal memuat percakapan",
+    "startedNewConversation": "Percakapan baru dimulai",
+    "connectionErrorBot": "Kesalahan koneksi. Silakan coba lagi.",
+    "analyzingPlantImage": "Menganalisis gambar tanaman...",
+    "imageAnalysisFailedBot": "Analisis gambar gagal. Silakan coba lagi.",
+    "sorryCouldNotProcess": "Maaf, saya tidak bisa memprosesnya. {details}",
+    "analysisCouldNotComplete": "Analisis tidak dapat diselesaikan. {details}",
+    "plantAnalysisIssues": "Analisis tanaman bermasalah: {details}",
+    "tapLocationToSet": "Ketuk untuk mengatur lokasi",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Anda",
+    "tapToAskNext": "Ketuk untuk pertanyaan berikutnya:"
+  },
+  "media": {
+    "photoLibraryPermission": "Perlu akses galeri foto untuk pilih gambar. Izinkan di Pengaturan.",
+    "cameraPermission": "Perlu akses kamera untuk ambil foto. Izinkan di Pengaturan.",
+    "pickImageFailed": "Gagal pilih gambar. Coba lagi.",
+    "cameraFailed": "Gagal akses kamera. Coba lagi.",
+    "camera": "Kamera",
+    "gallery": "Galeri"
+  },
+  "voice": {
+    "microphonePermission": "Izin Mikrofon Diperlukan",
+    "startRecordingFailed": "Gagal Memulai Rekaman",
+    "recordingFailed": "Rekaman Gagal",
+    "transcriptionFailed": "Gagal Memproses Suara",
+    "couldNotTranscribeAudio": "Tidak Bisa Memproses Suara",
+    "voiceUnavailableLater": "Suara Tidak Tersedia - Coba Lagi Nanti",
+    "voiceUnavailable": "Suara Tidak Tersedia - Coba Lagi",
+    "audioPlaybackFailed": "Gagal Memutar Audio",
+    "recording": "Merekam",
+    "cancel": "Batal",
+    "done": "Selesai",
+    "transcribing": "Memproses Suara...",
+    "recordingHint": "Ketuk Selesai untuk memproses suara, atau Batal untuk menghapus."
+  },
+  "history": {
+    "title": "Percakapan",
+    "noConversations": "Belum ada percakapan",
+    "noConversationsHint": "Mulai obrolan baru untuk dapat saran pertanian",
+    "newChat": "Obrolan Baru",
+    "newConversation": "Percakapan Baru",
+    "deleteTitle": "Hapus Percakapan",
+    "deleteMessage": "Hapus \"{title}\"? Ini tidak bisa dibatalkan.",
+    "untitled": "Tanpa Judul",
+    "deleted": "Percakapan dihapus",
+    "deleteFailed": "Gagal menghapus",
+    "couldNotDelete": "Tidak bisa menghapus percakapan",
+    "notConnectedTitle": "Tidak terhubung",
+    "notConnectedHint": "Riwayat percakapan perlu koneksi internet",
+    "yesterday": "Kemarin"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "sectionConversations": "PERCAKAPAN",
+    "sectionAiServices": "LAYANAN AI",
+    "sectionLocation": "LOKASI",
+    "sectionLanguage": "BAHASA",
+    "sectionAppearance": "TAMPILAN",
+    "sectionDanger": "ZONA BAHAYA",
+    "chatHistory": "Riwayat Chat",
+    "chatHistorySubtitle": "Lihat dan lanjutkan percakapan sebelumnya",
+    "aiServices": "Layanan Aktif",
+    "aiServicesSubtitle": "Lihat layanan AI yang aktif di daerah Anda",
+    "locationPermissionDenied": "Izin lokasi ditolak",
+    "locationUpdated": "Lokasi berhasil diperbarui!",
+    "locationUpdateFailed": "Gagal memperbarui lokasi. Coba lagi.",
+    "locationEnabled": "Lokasi aktif",
+    "tapToEnable": "Ketuk untuk mengaktifkan",
+    "tapToUpdateLocation": "Ketuk untuk perbarui lokasi",
+    "themeLight": "Terang",
+    "themeDark": "Gelap",
+    "themeSystem": "Sistem",
+    "language": "Bahasa",
+    "resetOnboarding": "Setel Ulang Panduan",
+    "resetOnboardingSubtitle": "Mulai dari awal dengan panduan pengaturan",
+    "resetConfirmTitle": "Setel Ulang Pengaturan",
+    "resetConfirmMessage": "Ini akan memulai ulang panduan pengaturan. Lanjutkan?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Didukung oleh Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "Layanan AI",
+    "loading": "Memuat layanan...",
+    "loadingDetails": "Memuat...",
+    "footer": "Ketersediaan layanan tergantung lokasi Anda",
+    "couldNotLoad": "Gagal memuat layanan",
+    "couldNotLoadDetails": "Gagal memuat detail layanan",
+    "failedToFetch": "Gagal mengambil layanan",
+    "serviceCategory": "Kategori {name}",
+    "service": "Layanan {name}",
+    "servicesAvailable": "{active} dari {total} layanan tersedia di lokasi Anda",
+    "activeCount": "{active}/{total} aktif",
+    "statusActive": "Aktif",
+    "statusUnavailable": "Tidak tersedia di wilayah Anda",
+    "locationNotSet": "Lokasi belum diatur",
+    "sectionAbout": "Tentang",
+    "sectionFeatures": "Fitur",
+    "sectionAvailableIn": "Tersedia di",
+    "sectionSupportedCrops": "Tanaman yang Didukung",
+    "categories": {
+      "plantHealth": "Kesehatan Tanaman",
+      "soil": "Analisis Tanah",
+      "weather": "Cuaca & Iklim",
+      "livestock": "Nutrisi Ternak",
+      "agriculture": "Saran Tanaman"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Deteksi dan diagnosis penyakit tanaman berbasis AI",
+        "description": "Analisis gambar tanaman untuk identifikasi penyakit, hama, dan kekurangan nutrisi. Dapatkan diagnosis instan dengan rekomendasi perawatan dan tips pencegahan."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "Analisis sifat tanah dan nutrisi untuk Afrika",
+        "description": "Dapatkan informasi tanah rinci termasuk pH, nitrogen, fosfor, kalium, dan nutrisi lainnya. Cakupan meliputi seluruh Afrika dengan resolusi 30 meter."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Kondisi terkini dan prakiraan cuaca seluruh dunia",
+        "description": "Akses data cuaca real-time termasuk suhu, kelembapan, kecepatan angin, dan curah hujan. Prakiraan tersedia hingga 15 hari."
+      },
+      "gapWeather": {
+        "name": "GAP Weather",
+        "tagline": "Prakiraan cuaca pertanian untuk Kenya",
+        "description": "Prakiraan cuaca khusus pertanian di Kenya. Mencakup evapotranspirasi, radiasi matahari, dan prakiraan curah hujan yang disesuaikan untuk keputusan pertanian."
+      },
+      "edacap": {
+        "name": "Iklim EDACaP",
+        "tagline": "Prakiraan iklim musiman untuk Ethiopia",
+        "description": "Prakiraan iklim musiman termasuk prediksi suhu dan curah hujan. Membantu petani merencanakan jadwal tanam dan panen."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Data cuaca untuk lokasi global",
+        "description": "Layanan data cuaca komprehensif yang menyediakan kondisi terkini dan prakiraan untuk lokasi di seluruh dunia."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Prakiraan & intelijen cuaca",
+        "description": "Platform intelijen cuaca canggih dengan prakiraan resolusi tinggi dan kemampuan nowcasting."
+      },
+      "feedFormulation": {
+        "name": "Formulasi Pakan",
+        "tagline": "Perhitungan diet optimal untuk sapi perah",
+        "description": "Hitung campuran pakan paling hemat biaya untuk sapi perah Anda. Mempertimbangkan target produksi susu, berat badan, dan pakan lokal yang tersedia."
+      },
+      "nextgen": {
+        "name": "Pupuk NextGen",
+        "tagline": "Rekomendasi pupuk spesifik lokasi untuk Ethiopia",
+        "description": "Dapatkan rekomendasi pupuk yang tepat berdasarkan lokasi persis Anda. Termasuk rekomendasi pupuk organik (kompos, kascing) dan anorganik (Urea, NPS)."
+      },
+      "decisionTree": {
+        "name": "Pohon Keputusan Tanaman",
+        "tagline": "Rekomendasi tahap pertumbuhan untuk Kenya",
+        "description": "Dapatkan rekomendasi manajemen tanaman berdasarkan tahap pertumbuhan dan kondisi cuaca terkini. Membantu Anda membuat keputusan tepat waktu untuk pengendalian hama, irigasi, dan panen."
+      },
+      "gapAgriculture": {
+        "name": "GAP Pertanian",
+        "tagline": "Layanan konsultasi pertanian",
+        "description": "Layanan konsultasi pertanian umum untuk manajemen tanaman dan ternak."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Deteksi Penyakit",
+      "pestIdentification": "Identifikasi Hama",
+      "nutrientAnalysis": "Analisis Nutrisi",
+      "treatmentAdvice": "Saran Perawatan",
+      "soilPh": "pH Tanah",
+      "nitrogen": "Nitrogen",
+      "phosphorus": "Fosfor",
+      "potassium": "Kalium",
+      "currentWeather": "Cuaca Terkini",
+      "temperature": "Suhu",
+      "humidity": "Kelembapan",
+      "forecast": "Prakiraan",
+      "precipitation": "Curah Hujan",
+      "evapotranspiration": "Evapotranspirasi",
+      "solarRadiation": "Radiasi Matahari",
+      "wind": "Angin",
+      "seasonalOutlook": "Prakiraan Musiman",
+      "rainfallProbability": "Kemungkinan Hujan",
+      "temperatureTrend": "Tren Suhu",
+      "cropForecasts": "Prakiraan Tanaman",
+      "historical": "Riwayat",
+      "astronomy": "Astronomi",
+      "nowcast": "Nowcast",
+      "forecasts": "Prakiraan",
+      "alerts": "Peringatan",
+      "dietOptimization": "Optimasi Diet",
+      "nutrientBalance": "Keseimbangan Nutrisi",
+      "localFeeds": "Pakan Lokal",
+      "costCalculation": "Perhitungan Biaya",
+      "organicFertilizers": "Pupuk Organik",
+      "inorganicFertilizers": "Pupuk Anorganik",
+      "expectedYield": "Hasil yang Diharapkan",
+      "siteSpecific": "Spesifik Lokasi",
+      "growthStage": "Tahap Pertumbuhan",
+      "recommendations": "Rekomendasi",
+      "weatherBased": "Berbasis Cuaca",
+      "actions": "Tindakan",
+      "cropAdvice": "Saran Tanaman",
+      "bestPractices": "Praktik Terbaik",
+      "seasonalTips": "Tips Musiman",
+      "localKnowledge": "Pengetahuan Lokal"
+    },
+    "fallback": {
+      "service": "Layanan pertanian",
+      "description": "Detail layanan tidak tersedia."
+    },
+    "regions": {
+      "worldwide": "Seluruh Dunia",
+      "africa": "Afrika",
+      "eastAfrica": "Afrika Timur",
+      "ethiopia": "Ethiopia",
+      "kenya": "Kenya"
+    },
+    "crops": {
+      "all": "Semua tanaman",
+      "wheat": "Gandum",
+      "maize": "Jagung",
+      "beans": "Kacang"
+    }
+  },
+  "system": {
+    "offline": "Tidak Ada Internet",
+    "errorTitle": "Aduh! Ada Kesalahan",
+    "errorFallback": "Terjadi kesalahan tak terduga",
+    "tryAgain": "Coba Lagi"
+  },
+  "errors": {
+    "syncFailed": "Gagal terhubung ke server. Beberapa fitur mungkin terbatas.",
+    "weatherUnavailable": "Info cuaca sementara tidak tersedia. Coba lagi nanti.",
+    "diagnosisTimeout": "Diagnosis tanaman terlalu lama. Coba lagi.",
+    "uploadFailed": "Gagal mengunggah gambar. Periksa koneksi dan coba lagi.",
+    "transcriptionFailed": "Transkripsi suara gagal. Coba bicara lagi.",
+    "serverError": "Kesalahan server. Coba lagi nanti.",
+    "requestTimeout": "Permintaan habis waktu. Periksa koneksi Anda.",
+    "locationLookupFailed": "Gagal menemukan detail lokasi Anda."
+  },
+  "a11y": {
+    "startNewChat": "Mulai obrolan baru",
+    "retryLoadingIntegrations": "Coba lagi muat integrasi",
+    "dismissNotification": "Tutup notifikasi",
+    "dismiss": "Tutup",
+    "clearSearch": "Hapus pencarian",
+    "cancelRecording": "Batal merekam",
+    "finishRecording": "Selesai merekam",
+    "refreshLocation": "Perbarui lokasi",
+    "newChat": "Obrolan baru",
+    "openSettings": "Buka pengaturan",
+    "scrollToBottom": "Gulir ke bawah",
+    "clearVoiceTranscription": "Hapus teks suara",
+    "takePhoto": "Ambil foto",
+    "pickImage": "Pilih gambar",
+    "messageInput": "Kolom pesan",
+    "sendMessage": "Kirim pesan",
+    "recordVoice": "Rekam suara",
+    "attachMedia": "Lampirkan media",
+    "closeMenu": "Tutup menu",
+    "playVoice": "Putar suara",
+    "stopVoicePlayback": "Hentikan putar suara",
+    "moreNotifications": "{count} notifikasi lainnya",
+    "themeMode": "Tema: {mode}",
+    "copyMessage": "Salin pesan",
+    "askQuestion": "Tanya: {question}",
+    "selectLanguage": "Bahasa {name}"
+  }
+}

@@ -19,13 +19,13 @@ const TRANSLATION_REGISTRY = {
   es: () => require('./translations/strings-es.json'),    // Spanish
   ar: () => require('./translations/strings-ar.json'),    // Arabic
 
-  // Indian Languages
-  // mr: () => require('./translations/strings-mr.json'),    // Marathi
-  // gu: () => require('./translations/strings-gu.json'),    // Gujarati
-  // ta: () => require('./translations/strings-ta.json'),    // Tamil
-  // bn: () => require('./translations/strings-bn.json'),    // Bengali
-  // ml: () => require('./translations/strings-ml.json'),    // Malayalam
-  // pa: () => require('./translations/strings-pa.json'),    // Punjabi
+  // Indian Languages - TRANSLATED
+  mr: () => require('./translations/strings-mr.json'),    // Marathi
+  gu: () => require('./translations/strings-gu.json'),    // Gujarati
+  ta: () => require('./translations/strings-ta.json'),    // Tamil
+  bn: () => require('./translations/strings-bn.json'),    // Bengali
+  ml: () => require('./translations/strings-ml.json'),    // Malayalam
+  pa: () => require('./translations/strings-pa.json'),    // Punjabi
   // or: () => require('./translations/strings-or.json'),    // Odia
   // as: () => require('./translations/strings-as.json'),    // Assamese
   // ne: () => require('./translations/strings-ne.json'),    // Nepali
@@ -40,18 +40,18 @@ const TRANSLATION_REGISTRY = {
   // rw: () => require('./translations/strings-rw.json'),    // Kinyarwanda
   // so: () => require('./translations/strings-so.json'),    // Somali
 
-  // Southeast Asian Languages
-  // th: () => require('./translations/strings-th.json'),    // Thai
-  // id: () => require('./translations/strings-id.json'),    // Indonesian
+  // Southeast Asian Languages - TRANSLATED
+  th: () => require('./translations/strings-th.json'),    // Thai
+  id: () => require('./translations/strings-id.json'),    // Indonesian
   // fil: () => require('./translations/strings-fil.json'),  // Filipino
   // ms: () => require('./translations/strings-ms.json'),    // Malay
   // my: () => require('./translations/strings-my.json'),    // Burmese
   // km: () => require('./translations/strings-km.json'),    // Khmer
   // lo: () => require('./translations/strings-lo.json'),    // Lao
 
-  // European Languages
-  // de: () => require('./translations/strings-de.json'),    // German
-  // pt: () => require('./translations/strings-pt.json'),    // Portuguese
+  // European Languages - TRANSLATED
+  de: () => require('./translations/strings-de.json'),    // German
+  pt: () => require('./translations/strings-pt.json'),    // Portuguese
   // it: () => require('./translations/strings-it.json'),    // Italian
   // nl: () => require('./translations/strings-nl.json'),    // Dutch
   // pl: () => require('./translations/strings-pl.json'),    // Polish
