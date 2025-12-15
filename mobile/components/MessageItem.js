@@ -245,7 +245,7 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
               onPress={handleSpeak}
               disabled={isLoading}
               accessibilityRole="button"
-              accessibilityLabel={isSpeaking ? 'Stop voice playback' : 'Play voice'}
+              accessibilityLabel={isSpeaking ? t('a11y.stopVoicePlayback') : t('a11y.playVoice')}
               android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: false } : undefined}
             >
               {isLoading ? (
@@ -313,7 +313,7 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
                   onFollowUpPress?.(question);
                 }}
                 accessibilityRole="button"
-                accessibilityLabel={`Ask: ${question}`}
+                accessibilityLabel={t('a11y.askQuestion', { question })}
                 android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: false } : undefined}
               >
                 <Text style={[styles.followUpText, { color: theme.text }]}>

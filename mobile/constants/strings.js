@@ -1,5 +1,37 @@
 const DEFAULT_LOCALE = 'en';
 
+// Current locale - can be updated dynamically
+let currentLocale = DEFAULT_LOCALE;
+
+// Loaded translations cache
+const translationsCache = {};
+
+// Set the current locale for translations
+export function setLocale(locale) {
+  currentLocale = locale || DEFAULT_LOCALE;
+}
+
+// Get the current locale
+export function getLocale() {
+  return currentLocale;
+}
+
+// Load translations for a specific language (called at app startup)
+export async function loadTranslations(locale) {
+  if (locale === 'en' || !locale) return; // English is built-in
+
+  // Check cache first
+  if (translationsCache[locale]) return;
+
+  try {
+    // Dynamic import of translation file
+    const translations = await import(`./translations/strings-${locale}.json`);
+    translationsCache[locale] = translations.default || translations;
+  } catch (error) {
+    console.log(`Translation file for ${locale} not found, using English`);
+  }
+}
+
 export const STRINGS = {
   en: {
     common: {
@@ -137,25 +169,171 @@ export const STRINGS = {
       appInfoPoweredBy: 'Powered by Digital Green Foundation',
     },
     mcp: {
-      title: 'AI Integrations',
-      loading: 'Loading integrations...',
-      footer: 'Integrations activate based on your region. Pull to refresh.',
+      title: 'AI Services',
+      loading: 'Loading services...',
+      loadingDetails: 'Loading...',
+      footer: 'Service availability depends on your location',
       couldNotLoad: 'Could not load services',
+      couldNotLoadDetails: 'Could not load service details',
+      failedToFetch: 'Failed to fetch services',
       serviceCategory: 'Category {name}',
       service: 'Service {name}',
-      stats: {
-        active: 'Active',
-        issues: 'Issues',
-        inactive: 'Inactive',
-        total: 'Total',
-      },
+      servicesAvailable: '{active} of {total} services available for your location',
+      activeCount: '{active}/{total} active',
+      statusActive: 'Active',
+      statusUnavailable: 'Not available in your region',
       locationNotSet: 'Location not set',
+      // Section titles
+      sectionAbout: 'About',
+      sectionFeatures: 'Features',
+      sectionAvailableIn: 'Available In',
+      sectionSupportedCrops: 'Supported Crops',
+      // Category names
+      categories: {
+        plantHealth: 'Plant Health',
+        soil: 'Soil Analysis',
+        weather: 'Weather & Climate',
+        livestock: 'Livestock Nutrition',
+        agriculture: 'Crop Advisory',
+      },
+      // Service descriptions - these will be translated
+      services: {
+        agrivision: {
+          name: 'AgriVision',
+          tagline: 'AI-powered plant disease detection and diagnosis',
+          description: 'Analyze plant images to identify diseases, pests, and nutrient deficiencies. Get instant diagnosis with treatment recommendations and prevention tips.',
+        },
+        isdaSoil: {
+          name: 'ISDA Soil',
+          tagline: 'Soil properties and nutrient analysis for Africa',
+          description: 'Get detailed soil information including pH, nitrogen, phosphorus, potassium, and other nutrients. Coverage includes all of Africa with 30-meter resolution.',
+        },
+        accuweather: {
+          name: 'AccuWeather',
+          tagline: 'Current conditions and weather forecasts worldwide',
+          description: 'Access real-time weather data including temperature, humidity, wind speed, and precipitation. Forecasts available up to 15 days.',
+        },
+        gapWeather: {
+          name: 'GAP Weather',
+          tagline: 'Agricultural weather forecasts for Kenya',
+          description: 'Specialized weather forecasts for agriculture in Kenya. Includes evapotranspiration, solar radiation, and precipitation forecasts tailored for farming decisions.',
+        },
+        edacap: {
+          name: 'EDACaP Climate',
+          tagline: 'Seasonal climate forecasts for Ethiopia',
+          description: 'Seasonal climate outlook including temperature and rainfall predictions. Helps farmers plan planting and harvesting schedules.',
+        },
+        weatherapi: {
+          name: 'WeatherAPI',
+          tagline: 'Weather data for global locations',
+          description: 'Comprehensive weather data service providing current conditions and forecasts for locations worldwide.',
+        },
+        tomorrowIo: {
+          name: 'Tomorrow.io',
+          tagline: 'Weather intelligence and forecasting',
+          description: 'Advanced weather intelligence platform with high-resolution forecasts and nowcasting capabilities.',
+        },
+        feedFormulation: {
+          name: 'Feed Formulation',
+          tagline: 'Optimal diet calculations for dairy cattle',
+          description: 'Calculate the most cost-effective feed mix for your dairy cattle. Takes into account milk production targets, body weight, and available local feeds.',
+        },
+        nextgen: {
+          name: 'NextGen Fertilizer',
+          tagline: 'Site-specific fertilizer recommendations for Ethiopia',
+          description: 'Get precise fertilizer recommendations based on your exact location. Includes both organic (compost, vermicompost) and inorganic (Urea, NPS) recommendations.',
+        },
+        decisionTree: {
+          name: 'Crop Decision Tree',
+          tagline: 'Growth stage recommendations for Kenya',
+          description: 'Get crop management recommendations based on growth stage and current weather conditions. Helps you make timely decisions for pest control, irrigation, and harvesting.',
+        },
+        gapAgriculture: {
+          name: 'GAP Agriculture',
+          tagline: 'Agricultural advisory services',
+          description: 'General agricultural advisory services for crop and livestock management.',
+        },
+      },
+      // Feature labels
+      features: {
+        diseaseDetection: 'Disease Detection',
+        pestIdentification: 'Pest Identification',
+        nutrientAnalysis: 'Nutrient Analysis',
+        treatmentAdvice: 'Treatment Advice',
+        soilPh: 'Soil pH',
+        nitrogen: 'Nitrogen',
+        phosphorus: 'Phosphorus',
+        potassium: 'Potassium',
+        currentWeather: 'Current Weather',
+        temperature: 'Temperature',
+        humidity: 'Humidity',
+        forecast: 'Forecast',
+        precipitation: 'Precipitation',
+        evapotranspiration: 'Evapotranspiration',
+        solarRadiation: 'Solar Radiation',
+        wind: 'Wind',
+        seasonalOutlook: 'Seasonal Outlook',
+        rainfallProbability: 'Rainfall Probability',
+        temperatureTrend: 'Temperature Trend',
+        cropForecasts: 'Crop Forecasts',
+        historical: 'Historical',
+        astronomy: 'Astronomy',
+        nowcast: 'Nowcast',
+        forecasts: 'Forecasts',
+        alerts: 'Alerts',
+        dietOptimization: 'Diet Optimization',
+        nutrientBalance: 'Nutrient Balance',
+        localFeeds: 'Local Feeds',
+        costCalculation: 'Cost Calculation',
+        organicFertilizers: 'Organic Fertilizers',
+        inorganicFertilizers: 'Inorganic Fertilizers',
+        expectedYield: 'Expected Yield',
+        siteSpecific: 'Site-Specific',
+        growthStage: 'Growth Stage',
+        recommendations: 'Recommendations',
+        weatherBased: 'Weather-Based',
+        actions: 'Actions',
+        cropAdvice: 'Crop Advice',
+        bestPractices: 'Best Practices',
+        seasonalTips: 'Seasonal Tips',
+        localKnowledge: 'Local Knowledge',
+      },
+      // Fallback descriptions
+      fallback: {
+        service: 'Agricultural service',
+        description: 'Service details not available.',
+      },
+      // Region names for coverage
+      regions: {
+        worldwide: 'Worldwide',
+        africa: 'Africa',
+        eastAfrica: 'East Africa',
+        ethiopia: 'Ethiopia',
+        kenya: 'Kenya',
+      },
+      // Crop names
+      crops: {
+        all: 'All crops',
+        wheat: 'Wheat',
+        maize: 'Maize',
+        beans: 'Beans',
+      },
     },
     system: {
       offline: 'No internet connection',
       errorTitle: 'Oops! Something went wrong',
       errorFallback: 'An unexpected error occurred',
       tryAgain: 'Try Again',
+    },
+    errors: {
+      syncFailed: 'Could not connect to server. Some features may be limited.',
+      weatherUnavailable: 'Weather service is temporarily unavailable. Try again later.',
+      diagnosisTimeout: 'Plant diagnosis is taking too long. Please try again.',
+      uploadFailed: 'Could not upload image. Check your connection and retry.',
+      transcriptionFailed: 'Voice transcription failed. Try speaking again.',
+      serverError: 'Server error. Please try again later.',
+      requestTimeout: 'Request timed out. Check your connection.',
+      locationLookupFailed: 'Could not determine your location details.',
     },
     a11y: {
       startNewChat: 'Start a new chat',
@@ -177,6 +355,13 @@ export const STRINGS = {
       recordVoice: 'Record voice',
       attachMedia: 'Attach media',
       closeMenu: 'Close menu',
+      playVoice: 'Play voice',
+      stopVoicePlayback: 'Stop voice playback',
+      moreNotifications: '{count} more notifications',
+      themeMode: 'Theme: {mode}',
+      copyMessage: 'Copy message',
+      askQuestion: 'Ask: {question}',
+      selectLanguage: 'Language {name}',
     },
   },
 };
@@ -192,7 +377,19 @@ function getByPath(obj, path) {
 }
 
 export function t(key, params) {
-  const raw = getByPath(STRINGS[DEFAULT_LOCALE], key) ?? key;
+  // Try to get translation from current locale first
+  let raw;
+
+  // Check cached translations for current locale
+  if (currentLocale !== 'en' && translationsCache[currentLocale]) {
+    raw = getByPath(translationsCache[currentLocale], key);
+  }
+
+  // Fall back to English if translation not found
+  if (!raw) {
+    raw = getByPath(STRINGS[DEFAULT_LOCALE], key) ?? key;
+  }
+
   if (!params) return raw;
   return Object.keys(params).reduce((acc, k) => acc.replaceAll(`{${k}}`, String(params[k])), raw);
 }

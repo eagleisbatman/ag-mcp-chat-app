@@ -2,6 +2,7 @@ import React from 'react';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import IconButton from './ui/IconButton';
+import { t } from '../constants/strings';
 
 export default function ThemeToggle({ style }) {
   const { theme, themeMode, setThemeMode } = useApp();
@@ -32,7 +33,7 @@ export default function ThemeToggle({ style }) {
       backgroundColor="transparent"
       color={theme.accent}
       style={style}
-      accessibilityLabel={`Theme: ${themeMode}`}
+      accessibilityLabel={t('a11y.themeMode', { mode: themeMode })}
     />
   );
 }

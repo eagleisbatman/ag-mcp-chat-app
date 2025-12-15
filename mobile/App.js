@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AppProvider, useApp } from './contexts/AppContext';
-import { ToastProvider } from './contexts/ToastContext';
+import { ToastProvider, useToast } from './contexts/ToastContext';
 import OfflineIndicator from './components/OfflineIndicator';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -46,6 +46,21 @@ function MainStack() {
   );
 }
 
+// Watch for sync errors and display toast notifications
+function SyncErrorWatcher() {
+  const { lastSyncError, clearSyncError } = useApp();
+  const { showWarning } = useToast();
+
+  useEffect(() => {
+    if (lastSyncError) {
+      showWarning(lastSyncError);
+      clearSyncError();
+    }
+  }, [lastSyncError, clearSyncError, showWarning]);
+
+  return null;
+}
+
 function AppNavigator() {
   const { isLoading, onboardingComplete, theme } = useApp();
 
@@ -61,6 +76,7 @@ function AppNavigator() {
     <View style={{ flex: 1 }}>
       <StatusBar style={theme.statusBar} backgroundColor={theme.surface} translucent={false} />
       <OfflineIndicator />
+      <SyncErrorWatcher />
       <NavigationContainer>
         {onboardingComplete ? <MainStack /> : <OnboardingStack />}
       </NavigationContainer>

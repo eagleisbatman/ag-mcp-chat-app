@@ -9,9 +9,8 @@ import { diagnosePlantHealth, formatDiagnosis } from '../services/agrivision';
 import { transcribeAudio as transcribeAudioService } from '../services/transcription';
 import { uploadImage, uploadAudio } from '../services/upload';
 import { createSession, saveMessage, generateTitle, updateSession, getSession } from '../services/db';
-import { parseErrorMessage, isNetworkError } from '../utils/apiHelpers';
+import { parseErrorMessage, isNetworkError, isServerError } from '../utils/apiHelpers';
 import { t } from '../constants/strings';
-import { WIDGET_METADATA, getOutputWidgetType } from '../widgets';
 
 const WELCOME_MESSAGE = {
   _id: 'welcome',
@@ -185,143 +184,41 @@ export default function useChat(sessionIdParam = null) {
           isBot: true 
         });
       } else {
-        // Debug logging for widget data
-        console.log('🔔 [useChat] API result widget:', {
-          hasWidget: !!result.widget,
-          widgetType: result.widget?.type,
-          widgetDataKeys: result.widget?.data ? Object.keys(result.widget.data) : [],
-        });
-
         const botMsg = {
           _id: (Date.now() + 1).toString(),
           text: result.response,
           createdAt: new Date(),
           isBot: true,
           followUpQuestions: result.followUpQuestions || [],
-          widget: result.widget || null, // Output widget from API
-          suggestedWidget: result.suggestedWidget || null, // Suggested input widget
         };
-
-        console.log('🔔 [useChat] Bot message created with widget:', {
-          hasWidget: !!botMsg.widget,
-          widgetType: botMsg.widget?.type,
-        });
-
         addMessage(botMsg);
+
+        // Save extracted entities for analytics (crops, livestock, practices from user query)
+        const analyticsMetadata = result.extractedEntities ? {
+          extractedEntities: result.extractedEntities,
+          intentsDetected: result.intentsDetected,
+          mcpToolsUsed: result.mcpToolsUsed,
+        } : null;
+
         persistMessage(botMsg, sessionId, {
           responseLanguageCode: language?.code,
           followUpQuestions: result.followUpQuestions || [],
+          metadata: analyticsMetadata,
         });
         maybeGenerateTitle(sessionId, [botMsg, userMessage, ...messages]);
       }
     } catch (error) {
       console.error('Chat error:', error);
       const errorMsg = parseErrorMessage(error);
-      // Note: Retry uses the captured `text` value which is correct since we're retrying the same message
-      const retryAction = isNetworkError(error) ? { label: t('common.retry'), onPress: () => handleSendText(text) } : null;
+      // Offer retry for network errors (connectivity issues) and server errors (5xx)
+      const shouldRetry = isNetworkError(error) || isServerError(error);
+      const retryAction = shouldRetry ? { label: t('common.retry'), onPress: () => handleSendText(text) } : null;
       showError(errorMsg, retryAction);
       addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.connectionErrorBot'), createdAt: new Date(), isBot: true });
     } finally {
       setIsTyping(false);
     }
   }, [location, language, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle]);
-
-  // Show an input widget in the chat (triggered from Tools menu)
-  const showInputWidget = useCallback((widgetType) => {
-    const metadata = WIDGET_METADATA[widgetType];
-    const widgetMessage = {
-      _id: Date.now().toString(),
-      text: metadata?.description || '',
-      createdAt: new Date(),
-      isBot: true,
-      widget: {
-        type: widgetType,
-        data: {},
-      },
-    };
-    addMessage(widgetMessage);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  }, [addMessage]);
-
-  // Handle widget form submission
-  const handleSendWidget = useCallback(async (widgetData) => {
-    const widgetType = widgetData.widget_type;
-    const metadata = WIDGET_METADATA[widgetType];
-
-    // Create user message showing widget submission
-    const userMessage = {
-      _id: Date.now().toString(),
-      text: `📋 ${metadata?.name || 'Widget'} submitted`,
-      createdAt: new Date(),
-      isBot: false,
-    };
-    addMessage(userMessage);
-    setIsTyping(true);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    const sessionId = await ensureSession();
-    persistMessage(userMessage, sessionId, { inputMethod: 'widget', widgetType });
-
-    try {
-      // Send widget data to API
-      const result = await sendChatMessage({
-        message: `Process ${metadata?.name || 'widget'} request`,
-        latitude: location?.latitude,
-        longitude: location?.longitude,
-        language: language?.code,
-        locationDetails,
-        history: messages,
-        widget_data: widgetData,
-      });
-
-      if (!result.success) {
-        const errorMsg = parseErrorMessage(result);
-        if (isNetworkError({ message: result.error })) {
-          showWarning(t('chat.noInternet'));
-        }
-        addMessage({
-          _id: (Date.now() + 1).toString(),
-          text: t('chat.sorryCouldNotProcess', { details: errorMsg }),
-          createdAt: new Date(),
-          isBot: true,
-        });
-      } else {
-        // Get expected output widget type
-        const outputWidgetType = getOutputWidgetType(widgetType);
-
-        const botMsg = {
-          _id: (Date.now() + 1).toString(),
-          text: result.response,
-          createdAt: new Date(),
-          isBot: true,
-          followUpQuestions: result.followUpQuestions || [],
-          // Use widget from response, or create one from the result data
-          widget: result.widget || (outputWidgetType ? {
-            type: outputWidgetType,
-            data: result.widgetData || {},
-          } : null),
-        };
-        addMessage(botMsg);
-        persistMessage(botMsg, sessionId, {
-          responseLanguageCode: language?.code,
-          followUpQuestions: result.followUpQuestions || [],
-        });
-        maybeGenerateTitle(sessionId, [botMsg, userMessage, ...messages]);
-      }
-    } catch (error) {
-      console.error('Widget submission error:', error);
-      const errorMsg = parseErrorMessage(error);
-      showError(errorMsg);
-      addMessage({
-        _id: (Date.now() + 1).toString(),
-        text: t('chat.connectionErrorBot'),
-        createdAt: new Date(),
-        isBot: true,
-      });
-    } finally {
-      setIsTyping(false);
-    }
-  }, [location, language, locationDetails, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle, showWarning, showError]);
 
   const handleSendImage = useCallback(async (imageData) => {
     const userMsg = { _id: Date.now().toString(), text: t('chat.analyzingPlantImage'), image: imageData.uri, createdAt: new Date(), isBot: false };
@@ -428,10 +325,8 @@ export default function useChat(sessionIdParam = null) {
     newestBotMessageId,
     handleSendText,
     handleSendImage,
-    handleSendWidget, // For widget form submissions
-    showInputWidget, // For showing input widgets from Tools menu
-    transcribeAudioForInput, // For VoiceRecorder
-    uploadAudioInBackground, // For silent audio storage
+    transcribeAudioForInput,
+    uploadAudioInBackground,
     startNewSession,
   };
 }

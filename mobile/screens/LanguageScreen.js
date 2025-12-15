@@ -61,7 +61,7 @@ export default function LanguageScreen({ navigation }) {
         ]}
         onPress={() => handleSelectLanguage(item)}
         accessibilityRole="button"
-        accessibilityLabel={`Language ${item.name}`}
+        accessibilityLabel={t('a11y.selectLanguage', { name: item.name })}
         android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
       >
         <View style={styles.languageInfo}>

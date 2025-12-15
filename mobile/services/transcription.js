@@ -1,7 +1,9 @@
 // Transcription Service - Voice to text via Gemini 2.5 Flash (n8n workflow)
+import { fetchWithTimeout } from '../utils/apiHelpers';
 
 const WHISPER_URL = process.env.EXPO_PUBLIC_WHISPER_URL || 'https://ag-mcp-api-gateway.up.railway.app/api/transcribe';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
+const TRANSCRIPTION_TIMEOUT_MS = 30000; // 30s for transcription
 
 /**
  * Transcribe audio to text using Gemini 2.5 Flash via n8n workflow
@@ -17,7 +19,7 @@ export const transcribeAudio = async (audioBase64, language = null) => {
       audioData = `data:audio/m4a;base64,${audioBase64}`;
     }
 
-    const response = await fetch(WHISPER_URL, {
+    const response = await fetchWithTimeout(WHISPER_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,7 +29,7 @@ export const transcribeAudio = async (audioBase64, language = null) => {
         audio: audioData,
         language: language,
       }),
-    });
+    }, TRANSCRIPTION_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`Transcription error: ${response.status}`);

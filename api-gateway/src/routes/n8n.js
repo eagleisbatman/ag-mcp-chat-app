@@ -2,20 +2,11 @@
 const express = require('express');
 const cloudinary = require('cloudinary').v2;
 const { prisma } = require('../db');
-const path = require('path');
-const fs = require('fs');
 
 const router = express.Router();
 
-// Load intents database for fast pattern-based classification
-let intentsDb = null;
-try {
-  const intentsPath = path.join(__dirname, '../data/intents.json');
-  intentsDb = JSON.parse(fs.readFileSync(intentsPath, 'utf8'));
-  console.log('✅ Loaded intents database with countries:', Object.keys(intentsDb.countries || {}).join(', '));
-} catch (e) {
-  console.warn('⚠️ Could not load intents.json, will use LLM-only classification');
-}
+// Intent classification now handled by Intent Classification MCP Server
+// Global keywords in GLOBAL_INTENT_KEYWORDS provide fast matching for common queries
 
 const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || 'https://ag-mcp-app.up.railway.app/webhook/api/chat';
 const N8N_WHISPER_URL = process.env.N8N_WHISPER_URL || 'https://ag-mcp-app.up.railway.app/webhook/api/transcribe';
@@ -782,76 +773,8 @@ async function callAgriVisionDiagnosis(imageBase64, expectedCrop = null) {
 }
 
 /**
- * Pattern-based intent detection from intents.json database
- * Fast, deterministic, supports multiple languages
- */
-function detectIntentsFromPatterns(message, country = 'ethiopia', language = 'en') {
-  if (!intentsDb) return { intents: [], source: 'none' };
-  
-  const lowerMessage = (message || '').toLowerCase();
-  const detectedIntents = [];
-  const matchedPatterns = [];
-  
-  // Get country-specific intents
-  const countryData = intentsDb.countries?.[country.toLowerCase()];
-  if (countryData?.intents) {
-    for (const [intentName, intentData] of Object.entries(countryData.intents)) {
-      // Check patterns in specified language first, then fallback to English
-      const patterns = intentData.patterns?.[language] || intentData.patterns?.en || [];
-      for (const pattern of patterns) {
-        if (lowerMessage.includes(pattern.toLowerCase())) {
-          detectedIntents.push({
-            intent: intentName,
-            tool: intentData.tool,
-            pattern: pattern,
-            priority: intentData.priority || 1,
-          });
-          matchedPatterns.push(pattern);
-          break; // One match per intent is enough
-        }
-      }
-    }
-  }
-  
-  // Also check global tools
-  if (intentsDb.global_tools) {
-    for (const [toolName, toolData] of Object.entries(intentsDb.global_tools)) {
-      if (toolData.intents) {
-        for (const [intentName, intentData] of Object.entries(toolData.intents)) {
-          const patterns = intentData.patterns?.[language] || intentData.patterns?.en || [];
-          for (const pattern of patterns) {
-            if (lowerMessage.includes(pattern.toLowerCase())) {
-              detectedIntents.push({
-                intent: intentName,
-                tool: intentData.tool,
-                pattern: pattern,
-                priority: intentData.priority || 1,
-              });
-              matchedPatterns.push(pattern);
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  // Sort by priority and deduplicate
-  detectedIntents.sort((a, b) => a.priority - b.priority);
-  const uniqueIntents = [...new Set(detectedIntents.map(i => i.intent))];
-  
-  console.log(`[Intent] Pattern match: ${uniqueIntents.join(', ') || 'none'} (patterns: ${matchedPatterns.join(', ') || 'none'})`);
-  
-  return {
-    intents: uniqueIntents,
-    details: detectedIntents,
-    source: 'patterns',
-    matchedPatterns,
-  };
-}
-
-/**
- * Call Intent Classification MCP for multi-language intent detection (LLM fallback)
+ * Call Intent Classification MCP for multi-language intent detection
+ * Provides structured entity extraction (crops, livestock, practices)
  */
 async function classifyIntentWithLLM(message, language = 'en') {
   try {
@@ -969,7 +892,7 @@ function detectIntentsFromKeywords(message) {
 }
 
 /**
- * Unified intent detection: Global keywords first, country patterns second, LLM fallback last
+ * Unified intent detection: Global keywords first, then Intent Classification MCP
  */
 async function detectIntents(message, country = 'ethiopia', language = 'en') {
   // Step 1: Try fast global keyword detection (works for ALL locations)
@@ -985,25 +908,8 @@ async function detectIntents(message, country = 'ethiopia', language = 'en') {
     };
   }
 
-  // Step 2: Try country-specific pattern matching from intents.json (for regional tools)
-  const patternResult = detectIntentsFromPatterns(message, country, language);
-
-  if (patternResult.intents.length > 0) {
-    // Map to MCP categories
-    const mcpIntents = patternResult.intents
-      .map(i => mapIntentToMcpCategory(i))
-      .filter(Boolean);
-
-    return {
-      intents: [...new Set(mcpIntents)],
-      rawIntents: patternResult.intents,
-      source: 'patterns',
-      classification: null,
-    };
-  }
-
-  // Step 3: Fallback to LLM classification (expensive, slower)
-  console.log('[Intent] No keyword/pattern match, falling back to LLM...');
+  // Step 2: Use Intent Classification MCP for structured classification
+  console.log('[Intent] No keyword match, using Intent Classification MCP...');
   const llmResult = await classifyIntentWithLLM(message, language);
 
   if (llmResult) {
@@ -1120,7 +1026,7 @@ You can also mention that farmers can use a combination of organic and inorganic
 
 /**
  * Call MCP servers based on user intent
- * Uses pattern matching from intents.json, falls back to LLM
+ * Uses global keyword matching first, then Intent Classification MCP for structured detection
  */
 async function callMcpServersForIntent(message, latitude, longitude, mcpServers, language = 'en', detectedRegions = []) {
   const lowerMessage = (message || '').toLowerCase();
@@ -1385,10 +1291,20 @@ router.post('/chat', async (req, res) => {
         ...cleanData
       } = data;
 
+      // Extract entities for analytics (crops, livestock, practices from Intent Classification)
+      const extractedEntities = classification ? {
+        crops: (classification.crops || []).map(c => c.canonical_name || c.name),
+        livestock: (classification.livestock || []).map(l => l.canonical_name || l.name),
+        practices: (classification.practices || []).map(p => p.name),
+        mainIntent: classification.main_intent,
+        confidence: classification.confidence,
+      } : null;
+
       res.json({
         ...cleanData,
         mcpToolsUsed: Object.keys(mcpResults),
         intentsDetected,
+        extractedEntities, // For analytics - save with message
         _meta: {
           duration,
           mcpServersUsed: mcpContext.global.length + mcpContext.regional.length,

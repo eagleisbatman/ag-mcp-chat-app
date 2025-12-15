@@ -181,7 +181,7 @@ export default function Toast({
           </Pressable>
         )}
         {queueCount > 0 ? (
-          <Text style={[styles.queueCount, { color: theme.textMuted }]} accessibilityLabel={`${queueCount} more notifications`}>
+          <Text style={[styles.queueCount, { color: theme.textMuted }]} accessibilityLabel={t('a11y.moreNotifications', { count: queueCount })}>
             +{queueCount}
           </Text>
         ) : null}

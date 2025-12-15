@@ -19,176 +19,101 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
-// Server display info with consistent descriptions
+// Server display info with string keys for localization
 const SERVER_INFO = {
   'agrivision': {
-    name: 'AgriVision',
-    tagline: 'AI-powered plant disease detection and diagnosis',
-    description: 'Analyze plant images to identify diseases, pests, and nutrient deficiencies. Get instant diagnosis with treatment recommendations and prevention tips.',
+    stringKey: 'mcp.services.agrivision',
     icon: 'leaf-circle',
     color: '#4CAF50',
-    features: [
-      { title: 'Disease Detection', description: 'Identify plant diseases from photos' },
-      { title: 'Pest Identification', description: 'Recognize common crop pests' },
-      { title: 'Nutrient Analysis', description: 'Detect deficiency symptoms' },
-      { title: 'Treatment Advice', description: 'Get actionable recommendations' },
-    ],
-    coverage: ['Worldwide'],
-    crops: ['All crops'],
+    featureKeys: ['diseaseDetection', 'pestIdentification', 'nutrientAnalysis', 'treatmentAdvice'],
+    coverageKeys: ['worldwide'],
+    cropKeys: ['all'],
   },
   'isda-soil': {
-    name: 'ISDA Soil',
-    tagline: 'Soil properties and nutrient analysis for Africa',
-    description: 'Get detailed soil information including pH, nitrogen, phosphorus, potassium, and other nutrients. Coverage includes all of Africa with 30-meter resolution.',
+    stringKey: 'mcp.services.isdaSoil',
     icon: 'terrain',
     color: '#8B4513',
-    features: [
-      { title: 'Soil pH', description: 'Acidity/alkalinity levels' },
-      { title: 'Nitrogen', description: 'Total nitrogen content' },
-      { title: 'Phosphorus', description: 'Available phosphorus' },
-      { title: 'Potassium', description: 'Exchangeable potassium' },
-    ],
-    coverage: ['Africa'],
+    featureKeys: ['soilPh', 'nitrogen', 'phosphorus', 'potassium'],
+    coverageKeys: ['africa'],
   },
   'accuweather': {
-    name: 'AccuWeather',
-    tagline: 'Current conditions and weather forecasts worldwide',
-    description: 'Access real-time weather data including temperature, humidity, wind speed, and precipitation. Forecasts available up to 15 days.',
+    stringKey: 'mcp.services.accuweather',
     icon: 'weather-partly-cloudy',
     color: '#2196F3',
-    features: [
-      { title: 'Current Weather', description: 'Real-time conditions' },
-      { title: 'Temperature', description: 'Current and feels-like' },
-      { title: 'Humidity', description: 'Relative humidity levels' },
-      { title: 'Forecast', description: 'Up to 15-day forecast' },
-    ],
-    coverage: ['Worldwide'],
+    featureKeys: ['currentWeather', 'temperature', 'humidity', 'forecast'],
+    coverageKeys: ['worldwide'],
   },
   'gap-weather': {
-    name: 'GAP Weather',
-    tagline: 'Agricultural weather forecasts for East Africa',
-    description: 'Specialized weather forecasts for agriculture in East Africa. Includes evapotranspiration, solar radiation, and precipitation forecasts tailored for farming decisions.',
+    stringKey: 'mcp.services.gapWeather',
     icon: 'weather-lightning-rainy',
     color: '#1565C0',
-    features: [
-      { title: 'Precipitation', description: 'Rainfall forecasts' },
-      { title: 'Evapotranspiration', description: 'ET estimates for irrigation' },
-      { title: 'Solar Radiation', description: 'For crop growth modeling' },
-      { title: 'Wind', description: 'Speed and direction' },
-    ],
-    coverage: ['Kenya', 'East Africa'],
+    featureKeys: ['precipitation', 'evapotranspiration', 'solarRadiation', 'wind'],
+    coverageKeys: ['kenya', 'eastAfrica'],
   },
   'edacap': {
-    name: 'EDACaP Climate',
-    tagline: 'Seasonal climate forecasts for Ethiopia',
-    description: 'Seasonal climate outlook including temperature and rainfall predictions. Helps farmers plan planting and harvesting schedules.',
+    stringKey: 'mcp.services.edacap',
     icon: 'weather-cloudy-arrow-right',
     color: '#0D47A1',
-    features: [
-      { title: 'Seasonal Outlook', description: 'Multi-month forecasts' },
-      { title: 'Rainfall Probability', description: 'Below/Normal/Above' },
-      { title: 'Temperature Trend', description: 'Expected deviations' },
-      { title: 'Crop Forecasts', description: 'Yield predictions' },
-    ],
-    coverage: ['Ethiopia'],
+    featureKeys: ['seasonalOutlook', 'rainfallProbability', 'temperatureTrend', 'cropForecasts'],
+    coverageKeys: ['ethiopia'],
   },
   'weatherapi': {
-    name: 'WeatherAPI',
-    tagline: 'Weather data for global locations',
-    description: 'Comprehensive weather data service providing current conditions and forecasts for locations worldwide.',
+    stringKey: 'mcp.services.weatherapi',
     icon: 'weather-sunny',
     color: '#FF9800',
-    features: [
-      { title: 'Current Weather', description: 'Real-time conditions' },
-      { title: 'Forecast', description: 'Multi-day forecasts' },
-      { title: 'Historical', description: 'Past weather data' },
-      { title: 'Astronomy', description: 'Sunrise/sunset times' },
-    ],
-    coverage: ['Worldwide'],
+    featureKeys: ['currentWeather', 'forecast', 'historical', 'astronomy'],
+    coverageKeys: ['worldwide'],
   },
   'tomorrow-io': {
-    name: 'Tomorrow.io',
-    tagline: 'Weather intelligence and forecasting',
-    description: 'Advanced weather intelligence platform with high-resolution forecasts and nowcasting capabilities.',
+    stringKey: 'mcp.services.tomorrowIo',
     icon: 'cloud-sync',
     color: '#673AB7',
-    features: [
-      { title: 'Nowcast', description: 'Minute-by-minute forecasts' },
-      { title: 'Forecasts', description: 'Hourly and daily' },
-      { title: 'Alerts', description: 'Severe weather warnings' },
-      { title: 'Historical', description: 'Climate data' },
-    ],
-    coverage: ['Worldwide'],
+    featureKeys: ['nowcast', 'forecasts', 'alerts', 'historical'],
+    coverageKeys: ['worldwide'],
   },
   'feed-formulation': {
-    name: 'Feed Formulation',
-    tagline: 'Optimal diet calculations for dairy cattle',
-    description: 'Calculate the most cost-effective feed mix for your dairy cattle. Takes into account milk production targets, body weight, and available local feeds.',
+    stringKey: 'mcp.services.feedFormulation',
     icon: 'cow',
     color: '#4CAF50',
-    features: [
-      { title: 'Diet Optimization', description: 'Cost-effective feed mix' },
-      { title: 'Nutrient Balance', description: 'Protein, energy, minerals' },
-      { title: 'Local Feeds', description: 'Ethiopia feed database' },
-      { title: 'Cost Calculation', description: 'Daily feeding costs' },
-    ],
-    coverage: ['Ethiopia'],
+    featureKeys: ['dietOptimization', 'nutrientBalance', 'localFeeds', 'costCalculation'],
+    coverageKeys: ['ethiopia'],
   },
   'nextgen': {
-    name: 'NextGen Fertilizer',
-    tagline: 'Site-specific fertilizer recommendations for Ethiopia',
-    description: 'Get precise fertilizer recommendations based on your exact location. Includes both organic (compost, vermicompost) and inorganic (Urea, NPS) recommendations.',
+    stringKey: 'mcp.services.nextgen',
     icon: 'flask-outline',
     color: '#E91E63',
-    features: [
-      { title: 'Organic Fertilizers', description: 'Compost, vermicompost (tons/ha)' },
-      { title: 'Inorganic Fertilizers', description: 'Urea, NPS amounts (kg/ha)' },
-      { title: 'Expected Yield', description: 'Predicted harvest' },
-      { title: 'Site-Specific', description: 'Based on your GPS location' },
-    ],
-    coverage: ['Ethiopia'],
-    crops: ['Wheat', 'Maize'],
+    featureKeys: ['organicFertilizers', 'inorganicFertilizers', 'expectedYield', 'siteSpecific'],
+    coverageKeys: ['ethiopia'],
+    cropKeys: ['wheat', 'maize'],
   },
   'decision-tree': {
-    name: 'Crop Decision Tree',
-    tagline: 'Growth stage recommendations for Kenya',
-    description: 'Get crop management recommendations based on growth stage and current weather conditions. Helps you make timely decisions for pest control, irrigation, and harvesting.',
+    stringKey: 'mcp.services.decisionTree',
     icon: 'source-branch',
     color: '#009688',
-    features: [
-      { title: 'Growth Stage', description: 'Track crop development' },
-      { title: 'Recommendations', description: 'Timely advice' },
-      { title: 'Weather-Based', description: 'Adjusted for conditions' },
-      { title: 'Actions', description: 'What to do now' },
-    ],
-    coverage: ['Kenya'],
-    crops: ['Maize', 'Beans'],
+    featureKeys: ['growthStage', 'recommendations', 'weatherBased', 'actions'],
+    coverageKeys: ['kenya'],
+    cropKeys: ['maize', 'beans'],
   },
   'gap-agriculture': {
-    name: 'GAP Agriculture',
-    tagline: 'Agricultural advisory services',
-    description: 'General agricultural advisory services for crop and livestock management.',
+    stringKey: 'mcp.services.gapAgriculture',
     icon: 'sprout',
     color: '#8BC34A',
-    features: [
-      { title: 'Crop Advice', description: 'Planting and harvesting' },
-      { title: 'Best Practices', description: 'Agricultural guidance' },
-      { title: 'Seasonal Tips', description: 'Timely recommendations' },
-      { title: 'Local Knowledge', description: 'Region-specific advice' },
-    ],
-    coverage: ['East Africa'],
+    featureKeys: ['cropAdvice', 'bestPractices', 'seasonalTips', 'localKnowledge'],
+    coverageKeys: ['eastAfrica'],
   },
 };
 
-function FeatureItem({ feature, theme, color }) {
+function FeatureItem({ featureKey, theme, color }) {
+  // Get localized feature name from string key
+  const featureName = t(`mcp.features.${featureKey}`);
+
   return (
     <View style={styles.featureItem}>
       <View style={[styles.featureIcon, { backgroundColor: color + '15' }]}>
         <MaterialCommunityIcons name="check" size={16} color={color} />
       </View>
       <View style={styles.featureContent}>
-        <Text style={[styles.featureTitle, { color: theme.text }]}>{feature.title}</Text>
-        <Text style={[styles.featureDescription, { color: theme.textMuted }]}>{feature.description}</Text>
+        <Text style={[styles.featureTitle, { color: theme.text }]}>{featureName}</Text>
       </View>
     </View>
   );
@@ -212,12 +137,12 @@ export default function McpServerDetailScreen({ navigation, route }) {
       if (response.success) {
         setServer(response.server);
       } else {
-        throw new Error(response.error || 'Failed to fetch server details');
+        throw new Error(response.error || t('mcp.failedToFetch'));
       }
     } catch (err) {
       console.error('Fetch MCP server error:', err);
       setError(err.message);
-      showError('Could not load service details');
+      showError(t('mcp.couldNotLoadDetails'));
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -234,14 +159,27 @@ export default function McpServerDetailScreen({ navigation, route }) {
   }, [fetchServerDetails]);
 
   // Get display info from our config or fallback to API data
-  const info = SERVER_INFO[slug] || {
+  const serverConfig = SERVER_INFO[slug];
+  const info = serverConfig ? {
+    name: t(`${serverConfig.stringKey}.name`),
+    tagline: t(`${serverConfig.stringKey}.tagline`),
+    description: t(`${serverConfig.stringKey}.description`),
+    icon: serverConfig.icon,
+    color: serverConfig.color,
+    featureKeys: serverConfig.featureKeys || [],
+    // Resolve coverageKeys to localized region names
+    coverage: (serverConfig.coverageKeys || []).map(key => t(`mcp.regions.${key}`)),
+    // Resolve cropKeys to localized crop names
+    crops: (serverConfig.cropKeys || []).map(key => t(`mcp.crops.${key}`)),
+  } : {
     name: server?.name?.replace(' MCP', '').replace(' Server', '') || slug,
-    tagline: server?.description || 'Agricultural service',
-    description: server?.longDescription || 'Service details not available.',
+    tagline: server?.description || t('mcp.fallback.service'),
+    description: server?.longDescription || t('mcp.fallback.description'),
     icon: 'puzzle',
     color: theme.accent,
-    features: [],
+    featureKeys: [],
     coverage: [],
+    crops: [],
   };
 
   const isActive = server?.healthStatus === 'healthy';
@@ -266,7 +204,7 @@ export default function McpServerDetailScreen({ navigation, route }) {
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.accent} />
-          <Text style={[styles.loadingText, { color: theme.textMuted }]}>Loading...</Text>
+          <Text style={[styles.loadingText, { color: theme.textMuted }]}>{t('mcp.loadingDetails')}</Text>
         </View>
       ) : error ? (
         <View style={styles.errorContainer}>
@@ -299,24 +237,24 @@ export default function McpServerDetailScreen({ navigation, route }) {
             <View style={[styles.statusBadge, { backgroundColor: isActive ? theme.success + '20' : theme.textMuted + '20' }]}>
               <View style={[styles.statusDot, { backgroundColor: isActive ? theme.success : theme.textMuted }]} />
               <Text style={[styles.statusText, { color: isActive ? theme.success : theme.textMuted }]}>
-                {isActive ? 'Active' : 'Not available in your region'}
+                {isActive ? t('mcp.statusActive') : t('mcp.statusUnavailable')}
               </Text>
             </View>
           </View>
 
           {/* Description */}
           <Card style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>About</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('mcp.sectionAbout')}</Text>
             <Text style={[styles.descriptionText, { color: theme.textMuted }]}>{info.description}</Text>
           </Card>
 
           {/* Features */}
-          {info.features && info.features.length > 0 && (
+          {info.featureKeys && info.featureKeys.length > 0 && (
             <Card style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>Features</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('mcp.sectionFeatures')}</Text>
               <View style={styles.featuresList}>
-                {info.features.map((feature, index) => (
-                  <FeatureItem key={index} feature={feature} theme={theme} color={displayColor} />
+                {info.featureKeys.map((featureKey, index) => (
+                  <FeatureItem key={index} featureKey={featureKey} theme={theme} color={displayColor} />
                 ))}
               </View>
             </Card>
@@ -325,7 +263,7 @@ export default function McpServerDetailScreen({ navigation, route }) {
           {/* Coverage */}
           {info.coverage && info.coverage.length > 0 && (
             <Card style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>Available In</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('mcp.sectionAvailableIn')}</Text>
               <View style={styles.tagsList}>
                 {info.coverage.map((region, index) => (
                   <View key={index} style={[styles.tag, { backgroundColor: theme.accent + '15' }]}>
@@ -340,7 +278,7 @@ export default function McpServerDetailScreen({ navigation, route }) {
           {/* Supported Crops */}
           {info.crops && info.crops.length > 0 && (
             <Card style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>Supported Crops</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('mcp.sectionSupportedCrops')}</Text>
               <View style={styles.tagsList}>
                 {info.crops.map((crop, index) => (
                   <View key={index} style={[styles.tag, { backgroundColor: theme.success + '15' }]}>

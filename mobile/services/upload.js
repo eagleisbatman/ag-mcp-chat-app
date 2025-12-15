@@ -1,8 +1,10 @@
 // File upload service - uploads images/audio to Cloudinary via API Gateway
+import { fetchWithTimeout } from '../utils/apiHelpers';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api/chat', '') 
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api/chat', '')
   || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
+const UPLOAD_TIMEOUT_MS = 60000; // 60s for file uploads
 
 /**
  * Upload image to Cloudinary
@@ -12,7 +14,7 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
  */
 export const uploadImage = async (base64Image, folder = 'ag-mcp/images') => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/upload/image`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/upload/image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +24,7 @@ export const uploadImage = async (base64Image, folder = 'ag-mcp/images') => {
         image: base64Image,
         folder,
       }),
-    });
+    }, UPLOAD_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`Upload error: ${response.status}`);
@@ -66,7 +68,7 @@ export const uploadAudio = async (base64Audio, format = 'm4a', folder = 'ag-mcp/
   try {
     console.log('📤 [Upload] Uploading audio:', { format, folder, length: base64Audio?.length });
     
-    const response = await fetch(`${API_BASE_URL}/api/upload/audio`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/upload/audio`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +79,7 @@ export const uploadAudio = async (base64Audio, format = 'm4a', folder = 'ag-mcp/
         format,
         folder,
       }),
-    });
+    }, UPLOAD_TIMEOUT_MS);
 
     if (!response.ok) {
       const errorText = await response.text();

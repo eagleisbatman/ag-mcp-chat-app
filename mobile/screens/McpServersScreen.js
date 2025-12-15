@@ -31,104 +31,98 @@ const INTERNAL_SERVERS = [
   'entity-extraction',
 ];
 
-// Service category configuration
+// Service category configuration - labels use string keys
 const SERVICE_CATEGORIES = {
   plant_health: {
-    label: 'Plant Health',
+    labelKey: 'mcp.categories.plantHealth',
     icon: 'leaf-circle',
     color: '#4CAF50',
     servers: ['agrivision'],
   },
   soil: {
-    label: 'Soil Analysis',
+    labelKey: 'mcp.categories.soil',
     icon: 'terrain',
     color: '#8B4513',
     servers: ['isda-soil'],
   },
   weather: {
-    label: 'Weather & Climate',
+    labelKey: 'mcp.categories.weather',
     icon: 'weather-partly-cloudy',
     color: '#2196F3',
     servers: ['accuweather', 'gap-weather', 'edacap', 'weatherapi', 'tomorrow-io'],
   },
   livestock: {
-    label: 'Livestock Nutrition',
+    labelKey: 'mcp.categories.livestock',
     icon: 'cow',
     color: '#66BB6A',
     servers: ['feed-formulation'],
   },
   agriculture: {
-    label: 'Crop Advisory',
+    labelKey: 'mcp.categories.agriculture',
     icon: 'sprout',
     color: '#FF9800',
     servers: ['nextgen', 'decision-tree', 'gap-agriculture'],
   },
 };
 
-// Server display info
+// Server display info - uses string keys for localization
 const SERVER_INFO = {
   'agrivision': {
-    name: 'AgriVision',
-    description: 'AI-powered plant disease detection and diagnosis',
+    stringKey: 'mcp.services.agrivision',
     icon: 'leaf-circle',
   },
   'isda-soil': {
-    name: 'ISDA Soil',
-    description: 'Soil properties and nutrient analysis for Africa',
+    stringKey: 'mcp.services.isdaSoil',
     icon: 'terrain',
   },
   'accuweather': {
-    name: 'AccuWeather',
-    description: 'Current conditions and weather forecasts worldwide',
+    stringKey: 'mcp.services.accuweather',
     icon: 'weather-partly-cloudy',
   },
   'gap-weather': {
-    name: 'GAP Weather',
-    description: 'Agricultural weather forecasts for East Africa',
+    stringKey: 'mcp.services.gapWeather',
     icon: 'weather-lightning-rainy',
   },
   'edacap': {
-    name: 'EDACaP Climate',
-    description: 'Seasonal climate forecasts for Ethiopia',
+    stringKey: 'mcp.services.edacap',
     icon: 'weather-cloudy-arrow-right',
   },
   'weatherapi': {
-    name: 'WeatherAPI',
-    description: 'Weather data for global locations',
+    stringKey: 'mcp.services.weatherapi',
     icon: 'weather-sunny',
   },
   'tomorrow-io': {
-    name: 'Tomorrow.io',
-    description: 'Weather intelligence and forecasting',
+    stringKey: 'mcp.services.tomorrowIo',
     icon: 'cloud-sync',
   },
   'feed-formulation': {
-    name: 'Feed Formulation',
-    description: 'Optimal diet calculations for dairy cattle',
+    stringKey: 'mcp.services.feedFormulation',
     icon: 'cow',
   },
   'nextgen': {
-    name: 'NextGen Fertilizer',
-    description: 'Site-specific fertilizer recommendations for Ethiopia',
+    stringKey: 'mcp.services.nextgen',
     icon: 'flask-outline',
   },
   'decision-tree': {
-    name: 'Crop Decision Tree',
-    description: 'Growth stage recommendations for Kenya',
+    stringKey: 'mcp.services.decisionTree',
     icon: 'source-branch',
   },
   'gap-agriculture': {
-    name: 'GAP Agriculture',
-    description: 'Agricultural advisory services',
+    stringKey: 'mcp.services.gapAgriculture',
     icon: 'sprout',
   },
 };
 
 function ServiceCard({ server, theme, onPress }) {
   const isActive = server.displayStatus === 'active';
-  const info = SERVER_INFO[server.slug] || {
+  const serverInfo = SERVER_INFO[server.slug];
+  const info = serverInfo ? {
+    name: t(`${serverInfo.stringKey}.name`),
+    description: t(`${serverInfo.stringKey}.tagline`),
+    icon: serverInfo.icon,
+  } : {
     name: server.name?.replace(' MCP', '').replace(' Server', ''),
-    description: server.description || 'Agricultural service',
+    description: server.description || t('mcp.fallback.service'),
     icon: 'puzzle',
   };
 
@@ -169,9 +163,9 @@ function CategorySection({ category, servers, theme, onServerPress }) {
         <View style={[styles.categoryIcon, { backgroundColor: config.color + '20' }]}>
           <MaterialCommunityIcons name={config.icon} size={18} color={config.color} />
         </View>
-        <Text style={[styles.categoryLabel, { color: theme.text }]}>{config.label}</Text>
+        <Text style={[styles.categoryLabel, { color: theme.text }]}>{t(config.labelKey)}</Text>
         <Text style={[styles.categoryCount, { color: theme.textMuted }]}>
-          {activeCount}/{servers.length} active
+          {t('mcp.activeCount', { active: activeCount, total: servers.length })}
         </Text>
       </View>
 
@@ -211,7 +205,7 @@ export default function McpServersScreen({ navigation }) {
       if (response.success) {
         setMcpData(response);
       } else {
-        throw new Error(response.error || 'Failed to fetch services');
+        throw new Error(response.error || t('mcp.failedToFetch'));
       }
     } catch (err) {
       console.error('Fetch MCP servers error:', err);
@@ -312,11 +306,11 @@ export default function McpServersScreen({ navigation }) {
               <AppIcon name="location" size={16} color={theme.accent} />
               <Text style={[styles.locationText, { color: theme.text }]} numberOfLines={1}>
                 {locationDetails?.displayName ||
-                  (location ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : 'Location not set')}
+                  (location ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('mcp.locationNotSet'))}
               </Text>
             </View>
             <Text style={[styles.summaryText, { color: theme.textMuted }]}>
-              {activeCount} of {visibleServers.length} services available for your location
+              {t('mcp.servicesAvailable', { active: activeCount, total: visibleServers.length })}
             </Text>
           </View>
 
@@ -333,7 +327,7 @@ export default function McpServersScreen({ navigation }) {
 
           {/* Footer */}
           <Text style={[styles.footerText, { color: theme.textMuted }]}>
-            Service availability depends on your location
+            {t('mcp.footer')}
           </Text>
         </ScrollView>
       )}

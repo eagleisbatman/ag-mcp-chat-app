@@ -14,11 +14,11 @@ export const THEMES = {
     textSecondary: '#3C3C43',      // iOS secondary label
     textMuted: '#8E8E93',          // iOS tertiary label
     
-    // Vibrant green accent (brighter than before)
-    accent: '#34C759',             // iOS green - bright and vibrant
-    accentBright: '#30D158',       // Even brighter for icons
+    // Green accent - darker for better light mode visibility
+    accent: '#1B8A2E',             // Darker green for better contrast
+    accentBright: '#22A03A',       // Slightly brighter for active states
     accentLight: '#E3F9E5',        // Very light green tint
-    accentDark: '#248A3D',         // Darker green for pressed states
+    accentDark: '#146B24',         // Even darker for pressed states
     
     // Borders & separators (intentionally borderless UI)
     border: 'transparent',
@@ -37,20 +37,20 @@ export const THEMES = {
     // Status bar
     statusBar: 'dark',
     
-    // Semantic colors - brighter
-    error: '#FF3B30',              // iOS red
+    // Semantic colors
+    error: '#D32F2F',              // Darker red for better visibility
     errorLight: '#FFEBE9',
-    success: '#34C759',            // iOS green
+    success: '#1B8A2E',            // Darker green for better visibility
     successLight: '#E3F9E5',
-    warning: '#FF9500',            // iOS orange
+    warning: '#E65100',            // Darker orange for better visibility
     warningLight: '#FFF4E5',
-    info: '#007AFF',               // iOS blue
+    info: '#0056B3',               // Darker blue for better visibility
     infoLight: '#E5F1FF',
-    
-    // Icon colors (brighter)
-    iconPrimary: '#34C759',        // Vibrant green
-    iconSecondary: '#8E8E93',      // Muted gray
-    iconAccent: '#007AFF',         // Blue accent
+
+    // Icon colors (darker for light mode visibility)
+    iconPrimary: '#1B8A2E',        // Darker green for better contrast
+    iconSecondary: '#6B6B6B',      // Darker gray for icons
+    iconAccent: '#0056B3',         // Darker blue accent
   },
   
   dark: {

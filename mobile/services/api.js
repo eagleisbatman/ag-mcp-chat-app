@@ -1,8 +1,13 @@
 // Chat API service - calls API Gateway → n8n workflow
+import { fetchWithTimeout } from '../utils/apiHelpers';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_URL = `${API_BASE_URL}/api/chat`;
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
+
+// Timeout constants
+const CHAT_TIMEOUT_MS = 60000; // 60s for chat (includes MCP calls)
+const DEFAULT_TIMEOUT_MS = 30000; // 30s for other endpoints
 
 /**
  * Send chat message with conversation history and location context
@@ -13,9 +18,8 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
  * @param {string} params.language - Language code (e.g., 'en', 'hi')
  * @param {object} params.locationDetails - Human-readable location (L1-L6)
  * @param {Array} params.history - Previous messages for context (last 10)
- * @param {object} params.widget_data - Structured widget input data (optional)
  */
-export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [], widget_data = null }) => {
+export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [] }) => {
   try {
     // Format history for n8n workflow
     const formattedHistory = history
@@ -41,8 +45,6 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       historyCount: formattedHistory.length,
       location: locationContext?.displayName || `${latitude}, ${longitude}`,
       language,
-      hasWidgetData: !!widget_data,
-      widgetType: widget_data?.widget_type,
     });
 
     const requestBody = {
@@ -54,19 +56,14 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       history: formattedHistory,
     };
 
-    // Add widget_data if provided
-    if (widget_data) {
-      requestBody.widget_data = widget_data;
-    }
-
-    const response = await fetch(API_URL, {
+    const response = await fetchWithTimeout(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': API_KEY,
       },
       body: JSON.stringify(requestBody),
-    });
+    }, CHAT_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
@@ -76,18 +73,12 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
     console.log('📥 [API] Chat response:', {
       hasFollowUp: !!data.followUpQuestions?.length,
       followUpCount: data.followUpQuestions?.length || 0,
-      hasWidget: !!data.widget,
-      widgetType: data.widget?.type,
-      hasSuggestedWidget: !!data.suggestedWidget,
-      suggestedType: data.suggestedWidget?.type,
     });
 
     return {
       success: true,
       response: data.response || data.text || 'No response received',
       followUpQuestions: data.followUpQuestions || [],
-      widget: data.widget || null, // Output widget with MCP data
-      suggestedWidget: data.suggestedWidget || null, // Suggested input widget for user
       region: data.region,
       language: data.language,
     };
@@ -114,13 +105,13 @@ export const getActiveMcpServers = async ({ lat, lon } = {}) => {
     
     const url = `${API_BASE_URL}/api/mcp-servers/active${queryParams.toString() ? `?${queryParams}` : ''}`;
 
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': API_KEY,
       },
-    });
+    }, DEFAULT_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
@@ -165,13 +156,13 @@ export const getAllMcpServersWithStatus = async ({ lat, lon } = {}) => {
     
     const url = `${API_BASE_URL}/api/mcp-servers/all-with-status${queryParams.toString() ? `?${queryParams}` : ''}`;
 
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': API_KEY,
       },
-    });
+    }, DEFAULT_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
@@ -203,13 +194,13 @@ export const getMcpServersLiveStatus = async ({ lat, lon } = {}) => {
     
     const url = `${API_BASE_URL}/api/mcp-servers/live-status${queryParams.toString() ? `?${queryParams}` : ''}`;
 
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': API_KEY,
       },
-    });
+    }, DEFAULT_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
@@ -246,13 +237,13 @@ export const getMcpServer = async (slug) => {
   try {
     const url = `${API_BASE_URL}/api/mcp-servers/${slug}`;
 
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': API_KEY,
       },
-    });
+    }, DEFAULT_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
@@ -287,14 +278,14 @@ export const getMcpServer = async (slug) => {
 export const detectRegions = async (lat, lon) => {
   try {
     const url = `${API_BASE_URL}/api/regions/detect?lat=${lat}&lon=${lon}`;
-    
-    const response = await fetch(url, {
+
+    const response = await fetchWithTimeout(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': API_KEY,
       },
-    });
+    }, DEFAULT_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);

@@ -3,6 +3,7 @@ import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerUser, updatePreferences, saveLocation as saveLocationToDB, lookupLocation } from '../services/db';
 import { THEMES } from '../constants/themes';
+import { setLocale, loadTranslations } from '../constants/strings';
 
 // Re-export THEMES for backward compatibility
 export { THEMES };
@@ -23,6 +24,7 @@ export const AppProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [isDbSynced, setIsDbSynced] = useState(false);
+  const [lastSyncError, setLastSyncError] = useState(null); // Track sync errors for UI display
 
   // Computed theme
   const theme = themeMode === 'system' 
@@ -54,7 +56,13 @@ export const AppProvider = ({ children }) => {
       });
 
       if (savedTheme) setThemeMode(savedTheme);
-      if (savedLanguage) setLanguage(JSON.parse(savedLanguage));
+      if (savedLanguage) {
+        const lang = JSON.parse(savedLanguage);
+        setLanguage(lang);
+        // Load translations for saved language
+        setLocale(lang.code);
+        await loadTranslations(lang.code);
+      }
       if (savedOnboarding === 'true') setOnboardingComplete(true);
       if (savedLocation) {
         const loc = JSON.parse(savedLocation);
@@ -89,6 +97,7 @@ export const AppProvider = ({ children }) => {
       }
     } catch (error) {
       console.log('❌ [AppContext] Background user sync failed:', error.message);
+      setLastSyncError('Could not connect to server. Some features may be limited.');
       // App continues to work offline
     }
   };
@@ -134,13 +143,23 @@ export const AppProvider = ({ children }) => {
   const saveLanguage = async (lang) => {
     console.log('🌐 [AppContext] Saving language:', lang.name, `(${lang.code})`);
     setLanguage(lang);
+
+    // Load translations for the selected language
+    try {
+      setLocale(lang.code);
+      await loadTranslations(lang.code);
+      console.log('✅ [AppContext] Translations loaded for:', lang.code);
+    } catch (e) {
+      console.log('⚠️ [AppContext] Could not load translations for:', lang.code, e);
+    }
+
     try {
       await AsyncStorage.setItem('language', JSON.stringify(lang));
       console.log('✅ [AppContext] Language saved to AsyncStorage');
     } catch (e) {
       console.log('❌ [AppContext] AsyncStorage write error (language):', e);
     }
-    
+
     // Sync to DB with retry if not yet synced
     syncLanguageToDb(lang);
   };
@@ -324,12 +343,15 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const clearSyncError = () => setLastSyncError(null);
+
   const value = {
     theme, themeMode, setThemeMode: saveThemeMode, isDark: theme.name === 'dark',
     language, setLanguage: saveLanguage,
     location, locationStatus, locationDetails, setLocation: saveLocation,
     onboardingComplete, completeOnboarding, resetOnboarding,
     userId, currentSessionId, setCurrentSessionId, isDbSynced,
+    lastSyncError, clearSyncError,
     isLoading,
   };
 

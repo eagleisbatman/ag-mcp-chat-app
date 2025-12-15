@@ -2,10 +2,12 @@
 // Communicates with the API Gateway for persistent storage
 
 import { getDeviceId, getDeviceInfo } from '../utils/deviceInfo';
+import { fetchWithTimeout } from '../utils/apiHelpers';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api/chat', '')
   || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
+const DB_TIMEOUT_MS = 30000; // 30s for database operations
 
 const headers = {
   'Content-Type': 'application/json',
@@ -24,11 +26,11 @@ export async function registerUser() {
   try {
     const deviceInfo = await getDeviceInfo();
     
-    const response = await fetch(`${API_BASE_URL}/api/users/register`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/register`, {
       method: 'POST',
       headers,
       body: JSON.stringify(deviceInfo),
-    });
+    }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -53,7 +55,7 @@ export async function registerUser() {
 export async function getCurrentUser() {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(`${API_BASE_URL}/api/users/me?deviceId=${deviceId}`, { headers });
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/me?deviceId=${deviceId}`, { headers }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return null;
@@ -73,11 +75,11 @@ export async function getCurrentUser() {
 export async function updatePreferences(preferences) {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(`${API_BASE_URL}/api/users/preferences`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/preferences`, {
       method: 'PUT',
       headers,
       body: JSON.stringify({ deviceId, ...preferences }),
-    });
+    }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, error: `HTTP ${response.status}` };
@@ -96,11 +98,11 @@ export async function updatePreferences(preferences) {
 export async function saveLocation(locationData) {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(`${API_BASE_URL}/api/users/location`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/location`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ deviceId, ...locationData }),
-    });
+    }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, error: `HTTP ${response.status}` };
@@ -124,7 +126,7 @@ export async function listSessions(options = {}) {
   try {
     const deviceId = await getDeviceId();
     const params = new URLSearchParams({ deviceId, ...options });
-    const response = await fetch(`${API_BASE_URL}/api/sessions?${params}`, { headers });
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions?${params}`, { headers }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, sessions: [], error: `HTTP ${response.status}` };
@@ -143,11 +145,11 @@ export async function listSessions(options = {}) {
 export async function createSession(options = {}) {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(`${API_BASE_URL}/api/sessions`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ deviceId, ...options }),
-    });
+    }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, error: `HTTP ${response.status}` };
@@ -166,9 +168,10 @@ export async function createSession(options = {}) {
 export async function getSession(sessionId, messageLimit = 50) {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/sessions/${sessionId}?deviceId=${deviceId}&messageLimit=${messageLimit}`,
-      { headers }
+      { headers },
+      DB_TIMEOUT_MS
     );
     
     if (!response.ok) {
@@ -188,11 +191,11 @@ export async function getSession(sessionId, messageLimit = 50) {
 export async function updateSession(sessionId, updates) {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(`${API_BASE_URL}/api/sessions/${sessionId}`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions/${sessionId}`, {
       method: 'PATCH',
       headers,
       body: JSON.stringify({ deviceId, ...updates }),
-    });
+    }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, error: `HTTP ${response.status}` };
@@ -211,9 +214,10 @@ export async function updateSession(sessionId, updates) {
 export async function deleteSession(sessionId) {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/sessions/${sessionId}?deviceId=${deviceId}`,
-      { method: 'DELETE', headers }
+      { method: 'DELETE', headers },
+      DB_TIMEOUT_MS
     );
     
     if (!response.ok) {
@@ -237,11 +241,11 @@ export async function deleteSession(sessionId) {
 export async function saveMessage(messageData) {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(`${API_BASE_URL}/api/messages`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ deviceId, ...messageData }),
-    });
+    }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, error: `HTTP ${response.status}` };
@@ -261,7 +265,7 @@ export async function getMessages(sessionId, options = {}) {
   try {
     const deviceId = await getDeviceId();
     const params = new URLSearchParams({ deviceId, ...options });
-    const response = await fetch(`${API_BASE_URL}/api/messages/${sessionId}?${params}`, { headers });
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages/${sessionId}?${params}`, { headers }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, messages: [], error: `HTTP ${response.status}` };
@@ -280,11 +284,11 @@ export async function getMessages(sessionId, options = {}) {
 export async function updateMessage(messageId, updates) {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetch(`${API_BASE_URL}/api/messages/${messageId}`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages/${messageId}`, {
       method: 'PATCH',
       headers,
       body: JSON.stringify({ deviceId, ...updates }),
-    });
+    }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, error: `HTTP ${response.status}` };
@@ -308,11 +312,11 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
   try {
     console.log('🔌 [DB] Looking up location:', { latitude, longitude, ipAddress });
     
-    const response = await fetch(`${API_BASE_URL}/api/location-lookup`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/location-lookup`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ latitude, longitude, ipAddress }),
-    });
+    }, DB_TIMEOUT_MS);
     
     console.log('🔌 [DB] Location lookup response status:', response.status);
     
@@ -347,11 +351,11 @@ export async function generateTitle(messages, language = 'en') {
   try {
     console.log('🔌 [DB] Generating title with', messages.length, 'messages, language:', language);
     
-    const response = await fetch(`${API_BASE_URL}/api/generate-title`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/generate-title`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ messages, language }),
-    });
+    }, DB_TIMEOUT_MS);
     
     console.log('🔌 [DB] Title generation response status:', response.status);
     
@@ -380,11 +384,11 @@ export async function generateTitle(messages, language = 'en') {
 export async function logEvent(eventName, eventData = {}, sessionId = null) {
   try {
     const deviceId = await getDeviceId();
-    await fetch(`${API_BASE_URL}/api/analytics/event`, {
+    await fetchWithTimeout(`${API_BASE_URL}/api/analytics/event`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ deviceId, sessionId, eventName, eventData }),
-    });
+    }, DB_TIMEOUT_MS);
   } catch (error) {
     // Silent fail for analytics
     console.debug('Analytics error:', error);

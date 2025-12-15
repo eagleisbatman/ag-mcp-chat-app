@@ -1,6 +1,8 @@
 // AgriVision MCP Service - Plant disease diagnosis via image analysis
+import { fetchWithTimeout } from '../utils/apiHelpers';
 
 const AGRIVISION_URL = process.env.EXPO_PUBLIC_AGRIVISION_URL || 'https://agrivision-mcp.up.railway.app/mcp';
+const AGRIVISION_TIMEOUT_MS = 45000; // 45s for image analysis
 
 /**
  * Diagnose plant health from an image using AgriVision MCP
@@ -30,14 +32,14 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
       },
     };
 
-    const response = await fetch(AGRIVISION_URL, {
+    const response = await fetchWithTimeout(AGRIVISION_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json, text/event-stream',
       },
       body: JSON.stringify(mcpRequest),
-    });
+    }, AGRIVISION_TIMEOUT_MS);
 
     if (!response.ok) {
       throw new Error(`AgriVision error: ${response.status}`);

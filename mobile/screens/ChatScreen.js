@@ -26,7 +26,7 @@ export default function ChatScreen({ navigation, route }) {
   
   const {
     messages, isTyping, isLoadingSession, newestBotMessageId,
-    handleSendText, handleSendImage, handleSendWidget, showInputWidget,
+    handleSendText, handleSendImage,
     transcribeAudioForInput, uploadAudioInBackground,
     startNewSession,
   } = useChat(sessionId);
@@ -81,11 +81,6 @@ export default function ChatScreen({ navigation, route }) {
     const distanceFromBottom = contentSize.height - (contentOffset.y + layoutMeasurement.height);
     setShowScrollButton(distanceFromBottom > 100);
   }, []);
-
-  // Handle accepting a widget suggestion from a bot message
-  const handleWidgetSuggestionAccept = useCallback((widgetType) => {
-    showInputWidget(widgetType);
-  }, [showInputWidget]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -154,8 +149,6 @@ export default function ChatScreen({ navigation, route }) {
                 message={item}
                 isNewMessage={item._id === newestBotMessageId}
                 onFollowUpPress={handleSendText}
-                onWidgetSubmit={handleSendWidget}
-                onWidgetSuggestionAccept={handleWidgetSuggestionAccept}
               />
             )}
             keyExtractor={(item) => item._id}

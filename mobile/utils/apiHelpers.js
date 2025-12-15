@@ -148,7 +148,7 @@ export async function safeApiCall(apiCall, { logError = true } = {}) {
 
 /**
  * Check if an error is a network/connectivity error
- * @param {Error} error 
+ * @param {Error} error
  * @returns {boolean}
  */
 export function isNetworkError(error) {
@@ -164,11 +164,32 @@ export function isNetworkError(error) {
   );
 }
 
+/**
+ * Check if an error is a server error (5xx)
+ * @param {Error|object} error
+ * @returns {boolean}
+ */
+export function isServerError(error) {
+  if (!error) return false;
+  // Check error.status directly (from our custom errors)
+  const status = error?.status || error?.response?.status;
+  if (status >= 500 && status < 600) return true;
+  // Check error message for HTTP status codes
+  const msg = error.message || '';
+  const match = msg.match(/API error:\s*(\d+)/);
+  if (match) {
+    const code = parseInt(match[1], 10);
+    return code >= 500 && code < 600;
+  }
+  return false;
+}
+
 export default {
   parseErrorMessage,
   fetchWithTimeout,
   fetchWithRetry,
   safeApiCall,
   isNetworkError,
+  isServerError,
 };
 

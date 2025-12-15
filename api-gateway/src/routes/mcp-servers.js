@@ -160,9 +160,9 @@ router.get('/active', async (req, res) => {
   try {
     const { lat, lon, countryCode } = req.query;
     
-    // 1. Get all global servers
+    // 1. Get all global servers (must be active AND deployed)
     const globalServers = await prisma.mcpServerRegistry.findMany({
-      where: { isGlobal: true, isActive: true },
+      where: { isGlobal: true, isActive: true, isDeployed: true },
       select: {
         id: true,
         name: true,
@@ -246,16 +246,17 @@ router.get('/active', async (req, res) => {
                 healthStatus: true,
                 endpointEnvVar: true,
                 isActive: true,
+                isDeployed: true,
               },
             },
           },
           orderBy: { priority: 'asc' },
         });
 
-        // Deduplicate and format
+        // Deduplicate and format (must be active AND deployed)
         const seenSlugs = new Set();
         for (const m of mappings) {
-          if (!seenSlugs.has(m.mcpServer.slug) && m.mcpServer.isActive) {
+          if (!seenSlugs.has(m.mcpServer.slug) && m.mcpServer.isActive && m.mcpServer.isDeployed) {
             seenSlugs.add(m.mcpServer.slug);
             regionalServers.push({
               ...m.mcpServer,
