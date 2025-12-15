@@ -7,6 +7,8 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
+const logoImage = require('../assets/logo.png');
+
 export default function WelcomeScreen({ navigation }) {
   const { theme } = useApp();
   const insets = useSafeAreaInsets();
@@ -18,7 +20,7 @@ export default function WelcomeScreen({ navigation }) {
       {/* Hero Section */}
       <View style={styles.hero}>
         <View style={styles.iconContainer}>
-          <AppIcon name="leaf" size={64} color={theme.accent} />
+          <Image source={logoImage} style={styles.logoImage} resizeMode="contain" />
         </View>
         
         <Text style={[styles.title, { color: theme.text }]}>
@@ -99,6 +101,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 24,
     backgroundColor: 'transparent',
+  },
+  logoImage: {
+    width: 100,
+    height: 100,
   },
   title: {
     fontSize: TYPOGRAPHY.sizes['3xl'],

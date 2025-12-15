@@ -502,28 +502,35 @@ const MCP_SERVERS = [
     },
   },
   
-  // East Africa
+  // Kenya
   {
     name: 'GAP Weather Intelligence',
     slug: 'gap-weather',
-    description: 'Weather forecasts for East Africa via TomorrowNow GAP - includes CBAM daily, Google GenCast ensemble, and Nowcast precipitation',
+    description: 'Weather forecasts for Kenya via TomorrowNow GAP - includes Salient seasonal (1-14 days), CBAM daily (1-10 days), and Nowcast precipitation (12 hours)',
     endpointEnvVar: 'MCP_GAP_URL',
     category: 'weather',
     isGlobal: false,
     tools: ['get_gap_weather_forecast', 'get_cbam_daily_forecast', 'get_gencast_forecast', 'get_nowcast_precipitation'],
-    capabilities: ['weather', 'forecast', 'satellite-data', 'nowcast', 'ensemble-forecast'],
-    icon: 'cloud',
+    capabilities: ['weather', 'forecast', 'satellite-data', 'nowcast', 'ensemble-forecast', 'evapotranspiration', 'solar-radiation'],
+    icon: 'partly_cloudy_day',
     color: '#03A9F4',
     // Widget Configuration
     widgetCategory: 'weather',
     requiresInput: false,
     inputWidget: {
-      type: 'weather_input',
-      prompt: 'Want detailed weather forecasts? Choose forecast type and duration.',
-      reason: 'You can select CBAM (1-10 days), GenCast AI (1-15 days), or Nowcast (0-12 hours).',
+      type: 'gap_weather_input',
+      prompt: 'Want detailed weather forecasts for Kenya? Choose forecast type and duration.',
+      reason: 'Select General (1-14 days), Detailed/CBAM (1-10 days), or Now Alert (12 hours) for immediate rain probability.',
     },
     outputWidget: {
-      type: 'weather_forecast_card',
+      type: 'salient_forecast_card',  // Default output
+    },
+    // Tool-to-output widget mappings
+    toolOutputWidgets: {
+      'get_gap_weather_forecast': 'salient_forecast_card',
+      'get_cbam_daily_forecast': 'cbam_detailed_card',
+      'get_gencast_forecast': 'salient_forecast_card',
+      'get_nowcast_precipitation': 'nowcast_alert_card',
     },
   },
   {
@@ -593,15 +600,14 @@ const REGION_MCP_MAPPINGS = [
   { regionCode: 'ETH', mcpSlug: 'edacap', priority: 2 },
   { regionCode: 'ETH', mcpSlug: 'feed-formulation', priority: 3 },
   { regionCode: 'ETH', mcpSlug: 'decision-tree', priority: 4 },
-  
-  // East Africa (includes Ethiopia, Kenya, Tanzania, Uganda)
-  { regionCode: 'EAST_AFRICA', mcpSlug: 'gap-weather', priority: 1 },
-  { regionCode: 'EAST_AFRICA', mcpSlug: 'decision-tree', priority: 2 },
-  
+
+  // East Africa (decision tree only - GAP Weather is Kenya-specific)
+  { regionCode: 'EAST_AFRICA', mcpSlug: 'decision-tree', priority: 1 },
+
   // All of Africa
   { regionCode: 'AFRICA', mcpSlug: 'isda-soil', priority: 1 },
-  
-  // Kenya
+
+  // Kenya (GAP Weather is Kenya-specific via TomorrowNow)
   { regionCode: 'KEN', mcpSlug: 'gap-weather', priority: 1 },
   { regionCode: 'KEN', mcpSlug: 'decision-tree', priority: 2 },
   
