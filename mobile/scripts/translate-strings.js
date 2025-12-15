@@ -207,7 +207,7 @@ async function main() {
   console.log(`📊 Total strings to translate: ${Object.keys(flatStrings).length}\n`);
 
   // Translate in sections to avoid token limits
-  const sections = ['common', 'onboarding', 'chat', 'media', 'voice', 'history', 'settings', 'mcp', 'system', 'a11y'];
+  const sections = ['common', 'onboarding', 'chat', 'media', 'voice', 'history', 'settings', 'mcp', 'system', 'errors', 'a11y'];
   const allTranslations = {};
 
   for (const section of sections) {
