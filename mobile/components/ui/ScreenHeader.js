@@ -19,7 +19,8 @@ export default function ScreenHeader({
   const { theme } = useApp();
   const resolvedBackground = backgroundColor ?? theme.background;
   const resolvedBorderColor = borderColor ?? theme.border;
-  const sideMinWidth = left || right ? 44 : 0;
+  const leftMinWidth = left ? 44 : 0;
+  const rightMinWidth = right ? 44 : 0;
 
   return (
     <SafeAreaView
@@ -34,8 +35,8 @@ export default function ScreenHeader({
       ]}
     >
       <View style={[styles.row, style]}>
-        <View style={[styles.side, { minWidth: sideMinWidth }]}>{left}</View>
-        <View style={[styles.center, align === 'left' ? styles.centerLeft : styles.centerCenter]}>
+        {left ? <View style={[styles.side, { minWidth: leftMinWidth }]}>{left}</View> : null}
+        <View style={[styles.center, align === 'left' ? styles.centerLeft : styles.centerCenter, !left && align === 'left' && { paddingLeft: 0 }]}>
           {center ? (
             center
           ) : (
@@ -57,7 +58,7 @@ export default function ScreenHeader({
             </>
           )}
         </View>
-        <View style={[styles.sideRight, { minWidth: sideMinWidth }]}>{right}</View>
+        <View style={[styles.sideRight, { minWidth: rightMinWidth }]}>{right}</View>
       </View>
     </SafeAreaView>
   );
@@ -70,9 +71,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     paddingTop: SPACING.md,
-    paddingBottom: SPACING.lg,
+    paddingBottom: SPACING.md,
   },
   side: {
     alignItems: 'flex-start',

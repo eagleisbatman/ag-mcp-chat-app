@@ -4,13 +4,20 @@ import {
   TextInput,
   Pressable,
   StyleSheet,
-  ActivityIndicator,
   Platform,
   Text,
   Keyboard,
   Animated,
   Dimensions,
+  LayoutAnimation,
+  UIManager,
+  Easing,
 } from 'react-native';
+
+// Enable LayoutAnimation for Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,9 +30,9 @@ import AppIcon from './ui/AppIcon';
 import IconButton from './ui/IconButton';
 import { t } from '../constants/strings';
 
-export default function InputToolbar({ 
-  onSendText, 
-  onSendImage, 
+export default function InputToolbar({
+  onSendText,
+  onSendImage,
   onSendVoiceText,
   transcribeAudio,
   uploadAudioInBackground,
@@ -38,9 +45,11 @@ export default function InputToolbar({
   const [isRecordingMode, setIsRecordingMode] = useState(false);
   const [pendingAudioData, setPendingAudioData] = useState(null);
   const [isFromVoice, setIsFromVoice] = useState(false);
+  const [showMediaMenu, setShowMediaMenu] = useState(false);
   const textInputRef = useRef(null);
   const windowHeightBaseline = useRef(Dimensions.get('window').height);
   const keyboardVisible = useRef(false);
+  const mediaMenuAnim = useRef(new Animated.Value(0)).current;
   
   // Keyboard animation - syncs with iOS keyboard animation
   const keyboardHeight = useRef(new Animated.Value(0)).current;
@@ -55,34 +64,51 @@ export default function InputToolbar({
         windowHeightBaseline.current = Dimensions.get('window').height;
       }
     });
-    
+
+    // Gap between keyboard and input
+    const KEYBOARD_GAP = SPACING.sm;
+
     const keyboardWillShow = Keyboard.addListener(showEvent, (e) => {
       keyboardVisible.current = true;
       const currentWindowHeight = Dimensions.get('window').height;
       const windowResizedForKeyboard =
         Platform.OS === 'android' && windowHeightBaseline.current - currentWindowHeight > 50;
       const targetKeyboardPadding = windowResizedForKeyboard
-        ? 0
-        : Math.max(0, e.endCoordinates.height - insets.bottom);
+        ? KEYBOARD_GAP
+        : Math.max(0, e.endCoordinates.height - insets.bottom + KEYBOARD_GAP);
 
-      // Animate in sync with keyboard (iOS provides duration)
-      Animated.timing(keyboardHeight, {
-        toValue: targetKeyboardPadding,
-        duration: Platform.OS === 'ios' ? e.duration : 250,
-        useNativeDriver: false, // translateY would need true, but we need padding
-      }).start();
+      if (Platform.OS === 'android') {
+        // Use LayoutAnimation for smoother Android transitions
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        keyboardHeight.setValue(targetKeyboardPadding);
+      } else {
+        // iOS - use native keyboard animation timing
+        Animated.timing(keyboardHeight, {
+          toValue: targetKeyboardPadding,
+          duration: e.duration || 250,
+          easing: Easing.bezier(0.17, 0.59, 0.4, 0.77), // iOS keyboard curve approximation
+          useNativeDriver: false,
+        }).start();
+      }
     });
-    
+
     const keyboardWillHide = Keyboard.addListener(hideEvent, (e) => {
       keyboardVisible.current = false;
       windowHeightBaseline.current = Dimensions.get('window').height;
-      Animated.timing(keyboardHeight, {
-        toValue: 0,
-        duration: Platform.OS === 'ios' ? e.duration : 250,
-        useNativeDriver: false,
-      }).start();
+
+      if (Platform.OS === 'android') {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        keyboardHeight.setValue(0);
+      } else {
+        Animated.timing(keyboardHeight, {
+          toValue: 0,
+          duration: e?.duration || 250,
+          easing: Easing.bezier(0.17, 0.59, 0.4, 0.77),
+          useNativeDriver: false,
+        }).start();
+      }
     });
-    
+
     return () => {
       keyboardWillShow.remove();
       keyboardWillHide.remove();
@@ -202,6 +228,33 @@ export default function InputToolbar({
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
+  const toggleMediaMenu = () => {
+    const toValue = showMediaMenu ? 0 : 1;
+    setShowMediaMenu(!showMediaMenu);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Animated.spring(mediaMenuAnim, {
+      toValue,
+      useNativeDriver: true,
+      friction: 8,
+      tension: 100,
+    }).start();
+  };
+
+  const handleMediaOption = (option) => {
+    setShowMediaMenu(false);
+    Animated.timing(mediaMenuAnim, {
+      toValue: 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start();
+
+    if (option === 'camera') {
+      handleTakePhoto();
+    } else if (option === 'gallery') {
+      handlePickImage();
+    }
+  };
+
   // Show VoiceRecorder when in recording mode
   if (isRecordingMode) {
     return (
@@ -219,105 +272,122 @@ export default function InputToolbar({
 
   return (
     <Animated.View style={[styles.wrapper, { paddingBottom: Animated.add(bottomPadding, keyboardHeight) }]}>
-      {/* Floating container with blur effect */}
-      <View style={[
-        styles.floatingContainer,
-        { 
-          backgroundColor: 'transparent',
-          borderColor: 'transparent',
-        }
-      ]}>
-        {/* Voice transcription indicator */}
-        {isFromVoice && (
-          <View style={styles.voiceIndicator}>
-            <AppIcon name="mic" size={14} color={theme.accent} />
-            <Text style={[styles.voiceIndicatorText, { color: theme.accent }]}>
-              {t('chat.fromVoice')}
-            </Text>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={t('a11y.clearVoiceTranscription')}
-              onPress={handleClearVoiceText}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
+      {/* Voice transcription indicator */}
+      {isFromVoice && (
+        <View style={[styles.voiceIndicator, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>
+          <AppIcon name="mic" size={14} color={theme.accent} />
+          <Text style={[styles.voiceIndicatorText, { color: theme.accent }]}>
+            {t('chat.fromVoice')}
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('a11y.clearVoiceTranscription')}
+            onPress={handleClearVoiceText}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
+          >
+            <AppIcon name="close-circle" size={18} color={theme.accent} />
+          </Pressable>
+        </View>
+      )}
+
+      {/* Main Input Row - Plus button, Text input, mic/send */}
+      <View style={styles.mainInputRow}>
+        {/* Plus button / Media menu */}
+        <View style={styles.mediaButtonContainer}>
+          <IconButton
+            icon={showMediaMenu ? 'close' : 'add'}
+            onPress={toggleMediaMenu}
+            disabled={disabled}
+            size={40}
+            borderRadius={20}
+            backgroundColor={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'}
+            color={theme.iconPrimary || theme.accent}
+            accessibilityLabel={showMediaMenu ? t('a11y.closeMenu') : t('a11y.attachMedia')}
+          />
+
+          {/* Expandable media options */}
+          {showMediaMenu && (
+            <Animated.View
+              style={[
+                styles.mediaMenu,
+                {
+                  backgroundColor: isDark ? theme.cardBackground : '#FFFFFF',
+                  borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+                  opacity: mediaMenuAnim,
+                  transform: [
+                    { scale: mediaMenuAnim.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) },
+                    { translateY: mediaMenuAnim.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) },
+                  ],
+                }
+              ]}
             >
-              <AppIcon name="close-circle" size={18} color={theme.accent} />
-            </Pressable>
-          </View>
-        )}
-
-        {/* Main Input Row */}
-        <View style={styles.inputRow}>
-          {/* Camera Button */}
-          <IconButton
-            icon="camera"
-            onPress={handleTakePhoto}
-            disabled={disabled}
-            size={40}
-            borderRadius={0}
-            backgroundColor={theme.inputBackground}
-            color={theme.iconPrimary || theme.accent}
-            accessibilityLabel={t('a11y.takePhoto')}
-          />
-
-          {/* Gallery Button */}
-          <IconButton
-            icon="image"
-            onPress={handlePickImage}
-            disabled={disabled}
-            size={40}
-            borderRadius={0}
-            backgroundColor={theme.inputBackground}
-            color={theme.iconPrimary || theme.accent}
-            accessibilityLabel={t('a11y.pickImage')}
-          />
-
-          {/* Text Input */}
-          <View style={[
-            styles.textInputContainer, 
-            { 
-              backgroundColor: theme.inputBackground,
-            }
-          ]}>
-            <TextInput
-              ref={textInputRef}
-              style={[styles.textInput, { color: theme.text }]}
-              placeholder={t('chat.messagePlaceholder')}
-              placeholderTextColor={theme.textMuted}
-              value={text}
-              onChangeText={setText}
-              multiline
-              maxLength={1000}
-              editable={!disabled}
-              accessibilityLabel={t('a11y.messageInput')}
-            />
-          </View>
-
-          {/* Voice / Send Button */}
-          {text.trim() ? (
-            <IconButton
-              icon="arrow-up"
-              onPress={handleSendText}
-              disabled={disabled}
-              size={40}
-              borderRadius={0}
-              backgroundColor={theme.accent}
-              color="#FFFFFF"
-              accessibilityLabel={t('a11y.sendMessage')}
-            />
-          ) : (
-            <IconButton
-              icon="mic"
-              onPress={handleStartRecording}
-              disabled={disabled}
-              size={40}
-              borderRadius={0}
-              backgroundColor={theme.accent}
-              color="#FFFFFF"
-              accessibilityLabel={t('a11y.recordVoice')}
-            />
+              <Pressable
+                style={[styles.mediaMenuItem, { borderBottomColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)' }]}
+                onPress={() => handleMediaOption('camera')}
+                android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
+              >
+                <AppIcon name="camera" size={20} color={theme.iconPrimary || theme.accent} />
+                <Text style={[styles.mediaMenuText, { color: theme.text }]}>{t('media.camera')}</Text>
+              </Pressable>
+              <Pressable
+                style={styles.mediaMenuItem}
+                onPress={() => handleMediaOption('gallery')}
+                android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
+              >
+                <AppIcon name="image" size={20} color={theme.iconPrimary || theme.accent} />
+                <Text style={[styles.mediaMenuText, { color: theme.text }]}>{t('media.gallery')}</Text>
+              </Pressable>
+            </Animated.View>
           )}
         </View>
+
+        {/* Text Input */}
+        <View style={[
+          styles.textInputContainer,
+          {
+            backgroundColor: theme.inputBackground,
+            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+          }
+        ]}>
+          <TextInput
+            ref={textInputRef}
+            style={[styles.textInput, { color: theme.text }]}
+            placeholder={t('chat.messagePlaceholder')}
+            placeholderTextColor={theme.textMuted}
+            value={text}
+            onChangeText={setText}
+            multiline
+            maxLength={1000}
+            editable={!disabled}
+            accessibilityLabel={t('a11y.messageInput')}
+          />
+        </View>
+
+        {/* Voice / Send Button */}
+        {text.trim() ? (
+          <IconButton
+            icon="arrow-up"
+            onPress={handleSendText}
+            disabled={disabled}
+            size={44}
+            borderRadius={22}
+            backgroundColor={theme.accent}
+            color="#FFFFFF"
+            accessibilityLabel={t('a11y.sendMessage')}
+          />
+        ) : (
+          <IconButton
+            icon="mic"
+            onPress={handleStartRecording}
+            disabled={disabled}
+            size={44}
+            borderRadius={22}
+            backgroundColor={theme.accent}
+            color="#FFFFFF"
+            accessibilityLabel={t('a11y.recordVoice')}
+          />
+        )}
       </View>
     </Animated.View>
   );
@@ -325,53 +395,69 @@ export default function InputToolbar({
 
 const styles = StyleSheet.create({
   wrapper: {
-    // Removed absolute positioning so keyboard avoidance works
-    paddingHorizontal: SPACING.floatingInputMargin,
-    paddingTop: SPACING.sm,
-  },
-  floatingContainer: {
-    borderRadius: 0,
-    borderWidth: 0,
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    ...ELEVATION.lg,
+    paddingTop: SPACING.sm,
   },
   voiceIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     paddingHorizontal: SPACING.md,
-    paddingVertical: 6,
-    borderRadius: 0,
+    paddingVertical: 8,
+    borderRadius: 12,
     marginBottom: SPACING.sm,
-    backgroundColor: 'transparent',
   },
   voiceIndicatorText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.medium,
   },
-  inputRow: {
+  mainInputRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     gap: SPACING.sm,
   },
+  mediaButtonContainer: {
+    position: 'relative',
+  },
+  mediaMenu: {
+    position: 'absolute',
+    bottom: 50,
+    left: 0,
+    borderRadius: 12,
+    borderWidth: 1,
+    overflow: 'hidden',
+    minWidth: 150,
+    ...ELEVATION.lg,
+  },
+  mediaMenuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  mediaMenuText: {
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontWeight: TYPOGRAPHY.weights.medium,
+  },
   textInputContainer: {
     flex: 1,
-    borderRadius: 0,
-    paddingHorizontal: SPACING.inputPadding,
-    paddingVertical: Platform.OS === 'ios' ? 10 : 8,
-    minHeight: 40,
-    maxHeight: 100,
+    borderRadius: 22,
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: Platform.OS === 'ios' ? 12 : 10,
+    minHeight: 44,
+    maxHeight: 120,
     justifyContent: 'center',
-    borderWidth: 0,
+    borderWidth: 1,
   },
   textInput: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
     padding: 0,
-    maxHeight: 80,
+    maxHeight: 100,
     textAlignVertical: 'center',
     includeFontPadding: false,
   },

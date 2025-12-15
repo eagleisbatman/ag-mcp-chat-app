@@ -73,6 +73,8 @@ export const STRINGS = {
       cameraPermission: 'Camera access is needed to take photos. Enable in Settings.',
       pickImageFailed: 'Failed to pick image. Please try again.',
       cameraFailed: 'Failed to access camera. Please try again.',
+      camera: 'Camera',
+      gallery: 'Gallery',
     },
     voice: {
       microphonePermission: 'Microphone permission required',
@@ -173,6 +175,8 @@ export const STRINGS = {
       messageInput: 'Message input',
       sendMessage: 'Send message',
       recordVoice: 'Record voice',
+      attachMedia: 'Attach media',
+      closeMenu: 'Close menu',
     },
   },
 };

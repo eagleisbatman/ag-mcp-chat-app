@@ -1,6 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image } from 'react-native';
-import AppIcon from '../components/ui/AppIcon';
 
 const logoImage = require('../assets/logo.png');
 import * as Haptics from 'expo-haptics';
@@ -14,10 +13,9 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import { t } from '../constants/strings';
-import { ToolsMenu } from '../widgets';
 
 export default function ChatScreen({ navigation, route }) {
-  const { theme, language, location, locationDetails, setLocation } = useApp();
+  const { theme, isDark, language, location, locationDetails, setLocation } = useApp();
   const { showSuccess, showWarning, showError } = useToast();
   const flatListRef = useRef(null);
   const scrollButtonAnim = useRef(new Animated.Value(0)).current;
@@ -35,7 +33,6 @@ export default function ChatScreen({ navigation, route }) {
   
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
-  const [showToolsMenu, setShowToolsMenu] = useState(false);
 
   // Handle new session request
   useEffect(() => {
@@ -85,12 +82,6 @@ export default function ChatScreen({ navigation, route }) {
     setShowScrollButton(distanceFromBottom > 100);
   }, []);
 
-  // Handle widget selection from tools menu
-  const handleSelectWidget = useCallback((widget) => {
-    // Show the input widget directly in the chat
-    showInputWidget(widget.type);
-  }, [showInputWidget]);
-
   // Handle accepting a widget suggestion from a bot message
   const handleWidgetSuggestionAccept = useCallback((widgetType) => {
     showInputWidget(widgetType);
@@ -103,9 +94,7 @@ export default function ChatScreen({ navigation, route }) {
         align="left"
         center={
           <View style={styles.headerLeft}>
-            <View style={styles.logoContainer}>
-              <Image source={logoImage} style={styles.headerLogo} resizeMode="contain" />
-            </View>
+            <Image source={logoImage} style={styles.headerLogo} resizeMode="contain" />
             <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
               {locationDetails?.displayName ||
                 locationDetails?.level5City ||
@@ -118,19 +107,12 @@ export default function ChatScreen({ navigation, route }) {
         right={
           <>
             <IconButton
-              icon="apps"
-              onPress={() => setShowToolsMenu(true)}
-              size={36}
-              backgroundColor="transparent"
-              color={theme.iconPrimary || theme.accent}
-              accessibilityLabel="Open tools menu"
-            />
-            <IconButton
               icon="location"
               onPress={handleRefreshLocation}
               disabled={isRefreshingLocation}
               size={36}
-              backgroundColor="transparent"
+              borderRadius={10}
+              backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
               color={theme.iconPrimary || theme.accent}
               accessibilityLabel={t('a11y.refreshLocation')}
             />
@@ -138,7 +120,8 @@ export default function ChatScreen({ navigation, route }) {
               icon="add"
               onPress={startNewSession}
               size={36}
-              backgroundColor="transparent"
+              borderRadius={10}
+              backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
               color={theme.iconPrimary || theme.accent}
               accessibilityLabel={t('a11y.newChat')}
             />
@@ -146,7 +129,8 @@ export default function ChatScreen({ navigation, route }) {
               icon="menu"
               onPress={() => navigation.navigate('Settings')}
               size={36}
-              backgroundColor="transparent"
+              borderRadius={10}
+              backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
               color={theme.iconSecondary || theme.textSecondary}
               accessibilityLabel={t('a11y.openSettings')}
             />
@@ -225,13 +209,6 @@ export default function ChatScreen({ navigation, route }) {
         uploadAudioInBackground={uploadAudioInBackground}
         disabled={isTyping}
       />
-
-      {/* Tools Menu Modal */}
-      <ToolsMenu
-        visible={showToolsMenu}
-        onClose={() => setShowToolsMenu(false)}
-        onSelectWidget={handleSelectWidget}
-      />
     </View>
   );
 }
@@ -240,18 +217,11 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1,
   },
-  headerLeft: { 
-    flex: 1, 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: SPACING.sm,
-  },
-  logoContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 0,
+  headerLeft: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: SPACING.sm,
   },
   headerLogo: {
     width: 32,
