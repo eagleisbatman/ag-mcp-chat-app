@@ -1,8 +1,10 @@
 // Text-to-Speech service - calls API Gateway → n8n TTS → Cloudinary
+import { fetchWithTimeout } from '../utils/apiHelpers';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api/chat', '/api/tts') 
+const API_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api/chat', '/api/tts')
   || 'https://ag-mcp-api-gateway.up.railway.app/api/tts';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
+const TTS_TIMEOUT_MS = 30000; // 30s for TTS generation
 
 /**
  * Convert text to speech audio using Gemini TTS
@@ -12,7 +14,7 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
  */
 export const textToSpeech = async (text, language = 'en') => {
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetchWithTimeout(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +24,7 @@ export const textToSpeech = async (text, language = 'en') => {
         text,
         language,
       }),
-    });
+    }, TTS_TIMEOUT_MS);
 
     if (!response.ok) {
       console.log(`TTS API returned status: ${response.status}`);
