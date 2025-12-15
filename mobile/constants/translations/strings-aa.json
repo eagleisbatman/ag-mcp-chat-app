@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Dibuk",
+    "retry": "Af-giddim",
+    "cancel": "Daqqo",
+    "delete": "Xayyoy",
+    "continue": "Waggal",
+    "dismiss": "Daqqo",
+    "refresh": "Kaa-gidi",
+    "clear": "Qaxxas",
+    "loading": "Buuda…",
+    "skipForNow": "Amay-duuda"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Keedát-le farmá gita",
+    "getStarted": "Diggi",
+    "features": {
+      "weatherTitle": "Qawá dirrísi",
+      "weatherDescription": "Farmáyay siiqó qawá dirrísi lon",
+      "diagnosisTitle": "Farmá umamá beexá",
+      "diagnosisDescription": "Xaagítih umamá beexá",
+      "voiceTitle": "Codí cakki",
+      "voiceDescription": "Lisanáka edde sagadá"
+    },
+    "locationTitle": "Beedú addisá",
+    "locationDescription": "Beedú addis luk, siiqó qawá dirrís kee, deertá farmá gita-le lon",
+    "enableLocation": "Beedú addisá",
+    "locationDenied": "Beedú addisinnám kinná",
+    "locationError": "Beedú hinná lon. Diggi isá.",
+    "benefits": {
+      "weather": "Deertá qawá dirrísi",
+      "regionAdvice": "Deertá farmá gita",
+      "soilData": "Deertá burrá xiiná"
+    },
+    "languageTitle": "Lisaná doori",
+    "languageSubtitle": "Gita-le lisanáka doori",
+    "searchLanguages": "Lisaná bári...",
+    "noLanguagesFound": "Lisaná hinná beel",
+    "suggestedForYou": "Siih-le caddee",
+    "currentLanguage": "Amma-le"
+  },
+  "chat": {
+    "welcomeMessage": "Naba! 👋 Ano ku-qambartay cawissa kinnioy.\n\nAkkak koo cawissoh anniy:\n• Ximoomi, baade, cado kee darrooti\n• Lacawwa, gita, kee bali baay\n• Baare kee qansarri gule\n• Maqaari kee soko giddi-maro\n\nAmma akkek koo cawisoonu?",
+    "locationDenied": "Diggo diggoyya hinte",
+    "locationUpdated": "Diggo culle!",
+    "locationUpdateFailed": "Diggo culsiyam matakka",
+    "loadingConversation": "Dabali baxxaqtam anuk...",
+    "thinking": "Koorisa...",
+    "messagePlaceholder": "Barri...",
+    "fromVoice": "Saggoo akke — saqqalam akak lissimmo",
+    "voiceTranscribed": "Saggoo qallite! Saqqalam akak lissimmo, kaadu ruub.",
+    "noInternet": "Intarneet geytimtek. Ku-nattorka ka-xayxiix.",
+    "couldNotLoadConversation": "Dabali baxxaqsam matakka",
+    "startedNewConversation": "Dabali cusub qimbaale",
+    "connectionErrorBot": "Caxale qaaqo. Adda ka-xayx.",
+    "analyzingPlantImage": "Baadete suura baqaaram anuk...",
+    "imageAnalysisFailedBot": "Suura baqaara matakka. Adda ka-xayx.",
+    "sorryCouldNotProcess": "Dooqo, ka-abbi-yam matakka. {details}",
+    "analysisCouldNotComplete": "Baqaara agaytam matakka. {details}",
+    "plantAnalysisIssues": "Baadete baqaara caagid le: {details}",
+    "tapLocationToSet": "Diggo cabbisisah gaddiss",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Atu",
+    "tapToAskNext": "Adda esserih gaddiss:"
+  },
+  "media": {
+    "photoLibraryPermission": "Sawir rakat qebnam cadi. Settings-ih fan gexe qeb.",
+    "cameraPermission": "Kaamira qebnam cadi. Settings-ih fan gexe qeb.",
+    "pickImageFailed": "Sawir dooqah xiine. Akkeeda esser.",
+    "cameraFailed": "Kaamira qebah xiine. Akkeeda esser.",
+    "camera": "Kaamira",
+    "gallery": "Sawir keenoo"
+  },
+  "voice": {
+    "microphonePermission": "Mikirofoni idin gexsolle",
+    "startRecordingFailed": "Sagada bilqila xiidde",
+    "recordingFailed": "Sagada xiidde",
+    "transcriptionFailed": "Sani qafara xiidde",
+    "couldNotTranscribeAudio": "Sani qafarah num madaga",
+    "voiceUnavailableLater": "Sani maaqat - lakal baaha",
+    "voiceUnavailable": "Sani maaqat - gubbaa baaha",
+    "audioPlaybackFailed": "Sani maage xiidde",
+    "recording": "Sagada",
+    "cancel": "Guubbi",
+    "done": "Agare",
+    "transcribing": "Sani qafarah an...",
+    "recordingHint": "Qafaram keh Agare-l guudda, madaaram keh Guubbi-l guudda"
+  },
+  "history": {
+    "title": "Magaala",
+    "noConversations": "Magaalitte mayan",
+    "noConversationsHint": "Magaala cabe, beera nummat awki",
+    "newChat": "Magaala cabe",
+    "newConversation": "Magaala adda",
+    "deleteTitle": "Magaala qasaw",
+    "deleteMessage": "{title} qasaw? Too akkal maaxiga.",
+    "untitled": "Caltu-waa",
+    "deleted": "Magaala qasaawitte",
+    "deleteFailed": "Qasaw yallam",
+    "couldNotDelete": "Magaala qasaw maaxiginnih",
+    "notConnectedTitle": "Qawannu mayan",
+    "notConnectedHint": "Magaala taariikitte net qawannu le",
+    "yesterday": "Akah"
+  },
+  "settings": {
+    "title": "Doohoobi",
+    "sectionConversations": "KUTNEYNA",
+    "sectionAiServices": "AI QADAAMATT",
+    "sectionLocation": "ARCA",
+    "sectionLanguage": "FAAT",
+    "sectionAppearance": "IDDA",
+    "sectionDanger": "DARAARA BAAGO",
+    "chatHistory": "Chat Baago",
+    "chatHistorySubtitle": "Kutney nak baago ooboy kaadu siggi",
+    "aiServices": "Gidiiritta Qadaamatt",
+    "aiServicesSubtitle": "Baagook gidiiritta AI qadaamatt ooboy",
+    "locationPermissionDenied": "Arca idiiy maggooy",
+    "locationUpdated": "Arca cakki edde xinto!",
+    "locationUpdateFailed": "Arca macintinnay. Baaxitte.",
+    "locationEnabled": "Arca gidiiritte",
+    "tapToEnable": "Gidirrih edde taaboy",
+    "tapToUpdateLocation": "Arca macintaama edde taaboy",
+    "themeLight": "Fayyi",
+    "themeDark": "Gorra",
+    "themeSystem": "Siinaa",
+    "language": "Faat",
+    "resetOnboarding": "Adda bilookoy",
+    "resetOnboardingSubtitle": "Haaraw bilookoy",
+    "resetConfirmTitle": "Adda bilookoy",
+    "resetConfirmMessage": "Tih bilookoy adda bilookoyta. Kaal siggi?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Digital Green Foundation yakime"
+  },
+  "mcp": {
+    "title": "AI Soocaa",
+    "loading": "Buukuma...",
+    "loadingDetails": "Buukuma...",
+    "footer": "Soocaa sin arca dambele geyta",
+    "couldNotLoad": "Soocaa abba hinna",
+    "couldNotLoadDetails": "Soocaa katat abba hinna",
+    "failedToFetch": "Soocaa abba hinna",
+    "serviceCategory": "Sallam {name}",
+    "service": "Soocaa {name}",
+    "servicesAvailable": "{total}-keh {active} soocaa sin arca le",
+    "activeCount": "{active}/{total} dagga le",
+    "statusActive": "Dagga le",
+    "statusUnavailable": "Sin arca hinna geyta",
+    "locationNotSet": "Arca hinna daffayna",
+    "sectionAbout": "Kaal",
+    "sectionFeatures": "Daaqa",
+    "sectionAvailableIn": "Geyta Guba",
+    "sectionSupportedCrops": "Dabbixima Beera",
+    "categories": {
+      "plantHealth": "Gita Affara",
+      "soil": "Bakaara Darsan",
+      "weather": "Cimla & Buulo",
+      "livestock": "Laacin Nafaasa",
+      "agriculture": "Beera Saaqat"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Qal-leela gita xagar gita kee darsan",
+        "description": "Gita sawir darsa, xagar, cad, kee nafaasa agi hinna gita. Too waqdi darsan, xagar abbay saaqat kee agi hinna ummattah saaqat gita."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "Bakaara daaqa kee nafaasa darsan Afrika-galeh",
+        "description": "Bakaara katat le darsan gita, pH, naytoroojin, fosforos, potasiyom, kee koo nafaasa dagga leeh. Afrika inkih gubba le 30 mitir dagga leeh."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Amma le dagga kee cimla saaqat addunya inkih",
+        "description": "Too waqdi cimla katat gita macar, roobi cadday, agur, kee roobi leeh. 15 ayr-keh saaqat le."
+      },
+      "gapWeather": {
+        "name": "GAP Weather",
+        "tagline": "Beera cimla saaqat Keenya-galeh",
+        "description": "Keenya beera-galeh kaxxa cimla saaqat. Evapotranspiration, cad, kee roobi saaqat dagga leeh beera yakkemah."
+      },
+      "edacap": {
+        "name": "EDACaP Climate",
+        "tagline": "Waagite buulo saaqat Itoopiya-galeh",
+        "description": "Waagite buulo inti macar kee roobi darsan leeh. Beerammaytaat dabbixa beeru kee abbay gita yakken."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Cimla katat addunya arca-galeh",
+        "description": "Cimla katat inkih geyta soocaa, amma le dagga kee saaqat gita addunya arca-galeh."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Cimla Qal-leela kee saaqat",
+        "description": "Kaxxa cimla qal-leela gubba kaxxa dagga le saaqat kee amma le saaqat daaqa."
+      },
+      "feedFormulation": {
+        "name": "Feed Formulation",
+        "tagline": "Laacin caddo daffaynay darsan caacayta laacin-galeh",
+        "description": "Sin caacayta laacin-galeh kaxxa malkah daffaynay caddo darsa. Caaca abbay yakken inti, keeduh dagga kee geyta dagga le caddo inti leeh."
+      },
+      "nextgen": {
+        "name": "NextGen Fertilizer",
+        "tagline": "Arca-galeh qirshaan saaqat Itoopiya-galeh",
+        "description": "Kaxxa dagga le qirshaan saaqat gita sin kaxxa arca dagga leeh. Dabbi-galeh (kompost, vermikompost) kee hinna dabbi-galeh (Urea, NPS) saaqat inkih le."
+      },
+      "decisionTree": {
+        "name": "Crop Decision Tree",
+        "tagline": "Gita edda saaqat Keenya-galeh",
+        "description": "Beera dagga le saaqat gita gita edda kee amma le cimla dagga leeh. Waqdi dagga le yakkenih dabbixa cad baala, bakaara miyaa kee abbay gita."
+      },
+      "gapAgriculture": {
+        "name": "GAP Agriculture",
+        "tagline": "Beera saaqat soocaa",
+        "description": "Inkih beera saaqat soocaa beera kee laacin dagga leeh."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Xagar Gita",
+      "pestIdentification": "Cad Gita",
+      "nutrientAnalysis": "Nafaasa Darsan",
+      "treatmentAdvice": "Xagar Abbay Saaqat",
+      "soilPh": "Bakaara pH",
+      "nitrogen": "Naytoroojin",
+      "phosphorus": "Fosforos",
+      "potassium": "Potasiyom",
+      "currentWeather": "Amma le Cimla",
+      "temperature": "Macar",
+      "humidity": "Roobi Cadday",
+      "forecast": "Saaqat",
+      "precipitation": "Roobi",
+      "evapotranspiration": "Evapotranspiration",
+      "solarRadiation": "Cad",
+      "wind": "Agur",
+      "seasonalOutlook": "Waagite Inti",
+      "rainfallProbability": "Roobi Geyta Baqxa",
+      "temperatureTrend": "Macar Fida",
+      "cropForecasts": "Beera Saaqat",
+      "historical": "Daaqah le",
+      "astronomy": "Qaraar Darsan",
+      "nowcast": "Amma le Saaqat",
+      "forecasts": "Saaqat",
+      "alerts": "Qarqiisa",
+      "dietOptimization": "Nafaasa Darsa",
+      "nutrientBalance": "Nafaasa Qadwa",
+      "localFeeds": "Dagga le Caddo",
+      "costCalculation": "Baqxa Darsan",
+      "organicFertilizers": "Dabbi-galeh Qirshaan",
+      "inorganicFertilizers": "Hinna Dabbi-galeh Qirshaan",
+      "expectedYield": "Eedegimta Baqa",
+      "siteSpecific": "Arca-galeh",
+      "growthStage": "Gita Edda",
+      "recommendations": "Saaqat",
+      "weatherBased": "Cimla-galeh",
+      "actions": "Abbo",
+      "cropAdvice": "Beera Saaqat",
+      "bestPractices": "Kaxxa Daaqa",
+      "seasonalTips": "Waagite Saaqat",
+      "localKnowledge": "Dagga le Yaab"
+    },
+    "fallback": {
+      "service": "Beera soocaa",
+      "description": "Soocaa katat hinna geyta."
+    },
+    "regions": {
+      "worldwide": "Addunya Innih",
+      "africa": "Afrika",
+      "eastAfrica": "Barr Afrika",
+      "ethiopia": "Itoopiya",
+      "kenya": "Keenya"
+    },
+    "crops": {
+      "all": "Beera Innih",
+      "wheat": "Alali",
+      "maize": "Maasho",
+      "beans": "Baaklawa"
+    }
+  },
+  "system": {
+    "offline": "Neti gubaa",
+    "errorTitle": "Uuh! Qafari gibdi",
+    "errorFallback": "Hinnammek qafari maana",
+    "tryAgain": "Kaadu dirab"
+  },
+  "errors": {
+    "syncFailed": "Server-ih maaqqen. Qoknaanak digdigiyya.",
+    "weatherUnavailable": "Qáfa qoknaanah maaqqen. Saaku guftá.",
+    "diagnosisTimeout": "Báxa cakkuk waqdi le-le. Saaku guftá.",
+    "uploadFailed": "Suuri gublisan maaqqen. Wagi-gittâlih cakkisá, guftá.",
+    "transcriptionFailed": "Sássa qorran maaqqen. Saaku sássá.",
+    "serverError": "Server-ih xúguna. Saaku guftá.",
+    "requestTimeout": "Xambaltó waqdi-gittî maaqqen. Wagi-gittâlih cakkisá.",
+    "locationLookupFailed": "Arcá cakkuk maaqqen."
+  },
+  "a11y": {
+    "startNewChat": "Kasso catat qimbis",
+    "retryLoadingIntegrations": "Integrations ugutta kaakelle",
+    "dismissNotification": "Saddak qayna yoo ab",
+    "dismiss": "Yoo ab",
+    "clearSearch": "Barra maga",
+    "cancelRecording": "Cakkoyna diggis",
+    "finishRecording": "Cakkoyna diggam",
+    "refreshLocation": "Arra kasso ab",
+    "newChat": "Kasso catat",
+    "openSettings": "Gufta afdal",
+    "scrollToBottom": "Gawasa dakkas",
+    "clearVoiceTranscription": "Sawt maxa maga",
+    "takePhoto": "Suura ab",
+    "pickImage": "Suura door",
+    "messageInput": "Maxa galta",
+    "sendMessage": "Maxa naqab",
+    "recordVoice": "Sawt cakko",
+    "attachMedia": "Media ere",
+    "closeMenu": "Menu diggis",
+    "playVoice": "Sawt waga",
+    "stopVoicePlayback": "Sawt wagaya diggis",
+    "moreNotifications": "{count} affara saddak",
+    "themeMode": "Miida: {mode}",
+    "copyMessage": "Maxa qafara",
+    "askQuestion": "Gubbisa: {question}",
+    "selectLanguage": "Af {name}"
+  }
+}

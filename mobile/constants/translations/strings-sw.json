@@ -36,7 +36,9 @@
     "languageTitle": "Chagua Lugha",
     "languageSubtitle": "Chagua lugha unayopendelea kwa msaidizi",
     "searchLanguages": "Tafuta lugha...",
-    "noLanguagesFound": "Hakuna lugha zilizopatikana"
+    "noLanguagesFound": "Hakuna lugha zilizopatikana",
+    "suggestedForYou": "Mapendekezo Yako",
+    "currentLanguage": "Sasa"
   },
   "chat": {
     "welcomeMessage": "Habari! 👋 Mimi ni msaidizi wako wa kilimo.\n\nNinaweza kukusaidia na:\n• Mazao, mboga, matunda, na maua\n• Mifugo, kuku, na ufugaji wa samaki\n• Udhibiti wa wadudu na magonjwa\n• Hali ya hewa na ushauri wa soko\n\nNinaweza kukusaidiaje leo?",

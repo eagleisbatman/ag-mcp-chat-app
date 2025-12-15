@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "返回",
+    "retry": "重试",
+    "cancel": "取消",
+    "delete": "删除",
+    "continue": "继续",
+    "dismiss": "关闭",
+    "refresh": "刷新",
+    "clear": "清除",
+    "loading": "加载中…",
+    "skipForNow": "暂时跳过"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "您的AI农业助手",
+    "getStarted": "开始使用",
+    "features": {
+      "weatherTitle": "天气预报",
+      "weatherDescription": "获取农场精准天气",
+      "diagnosisTitle": "作物病害诊断",
+      "diagnosisDescription": "拍照识别病害",
+      "voiceTitle": "语音助手",
+      "voiceDescription": "用您的语言自然交流"
+    },
+    "locationTitle": "开启定位",
+    "locationDescription": "开启定位，获取精准天气和区域农事建议。",
+    "enableLocation": "开启定位",
+    "locationDenied": "定位权限已拒绝",
+    "locationError": "获取定位失败，请重试。",
+    "benefits": {
+      "weather": "本地天气预报",
+      "regionAdvice": "区域农事建议",
+      "soilData": "区域土壤数据"
+    },
+    "languageTitle": "选择语言",
+    "languageSubtitle": "选择助手语言",
+    "searchLanguages": "搜索语言...",
+    "noLanguagesFound": "未找到语言",
+    "suggestedForYou": "为您推荐",
+    "currentLanguage": "当前"
+  },
+  "chat": {
+    "welcomeMessage": "你好！👋 我是你的种田帮手。\n\n我能帮你解决：\n• 庄稼、蔬菜、水果和花卉\n• 牲畜、家禽和水产养殖\n• 病虫害防治\n• 天气和市场建议\n\n今天我能帮你什么？",
+    "locationDenied": "定位权限被拒",
+    "locationUpdated": "位置已更新！",
+    "locationUpdateFailed": "无法更新位置",
+    "loadingConversation": "正在加载对话...",
+    "thinking": "思考中...",
+    "messagePlaceholder": "消息...",
+    "fromVoice": "来自语音 - 如需请编辑",
+    "voiceTranscribed": "语音已转写！如需请编辑，然后发送。",
+    "noInternet": "无网络连接。请检查你的网络。",
+    "couldNotLoadConversation": "无法加载对话",
+    "startedNewConversation": "已开始新对话",
+    "connectionErrorBot": "连接错误。请重试。",
+    "analyzingPlantImage": "正在分析植物图片...",
+    "imageAnalysisFailedBot": "图片分析失败。请重试。",
+    "sorryCouldNotProcess": "抱歉，我无法处理。{details}",
+    "analysisCouldNotComplete": "分析未能完成。{details}",
+    "plantAnalysisIssues": "植物分析有问题：{details}",
+    "tapLocationToSet": "点击设置位置",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "你",
+    "tapToAskNext": "点击提问："
+  },
+  "media": {
+    "photoLibraryPermission": "选择图片需要相册权限。请到设置中启用。",
+    "cameraPermission": "拍照需要相机权限。请到设置中启用。",
+    "pickImageFailed": "选择图片失败，请重试。",
+    "cameraFailed": "无法打开相机，请重试。",
+    "camera": "相机",
+    "gallery": "相册"
+  },
+  "voice": {
+    "microphonePermission": "需要麦克风权限",
+    "startRecordingFailed": "启动录音失败",
+    "recordingFailed": "录音失败",
+    "transcriptionFailed": "转写失败",
+    "couldNotTranscribeAudio": "无法转写语音",
+    "voiceUnavailableLater": "语音暂时不可用，请稍后再试",
+    "voiceUnavailable": "语音不可用，请重试",
+    "audioPlaybackFailed": "语音播放失败",
+    "recording": "录音中",
+    "cancel": "取消",
+    "done": "完成",
+    "transcribing": "转写中...",
+    "recordingHint": "点“完成”转写，点“取消”放弃"
+  },
+  "history": {
+    "title": "对话",
+    "noConversations": "暂无对话",
+    "noConversationsHint": "开始新聊天，获取农耕建议",
+    "newChat": "新聊天",
+    "newConversation": "新对话",
+    "deleteTitle": "删除对话",
+    "deleteMessage": "删除“{title}”？删除后无法恢复。",
+    "untitled": "无标题",
+    "deleted": "对话已删除",
+    "deleteFailed": "删除失败",
+    "couldNotDelete": "无法删除对话",
+    "notConnectedTitle": "未联网",
+    "notConnectedHint": "对话记录需要连接互联网",
+    "yesterday": "昨天"
+  },
+  "settings": {
+    "title": "设置",
+    "sectionConversations": "聊天",
+    "sectionAiServices": "AI 服务",
+    "sectionLocation": "位置",
+    "sectionLanguage": "语言",
+    "sectionAppearance": "外观",
+    "sectionDanger": "危险区",
+    "chatHistory": "聊天记录",
+    "chatHistorySubtitle": "查看并继续过往对话",
+    "aiServices": "已启用服务",
+    "aiServicesSubtitle": "查看您所在地区已启用的AI服务",
+    "locationPermissionDenied": "位置权限被拒",
+    "locationUpdated": "位置更新成功！",
+    "locationUpdateFailed": "无法更新位置，请重试。",
+    "locationEnabled": "位置已启用",
+    "tapToEnable": "点击启用",
+    "tapToUpdateLocation": "点击更新位置",
+    "themeLight": "浅色",
+    "themeDark": "深色",
+    "themeSystem": "系统",
+    "language": "语言",
+    "resetOnboarding": "重置新手引导",
+    "resetOnboardingSubtitle": "重新开始设置向导",
+    "resetConfirmTitle": "重置设置",
+    "resetConfirmMessage": "这将重新开始设置流程。继续？",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "由 Digital Green Foundation 提供支持"
+  },
+  "mcp": {
+    "title": "AI 服务",
+    "loading": "正在加载服务...",
+    "loadingDetails": "正在加载...",
+    "footer": "服务可用性取决于您的位置",
+    "couldNotLoad": "未能加载服务",
+    "couldNotLoadDetails": "未能加载服务详情",
+    "failedToFetch": "获取服务失败",
+    "serviceCategory": "{name} 类服务",
+    "service": "{name} 服务",
+    "servicesAvailable": "您所在地区有 {total} 项服务，其中 {active} 项可用",
+    "activeCount": "{active}/{total} 项可用",
+    "statusActive": "可用",
+    "statusUnavailable": "您所在地区不可用",
+    "locationNotSet": "未设置位置",
+    "sectionAbout": "关于",
+    "sectionFeatures": "功能特点",
+    "sectionAvailableIn": "支持地区",
+    "sectionSupportedCrops": "支持作物",
+    "categories": {
+      "plantHealth": "作物健康",
+      "soil": "土壤分析",
+      "weather": "天气与气候",
+      "livestock": "牲畜营养",
+      "agriculture": "农业建议"
+    },
+    "services": {
+      "agrivision": {
+        "name": "作物视觉",
+        "tagline": "AI 识别病虫害，提供诊疗方案",
+        "description": "通过分析作物图片，识别病虫害和营养缺乏。即时获得诊断结果、治疗建议和预防措施。"
+      },
+      "isdaSoil": {
+        "name": "ISDA 土壤",
+        "tagline": "非洲土壤属性与养分分析",
+        "description": "获取详细土壤信息，包括酸碱度、氮、磷、钾及其他养分。覆盖整个非洲地区，分辨率达 30 米。"
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "全球实时天气与预报",
+        "description": "获取实时天气数据，包括温度、湿度、风速和降水。提供长达 15 天的预报。"
+      },
+      "gapWeather": {
+        "name": "GAP 天气",
+        "tagline": "肯尼亚农业天气预报",
+        "description": "肯尼亚农业专业天气预报。包括蒸散量、太阳辐射和降水预报，帮助您制定农事决策。"
+      },
+      "edacap": {
+        "name": "EDACaP 气候",
+        "tagline": "埃塞俄比亚季节性气候预报",
+        "description": "提供季节性气候展望，包括温度和降雨预测。帮助农民规划种植和收割时间。"
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "全球地点天气数据",
+        "description": "提供全球各地实时天气状况和预报的综合天气数据服务。"
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "智能天气与预报",
+        "description": "先进的智能天气平台，提供高分辨率预报和临近预报功能。"
+      },
+      "feedFormulation": {
+        "name": "饲料配方",
+        "tagline": "奶牛最佳饲料配比计算",
+        "description": "为您计算奶牛最经济高效的饲料配方。考虑产奶量目标、体重和当地可用饲料。"
+      },
+      "nextgen": {
+        "name": "新一代肥料",
+        "tagline": "埃塞俄比亚地区定制化肥料推荐",
+        "description": "根据您的具体位置，获取精准肥料推荐。包括有机肥（堆肥、蚯蚓肥）和无机肥（尿素、NPS）推荐。"
+      },
+      "decisionTree": {
+        "name": "作物决策树",
+        "tagline": "肯尼亚作物生长阶段推荐",
+        "description": "根据作物生长阶段和当前天气状况，获取作物管理建议。帮助您及时决策病虫害防治、灌溉和收割。"
+      },
+      "gapAgriculture": {
+        "name": "GAP 农业",
+        "tagline": "农业咨询服务",
+        "description": "提供作物和牲畜管理方面的综合农业咨询服务。"
+      }
+    },
+    "features": {
+      "diseaseDetection": "病害检测",
+      "pestIdentification": "害虫识别",
+      "nutrientAnalysis": "养分分析",
+      "treatmentAdvice": "治疗建议",
+      "soilPh": "土壤酸碱度",
+      "nitrogen": "氮",
+      "phosphorus": "磷",
+      "potassium": "钾",
+      "currentWeather": "当前天气",
+      "temperature": "温度",
+      "humidity": "湿度",
+      "forecast": "天气预报",
+      "precipitation": "降水",
+      "evapotranspiration": "蒸散量",
+      "solarRadiation": "太阳辐射",
+      "wind": "风力",
+      "seasonalOutlook": "季节展望",
+      "rainfallProbability": "降雨概率",
+      "temperatureTrend": "温度趋势",
+      "cropForecasts": "作物预报",
+      "historical": "历史数据",
+      "astronomy": "天文",
+      "nowcast": "临近预报",
+      "forecasts": "预报",
+      "alerts": "警报",
+      "dietOptimization": "日粮优化",
+      "nutrientBalance": "营养平衡",
+      "localFeeds": "当地饲料",
+      "costCalculation": "成本计算",
+      "organicFertilizers": "有机肥",
+      "inorganicFertilizers": "无机肥",
+      "expectedYield": "预期产量",
+      "siteSpecific": "地点定制",
+      "growthStage": "生长阶段",
+      "recommendations": "推荐方案",
+      "weatherBased": "基于天气",
+      "actions": "操作",
+      "cropAdvice": "作物建议",
+      "bestPractices": "最佳实践",
+      "seasonalTips": "季节性提示",
+      "localKnowledge": "本地知识"
+    },
+    "fallback": {
+      "service": "农业服务",
+      "description": "服务详情不可用。"
+    },
+    "regions": {
+      "worldwide": "全球",
+      "africa": "非洲",
+      "eastAfrica": "东非",
+      "ethiopia": "埃塞俄比亚",
+      "kenya": "肯尼亚"
+    },
+    "crops": {
+      "all": "所有作物",
+      "wheat": "小麦",
+      "maize": "玉米",
+      "beans": "豆类"
+    }
+  },
+  "system": {
+    "offline": "无网络连接",
+    "errorTitle": "哎呀，出错了",
+    "errorFallback": "出现未知错误",
+    "tryAgain": "重试"
+  },
+  "errors": {
+    "syncFailed": "服务器连接失败。部分功能可能受限。",
+    "weatherUnavailable": "天气服务暂时不可用。请稍后再试。",
+    "diagnosisTimeout": "植物诊断超时。请重试。",
+    "uploadFailed": "图片上传失败。请检查网络并重试。",
+    "transcriptionFailed": "语音识别失败。请再说一次。",
+    "serverError": "服务器错误。请稍后再试。",
+    "requestTimeout": "请求超时。请检查网络连接。",
+    "locationLookupFailed": "无法定位您的位置。"
+  },
+  "a11y": {
+    "startNewChat": "开始新聊天",
+    "retryLoadingIntegrations": "重试加载功能",
+    "dismissNotification": "关闭通知",
+    "dismiss": "关闭",
+    "clearSearch": "清除搜索",
+    "cancelRecording": "取消录音",
+    "finishRecording": "完成录音",
+    "refreshLocation": "刷新位置",
+    "newChat": "新聊天",
+    "openSettings": "打开设置",
+    "scrollToBottom": "滚动到底部",
+    "clearVoiceTranscription": "清除语音转录",
+    "takePhoto": "拍照",
+    "pickImage": "选择图片",
+    "messageInput": "消息输入框",
+    "sendMessage": "发送消息",
+    "recordVoice": "录音",
+    "attachMedia": "附加媒体",
+    "closeMenu": "关闭菜单",
+    "playVoice": "播放语音",
+    "stopVoicePlayback": "停止语音播放",
+    "moreNotifications": "{count} 条更多通知",
+    "themeMode": "主题：{mode}",
+    "copyMessage": "复制消息",
+    "askQuestion": "提问：{question}",
+    "selectLanguage": "语言 {name}"
+  }
+}

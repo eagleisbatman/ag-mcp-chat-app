@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "חזור",
+    "retry": "נסה שוב",
+    "cancel": "ביטול",
+    "delete": "מחק",
+    "continue": "המשך",
+    "dismiss": "סגור",
+    "refresh": "רענן",
+    "clear": "נקה",
+    "loading": "טוען…",
+    "skipForNow": "דלג בינתיים"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "השותף החכם שלך לחקלאות",
+    "getStarted": "להתחיל",
+    "features": {
+      "weatherTitle": "תחזית מזג אוויר",
+      "weatherDescription": "קבל תחזיות מזג אוויר מדויקות לחווה שלך",
+      "diagnosisTitle": "אבחון גידולים",
+      "diagnosisDescription": "זהה מחלות צמחים באמצעות תמונות",
+      "voiceTitle": "תמיכה קולית",
+      "voiceDescription": "דבר באופן טבעי בשפה שלך"
+    },
+    "locationTitle": "הפעל מיקום",
+    "locationDescription": "שתף את מיקומך כדי לקבל תחזיות מזג אוויר מדויקות ועצות חקלאיות מותאמות לאזור.",
+    "enableLocation": "הפעל מיקום",
+    "locationDenied": "הרשאת מיקום נדחתה",
+    "locationError": "לא ניתן לקבל מיקום. אנא נסה שוב.",
+    "benefits": {
+      "weather": "תחזיות מזג אוויר מקומיות",
+      "regionAdvice": "עצות גידול מותאמות לאזור",
+      "soilData": "נתוני קרקע לאזורך"
+    },
+    "languageTitle": "בחר שפה",
+    "languageSubtitle": "בחר את השפה המועדפת עליך עבור העוזר",
+    "searchLanguages": "חפש שפות...",
+    "noLanguagesFound": "לא נמצאו שפות",
+    "suggestedForYou": "מומלץ עבורך",
+    "currentLanguage": "נוכחי"
+  },
+  "chat": {
+    "welcomeMessage": "שלום! 👋 אני העוזר החקלאי שלך.\n\nאני יכול לעזור לך ב:\n• גידולי שדה, ירקות, פירות ופרחים\n• בעלי חיים, עופות ודגים\n• ניהול מזיקים ומחלות\n• ייעוץ מזג אוויר ושוק\n\nאיך אוכל לעזור לך היום?",
+    "locationDenied": "גישה למיקום נדחתה",
+    "locationUpdated": "מיקום עודכן!",
+    "locationUpdateFailed": "לא ניתן לעדכן מיקום",
+    "loadingConversation": "טוען שיחה...",
+    "thinking": "חושב...",
+    "messagePlaceholder": "הודעה...",
+    "fromVoice": "מהקלטה קולית – ערוך אם צריך",
+    "voiceTranscribed": "קול תומלל! ערוך אם צריך, ואז שלח.",
+    "noInternet": "אין חיבור לאינטרנט. אנא בדוק את הרשת שלך.",
+    "couldNotLoadConversation": "לא ניתן לטעון שיחה",
+    "startedNewConversation": "שיחה חדשה החלה",
+    "connectionErrorBot": "שגיאת חיבור. אנא נסה שוב.",
+    "analyzingPlantImage": "מנתח תמונת צמח...",
+    "imageAnalysisFailedBot": "ניתוח תמונה נכשל. אנא נסה שוב.",
+    "sorryCouldNotProcess": "סליחה, לא הצלחתי לעבד את זה. {details}",
+    "analysisCouldNotComplete": "הניתוח לא הושלם. {details}",
+    "plantAnalysisIssues": "בניתוח הצמח התגלו בעיות: {details}",
+    "tapLocationToSet": "הקש על מיקום כדי להגדיר",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "אתה",
+    "tapToAskNext": "הקש לשאלה הבאה:"
+  },
+  "media": {
+    "photoLibraryPermission": "נדרשת גישה לגלריית התמונות לבחירת תמונות. הפעל בהגדרות.",
+    "cameraPermission": "נדרשת גישה למצלמה כדי לצלם תמונות. הפעל בהגדרות.",
+    "pickImageFailed": "בחירת התמונה נכשלה. אנא נסה שוב.",
+    "cameraFailed": "הגישה למצלמה נכשלה. אנא נסה שוב.",
+    "camera": "מצלמה",
+    "gallery": "גלריה"
+  },
+  "voice": {
+    "microphonePermission": "הרשאת מיקרופון נדרשת",
+    "startRecordingFailed": "כשל בהתחלת הקלטה",
+    "recordingFailed": "ההקלטה נכשלה",
+    "transcriptionFailed": "התמלול נכשל",
+    "couldNotTranscribeAudio": "לא ניתן לתמלל את ההקלטה",
+    "voiceUnavailableLater": "שירות קולי לא זמין – נסה שוב מאוחר יותר",
+    "voiceUnavailable": "שירות קולי לא זמין – נסה שוב",
+    "audioPlaybackFailed": "השמעה נכשלה",
+    "recording": "הקלטה",
+    "cancel": "בטל",
+    "done": "סיום",
+    "transcribing": "מתמלל...",
+    "recordingHint": "הקש 'סיום' לתמלול, או 'בטל' למחיקה"
+  },
+  "history": {
+    "title": "שיחות",
+    "noConversations": "אין שיחות עדיין",
+    "noConversationsHint": "התחל צ'אט חדש כדי לקבל עצות חקלאיות",
+    "newChat": "צ'אט חדש",
+    "newConversation": "שיחה חדשה",
+    "deleteTitle": "מחק שיחה",
+    "deleteMessage": "למחוק את \"{title}\"? לא ניתן לבטל פעולה זו.",
+    "untitled": "ללא שם",
+    "deleted": "השיחה נמחקה",
+    "deleteFailed": "מחיקה נכשלה",
+    "couldNotDelete": "לא ניתן למחוק את השיחה",
+    "notConnectedTitle": "אין חיבור",
+    "notConnectedHint": "היסטוריית השיחות דורשת חיבור לאינטרנט",
+    "yesterday": "אתמול"
+  },
+  "settings": {
+    "title": "הגדרות",
+    "sectionConversations": "שיחות",
+    "sectionAiServices": "שירותי בינה מלאכותית",
+    "sectionLocation": "מיקום",
+    "sectionLanguage": "שפה",
+    "sectionAppearance": "מראה",
+    "sectionDanger": "אזור מסוכן",
+    "chatHistory": "היסטוריית שיחות",
+    "chatHistorySubtitle": "הצג והמשך שיחות קודמות",
+    "aiServices": "שירותים פעילים",
+    "aiServicesSubtitle": "הצג שירותי בינה מלאכותית פעילים באזורך",
+    "locationPermissionDenied": "הרשאת מיקום נדחתה",
+    "locationUpdated": "המיקום עודכן בהצלחה!",
+    "locationUpdateFailed": "לא ניתן לעדכן מיקום. נסה שוב.",
+    "locationEnabled": "מיקום מופעל",
+    "tapToEnable": "הקש להפעלה",
+    "tapToUpdateLocation": "הקש לעדכון מיקום",
+    "themeLight": "בהיר",
+    "themeDark": "כהה",
+    "themeSystem": "מערכת",
+    "language": "שפה",
+    "resetOnboarding": "איפוס הגדרה ראשונית",
+    "resetOnboardingSubtitle": "התחל מחדש עם אשף ההגדרות",
+    "resetConfirmTitle": "איפוס הגדרות",
+    "resetConfirmMessage": "פעולה זו תפעיל מחדש את תהליך ההצטרפות. להמשיך?",
+    "appInfoVersion": "FarmerChat גירסה 2.0.0",
+    "appInfoPoweredBy": "מופעל על ידי Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "שירותים חכמים",
+    "loading": "טוען שירותים...",
+    "loadingDetails": "טוען...",
+    "footer": "זמינות השירותים תלויה במיקומך",
+    "couldNotLoad": "לא ניתן לטעון שירותים",
+    "couldNotLoadDetails": "לא ניתן לטעון פרטי שירות",
+    "failedToFetch": "כשל בטעינת שירותים",
+    "serviceCategory": "קטגוריה: {name}",
+    "service": "שירות: {name}",
+    "servicesAvailable": "{active} מתוך {total} שירותים זמינים למיקומך",
+    "activeCount": "{active}/{total} פעילים",
+    "statusActive": "פעיל",
+    "statusUnavailable": "לא זמין באזורך",
+    "locationNotSet": "מיקום לא הוגדר",
+    "sectionAbout": "אודות",
+    "sectionFeatures": "תכונות",
+    "sectionAvailableIn": "זמין ב",
+    "sectionSupportedCrops": "גידולים נתמכים",
+    "categories": {
+      "plantHealth": "בריאות הצמח",
+      "soil": "ניתוח קרקע",
+      "weather": "מזג אוויר ואקלים",
+      "livestock": "תזונת בעלי חיים",
+      "agriculture": "ייעוץ חקלאי"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "זיהוי ואבחון מחלות צמחים מבוסס AI",
+        "description": "נתח תמונות צמחים לזיהוי מחלות, מזיקים וחוסרי הזנה. קבל אבחון מיידי עם המלצות טיפול וטיפים למניעה."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "תכונות קרקע וניתוח חומרים מזינים לאפריקה",
+        "description": "קבל מידע מפורט על הקרקע כולל pH, חנקן, זרחן, אשלגן וחומרים מזינים אחרים. הכיסוי כולל את כל אפריקה ברזולוציה של 30 מטר."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "תנאים נוכחיים ותחזיות מזג אוויר גלובליות",
+        "description": "קבל גישה לנתוני מזג אוויר בזמן אמת, כולל טמפרטורה, לחות, מהירות רוח ומשקעים. תחזיות זמינות עד 15 יום."
+      },
+      "gapWeather": {
+        "name": "GAP Weather",
+        "tagline": "תחזיות מזג אוויר חקלאיות לקניה",
+        "description": "תחזיות מזג אוויר מיוחדות לחקלאות בקניה. כולל תחזיות אידוי והתאדות, קרינת שמש ומשקעים המותאמות להחלטות חקלאיות."
+      },
+      "edacap": {
+        "name": "EDACaP Climate",
+        "tagline": "תחזיות אקלים עונתיות לאתיופיה",
+        "description": "תחזית אקלים עונתית הכוללת חיזוי טמפרטורה וגשם. מסייע לחקלאים לתכנן לוחות זמנים לזריעה ולקציר."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "נתוני מזג אוויר למיקומים גלובליים",
+        "description": "שירות נתוני מזג אוויר מקיף המספק תנאים נוכחיים ותחזיות למיקומים ברחבי העולם."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "מודיעין מזג אוויר ותחזיות",
+        "description": "פלטפורמת מודיעין מזג אוויר מתקדמת עם תחזיות ברזולוציה גבוהה ויכולות ניבוי קצר טווח (נוקאסט)."
+      },
+      "feedFormulation": {
+        "name": "ניסוח מזון",
+        "tagline": "חישובי תזונה אופטימליים לבקר חלב",
+        "description": "חשב את תערובת המזון החסכונית ביותר עבור בקר החלב שלך. לוקח בחשבון יעדי ייצור חלב, משקל גוף ומזונות מקומיים זמינים."
+      },
+      "nextgen": {
+        "name": "דשן הדור הבא",
+        "tagline": "המלצות דישון ספציפיות לאתר עבור אתיופיה",
+        "description": "קבל המלצות דישון מדויקות על סמך מיקומך המדויק. כולל המלצות לדשנים אורגניים (קומפוסט, ורמיקומפוסט) ואי-אורגניים (אוריאה, NPS)."
+      },
+      "decisionTree": {
+        "name": "עץ החלטות לגידולים",
+        "tagline": "המלצות שלבי גידול לקניה",
+        "description": "קבל המלצות לניהול גידולים בהתבסס על שלב הגידול ותנאי מזג האוויר הנוכחיים. מסייע לך לקבל החלטות בזמן על הדברת מזיקים, השקיה וקציר."
+      },
+      "gapAgriculture": {
+        "name": "GAP חקלאות",
+        "tagline": "שירותי ייעוץ חקלאי",
+        "description": "שירותי ייעוץ חקלאי כלליים לניהול גידולים ובעלי חיים."
+      }
+    },
+    "features": {
+      "diseaseDetection": "זיהוי מחלות",
+      "pestIdentification": "זיהוי מזיקים",
+      "nutrientAnalysis": "ניתוח חומרים מזינים",
+      "treatmentAdvice": "ייעוץ טיפולי",
+      "soilPh": "pH קרקע",
+      "nitrogen": "חנקן",
+      "phosphorus": "זרחן",
+      "potassium": "אשלגן",
+      "currentWeather": "מזג אוויר נוכחי",
+      "temperature": "טמפרטורה",
+      "humidity": "לחות",
+      "forecast": "תחזית",
+      "precipitation": "משקעים",
+      "evapotranspiration": "אידוי והתאדות",
+      "solarRadiation": "קרינת שמש",
+      "wind": "רוח",
+      "seasonalOutlook": "תחזית עונתית",
+      "rainfallProbability": "הסתברות לגשם",
+      "temperatureTrend": "מגמת טמפרטורה",
+      "cropForecasts": "תחזיות גידולים",
+      "historical": "היסטורי",
+      "astronomy": "אסטרונומיה",
+      "nowcast": "תחזית מיידית",
+      "forecasts": "תחזיות",
+      "alerts": "התראות",
+      "dietOptimization": "אופטימיזציית תזונה",
+      "nutrientBalance": "איזון חומרים מזינים",
+      "localFeeds": "מזונות מקומיים",
+      "costCalculation": "חישוב עלות",
+      "organicFertilizers": "דשנים אורגניים",
+      "inorganicFertilizers": "דשנים אי-אורגניים",
+      "expectedYield": "יבול צפוי",
+      "siteSpecific": "ספציפי לאתר",
+      "growthStage": "שלב גידול",
+      "recommendations": "המלצות",
+      "weatherBased": "מבוסס מזג אוויר",
+      "actions": "פעולות",
+      "cropAdvice": "ייעוץ גידולים",
+      "bestPractices": "שיטות עבודה מומלצות",
+      "seasonalTips": "טיפים עונתיים",
+      "localKnowledge": "ידע מקומי"
+    },
+    "fallback": {
+      "service": "שירות חקלאי",
+      "description": "פרטי השירות אינם זמינים."
+    },
+    "regions": {
+      "worldwide": "ברחבי העולם",
+      "africa": "אפריקה",
+      "eastAfrica": "מזרח אפריקה",
+      "ethiopia": "אתיופיה",
+      "kenya": "קניה"
+    },
+    "crops": {
+      "all": "כל הגידולים",
+      "wheat": "חיטה",
+      "maize": "תירס",
+      "beans": "שעועית"
+    }
+  },
+  "system": {
+    "offline": "אין חיבור לאינטרנט",
+    "errorTitle": "אופס! משהו השתבש",
+    "errorFallback": "תקלה לא צפויה",
+    "tryAgain": "נסה שוב"
+  },
+  "errors": {
+    "syncFailed": "לא הצלחנו להתחבר. ייתכן שחלק מהשירותים מוגבלים.",
+    "weatherUnavailable": "שירות מזג האוויר אינו זמין. נסה שוב אחר כך.",
+    "diagnosisTimeout": "אבחון הצמח ארוך מדי. נסה שוב.",
+    "uploadFailed": "העלאת התמונה נכשלה. בדוק חיבור ונסה שוב.",
+    "transcriptionFailed": "זיהוי קולי נכשל. נסה לדבר שוב.",
+    "serverError": "שגיאת שרת. נסה שוב אחר כך.",
+    "requestTimeout": "פג זמן הבקשה. בדוק את החיבור.",
+    "locationLookupFailed": "לא הצלחנו לאתר את מיקומך."
+  },
+  "a11y": {
+    "startNewChat": "התחל שיחה חדשה",
+    "retryLoadingIntegrations": "נסה לטעון מחדש את החיבורים",
+    "dismissNotification": "בטל התראה",
+    "dismiss": "בטל",
+    "clearSearch": "נקה חיפוש",
+    "cancelRecording": "בטל הקלטה",
+    "finishRecording": "סיים הקלטה",
+    "refreshLocation": "רענן מיקום",
+    "newChat": "שיחה חדשה",
+    "openSettings": "פתח הגדרות",
+    "scrollToBottom": "גלול לתחתית",
+    "clearVoiceTranscription": "נקה תמלול קולי",
+    "takePhoto": "צלם תמונה",
+    "pickImage": "בחר תמונה",
+    "messageInput": "שדה הודעה",
+    "sendMessage": "שלח הודעה",
+    "recordVoice": "הקלט קול",
+    "attachMedia": "צרף מדיה",
+    "closeMenu": "סגור תפריט",
+    "playVoice": "נגן קול",
+    "stopVoicePlayback": "עצור ניגון קולי",
+    "moreNotifications": "עוד {count} התראות",
+    "themeMode": "ערכת נושא: {mode}",
+    "copyMessage": "העתק הודעה",
+    "askQuestion": "שאל: {question}",
+    "selectLanguage": "שפה {name}"
+  }
+}

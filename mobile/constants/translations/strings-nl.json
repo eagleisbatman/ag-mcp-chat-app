@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Terug",
+    "retry": "Opnieuw",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "continue": "Doorgaan",
+    "dismiss": "Sluiten",
+    "refresh": "Vernieuwen",
+    "clear": "Wissen",
+    "loading": "Laden…",
+    "skipForNow": "Nu overslaan"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Uw slimme boerenhulp",
+    "getStarted": "Aan de slag",
+    "features": {
+      "weatherTitle": "Weersvoorspellingen",
+      "weatherDescription": "Krijg nauwkeurige weersvoorspellingen voor uw boerderij",
+      "diagnosisTitle": "Gewasdiagnose",
+      "diagnosisDescription": "Herken plantenziekten met foto's",
+      "voiceTitle": "Stemhulp",
+      "voiceDescription": "Praat natuurlijk in uw taal"
+    },
+    "locationTitle": "Locatie inschakelen",
+    "locationDescription": "Deel uw locatie voor nauwkeurige weersvoorspellingen en advies voor uw regio.",
+    "enableLocation": "Locatie inschakelen",
+    "locationDenied": "Locatietoegang geweigerd",
+    "locationError": "Locatie niet gevonden. Probeer opnieuw.",
+    "benefits": {
+      "weather": "Lokaal weerbericht",
+      "regionAdvice": "Gewasadvies voor uw regio",
+      "soilData": "Bodemgegevens voor uw gebied"
+    },
+    "languageTitle": "Taal kiezen",
+    "languageSubtitle": "Kies uw voorkeurstaal voor de assistent",
+    "searchLanguages": "Zoek talen...",
+    "noLanguagesFound": "Geen talen gevonden",
+    "suggestedForYou": "Aanbevolen voor u",
+    "currentLanguage": "Huidig"
+  },
+  "chat": {
+    "welcomeMessage": "Hallo! 👋 Ik ben je landbouwassistent.\n\nIk help je graag met:\n• Gewassen, groenten, fruit en bloemen\n• Veeteelt, pluimvee en viskweek\n• Ongedierte- en ziektebestrijding\n• Weer- en marktinformatie\n\nHoe kan ik je vandaag helpen?",
+    "locationDenied": "Locatie geweigerd",
+    "locationUpdated": "Locatie bijgewerkt!",
+    "locationUpdateFailed": "Locatie bijwerken mislukt",
+    "loadingConversation": "Gesprek laden...",
+    "thinking": "Aan het denken...",
+    "messagePlaceholder": "Bericht...",
+    "fromVoice": "Van spraak – bewerk indien nodig",
+    "voiceTranscribed": "Spraak herkend! Bewerk indien nodig en verstuur.",
+    "noInternet": "Geen internetverbinding. Controleer je netwerk.",
+    "couldNotLoadConversation": "Laden gesprek mislukt",
+    "startedNewConversation": "Nieuw gesprek gestart",
+    "connectionErrorBot": "Verbindingsfout. Probeer opnieuw.",
+    "analyzingPlantImage": "Plantenafbeelding analyseren...",
+    "imageAnalysisFailedBot": "Afbeeldingsanalyse mislukt. Probeer opnieuw.",
+    "sorryCouldNotProcess": "Sorry, ik kon dat niet verwerken. {details}",
+    "analysisCouldNotComplete": "Analyse kon niet worden voltooid. {details}",
+    "plantAnalysisIssues": "Problemen met plantenanalyse: {details}",
+    "tapLocationToSet": "Tik op locatie om in te stellen",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Jij",
+    "tapToAskNext": "Tik voor volgende vraag:"
+  },
+  "media": {
+    "photoLibraryPermission": "Toegang tot fotobibliotheek nodig om afbeeldingen te kiezen. Schakel in via Instellingen.",
+    "cameraPermission": "Toegang tot camera nodig om foto's te maken. Schakel in via Instellingen.",
+    "pickImageFailed": "Afbeelding kiezen mislukt. Probeer het opnieuw.",
+    "cameraFailed": "Toegang tot camera mislukt. Probeer het opnieuw.",
+    "camera": "Camera",
+    "gallery": "Galerij"
+  },
+  "voice": {
+    "microphonePermission": "Microfoonrechten nodig",
+    "startRecordingFailed": "Starten opname mislukt",
+    "recordingFailed": "Opname mislukt",
+    "transcriptionFailed": "Transcriptie mislukt",
+    "couldNotTranscribeAudio": "Kon audio niet omzetten",
+    "voiceUnavailableLater": "Stemfunctie niet beschikbaar - probeer later opnieuw",
+    "voiceUnavailable": "Stemfunctie niet beschikbaar - probeer opnieuw",
+    "audioPlaybackFailed": "Afspelen audio mislukt",
+    "recording": "Opnemen",
+    "cancel": "Annuleren",
+    "done": "Klaar",
+    "transcribing": "Transcriberen...",
+    "recordingHint": "Tik op Klaar voor tekst, of Annuleer om te wissen"
+  },
+  "history": {
+    "title": "Gesprekken",
+    "noConversations": "Nog geen gesprekken",
+    "noConversationsHint": "Start een nieuwe chat voor landbouwadvies",
+    "newChat": "Nieuwe Chat",
+    "newConversation": "Nieuw gesprek",
+    "deleteTitle": "Gesprek verwijderen",
+    "deleteMessage": "Verwijder \"{title}\"? Dit kan niet ongedaan worden gemaakt.",
+    "untitled": "Zonder titel",
+    "deleted": "Gesprek verwijderd",
+    "deleteFailed": "Verwijderen mislukt",
+    "couldNotDelete": "Kon gesprek niet verwijderen",
+    "notConnectedTitle": "Niet verbonden",
+    "notConnectedHint": "Voor gespreksgeschiedenis is een internetverbinding nodig",
+    "yesterday": "Gisteren"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "sectionConversations": "GESPREKKEN",
+    "sectionAiServices": "AI-DIENSTEN",
+    "sectionLocation": "LOCATIE",
+    "sectionLanguage": "TAAL",
+    "sectionAppearance": "WEERGAVE",
+    "sectionDanger": "GEVARENZONE",
+    "chatHistory": "Chatgeschiedenis",
+    "chatHistorySubtitle": "Bekijk en vervolg eerdere gesprekken",
+    "aiServices": "Actieve diensten",
+    "aiServicesSubtitle": "Bekijk actieve AI-diensten voor uw regio",
+    "locationPermissionDenied": "Locatietoegang geweigerd",
+    "locationUpdated": "Locatie bijgewerkt!",
+    "locationUpdateFailed": "Locatie bijwerken mislukt. Probeer opnieuw.",
+    "locationEnabled": "Locatie ingeschakeld",
+    "tapToEnable": "Tik om in te schakelen",
+    "tapToUpdateLocation": "Tik om locatie bij te werken",
+    "themeLight": "Licht",
+    "themeDark": "Donker",
+    "themeSystem": "Systeem",
+    "language": "Taal",
+    "resetOnboarding": "Introductie resetten",
+    "resetOnboardingSubtitle": "Begin opnieuw met instelhulp",
+    "resetConfirmTitle": "Instelling resetten",
+    "resetConfirmMessage": "Dit herstart de introductie. Doorgaan?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Mogelijk gemaakt door Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "AI-diensten",
+    "loading": "Diensten laden...",
+    "loadingDetails": "Laden...",
+    "footer": "Beschikbaarheid diensten is afhankelijk van uw locatie",
+    "couldNotLoad": "Diensten konden niet worden geladen",
+    "couldNotLoadDetails": "Servicegegevens konden niet worden geladen",
+    "failedToFetch": "Ophalen diensten mislukt",
+    "serviceCategory": "Categorie {name}",
+    "service": "Dienst {name}",
+    "servicesAvailable": "{active} van de {total} diensten beschikbaar voor uw locatie",
+    "activeCount": "{active}/{total} actief",
+    "statusActive": "Actief",
+    "statusUnavailable": "Niet beschikbaar in uw regio",
+    "locationNotSet": "Locatie niet ingesteld",
+    "sectionAbout": "Over",
+    "sectionFeatures": "Kenmerken",
+    "sectionAvailableIn": "Beschikbaar in",
+    "sectionSupportedCrops": "Ondersteunde gewassen",
+    "categories": {
+      "plantHealth": "Plantgezondheid",
+      "soil": "Bodemanalyse",
+      "weather": "Weer & Klimaat",
+      "livestock": "Veevoeding",
+      "agriculture": "Gewasadvies"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "AI-gestuurde ziekteherkenning en diagnose van planten",
+        "description": "Analyseer plantfoto's om ziekten, plagen en voedingstekorten te identificeren. Krijg direct een diagnose met behandelingsadvies en preventietips."
+      },
+      "isdaSoil": {
+        "name": "ISDA Bodem",
+        "tagline": "Bodemkenmerken en nutriëntenanalyse voor Afrika",
+        "description": "Krijg gedetailleerde bodeminformatie inclusief pH, stikstof, fosfor, kalium en andere nutriënten. Dekking omvat heel Afrika met een resolutie van 30 meter."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Huidige omstandigheden en weersvoorspellingen wereldwijd",
+        "description": "Krijg toegang tot real-time weergegevens, waaronder temperatuur, luchtvochtigheid, windsnelheid en neerslag. Voorspellingen tot 15 dagen beschikbaar."
+      },
+      "gapWeather": {
+        "name": "GAP Weer",
+        "tagline": "Agrarische weersvoorspellingen voor Kenia",
+        "description": "Gespecialiseerde weersvoorspellingen voor de landbouw in Kenia. Inclusief verdamping, zonnestraling en neerslagvoorspellingen, afgestemd op landbouwbeslissingen."
+      },
+      "edacap": {
+        "name": "EDACaP Klimaat",
+        "tagline": "Seizoensgebonden klimaatvoorspellingen voor Ethiopië",
+        "description": "Seizoensgebonden klimaatuizichten inclusief temperatuur- en regenvoorspellingen. Helpt boeren bij het plannen van zaai- en oogstschema's."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Weergegevens voor wereldwijde locaties",
+        "description": "Uitgebreide weergegevensdienst die huidige omstandigheden en voorspellingen biedt voor locaties wereldwijd."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Weerinformatie en voorspelling",
+        "description": "Geavanceerd weersinformatieplatform met hoge-resolutie voorspellingen en nowcasting-mogelijkheden."
+      },
+      "feedFormulation": {
+        "name": "Voederformule",
+        "tagline": "Optimale dieetberekeningen voor melkvee",
+        "description": "Bereken de meest kosteneffectieve voermix voor uw melkvee. Houdt rekening met melkproductiedoelen, lichaamsgewicht en beschikbare lokale voeders."
+      },
+      "nextgen": {
+        "name": "NextGen Meststof",
+        "tagline": "Plaats-specifieke meststofadviezen voor Ethiopië",
+        "description": "Krijg nauwkeurig meststofadvies op basis van uw exacte locatie. Inclusief zowel organische (compost, vermicompost) als anorganische (Ureum, NPS) aanbevelingen."
+      },
+      "decisionTree": {
+        "name": "Gewas Beslisboom",
+        "tagline": "Groeifase aanbevelingen voor Kenia",
+        "description": "Krijg gewasbeheeradvies op basis van de groeifase en huidige weersomstandigheden. Helpt u bij het nemen van tijdige beslissingen voor plaagbestrijding, irrigatie en oogst."
+      },
+      "gapAgriculture": {
+        "name": "GAP Landbouw",
+        "tagline": "Agrarische adviesdiensten",
+        "description": "Algemene agrarische adviesdiensten voor gewas- en veebeheer."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Ziekteherkenning",
+      "pestIdentification": "Plaagidentificatie",
+      "nutrientAnalysis": "Nutriëntenanalyse",
+      "treatmentAdvice": "Behandeladvies",
+      "soilPh": "Bodem pH",
+      "nitrogen": "Stikstof",
+      "phosphorus": "Fosfor",
+      "potassium": "Kalium",
+      "currentWeather": "Huidig weer",
+      "temperature": "Temperatuur",
+      "humidity": "Luchtvochtigheid",
+      "forecast": "Voorspelling",
+      "precipitation": "Neerslag",
+      "evapotranspiration": "Verdamping",
+      "solarRadiation": "Zonnestraling",
+      "wind": "Wind",
+      "seasonalOutlook": "Seizoensvoorspelling",
+      "rainfallProbability": "Regenkans",
+      "temperatureTrend": "Temperatuurtrend",
+      "cropForecasts": "Gewasvoorspellingen",
+      "historical": "Historisch",
+      "astronomy": "Astronomisch",
+      "nowcast": "Nowcast",
+      "forecasts": "Voorspellingen",
+      "alerts": "Meldingen",
+      "dietOptimization": "Dieetoptimalisatie",
+      "nutrientBalance": "Nutriëntenbalans",
+      "localFeeds": "Lokale voeders",
+      "costCalculation": "Kostenberekening",
+      "organicFertilizers": "Organische meststoffen",
+      "inorganicFertilizers": "Anorganische meststoffen",
+      "expectedYield": "Verwachte opbrengst",
+      "siteSpecific": "Plaats-specifiek",
+      "growthStage": "Groeifase",
+      "recommendations": "Aanbevelingen",
+      "weatherBased": "Weersafhankelijk",
+      "actions": "Acties",
+      "cropAdvice": "Gewasadvies",
+      "bestPractices": "Beste praktijken",
+      "seasonalTips": "Seizoenstips",
+      "localKnowledge": "Lokale kennis"
+    },
+    "fallback": {
+      "service": "Agrarische dienst",
+      "description": "Servicegegevens niet beschikbaar."
+    },
+    "regions": {
+      "worldwide": "Wereldwijd",
+      "africa": "Afrika",
+      "eastAfrica": "Oost-Afrika",
+      "ethiopia": "Ethiopië",
+      "kenya": "Kenia"
+    },
+    "crops": {
+      "all": "Alle gewassen",
+      "wheat": "Tarwe",
+      "maize": "Maïs",
+      "beans": "Bonen"
+    }
+  },
+  "system": {
+    "offline": "Geen internet",
+    "errorTitle": "Oeps! Er ging iets mis",
+    "errorFallback": "Er ging iets onverwachts mis",
+    "tryAgain": "Probeer opnieuw"
+  },
+  "errors": {
+    "syncFailed": "Verbinding met server mislukt. Sommige functies zijn beperkt.",
+    "weatherUnavailable": "Weerdienst tijdelijk niet beschikbaar. Probeer later opnieuw.",
+    "diagnosisTimeout": "Planten diagnose duurt te lang. Probeer het opnieuw.",
+    "uploadFailed": "Uploaden afbeelding mislukt. Controleer je verbinding en probeer opnieuw.",
+    "transcriptionFailed": "Spraakherkenning mislukt. Probeer opnieuw te spreken.",
+    "serverError": "Serverfout. Probeer later opnieuw.",
+    "requestTimeout": "Verzoek verlopen. Controleer je verbinding.",
+    "locationLookupFailed": "Locatie niet gevonden."
+  },
+  "a11y": {
+    "startNewChat": "Nieuwe chat starten",
+    "retryLoadingIntegrations": "Integraties opnieuw laden",
+    "dismissNotification": "Melding sluiten",
+    "dismiss": "Sluiten",
+    "clearSearch": "Zoeken wissen",
+    "cancelRecording": "Opname annuleren",
+    "finishRecording": "Opname voltooien",
+    "refreshLocation": "Locatie vernieuwen",
+    "newChat": "Nieuwe chat",
+    "openSettings": "Instellingen openen",
+    "scrollToBottom": "Naar onderen scrollen",
+    "clearVoiceTranscription": "Spraaktranscriptie wissen",
+    "takePhoto": "Foto maken",
+    "pickImage": "Afbeelding kiezen",
+    "messageInput": "Berichtveld",
+    "sendMessage": "Bericht verzenden",
+    "recordVoice": "Stem opnemen",
+    "attachMedia": "Media bijvoegen",
+    "closeMenu": "Menu sluiten",
+    "playVoice": "Stem afspelen",
+    "stopVoicePlayback": "Stem afspelen stoppen",
+    "moreNotifications": "{count} meer meldingen",
+    "themeMode": "Thema: {mode}",
+    "copyMessage": "Bericht kopiëren",
+    "askQuestion": "Vraag: {question}",
+    "selectLanguage": "Taal {name}"
+  }
+}

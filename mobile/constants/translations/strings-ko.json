@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "뒤로",
+    "retry": "다시 시도",
+    "cancel": "취소",
+    "delete": "삭제",
+    "continue": "계속",
+    "dismiss": "닫기",
+    "refresh": "새로 고침",
+    "clear": "지우기",
+    "loading": "로딩 중…",
+    "skipForNow": "나중에 건너뛰기"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "AI 기반 영농 동반자",
+    "getStarted": "시작하기",
+    "features": {
+      "weatherTitle": "날씨 예보",
+      "weatherDescription": "농장 날씨를 정확히 예측합니다.",
+      "diagnosisTitle": "작물 진단",
+      "diagnosisDescription": "사진으로 작물 병해 진단",
+      "voiceTitle": "음성 지원",
+      "voiceDescription": "내 언어로 편하게 대화하세요."
+    },
+    "locationTitle": "위치 사용 설정",
+    "locationDescription": "위치를 공유하면 정확한 날씨 예보와 지역별 영농 조언을 받을 수 있습니다.",
+    "enableLocation": "위치 켜기",
+    "locationDenied": "위치 권한 거부됨",
+    "locationError": "위치를 가져올 수 없습니다. 다시 시도해주세요.",
+    "benefits": {
+      "weather": "지역별 날씨 예보",
+      "regionAdvice": "지역별 영농 조언",
+      "soilData": "지역별 토양 정보"
+    },
+    "languageTitle": "언어 선택",
+    "languageSubtitle": "도우미가 사용할 언어를 선택하세요.",
+    "searchLanguages": "언어 검색...",
+    "noLanguagesFound": "언어를 찾을 수 없습니다.",
+    "suggestedForYou": "추천",
+    "currentLanguage": "현재"
+  },
+  "chat": {
+    "welcomeMessage": "안녕하세요! 👋 저는 농업 도우미입니다.\n\n제가 도와드릴 수 있는 분야는:\n• 작물, 채소, 과일, 화훼\n• 가축, 가금류, 양식업\n• 병충해 관리\n• 날씨 및 시장 정보\n\n오늘 무엇을 도와드릴까요?",
+    "locationDenied": "위치 권한 거부됨",
+    "locationUpdated": "위치 업데이트 완료!",
+    "locationUpdateFailed": "위치를 업데이트할 수 없습니다",
+    "loadingConversation": "대화 불러오는 중...",
+    "thinking": "생각 중...",
+    "messagePlaceholder": "메시지...",
+    "fromVoice": "음성 입력 - 필요시 수정",
+    "voiceTranscribed": "음성 인식 완료! 필요시 수정 후 전송.",
+    "noInternet": "인터넷 연결 없음. 네트워크를 확인해 주세요.",
+    "couldNotLoadConversation": "대화를 불러올 수 없습니다",
+    "startedNewConversation": "새 대화 시작",
+    "connectionErrorBot": "연결 오류. 다시 시도해 주세요.",
+    "analyzingPlantImage": "식물 이미지 분석 중...",
+    "imageAnalysisFailedBot": "이미지 분석 실패. 다시 시도해 주세요.",
+    "sorryCouldNotProcess": "죄송합니다. 처리할 수 없었습니다. {details}",
+    "analysisCouldNotComplete": "분석을 완료할 수 없었습니다. {details}",
+    "plantAnalysisIssues": "식물 분석 중 문제 발생: {details}",
+    "tapLocationToSet": "위치를 설정하려면 탭하세요",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "나",
+    "tapToAskNext": "다음 질문을 하려면 탭:"
+  },
+  "media": {
+    "photoLibraryPermission": "사진을 선택하려면 사진 보관함 접근 권한이 필요합니다. 설정에서 허용해 주세요.",
+    "cameraPermission": "사진을 찍으려면 카메라 접근 권한이 필요합니다. 설정에서 허용해 주세요.",
+    "pickImageFailed": "사진 선택에 실패했습니다. 다시 시도해 주세요.",
+    "cameraFailed": "카메라 접근에 실패했습니다. 다시 시도해 주세요.",
+    "camera": "카메라",
+    "gallery": "갤러리"
+  },
+  "voice": {
+    "microphonePermission": "마이크 권한 필요",
+    "startRecordingFailed": "녹음 시작 실패",
+    "recordingFailed": "녹음 실패",
+    "transcriptionFailed": "음성 인식 실패",
+    "couldNotTranscribeAudio": "음성 인식 불가",
+    "voiceUnavailableLater": "음성 기능 사용 불가 - 나중에 다시 시도해주세요.",
+    "voiceUnavailable": "음성 기능 사용 불가 - 다시 시도해주세요.",
+    "audioPlaybackFailed": "오디오 재생 실패",
+    "recording": "녹음 중",
+    "cancel": "취소",
+    "done": "완료",
+    "transcribing": "음성 인식 중...",
+    "recordingHint": "완료 탭 시 음성 인식, 취소 탭 시 녹음 버리기"
+  },
+  "history": {
+    "title": "대화",
+    "noConversations": "아직 대화가 없습니다",
+    "noConversationsHint": "새 대화를 시작하여 영농 조언을 받아보세요",
+    "newChat": "새 대화",
+    "newConversation": "새 대화",
+    "deleteTitle": "대화 삭제",
+    "deleteMessage": "\"{title}\"을(를) 삭제하시겠습니까? 되돌릴 수 없습니다.",
+    "untitled": "제목 없음",
+    "deleted": "대화 삭제됨",
+    "deleteFailed": "삭제 실패",
+    "couldNotDelete": "대화를 삭제할 수 없습니다",
+    "notConnectedTitle": "연결 안 됨",
+    "notConnectedHint": "대화 기록은 인터넷 연결이 필요합니다",
+    "yesterday": "어제"
+  },
+  "settings": {
+    "title": "설정",
+    "sectionConversations": "대화",
+    "sectionAiServices": "AI 서비스",
+    "sectionLocation": "위치",
+    "sectionLanguage": "언어",
+    "sectionAppearance": "화면",
+    "sectionDanger": "위험 구역",
+    "chatHistory": "대화 기록",
+    "chatHistorySubtitle": "지난 대화 확인 및 이어하기",
+    "aiServices": "활성 서비스",
+    "aiServicesSubtitle": "내 지역에서 이용 가능한 AI 서비스 확인",
+    "locationPermissionDenied": "위치 권한 거부됨",
+    "locationUpdated": "위치 업데이트 완료!",
+    "locationUpdateFailed": "위치 업데이트 실패. 다시 시도하세요.",
+    "locationEnabled": "위치 사용 중",
+    "tapToEnable": "눌러서 활성화",
+    "tapToUpdateLocation": "눌러서 위치 업데이트",
+    "themeLight": "밝게",
+    "themeDark": "어둡게",
+    "themeSystem": "시스템",
+    "language": "언어",
+    "resetOnboarding": "초기 설정 재설정",
+    "resetOnboardingSubtitle": "설정 마법사로 새로 시작",
+    "resetConfirmTitle": "설정 재설정",
+    "resetConfirmMessage": "초기 설정 과정이 다시 시작됩니다. 계속하시겠습니까?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Digital Green Foundation 제공"
+  },
+  "mcp": {
+    "title": "AI 서비스",
+    "loading": "서비스 로딩 중...",
+    "loadingDetails": "로딩 중...",
+    "footer": "위치에 따라 서비스가 제한될 수 있습니다.",
+    "couldNotLoad": "서비스를 불러올 수 없습니다.",
+    "couldNotLoadDetails": "서비스 상세 정보를 불러올 수 없습니다.",
+    "failedToFetch": "서비스를 가져오지 못했습니다.",
+    "serviceCategory": "{name} 카테고리",
+    "service": "{name} 서비스",
+    "servicesAvailable": "현재 위치에서 {total}개 중 {active}개 서비스 이용 가능",
+    "activeCount": "{total}개 중 {active}개 사용 가능",
+    "statusActive": "사용 가능",
+    "statusUnavailable": "해당 지역에서는 이용할 수 없습니다.",
+    "locationNotSet": "위치 설정 안 됨",
+    "sectionAbout": "소개",
+    "sectionFeatures": "기능",
+    "sectionAvailableIn": "이용 가능 지역",
+    "sectionSupportedCrops": "지원 작물",
+    "categories": {
+      "plantHealth": "작물 건강",
+      "soil": "토양 분석",
+      "weather": "날씨 및 기후",
+      "livestock": "가축 영양",
+      "agriculture": "작물 자문"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "AI 기반 작물 질병 탐지 및 진단",
+        "description": "작물 이미지 분석으로 질병, 해충, 영양 부족을 식별합니다. 즉시 진단과 함께 치료법 및 예방 팁을 제공합니다."
+      },
+      "isdaSoil": {
+        "name": "ISDA 토양",
+        "tagline": "아프리카 토양 특성 및 영양 분석",
+        "description": "pH, 질소, 인, 칼륨 등 상세 토양 정보를 얻으세요. 아프리카 전역을 30미터 해상도로 지원합니다."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "전 세계 현재 날씨 및 예보",
+        "description": "온도, 습도, 풍속, 강수량 등 실시간 날씨 데이터를 확인하세요. 최대 15일 예보를 제공합니다."
+      },
+      "gapWeather": {
+        "name": "GAP 날씨",
+        "tagline": "케냐 농업 기상 예보",
+        "description": "케냐 농업을 위한 전문 기상 예보. 증발산량, 일사량, 강수량 예보를 포함하여 농업 결정에 도움이 됩니다."
+      },
+      "edacap": {
+        "name": "EDACaP 기후",
+        "tagline": "에티오피아 계절 기후 예보",
+        "description": "온도 및 강우량 예측을 포함한 계절 기후 전망. 농부들이 파종 및 수확 일정을 계획하는 데 도움을 줍니다."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "전 세계 위치 날씨 데이터",
+        "description": "전 세계 위치에 대한 현재 날씨 정보와 예보를 제공하는 종합 날씨 데이터 서비스입니다."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "기상 정보 및 예보",
+        "description": "고해상도 예보 및 실시간 예측 기능을 갖춘 고급 기상 정보 플랫폼입니다."
+      },
+      "feedFormulation": {
+        "name": "사료 배합",
+        "tagline": "젖소 사료 최적 배합 계산",
+        "description": "젖소의 가장 비용 효율적인 사료 배합을 계산합니다. 우유 생산 목표, 체중 및 이용 가능한 지역 사료를 고려합니다."
+      },
+      "nextgen": {
+        "name": "넥스젠 비료",
+        "tagline": "에티오피아 현장 맞춤형 비료 추천",
+        "description": "정확한 위치 기반 정밀 비료 추천을 받으세요. 유기 비료(퇴비, 지렁이 퇴비)와 무기 비료(요소, NPS) 추천을 모두 포함합니다."
+      },
+      "decisionTree": {
+        "name": "작물 의사 결정 트리",
+        "tagline": "케냐 생육 단계별 추천",
+        "description": "생육 단계 및 현재 날씨 조건에 따른 작물 관리 추천을 받으세요. 해충 방제, 관개 및 수확 시기를 적절하게 결정하는 데 도움을 줍니다."
+      },
+      "gapAgriculture": {
+        "name": "GAP 농업",
+        "tagline": "농업 자문 서비스",
+        "description": "작물 및 가축 관리를 위한 일반 농업 자문 서비스입니다."
+      }
+    },
+    "features": {
+      "diseaseDetection": "질병 탐지",
+      "pestIdentification": "해충 식별",
+      "nutrientAnalysis": "영양 분석",
+      "treatmentAdvice": "치료 조언",
+      "soilPh": "토양 pH",
+      "nitrogen": "질소",
+      "phosphorus": "인",
+      "potassium": "칼륨",
+      "currentWeather": "현재 날씨",
+      "temperature": "기온",
+      "humidity": "습도",
+      "forecast": "예보",
+      "precipitation": "강수량",
+      "evapotranspiration": "증발산량",
+      "solarRadiation": "일사량",
+      "wind": "바람",
+      "seasonalOutlook": "계절 전망",
+      "rainfallProbability": "강수 확률",
+      "temperatureTrend": "기온 추이",
+      "cropForecasts": "작물 예보",
+      "historical": "과거 기록",
+      "astronomy": "천문",
+      "nowcast": "실시간 예보",
+      "forecasts": "예보",
+      "alerts": "알림",
+      "dietOptimization": "사료 최적화",
+      "nutrientBalance": "영양 균형",
+      "localFeeds": "지역 사료",
+      "costCalculation": "비용 계산",
+      "organicFertilizers": "유기 비료",
+      "inorganicFertilizers": "무기 비료",
+      "expectedYield": "예상 수확량",
+      "siteSpecific": "현장 맞춤형",
+      "growthStage": "생육 단계",
+      "recommendations": "추천",
+      "weatherBased": "날씨 기반",
+      "actions": "조치",
+      "cropAdvice": "작물 조언",
+      "bestPractices": "최적 농법",
+      "seasonalTips": "계절별 팁",
+      "localKnowledge": "지역 지식"
+    },
+    "fallback": {
+      "service": "농업 서비스",
+      "description": "서비스 상세 정보를 이용할 수 없습니다."
+    },
+    "regions": {
+      "worldwide": "전 세계",
+      "africa": "아프리카",
+      "eastAfrica": "동아프리카",
+      "ethiopia": "에티오피아",
+      "kenya": "케냐"
+    },
+    "crops": {
+      "all": "모든 작물",
+      "wheat": "밀",
+      "maize": "옥수수",
+      "beans": "콩"
+    }
+  },
+  "system": {
+    "offline": "인터넷 연결 안됨",
+    "errorTitle": "앗! 문제가 생겼어요",
+    "errorFallback": "알 수 없는 오류가 발생했습니다.",
+    "tryAgain": "다시 시도"
+  },
+  "errors": {
+    "syncFailed": "서버 연결 불가. 일부 기능 제한.",
+    "weatherUnavailable": "날씨 서비스 이용 불가. 나중에 다시 시도하세요.",
+    "diagnosisTimeout": "식물 진단 지연. 다시 시도해주세요.",
+    "uploadFailed": "이미지 업로드 실패. 연결 확인 후 다시 시도하세요.",
+    "transcriptionFailed": "음성 인식 실패. 다시 말해주세요.",
+    "serverError": "서버 오류. 나중에 다시 시도하세요.",
+    "requestTimeout": "요청 시간 초과. 연결을 확인하세요.",
+    "locationLookupFailed": "위치 정보 확인 불가."
+  },
+  "a11y": {
+    "startNewChat": "새 채팅 시작",
+    "retryLoadingIntegrations": "연동 불러오기 재시도",
+    "dismissNotification": "알림 닫기",
+    "dismiss": "닫기",
+    "clearSearch": "검색 지우기",
+    "cancelRecording": "녹음 취소",
+    "finishRecording": "녹음 완료",
+    "refreshLocation": "위치 새로 고침",
+    "newChat": "새 채팅",
+    "openSettings": "설정 열기",
+    "scrollToBottom": "맨 아래로 스크롤",
+    "clearVoiceTranscription": "음성 텍스트 지우기",
+    "takePhoto": "사진 찍기",
+    "pickImage": "이미지 선택",
+    "messageInput": "메시지 입력",
+    "sendMessage": "메시지 보내기",
+    "recordVoice": "음성 녹음",
+    "attachMedia": "미디어 첨부",
+    "closeMenu": "메뉴 닫기",
+    "playVoice": "음성 재생",
+    "stopVoicePlayback": "음성 재생 중지",
+    "moreNotifications": "{count}개 알림 더보기",
+    "themeMode": "테마: {mode}",
+    "copyMessage": "메시지 복사",
+    "askQuestion": "질문: {question}",
+    "selectLanguage": "언어 {name}"
+  }
+}

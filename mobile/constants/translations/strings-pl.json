@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Wróć",
+    "retry": "Spróbuj ponownie",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "continue": "Dalej",
+    "dismiss": "Zamknij",
+    "refresh": "Odśwież",
+    "clear": "Wyczyść",
+    "loading": "Ładowanie…",
+    "skipForNow": "Pomiń na razie"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Twój inteligentny pomocnik rolniczy",
+    "getStarted": "Rozpocznij",
+    "features": {
+      "weatherTitle": "Prognoza pogody",
+      "weatherDescription": "Dokładna prognoza pogody dla Twojej farmy.",
+      "diagnosisTitle": "Diagnoza upraw",
+      "diagnosisDescription": "Rozpoznawaj choroby roślin ze zdjęć.",
+      "voiceTitle": "Wsparcie głosowe",
+      "voiceDescription": "Mów naturalnie w Twoim języku."
+    },
+    "locationTitle": "Włącz lokalizację",
+    "locationDescription": "Podaj swoją lokalizację, aby uzyskać dokładną pogodę i porady rolnicze dla Twojego regionu.",
+    "enableLocation": "Włącz lokalizację",
+    "locationDenied": "Odmowa dostępu do lokalizacji",
+    "locationError": "Nie udało się pobrać lokalizacji. Spróbuj ponownie.",
+    "benefits": {
+      "weather": "Lokalne prognozy pogody",
+      "regionAdvice": "Porady uprawowe dla regionu",
+      "soilData": "Dane o glebie dla Twojej okolicy"
+    },
+    "languageTitle": "Wybierz język",
+    "languageSubtitle": "Wybierz preferowany język asystenta",
+    "searchLanguages": "Szukaj języków...",
+    "noLanguagesFound": "Nie znaleziono języków",
+    "suggestedForYou": "Sugerowane dla Ciebie",
+    "currentLanguage": "Obecny"
+  },
+  "chat": {
+    "welcomeMessage": "Witaj! 👋 Jestem Twoim asystentem rolniczym.\n\nMogę pomóc Ci w:\n• Uprawach, warzywach, owocach i kwiatach\n• Hodowli zwierząt, drobiu i ryb\n• Zwalczaniu szkodników i chorób\n• Poradach pogodowych i rynkowych\n\nJak mogę Ci dzisiaj pomóc?",
+    "locationDenied": "Odmowa dostępu do lokalizacji",
+    "locationUpdated": "Lokalizacja zaktualizowana!",
+    "locationUpdateFailed": "Nie udało się zaktualizować lokalizacji",
+    "loadingConversation": "Ładowanie rozmowy...",
+    "thinking": "Myślę...",
+    "messagePlaceholder": "Wiadomość...",
+    "fromVoice": "Z głosu — edytuj w razie potrzeby",
+    "voiceTranscribed": "Głos przepisany! Edytuj w razie potrzeby, następnie wyślij.",
+    "noInternet": "Brak połączenia z internetem. Sprawdź swoje połączenie.",
+    "couldNotLoadConversation": "Nie udało się załadować rozmowy",
+    "startedNewConversation": "Rozpoczęto nową rozmowę",
+    "connectionErrorBot": "Błąd połączenia. Spróbuj ponownie.",
+    "analyzingPlantImage": "Analizuję zdjęcie rośliny...",
+    "imageAnalysisFailedBot": "Analiza zdjęcia nie powiodła się. Spróbuj ponownie.",
+    "sorryCouldNotProcess": "Przepraszam, nie mogłem tego przetworzyć. {details}",
+    "analysisCouldNotComplete": "Analiza nie mogła zostać ukończona. {details}",
+    "plantAnalysisIssues": "Analiza rośliny napotkała problemy: {details}",
+    "tapLocationToSet": "Dotknij, aby ustawić lokalizację",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Ty",
+    "tapToAskNext": "Dotknij, aby zapytać dalej:"
+  },
+  "media": {
+    "photoLibraryPermission": "Dostęp do galerii jest potrzebny, aby wybrać zdjęcia. Włącz w Ustawieniach.",
+    "cameraPermission": "Dostęp do aparatu jest potrzebny, aby robić zdjęcia. Włącz w Ustawieniach.",
+    "pickImageFailed": "Nie udało się wybrać zdjęcia. Spróbuj ponownie.",
+    "cameraFailed": "Nie udało się uzyskać dostępu do aparatu. Spróbuj ponownie.",
+    "camera": "Aparat",
+    "gallery": "Galeria"
+  },
+  "voice": {
+    "microphonePermission": "Wymagany dostęp do mikrofonu",
+    "startRecordingFailed": "Nie udało się rozpocząć nagrywania",
+    "recordingFailed": "Nagrywanie nie powiodło się",
+    "transcriptionFailed": "Transkrypcja nie powiodła się",
+    "couldNotTranscribeAudio": "Nie udało się przepisać nagrania",
+    "voiceUnavailableLater": "Funkcja głosowa niedostępna – spróbuj ponownie później",
+    "voiceUnavailable": "Funkcja głosowa niedostępna – spróbuj ponownie",
+    "audioPlaybackFailed": "Odtwarzanie nagrania nie powiodło się",
+    "recording": "Nagrywanie",
+    "cancel": "Anuluj",
+    "done": "Gotowe",
+    "transcribing": "Przepisywanie...",
+    "recordingHint": "Naciśnij Gotowe, by przepisać, lub Anuluj, by odrzucić."
+  },
+  "history": {
+    "title": "Rozmowy",
+    "noConversations": "Brak rozmów",
+    "noConversationsHint": "Zacznij nowy czat po porady rolnicze",
+    "newChat": "Nowy czat",
+    "newConversation": "Nowa rozmowa",
+    "deleteTitle": "Usuń rozmowę",
+    "deleteMessage": "Usunąć „{title}”? Tego nie można cofnąć.",
+    "untitled": "Bez tytułu",
+    "deleted": "Rozmowa usunięta",
+    "deleteFailed": "Usunięcie nie powiodło się",
+    "couldNotDelete": "Nie można usunąć rozmowy",
+    "notConnectedTitle": "Brak połączenia",
+    "notConnectedHint": "Historia rozmów wymaga połączenia z internetem",
+    "yesterday": "Wczoraj"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "sectionConversations": "ROZMOWY",
+    "sectionAiServices": "USŁUGI AI",
+    "sectionLocation": "LOKALIZACJA",
+    "sectionLanguage": "JĘZYK",
+    "sectionAppearance": "WYGLĄD",
+    "sectionDanger": "STREFA NIEBEZPIECZEŃSTWA",
+    "chatHistory": "Historia czatu",
+    "chatHistorySubtitle": "Zobacz i kontynuuj poprzednie rozmowy",
+    "aiServices": "Aktywne usługi",
+    "aiServicesSubtitle": "Zobacz usługi AI aktywne dla Twojego regionu",
+    "locationPermissionDenied": "Brak zgody na lokalizację",
+    "locationUpdated": "Lokalizacja zaktualizowana pomyślnie!",
+    "locationUpdateFailed": "Nie udało się zaktualizować lokalizacji. Spróbuj ponownie.",
+    "locationEnabled": "Lokalizacja włączona",
+    "tapToEnable": "Dotknij, aby włączyć",
+    "tapToUpdateLocation": "Dotknij, aby zaktualizować lokalizację",
+    "themeLight": "Jasny",
+    "themeDark": "Ciemny",
+    "themeSystem": "System",
+    "language": "Język",
+    "resetOnboarding": "Zresetuj wprowadzenie",
+    "resetOnboardingSubtitle": "Rozpocznij od nowa z kreatorem konfiguracji",
+    "resetConfirmTitle": "Zresetuj konfigurację",
+    "resetConfirmMessage": "Spowoduje to ponowne uruchomienie procesu wprowadzenia. Kontynuować?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Wspierane przez Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "Usługi AI",
+    "loading": "Ładowanie usług...",
+    "loadingDetails": "Ładowanie...",
+    "footer": "Dostępność usług zależy od Twojej lokalizacji",
+    "couldNotLoad": "Nie udało się załadować usług",
+    "couldNotLoadDetails": "Nie udało się załadować szczegółów usługi",
+    "failedToFetch": "Nie udało się pobrać usług",
+    "serviceCategory": "Kategoria {name}",
+    "service": "Usługa {name}",
+    "servicesAvailable": "{active} z {total} usług dostępnych dla Twojej lokalizacji",
+    "activeCount": "{active}/{total} aktywnych",
+    "statusActive": "Aktywne",
+    "statusUnavailable": "Niedostępne w Twoim regionie",
+    "locationNotSet": "Brak lokalizacji",
+    "sectionAbout": "O usłudze",
+    "sectionFeatures": "Funkcje",
+    "sectionAvailableIn": "Dostępne w",
+    "sectionSupportedCrops": "Obsługiwane uprawy",
+    "categories": {
+      "plantHealth": "Zdrowie roślin",
+      "soil": "Analiza gleby",
+      "weather": "Pogoda i klimat",
+      "livestock": "Żywienie inwentarza",
+      "agriculture": "Doradztwo uprawowe"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Wykrywanie i diagnozowanie chorób roślin za pomocą AI",
+        "description": "Analizuj zdjęcia roślin, aby identyfikować choroby, szkodniki i niedobory składników odżywczych. Uzyskaj natychmiastową diagnozę z zaleceniami leczenia i wskazówkami zapobiegawczymi."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "Właściwości gleby i analiza składników odżywczych dla Afryki",
+        "description": "Uzyskaj szczegółowe informacje o glebie, w tym pH, azot, fosfor, potas i inne składniki odżywcze. Zasięg obejmuje całą Afrykę z rozdzielczością 30 metrów."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Aktualne warunki i prognozy pogody na świecie",
+        "description": "Dostęp do danych pogodowych w czasie rzeczywistym, w tym temperatury, wilgotności, prędkości wiatru i opadów. Prognozy dostępne do 15 dni."
+      },
+      "gapWeather": {
+        "name": "GAP Pogoda",
+        "tagline": "Rolnicze prognozy pogody dla Kenii",
+        "description": "Specjalistyczne prognozy pogody dla rolnictwa w Kenii. Zawiera prognozy ewapotranspiracji, promieniowania słonecznego i opadów, dostosowane do decyzji rolniczych."
+      },
+      "edacap": {
+        "name": "EDACaP Klimat",
+        "tagline": "Sezonowe prognozy klimatyczne dla Etiopii",
+        "description": "Sezonowa prognoza klimatyczna obejmująca przewidywania temperatury i opadów. Pomaga rolnikom planować harmonogramy sadzenia i zbiorów."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Dane pogodowe dla lokalizacji na całym świecie",
+        "description": "Kompleksowa usługa danych pogodowych, dostarczająca aktualne warunki i prognozy dla lokalizacji na całym świecie."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Inteligencja pogodowa i prognozowanie",
+        "description": "Zaawansowana platforma inteligencji pogodowej z prognozami wysokiej rozdzielczości i prognozami w czasie rzeczywistym."
+      },
+      "feedFormulation": {
+        "name": "Formulacja pasz",
+        "tagline": "Obliczenia optymalnej diety dla bydła mlecznego",
+        "description": "Oblicz najbardziej ekonomiczną mieszankę paszową dla swojego bydła mlecznego. Uwzględnia cele produkcji mleka, masę ciała i dostępne lokalne pasze."
+      },
+      "nextgen": {
+        "name": "NextGen Nawozy",
+        "tagline": "Zalecenia dotyczące nawożenia dla konkretnych miejsc w Etiopii",
+        "description": "Uzyskaj precyzyjne zalecenia dotyczące nawożenia na podstawie Twojej dokładnej lokalizacji. Zawiera zalecenia zarówno dla nawozów organicznych (kompost, wermikompost), jak i nieorganicznych (Mocznik, NPS)."
+      },
+      "decisionTree": {
+        "name": "Drzewo Decyzji Upraw",
+        "tagline": "Zalecenia dla etapów wzrostu roślin dla Kenii",
+        "description": "Uzyskaj zalecenia dotyczące zarządzania uprawami na podstawie etapu wzrostu i aktualnych warunków pogodowych. Pomaga w podejmowaniu terminowych decyzji dotyczących zwalczania szkodników, nawadniania i zbiorów."
+      },
+      "gapAgriculture": {
+        "name": "GAP Rolnictwo",
+        "tagline": "Usługi doradztwa rolniczego",
+        "description": "Ogólne usługi doradztwa rolniczego w zakresie zarządzania uprawami i inwentarzem żywym."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Wykrywanie chorób",
+      "pestIdentification": "Identyfikacja szkodników",
+      "nutrientAnalysis": "Analiza składników odżywczych",
+      "treatmentAdvice": "Porady dotyczące leczenia",
+      "soilPh": "pH gleby",
+      "nitrogen": "Azot",
+      "phosphorus": "Fosfor",
+      "potassium": "Potas",
+      "currentWeather": "Aktualna pogoda",
+      "temperature": "Temperatura",
+      "humidity": "Wilgotność",
+      "forecast": "Prognoza",
+      "precipitation": "Opady",
+      "evapotranspiration": "Ewapotranspiracja",
+      "solarRadiation": "Promieniowanie słoneczne",
+      "wind": "Wiatr",
+      "seasonalOutlook": "Prognoza sezonowa",
+      "rainfallProbability": "Prawdopodobieństwo opadów",
+      "temperatureTrend": "Trend temperaturowy",
+      "cropForecasts": "Prognozy upraw",
+      "historical": "Historyczne",
+      "astronomy": "Astronomia",
+      "nowcast": "Prognoza krótkoterminowa",
+      "forecasts": "Prognozy",
+      "alerts": "Alerty",
+      "dietOptimization": "Optymalizacja diety",
+      "nutrientBalance": "Bilans składników odżywczych",
+      "localFeeds": "Lokalne pasze",
+      "costCalculation": "Obliczanie kosztów",
+      "organicFertilizers": "Nawozy organiczne",
+      "inorganicFertilizers": "Nawozy nieorganiczne",
+      "expectedYield": "Oczekiwany plon",
+      "siteSpecific": "Specyficzne dla miejsca",
+      "growthStage": "Etap wzrostu",
+      "recommendations": "Zalecenia",
+      "weatherBased": "Na podstawie pogody",
+      "actions": "Działania",
+      "cropAdvice": "Porady uprawowe",
+      "bestPractices": "Najlepsze praktyki",
+      "seasonalTips": "Porady sezonowe",
+      "localKnowledge": "Lokalna wiedza"
+    },
+    "fallback": {
+      "service": "Usługa rolnicza",
+      "description": "Szczegóły usługi niedostępne."
+    },
+    "regions": {
+      "worldwide": "Cały świat",
+      "africa": "Afryka",
+      "eastAfrica": "Afryka Wschodnia",
+      "ethiopia": "Etiopia",
+      "kenya": "Kenia"
+    },
+    "crops": {
+      "all": "Wszystkie uprawy",
+      "wheat": "Pszenica",
+      "maize": "Kukurydza",
+      "beans": "Fasola"
+    }
+  },
+  "system": {
+    "offline": "Brak internetu",
+    "errorTitle": "Coś poszło nie tak",
+    "errorFallback": "Wystąpił nieoczekiwany błąd",
+    "tryAgain": "Spróbuj ponownie"
+  },
+  "errors": {
+    "syncFailed": "Nie udało się połączyć z serwerem. Niektóre funkcje mogą być ograniczone.",
+    "weatherUnavailable": "Usługa pogody jest chwilowo niedostępna. Spróbuj ponownie później.",
+    "diagnosisTimeout": "Diagnoza roślin trwa zbyt długo. Spróbuj ponownie.",
+    "uploadFailed": "Nie udało się przesłać zdjęcia. Sprawdź połączenie i spróbuj ponownie.",
+    "transcriptionFailed": "Rozpoznawanie mowy nie powiodło się. Spróbuj mówić ponownie.",
+    "serverError": "Błąd serwera. Spróbuj ponownie później.",
+    "requestTimeout": "Przekroczono czas żądania. Sprawdź połączenie.",
+    "locationLookupFailed": "Nie udało się określić Twojej lokalizacji."
+  },
+  "a11y": {
+    "startNewChat": "Rozpocznij nowy czat",
+    "retryLoadingIntegrations": "Ponów ładowanie integracji",
+    "dismissNotification": "Odrzuć powiadomienie",
+    "dismiss": "Odrzuć",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "cancelRecording": "Anuluj nagrywanie",
+    "finishRecording": "Zakończ nagrywanie",
+    "refreshLocation": "Odśwież lokalizację",
+    "newChat": "Nowy czat",
+    "openSettings": "Otwórz ustawienia",
+    "scrollToBottom": "Przewiń na dół",
+    "clearVoiceTranscription": "Wyczyść transkrypcję głosową",
+    "takePhoto": "Zrób zdjęcie",
+    "pickImage": "Wybierz zdjęcie",
+    "messageInput": "Pole wiadomości",
+    "sendMessage": "Wyślij wiadomość",
+    "recordVoice": "Nagraj głos",
+    "attachMedia": "Dołącz multimedia",
+    "closeMenu": "Zamknij menu",
+    "playVoice": "Odtwórz głos",
+    "stopVoicePlayback": "Zatrzymaj odtwarzanie głosu",
+    "moreNotifications": "{count} więcej powiadomień",
+    "themeMode": "Motyw: {mode}",
+    "copyMessage": "Kopiuj wiadomość",
+    "askQuestion": "Zapytaj: {question}",
+    "selectLanguage": "Język {name}"
+  }
+}

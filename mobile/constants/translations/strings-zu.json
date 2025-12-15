@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Emuva",
+    "retry": "Zama Futhi",
+    "cancel": "Yeka",
+    "delete": "Susa",
+    "continue": "Qhubeka",
+    "dismiss": "Vala",
+    "refresh": "Vuselela",
+    "clear": "Sula",
+    "loading": "Iyalayisha…",
+    "skipForNow": "Yeqa Okwamanje"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Umsizi wakho wezolimo oholwa yi-AI",
+    "getStarted": "Qalisa",
+    "features": {
+      "weatherTitle": "Isimo Sezulu",
+      "weatherDescription": "Thola izibikezelo ezinembile zesimo sezulu epulazini lakho",
+      "diagnosisTitle": "Ukuhlola Izitshalo",
+      "diagnosisDescription": "Hlonza izifo zezitshalo ngezithombe",
+      "voiceTitle": "Ukusekelwa Ngezwi",
+      "voiceDescription": "Khuluma ngokukhululeka ngolimi lwakho"
+    },
+    "locationTitle": "Vumela Indawo",
+    "locationDescription": "Yabelana ngendawo yakho ukuze uthole izibikezelo zesimo sezulu ezinembile nezeluleko zokulima zasendaweni yakho.",
+    "enableLocation": "Vumela Indawo",
+    "locationDenied": "Imvume yendawo yenqatshiwe",
+    "locationError": "Ayikwazanga ukuthola indawo. Sicela uzame futhi.",
+    "benefits": {
+      "weather": "Izibikezelo zesimo sezulu zasendaweni",
+      "regionAdvice": "Izeluleko zezolimo zasendaweni",
+      "soilData": "Imininingwane yenhlabathi yendawo yakho"
+    },
+    "languageTitle": "Khetha Ulimi",
+    "languageSubtitle": "Khetha ulimi oluthandayo lomsizi",
+    "searchLanguages": "Sesha izilimi...",
+    "noLanguagesFound": "Azikho izilimi ezitholakele",
+    "suggestedForYou": "Eziphakanyiselwe wena",
+    "currentLanguage": "Okhona"
+  },
+  "chat": {
+    "welcomeMessage": "Sawubona! 👋 Ngingumsizi wakho wezolimo.\n\nNgingakusiza ngalezi:\n• Izitshalo, imifino, izithelo nezimbali\n• Imfuyo, izinkukhu nokufuya izinhlanzi\n• Ukuphatha izinambuzane nezifo\n• Iseluleko ngesimo sezulu nemakethe\n\nNgingakusiza kanjani namuhla?",
+    "locationDenied": "Imvume yendawo yenqatshiwe",
+    "locationUpdated": "Indawo ibuyekeziwe!",
+    "locationUpdateFailed": "Ayikwazanga ukubuyekeza indawo",
+    "loadingConversation": "Ilayisha ingxoxo...",
+    "thinking": "Ngicabanga...",
+    "messagePlaceholder": "Umlayezo...",
+    "fromVoice": "Okuvela ezwini — hlela uma kudingeka",
+    "voiceTranscribed": "Izwi lishintshiwe laba umbhalo! Hlela uma kudingeka, bese uthumela.",
+    "noInternet": "Ayikho i-inthanethi. Sicela uhlole inethiwekhi yakho.",
+    "couldNotLoadConversation": "Ayikwazanga ukulayisha ingxoxo",
+    "startedNewConversation": "Ingxoxo entsha iqalile",
+    "connectionErrorBot": "Iphutha lokuxhuma. Sicela uzame futhi.",
+    "analyzingPlantImage": "Ihlaziya isithombe sesitshalo...",
+    "imageAnalysisFailedBot": "Ukuhlaziya isithombe kuhlulekile. Sicela uzame futhi.",
+    "sorryCouldNotProcess": "Uxolo, angikwazanga ukucubungula lokho. {details}",
+    "analysisCouldNotComplete": "Ukuhlaziya akukwazanga ukuqedwa. {details}",
+    "plantAnalysisIssues": "Ukuhlaziya isitshalo kube nezinkinga: {details}",
+    "tapLocationToSet": "Thepha indawo ukuze usethe",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Wena",
+    "tapToAskNext": "Thepha ukuze ubuze okulandelayo:"
+  },
+  "media": {
+    "photoLibraryPermission": "Ukufinyelela ezithombeni kudingeka ukuze ukhethe izithombe. Yivule Kuzilungiselelo.",
+    "cameraPermission": "Ukufinyelela kwikhamera kudingeka ukuze uthathe izithombe. Yivule Kuzilungiselelo.",
+    "pickImageFailed": "Kuhlulekile ukukhetha isithombe. Sicela uzame futhi.",
+    "cameraFailed": "Kuhlulekile ukufinyelela ikhamera. Sicela uzame futhi.",
+    "camera": "Ikhamera",
+    "gallery": "Igalari"
+  },
+  "voice": {
+    "microphonePermission": "Imvume yemakrofoni iyadingeka",
+    "startRecordingFailed": "Yehlulekile ukuqala ukurekhoda",
+    "recordingFailed": "Ukurekhoda kwehlulekile",
+    "transcriptionFailed": "Ukubhalwa kwehlulekile",
+    "couldNotTranscribeAudio": "Ayikwazanga ukubhala umsindo",
+    "voiceUnavailableLater": "Izwi alitholakali – zama futhi ngokuhamba kwesikhathi",
+    "voiceUnavailable": "Izwi alitholakali – zama futhi",
+    "audioPlaybackFailed": "Ukudlala umsindo kwehlulekile",
+    "recording": "Ukurekhoda",
+    "cancel": "Khansela",
+    "done": "Qeda",
+    "transcribing": "Iyabhala...",
+    "recordingHint": "Thepha 'Qeda' ukuze kubhalwe, noma 'Khansela' ukuze ulahle"
+  },
+  "history": {
+    "title": "Izingxoxo",
+    "noConversations": "Azikho izingxoxo okwamanje",
+    "noConversationsHint": "Qala ingxoxo entsha ukuze uthole iseluleko sokulima.",
+    "newChat": "Ingxoxo Entsha",
+    "newConversation": "Ingxoxo Entsha",
+    "deleteTitle": "Susa Ingxoxo",
+    "deleteMessage": "Susa \"{title}\"? Lokhu akunakuhlehliswa.",
+    "untitled": "Okungenasihloko",
+    "deleted": "Ingxoxo isusiwe",
+    "deleteFailed": "Ukususwa kwehlulekile",
+    "couldNotDelete": "Ayikwazanga ukususwa ingxoxo",
+    "notConnectedTitle": "Akuxhunyiwe",
+    "notConnectedHint": "Umlando wengxoxo udinga uxhumano lwe-inthanethi.",
+    "yesterday": "Izolo"
+  },
+  "settings": {
+    "title": "Izilungiselelo",
+    "sectionConversations": "IZINGXOXO",
+    "sectionAiServices": "IZINSIZAKALO ZE-AI",
+    "sectionLocation": "INDAWO",
+    "sectionLanguage": "ULIMI",
+    "sectionAppearance": "UKUBUKEKA",
+    "sectionDanger": "INDAWO EYNGOZI",
+    "chatHistory": "Umlando Wengxoxo",
+    "chatHistorySubtitle": "Buka futhi uqhubeke nezingxoxo ezedlule",
+    "aiServices": "Izinsizakalo Ezisebenzayo",
+    "aiServicesSubtitle": "Buka izinsizakalo ze-AI ezisebenzayo esifundeni sakho",
+    "locationPermissionDenied": "Imvume yendawo yenqatshiwe",
+    "locationUpdated": "Indawo ibuyekezwe ngempumelelo!",
+    "locationUpdateFailed": "Ayikwazanga ukubuyekeza indawo. Sicela uzame futhi.",
+    "locationEnabled": "Indawo inikwe amandla",
+    "tapToEnable": "Thinta ukuze unike amandla",
+    "tapToUpdateLocation": "Thinta ukuze ubuyekeze indawo",
+    "themeLight": "Okukhanyayo",
+    "themeDark": "Okumnyama",
+    "themeSystem": "Uhlelo",
+    "language": "Ulimi",
+    "resetOnboarding": "Setha kabusha Isingeniso",
+    "resetOnboardingSubtitle": "Qala kabusha ngomhlahlandlela wokusetha",
+    "resetConfirmTitle": "Setha kabusha Ukusetha",
+    "resetConfirmMessage": "Lokhu kuzoqala kabusha inqubo yesingeniso. Qhubeka?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Inikwe amandla yiDigital Green Foundation"
+  },
+  "mcp": {
+    "title": "Izinsizakalo ze-AI",
+    "loading": "Kulayishwa izinsizakalo...",
+    "loadingDetails": "Kulayishwa...",
+    "footer": "Ukutholakala kwensizakalo kuncike endaweni yakho",
+    "couldNotLoad": "Akukwazanga ukulayishwa izinsizakalo",
+    "couldNotLoadDetails": "Akukwazanga ukulayishwa imininingwane yensizakalo",
+    "failedToFetch": "Kwehlulekile ukuthola izinsizakalo",
+    "serviceCategory": "Isigaba {name}",
+    "service": "Inzizakalo {name}",
+    "servicesAvailable": "Izinsizakalo eziyi-{active} kweziyi-{total} zitholakala endaweni yakho",
+    "activeCount": "{active}/{total} ziyasebenza",
+    "statusActive": "Iyasebenza",
+    "statusUnavailable": "Ayitholakali esifundeni sakho",
+    "locationNotSet": "Indawo ayikabekwa",
+    "sectionAbout": "Mayelana",
+    "sectionFeatures": "Izici",
+    "sectionAvailableIn": "Itholakala Kuphi",
+    "sectionSupportedCrops": "Izitshalo Ezisizwayo",
+    "categories": {
+      "plantHealth": "Impilo Yezitshalo",
+      "soil": "Ukuhlaziya Umhlabathi",
+      "weather": "Isimo Sezulu Nezikhathi Zonyaka",
+      "livestock": "Ukudla Kwezilwane",
+      "agriculture": "Ukweluleka Ngokulima"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Ukuthola nokuhlola izifo zezitshalo nge-AI",
+        "description": "Hlaziya izithombe zezitshalo ukuze uthole izifo, izinambuzane, kanye nokuntuleka kwezakhamzimba. Thola ukuhlolwa okusheshayo nezincomo zokwelapha namasu okuvikela."
+      },
+      "isdaSoil": {
+        "name": "ISDA Umhlabathi",
+        "tagline": "Izakhiwo zomhlabathi nokuhlaziya izakhamzimba zase-Afrika",
+        "description": "Thola ulwazi oluningiliziwe ngomhlabathi oluhlanganisa i-pH, i-nitrogen, i-phosphorus, i-potassium, nezinye izakhamzimba. Ihlanganisa yonke i-Afrika ngokucaca kwamamitha angama-30."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Izimo zamanje nezibikezelo zezulu emhlabeni jikelele",
+        "description": "Finyelela idatha yesimo sezulu ngesikhathi sangempela okuhlanganisa izinga lokushisa, umswakama, isivinini somoya, nemvula. Izibikezelo zitholakala kuze kube yizinsuku eziyi-15."
+      },
+      "gapWeather": {
+        "name": "GAP Isimo Sezulu",
+        "tagline": "Izibikezelo zezulu ezibhekisa kwezolimo eKenya",
+        "description": "Izibikezelo zezulu ezikhethekile zezolimo eKenya. Kuhlanganisa ukuhwamuka kwamanzi, imisebe yelanga, nezibikezelo zemvula ezenzelwe izinqumo zokulima."
+      },
+      "edacap": {
+        "name": "EDACaP Isimo Sezulu",
+        "tagline": "Izibikezelo zezulu zezikhathi zonyaka zase-Ethiopia",
+        "description": "Izibikezelo zezulu zezikhathi zonyaka ezihlanganisa izinga lokushisa nezibikezelo zemvula. Kusiza abalimi ukuhlela izikhathi zokutshala nokuvuna."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Idatha yesimo sezulu yezindawo zomhlaba wonke",
+        "description": "Inzizakalo yedatha yesimo sezulu ebanzi enikeza izimo zamanje nezibikezelo zezindawo zomhlaba wonke."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Ulwazi lwesimo sezulu nezibikezelo",
+        "description": "Inkundla ethuthukile yolwazi lwesimo sezulu enezibikezelo ezinemba kakhulu kanye namakhono okubikezela okusheshayo."
+      },
+      "feedFormulation": {
+        "name": "Ukuhlanganisa Ukudla",
+        "tagline": "Izibalo zokudla okuhle kakhulu kwezinkomo zobisi",
+        "description": "Bala ukudla okuxutshiwe okonga kakhulu kwezinkomo zakho zobisi. Kubheka imigomo yokukhiqiza ubisi, isisindo somzimba, nokudla okutholakala endaweni."
+      },
+      "nextgen": {
+        "name": "Umfundisi weSizukulwane Esisha",
+        "tagline": "Izincomo zomfundisi eziqondene nendawo e-Ethiopia",
+        "description": "Thola izincomo zomfundisi ezinembile ngokusekelwe endaweni yakho eqondile. Kuhlanganisa izincomo zomfundisi wemvelo (umquba, umquba wezimpethu) kanye nowokwenziwa (i-Urea, i-NPS)."
+      },
+      "decisionTree": {
+        "name": "Umgwamanda Wezinqumo Zesitshalo",
+        "tagline": "Izincomo zezigaba zokukhula kwezitshalo eKenya",
+        "description": "Thola izincomo zokuphathwa kwezitshalo ngokusekelwe esigabeni sokukhula nasezimeni zezulu zamanje. Kukusiza ukwenza izinqumo ezifanele zokulawula izinambuzane, ukuchelela, nokuvuna."
+      },
+      "gapAgriculture": {
+        "name": "GAP Ezolimo",
+        "tagline": "Izinsizakalo zokweluleka ngezolimo",
+        "description": "Izinsizakalo zokweluleka ngezolimo ezijwayelekile zokuphathwa kwezitshalo nezifuyo."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Ukuthola Izifo",
+      "pestIdentification": "Ukuhlonza Izinambuzane",
+      "nutrientAnalysis": "Ukuhlaziya Izakhamzimba",
+      "treatmentAdvice": "Iseluleko Sokwelapha",
+      "soilPh": "I-pH Yomhlabathi",
+      "nitrogen": "I-Nitrogen",
+      "phosphorus": "I-Phosphorus",
+      "potassium": "I-Potassium",
+      "currentWeather": "Isimo Sezulu Samanje",
+      "temperature": "Izinga Lokushisa",
+      "humidity": "Umswakama",
+      "forecast": "Isibikezelo",
+      "precipitation": "Imvula",
+      "evapotranspiration": "Ukuhwamuka Kwamanzi",
+      "solarRadiation": "Imisebe Yelanga",
+      "wind": "Umoya",
+      "seasonalOutlook": "Isibikezelo Sezikhathi Zonyaka",
+      "rainfallProbability": "Amathuba Emvula",
+      "temperatureTrend": "Umkhuba Wezinga Lokushisa",
+      "cropForecasts": "Izibikezelo Zezitshalo",
+      "historical": "Umlando",
+      "astronomy": "Isayensi Yezinkanyezi",
+      "nowcast": "Isibikezelo Samanje",
+      "forecasts": "Izibikezelo",
+      "alerts": "Izaziso",
+      "dietOptimization": "Ukulungisa Ukudla Okungcono",
+      "nutrientBalance": "Ukulingana Kwezakhamzimba",
+      "localFeeds": "Ukudla Kwasendaweni",
+      "costCalculation": "Ukubalwa Kwezindleko",
+      "organicFertilizers": "Omanyolo Bemvelo",
+      "inorganicFertilizers": "Omanyolo Okwenziwa",
+      "expectedYield": "Isivuno Esilindelekile",
+      "siteSpecific": "Oqondene Nendawo",
+      "growthStage": "Isigaba Sokukhula",
+      "recommendations": "Izincomo",
+      "weatherBased": "NgokweSimo Sezulu",
+      "actions": "Izenzo",
+      "cropAdvice": "Iseluleko Sezitshalo",
+      "bestPractices": "Izindlela Ezingcono Kakhulu",
+      "seasonalTips": "Amasu Ezikhathi Zonyaka",
+      "localKnowledge": "Ulwazi Lwasendaweni"
+    },
+    "fallback": {
+      "service": "Inzizakalo yezolimo",
+      "description": "Imininingwane yensizakalo ayitholakali."
+    },
+    "regions": {
+      "worldwide": "Emhlabeni Wonke",
+      "africa": "I-Afrika",
+      "eastAfrica": "I-Afrika Esempumalanga",
+      "ethiopia": "I-Ethiopia",
+      "kenya": "IKenya"
+    },
+    "crops": {
+      "all": "Zonke izitshalo",
+      "wheat": "Ukolweni",
+      "maize": "Umbila",
+      "beans": "Ubhonisi"
+    }
+  },
+  "system": {
+    "offline": "Ayikho i-inthanethi",
+    "errorTitle": "Owu! Kukhona okungahambanga kahle",
+    "errorFallback": "Kube nephutha elingalindelekile",
+    "tryAgain": "Zama futhi"
+  },
+  "errors": {
+    "syncFailed": "Ayikwazanga ukuxhuma kuseva. Ezinye izici zingase zinganelwe.",
+    "weatherUnavailable": "Isevisi yesimo sezulu ayitholakali okwesikhashana. Zama futhi kamuva.",
+    "diagnosisTimeout": "Ukuhlonza isitshalo kuthatha isikhathi eside. Sicela uzame futhi.",
+    "uploadFailed": "Ayikwazanga ukulayisha isithombe. Hlola uxhumano lwakho bese uzama futhi.",
+    "transcriptionFailed": "Ukubhalwa kwezwi kwehlulekile. Zama ukukhuluma futhi.",
+    "serverError": "Iphutha leseva. Sicela uzame futhi kamuva.",
+    "requestTimeout": "Isicelo siphelelwe isikhathi. Hlola uxhumano lwakho.",
+    "locationLookupFailed": "Ayikwazanga ukuthola imininingwane yendawo yakho."
+  },
+  "a11y": {
+    "startNewChat": "Qala ingxoxo",
+    "retryLoadingIntegrations": "Zama futhi ukulayisha",
+    "dismissNotification": "Cisha isaziso",
+    "dismiss": "Cisha",
+    "clearSearch": "Sula ukusesha",
+    "cancelRecording": "Yeka ukuqopha",
+    "finishRecording": "Qeda ukuqopha",
+    "refreshLocation": "Buyekeza indawo",
+    "newChat": "Ingxoxo entsha",
+    "openSettings": "Vula izilungiselelo",
+    "scrollToBottom": "Skrolela phansi",
+    "clearVoiceTranscription": "Sula umbhalo wezwi",
+    "takePhoto": "Thatha isithombe",
+    "pickImage": "Khetha isithombe",
+    "messageInput": "Umlayezo",
+    "sendMessage": "Thumela umlayezo",
+    "recordVoice": "Qopha izwi",
+    "attachMedia": "Namathisela imidiya",
+    "closeMenu": "Vala imenyu",
+    "playVoice": "Dlala izwi",
+    "stopVoicePlayback": "Misa ukudlala izwi",
+    "moreNotifications": "Izaziso ezengeziwe eziyi-{count}",
+    "themeMode": "Itimu: {mode}",
+    "copyMessage": "Kopisha umlayezo",
+    "askQuestion": "Buza: {question}",
+    "selectLanguage": "Ulimi {name}"
+  }
+}

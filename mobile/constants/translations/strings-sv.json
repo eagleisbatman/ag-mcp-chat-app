@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Tillbaka",
+    "retry": "Försök igen",
+    "cancel": "Avbryt",
+    "delete": "Radera",
+    "continue": "Fortsätt",
+    "dismiss": "Stäng",
+    "refresh": "Uppdatera",
+    "clear": "Rensa",
+    "loading": "Laddar…",
+    "skipForNow": "Hoppa över nu"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Din AI-drivna lantbrukskompis",
+    "getStarted": "Kom igång",
+    "features": {
+      "weatherTitle": "Väderprognoser",
+      "weatherDescription": "Få noggranna väderprognoser för din gård",
+      "diagnosisTitle": "Växtdiagnos",
+      "diagnosisDescription": "Identifiera växtsjukdomar med foton",
+      "voiceTitle": "Röststöd",
+      "voiceDescription": "Tala naturligt på ditt språk"
+    },
+    "locationTitle": "Aktivera plats",
+    "locationDescription": "Dela din plats för att få noggranna väderprognoser och regionspecifika lantbruksråd.",
+    "enableLocation": "Aktivera plats",
+    "locationDenied": "Platsåtkomst nekad",
+    "locationError": "Kunde inte hämta plats. Försök igen.",
+    "benefits": {
+      "weather": "Lokala väderprognoser",
+      "regionAdvice": "Regionspecifika odlingsråd",
+      "soilData": "Jorddata för ditt område"
+    },
+    "languageTitle": "Välj språk",
+    "languageSubtitle": "Välj ditt föredragna språk för assistenten",
+    "searchLanguages": "Sök språk...",
+    "noLanguagesFound": "Inga språk hittades",
+    "suggestedForYou": "Föreslagna för dig",
+    "currentLanguage": "Aktuellt"
+  },
+  "chat": {
+    "welcomeMessage": "Hej! 👋 Jag är din lantbruksassistent.\n\nJag kan hjälpa dig med:\n• Grödor, grönsaker, frukt och blommor\n• Boskap, fjäderfä och fiskodling\n• Skadedjurs- och sjukdomsbekämpning\n• Väder- och marknadsråd\n\nHur kan jag hjälpa dig idag?",
+    "locationDenied": "Platstillstånd nekades",
+    "locationUpdated": "Plats uppdaterad!",
+    "locationUpdateFailed": "Kunde inte uppdatera plats",
+    "loadingConversation": "Laddar konversation...",
+    "thinking": "Tänker...",
+    "messagePlaceholder": "Meddelande...",
+    "fromVoice": "Från röst — redigera vid behov",
+    "voiceTranscribed": "Röst transkriberad! Redigera vid behov, skicka sedan.",
+    "noInternet": "Ingen internetanslutning. Kontrollera nätverket.",
+    "couldNotLoadConversation": "Kunde inte ladda konversation",
+    "startedNewConversation": "Startade ny konversation",
+    "connectionErrorBot": "Anslutningsfel. Försök igen.",
+    "analyzingPlantImage": "Analyserar växtbild...",
+    "imageAnalysisFailedBot": "Bildanalys misslyckades. Försök igen.",
+    "sorryCouldNotProcess": "Ursäkta, jag kunde inte bearbeta det. {details}",
+    "analysisCouldNotComplete": "Analysen kunde inte slutföras. {details}",
+    "plantAnalysisIssues": "Växtanalysen hade problem: {details}",
+    "tapLocationToSet": "Tryck för att ställa in plats",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Du",
+    "tapToAskNext": "Tryck för att fråga nästa:"
+  },
+  "media": {
+    "photoLibraryPermission": "Behöver åtkomst till galleriet för att välja bilder. Aktivera i Inställningar.",
+    "cameraPermission": "Behöver åtkomst till kameran för att ta bilder. Aktivera i Inställningar.",
+    "pickImageFailed": "Kunde inte välja bild. Försök igen.",
+    "cameraFailed": "Kunde inte komma åt kameran. Försök igen.",
+    "camera": "Kamera",
+    "gallery": "Galleri"
+  },
+  "voice": {
+    "microphonePermission": "Mikrofonbehörighet krävs",
+    "startRecordingFailed": "Kunde inte starta inspelning",
+    "recordingFailed": "Inspelning misslyckades",
+    "transcriptionFailed": "Transkribering misslyckades",
+    "couldNotTranscribeAudio": "Kunde inte transkribera ljud",
+    "voiceUnavailableLater": "Röstfunktion ej tillgänglig - försök igen senare",
+    "voiceUnavailable": "Röstfunktion ej tillgänglig - försök igen",
+    "audioPlaybackFailed": "Ljuduppspelning misslyckades",
+    "recording": "Inspelning",
+    "cancel": "Avbryt",
+    "done": "Klar",
+    "transcribing": "Transkriberar...",
+    "recordingHint": "Tryck Klar för att transkribera, eller Avbryt för att kasta"
+  },
+  "history": {
+    "title": "Samtal",
+    "noConversations": "Inga samtal än",
+    "noConversationsHint": "Börja en ny chatt för att få jordbruksråd",
+    "newChat": "Ny Chatt",
+    "newConversation": "Nytt Samtal",
+    "deleteTitle": "Radera Samtal",
+    "deleteMessage": "Radera \"{title}\"? Detta kan inte ångras.",
+    "untitled": "Namnlös",
+    "deleted": "Samtal raderat",
+    "deleteFailed": "Radering misslyckades",
+    "couldNotDelete": "Kunde inte radera samtal",
+    "notConnectedTitle": "Inte ansluten",
+    "notConnectedHint": "Samtalshistorik kräver internetanslutning",
+    "yesterday": "Igår"
+  },
+  "settings": {
+    "title": "Inställningar",
+    "sectionConversations": "KONVERSATIONER",
+    "sectionAiServices": "AI-TJÄNSTER",
+    "sectionLocation": "PLATS",
+    "sectionLanguage": "SPRÅK",
+    "sectionAppearance": "UTSEENDE",
+    "sectionDanger": "RISKZON",
+    "chatHistory": "Chatthistorik",
+    "chatHistorySubtitle": "Se och fortsätt tidigare konversationer",
+    "aiServices": "Aktiva tjänster",
+    "aiServicesSubtitle": "Se AI-tjänster aktiva för din region",
+    "locationPermissionDenied": "Platsåtkomst nekad",
+    "locationUpdated": "Plats uppdaterad!",
+    "locationUpdateFailed": "Kunde inte uppdatera plats. Försök igen.",
+    "locationEnabled": "Plats aktiverad",
+    "tapToEnable": "Tryck för att aktivera",
+    "tapToUpdateLocation": "Tryck för att uppdatera plats",
+    "themeLight": "Ljus",
+    "themeDark": "Mörk",
+    "themeSystem": "System",
+    "language": "Språk",
+    "resetOnboarding": "Nollställ introduktion",
+    "resetOnboardingSubtitle": "Börja om med installationsguiden",
+    "resetConfirmTitle": "Nollställ inställningar",
+    "resetConfirmMessage": "Detta startar om introduktionsprocessen. Fortsätt?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Drivs av Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "AI-tjänster",
+    "loading": "Laddar tjänster...",
+    "loadingDetails": "Laddar...",
+    "footer": "Tjänsterna beror på din plats",
+    "couldNotLoad": "Kunde inte ladda tjänster",
+    "couldNotLoadDetails": "Kunde inte ladda tjänstdetaljer",
+    "failedToFetch": "Kunde inte hämta tjänster",
+    "serviceCategory": "Kategori {name}",
+    "service": "Tjänst {name}",
+    "servicesAvailable": "{active} av {total} tjänster tillgängliga för din plats",
+    "activeCount": "{active}/{total} aktiva",
+    "statusActive": "Aktiv",
+    "statusUnavailable": "Ej tillgänglig i din region",
+    "locationNotSet": "Plats ej angiven",
+    "sectionAbout": "Om",
+    "sectionFeatures": "Funktioner",
+    "sectionAvailableIn": "Tillgänglig i",
+    "sectionSupportedCrops": "Stödda grödor",
+    "categories": {
+      "plantHealth": "Växthälsa",
+      "soil": "Jordanalys",
+      "weather": "Väder & Klimat",
+      "livestock": "Boskapsnäring",
+      "agriculture": "Grödrådgivning"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "AI-driven växtsjukdomsdetektering och diagnos",
+        "description": "Analysera växtbilder för att identifiera sjukdomar, skadedjur och näringsbrister. Få omedelbar diagnos med behandlingsrekommendationer och förebyggande tips."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "Jordegenskaper och näringsanalys för Afrika",
+        "description": "Få detaljerad jordinformation inklusive pH, kväve, fosfor, kalium och andra näringsämnen. Täckning inkluderar hela Afrika med 30 meters upplösning."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Aktuella förhållanden och väderprognoser globalt",
+        "description": "Få tillgång till realtidsdata för väder inklusive temperatur, luftfuktighet, vindhastighet och nederbörd. Prognoser tillgängliga upp till 15 dagar."
+      },
+      "gapWeather": {
+        "name": "GAP Väder",
+        "tagline": "Jordbruksväderprognoser för Kenya",
+        "description": "Specialiserade väderprognoser för jordbruk i Kenya. Inkluderar prognoser för avdunstning, solstrålning och nederbörd anpassade för odlingsbeslut."
+      },
+      "edacap": {
+        "name": "EDACaP Klimat",
+        "tagline": "Säsongsprognoser för klimatet i Etiopien",
+        "description": "Säsongsprognoser för klimatet inklusive temperatur- och nederbördsprognoser. Hjälper bönder att planera sådd- och skördetider."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Väderdata för globala platser",
+        "description": "Omfattande väderdataserver som tillhandahåller aktuella förhållanden och prognoser för platser över hela världen."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Väderintelligens och prognoser",
+        "description": "Avancerad väderintelligensplattform med högupplösta prognoser och 'nowcasting'-funktioner."
+      },
+      "feedFormulation": {
+        "name": "Foderformulering",
+        "tagline": "Optimala dietberäkningar för mjölkboskap",
+        "description": "Beräkna den mest kostnadseffektiva foderblandningen för din mjölkboskap. Tar hänsyn till mål för mjölkproduktion, kroppsvikt och tillgängliga lokala foder."
+      },
+      "nextgen": {
+        "name": "NextGen Gödningsmedel",
+        "tagline": "Plats-specifika gödningsrekommendationer för Etiopien",
+        "description": "Få precisa gödningsrekommendationer baserade på din exakta plats. Inkluderar både organiska (kompost, vermikompost) och oorganiska (Urea, NPS) rekommendationer."
+      },
+      "decisionTree": {
+        "name": "Beslutsträd för grödor",
+        "tagline": "Rekommendationer för växtstadier i Kenya",
+        "description": "Få rekommendationer för grödhantering baserade på växtstadium och aktuella väderförhållanden. Hjälper dig att fatta snabba beslut för skadedjursbekämpning, bevattning och skörd."
+      },
+      "gapAgriculture": {
+        "name": "GAP Jordbruk",
+        "tagline": "Jordbruksrådgivning",
+        "description": "Allmänna jordbruksrådgivningstjänster för gröd- och boskapshantering."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Sjukdomsdetektering",
+      "pestIdentification": "Skadedjursidentifiering",
+      "nutrientAnalysis": "Näringsanalys",
+      "treatmentAdvice": "Behandlingsråd",
+      "soilPh": "Jord-pH",
+      "nitrogen": "Kväve",
+      "phosphorus": "Fosfor",
+      "potassium": "Kalium",
+      "currentWeather": "Aktuellt väder",
+      "temperature": "Temperatur",
+      "humidity": "Luftfuktighet",
+      "forecast": "Prognos",
+      "precipitation": "Nederbörd",
+      "evapotranspiration": "Evapotranspiration",
+      "solarRadiation": "Solstrålning",
+      "wind": "Vind",
+      "seasonalOutlook": "Säsongsprognos",
+      "rainfallProbability": "Nederbördssannolikhet",
+      "temperatureTrend": "Temperaturtrend",
+      "cropForecasts": "Grödprognoser",
+      "historical": "Historik",
+      "astronomy": "Astronomi",
+      "nowcast": "Nowcast",
+      "forecasts": "Prognoser",
+      "alerts": "Varningar",
+      "dietOptimization": "Foderoptimering",
+      "nutrientBalance": "Näringsbalans",
+      "localFeeds": "Lokala foder",
+      "costCalculation": "Kostnadsberäkning",
+      "organicFertilizers": "Organiska gödningsmedel",
+      "inorganicFertilizers": "Oorganiska gödningsmedel",
+      "expectedYield": "Förväntad avkastning",
+      "siteSpecific": "Plats-specifik",
+      "growthStage": "Växtstadium",
+      "recommendations": "Rekommendationer",
+      "weatherBased": "Väderbaserad",
+      "actions": "Åtgärder",
+      "cropAdvice": "Grödråd",
+      "bestPractices": "Bästa praxis",
+      "seasonalTips": "Säsongstips",
+      "localKnowledge": "Lokal kunskap"
+    },
+    "fallback": {
+      "service": "Jordbrukstjänst",
+      "description": "Tjänstdetaljer ej tillgängliga."
+    },
+    "regions": {
+      "worldwide": "Globalt",
+      "africa": "Afrika",
+      "eastAfrica": "Östra Afrika",
+      "ethiopia": "Etiopien",
+      "kenya": "Kenya"
+    },
+    "crops": {
+      "all": "Alla grödor",
+      "wheat": "Vete",
+      "maize": "Majs",
+      "beans": "Bönor"
+    }
+  },
+  "system": {
+    "offline": "Ingen uppkoppling",
+    "errorTitle": "Hoppsan! Något gick fel",
+    "errorFallback": "Ett oväntat fel uppstod",
+    "tryAgain": "Försök igen"
+  },
+  "errors": {
+    "syncFailed": "Kunde inte ansluta till servern. Vissa funktioner kan vara begränsade.",
+    "weatherUnavailable": "Vädertjänsten är tillfälligt otillgänglig. Försök igen senare.",
+    "diagnosisTimeout": "Växtdiagnosen tar för lång tid. Försök igen.",
+    "uploadFailed": "Kunde inte ladda upp bilden. Kontrollera din anslutning och försök igen.",
+    "transcriptionFailed": "Rösttranskription misslyckades. Försök att tala igen.",
+    "serverError": "Serverfel. Försök igen senare.",
+    "requestTimeout": "Förfrågan tog för lång tid. Kontrollera din anslutning.",
+    "locationLookupFailed": "Kunde inte fastställa din plats."
+  },
+  "a11y": {
+    "startNewChat": "Starta en ny chatt",
+    "retryLoadingIntegrations": "Ladda om integrationer",
+    "dismissNotification": "Stäng notis",
+    "dismiss": "Stäng",
+    "clearSearch": "Rensa sökning",
+    "cancelRecording": "Avbryt inspelning",
+    "finishRecording": "Stoppa inspelning",
+    "refreshLocation": "Uppdatera plats",
+    "newChat": "Ny chatt",
+    "openSettings": "Öppna inställningar",
+    "scrollToBottom": "Skrolla till botten",
+    "clearVoiceTranscription": "Rensa rösttranskribering",
+    "takePhoto": "Ta foto",
+    "pickImage": "Välj bild",
+    "messageInput": "Meddelandefält",
+    "sendMessage": "Skicka meddelande",
+    "recordVoice": "Spela in röst",
+    "attachMedia": "Bifoga media",
+    "closeMenu": "Stäng meny",
+    "playVoice": "Spela upp röst",
+    "stopVoicePlayback": "Stoppa röstuppspelning",
+    "moreNotifications": "{count} fler notiser",
+    "themeMode": "Tema: {mode}",
+    "copyMessage": "Kopiera meddelande",
+    "askQuestion": "Fråga: {question}",
+    "selectLanguage": "Språk {name}"
+  }
+}

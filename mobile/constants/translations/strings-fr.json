@@ -36,7 +36,9 @@
     "languageTitle": "Sélectionner la langue",
     "languageSubtitle": "Choisissez votre langue préférée pour l'assistant",
     "searchLanguages": "Rechercher des langues...",
-    "noLanguagesFound": "Aucune langue trouvée"
+    "noLanguagesFound": "Aucune langue trouvée",
+    "suggestedForYou": "Suggestions",
+    "currentLanguage": "Actuelle"
   },
   "chat": {
     "welcomeMessage": "Bonjour ! 👋 Je suis votre assistant agricole.\n\nJe peux vous aider avec :\n• Cultures, légumes, fruits et fleurs\n• Élevage (bétail, volaille) et pisciculture\n• Gestion des ravageurs et maladies\n• Conseils météo et marché\n\nComment puis-je vous aider aujourd'hui ?",

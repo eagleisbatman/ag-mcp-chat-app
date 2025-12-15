@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Laghachi",
+    "retry": "Gbalịa ọzọ",
+    "cancel": "Kagbuo",
+    "delete": "Hichapụ",
+    "continue": "Gaa n'ihu",
+    "dismiss": "Wepụ",
+    "refresh": "Megharịa",
+    "clear": "Kpochapụ",
+    "loading": "Na-ebuputa…",
+    "skipForNow": "Wụfere ugbu a"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Onye enyemaka ugbo gị nwere ọgụgụ isi",
+    "getStarted": "Bido",
+    "features": {
+      "weatherTitle": "Amụma ihu igwe",
+      "weatherDescription": "Nweta amụma ihu igwe ziri ezi maka ugbo gị",
+      "diagnosisTitle": "Nchọpụta ọrịa ihe ubi",
+      "diagnosisDescription": "Chọpụta ọrịa osisi site na foto",
+      "voiceTitle": "Nkwado olu",
+      "voiceDescription": "Kwuo okwu n'ụzọ nkịtị n'asụsụ gị"
+    },
+    "locationTitle": "Kwado Ọnọdụ",
+    "locationDescription": "Kekọrịta ọnọdụ gị iji nweta amụma ihu igwe ziri ezi na ndụmọdụ ugbo maka mpaghara gị.",
+    "enableLocation": "Kwado Ọnọdụ",
+    "locationDenied": "Enyefeghị ikike ọnọdụ",
+    "locationError": "Enweghị ike ịnwe ọnọdụ. Biko gbalịa ọzọ.",
+    "benefits": {
+      "weather": "Amụma ihu igwe mpaghara",
+      "regionAdvice": "Ndụmọdụ ihe ubi maka mpaghara gị",
+      "soilData": "Data ala maka mpaghara gị"
+    },
+    "languageTitle": "Họrọ Asụsụ",
+    "languageSubtitle": "Họrọ asụsụ ị ga-eji maka onye enyemaka a",
+    "searchLanguages": "Chọọ asụsụ...",
+    "noLanguagesFound": "Ahụtaghị asụsụ ọ bụla",
+    "suggestedForYou": "A tụrụ aro maka gị",
+    "currentLanguage": "Nke ugbu a"
+  },
+  "chat": {
+    "welcomeMessage": "Ndewo! 👋 Abụ m onye enyemaka ugbo gị.\n\nM nwere ike inyere gị aka na:\n• Ihe ọkụkụ, akwụkwọ nri, mkpụrụ osisi, na okooko osisi\n• Anụ ụlọ, anụ ọkụkọ, na ịzụ azụ\n• Nchịkwa ahụhụ na ọrịa\n• Ndụmọdụ ihu igwe na ahịa\n\nKedu ka m ga-esi nyere gị aka taa?",
+    "locationDenied": "Agọnarị ikike ọnọdụ",
+    "locationUpdated": "Emezigharịrị ọnọdụ!",
+    "locationUpdateFailed": "Enweghị ike imezigharị ọnọdụ",
+    "loadingConversation": "Na-ebu mkparịta ụka...",
+    "thinking": "Na-eche...",
+    "messagePlaceholder": "Ozi...",
+    "fromVoice": "Site n'olu — dezie ma ọ dị mkpa",
+    "voiceTranscribed": "Edepụtala olu! Dezie ma ọ dị mkpa, wee zipụ.",
+    "noInternet": "Enweghị njikọ ịntanetị. Biko lelee netwọkụ gị.",
+    "couldNotLoadConversation": "Enweghị ike ibu mkparịta ụka",
+    "startedNewConversation": "Malitere mkparịta ụka ọhụrụ",
+    "connectionErrorBot": "Njehie njikọ. Biko nwaa ọzọ.",
+    "analyzingPlantImage": "Na-enyocha onyonyo osisi...",
+    "imageAnalysisFailedBot": "Nyocha onyonyo dara. Biko nwaa ọzọ.",
+    "sorryCouldNotProcess": "Ndo, enweghị m ike hazie nke ahụ. {details}",
+    "analysisCouldNotComplete": "Nyocha enweghị ike ịrụcha. {details}",
+    "plantAnalysisIssues": "Nyocha osisi nwere nsogbu: {details}",
+    "tapLocationToSet": "Pịa ọnọdụ ka ịtọlite",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Gị",
+    "tapToAskNext": "Pịa ịjụ nke ọzọ:"
+  },
+  "media": {
+    "photoLibraryPermission": "Ịnweta gallery dị mkpa iji họrọ onyonyo. Mepee ya na Ntọala.",
+    "cameraPermission": "Ịnweta igwefoto dị mkpa iji see foto. Mepee ya na Ntọala.",
+    "pickImageFailed": "Adaghị ịhọrọ onyonyo. Biko gbalịa ọzọ.",
+    "cameraFailed": "Adaghị ịnweta igwefoto. Biko gbalịa ọzọ.",
+    "camera": "Igwefoto",
+    "gallery": "Gallery"
+  },
+  "voice": {
+    "microphonePermission": "Achọrọ ikike igwe okwu",
+    "startRecordingFailed": "Ndekọ amaliteghị",
+    "recordingFailed": "Ndekọ dara",
+    "transcriptionFailed": "Ntụgharị okwu dara",
+    "couldNotTranscribeAudio": "Enweghị ike ịtụgharị olu",
+    "voiceUnavailableLater": "Olu adịghị - biko nwaa ọzọ ma emesịa",
+    "voiceUnavailable": "Olu adịghị - biko nwaa ọzọ",
+    "audioPlaybackFailed": "Ịkpọgharị olu dara",
+    "recording": "A na-edekọ",
+    "cancel": "Kagbuo",
+    "done": "Mechaa",
+    "transcribing": "A na-atụgharị okwu...",
+    "recordingHint": "Pịa Mechaa iji tụgharịa okwu, ma ọ bụ Kagbuo iji tụfuo"
+  },
+  "history": {
+    "title": "Mkparịta ụka",
+    "noConversations": "Enwebeghị mkparịta ụka",
+    "noConversationsHint": "Bido mkparịta ụka ọhụrụ iji nweta ndụmọdụ ọrụ ugbo",
+    "newChat": "Mkparịta ụka Ọhụrụ",
+    "newConversation": "Mkparịta ụka Ọhụrụ",
+    "deleteTitle": "Hichapụ Mkparịta ụka",
+    "deleteMessage": "Ị ga-ehichapụ \"{title}\"? Nke a apụghị ịlaghachi azụ.",
+    "untitled": "Enweghị Aha",
+    "deleted": "Ehichapụla mkparịta ụka",
+    "deleteFailed": "Ehichapụghị ya",
+    "couldNotDelete": "Enweghị ike ihichapụ mkparịta ụka",
+    "notConnectedTitle": "Enweghị njikọ",
+    "notConnectedHint": "Akụkọ mkparịta ụka chọrọ njikọ ịntanetị",
+    "yesterday": "Ụnyaahụ"
+  },
+  "settings": {
+    "title": "Ntọala",
+    "sectionConversations": "MKPARỊTA ỤKA",
+    "sectionAiServices": "ỌRỤ AI",
+    "sectionLocation": "ỌNỌDỤ",
+    "sectionLanguage": "ASỤSỤ",
+    "sectionAppearance": "MKPỤTA",
+    "sectionDanger": "EBE EGWU",
+    "chatHistory": "Akụkọ Mkparịta ụka",
+    "chatHistorySubtitle": "Lee ma gaa n'ihu mkparịta ụka gara aga",
+    "aiServices": "Ọrụ Na-arụ Ọrụ",
+    "aiServicesSubtitle": "Lee ọrụ AI na-arụ ọrụ n'ókèala gị",
+    "locationPermissionDenied": "Enyeghị ikike ọnọdụ",
+    "locationUpdated": "Emelitere ọnọdụ nke ọma!",
+    "locationUpdateFailed": "Enweghị ike imelite ọnọdụ. Biko nwaa ọzọ.",
+    "locationEnabled": "Enyere ọnọdụ ike",
+    "tapToEnable": "Metụ ka ọ rụọ",
+    "tapToUpdateLocation": "Metụ imelite ọnọdụ",
+    "themeLight": "Ìhè",
+    "themeDark": "Ọchịchịrị",
+    "themeSystem": "Sistemụ",
+    "language": "Asụsụ",
+    "resetOnboarding": "Tọgharịa Nkwadobe",
+    "resetOnboardingSubtitle": "Bido ọhụrụ na ọkachamara nhazi",
+    "resetConfirmTitle": "Tọgharịa Nhazi",
+    "resetConfirmMessage": "Nke a ga-ebido usoro nkwadobe ọzọ. Ị ga-aga n'ihu?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Nke Digital Green Foundation kwadoro"
+  },
+  "mcp": {
+    "title": "Ọrụ AI",
+    "loading": "Na-ebunye ọrụ...",
+    "loadingDetails": "Na-ebunye...",
+    "footer": "Ịnweta ọrụ dabere n'ebe ị nọ",
+    "couldNotLoad": "Enweghị ike ibunye ọrụ",
+    "couldNotLoadDetails": "Enweghị ike ibunye nkọwa ọrụ",
+    "failedToFetch": "Ibu ọrụ kụrụ afọ n'ala",
+    "serviceCategory": "Ụdị {name}",
+    "service": "Ọrụ {name}",
+    "servicesAvailable": "{active} n'ime {total} ọrụ dị maka mpaghara gị",
+    "activeCount": "{active}/{total} dị njikere",
+    "statusActive": "Dị njikere",
+    "statusUnavailable": "Adịghị na mpaghara gị",
+    "locationNotSet": "Ebe ahọpụtabeghị",
+    "sectionAbout": "Banyere",
+    "sectionFeatures": "Njirimara",
+    "sectionAvailableIn": "Dị n'ebe",
+    "sectionSupportedCrops": "Ihe ọkụkụ akwadoro",
+    "categories": {
+      "plantHealth": "Ahụike Osisi",
+      "soil": "Nyocha Ala",
+      "weather": "Ihu igwe & Ọnọdụ Ihu igwe",
+      "livestock": "Nri Anụ Ụlọ",
+      "agriculture": "Ndụmọdụ Ọkụkụ"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Nchọpụta na nchọpụta ọrịa osisi site na AI",
+        "description": "Nyochaa foto osisi iji chọpụta ọrịa, ahụhụ na ụkọ nri. Nweta nchọpụta ngwa ngwa yana ndụmọdụ ọgwụgwọ na mgbochi."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "Njirimara ala na nyocha nri maka Africa",
+        "description": "Nweta ozi zuru ezu gbasara ala gụnyere pH, nitrogen, phosphorus, potassium, na nri ndị ọzọ. Ọ gụnyere Africa niile site na mkpebi mita 30."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Ọnọdụ dị ugbu a na amụma ihu igwe n'ụwa niile",
+        "description": "Nweta data ihu igwe ozugbo gụnyere okpomọkụ, iru mmiri, ọsọ ifufe, na mmiri ozuzo. Amụma dị ruo ụbọchị 15."
+      },
+      "gapWeather": {
+        "name": "GAP Weather",
+        "tagline": "Amụma ihu igwe ọrụ ugbo maka Kenya",
+        "description": "Amụma ihu igwe pụrụ iche maka ọrụ ugbo na Kenya. Gụnyere evapotranspiration, radieshon anyanwụ, na mmiri ozuzo maka mkpebi ọrụ ugbo."
+      },
+      "edacap": {
+        "name": "EDACaP Climate",
+        "tagline": "Amụma ihu igwe oge maka Etiopia",
+        "description": "Echiche ihu igwe oge gụnyere amụma okpomọkụ na mmiri ozuzo. Na-enyere ndị ọrụ ugbo aka ịhazi oge ịkụ ihe na owuwe ihe ubi."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Data ihu igwe maka ebe zuru ụwa ọnụ",
+        "description": "Ọrụ data ihu igwe zuru oke na-enye ọnọdụ dị ugbu a na amụma maka ebe zuru ụwa ọnụ."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Ọgụgụ isi ihu igwe na amụma",
+        "description": "Usoro ọgụgụ isi ihu igwe dị elu nwere amụma dị elu na ike nowcasting."
+      },
+      "feedFormulation": {
+        "name": "Ntụziaka Nri Anụ Ụlọ",
+        "tagline": "Ngụkọta nri kachasị mma maka ehi mmiri",
+        "description": "Gbakọọ ngwakọta nri kachasị ọnụ ahịa maka ehi mmiri gị. Na-eburu n'uche ihe mgbaru ọsọ mmepụta mmiri ara ehi, ibu ahụ, na nri obodo dịnụ."
+      },
+      "nextgen": {
+        "name": "NextGen Fertilizer",
+        "tagline": "Ndụmọdụ fatịlaịza pụrụ iche maka Etiopia",
+        "description": "Nweta ndụmọdụ fatịlaịza ziri ezi dabere na ọnọdụ gị kpọmkwem. Gụnyere ma ndụmọdụ organic (compost, vermicompost) na inorganic (Urea, NPS)."
+      },
+      "decisionTree": {
+        "name": "Osisi Mkpebi Ọkụkụ",
+        "tagline": "Ndụmọdụ oge uto maka Kenya",
+        "description": "Nweta ndụmọdụ njikwa ihe ọkụkụ dabere na oge uto na ọnọdụ ihu igwe dị ugbu a. Na-enyere gị aka ime mkpebi oge maka njikwa ahụhụ, ịgbara mmiri, na owuwe ihe ubi."
+      },
+      "gapAgriculture": {
+        "name": "GAP Agriculture",
+        "tagline": "Ọrụ ndụmọdụ ọrụ ugbo",
+        "description": "Ọrụ ndụmọdụ ọrụ ugbo n'ozuzu maka njikwa ihe ọkụkụ na anụ ụlọ."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Nchọpụta Ọrịa",
+      "pestIdentification": "Nchọpụta Ahụhụ",
+      "nutrientAnalysis": "Nyocha Nri",
+      "treatmentAdvice": "Ndụmọdụ Ọgwụgwọ",
+      "soilPh": "pH Ala",
+      "nitrogen": "Nitrogen",
+      "phosphorus": "Phosphorus",
+      "potassium": "Potassium",
+      "currentWeather": "Ihu igwe Dị Ugbu A",
+      "temperature": "Okpomọkụ",
+      "humidity": "Iru Mmiri",
+      "forecast": "Amụma",
+      "precipitation": "Mmiri Ozuzo",
+      "evapotranspiration": "Evapotranspiration",
+      "solarRadiation": "Radieshon Anyanwụ",
+      "wind": "Ifufe",
+      "seasonalOutlook": "Echiche Oge",
+      "rainfallProbability": "Ohere Mmiri Ozuzo",
+      "temperatureTrend": "Ọdịdị Okpomọkụ",
+      "cropForecasts": "Amụma Ọkụkụ",
+      "historical": "Akụkọ Ihe Mere Eme",
+      "astronomy": "Nkà Mmụta Kpakpando",
+      "nowcast": "Nowcast",
+      "forecasts": "Amụma",
+      "alerts": "Ịdọ Aka ná Ntị",
+      "dietOptimization": "Nri Kachasị Mma",
+      "nutrientBalance": "Nri Ziri Ezi",
+      "localFeeds": "Nri Obodo",
+      "costCalculation": "Ngụkọta Ọnụ Ahịa",
+      "organicFertilizers": "Fatịlaịza Organic",
+      "inorganicFertilizers": "Fatịlaịza Inorganic",
+      "expectedYield": "Owuwe Ihe Ubi A Na-atụ Anya",
+      "siteSpecific": "Pụrụ Iche Maka Ebe",
+      "growthStage": "Oge Uto",
+      "recommendations": "Ndụmọdụ",
+      "weatherBased": "Dabere n'Ihu Igwe",
+      "actions": "Omume",
+      "cropAdvice": "Ndụmọdụ Ọkụkụ",
+      "bestPractices": "Omume Kacha Mma",
+      "seasonalTips": "Ndụmọdụ Oge",
+      "localKnowledge": "Ihe Ọmụma Obodo"
+    },
+    "fallback": {
+      "service": "Ọrụ Ugbo",
+      "description": "Nkọwa ọrụ adịghị."
+    },
+    "regions": {
+      "worldwide": "Ụwa Niile",
+      "africa": "Africa",
+      "eastAfrica": "East Africa",
+      "ethiopia": "Ethiopia",
+      "kenya": "Kenya"
+    },
+    "crops": {
+      "all": "Ihe ọkụkụ niile",
+      "wheat": "Wit",
+      "maize": "Ọka",
+      "beans": "Agwa"
+    }
+  },
+  "system": {
+    "offline": "Ịntanetị adịghị",
+    "errorTitle": "Ehee! Ihe adịghị mma",
+    "errorFallback": "Ihe mperi a na-atụghị anya ya",
+    "tryAgain": "Gbalịa ọzọ"
+  },
+  "errors": {
+    "syncFailed": "Enweghị ike ijikọ na sava. Ụfọdụ atụmatụ nwere ike ịdị oke.",
+    "weatherUnavailable": "Ọrụ ihu igwe adịghị nwa oge. Nwaa ọzọ ma emechaa.",
+    "diagnosisTimeout": "Nchọpụta osisi na-ewe ogologo oge. Biko nwaa ọzọ.",
+    "uploadFailed": "Enweghị ike ibudata foto. Lelee njikọ gị wee nwaa ọzọ.",
+    "transcriptionFailed": "Ntụgharị olu dara. Nwaa ikwu okwu ọzọ.",
+    "serverError": "Njehie sava. Biko nwaa ọzọ ma emechaa.",
+    "requestTimeout": "Arịrịọ gafere oge. Lelee njikọ gị.",
+    "locationLookupFailed": "Enweghị ike ịchọta ebe ị nọ."
+  },
+  "a11y": {
+    "startNewChat": "Malite mkparịtaụka ọhụrụ",
+    "retryLoadingIntegrations": "Gbalịaghachi ibudata ihe jikọrọ ọnụ",
+    "dismissNotification": "Wepụ ozi ngosi",
+    "dismiss": "Wepụ",
+    "clearSearch": "Hichapụ nchọ",
+    "cancelRecording": "Kwụsị ndekọ",
+    "finishRecording": "Mechaa ndekọ",
+    "refreshLocation": "Meekwa ọnọdụ ọhụrụ",
+    "newChat": "Mkparịtaụka ọhụrụ",
+    "openSettings": "Mepee ntọala",
+    "scrollToBottom": "Gaa n'ala",
+    "clearVoiceTranscription": "Hichapụ ihe edegharịrị n'olu",
+    "takePhoto": "See foto",
+    "pickImage": "Họrọ foto",
+    "messageInput": "Ebe ntinye ozi",
+    "sendMessage": "Ziga ozi",
+    "recordVoice": "Dekọọ olu",
+    "attachMedia": "Tinye ihe mgbakwunye",
+    "closeMenu": "Mechie nhọrọ",
+    "playVoice": "Kpọọ olu",
+    "stopVoicePlayback": "Kwụsị ịkpọ olu",
+    "moreNotifications": "{count} ozi ngosi ọzọ",
+    "themeMode": "Isiokwu: {mode}",
+    "copyMessage": "Detuo ozi",
+    "askQuestion": "Jụọ: {question}",
+    "selectLanguage": "Asụsụ {name}"
+  }
+}

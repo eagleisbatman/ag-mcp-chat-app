@@ -36,7 +36,9 @@
     "languageTitle": "Chọn ngôn ngữ",
     "languageSubtitle": "Chọn ngôn ngữ bạn muốn dùng cho trợ lý",
     "searchLanguages": "Tìm ngôn ngữ...",
-    "noLanguagesFound": "Không tìm thấy ngôn ngữ nào"
+    "noLanguagesFound": "Không tìm thấy ngôn ngữ nào",
+    "suggestedForYou": "Gợi ý",
+    "currentLanguage": "Hiện tại"
   },
   "chat": {
     "welcomeMessage": "Chào bạn! 👋 Tôi là trợ lý nông nghiệp của bạn.\n\nTôi có thể giúp bạn về:\n• Cây trồng, rau màu, hoa quả, hoa\n• Chăn nuôi gia súc, gia cầm, thủy sản\n• Quản lý sâu bệnh\n• Tư vấn thời tiết và thị trường\n\nHôm nay tôi có thể giúp gì cho bạn?",

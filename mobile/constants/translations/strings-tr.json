@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Geri",
+    "retry": "Tekrar Dene",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "continue": "Devam Et",
+    "dismiss": "Kapat",
+    "refresh": "Yenile",
+    "clear": "Temizle",
+    "loading": "Yükleniyor…",
+    "skipForNow": "Şimdilik Atla"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Yapay zeka destekli tarım arkadaşınız",
+    "getStarted": "Başla",
+    "features": {
+      "weatherTitle": "Hava Tahmini",
+      "weatherDescription": "Çiftliğiniz için doğru hava tahminleri.",
+      "diagnosisTitle": "Mahsul Teşhisi",
+      "diagnosisDescription": "Fotoğraflarla bitki hastalıklarını teşhis edin.",
+      "voiceTitle": "Sesli Destek",
+      "voiceDescription": "Kendi dilinizde doğal konuşun."
+    },
+    "locationTitle": "Konumu Aç",
+    "locationDescription": "Doğru hava tahminleri ve bölgenize özel tarım tavsiyeleri almak için konumunuzu paylaşın.",
+    "enableLocation": "Konumu Aç",
+    "locationDenied": "Konum izni reddedildi",
+    "locationError": "Konum alınamadı. Lütfen tekrar deneyin.",
+    "benefits": {
+      "weather": "Yerel hava tahminleri",
+      "regionAdvice": "Bölgesel mahsul tavsiyeleri",
+      "soilData": "Bölgeniz için toprak verileri"
+    },
+    "languageTitle": "Dil Seçin",
+    "languageSubtitle": "Asistanınız için tercih ettiğiniz dili seçin.",
+    "searchLanguages": "Dilleri ara...",
+    "noLanguagesFound": "Dil bulunamadı",
+    "suggestedForYou": "Sizin İçin Önerilenler",
+    "currentLanguage": "Mevcut"
+  },
+  "chat": {
+    "welcomeMessage": "Merhaba! 👋 Ben sizin tarım asistanınızım.\n\nŞunlarda size yardımcı olabilirim:\n• Tarla ürünleri, sebzeler, meyveler ve çiçekler\n• Hayvancılık, kümes hayvanları ve balıkçılık\n• Haşere ve hastalık mücadelesi\n• Hava durumu ve piyasa tavsiyeleri\n\nBugün size nasıl yardımcı olabilirim?",
+    "locationDenied": "Konum izni reddedildi",
+    "locationUpdated": "Konum güncellendi!",
+    "locationUpdateFailed": "Konum güncellenemedi",
+    "loadingConversation": "Sohbet yükleniyor...",
+    "thinking": "Düşünüyor...",
+    "messagePlaceholder": "Mesaj...",
+    "fromVoice": "Sesten — gerekirse düzenleyin",
+    "voiceTranscribed": "Ses yazıya çevrildi! Gerekirse düzenleyip gönderin.",
+    "noInternet": "İnternet bağlantısı yok. Lütfen ağınızı kontrol edin.",
+    "couldNotLoadConversation": "Sohbet yüklenemedi",
+    "startedNewConversation": "Yeni sohbet başlatıldı",
+    "connectionErrorBot": "Bağlantı hatası. Lütfen tekrar deneyin.",
+    "analyzingPlantImage": "Bitki görseli analiz ediliyor...",
+    "imageAnalysisFailedBot": "Görsel analizi başarısız oldu. Lütfen tekrar deneyin.",
+    "sorryCouldNotProcess": "Üzgünüm, bunu işleyemedim. {details}",
+    "analysisCouldNotComplete": "Analiz tamamlanamadı. {details}",
+    "plantAnalysisIssues": "Bitki analizinde sorunlar oluştu: {details}",
+    "tapLocationToSet": "Ayarlamak için konuma dokunun",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Siz",
+    "tapToAskNext": "Sonraki soruyu sormak için dokunun:"
+  },
+  "media": {
+    "photoLibraryPermission": "Resim seçmek için fotoğraf galerisi izni gerekli. Ayarlardan etkinleştirin.",
+    "cameraPermission": "Fotoğraf çekmek için kamera izni gerekli. Ayarlardan etkinleştirin.",
+    "pickImageFailed": "Resim seçilemedi. Lütfen tekrar deneyin.",
+    "cameraFailed": "Kameraya erişilemedi. Lütfen tekrar deneyin.",
+    "camera": "Kamera",
+    "gallery": "Galeri"
+  },
+  "voice": {
+    "microphonePermission": "Mikrofon izni gerekli",
+    "startRecordingFailed": "Kaydı başlatılamadı",
+    "recordingFailed": "Kayıt başarısız",
+    "transcriptionFailed": "Yazıya çevirme başarısız",
+    "couldNotTranscribeAudio": "Ses yazıya çevrilemedi",
+    "voiceUnavailableLater": "Sesli özellik kullanılamıyor - daha sonra deneyin",
+    "voiceUnavailable": "Sesli özellik kullanılamıyor - tekrar deneyin",
+    "audioPlaybackFailed": "Ses oynatılamadı",
+    "recording": "Kaydediliyor",
+    "cancel": "İptal",
+    "done": "Bitti",
+    "transcribing": "Yazıya çevriliyor...",
+    "recordingHint": "Yazıya çevirmek için Bitti'ye, vazgeçmek için İptal'e dokunun."
+  },
+  "history": {
+    "title": "Sohbetler",
+    "noConversations": "Henüz sohbet yok",
+    "noConversationsHint": "Yeni sohbet başlat, tarım tavsiyesi al",
+    "newChat": "Yeni Sohbet",
+    "newConversation": "Yeni Sohbet",
+    "deleteTitle": "Sohbeti Sil",
+    "deleteMessage": "\"{title}\" silinsin mi? Bu işlem geri alınamaz.",
+    "untitled": "Başlıksız",
+    "deleted": "Sohbet silindi",
+    "deleteFailed": "Silme başarısız",
+    "couldNotDelete": "Sohbet silinemedi",
+    "notConnectedTitle": "Bağlantı yok",
+    "notConnectedHint": "Sohbet geçmişi için internet bağlantısı gerekli",
+    "yesterday": "Dün"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "sectionConversations": "SOHBETLER",
+    "sectionAiServices": "YAPAY ZEKA HİZMETLERİ",
+    "sectionLocation": "KONUM",
+    "sectionLanguage": "DİL",
+    "sectionAppearance": "GÖRÜNÜM",
+    "sectionDanger": "TEHLİKE BÖLGESİ",
+    "chatHistory": "Sohbet Geçmişi",
+    "chatHistorySubtitle": "Geçmiş sohbetleri gör ve devam et",
+    "aiServices": "Aktif Hizmetler",
+    "aiServicesSubtitle": "Bölgenizdeki aktif YZ hizmetlerini görün",
+    "locationPermissionDenied": "Konum izni reddedildi",
+    "locationUpdated": "Konum başarıyla güncellendi!",
+    "locationUpdateFailed": "Konum güncellenemedi. Lütfen tekrar deneyin.",
+    "locationEnabled": "Konum açık",
+    "tapToEnable": "Açmak için dokun",
+    "tapToUpdateLocation": "Konumu güncellemek için dokun",
+    "themeLight": "Açık",
+    "themeDark": "Koyu",
+    "themeSystem": "Sistem",
+    "language": "Dil",
+    "resetOnboarding": "Kurulumu Sıfırla",
+    "resetOnboardingSubtitle": "Kurulum sihirbazı ile baştan başla",
+    "resetConfirmTitle": "Kurulumu Sıfırla",
+    "resetConfirmMessage": "Bu işlem kurulum sürecini yeniden başlatır. Devam edilsin mi?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Digital Green Foundation tarafından desteklenmektedir"
+  },
+  "mcp": {
+    "title": "AI Hizmetleri",
+    "loading": "Hizmetler yükleniyor...",
+    "loadingDetails": "Yükleniyor...",
+    "footer": "Hizmet kullanılabilirliği konumunuza bağlıdır",
+    "couldNotLoad": "Hizmetler yüklenemedi",
+    "couldNotLoadDetails": "Hizmet detayları yüklenemedi",
+    "failedToFetch": "Hizmetler alınamadı",
+    "serviceCategory": "{name} Kategorisi",
+    "service": "{name} Hizmeti",
+    "servicesAvailable": "Konumunuz için {total} hizmetten {active} tanesi mevcut",
+    "activeCount": "{active}/{total} aktif",
+    "statusActive": "Aktif",
+    "statusUnavailable": "Bölgenizde mevcut değil",
+    "locationNotSet": "Konum ayarlanmadı",
+    "sectionAbout": "Hakkında",
+    "sectionFeatures": "Özellikler",
+    "sectionAvailableIn": "Kullanılabilir Yerler",
+    "sectionSupportedCrops": "Desteklenen Ürünler",
+    "categories": {
+      "plantHealth": "Bitki Sağlığı",
+      "soil": "Toprak Analizi",
+      "weather": "Hava & İklim",
+      "livestock": "Hayvan Beslenmesi",
+      "agriculture": "Tarım Danışmanlığı"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Yapay zeka destekli bitki hastalığı tespiti ve teşhisi",
+        "description": "Bitki resimlerini analiz ederek hastalıkları, zararlıları ve besin eksikliklerini tespit edin. Tedavi önerileri ve önleme ipuçlarıyla anında teşhis alın."
+      },
+      "isdaSoil": {
+        "name": "ISDA Toprak",
+        "tagline": "Afrika için toprak özellikleri ve besin analizi",
+        "description": "pH, azot, fosfor, potasyum ve diğer besinler dahil detaylı toprak bilgisi alın. Afrika genelinde 30 metrelik çözünürlükle kapsama alanı sunar."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Dünya genelinde güncel hava durumu ve tahminleri",
+        "description": "Sıcaklık, nem, rüzgar hızı ve yağış dahil gerçek zamanlı hava verilerine erişin. 15 güne kadar tahminler mevcut."
+      },
+      "gapWeather": {
+        "name": "GAP Hava Durumu",
+        "tagline": "Kenya için tarımsal hava durumu tahminleri",
+        "description": "Kenya'da tarım için özel hava durumu tahminleri. Tarım kararlarına göre buharlaşma-terleme, güneş radyasyonu ve yağış tahminlerini içerir."
+      },
+      "edacap": {
+        "name": "EDACaP İklim",
+        "tagline": "Etiyopya için mevsimsel iklim tahminleri",
+        "description": "Sıcaklık ve yağış tahminlerini içeren mevsimsel iklim görünümü. Çiftçilerin ekim ve hasat programlarını planlamasına yardımcı olur."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Küresel konumlar için hava durumu verileri",
+        "description": "Dünya genelindeki konumlar için güncel koşulları ve tahminleri sağlayan kapsamlı hava durumu veri hizmeti."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Hava durumu analizi ve tahmini",
+        "description": "Yüksek çözünürlüklü tahminler ve anlık hava durumu yetenekleri sunan gelişmiş hava durumu analiz platformu."
+      },
+      "feedFormulation": {
+        "name": "Yem Formülasyonu",
+        "tagline": "Süt sığırları için en uygun diyet hesaplamaları",
+        "description": "Süt sığırlarınız için en uygun maliyetli yem karışımını hesaplayın. Süt üretim hedefleri, vücut ağırlığı ve mevcut yerel yemleri dikkate alır."
+      },
+      "nextgen": {
+        "name": "NextGen Gübre",
+        "tagline": "Etiyopya için araziye özel gübre önerileri",
+        "description": "Tam konumunuza göre hassas gübre önerileri alın. Hem organik (kompost, solucan gübresi) hem de inorganik (Üre, NPS) önerileri içerir."
+      },
+      "decisionTree": {
+        "name": "Ürün Karar Ağacı",
+        "tagline": "Kenya için büyüme dönemi önerileri",
+        "description": "Büyüme dönemi ve güncel hava koşullarına göre ürün yönetimi önerileri alın. Zararlı kontrolü, sulama ve hasat için zamanında karar vermenize yardımcı olur."
+      },
+      "gapAgriculture": {
+        "name": "GAP Tarım",
+        "tagline": "Tarımsal danışmanlık hizmetleri",
+        "description": "Ürün ve hayvan yönetimi için genel tarımsal danışmanlık hizmetleri."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Hastalık Tespiti",
+      "pestIdentification": "Zararlı Tespiti",
+      "nutrientAnalysis": "Besin Analizi",
+      "treatmentAdvice": "Tedavi Tavsiyesi",
+      "soilPh": "Toprak pH'ı",
+      "nitrogen": "Azot",
+      "phosphorus": "Fosfor",
+      "potassium": "Potasyum",
+      "currentWeather": "Güncel Hava",
+      "temperature": "Sıcaklık",
+      "humidity": "Nem",
+      "forecast": "Tahmin",
+      "precipitation": "Yağış",
+      "evapotranspiration": "Buharlaşma-Terleme",
+      "solarRadiation": "Güneş Radyasyonu",
+      "wind": "Rüzgar",
+      "seasonalOutlook": "Mevsimsel Görünüm",
+      "rainfallProbability": "Yağış İhtimali",
+      "temperatureTrend": "Sıcaklık Eğilimi",
+      "cropForecasts": "Ürün Tahminleri",
+      "historical": "Geçmiş Veriler",
+      "astronomy": "Astronomi",
+      "nowcast": "Anlık Tahmin",
+      "forecasts": "Tahminler",
+      "alerts": "Uyarılar",
+      "dietOptimization": "Diyet Optimizasyonu",
+      "nutrientBalance": "Besin Dengesi",
+      "localFeeds": "Yerel Yemler",
+      "costCalculation": "Maliyet Hesaplama",
+      "organicFertilizers": "Organik Gübreler",
+      "inorganicFertilizers": "İnorganik Gübreler",
+      "expectedYield": "Beklenen Verim",
+      "siteSpecific": "Araziye Özel",
+      "growthStage": "Büyüme Dönemi",
+      "recommendations": "Öneriler",
+      "weatherBased": "Hava Durumuna Dayalı",
+      "actions": "Eylemler",
+      "cropAdvice": "Ürün Tavsiyesi",
+      "bestPractices": "En İyi Uygulamalar",
+      "seasonalTips": "Mevsimlik İpuçları",
+      "localKnowledge": "Yerel Bilgi"
+    },
+    "fallback": {
+      "service": "Tarımsal hizmet",
+      "description": "Hizmet detayları mevcut değil."
+    },
+    "regions": {
+      "worldwide": "Dünya Geneli",
+      "africa": "Afrika",
+      "eastAfrica": "Doğu Afrika",
+      "ethiopia": "Etiyopya",
+      "kenya": "Kenya"
+    },
+    "crops": {
+      "all": "Tüm ürünler",
+      "wheat": "Buğday",
+      "maize": "Mısır",
+      "beans": "Fasulye"
+    }
+  },
+  "system": {
+    "offline": "İnternet yok",
+    "errorTitle": "Eyvah! Bir hata oluştu",
+    "errorFallback": "Beklenmedik bir hata oluştu",
+    "tryAgain": "Tekrar Dene"
+  },
+  "errors": {
+    "syncFailed": "Sunucuya bağlanılamadı. Bazı özellikler kısıtlı olabilir.",
+    "weatherUnavailable": "Hava durumu servisi geçici olarak kullanılamıyor. Daha sonra tekrar deneyin.",
+    "diagnosisTimeout": "Bitki teşhisi çok uzun sürdü. Lütfen tekrar deneyin.",
+    "uploadFailed": "Görsel yüklenemedi. Bağlantınızı kontrol edin ve tekrar deneyin.",
+    "transcriptionFailed": "Ses tanıma başarısız oldu. Tekrar konuşmayı deneyin.",
+    "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
+    "requestTimeout": "İstek zaman aşımına uğradı. Bağlantınızı kontrol edin.",
+    "locationLookupFailed": "Konum bilgileriniz belirlenemedi."
+  },
+  "a11y": {
+    "startNewChat": "Yeni sohbet başlat",
+    "retryLoadingIntegrations": "Entegrasyonları tekrar yükle",
+    "dismissNotification": "Bildirimi kapat",
+    "dismiss": "Kapat",
+    "clearSearch": "Aramayı temizle",
+    "cancelRecording": "Kaydı iptal et",
+    "finishRecording": "Kaydı bitir",
+    "refreshLocation": "Konumu yenile",
+    "newChat": "Yeni sohbet",
+    "openSettings": "Ayarları aç",
+    "scrollToBottom": "En alta kaydır",
+    "clearVoiceTranscription": "Sesli metni temizle",
+    "takePhoto": "Fotoğraf çek",
+    "pickImage": "Resim seç",
+    "messageInput": "Mesaj girişi",
+    "sendMessage": "Mesaj gönder",
+    "recordVoice": "Ses kaydet",
+    "attachMedia": "Medya ekle",
+    "closeMenu": "Menüyü kapat",
+    "playVoice": "Sesi oynat",
+    "stopVoicePlayback": "Ses oynatmayı durdur",
+    "moreNotifications": "{count} bildirim daha",
+    "themeMode": "Tema: {mode}",
+    "copyMessage": "Mesajı kopyala",
+    "askQuestion": "Sor: {question}",
+    "selectLanguage": "Dil {name}"
+  }
+}

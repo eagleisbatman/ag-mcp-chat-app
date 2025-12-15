@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Baya",
+    "retry": "Sake gwada",
+    "cancel": "Soke",
+    "delete": "Goge",
+    "continue": "Ci gaba",
+    "dismiss": "Rufe",
+    "refresh": "Sabunta",
+    "clear": "Shafe",
+    "loading": "Ana loda…",
+    "skipForNow": "Tsallake yanzu"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Abokinka na noma mai wayo",
+    "getStarted": "Fara",
+    "features": {
+      "weatherTitle": "Hasashen Yanayi",
+      "weatherDescription": "Samu ingantaccen hasashen yanayi don gonarka",
+      "diagnosisTitle": "Binciken Shuka",
+      "diagnosisDescription": "Gano cututtukan shuka da hotuna",
+      "voiceTitle": "Taimako ta Murya",
+      "voiceDescription": "Yi magana yadda kake a yarenka"
+    },
+    "locationTitle": "Bada Wuri",
+    "locationDescription": "Bada wurinka don samun ingantaccen hasashen yanayi da shawarwarin noma na musamman ga yankinka.",
+    "enableLocation": "Bada Wuri",
+    "locationDenied": "Ba a bada izinin wuri ba",
+    "locationError": "Ba a iya samun wuri ba. Da fatan za a sake gwadawa.",
+    "benefits": {
+      "weather": "Hasashen yanayi na yankinku",
+      "regionAdvice": "Shawarwarin noma na musamman ga yankinku",
+      "soilData": "Bayanin kasa na yankinku"
+    },
+    "languageTitle": "Zabi Harshe",
+    "languageSubtitle": "Zabi harshen da kake so don mataimakin",
+    "searchLanguages": "Nemo harsuna...",
+    "noLanguagesFound": "Ba a sami harshe ba",
+    "suggestedForYou": "Shawara a gareka",
+    "currentLanguage": "Na Yanzu"
+  },
+  "chat": {
+    "welcomeMessage": "Sannu! 👋 Ni ne mataimakin nomanka.\n\nZan iya taimaka maka da:\n• Noma, kayan lambu, 'ya'yan itace, da furanni\n• Dabbobi, kaji, da kiwon kifi\n• Maganin kwari da cututtuka\n• Shawarar yanayi da kasuwa\n\nYaya zan iya taimaka maka yau?",
+    "locationDenied": "An hana izinin wuri",
+    "locationUpdated": "An sabunta wuri!",
+    "locationUpdateFailed": "Ba a iya sabunta wuri ba",
+    "loadingConversation": "Ana loda zance...",
+    "thinking": "Ina tunani...",
+    "messagePlaceholder": "Saƙo...",
+    "fromVoice": "Daga murya — gyara idan ya cancanta",
+    "voiceTranscribed": "An rubuta murya! Gyara idan ya cancanta, sannan a aika.",
+    "noInternet": "Babu haɗin Intanet. Da fatan za a bincika hanyar sadarwarka.",
+    "couldNotLoadConversation": "Ba a iya loda zance ba",
+    "startedNewConversation": "An fara sabon zance",
+    "connectionErrorBot": "Kuskuren haɗi. Da fatan za a sake gwadawa.",
+    "analyzingPlantImage": "Ana nazarin hoton shuka...",
+    "imageAnalysisFailedBot": "Nazarin hoto ya gaza. Da fatan za a sake gwadawa.",
+    "sorryCouldNotProcess": "Yi haƙuri, ban iya sarrafa hakan ba. {details}",
+    "analysisCouldNotComplete": "Nazari bai kammala ba. {details}",
+    "plantAnalysisIssues": "Nazarin shuka ya sami matsaloli: {details}",
+    "tapLocationToSet": "Taɓa wuri don saita",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Kai",
+    "tapToAskNext": "Taɓa don tambaya gaba:"
+  },
+  "media": {
+    "photoLibraryPermission": "Don zaɓar hoto, ana buƙatar damar shiga hotuna. Kunna a Saituna.",
+    "cameraPermission": "Ana buƙatar damar shiga kyamara don ɗaukar hoto. Kunna a Saituna.",
+    "pickImageFailed": "An kasa zaɓar hoto. Don Allah a sake gwadawa.",
+    "cameraFailed": "An kasa shiga kyamara. Don Allah a sake gwadawa.",
+    "camera": "Kyamara",
+    "gallery": "Hotuna"
+  },
+  "voice": {
+    "microphonePermission": "Ana buƙatar izinin makirfo",
+    "startRecordingFailed": "Fara rikodin ya gaza",
+    "recordingFailed": "Rikodin ya gaza",
+    "transcriptionFailed": "Fassarar murya ta gaza",
+    "couldNotTranscribeAudio": "An kasa fassara muryar",
+    "voiceUnavailableLater": "Murya ba ta samuwa - gwada daga baya",
+    "voiceUnavailable": "Murya ba ta samuwa - gwada kuma",
+    "audioPlaybackFailed": "Kunna sauti ya gaza",
+    "recording": "Ana rikodin",
+    "cancel": "Soke",
+    "done": "Gama",
+    "transcribing": "Ana fassara...",
+    "recordingHint": "Danna Gama don fassarawa, ko Soke don watsarwa"
+  },
+  "history": {
+    "title": "Tattaunawa",
+    "noConversations": "Babu tattaunawa tukuna",
+    "noConversationsHint": "Fara sabuwar hira don samun shawarar noma",
+    "newChat": "Sabuwar Hira",
+    "newConversation": "Sabuwar Tattaunawa",
+    "deleteTitle": "Goge Tattaunawa",
+    "deleteMessage": "Goge \"{title}\"? Ba za a iya dawo da ita ba.",
+    "untitled": "Marar Suna",
+    "deleted": "An goge tattaunawar",
+    "deleteFailed": "Gogewa ta gagara",
+    "couldNotDelete": "Ba a iya goge tattaunawar ba",
+    "notConnectedTitle": "Babu Haɗi",
+    "notConnectedHint": "Tarihin tattaunawa yana buƙatar haɗin intanet",
+    "yesterday": "Jiya"
+  },
+  "settings": {
+    "title": "Saituna",
+    "sectionConversations": "HIRARRAKI",
+    "sectionAiServices": "AYYUKAN AI",
+    "sectionLocation": "WURI",
+    "sectionLanguage": "HARSHE",
+    "sectionAppearance": "SIFFA",
+    "sectionDanger": "YANKIN HADARI",
+    "chatHistory": "Tarihin Hira",
+    "chatHistorySubtitle": "Duba da ci gaba da hirarraki na baya",
+    "aiServices": "Ayyuka Masu Aiki",
+    "aiServicesSubtitle": "Duba ayyukan AI masu aiki a yankinka",
+    "locationPermissionDenied": "Ba a ba izinin wuri ba",
+    "locationUpdated": "An sabunta wuri cikin nasara!",
+    "locationUpdateFailed": "Ba a iya sabunta wuri ba. Da fatan za a sake gwadawa.",
+    "locationEnabled": "An kunna wuri",
+    "tapToEnable": "Danna don kunnawa",
+    "tapToUpdateLocation": "Danna don sabunta wuri",
+    "themeLight": "Haske",
+    "themeDark": "Duhu",
+    "themeSystem": "Tsarin waya",
+    "language": "Harshe",
+    "resetOnboarding": "Sake fara farawa",
+    "resetOnboardingSubtitle": "Fara sabo da jagorar shiri",
+    "resetConfirmTitle": "Sake Shiri",
+    "resetConfirmMessage": "Wannan zai sake fara tsarin farawa. Ci gaba?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Wanda Digital Green Foundation ke tallafawa"
+  },
+  "mcp": {
+    "title": "Ayyukan AI",
+    "loading": "Ana ɗauko sabis...",
+    "loadingDetails": "Ana ɗauko...",
+    "footer": "Samun sabis ya dogara ne da wurinka",
+    "couldNotLoad": "An kasa ɗauko sabis",
+    "couldNotLoadDetails": "An kasa ɗauko cikakken bayanin sabis",
+    "failedToFetch": "An kasa nemo sabis",
+    "serviceCategory": "Rukunin {name}",
+    "service": "Sabis {name}",
+    "servicesAvailable": "{active} cikin {total} sabis na nan a wurinka",
+    "activeCount": "{active}/{total} masu aiki",
+    "statusActive": "Mai aiki",
+    "statusUnavailable": "Baya nan a yankinka",
+    "locationNotSet": "Ba a saita wuri ba",
+    "sectionAbout": "Game da shi",
+    "sectionFeatures": "Abubuwan da yake yi",
+    "sectionAvailableIn": "Akwai a",
+    "sectionSupportedCrops": "Amfanin gona masu dacewa",
+    "categories": {
+      "plantHealth": "Lafiyar shuka",
+      "soil": "Binciken ƙasa",
+      "weather": "Yanayi & Sauyin yanayi",
+      "livestock": "Abincin dabbobi",
+      "agriculture": "Shawarwarin noma"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Gano cututtukan shuka da maganinsu ta amfani da AI",
+        "description": "Duba hotunan shuka don gano cututtuka, kwari, da rashin sinadarai. Samu shawarar magani nan take da kuma hanyoyin kariya."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "Halayen ƙasa da binciken sinadaran abinci ga Afirka",
+        "description": "Samu cikakken bayanin ƙasa ciki har da pH, nitrogen, phosphorus, potassium, da sauran sinadarai. Ya shafi duk faɗin Afirka tare da tsarin mita 30."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Yanayin yanzu da hasashen yanayi na duniya baki ɗaya",
+        "description": "Samu bayanan yanayi na ainihin lokaci ciki har da zafin jiki, danshi, gudun iska, da ruwan sama. Hasashe yana samuwa har zuwa kwana 15."
+      },
+      "gapWeather": {
+        "name": "GAP Weather",
+        "tagline": "Hasashen yanayin noma ga Kenya",
+        "description": "Keɓaɓɓen hasashen yanayi don noma a Kenya. Ya haɗa da evapotranspiration, radiation na rana, da hasashen ruwan sama waɗanda aka keɓance don yanke shawara a harkar noma."
+      },
+      "edacap": {
+        "name": "EDACaP Climate",
+        "tagline": "Hasashen yanayi na lokaci-lokaci ga Habasha",
+        "description": "Hasashen yanayi na lokaci-lokaci ciki har da zafin jiki da hasashen ruwan sama. Yana taimaka wa manoma su tsara lokutan shuka da girbi."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Bayanin yanayi na wurare a faɗin duniya",
+        "description": "Cikakken sabis na bayanan yanayi wanda ke ba da yanayin yanzu da hasashe ga wurare a faɗin duniya."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Hankali da hasashen yanayi",
+        "description": "Ingantaccen tsarin binciken yanayi tare da hasashe mai zurfi da kuma iya hango yanayin yanzu."
+      },
+      "feedFormulation": {
+        "name": "Haɗin Abincin Dabbobi",
+        "tagline": "Ƙididdigar abinci mafi dacewa ga shanu masu nono",
+        "description": "Ƙididdige abincin dabbobi mafi araha ga shanu masu nono. Yana la'akari da burin samar da nono, nauyin jiki, da abincin dabbobi na gida da ke akwai."
+      },
+      "nextgen": {
+        "name": "NextGen Taki",
+        "tagline": "Shawarwarin takin zamani na musamman ga kowanne wuri a Habasha",
+        "description": "Samu ingantattun shawarwarin taki dangane da ainihin wurinka. Ya haɗa da shawarwarin taki na halitta (kamar takin gargajiya, vermicompost) da na sinadarai (kamar Urea, NPS)."
+      },
+      "decisionTree": {
+        "name": "Tsarin Shawarwarin Noma",
+        "tagline": "Shawarwari dangane da matakin girma ga Kenya",
+        "description": "Samu shawarwarin kula da amfanin gona dangane da matakin girma da yanayin yanzu. Yana taimaka maka yanke shawara a kan lokaci game da maganin kwari, ban ruwa, da girbi."
+      },
+      "gapAgriculture": {
+        "name": "GAP Agriculture",
+        "tagline": "Ayyukan shawarwarin noma",
+        "description": "Gabaɗaya ayyukan shawarwarin noma don kula da amfanin gona da dabbobi."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Gano cututtuka",
+      "pestIdentification": "Gano kwari",
+      "nutrientAnalysis": "Binciken sinadarai",
+      "treatmentAdvice": "Shawarar magani",
+      "soilPh": "pH na ƙasa",
+      "nitrogen": "Nitrogen",
+      "phosphorus": "Phosphorus",
+      "potassium": "Potassium",
+      "currentWeather": "Yanayin yanzu",
+      "temperature": "Zafin jiki",
+      "humidity": "Danshi",
+      "forecast": "Hasashe",
+      "precipitation": "Ruwan sama",
+      "evapotranspiration": "Evapotranspiration",
+      "solarRadiation": "Hasken rana",
+      "wind": "Iska",
+      "seasonalOutlook": "Hasashen lokaci-lokaci",
+      "rainfallProbability": "Yiwuwar ruwan sama",
+      "temperatureTrend": "Yanayin zafin jiki",
+      "cropForecasts": "Hasashen amfanin gona",
+      "historical": "Tarihi",
+      "astronomy": "Ilimin taurari",
+      "nowcast": "Hasashen yanzu",
+      "forecasts": "Hasashe",
+      "alerts": "Faɗakarwa",
+      "dietOptimization": "Inganta abinci",
+      "nutrientBalance": "Daidaiton sinadarai",
+      "localFeeds": "Abincin dabbobi na gida",
+      "costCalculation": "Ƙididdigar farashi",
+      "organicFertilizers": "Takin halitta",
+      "inorganicFertilizers": "Takin sinadarai",
+      "expectedYield": "Yawan amfani",
+      "siteSpecific": "Na musamman ga wuri",
+      "growthStage": "Matakin girma",
+      "recommendations": "Shawarwari",
+      "weatherBased": "Dangane da yanayi",
+      "actions": "Ayyuka",
+      "cropAdvice": "Shawarar noma",
+      "bestPractices": "Hanyoyi mafi kyau",
+      "seasonalTips": "Shawarwari na lokaci-lokaci",
+      "localKnowledge": "Ilimin gida"
+    },
+    "fallback": {
+      "service": "Sabis na noma",
+      "description": "Bayanin sabis baya nan."
+    },
+    "regions": {
+      "worldwide": "Duniya baki ɗaya",
+      "africa": "Afirka",
+      "eastAfrica": "Gabashin Afirka",
+      "ethiopia": "Habasha",
+      "kenya": "Kenya"
+    },
+    "crops": {
+      "all": "Duk amfanin gona",
+      "wheat": "Alhuda",
+      "maize": "Masara",
+      "beans": "Wake"
+    }
+  },
+  "system": {
+    "offline": "Babu haɗin intanet",
+    "errorTitle": "An samu matsala",
+    "errorFallback": "An samu kuskure mara tsammani",
+    "tryAgain": "Gwada sake"
+  },
+  "errors": {
+    "syncFailed": "Ba a haɗa da sabar ba. Wasu ayyuka sun iyakance.",
+    "weatherUnavailable": "Ba a samu yanayi ba. Gwada daga baya.",
+    "diagnosisTimeout": "Binciken shuka ya yi tsawo. Sake gwadawa.",
+    "uploadFailed": "Ɗora hoto ya gagara. Duba haɗi ka sake gwadawa.",
+    "transcriptionFailed": "Rubuta murya ya gagara. Sake magana.",
+    "serverError": "Kuskuren sabar. Sake gwadawa daga baya.",
+    "requestTimeout": "Nema ya ƙare lokaci. Duba haɗinka.",
+    "locationLookupFailed": "Ba a iya gano inda kake ba."
+  },
+  "a11y": {
+    "startNewChat": "Fara sabon hira",
+    "retryLoadingIntegrations": "Sake gwada ɗaukar haɗi",
+    "dismissNotification": "Cire sanarwa",
+    "dismiss": "Cire",
+    "clearSearch": "Share bincike",
+    "cancelRecording": "Soke rikodi",
+    "finishRecording": "Gama rikodi",
+    "refreshLocation": "Sake sabunta wuri",
+    "newChat": "Sabon hira",
+    "openSettings": "Bude saituna",
+    "scrollToBottom": "Gungura zuwa ƙasa",
+    "clearVoiceTranscription": "Share rubutun murya",
+    "takePhoto": "Ɗauki hoto",
+    "pickImage": "Zaɓi hoto",
+    "messageInput": "Wurin saƙo",
+    "sendMessage": "Aika saƙo",
+    "recordVoice": "Rikodi murya",
+    "attachMedia": "Haɗa abu",
+    "closeMenu": "Rufe menu",
+    "playVoice": "Kunna murya",
+    "stopVoicePlayback": "Tsaya kunna murya",
+    "moreNotifications": "{count} ƙarin sanarwa",
+    "themeMode": "Jigo: {mode}",
+    "copyMessage": "Kwafi saƙo",
+    "askQuestion": "Tambaya: {question}",
+    "selectLanguage": "Harshe {name}"
+  }
+}

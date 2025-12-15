@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "戻る",
+    "retry": "再試行",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "continue": "続ける",
+    "dismiss": "閉じる",
+    "refresh": "更新",
+    "clear": "クリア",
+    "loading": "読み込み中…",
+    "skipForNow": "今はスキップ"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "AI搭載の農業パートナー",
+    "getStarted": "始める",
+    "features": {
+      "weatherTitle": "天気予報",
+      "weatherDescription": "あなたの農場の正確な天気予報を受け取る",
+      "diagnosisTitle": "作物診断",
+      "diagnosisDescription": "写真で植物の病気を診断",
+      "voiceTitle": "音声サポート",
+      "voiceDescription": "あなたの言葉で自然に話せる"
+    },
+    "locationTitle": "位置情報を有効に",
+    "locationDescription": "位置情報を共有すると、正確な天気予報や地域に合った農業アドバイスが受け取れます。",
+    "enableLocation": "位置情報許可",
+    "locationDenied": "位置情報が許可されていません",
+    "locationError": "位置情報を取得できませんでした。もう一度お試しください。",
+    "benefits": {
+      "weather": "地域の天気予報",
+      "regionAdvice": "地域に合った栽培アドバイス",
+      "soilData": "地域の土壌データ"
+    },
+    "languageTitle": "言語選択",
+    "languageSubtitle": "アシスタントの言語を選んでください",
+    "searchLanguages": "言語を検索...",
+    "noLanguagesFound": "言語が見つかりませんでした",
+    "suggestedForYou": "おすすめ",
+    "currentLanguage": "現在"
+  },
+  "chat": {
+    "welcomeMessage": "こんにちは！👋 私はあなたの農業アシスタントです。\n\n次のお手伝いができます:\n• 作物、野菜、果物、花\n• 家畜、家禽、養殖\n• 病害虫対策\n• 天候と市場のアドバイス\n\n今日はお手伝いできることはありますか？",
+    "locationDenied": "位置情報が無効です",
+    "locationUpdated": "位置情報を更新しました！",
+    "locationUpdateFailed": "位置情報を更新できませんでした",
+    "loadingConversation": "会話を読み込み中...",
+    "thinking": "考え中...",
+    "messagePlaceholder": "メッセージ...",
+    "fromVoice": "音声入力 — 必要なら編集",
+    "voiceTranscribed": "音声認識完了！必要なら編集して送信してください。",
+    "noInternet": "インターネット接続がありません。ネットワークを確認してください。",
+    "couldNotLoadConversation": "会話を読み込めませんでした",
+    "startedNewConversation": "新しい会話を開始しました",
+    "connectionErrorBot": "接続エラーです。もう一度お試しください。",
+    "analyzingPlantImage": "植物画像を解析中...",
+    "imageAnalysisFailedBot": "画像解析に失敗しました。もう一度お試しください。",
+    "sorryCouldNotProcess": "申し訳ありません、処理できませんでした。{details}",
+    "analysisCouldNotComplete": "解析が完了できませんでした。{details}",
+    "plantAnalysisIssues": "植物の解析に問題がありました: {details}",
+    "tapLocationToSet": "位置をタップして設定",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "あなた",
+    "tapToAskNext": "次に質問するにはタップ:"
+  },
+  "media": {
+    "photoLibraryPermission": "写真を選ぶには、フォトライブラリへのアクセスが必要です。設定で許可してください。",
+    "cameraPermission": "写真を撮るにはカメラへのアクセスが必要です。設定で許可してください。",
+    "pickImageFailed": "画像の選択に失敗しました。もう一度お試しください。",
+    "cameraFailed": "カメラへのアクセスに失敗しました。もう一度お試しください。",
+    "camera": "カメラ",
+    "gallery": "ギャラリー"
+  },
+  "voice": {
+    "microphonePermission": "マイク許可が必要です",
+    "startRecordingFailed": "録音開始できませんでした",
+    "recordingFailed": "録音できませんでした",
+    "transcriptionFailed": "文字起こしできませんでした",
+    "couldNotTranscribeAudio": "音声の文字起こしができませんでした",
+    "voiceUnavailableLater": "音声機能は利用できません - 後でもう一度お試しください",
+    "voiceUnavailable": "音声機能は利用できません - もう一度お試しください",
+    "audioPlaybackFailed": "音声再生できませんでした",
+    "recording": "録音中",
+    "cancel": "キャンセル",
+    "done": "完了",
+    "transcribing": "文字起こし中...",
+    "recordingHint": "「完了」で文字起こし、「キャンセル」で破棄"
+  },
+  "history": {
+    "title": "会話",
+    "noConversations": "まだ会話がありません",
+    "noConversationsHint": "新しいチャットを始めて、農業アドバイスをもらいましょう",
+    "newChat": "新しいチャット",
+    "newConversation": "新しい会話",
+    "deleteTitle": "会話を削除",
+    "deleteMessage": "{title}を削除しますか？元に戻せません。",
+    "untitled": "無題",
+    "deleted": "会話を削除しました",
+    "deleteFailed": "削除失敗",
+    "couldNotDelete": "会話を削除できませんでした",
+    "notConnectedTitle": "未接続",
+    "notConnectedHint": "会話履歴にはインターネット接続が必要です",
+    "yesterday": "昨日"
+  },
+  "settings": {
+    "title": "設定",
+    "sectionConversations": "会話",
+    "sectionAiServices": "AIサービス",
+    "sectionLocation": "位置情報",
+    "sectionLanguage": "言語",
+    "sectionAppearance": "表示",
+    "sectionDanger": "危険",
+    "chatHistory": "チャット履歴",
+    "chatHistorySubtitle": "過去の会話を見る・続ける",
+    "aiServices": "利用中のサービス",
+    "aiServicesSubtitle": "地域で利用中のAIサービスを表示",
+    "locationPermissionDenied": "位置情報が拒否されました",
+    "locationUpdated": "現在地を更新しました！",
+    "locationUpdateFailed": "現在地を更新できませんでした。もう一度お試しください。",
+    "locationEnabled": "位置情報はオンです",
+    "tapToEnable": "タップしてオンにする",
+    "tapToUpdateLocation": "タップして現在地を更新",
+    "themeLight": "ライト",
+    "themeDark": "ダーク",
+    "themeSystem": "システム",
+    "language": "言語",
+    "resetOnboarding": "初期設定をリセット",
+    "resetOnboardingSubtitle": "最初から設定し直す",
+    "resetConfirmTitle": "設定をリセット",
+    "resetConfirmMessage": "初期設定をやり直します。続けますか？",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "提供: Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "AIサービス",
+    "loading": "サービスを読み込み中...",
+    "loadingDetails": "読み込み中...",
+    "footer": "サービスは現在地によって利用可否が変わります",
+    "couldNotLoad": "サービスを読み込めませんでした",
+    "couldNotLoadDetails": "サービス詳細を読み込めませんでした",
+    "failedToFetch": "サービスの取得に失敗しました",
+    "serviceCategory": "{name}カテゴリ",
+    "service": "{name}サービス",
+    "servicesAvailable": "現在地で{active}/{total}のサービスが利用可能です",
+    "activeCount": "{active}/{total}件が稼働中",
+    "statusActive": "稼働中",
+    "statusUnavailable": "お住まいの地域では利用できません",
+    "locationNotSet": "現在地が設定されていません",
+    "sectionAbout": "概要",
+    "sectionFeatures": "機能",
+    "sectionAvailableIn": "対応地域",
+    "sectionSupportedCrops": "対応作物",
+    "categories": {
+      "plantHealth": "植物の健康",
+      "soil": "土壌分析",
+      "weather": "天候・気候",
+      "livestock": "家畜栄養",
+      "agriculture": "作物アドバイス"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "AIによる植物の病気診断",
+        "description": "植物の画像を分析し、病気、害虫、栄養不足を特定します。治療法と予防のヒントをすぐに診断して提供します。"
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "アフリカの土壌特性と栄養分析",
+        "description": "pH、窒素、リン、カリウム、その他の栄養素を含む詳細な土壌情報を提供。アフリカ全土を30メートル解像度でカバーします。"
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "世界の現在天気と予報",
+        "description": "気温、湿度、風速、降水量などのリアルタイムの気象データにアクセス。最大15日間の予報が利用可能です。"
+      },
+      "gapWeather": {
+        "name": "GAP Weather",
+        "tagline": "ケニア向け農業気象予報",
+        "description": "ケニアの農業に特化した気象予報。蒸発散量、日射量、降水量の予報を含み、営農判断に役立ちます。"
+      },
+      "edacap": {
+        "name": "EDACaP Climate",
+        "tagline": "エチオピア向け季節気候予報",
+        "description": "気温や降水量予測を含む季節ごとの気候見通し。農家が作付けや収穫の計画を立てるのに役立ちます。"
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "世界各地の気象データ",
+        "description": "世界中の現在および予報を含む、包括的な気象データサービスを提供します。"
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "気象情報と予報",
+        "description": "高解像度の予報とナウキャスト機能を提供する高度な気象情報プラットフォーム。"
+      },
+      "feedFormulation": {
+        "name": "飼料配合",
+        "tagline": "酪農牛向けの最適な飼料配合計算",
+        "description": "酪農牛の費用対効果が最も高い飼料配合を計算します。乳生産目標、体重、利用可能な地元飼料を考慮に入れます。"
+      },
+      "nextgen": {
+        "name": "次世代肥料",
+        "tagline": "エチオピアの場所に応じた肥料推奨",
+        "description": "現在地に基づいた正確な肥料推奨を取得。有機肥料（堆肥、ミミズ堆肥）と無機肥料（尿素、NPS）の両方の推奨が含まれます。"
+      },
+      "decisionTree": {
+        "name": "作物意思決定ツリー",
+        "tagline": "ケニア向け生育段階別推奨",
+        "description": "生育段階と現在の気象条件に基づいた作物管理推奨を取得。害虫駆除、灌漑、収穫の時期を逃さない決定に役立ちます。"
+      },
+      "gapAgriculture": {
+        "name": "GAP農業",
+        "tagline": "農業アドバイスサービス",
+        "description": "作物および家畜管理のための一般的な農業アドバイスサービス。"
+      }
+    },
+    "features": {
+      "diseaseDetection": "病気検知",
+      "pestIdentification": "害虫特定",
+      "nutrientAnalysis": "栄養分析",
+      "treatmentAdvice": "治療アドバイス",
+      "soilPh": "土壌pH",
+      "nitrogen": "窒素",
+      "phosphorus": "リン",
+      "potassium": "カリウム",
+      "currentWeather": "現在の天気",
+      "temperature": "気温",
+      "humidity": "湿度",
+      "forecast": "予報",
+      "precipitation": "降水量",
+      "evapotranspiration": "蒸発散量",
+      "solarRadiation": "日射量",
+      "wind": "風",
+      "seasonalOutlook": "季節見通し",
+      "rainfallProbability": "降水確率",
+      "temperatureTrend": "気温傾向",
+      "cropForecasts": "作物予測",
+      "historical": "過去データ",
+      "astronomy": "天文情報",
+      "nowcast": "ナウキャスト",
+      "forecasts": "予報",
+      "alerts": "アラート",
+      "dietOptimization": "飼料最適化",
+      "nutrientBalance": "栄養バランス",
+      "localFeeds": "地元飼料",
+      "costCalculation": "コスト計算",
+      "organicFertilizers": "有機肥料",
+      "inorganicFertilizers": "無機肥料",
+      "expectedYield": "予測収量",
+      "siteSpecific": "場所別",
+      "growthStage": "生育段階",
+      "recommendations": "推奨事項",
+      "weatherBased": "天候に基づく",
+      "actions": "対策",
+      "cropAdvice": "作物アドバイス",
+      "bestPractices": "最適な実践法",
+      "seasonalTips": "季節のヒント",
+      "localKnowledge": "地域知識"
+    },
+    "fallback": {
+      "service": "農業サービス",
+      "description": "サービス詳細は利用できません。"
+    },
+    "regions": {
+      "worldwide": "世界中",
+      "africa": "アフリカ",
+      "eastAfrica": "東アフリカ",
+      "ethiopia": "エチオピア",
+      "kenya": "ケニア"
+    },
+    "crops": {
+      "all": "全作物",
+      "wheat": "小麦",
+      "maize": "トウモロコシ",
+      "beans": "豆"
+    }
+  },
+  "system": {
+    "offline": "インターネットに接続できません",
+    "errorTitle": "問題が発生しました",
+    "errorFallback": "予期せぬエラーが発生しました",
+    "tryAgain": "もう一度"
+  },
+  "errors": {
+    "syncFailed": "サーバーに接続できませんでした。一部機能が制限されます。",
+    "weatherUnavailable": "天気予報サービスは一時的に利用できません。後で再度お試しください。",
+    "diagnosisTimeout": "植物診断に時間がかかっています。再度お試しください。",
+    "uploadFailed": "画像がアップロードできませんでした。接続を確認し、やり直してください。",
+    "transcriptionFailed": "音声認識に失敗しました。もう一度お話しください。",
+    "serverError": "サーバーエラーです。後で再度お試しください。",
+    "requestTimeout": "応答がありません。通信状況をご確認ください。",
+    "locationLookupFailed": "現在地が特定できませんでした。"
+  },
+  "a11y": {
+    "startNewChat": "新しいチャットを開始",
+    "retryLoadingIntegrations": "連携の読み込みを再試行",
+    "dismissNotification": "通知を閉じる",
+    "dismiss": "閉じる",
+    "clearSearch": "検索をクリア",
+    "cancelRecording": "録音を中止",
+    "finishRecording": "録音を終了",
+    "refreshLocation": "位置情報を更新",
+    "newChat": "新規チャット",
+    "openSettings": "設定を開く",
+    "scrollToBottom": "一番下までスクロール",
+    "clearVoiceTranscription": "文字起こしをクリア",
+    "takePhoto": "写真を撮る",
+    "pickImage": "画像を選択",
+    "messageInput": "メッセージ入力",
+    "sendMessage": "メッセージを送信",
+    "recordVoice": "音声を録音",
+    "attachMedia": "メディアを添付",
+    "closeMenu": "メニューを閉じる",
+    "playVoice": "音声を再生",
+    "stopVoicePlayback": "音声再生を停止",
+    "moreNotifications": "あと{count}件の通知",
+    "themeMode": "テーマ: {mode}",
+    "copyMessage": "メッセージをコピー",
+    "askQuestion": "質問: {question}",
+    "selectLanguage": "言語 {name}"
+  }
+}

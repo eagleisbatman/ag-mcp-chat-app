@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Dib",
+    "retry": "Mar kale isku day",
+    "cancel": "Jooji",
+    "delete": "Tirtir",
+    "continue": "Sii wad",
+    "dismiss": "Xidh",
+    "refresh": "Cusboonaysii",
+    "clear": "Nadiifi",
+    "loading": "Diyaarinaya…",
+    "skipForNow": "Hadda ka gudub"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Kaaliyahaaga beeraha ee A.I.",
+    "getStarted": "Bilow",
+    "features": {
+      "weatherTitle": "Saadaasha Cimilada",
+      "weatherDescription": "Ka hel saadaasha cimilada saxda ah beerahaaga",
+      "diagnosisTitle": "Baaritaanka Dalagga",
+      "diagnosisDescription": "Ku aqoonso cudurrada dhirta sawirro",
+      "voiceTitle": "Taageero Cod",
+      "voiceDescription": "Ku hadal si dabiici ah luqaddaada"
+    },
+    "locationTitle": "Daar Goobta",
+    "locationDescription": "La wadaag goobtaada si aad u hesho saadaasha cimilada saxda ah iyo talo beerasho oo degaankaaga gaar ah.",
+    "enableLocation": "Daar Goobta",
+    "locationDenied": "Ogolaanshaha goobta waa la diiday",
+    "locationError": "Lama helin goobta. Fadlan mar kale isku day.",
+    "benefits": {
+      "weather": "Saadaasha cimilada degaanka",
+      "regionAdvice": "Talooyin dalag oo degaankaaga ah",
+      "soilData": "Xogta ciidda ee degaankaaga"
+    },
+    "languageTitle": "Dooro Luqadda",
+    "languageSubtitle": "Dooro luqadda aad doorbiddayso ee kaaliyaha",
+    "searchLanguages": "Ka raadi luqadaha...",
+    "noLanguagesFound": "Lama helin luqado",
+    "suggestedForYou": "Kuu Soo Jeedisay",
+    "currentLanguage": "Hadda"
+  },
+  "chat": {
+    "welcomeMessage": "Salaan! 👋 Waxaan ahay kaaliyahaaga beeraha.\n\nWaxaan kaa caawin karaa arrimaha soo socda:\n• Dalagga, khudaarta, midhaha, iyo ubaxa\n• Xoolaha, digaaga, iyo kalluumaysiga\n• Maareynta cayayaanka iyo cudurrada\n• Talada cimilada iyo suuqa\n\nMaanta sideen kuu caawin karaa?",
+    "locationDenied": "Ogolaanshaha goobta waa la diiday",
+    "locationUpdated": "Goobta waa la cusboonaysiiyay!",
+    "locationUpdateFailed": "Lama cusboonaysiin karin goobta",
+    "loadingConversation": "Wadahadalka ayaa soo degaya...",
+    "thinking": "Waan fikirayaa...",
+    "messagePlaceholder": "Fariin...",
+    "fromVoice": "Cod ayay ka timid — tafatir haddii loo baahdo",
+    "voiceTranscribed": "Codkii waa la qoray! Tafatir haddii loo baahdo, ka dibna dir.",
+    "noInternet": "Ma jirto xiriir internet. Fadlan hubi shabakadaada.",
+    "couldNotLoadConversation": "Wadahadalka lama soo shubin karin",
+    "startedNewConversation": "Wadahadal cusub ayaa bilaabmay",
+    "connectionErrorBot": "Cilad isku xirnaan. Fadlan mar kale isku day.",
+    "analyzingPlantImage": "Sawirka geedka ayaa la falanqeynayaa...",
+    "imageAnalysisFailedBot": "Falanqaynta sawirka way fashilantay. Fadlan mar kale isku day.",
+    "sorryCouldNotProcess": "Waan ka xumahay, ma aanan farsamayn karin. {details}",
+    "analysisCouldNotComplete": "Falanqayntii ma dhamaanin. {details}",
+    "plantAnalysisIssues": "Falanqaynta geedka waxay lahayd arrimo: {details}",
+    "tapLocationToSet": "Ku dhufo goobta si aad u dejiso",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Adiga",
+    "tapToAskNext": "Ku dhufo si aad u weydiiso waxa xiga:"
+  },
+  "media": {
+    "photoLibraryPermission": "Waxaa loo baahan yahay helitaanka maktabadda sawirrada si aad sawirro u doorato. Ka hawlgeli Goobaha.",
+    "cameraPermission": "Waxaa loo baahan yahay helitaanka kamaradda si aad sawirro u qaado. Ka hawlgeli Goobaha.",
+    "pickImageFailed": "Lama dooran karin sawirka. Fadlan mar kale isku day.",
+    "cameraFailed": "Lama heli karin kamaradda. Fadlan mar kale isku day.",
+    "camera": "Kamarad",
+    "gallery": "Sawirro"
+  },
+  "voice": {
+    "microphonePermission": "Ogolaansho makarafoon waa loo baahan yahay.",
+    "startRecordingFailed": "Duubistu ma bilaabmin.",
+    "recordingFailed": "Duubistii waa fashilantay.",
+    "transcriptionFailed": "Qoristii waa fashilantay.",
+    "couldNotTranscribeAudio": "Codka lama qori karin.",
+    "voiceUnavailableLater": "Codka ma shaqaynayo - mar dambe isku day.",
+    "voiceUnavailable": "Codka ma shaqaynayo - mar kale isku day.",
+    "audioPlaybackFailed": "Ciyaaristii codka waa fashilantay.",
+    "recording": "Duubayaa",
+    "cancel": "Jooji",
+    "done": "Dhamee",
+    "transcribing": "Waa la qorayaa...",
+    "recordingHint": "Taabo 'Dhamee' si aad u qorto, ama 'Jooji' si aad uga tagto."
+  },
+  "history": {
+    "title": "Sheekooyin",
+    "noConversations": "Wali ma jiraan sheekooyin",
+    "noConversationsHint": "Ku bilow sheeko cusub si aad talo beerasho u hesho",
+    "newChat": "Sheeko Cusub",
+    "newConversation": "Wada Hadal Cusub",
+    "deleteTitle": "Tirtir Wada Hadalka",
+    "deleteMessage": "Ma tirtirtaa \"{title}\"? Tan dib looma celin karo.",
+    "untitled": "Magac La'aan",
+    "deleted": "Wada Hadalkii waa la tirtiray",
+    "deleteFailed": "Tirtirkii wuu guuldaraystay",
+    "couldNotDelete": "Lama tirtiri karin wada hadalka",
+    "notConnectedTitle": "Ma xidhna",
+    "notConnectedHint": "Taariikhda wada hadalku waxay u baahan tahay xidhiidh internet.",
+    "yesterday": "Shalay"
+  },
+  "settings": {
+    "title": "Goobaha",
+    "sectionConversations": "SHEEKOOYIN",
+    "sectionAiServices": "ADEGYADA AI",
+    "sectionLocation": "GOOBTA",
+    "sectionLanguage": "LUQADDA",
+    "sectionAppearance": "MUUQAALKA",
+    "sectionDanger": "AAGGA HALISTA",
+    "chatHistory": "Sheekooyinkii Hore",
+    "chatHistorySubtitle": "Eeg oo sii wad sheekooyinkii hore",
+    "aiServices": "Adeegyada Shaqaynaya",
+    "aiServicesSubtitle": "Eeg adeegyada AI ee deegaankaaga ka shaqaynaya",
+    "locationPermissionDenied": "Ogolaanshaha goobta waa la diiday",
+    "locationUpdated": "Goobta si guul ah ayaa loo cusboonaysiiyay!",
+    "locationUpdateFailed": "Lama cusboonaysiin karin goobta. Fadlan mar kale isku day.",
+    "locationEnabled": "Goobta waa shidan tahay",
+    "tapToEnable": "Taabo si aad u shido",
+    "tapToUpdateLocation": "Taabo si aad u cusboonaysiiso goobta",
+    "themeLight": "Iftiin",
+    "themeDark": "Madow",
+    "themeSystem": "Nidaam",
+    "language": "Luqad",
+    "resetOnboarding": "Dib u billow Bilowga",
+    "resetOnboardingSubtitle": "Ka bilow cusub hage dejinta",
+    "resetConfirmTitle": "Dib u billow Dejinta",
+    "resetConfirmMessage": "Tani waxay dib u billaabi doontaa habka dejinta bilowga. Ma sii wadaysaa?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Waxaa waday Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "Adeegyada AI",
+    "loading": "Adeegyada ayaa soo socda...",
+    "loadingDetails": "Soo socda...",
+    "footer": "Helitaanka adeeggu wuxuu ku xiran yahay goobtaada",
+    "couldNotLoad": "Adeegyada lama soo shubin karin",
+    "couldNotLoadDetails": "Faahfaahinta adeegga lama soo shubin karin",
+    "failedToFetch": "Adeegyada lama heli karin",
+    "serviceCategory": "Qaybta {name}",
+    "service": "Adeegga {name}",
+    "servicesAvailable": "{active} ka mid ah {total} adeeg ayaa laga helayaa goobtaada",
+    "activeCount": "{active}/{total} waa firfircoon",
+    "statusActive": "Firfircoon",
+    "statusUnavailable": "Lagama helo gobolkaaga",
+    "locationNotSet": "Goobta lama dejin",
+    "sectionAbout": "Ku saabsan",
+    "sectionFeatures": "Tilmaamaha",
+    "sectionAvailableIn": "Laga heli karo",
+    "sectionSupportedCrops": "Dalagyada la taageero",
+    "categories": {
+      "plantHealth": "Caafimaadka Dhirta",
+      "soil": "Baadhitaanka Ciidda",
+      "weather": "Cimilada & Hawada",
+      "livestock": "Nafaqada Xoolaha",
+      "agriculture": "Talooyinka Beeraha"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Aqoonsiga iyo baadhista cudurrada dhirta ee AI ku shaqeeya",
+        "description": "Falanqee sawirrada dhirta si aad u aqoonsato cudurrada, cayayaanka, iyo nafaqo-darrooyinka. Hel baadhitaan degdeg ah oo wata talooyin daaweyn iyo ka hortag."
+      },
+      "isdaSoil": {
+        "name": "ISDA Ciid",
+        "tagline": "Tilmaamaha ciidda iyo baadhista nafaqooyinka ee Afrika",
+        "description": "Hel macluumaad faahfaahsan oo ciidda ah oo ay ku jiraan pH, nitrogen, phosphorus, potassium, iyo nafaqooyinka kale. Wuxuu daboolayaa dhammaan Afrika oo leh cabbir 30-mitir ah."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Xaaladaha hadda jira iyo saadaasha hawada ee adduunka oo dhan",
+        "description": "Hel macluumaadka cimilada ee waqtiga dhabta ah oo ay ku jiraan heerkulka, qoyaanka, xawaaraha dabaysha, iyo roobka. Saadaashu waxay diyaar tahay ilaa 15 maalmood."
+      },
+      "gapWeather": {
+        "name": "GAP Hawada",
+        "tagline": "Saadaasha cimilada beeraha ee Kenya",
+        "description": "Saadaasha cimilada gaarka ah ee beeraha Kenya. Waxaa ku jira uumibaxa biyaha, shucaaca qoraxda, iyo saadaasha roobka oo loogu talagalay go'aamada beeraha."
+      },
+      "edacap": {
+        "name": "EDACaP Cimilada",
+        "tagline": "Saadaasha cimilada xilliyeed ee Ethiopia",
+        "description": "Aragti cimilada xilliyeed oo ay ku jiraan saadaasha heerkulka iyo roobka. Waxay ka caawisaa beeralayda inay qorsheeyaan jadwalaha beero-gooynta."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Xogta cimilada ee goobaha caalamiga ah",
+        "description": "Adeeg xog cimilada oo dhammaystiran oo bixiya xaaladaha hadda jira iyo saadaasha goobaha adduunka oo dhan."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Xog-ogaalnimada iyo saadaasha cimilada",
+        "description": "Madal horumarsan oo xog-ogaalnimada cimilada ah oo leh saadaalo tayo sare leh iyo awoodo saadaalin degdeg ah."
+      },
+      "feedFormulation": {
+        "name": "Diyaarinta Quudka",
+        "tagline": "Xisaabinta quudka ugu habboon ee lo'da caanaha",
+        "description": "Xisaabi isku-darka quudka ugu kharash-yar ee lo'daada caanaha. Waxay tixgelinaysaa yoolalka wax-soo-saarka caanaha, miisaanka jirka, iyo quudka deegaanka ee diyaar ah."
+      },
+      "nextgen": {
+        "name": "Bacriminta Cusub",
+        "tagline": "Talooyinka bacriminta gaarka ah ee goobta ee Ethiopia",
+        "description": "Hel talooyin bacrimin oo sax ah oo ku salaysan goobtaada saxda ah. Waxaa ku jira talooyin organic ah (digada, vermicompost) iyo kuwa aan organic ahayn (Urea, NPS)."
+      },
+      "decisionTree": {
+        "name": "Go'aanka Dalagga",
+        "tagline": "Talooyinka heerka koritaanka ee Kenya",
+        "description": "Hel talooyin maareynta dalagga oo ku salaysan heerka koritaanka iyo xaaladaha cimilada ee hadda jira. Waxay kaa caawisaa inaad go'aanno waqtigooda ah ka gaarto xakamaynta cayayaanka, waraabka, iyo goosashada."
+      },
+      "gapAgriculture": {
+        "name": "GAP Beeraha",
+        "tagline": "Adeegyada talada beeraha",
+        "description": "Adeegyada talada beeraha ee guud ee maareynta dalagga iyo xoolaha."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Aqoonsiga Cudurrada",
+      "pestIdentification": "Aqoonsiga Cayayaanka",
+      "nutrientAnalysis": "Baadhitaanka Nafaqada",
+      "treatmentAdvice": "Talo Daaweyn",
+      "soilPh": "PH Ciidda",
+      "nitrogen": "Nitrogen",
+      "phosphorus": "Phosphorus",
+      "potassium": "Potassium",
+      "currentWeather": "Cimilada Hadda",
+      "temperature": "Heerkulka",
+      "humidity": "Qoyaan",
+      "forecast": "Saadaasha",
+      "precipitation": "Roobka",
+      "evapotranspiration": "Uumibaxa Biyaha",
+      "solarRadiation": "Shucaaca Qoraxda",
+      "wind": "Dabayl",
+      "seasonalOutlook": "Aragti Xilliyeed",
+      "rainfallProbability": "Suurtagalnimada Roobka",
+      "temperatureTrend": "Isbedelka Heerkulka",
+      "cropForecasts": "Saadaasha Dalagyada",
+      "historical": "Taariikhi",
+      "astronomy": "Xiddigiska",
+      "nowcast": "Saadaal Hadda",
+      "forecasts": "Saadaalo",
+      "alerts": "Digniino",
+      "dietOptimization": "Hagaajinta Quudka",
+      "nutrientBalance": "Isku-dheelitirnaanta Nafaqada",
+      "localFeeds": "Quudka Deegaanka",
+      "costCalculation": "Xisaabinta Kharashka",
+      "organicFertilizers": "Bacriminta Organic",
+      "inorganicFertilizers": "Bacriminta Aan Organic Ahayn",
+      "expectedYield": "Goosashada La Filaayo",
+      "siteSpecific": "Goob-Gaar ah",
+      "growthStage": "Heerka Koritaanka",
+      "recommendations": "Talooyin",
+      "weatherBased": "Cimilada Ku Salaysan",
+      "actions": "Tallaabooyin",
+      "cropAdvice": "Talo Dalag",
+      "bestPractices": "Hababka Ugu Wanaagsan",
+      "seasonalTips": "Talooyin Xilliyeed",
+      "localKnowledge": "Aqoon Deegaan"
+    },
+    "fallback": {
+      "service": "Adeeg beeraha",
+      "description": "Faahfaahinta adeegga lama heli karo."
+    },
+    "regions": {
+      "worldwide": "Adduunka oo dhan",
+      "africa": "Afrika",
+      "eastAfrica": "Bariga Afrika",
+      "ethiopia": "Ethiopia",
+      "kenya": "Kenya"
+    },
+    "crops": {
+      "all": "Dhammaan dalagyada",
+      "wheat": "Qamadi",
+      "maize": "Galley",
+      "beans": "Digir"
+    }
+  },
+  "system": {
+    "offline": "Internet ma jiro",
+    "errorTitle": "Cilad baa dhacday",
+    "errorFallback": "Cilad lama filaan ah baa dhacday",
+    "tryAgain": "Iskuday mar kale"
+  },
+  "errors": {
+    "syncFailed": "Server-ka lama gaadhin. Adeegyada qaar way xaddidan yihiin.",
+    "weatherUnavailable": "Adeegga cimilada si kumeelgaadh ah uma shaqeeyo. Mar dambe isku day.",
+    "diagnosisTimeout": "Baadhitaanka geedaha wuxuu qaadanayaa wakhti dheer. Fadlan mar labaad isku day.",
+    "uploadFailed": "Sawirka lama soo gelin karin. Hubi isku xidhkaaga oo mar labaad isku day.",
+    "transcriptionFailed": "Qoraalka codka way guuldarraysatay. Mar labaad hadal.",
+    "serverError": "Cilad server ah. Fadlan mar dambe isku day.",
+    "requestTimeout": "Codsigu wuu dhacay. Hubi isku xidhkaaga.",
+    "locationLookupFailed": "Lama go'aamin karin meesha aad joogto."
+  },
+  "a11y": {
+    "startNewChat": "Bilaw sheeko cusub",
+    "retryLoadingIntegrations": "Dib u soo deji isku xirka",
+    "dismissNotification": "Xidh ogeysiiska",
+    "dismiss": "Xidh",
+    "clearSearch": "Nadiifi raadinta",
+    "cancelRecording": "Jooji duubista",
+    "finishRecording": "Dhamee duubista",
+    "refreshLocation": "Dib u cusbooneysii goobta",
+    "newChat": "Sheeko cusub",
+    "openSettings": "Fur goobaha",
+    "scrollToBottom": "Hoos u deg",
+    "clearVoiceTranscription": "Nadiifi qoraalka codka",
+    "takePhoto": "Sawir qaad",
+    "pickImage": "Dooro sawir",
+    "messageInput": "Meel fariin lagu qoro",
+    "sendMessage": "Dir fariin",
+    "recordVoice": "Duub cod",
+    "attachMedia": "Ku dar warbaahin",
+    "closeMenu": "Xidh liiska",
+    "playVoice": "Dhegeyso codka",
+    "stopVoicePlayback": "Jooji dhegeysiga codka",
+    "moreNotifications": "{count} ogeysiis oo kale",
+    "themeMode": "Mawduuc: {mode}",
+    "copyMessage": "Koobiye fariin",
+    "askQuestion": "Weydii: {question}",
+    "selectLanguage": "Luuqad {name}"
+  }
+}

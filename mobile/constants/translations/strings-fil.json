@@ -1,0 +1,323 @@
+{
+  "common": {
+    "back": "Balik",
+    "retry": "Ulitin",
+    "cancel": "Kanselahin",
+    "delete": "Burahin",
+    "continue": "Tuloy",
+    "dismiss": "Isara",
+    "refresh": "I-refresh",
+    "clear": "Linisin",
+    "loading": "Naglo-load…",
+    "skipForNow": "Laktawan Muna"
+  },
+  "onboarding": {
+    "appName": "FarmerChat",
+    "tagline": "Ang iyong matalinong kasama sa pagsasaka.",
+    "getStarted": "Magsimula",
+    "features": {
+      "weatherTitle": "Ulat Panahon",
+      "weatherDescription": "Tumpak na taya ng panahon para sa iyong bukid.",
+      "diagnosisTitle": "Pagsusuri ng Pananim",
+      "diagnosisDescription": "Tukuyin ang sakit ng halaman sa tulong ng mga larawan.",
+      "voiceTitle": "Tulong sa Boses",
+      "voiceDescription": "Magsalita nang natural sa iyong wika."
+    },
+    "locationTitle": "Paganahin ang Lokasyon",
+    "locationDescription": "Ibahagi ang iyong lokasyon para makakuha ng tumpak na taya ng panahon at payo sa pagsasaka para sa iyong lugar.",
+    "enableLocation": "Paganahin ang Lokasyon",
+    "locationDenied": "Hindi pinayagan ang Lokasyon.",
+    "locationError": "Hindi makuha ang lokasyon. Pakisubukan ulit.",
+    "benefits": {
+      "weather": "Taya ng panahon sa inyong lugar.",
+      "regionAdvice": "Payo sa pananim batay sa lugar.",
+      "soilData": "Impormasyon sa lupa para sa inyong lugar."
+    },
+    "languageTitle": "Pumili ng Wika",
+    "languageSubtitle": "Piliin ang iyong gustong wika para sa katuwang.",
+    "searchLanguages": "Maghanap ng wika...",
+    "noLanguagesFound": "Walang nakitang wika.",
+    "suggestedForYou": "Iminungkahi para sa Iyo",
+    "currentLanguage": "Kasalukuyan"
+  },
+  "chat": {
+    "welcomeMessage": "Kumusta! 👋 Ako ang iyong katulong sa pagsasaka.\n\nMatutulungan kita sa:\n• Pananim, gulay, prutas, at bulaklak\n• Pag-aalaga ng hayop, manok, at isda\n• Pamamahala ng peste at sakit\n• Payo sa panahon at merkado\n\nPaano ako makakatulong sa iyo ngayon?",
+    "locationDenied": "Lokasyon hindi pinayagan",
+    "locationUpdated": "Na-update ang lokasyon!",
+    "locationUpdateFailed": "Hindi ma-update ang lokasyon",
+    "loadingConversation": "Kinakarga ang usapan...",
+    "thinking": "Nag-iisip...",
+    "messagePlaceholder": "Mensahe...",
+    "fromVoice": "Mula sa boses — i-edit kung kailangan",
+    "voiceTranscribed": "Naisalin ang boses! I-edit kung kailangan, pagkatapos ipadala.",
+    "noInternet": "Walang koneksyon sa internet. Pakisuri ang iyong network.",
+    "couldNotLoadConversation": "Hindi makakarga ang usapan",
+    "startedNewConversation": "Nagsimula ng bagong usapan",
+    "connectionErrorBot": "Error sa koneksyon. Pakiulit.",
+    "analyzingPlantImage": "Sinusuri ang larawan ng halaman...",
+    "imageAnalysisFailedBot": "Bigo ang pagsusuri ng larawan. Pakiulit.",
+    "sorryCouldNotProcess": "Pasensya, hindi ko ito naproseso. {details}",
+    "analysisCouldNotComplete": "Hindi natapos ang pagsusuri. {details}",
+    "plantAnalysisIssues": "May problema ang pagsusuri ng halaman: {details}",
+    "tapLocationToSet": "I-tap ang lokasyon para itakda",
+    "senderAssistant": "FarmerChat",
+    "senderYou": "Ikaw",
+    "tapToAskNext": "I-tap para magtanong ulit:"
+  },
+  "media": {
+    "photoLibraryPermission": "Kailangan ng access sa photo library para makapili ng larawan. Buksan sa Settings.",
+    "cameraPermission": "Kailangan ng access sa Camera para makakuha ng larawan. Buksan sa Settings.",
+    "pickImageFailed": "Hindi makuha ang larawan. Subukan ulit.",
+    "cameraFailed": "Hindi ma-access ang Camera. Subukan ulit.",
+    "camera": "Camera",
+    "gallery": "Gallery"
+  },
+  "voice": {
+    "microphonePermission": "Kailangan ng pahintulot sa mikropono",
+    "startRecordingFailed": "Hindi makapagsimula ng pagre-record",
+    "recordingFailed": "Nabigo ang pagre-record",
+    "transcriptionFailed": "Nabigo ang pagsasalin ng boses",
+    "couldNotTranscribeAudio": "Hindi maisalin ang boses",
+    "voiceUnavailableLater": "Hindi magamit ang boses - subukang muli mamaya",
+    "voiceUnavailable": "Hindi magamit ang boses - subukang muli",
+    "audioPlaybackFailed": "Hindi mapatugtog ang audio",
+    "recording": "Nagre-record",
+    "cancel": "Kanselahin",
+    "done": "Tapos na",
+    "transcribing": "Nagsasalin ng boses...",
+    "recordingHint": "Pindutin ang Tapos na para isalin, o Kanselahin para itapon"
+  },
+  "history": {
+    "title": "Mga Usapan",
+    "noConversations": "Wala pang usapan",
+    "noConversationsHint": "Magsimula ng bagong chat para sa payo sa pagsasaka.",
+    "newChat": "Bagong Chat",
+    "newConversation": "Bagong Usapan",
+    "deleteTitle": "Burahin ang Usapan",
+    "deleteMessage": "Burahin ang \"{title}\"? Hindi na ito maibabalik.",
+    "untitled": "Walang Pamagat",
+    "deleted": "Nabura ang Usapan",
+    "deleteFailed": "Hindi nabura",
+    "couldNotDelete": "Hindi mabura ang usapan",
+    "notConnectedTitle": "Walang Koneksyon",
+    "notConnectedHint": "Kailangan ng koneksyon sa internet para sa kasaysayan ng usapan.",
+    "yesterday": "Kahapon"
+  },
+  "settings": {
+    "title": "Mga Setting",
+    "sectionConversations": "MGA USAPAN",
+    "sectionAiServices": "MGA SERBISYO NG AI",
+    "sectionLocation": "LOKASYON",
+    "sectionLanguage": "WIKA",
+    "sectionAppearance": "ANYO",
+    "sectionDanger": "BABALA",
+    "chatHistory": "Kasaysayan ng Usapan",
+    "chatHistorySubtitle": "Tingnan at ipagpatuloy ang mga nakaraang usapan",
+    "aiServices": "Mga Aktibong Serbisyo",
+    "aiServicesSubtitle": "Tingnan ang mga serbisyo ng AI na aktibo sa iyong rehiyon",
+    "locationPermissionDenied": "Tinanggihan ang pahintulot sa lokasyon",
+    "locationUpdated": "Na-update ang lokasyon!",
+    "locationUpdateFailed": "Hindi ma-update ang lokasyon. Subukan muli.",
+    "locationEnabled": "Naka-on ang lokasyon",
+    "tapToEnable": "I-tap para i-on",
+    "tapToUpdateLocation": "I-tap para i-update ang lokasyon",
+    "themeLight": "Maliwanag",
+    "themeDark": "Madilim",
+    "themeSystem": "Sistema",
+    "language": "Wika",
+    "resetOnboarding": "Ulitin ang Setup",
+    "resetOnboardingSubtitle": "Magsimula sa bagong setup",
+    "resetConfirmTitle": "Ulitin ang Setup",
+    "resetConfirmMessage": "Uulitin nito ang pag-setup. Ipagpatuloy?",
+    "appInfoVersion": "FarmerChat v2.0.0",
+    "appInfoPoweredBy": "Pinapagana ng Digital Green Foundation"
+  },
+  "mcp": {
+    "title": "Mga Serbisyo ng AI",
+    "loading": "Ikinakarga ang mga serbisyo...",
+    "loadingDetails": "Ikinakarga...",
+    "footer": "Nakadepende ang serbisyo sa inyong lokasyon",
+    "couldNotLoad": "Hindi makarga ang mga serbisyo",
+    "couldNotLoadDetails": "Hindi makarga ang detalye ng serbisyo",
+    "failedToFetch": "Hindi nakuha ang mga serbisyo",
+    "serviceCategory": "Kategorya {name}",
+    "service": "Serbisyo {name}",
+    "servicesAvailable": "{active} sa {total} serbisyo ang makukuha sa inyong lokasyon",
+    "activeCount": "{active}/{total} aktibo",
+    "statusActive": "Aktibo",
+    "statusUnavailable": "Hindi makukuha sa inyong rehiyon",
+    "locationNotSet": "Hindi nakatakda ang lokasyon",
+    "sectionAbout": "Tungkol",
+    "sectionFeatures": "Mga Tampok",
+    "sectionAvailableIn": "Makukuha Sa",
+    "sectionSupportedCrops": "Mga Sinusuportahang Pananim",
+    "categories": {
+      "plantHealth": "Kalusugan ng Pananim",
+      "soil": "Pagsusuri ng Lupa",
+      "weather": "Panahon at Klima",
+      "livestock": "Nutrisyon ng Alagang Hayop",
+      "agriculture": "Payo sa Pananim"
+    },
+    "services": {
+      "agrivision": {
+        "name": "AgriVision",
+        "tagline": "Pagtukoy at pagsusuri ng sakit ng halaman gamit ang AI",
+        "description": "Suriin ang mga larawan ng halaman para matukoy ang sakit, peste, at kakulangan sa nutrisyon. Makakuha agad ng diagnosis na may kasamang rekomendasyon sa paggamot at tips sa pag-iwas."
+      },
+      "isdaSoil": {
+        "name": "ISDA Soil",
+        "tagline": "Mga katangian ng lupa at pagsusuri ng nutrisyon para sa Africa",
+        "description": "Kumuha ng detalyadong impormasyon tungkol sa lupa kabilang ang pH, nitrogen, phosphorus, potassium, at iba pang sustansya. Saklaw ang buong Africa na may 30-meter resolution."
+      },
+      "accuweather": {
+        "name": "AccuWeather",
+        "tagline": "Kasalukuyang kondisyon at forecast ng panahon sa buong mundo",
+        "description": "Access sa real-time na datos ng panahon kabilang ang temperatura, humidity, bilis ng hangin, at pag-ulan. Makukuha ang forecast hanggang 15 araw."
+      },
+      "gapWeather": {
+        "name": "GAP Weather",
+        "tagline": "Agricultural weather forecasts para sa Kenya",
+        "description": "Espesyalisadong forecast ng panahon para sa agrikultura sa Kenya. Kasama ang evapotranspiration, solar radiation, at forecast ng pag-ulan na akma sa desisyon sa pagsasaka."
+      },
+      "edacap": {
+        "name": "EDACaP Klima",
+        "tagline": "Pana-panahong forecast ng klima para sa Ethiopia",
+        "description": "Pana-panahong pagtingin sa klima kasama ang prediksyon sa temperatura at pag-ulan. Tumutulong sa mga magsasaka na planuhin ang iskedyul ng pagtatanim at pag-aani."
+      },
+      "weatherapi": {
+        "name": "WeatherAPI",
+        "tagline": "Datos ng panahon para sa mga lokasyon sa buong mundo",
+        "description": "Komprehensibong serbisyo ng datos ng panahon na nagbibigay ng kasalukuyang kondisyon at forecast para sa mga lokasyon sa buong mundo."
+      },
+      "tomorrowIo": {
+        "name": "Tomorrow.io",
+        "tagline": "Kaalaman sa panahon at forecasting",
+        "description": "Advanced na platform ng kaalaman sa panahon na may high-resolution na forecast at kakayahan sa nowcasting."
+      },
+      "feedFormulation": {
+        "name": "Formulasyon ng Pakain",
+        "tagline": "Optimal na kalkulasyon ng diyeta para sa bakang gatas",
+        "description": "Kalkulahin ang pinaka-cost-effective na pinaghalong pakain para sa inyong bakang gatas. Isinasaalang-alang ang target sa produksyon ng gatas, timbang ng katawan, at makukuhang lokal na pakain."
+      },
+      "nextgen": {
+        "name": "NextGen Pataba",
+        "tagline": "Rekomendasyon ng pataba para sa tiyak na lugar sa Ethiopia",
+        "description": "Makakuha ng eksaktong rekomendasyon sa pataba batay sa inyong eksaktong lokasyon. Kasama ang organikong (compost, vermicompost) at inorganikong (Urea, NPS) rekomendasyon."
+      },
+      "decisionTree": {
+        "name": "Puno ng Desisyon sa Pananim",
+        "tagline": "Rekomendasyon ayon sa yugto ng paglaki para sa Kenya",
+        "description": "Makakuha ng rekomendasyon sa pamamahala ng pananim batay sa yugto ng paglaki at kasalukuyang kondisyon ng panahon. Nakakatulong ito na makagawa ng tamang desisyon para sa pagkontrol ng peste, irigasyon, at pag-aani."
+      },
+      "gapAgriculture": {
+        "name": "GAP Agrikultura",
+        "tagline": "Mga serbisyong payo sa agrikultura",
+        "description": "Pangkalahatang serbisyo ng payo sa agrikultura para sa pamamahala ng pananim at alagang hayop."
+      }
+    },
+    "features": {
+      "diseaseDetection": "Pagtukoy ng Sakit",
+      "pestIdentification": "Pagtukoy ng Peste",
+      "nutrientAnalysis": "Pagsusuri ng Nutrisyon",
+      "treatmentAdvice": "Payo sa Paggamot",
+      "soilPh": "pH ng Lupa",
+      "nitrogen": "Nitrogen",
+      "phosphorus": "Phosphorus",
+      "potassium": "Potassium",
+      "currentWeather": "Kasalukuyang Panahon",
+      "temperature": "Temperatura",
+      "humidity": "Humidity",
+      "forecast": "Forecast",
+      "precipitation": "Pag-ulan",
+      "evapotranspiration": "Evapotranspiration",
+      "solarRadiation": "Solar Radiation",
+      "wind": "Hangin",
+      "seasonalOutlook": "Pana-panahong Pagtingin",
+      "rainfallProbability": "Probabilidad ng Pag-ulan",
+      "temperatureTrend": "Trend ng Temperatura",
+      "cropForecasts": "Forecast ng Pananim",
+      "historical": "Historikal",
+      "astronomy": "Astronomy",
+      "nowcast": "Nowcast",
+      "forecasts": "Mga Forecast",
+      "alerts": "Mga Alerto",
+      "dietOptimization": "Optimisasyon ng Diyeta",
+      "nutrientBalance": "Balanse ng Nutrisyon",
+      "localFeeds": "Lokal na Pakain",
+      "costCalculation": "Kalkulasyon ng Gastos",
+      "organicFertilizers": "Organikong Pataba",
+      "inorganicFertilizers": "Inorganikong Pataba",
+      "expectedYield": "Inaasahang Ani",
+      "siteSpecific": "Tiyak sa Lugar",
+      "growthStage": "Yugto ng Paglaki",
+      "recommendations": "Mga Rekomendasyon",
+      "weatherBased": "Batay sa Panahon",
+      "actions": "Mga Aksyon",
+      "cropAdvice": "Payo sa Pananim",
+      "bestPractices": "Pinakamahusay na Gawi",
+      "seasonalTips": "Pana-panahong Tips",
+      "localKnowledge": "Lokal na Kaalaman"
+    },
+    "fallback": {
+      "service": "Serbisyo sa Agrikultura",
+      "description": "Hindi makukuha ang detalye ng serbisyo."
+    },
+    "regions": {
+      "worldwide": "Buong Mundo",
+      "africa": "Africa",
+      "eastAfrica": "Silangang Africa",
+      "ethiopia": "Ethiopia",
+      "kenya": "Kenya"
+    },
+    "crops": {
+      "all": "Lahat ng pananim",
+      "wheat": "Trigo",
+      "maize": "Mais",
+      "beans": "Patani"
+    }
+  },
+  "system": {
+    "offline": "Walang internet",
+    "errorTitle": "Oops! May nangyaring mali",
+    "errorFallback": "May di inaasahang problema",
+    "tryAgain": "Subukang Muli"
+  },
+  "errors": {
+    "syncFailed": "Hindi makakonekta sa serber. Limitado ang ilang feature.",
+    "weatherUnavailable": "Ulat-panahon hindi muna magagamit. Subukan ulit mamaya.",
+    "diagnosisTimeout": "Matagal ang pagsusuri sa halaman. Subukan ulit.",
+    "uploadFailed": "Hindi ma-upload ang larawan. Tingnan ang koneksyon at subukan muli.",
+    "transcriptionFailed": "Hindi naunawaan ang sinabi. Subukang magsalita ulit.",
+    "serverError": "May problema sa serber. Subukan ulit mamaya.",
+    "requestTimeout": "Hindi sumagot ang kahilingan. Tingnan ang koneksyon mo.",
+    "locationLookupFailed": "Hindi matukoy ang lokasyon mo."
+  },
+  "a11y": {
+    "startNewChat": "Magsimula ng bagong usapan",
+    "retryLoadingIntegrations": "Subukang muling i-load ang mga koneksyon",
+    "dismissNotification": "Isara ang abiso",
+    "dismiss": "Isara",
+    "clearSearch": "Linisin ang paghahanap",
+    "cancelRecording": "Kanselahin ang pagrekord",
+    "finishRecording": "Tapusin ang pagrekord",
+    "refreshLocation": "I-update ang Lokasyon",
+    "newChat": "Bagong Usapan",
+    "openSettings": "Buksan ang Mga Setting",
+    "scrollToBottom": "Pumunta sa Ibaba",
+    "clearVoiceTranscription": "Linisin ang nakasulat na boses",
+    "takePhoto": "Kunan ng Larawan",
+    "pickImage": "Pumili ng Larawan",
+    "messageInput": "Lalagyan ng Mensahe",
+    "sendMessage": "Ipadala ang Mensahe",
+    "recordVoice": "Mag-record ng Boses",
+    "attachMedia": "Maglakip ng Media",
+    "closeMenu": "Isara ang Menu",
+    "playVoice": "Pakinggan ang Boses",
+    "stopVoicePlayback": "Ihinto ang Pag-play ng Boses",
+    "moreNotifications": "{count} pang abiso",
+    "themeMode": "Tema: {mode}",
+    "copyMessage": "Kopyahin ang Mensahe",
+    "askQuestion": "Itanong: {question}",
+    "selectLanguage": "Wika {name}"
+  }
+}

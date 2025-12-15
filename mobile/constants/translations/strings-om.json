@@ -36,7 +36,9 @@
     "languageTitle": "Afaan Filadhu",
     "languageSubtitle": "Afaan gargaartichaaf jaallattu filadhu.",
     "searchLanguages": "Afaan barbaadi...",
-    "noLanguagesFound": "Afaan tokko illee hin argamne"
+    "noLanguagesFound": "Afaan tokko illee hin argamne",
+    "suggestedForYou": "Siif Yaadame",
+    "currentLanguage": "Amma"
   },
   "chat": {
     "welcomeMessage": "Akkam! 👋 Gargaaraa qonnaa keetii dha.\n\nKanin si gargaaruu danda'u:\n• Midhaan, kuduraa, fuduraa fi daraaraa\n• Horii, lukkuu fi qurxummii horsiisuu\n• Balaa fi dhukkuba to'achuu\n• Haala qilleensaa fi gorsa gabaa\n\nHar'a akkamitti si gargaaruu danda'a?",

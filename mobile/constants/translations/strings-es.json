@@ -36,7 +36,9 @@
     "languageTitle": "Seleccionar Idioma",
     "languageSubtitle": "Elige tu idioma preferido para el asistente",
     "searchLanguages": "Buscar idiomas...",
-    "noLanguagesFound": "No se encontraron idiomas"
+    "noLanguagesFound": "No se encontraron idiomas",
+    "suggestedForYou": "Sugerencias",
+    "currentLanguage": "Actual"
   },
   "chat": {
     "welcomeMessage": "¡Hola! 👋 Soy tu asistente agrícola.\n\nPuedo ayudarte con:\n• Cultivos, hortalizas, frutas y flores\n• Ganado, aves de corral y piscicultura\n• Manejo de plagas y enfermedades\n• Consejos sobre clima y mercado\n\n¿En qué puedo ayudarte hoy?",
