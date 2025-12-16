@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Platform,
+  Easing,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system/legacy';
@@ -21,8 +22,9 @@ import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const WAVEFORM_BARS = 30;
 const MAX_RECORDING_DURATION = 120; // 2 minutes max
+const SILENCE_THRESHOLD = -45; // dB threshold for silence detection
+const WAVEFORM_POINTS = 50; // Number of points in sine wave
 
 export default function VoiceRecorder({ 
   onTranscriptionComplete, 
@@ -38,19 +40,18 @@ export default function VoiceRecorder({
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
-  const [waveformLevels, setWaveformLevels] = useState(
-    Array(WAVEFORM_BARS).fill(0.1)
-  );
-  
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
+
   // Refs
   const recordingRef = useRef(null);
   const timerRef = useRef(null);
-  const waveformIntervalRef = useRef(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
-  const waveformAnims = useRef(
-    Array(WAVEFORM_BARS).fill(0).map(() => new Animated.Value(0.1))
-  ).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
+  const wavePhase = useRef(new Animated.Value(0)).current;
+  const waveAmplitude = useRef(new Animated.Value(0)).current;
+  const waveAnimationRef = useRef(null);
+  const silenceTimeoutRef = useRef(null);
 
   // Start recording on mount
   useEffect(() => {
@@ -89,21 +90,54 @@ export default function VoiceRecorder({
     }
   }, [isRecording]);
 
-  // Animate waveform bars
+  // Animate sine wave phase continuously when speaking
   useEffect(() => {
-    waveformLevels.forEach((level, index) => {
-      Animated.spring(waveformAnims[index], {
-        toValue: level,
+    if (isSpeaking && isRecording) {
+      // Start continuous phase animation
+      const animatePhase = () => {
+        waveAnimationRef.current = Animated.loop(
+          Animated.timing(wavePhase, {
+            toValue: 2 * Math.PI,
+            duration: 800,
+            useNativeDriver: true,
+            easing: Easing.linear,
+          })
+        );
+        waveAnimationRef.current.start();
+      };
+
+      // Animate amplitude based on audio level
+      Animated.spring(waveAmplitude, {
+        toValue: Math.min(1, audioLevel * 2),
         friction: 5,
-        tension: 100,
+        tension: 80,
         useNativeDriver: true,
       }).start();
-    });
-  }, [waveformLevels]);
+
+      animatePhase();
+    } else {
+      // Stop animation and reduce amplitude when silent
+      if (waveAnimationRef.current) {
+        waveAnimationRef.current.stop();
+      }
+      Animated.timing(waveAmplitude, {
+        toValue: 0.05,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+
+    return () => {
+      if (waveAnimationRef.current) {
+        waveAnimationRef.current.stop();
+      }
+    };
+  }, [isSpeaking, isRecording, audioLevel]);
 
   const cleanup = () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    if (waveformIntervalRef.current) clearInterval(waveformIntervalRef.current);
+    if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
+    if (waveAnimationRef.current) waveAnimationRef.current.stop();
     if (recordingRef.current) {
       recordingRef.current.stopAndUnloadAsync().catch(() => {});
     }
@@ -128,13 +162,13 @@ export default function VoiceRecorder({
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
       
-      // Enable metering for waveform
+      // Enable metering for waveform with silence detection
       recording.setOnRecordingStatusUpdate((status) => {
         if (status.metering !== undefined) {
-          updateWaveform(status.metering);
+          handleMeteringUpdate(status.metering);
         }
       });
-      
+
       await recording.startAsync();
 
       recordingRef.current = recording;
@@ -152,11 +186,6 @@ export default function VoiceRecorder({
         });
       }, 1000);
 
-      // Simulate waveform updates (expo-av metering can be unreliable)
-      waveformIntervalRef.current = setInterval(() => {
-        simulateWaveform();
-      }, 100);
-
     } catch (error) {
       console.error('Recording start error:', error);
       showError(t('voice.startRecordingFailed'));
@@ -164,23 +193,30 @@ export default function VoiceRecorder({
     }
   };
 
-  const updateWaveform = (metering) => {
+  const handleMeteringUpdate = (metering) => {
     // Normalize metering value (-160 to 0) to 0-1
     const normalized = Math.max(0, (metering + 60) / 60);
-    setWaveformLevels(prev => {
-      const newLevels = [...prev.slice(1), normalized];
-      return newLevels;
-    });
-  };
+    setAudioLevel(normalized);
 
-  const simulateWaveform = () => {
-    setWaveformLevels(prev => {
-      const newLevels = [...prev.slice(1)];
-      // Random value between 0.2 and 1 for visual effect
-      const newValue = 0.2 + Math.random() * 0.8;
-      newLevels.push(newValue);
-      return newLevels;
-    });
+    // Detect if user is speaking (above silence threshold)
+    if (metering > SILENCE_THRESHOLD) {
+      // User is speaking
+      setIsSpeaking(true);
+      // Clear any pending silence timeout
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+        silenceTimeoutRef.current = null;
+      }
+    } else {
+      // Audio below threshold - wait a bit before marking as silent
+      // to avoid flickering during brief pauses
+      if (!silenceTimeoutRef.current) {
+        silenceTimeoutRef.current = setTimeout(() => {
+          setIsSpeaking(false);
+          silenceTimeoutRef.current = null;
+        }, 200); // 200ms debounce
+      }
+    }
   };
 
   const handleCancel = useCallback(async () => {
@@ -199,14 +235,16 @@ export default function VoiceRecorder({
 
   const handleDone = useCallback(async () => {
     if (!recordingRef.current || isTranscribing) return;
-    
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    
-    // Stop timers
+
+    // Stop timers and animation
     if (timerRef.current) clearInterval(timerRef.current);
-    if (waveformIntervalRef.current) clearInterval(waveformIntervalRef.current);
-    
+    if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
+    if (waveAnimationRef.current) waveAnimationRef.current.stop();
+
     setIsRecording(false);
+    setIsSpeaking(false);
     setIsTranscribing(true);
 
     try {
@@ -302,27 +340,57 @@ export default function VoiceRecorder({
               </Text>
             </View>
 
-            {/* Waveform */}
+            {/* Animated Sine Waveform */}
             <View style={styles.waveformContainer}>
-              {waveformAnims.map((anim, index) => (
-                <Animated.View
-                  key={index}
-                  style={[
-                    styles.waveformBar,
-                    {
-                      backgroundColor: theme.accentBright || theme.accent,
-                      transform: [
-                        {
-                          scaleY: anim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0.1, 1],
-                          }),
-                        },
-                      ],
-                    },
-                  ]}
-                />
-              ))}
+              {isSpeaking ? (
+                // Animated sine wave when speaking
+                <View style={styles.sineWaveContainer}>
+                  {Array.from({ length: WAVEFORM_POINTS }).map((_, index) => {
+                    const position = (index / WAVEFORM_POINTS) * 100;
+                    // Create sine wave pattern
+                    const baseOffset = Math.sin((index / WAVEFORM_POINTS) * Math.PI * 4);
+
+                    return (
+                      <Animated.View
+                        key={index}
+                        style={[
+                          styles.sineWavePoint,
+                          {
+                            backgroundColor: theme.accentBright || theme.accent,
+                            left: `${position}%`,
+                            transform: [
+                              {
+                                translateY: waveAmplitude.interpolate({
+                                  inputRange: [0, 1],
+                                  outputRange: [0, baseOffset * 20],
+                                }),
+                              },
+                              {
+                                scaleY: waveAmplitude.interpolate({
+                                  inputRange: [0, 1],
+                                  outputRange: [0.3, 1],
+                                }),
+                              },
+                            ],
+                            opacity: waveAmplitude.interpolate({
+                              inputRange: [0, 0.5, 1],
+                              outputRange: [0.3, 0.7, 1],
+                            }),
+                          },
+                        ]}
+                      />
+                    );
+                  })}
+                </View>
+              ) : (
+                // Flat line when silent
+                <View style={[styles.silentLine, { backgroundColor: theme.textMuted }]} />
+              )}
+
+              {/* Speaking indicator */}
+              <Text style={[styles.speakingHint, { color: theme.textMuted }]}>
+                {isSpeaking ? t('voice.listening') : t('voice.waitingForSpeech')}
+              </Text>
             </View>
 
             {/* Action Buttons */}
@@ -368,7 +436,7 @@ const styles = StyleSheet.create({
     paddingTop: SPACING.sm,
   },
   container: {
-    borderRadius: 0,
+    borderRadius: 24,
     borderWidth: 0,
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.lg,
@@ -401,17 +469,34 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   waveformContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 50,
-    gap: 3,
-    marginBottom: SPACING.xl,
+    height: 80,
+    marginBottom: SPACING.lg,
   },
-  waveformBar: {
-    width: (SCREEN_WIDTH - 100) / WAVEFORM_BARS - 3,
-    height: 40,
-    borderRadius: 2,
+  sineWaveContainer: {
+    width: '100%',
+    height: 50,
+    position: 'relative',
+  },
+  sineWavePoint: {
+    position: 'absolute',
+    width: 3,
+    height: 20,
+    borderRadius: 1.5,
+    top: '50%',
+    marginTop: -10,
+  },
+  silentLine: {
+    width: '80%',
+    height: 2,
+    borderRadius: 1,
+    opacity: 0.3,
+  },
+  speakingHint: {
+    marginTop: SPACING.sm,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    textAlign: 'center',
   },
   actionsRow: {
     flexDirection: 'row',
@@ -424,7 +509,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING['2xl'],
-    borderRadius: 0,
+    borderRadius: 16,
     gap: SPACING.xs,
   },
   doneButton: {
@@ -432,7 +517,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING['2xl'],
-    borderRadius: 0,
+    borderRadius: 16,
     gap: SPACING.xs,
   },
   buttonLabel: {

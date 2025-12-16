@@ -12,10 +12,10 @@ import { t } from '../constants/strings';
  * Toast notification component
  * Displays near bottom of screen, auto-dismisses
  */
-export default function Toast({ 
+export default function Toast({
   toastId,
-  visible, 
-  message, 
+  visible,
+  message,
   type = 'info', // 'success' | 'error' | 'warning' | 'info'
   duration = 3000,
   onDismiss,
@@ -28,6 +28,64 @@ export default function Toast({
   const translateY = useRef(new Animated.Value(100)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const dragY = useRef(new Animated.Value(0)).current;
+
+  const getTypeConfig = () => {
+    switch (type) {
+      case 'success':
+        return { icon: 'checkmark-circle', bg: theme.success, bgLight: theme.successLight };
+      case 'error':
+        return { icon: 'alert-circle', bg: theme.error, bgLight: theme.errorLight };
+      case 'warning':
+        return { icon: 'warning', bg: theme.warning, bgLight: theme.warningLight };
+      default:
+        return { icon: 'information-circle', bg: theme.accent, bgLight: theme.accentLight };
+    }
+  };
+
+  const config = getTypeConfig();
+  const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
+
+  const dismiss = () => {
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: 140,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      if (toastId != null) onDismiss?.(toastId);
+    });
+  };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) => {
+        if (!visible) return false;
+        const absX = Math.abs(gesture.dx);
+        const absY = Math.abs(gesture.dy);
+        return absY > 6 && absY > absX;
+      },
+      onPanResponderMove: (_, gesture) => {
+        const clamped = Math.max(0, Math.min(80, gesture.dy));
+        dragY.setValue(clamped);
+      },
+      onPanResponderRelease: (_, gesture) => {
+        if (gesture.dy > 40 || gesture.vy > 1.2) {
+          dismiss();
+          return;
+        }
+        Animated.spring(dragY, { toValue: 0, useNativeDriver: true, friction: 8, tension: 80 }).start();
+      },
+      onPanResponderTerminate: () => {
+        Animated.spring(dragY, { toValue: 0, useNativeDriver: true, friction: 8, tension: 80 }).start();
+      },
+    })
+  ).current;
 
   useEffect(() => {
     if (visible) {
@@ -68,42 +126,7 @@ export default function Toast({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toastId, visible, duration, type]); // dismiss, translateY, opacity are refs/stable
-
-  const dismiss = () => {
-    Animated.parallel([
-      Animated.timing(translateY, {
-        toValue: 140,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacity, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      if (toastId != null) onDismiss?.(toastId);
-    });
-  };
-
-  if (!visible) return null;
-
-  const getTypeConfig = () => {
-    switch (type) {
-      case 'success':
-        return { icon: 'checkmark-circle', bg: theme.success, bgLight: theme.successLight };
-      case 'error':
-        return { icon: 'alert-circle', bg: theme.error, bgLight: theme.errorLight };
-      case 'warning':
-        return { icon: 'warning', bg: theme.warning, bgLight: theme.warningLight };
-      default:
-        return { icon: 'information-circle', bg: theme.accent, bgLight: theme.accentLight };
-    }
-  };
-
-  const config = getTypeConfig();
-  const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
+  }, [toastId, visible, duration, type]);
 
   useEffect(() => {
     if (visible && dismissToken > 0) {
@@ -112,30 +135,8 @@ export default function Toast({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dismissToken]);
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gesture) => {
-        if (!visible) return false;
-        const absX = Math.abs(gesture.dx);
-        const absY = Math.abs(gesture.dy);
-        return absY > 6 && absY > absX;
-      },
-      onPanResponderMove: (_, gesture) => {
-        const clamped = Math.max(0, Math.min(80, gesture.dy));
-        dragY.setValue(clamped);
-      },
-      onPanResponderRelease: (_, gesture) => {
-        if (gesture.dy > 40 || gesture.vy > 1.2) {
-          dismiss();
-          return;
-        }
-        Animated.spring(dragY, { toValue: 0, useNativeDriver: true, friction: 8, tension: 80 }).start();
-      },
-      onPanResponderTerminate: () => {
-        Animated.spring(dragY, { toValue: 0, useNativeDriver: true, friction: 8, tension: 80 }).start();
-      },
-    })
-  ).current;
+  // Early return AFTER all hooks
+  if (!visible) return null;
 
   return (
     <Animated.View

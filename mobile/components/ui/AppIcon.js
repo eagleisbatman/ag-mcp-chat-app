@@ -32,6 +32,7 @@ const FEATHER_ICONS = {
   'message-circle': 'message-circle',
   'trash-2': 'trash-2',
   'edit-2': 'edit-2',
+  'file-text': 'file-text',
 };
 
 const ION_TO_MCI = {

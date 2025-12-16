@@ -9,7 +9,8 @@
     "refresh": "Refresh",
     "clear": "Clear",
     "loading": "Loading…",
-    "skipForNow": "Skip for now"
+    "skipForNow": "Skip for now",
+    "comingSoon": "Coming soon"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -70,7 +71,10 @@
     "pickImageFailed": "Failed to pick image. Please try again.",
     "cameraFailed": "Failed to access camera. Please try again.",
     "camera": "Camera",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "addToChat": "Add to Chat",
+    "photos": "Photos",
+    "files": "Files"
   },
   "voice": {
     "microphonePermission": "Microphone permission required",
@@ -85,7 +89,9 @@
     "cancel": "Cancel",
     "done": "Done",
     "transcribing": "Transcribing...",
-    "recordingHint": "Tap Done to transcribe, or Cancel to discard"
+    "recordingHint": "Tap Done to transcribe, or Cancel to discard",
+    "listening": "Listening...",
+    "waitingForSpeech": "Waiting for speech..."
   },
   "history": {
     "title": "Conversations",
@@ -313,7 +319,7 @@
     "sendMessage": "Send message",
     "recordVoice": "Record voice",
     "attachMedia": "Attach media",
-    "closeMenu": "Close menu",
+    "openHistory": "Open history",
     "playVoice": "Play voice",
     "stopVoicePlayback": "Stop voice playback",
     "moreNotifications": "{count} more notifications",

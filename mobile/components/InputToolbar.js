@@ -24,6 +24,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import VoiceRecorder from './VoiceRecorder';
+import AttachBottomSheet from './AttachBottomSheet';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
@@ -48,7 +49,6 @@ export default function InputToolbar({
   const textInputRef = useRef(null);
   const windowHeightBaseline = useRef(Dimensions.get('window').height);
   const keyboardVisible = useRef(false);
-  const mediaMenuAnim = useRef(new Animated.Value(0)).current;
 
   // Keyboard animation - syncs with iOS keyboard animation
   const keyboardHeight = useRef(new Animated.Value(0)).current;
@@ -229,16 +229,14 @@ export default function InputToolbar({
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
-  const toggleMediaMenu = () => {
-    const toValue = showMediaMenu ? 0 : 1;
-    setShowMediaMenu(!showMediaMenu);
+  const openMediaMenu = () => {
+    if (disabled) return;
+    setShowMediaMenu(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Animated.spring(mediaMenuAnim, {
-      toValue,
-      useNativeDriver: true,
-      friction: 8,
-      tension: 100,
-    }).start();
+  };
+
+  const closeMediaMenu = () => {
+    setShowMediaMenu(false);
   };
 
   // Show VoiceRecorder when in recording mode
@@ -278,40 +276,14 @@ export default function InputToolbar({
         </View>
       )}
 
-      {/* Media menu popup */}
-      {showMediaMenu && (
-        <Animated.View
-          style={[
-            styles.mediaMenu,
-            {
-              backgroundColor: isDark ? theme.cardBackground : '#FFFFFF',
-              borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
-              opacity: mediaMenuAnim,
-              transform: [
-                { scale: mediaMenuAnim.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) },
-                { translateY: mediaMenuAnim.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) },
-              ],
-            }
-          ]}
-        >
-          <Pressable
-            style={[styles.mediaMenuItem, { borderBottomColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)' }]}
-            onPress={handleTakePhoto}
-            android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
-          >
-            <AppIcon name="camera" size={20} color={theme.text} prefer="feather" />
-            <Text style={[styles.mediaMenuText, { color: theme.text }]}>{t('media.camera')}</Text>
-          </Pressable>
-          <Pressable
-            style={styles.mediaMenuItem}
-            onPress={handlePickImage}
-            android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
-          >
-            <AppIcon name="image" size={20} color={theme.text} prefer="feather" />
-            <Text style={[styles.mediaMenuText, { color: theme.text }]}>{t('media.gallery')}</Text>
-          </Pressable>
-        </Animated.View>
-      )}
+      {/* Claude-style Attach Bottom Sheet */}
+      <AttachBottomSheet
+        visible={showMediaMenu}
+        onClose={closeMediaMenu}
+        onCamera={handleTakePhoto}
+        onPhotos={handlePickImage}
+        onFiles={() => {}} // Placeholder for future
+      />
 
       {/* Unified Input Container - Claude-style */}
       <View style={[
@@ -341,16 +313,16 @@ export default function InputToolbar({
           <View style={styles.leftIcons}>
             {/* Plus/Attach Button */}
             <Pressable
-              style={[styles.iconButton, showMediaMenu && { backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)' }]}
-              onPress={toggleMediaMenu}
+              style={styles.iconButton}
+              onPress={openMediaMenu}
               disabled={disabled}
-              accessibilityLabel={showMediaMenu ? t('a11y.closeMenu') : t('a11y.attachMedia')}
+              accessibilityLabel={t('a11y.attachMedia')}
               android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
             >
               <AppIcon
-                name={showMediaMenu ? 'x' : 'plus'}
+                name="plus"
                 size={22}
-                color={theme.textMuted}
+                color={theme.iconSecondary}
                 prefer="feather"
               />
             </Pressable>
@@ -364,7 +336,7 @@ export default function InputToolbar({
                 accessibilityLabel={t('a11y.openHistory')}
                 android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
               >
-                <AppIcon name="clock" size={22} color={theme.textMuted} prefer="feather" />
+                <AppIcon name="clock" size={22} color={theme.iconSecondary} prefer="feather" />
               </Pressable>
             )}
           </View>
@@ -380,7 +352,7 @@ export default function InputToolbar({
                 accessibilityLabel={t('a11y.recordVoice')}
                 android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
               >
-                <AppIcon name="mic" size={22} color={theme.textMuted} prefer="feather" />
+                <AppIcon name="mic" size={22} color={theme.iconSecondary} prefer="feather" />
               </Pressable>
             )}
 
@@ -431,33 +403,6 @@ const styles = StyleSheet.create({
   voiceIndicatorText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium,
-  },
-  mediaMenu: {
-    position: 'absolute',
-    bottom: 80,
-    left: SPACING.md,
-    borderRadius: 16,
-    borderWidth: 1,
-    overflow: 'hidden',
-    minWidth: 160,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
-    zIndex: 100,
-  },
-  mediaMenuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.md,
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.md,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  mediaMenuText: {
-    fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.medium,
   },
   // Claude-style unified container
