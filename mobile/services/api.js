@@ -1,4 +1,4 @@
-// Chat API service - calls API Gateway → n8n workflow
+// Chat API service - calls API Gateway → AI Services
 import { fetchWithTimeout } from '../utils/apiHelpers';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
@@ -21,7 +21,7 @@ const DEFAULT_TIMEOUT_MS = 30000; // 30s for other endpoints
  */
 export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [] }) => {
   try {
-    // Format history for n8n workflow
+    // Format history for AI Services
     const formattedHistory = history
       .filter(m => m._id !== 'welcome') // Exclude welcome message
       .slice(0, 10) // Last 10 messages

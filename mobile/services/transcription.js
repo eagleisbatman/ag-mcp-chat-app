@@ -1,4 +1,4 @@
-// Transcription Service - Voice to text via Gemini 2.5 Flash (n8n workflow)
+// Transcription Service - Voice to text via Gemini 2.5 Flash (AI Services)
 import { fetchWithTimeout } from '../utils/apiHelpers';
 
 const WHISPER_URL = process.env.EXPO_PUBLIC_WHISPER_URL || 'https://ag-mcp-api-gateway.up.railway.app/api/transcribe';
@@ -6,7 +6,7 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 const TRANSCRIPTION_TIMEOUT_MS = 30000; // 30s for transcription
 
 /**
- * Transcribe audio to text using Gemini 2.5 Flash via n8n workflow
+ * Transcribe audio to text using Gemini 2.5 Flash via AI Services
  * @param {string} audioBase64 - Base64 encoded audio file
  * @param {string} language - Optional language hint (ISO code, e.g., 'en', 'hi')
  * @returns {Promise<{success: boolean, text?: string, language?: string, error?: string}>}

@@ -262,7 +262,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Fetch L1-L6 location details from n8n workflow
+  // Fetch L1-L6 location details from API Gateway (Nominatim/IP-API)
   const lookupLocationDetails = async (latitude, longitude) => {
     console.log('🌍 [AppContext] Looking up location details for:', { latitude, longitude });
     console.log('🌍 [AppContext] Coordinates valid:', { 

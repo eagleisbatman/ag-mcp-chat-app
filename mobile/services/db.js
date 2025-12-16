@@ -305,7 +305,7 @@ export async function updateMessage(messageId, updates) {
 // ============================================
 
 /**
- * Lookup location from GPS or IP via n8n workflow
+ * Lookup location from GPS or IP via API Gateway (Nominatim/IP-API)
  */
 export async function lookupLocation(latitude, longitude, ipAddress = null) {
   try {
@@ -344,7 +344,7 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
 // ============================================
 
 /**
- * Generate session title via n8n workflow
+ * Generate session title via AI Services
  */
 export async function generateTitle(messages, language = 'en') {
   try {

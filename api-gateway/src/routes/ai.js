@@ -1,23 +1,26 @@
-// n8n workflow proxy routes
+// AI Routes - Chat, TTS, Transcription, Location
 const express = require('express');
 const cloudinary = require('cloudinary').v2;
 const { prisma } = require('../db');
 
 const router = express.Router();
 
-// Intent classification now handled by Intent Classification MCP Server
+// Intent classification handled by Intent Classification MCP Server
 // Global keywords in GLOBAL_INTENT_KEYWORDS provide fast matching for common queries
 
-// AI Services (replaces n8n for Gemini-based endpoints)
+// AI Services for Gemini-based endpoints
 const AI_SERVICES_URL = process.env.AI_SERVICES_URL || 'https://ag-mcp-ai-services.up.railway.app';
 const AI_SERVICES_KEY = process.env.AI_SERVICES_KEY || '';
 
-// n8n webhooks (only for non-Gemini services)
-const N8N_LOCATION_URL = process.env.N8N_LOCATION_URL || 'https://ag-mcp-app.up.railway.app/webhook/location-lookup';
+// External service URLs
 const INTENT_CLASSIFICATION_URL = process.env.INTENT_CLASSIFICATION_URL || 'https://intent-classification-mcp.up.railway.app';
 const AGRIVISION_URL = process.env.AGRIVISION_URL || 'https://agrivision-mcp-server.up.railway.app';
 const CHAT_TIMEOUT_MS = parseInt(process.env.CHAT_TIMEOUT_MS || '60000'); // 60s default
 const AGRIVISION_TIMEOUT_MS = parseInt(process.env.AGRIVISION_TIMEOUT_MS || '45000'); // 45s for image analysis
+
+// Geocoding APIs (direct calls)
+const NOMINATIM_URL = 'https://nominatim.openstreetmap.org';
+const IP_API_URL = 'http://ip-api.com/json';
 
 
 /**
@@ -526,7 +529,7 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
 
       // Combine results for widget rendering
       // AccuWeather returns nested structure: { location, current: {...}, data_source }
-      // Flatten it so n8n can access weather data directly
+      // Flatten it so AI Services can access weather data directly
       const weatherError = isErrorOrNoData(current) && isErrorOrNoData(forecast);
       const currentWeatherData = current?.current || current; // Extract inner current object
 
@@ -662,11 +665,11 @@ async function callMcpServersForIntent(message, latitude, longitude, mcpServers,
 }
 
 /**
- * Chat endpoint - routes to n8n Gemini chat workflow with MCP context
+ * Chat endpoint - routes to AI Services with MCP context
  *
  * SIMPLIFIED TEXT-ONLY MODE:
  * - Intent classification determines which MCP servers to call
- * - MCP data is passed to n8n for AI response generation
+ * - MCP data is passed to AI Services for Gemini response generation
  * - Returns pure text responses (no widgets)
  */
 router.post('/chat', async (req, res) => {
@@ -729,7 +732,7 @@ router.post('/chat', async (req, res) => {
       intentSource,
     });
 
-    // Build enhanced request body for n8n (text-only, no widgets)
+    // Build enhanced request body for AI Services (text-only, no widgets)
     const enhancedBody = {
       ...req.body,
       mcpServers: {
@@ -748,7 +751,7 @@ router.post('/chat', async (req, res) => {
       noDataFallbacks: Object.keys(noDataFallbacks).length > 0 ? noDataFallbacks : null,
     };
 
-    // Call n8n with timeout
+    // Call AI Services with timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
 
@@ -782,7 +785,7 @@ router.post('/chat', async (req, res) => {
       });
 
       // Return pure text response - explicitly remove ALL widget-related fields
-      // Widget fields may come from n8n workflow, filter them out for text-only mode
+      // Filter out widget fields for text-only mode
       const {
         widget,
         widgetPrompt,
@@ -918,7 +921,7 @@ router.post('/transcribe', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error calling n8n transcribe:', error.message);
+    console.error('Error calling AI Services transcribe:', error.message);
     res.status(500).json({ success: false, error: 'Failed to transcribe audio: ' + error.message });
   }
 });
@@ -960,13 +963,13 @@ router.post('/tts', async (req, res) => {
       res.json(data);
     }
   } catch (error) {
-    console.error('Error calling n8n TTS:', error);
+    console.error('Error calling AI Services TTS:', error);
     res.status(500).json({ error: 'Failed to generate speech' });
   }
 });
 
 /**
- * Generate session title via n8n workflow
+ * Generate session title via AI Services
  */
 router.post('/generate-title', async (req, res) => {
   try {
@@ -1000,37 +1003,104 @@ router.post('/generate-title', async (req, res) => {
 });
 
 /**
- * Location lookup via n8n workflow
+ * Location lookup via Nominatim/IP-API (direct calls)
  */
 router.post('/location-lookup', async (req, res) => {
   try {
     const { latitude, longitude, ipAddress } = req.body;
     console.log('📍 [Location] Looking up:', { latitude, longitude, ipAddress });
-    
-    const response = await fetch(N8N_LOCATION_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body),
-    });
-    
-    if (!response.ok) {
-      console.log('📍 [Location] n8n error:', response.status);
-      return res.status(response.status).json({ 
-        success: false, 
-        error: `n8n returned ${response.status}` 
-      });
+
+    // Try coordinates first using Nominatim
+    if (latitude && longitude) {
+      try {
+        const nominatimUrl = `${NOMINATIM_URL}/reverse?lat=${latitude}&lon=${longitude}&format=json&zoom=10`;
+        const nominatimResponse = await fetch(nominatimUrl, {
+          headers: {
+            'User-Agent': 'AG-MCP-Chat/1.0 (agriculture-advisor@digitalgreen.org)',
+            'Accept': 'application/json',
+          },
+        });
+
+        if (nominatimResponse.ok) {
+          const data = await nominatimResponse.json();
+          if (!data.error) {
+            const address = data.address || {};
+            const result = {
+              success: true,
+              source: 'coordinates',
+              level1Country: address.country,
+              level1CountryCode: address.country_code?.toUpperCase(),
+              level2State: address.state || address.region,
+              level5City: address.city || address.town || address.village || address.county,
+              displayName: address.city || address.town || address.village
+                ? `${address.city || address.town || address.village}, ${address.country}`
+                : address.country,
+              formattedAddress: [
+                address.city || address.town || address.village,
+                address.state || address.region,
+                address.country
+              ].filter(Boolean).join(', '),
+              latitude,
+              longitude,
+            };
+            console.log('📍 [Location] Nominatim result:', {
+              success: result.success,
+              source: result.source,
+              displayName: result.displayName,
+              country: result.level1Country,
+              city: result.level5City,
+            });
+            return res.json(result);
+          }
+        }
+      } catch (nominatimError) {
+        console.error('📍 [Location] Nominatim error:', nominatimError.message);
+      }
     }
-    
-    const data = await response.json();
-    console.log('📍 [Location] Result:', { 
-      success: data.success, 
-      source: data.source, 
-      displayName: data.displayName,
-      country: data.level1Country,
-      city: data.level5City 
-    });
-    
-    res.json(data);
+
+    // Fallback to IP-API if coordinates failed or not provided
+    if (ipAddress && ipAddress !== '127.0.0.1' && ipAddress !== '::1') {
+      try {
+        const ipApiUrl = `${IP_API_URL}/${ipAddress}?fields=status,message,country,countryCode,region,regionName,city,lat,lon,timezone,isp`;
+        const ipResponse = await fetch(ipApiUrl, {
+          headers: { 'Accept': 'application/json' },
+        });
+
+        if (ipResponse.ok) {
+          const data = await ipResponse.json();
+          if (data.status === 'success') {
+            const result = {
+              success: true,
+              source: 'ip',
+              level1Country: data.country,
+              level1CountryCode: data.countryCode,
+              level2State: data.regionName,
+              level5City: data.city,
+              isp: data.isp,
+              timezone: data.timezone,
+              displayName: data.city ? `${data.city}, ${data.country}` : data.country,
+              formattedAddress: [data.city, data.regionName, data.country].filter(Boolean).join(', '),
+              latitude: data.lat,
+              longitude: data.lon,
+            };
+            console.log('📍 [Location] IP-API result:', {
+              success: result.success,
+              source: result.source,
+              displayName: result.displayName,
+              country: result.level1Country,
+              city: result.level5City,
+            });
+            return res.json(result);
+          }
+        }
+      } catch (ipError) {
+        console.error('📍 [Location] IP-API error:', ipError.message);
+      }
+    }
+
+    // No location found
+    console.log('📍 [Location] No location found');
+    res.json({ success: false, source: 'none', error: 'Could not determine location' });
   } catch (error) {
     console.error('📍 [Location] Error:', error.message);
     res.status(500).json({ success: false, error: 'Failed to lookup location' });

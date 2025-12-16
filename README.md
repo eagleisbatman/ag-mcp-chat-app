@@ -1,11 +1,13 @@
-# ag-mcp Chat App
+# AG-MCP Chat App
 
 AI-powered farming assistant mobile app with region-specific MCP server integration.
 
-## 🚀 Architecture
+## Architecture
 
 ```
-Mobile App → API Gateway (auth) → n8n (AI workflow)
+Mobile App → API Gateway (auth + orchestration) → AI Services (Gemini)
+                    ↓
+            MCP Servers (Weather, Soil, Feed, etc.)
 ```
 
 **API Endpoint:**
@@ -14,21 +16,35 @@ POST https://ag-mcp-api-gateway.up.railway.app/api/chat
 Header: X-API-Key: your-api-key
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ag-mcp-chat-app/
 ├── mobile/               # Expo + React Native Gifted Chat
-│   └── App.js
-├── api-gateway/          # Express.js (handles API key auth)
-│   └── index.js
-├── n8n/                  # n8n workflow (AI processing)
-│   └── workflows/
-│       └── chat-workflow.json
+│   ├── screens/          # App screens
+│   ├── components/       # UI components
+│   ├── services/         # API, TTS, transcription services
+│   ├── contexts/         # React contexts (app state)
+│   └── constants/        # Translations, config
+├── api-gateway/          # Express.js + TypeScript
+│   ├── src/
+│   │   ├── config/       # Zod-validated env config
+│   │   ├── middleware/   # Auth, validation, error handling
+│   │   ├── routes/
+│   │   │   ├── ai/       # Chat, TTS, transcribe, title routes
+│   │   │   └── mcp-servers/ # MCP server management routes
+│   │   ├── services/
+│   │   │   ├── mcp/      # MCP caller, registry, orchestrator
+│   │   │   ├── intent/   # Intent detection (keywords, LLM)
+│   │   │   ├── geocoding.ts # Nominatim/IP-API location lookup
+│   │   │   └── ai-services.ts # AI Services client
+│   │   ├── types/        # TypeScript interfaces
+│   │   └── utils/        # Logger utilities
+│   └── prisma/           # Database schema + seed
 └── README.md
 ```
 
-## 📱 Mobile App Setup
+## Mobile App Setup
 
 ```bash
 cd mobile
@@ -52,39 +68,80 @@ npx expo build:ios
 npx expo build:android
 ```
 
-## ✨ Features
+## Features
 
 - **React Native Gifted Chat** - Beautiful chat UI
-- **Google Gemini 2.0** - AI-powered responses
+- **Google Gemini 2.5 Flash** - AI-powered responses via AI Services
 - **Auto Location** - GPS detection for regional advice
-- **Region Detection** - Ethiopia, East Africa, Global
-- **Language Detection** - English, Swahili auto-detection
-- **Typing Indicator** - Shows when AI is thinking
+- **Region Detection** - Ethiopia, Kenya, Tanzania, Vietnam, Global
+- **Language Detection** - 20+ languages supported
+- **Voice Input** - Speech-to-text transcription
+- **Text-to-Speech** - Audio responses
 
-## 🎨 Customization
+## API Gateway Services
 
-Edit `mobile/App.js` to customize:
-- Colors (green theme by default)
-- Bot avatar
-- Welcome message
-- Input placeholder
+| Service | Description |
+|---------|-------------|
+| Chat | Gemini chat with MCP context |
+| TTS | Text-to-Speech via Gemini |
+| Transcribe | Speech-to-Text via Gemini |
+| Location | Geocoding via Nominatim/IP-API |
+| MCP Servers | Regional server orchestration |
 
-## 📍 Supported Regions
+## Supported Regions
 
-| Coordinates | Region | MCP Servers |
-|------------|--------|-------------|
-| Ethiopia (3-15°N, 32-48°E) | `ethiopia` | SSFR, ISDA Soil |
-| East Africa (-12-18°N, 29-52°E) | `east-africa` | GAP Weather, Decision Tree |
-| Other | `global` | AccuWeather, AgriVision |
+| Region | MCP Servers |
+|--------|-------------|
+| Ethiopia | NextGen, Feed Formulation, EDACaP, ISDA Soil |
+| Kenya | GAP Weather, ISDA Soil |
+| Tanzania | GAP Weather, ISDA Soil |
+| Vietnam | WeatherAPI |
+| Global | AccuWeather, AgriVision |
 
-## 🔧 Backend (n8n)
+## Backend Services
 
-Already deployed at `ag-mcp-app.up.railway.app`
+### API Gateway (Express.js + TypeScript)
+- Deployed at `ag-mcp-api-gateway.up.railway.app`
+- Handles authentication, MCP orchestration, and request routing
 
-To modify:
-1. Open n8n UI
-2. Edit workflow
-3. Save & activate
+### AI Services (TypeScript)
+- Deployed at `ag-mcp-ai-services.up.railway.app`
+- Handles Gemini API calls for chat, TTS, and transcription
+
+## Testing
+
+### API Gateway Tests
+
+```bash
+cd api-gateway
+npm test              # Run all tests
+npm run test:watch    # Watch mode
+npm run test:coverage # Coverage report
+```
+
+**Test coverage:** 112 tests covering services, middleware, and routes.
+
+### AI Services Tests
+
+See the [ai-services README](../ai-services/README.md) for testing instructions.
+
+## Development
+
+### API Gateway
+
+```bash
+cd api-gateway
+npm install
+npm run dev   # Start development server with hot reload
+```
+
+### Mobile App
+
+```bash
+cd mobile
+npm install
+npx expo start
+```
 
 ---
 

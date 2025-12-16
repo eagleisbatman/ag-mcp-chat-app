@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
 /**
  * GET /api/languages/tts-mapping
  * Returns a simple language code -> TTS voice mapping
- * Used by the n8n TTS workflow
+ * Used by the AI Services TTS endpoint
  */
 router.get('/tts-mapping', async (req, res) => {
   try {

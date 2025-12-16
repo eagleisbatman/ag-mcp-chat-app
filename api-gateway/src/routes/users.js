@@ -4,23 +4,51 @@ const { prisma } = require('../db');
 
 const router = express.Router();
 
-const N8N_LOCATION_URL = process.env.N8N_LOCATION_URL || 'https://ag-mcp-app.up.railway.app/webhook/location-lookup';
+// IP-API for IP geolocation (replaces n8n)
+const IP_API_URL = 'http://ip-api.com/json';
 
 /**
- * Helper: Lookup IP geolocation via n8n workflow
+ * Helper: Lookup IP geolocation via IP-API (direct call)
  */
 async function lookupIpLocation(ipAddress) {
   try {
-    const response = await fetch(N8N_LOCATION_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ipAddress }),
+    // Skip for local addresses
+    if (ipAddress === '127.0.0.1' || ipAddress === '::1' || ipAddress.startsWith('192.168.')) {
+      return null;
+    }
+
+    const url = `${IP_API_URL}/${ipAddress}?fields=status,message,country,countryCode,region,regionName,city,lat,lon,timezone,isp`;
+
+    const response = await fetch(url, {
+      headers: { 'Accept': 'application/json' },
     });
-    if (!response.ok) return null;
+
+    if (!response.ok) {
+      console.error('[IP Lookup] API error:', response.status);
+      return null;
+    }
+
     const data = await response.json();
-    return data.success ? data : null;
+
+    if (data.status !== 'success') {
+      console.error('[IP Lookup] API returned error:', data.message);
+      return null;
+    }
+
+    // Map to expected format
+    return {
+      success: true,
+      level1Country: data.country,
+      level1CountryCode: data.countryCode,
+      level2State: data.regionName,
+      level5City: data.city,
+      isp: data.isp,
+      timezone: data.timezone,
+      displayName: data.city ? `${data.city}, ${data.country}` : data.country,
+      formattedAddress: [data.city, data.regionName, data.country].filter(Boolean).join(', '),
+    };
   } catch (error) {
-    console.error('IP lookup failed:', error.message);
+    console.error('[IP Lookup] Error:', error.message);
     return null;
   }
 }
