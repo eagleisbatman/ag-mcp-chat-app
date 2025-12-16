@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
+import { CameraIcon, ImageIcon } from './ui/LineIcons';
 import { t } from '../constants/strings';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -170,7 +171,7 @@ export default function AttachBottomSheet({
             android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
           >
             <View style={[styles.iconCircle, { backgroundColor: isDark ? '#38383A' : '#E5E5EA' }]}>
-              <AppIcon name="camera" size={24} color={theme.iconPrimary} prefer="feather" />
+              <CameraIcon size={28} color={theme.iconPrimary} />
             </View>
             <Text style={[styles.optionLabel, { color: theme.text }]}>{t('media.camera')}</Text>
           </Pressable>
@@ -182,7 +183,7 @@ export default function AttachBottomSheet({
             android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
           >
             <View style={[styles.iconCircle, { backgroundColor: isDark ? '#38383A' : '#E5E5EA' }]}>
-              <AppIcon name="image" size={24} color={theme.iconPrimary} prefer="feather" />
+              <ImageIcon size={28} color={theme.iconPrimary} />
             </View>
             <Text style={[styles.optionLabel, { color: theme.text }]}>{t('media.photos')}</Text>
           </Pressable>

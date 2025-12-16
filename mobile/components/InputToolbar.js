@@ -27,6 +27,7 @@ import VoiceRecorder from './VoiceRecorder';
 import AttachBottomSheet from './AttachBottomSheet';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
+import { PlusIcon, ClockIcon, ArrowUpIcon, VoiceWaveIcon } from './ui/LineIcons';
 import { t } from '../constants/strings';
 
 export default function InputToolbar({
@@ -318,12 +319,7 @@ export default function InputToolbar({
               accessibilityLabel={t('a11y.attachMedia')}
               android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
             >
-              <AppIcon
-                name="plus"
-                size={22}
-                color={theme.iconSecondary}
-                prefer="feather"
-              />
+              <PlusIcon size={22} color={theme.iconSecondary} />
             </Pressable>
 
             {/* History Button */}
@@ -335,26 +331,13 @@ export default function InputToolbar({
                 accessibilityLabel={t('a11y.openHistory')}
                 android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
               >
-                <AppIcon name="clock" size={22} color={theme.iconSecondary} prefer="feather" />
+                <ClockIcon size={22} color={theme.iconSecondary} />
               </Pressable>
             )}
           </View>
 
           {/* Right Icons */}
           <View style={styles.rightIcons}>
-            {/* Mic Button (when no text) */}
-            {!hasText && (
-              <Pressable
-                style={styles.iconButton}
-                onPress={handleStartRecording}
-                disabled={disabled}
-                accessibilityLabel={t('a11y.recordVoice')}
-                android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
-              >
-                <AppIcon name="mic" size={22} color={theme.iconSecondary} prefer="feather" />
-              </Pressable>
-            )}
-
             {/* Send/Voice Button */}
             <Pressable
               style={[
@@ -367,15 +350,9 @@ export default function InputToolbar({
               android_ripple={Platform.OS === 'android' ? { color: 'rgba(255,255,255,0.2)', borderless: true } : undefined}
             >
               {hasText ? (
-                <AppIcon name="arrow-up" size={20} color="#FFFFFF" prefer="feather" />
+                <ArrowUpIcon size={20} color="#FFFFFF" />
               ) : (
-                <View style={styles.voiceWaveIcon}>
-                  <View style={[styles.waveLine, styles.waveLineShort, { backgroundColor: isDark ? '#FFFFFF' : theme.text }]} />
-                  <View style={[styles.waveLine, styles.waveLineTall, { backgroundColor: isDark ? '#FFFFFF' : theme.text }]} />
-                  <View style={[styles.waveLine, styles.waveLineMedium, { backgroundColor: isDark ? '#FFFFFF' : theme.text }]} />
-                  <View style={[styles.waveLine, styles.waveLineTall, { backgroundColor: isDark ? '#FFFFFF' : theme.text }]} />
-                  <View style={[styles.waveLine, styles.waveLineShort, { backgroundColor: isDark ? '#FFFFFF' : theme.text }]} />
-                </View>
+                <VoiceWaveIcon size={20} color={isDark ? '#FFFFFF' : theme.text} />
               )}
             </Pressable>
           </View>
@@ -453,25 +430,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  // Voice wave icon (like Claude's)
-  voiceWaveIcon: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 2,
-  },
-  waveLine: {
-    width: 2,
-    borderRadius: 1,
-  },
-  waveLineShort: {
-    height: 8,
-  },
-  waveLineMedium: {
-    height: 12,
-  },
-  waveLineTall: {
-    height: 16,
   },
 });
