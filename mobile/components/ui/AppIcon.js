@@ -1,5 +1,38 @@
 import React from 'react';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+
+// Feather icons - thin, clean aesthetic (like Claude's app)
+const FEATHER_ICONS = {
+  'plus': 'plus',
+  'x': 'x',
+  'mic': 'mic',
+  'camera': 'camera',
+  'image': 'image',
+  'clock': 'clock',
+  'send': 'send',
+  'arrow-up': 'arrow-up',
+  'arrow-left': 'arrow-left',
+  'arrow-right': 'arrow-right',
+  'search': 'search',
+  'settings': 'settings',
+  'user': 'user',
+  'map-pin': 'map-pin',
+  'globe': 'globe',
+  'check': 'check',
+  'check-circle': 'check-circle',
+  'x-circle': 'x-circle',
+  'alert-circle': 'alert-circle',
+  'info': 'info',
+  'menu': 'menu',
+  'chevron-down': 'chevron-down',
+  'chevron-right': 'chevron-right',
+  'volume-2': 'volume-2',
+  'stop-circle': 'stop-circle',
+  'refresh-cw': 'refresh-cw',
+  'message-circle': 'message-circle',
+  'trash-2': 'trash-2',
+  'edit-2': 'edit-2',
+};
 
 const ION_TO_MCI = {
   'arrow-back': 'arrow-left',
@@ -38,12 +71,28 @@ const ION_TO_MCI = {
   'leaf-outline': 'sprout-outline',
 };
 
+/**
+ * Unified icon component supporting multiple icon sets
+ * @param {string} name - Icon name
+ * @param {number} size - Icon size
+ * @param {string} color - Icon color
+ * @param {string} prefer - Preferred icon set: 'feather' | 'mci' | 'ion'
+ */
 export default function AppIcon({ name, size, color, prefer = 'mci', ...rest }) {
-  const mapped = ION_TO_MCI[name];
+  // Check Feather first if preferred or if icon exists in Feather set
+  if (prefer === 'feather' || FEATHER_ICONS[name]) {
+    const featherName = FEATHER_ICONS[name];
+    if (featherName) {
+      return <Feather name={featherName} size={size} color={color} {...rest} />;
+    }
+  }
 
+  // Fall back to MCI mapping
+  const mapped = ION_TO_MCI[name];
   if (prefer === 'mci' && mapped) {
     return <MaterialCommunityIcons name={mapped} size={size} color={color} {...rest} />;
   }
 
+  // Default to Ionicons
   return <Ionicons name={name} size={size} color={color} {...rest} />;
 }

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     minHeight: 48,
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.md,
-    borderRadius: 0,
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
   },

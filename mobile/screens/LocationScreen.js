@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 120,
     height: 120,
-    borderRadius: 0,
+    borderRadius: 60,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: SPACING.md,
-    borderRadius: 0,
+    borderRadius: 12,
     marginBottom: SPACING['2xl'],
     gap: SPACING.sm,
     backgroundColor: 'transparent',

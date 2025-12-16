@@ -435,6 +435,7 @@ export const STRINGS = {
       recordVoice: 'Record voice',
       attachMedia: 'Attach media',
       closeMenu: 'Close menu',
+      openHistory: 'Open chat history',
       playVoice: 'Play voice',
       stopVoicePlayback: 'Stop voice playback',
       moreNotifications: '{count} more notifications',
