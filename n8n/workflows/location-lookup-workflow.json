@@ -1,51 +1,78 @@
 {
+  "id": "NRRFikOyc5IUcjAX",
   "name": "AG-MCP Location Lookup",
   "nodes": [
     {
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        260,
+        300
+      ],
+      "webhookId": "location-lookup-endpoint",
       "parameters": {
         "httpMethod": "POST",
         "path": "location-lookup",
         "responseMode": "responseNode",
         "options": {}
-      },
-      "id": "webhook-trigger",
-      "name": "Webhook Trigger",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [260, 300],
-      "webhookId": "location-lookup-webhook",
-      "notes": "Receives POST with latitude/longitude or ipAddress"
+      }
     },
     {
-      "parameters": {
-        "jsCode": "// Determine location source - handle both direct JSON and body-wrapped input\nconst input = $input.first().json;\nconst body = input.body || input;\n\nconst latitude = body.latitude;\nconst longitude = body.longitude;\nconst ipAddress = body.ipAddress;\n\nconsole.log('Location lookup input:', JSON.stringify({ latitude, longitude, ipAddress }));\n\nconst hasGPS = latitude && longitude && \n  !isNaN(parseFloat(latitude)) && !isNaN(parseFloat(longitude)) &&\n  parseFloat(latitude) !== 0 && parseFloat(longitude) !== 0;\n\nconst hasIP = ipAddress && \n  ipAddress !== '127.0.0.1' && \n  ipAddress !== '::1' &&\n  !ipAddress.startsWith('192.168.') &&\n  !ipAddress.startsWith('10.') &&\n  !ipAddress.startsWith('172.');\n\nconsole.log('Location source:', { hasGPS, hasIP, lat: latitude, lon: longitude });\n\nreturn {\n  latitude: hasGPS ? parseFloat(latitude) : null,\n  longitude: hasGPS ? parseFloat(longitude) : null,\n  ipAddress: hasIP ? ipAddress : null,\n  useGPS: hasGPS,\n  useIP: !hasGPS && hasIP,\n  noSource: !hasGPS && !hasIP\n};"
-      },
       "id": "determine-source",
       "name": "Determine Source",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [480, 300],
-      "notes": "Check what location data is available (GPS coords or IP address)"
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst body = input.body || input;\nconst { latitude, longitude, ipAddress } = body;\nconst lat = parseFloat(latitude);\nconst lon = parseFloat(longitude);\nconst hasGPS = !isNaN(lat) && !isNaN(lon) && lat !== 0 && lon !== 0;\nconst hasIP = ipAddress && typeof ipAddress === 'string' && ipAddress.length > 0 && ipAddress !== '127.0.0.1' && !ipAddress.startsWith('192.168.') && !ipAddress.startsWith('10.') && !ipAddress.startsWith('172.') && !ipAddress.startsWith('::1');\nreturn [{ json: { latitude: hasGPS ? lat : null, longitude: hasGPS ? lon : null, ipAddress: hasIP ? ipAddress : null, useGPS: hasGPS, useIP: !hasGPS && hasIP, noSource: !hasGPS && !hasIP } }];"
+      }
     },
     {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{ $json.useGPS }}",
-              "value2": true
-            }
-          ]
-        }
-      },
       "id": "has-gps",
       "name": "Has GPS?",
       "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [700, 300],
-      "notes": "Route based on GPS availability"
+      "typeVersion": 2.2,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond1",
+              "leftValue": "={{ $json.useGPS }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
     },
     {
+      "id": "nominatim-reverse",
+      "name": "Nominatim Reverse Geocode",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        200
+      ],
       "parameters": {
         "url": "=https://nominatim.openstreetmap.org/reverse?format=json&lat={{ $json.latitude }}&lon={{ $json.longitude }}&addressdetails=1&zoom=18",
         "options": {
@@ -63,46 +90,64 @@
             }
           ]
         }
-      },
-      "id": "nominatim-reverse",
-      "name": "Nominatim Reverse Geocode",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [920, 200],
-      "notes": "OpenStreetMap Nominatim API for reverse geocoding - free, no API key"
+      }
     },
     {
-      "parameters": {
-        "jsCode": "// Parse Nominatim response into L1-L6 hierarchy\nconst data = $input.first().json;\nconst address = data.address || {};\nconst lat = $('Determine Source').first().json.latitude;\nconst lon = $('Determine Source').first().json.longitude;\n\nreturn {\n  success: true,\n  source: 'gps',\n  latitude: lat,\n  longitude: lon,\n  \n  // L1: Country\n  level1Country: address.country || null,\n  level1CountryCode: (address.country_code || '').toUpperCase() || null,\n  \n  // L2: State/Province\n  level2State: address.state || address.province || address.region || null,\n  \n  // L3: District/County\n  level3District: address.county || address.district || address.state_district || null,\n  \n  // L4: Sub-district/Taluk\n  level4SubDistrict: address.municipality || address.city_district || address.suburb || null,\n  \n  // L5: City/Town/Village\n  level5City: address.city || address.town || address.village || address.hamlet || null,\n  \n  // L6: Locality/Neighborhood\n  level6Locality: address.neighbourhood || address.quarter || address.residential || null,\n  \n  // Display names\n  displayName: [address.city || address.town || address.village, address.country].filter(Boolean).join(', '),\n  formattedAddress: data.display_name || null,\n  \n  resolvedAt: new Date().toISOString()\n};"
-      },
       "id": "parse-nominatim",
       "name": "Parse Nominatim",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1140, 200],
-      "notes": "Extract hierarchical location data (L1-L6) from Nominatim response"
+      "position": [
+        1140,
+        200
+      ],
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst address = data.address || {};\nconst coords = $('Determine Source').first().json;\nconst country = address.country || null;\nconst countryCode = (address.country_code || '').toUpperCase() || null;\nconst state = address.state || address.province || address.region || null;\nconst district = address.county || address.district || address.state_district || null;\nconst subDistrict = address.municipality || address.city_district || address.suburb || null;\nconst city = address.city || address.town || address.village || address.hamlet || null;\nconst locality = address.neighbourhood || address.quarter || address.residential || address.road || null;\nconst displayParts = [city || district || subDistrict, state, country].filter(Boolean);\nconst displayName = displayParts.length > 0 ? displayParts.join(', ') : data.display_name || 'Unknown Location';\nreturn [{ json: { success: true, source: 'gps', latitude: coords.latitude, longitude: coords.longitude, level1Country: country, level1CountryCode: countryCode, level2State: state, level3District: district, level4SubDistrict: subDistrict, level5City: city, level6Locality: locality, displayName: displayName, formattedAddress: data.display_name || null, resolvedAt: new Date().toISOString() } }];"
+      }
     },
     {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{ $json.useIP }}",
-              "value2": true
-            }
-          ]
-        }
-      },
       "id": "has-ip",
       "name": "Has IP?",
       "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [920, 400],
-      "notes": "Check if IP lookup should be attempted"
+      "typeVersion": 2.2,
+      "position": [
+        920,
+        400
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond2",
+              "leftValue": "={{ $json.useIP }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
     },
     {
+      "id": "ip-api-lookup",
+      "name": "IP API Lookup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        350
+      ],
       "parameters": {
-        "url": "=http://ip-api.com/json/{{ $('Determine Source').first().json.ipAddress }}?fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp",
+        "url": "=http://ip-api.com/json/{{ $json.ipAddress }}?fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp",
         "options": {
           "response": {
             "response": {
@@ -110,74 +155,78 @@
             }
           }
         }
-      },
-      "id": "ip-api-lookup",
-      "name": "IP API Lookup",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [1140, 350],
-      "notes": "ip-api.com for IP geolocation - free tier, no API key needed"
+      }
     },
     {
-      "parameters": {
-        "jsCode": "// Parse IP API response\nconst data = $input.first().json;\n\nif (data.status !== 'success') {\n  return {\n    success: false,\n    source: 'ip',\n    error: data.message || 'IP lookup failed'\n  };\n}\n\nreturn {\n  success: true,\n  source: 'ip',\n  latitude: data.lat,\n  longitude: data.lon,\n  \n  // L1-L5 from IP\n  level1Country: data.country || null,\n  level1CountryCode: data.countryCode || null,\n  level2State: data.regionName || null,\n  level3District: data.district || null,\n  level5City: data.city || null,\n  \n  // IP specific\n  timezone: data.timezone || null,\n  isp: data.isp || null,\n  \n  displayName: [data.city, data.country].filter(Boolean).join(', '),\n  formattedAddress: [data.city, data.regionName, data.country].filter(Boolean).join(', '),\n  \n  resolvedAt: new Date().toISOString()\n};"
-      },
       "id": "parse-ip-api",
       "name": "Parse IP API",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1360, 350],
-      "notes": "Extract location data from IP API response"
+      "position": [
+        1360,
+        350
+      ],
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nif (data.status !== 'success') { return [{ json: { success: false, source: 'ip', error: data.message || 'IP lookup failed' } }]; }\nconst displayParts = [data.city, data.regionName, data.country].filter(Boolean);\nconst displayName = displayParts.length > 0 ? displayParts.join(', ') : 'Unknown Location';\nreturn [{ json: { success: true, source: 'ip', latitude: data.lat, longitude: data.lon, level1Country: data.country || null, level1CountryCode: data.countryCode || null, level2State: data.regionName || null, level3District: data.district || null, level5City: data.city || null, timezone: data.timezone || null, isp: data.isp || null, displayName: displayName, formattedAddress: displayParts.join(', ') || null, resolvedAt: new Date().toISOString() } }];"
+      }
     },
     {
-      "parameters": {
-        "jsCode": "// No location source available\nreturn {\n  success: false,\n  source: 'none',\n  error: 'No GPS coordinates or valid IP address provided',\n  resolvedAt: new Date().toISOString()\n};"
-      },
       "id": "no-source",
       "name": "No Source",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1140, 500],
-      "notes": "Return error when no location data available"
+      "position": [
+        1140,
+        500
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { success: false, source: 'none', error: 'No GPS coordinates or valid IP address provided', resolvedAt: new Date().toISOString() } }];"
+      }
     },
     {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ $json }}",
-        "options": {}
-      },
       "id": "respond-gps",
       "name": "Respond GPS",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1360, 200],
-      "notes": "Return GPS-based location"
-    },
-    {
+      "position": [
+        1360,
+        200
+      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json }}",
         "options": {}
-      },
+      }
+    },
+    {
       "id": "respond-ip",
       "name": "Respond IP",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1580, 350],
-      "notes": "Return IP-based location"
-    },
-    {
+      "position": [
+        1580,
+        350
+      ],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json }}",
         "options": {}
-      },
+      }
+    },
+    {
       "id": "respond-error",
       "name": "Respond Error",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1360, 500],
-      "notes": "Return error response"
+      "position": [
+        1360,
+        500
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      }
     }
   ],
   "connections": {
@@ -296,8 +345,8 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
-  },
-  "tags": []
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  }
 }
-
