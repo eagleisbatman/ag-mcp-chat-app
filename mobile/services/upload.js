@@ -1,8 +1,7 @@
 // File upload service - uploads images/audio to Cloudinary via API Gateway
 import { fetchWithTimeout } from '../utils/apiHelpers';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api/chat', '')
-  || 'https://ag-mcp-api-gateway.up.railway.app';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 const UPLOAD_TIMEOUT_MS = 60000; // 60s for file uploads
 

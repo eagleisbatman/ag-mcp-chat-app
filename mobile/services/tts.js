@@ -1,8 +1,8 @@
 // Text-to-Speech service - calls API Gateway → n8n TTS → Cloudinary
 import { fetchWithTimeout } from '../utils/apiHelpers';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api/chat', '/api/tts')
-  || 'https://ag-mcp-api-gateway.up.railway.app/api/tts';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
+const API_URL = `${API_BASE_URL}/api/tts`;
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 const TTS_TIMEOUT_MS = 30000; // 30s for TTS generation
 

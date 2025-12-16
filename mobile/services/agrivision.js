@@ -48,10 +48,17 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
     // Parse SSE response
     const text = await response.text();
     const lines = text.split('\n');
-    
+
     for (const line of lines) {
       if (line.startsWith('data: ')) {
-        const data = JSON.parse(line.slice(6));
+        let data;
+        try {
+          data = JSON.parse(line.slice(6));
+        } catch (parseError) {
+          console.warn('Failed to parse SSE line:', line.slice(0, 100));
+          continue; // Skip malformed lines
+        }
+
         if (data.result?.content?.[0]?.text) {
           try {
             const diagnosis = JSON.parse(data.result.content[0].text);

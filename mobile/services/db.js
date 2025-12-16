@@ -4,8 +4,7 @@
 import { getDeviceId, getDeviceInfo } from '../utils/deviceInfo';
 import { fetchWithTimeout } from '../utils/apiHelpers';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api/chat', '')
-  || 'https://ag-mcp-api-gateway.up.railway.app';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 const DB_TIMEOUT_MS = 30000; // 30s for database operations
 

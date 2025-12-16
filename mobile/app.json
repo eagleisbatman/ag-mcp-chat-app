@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "FarmerChat",
-    "slug": "ag-mcp-mobile",
-    "version": "1.0.0",
+    "slug": "farmerchat",
+    "version": "2.0.0",
     "sdkVersion": "54.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -32,7 +32,9 @@
       "package": "org.digitalgreen.agmcp",
       "permissions": [
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
     "plugins": [
@@ -43,6 +45,9 @@
         }
       ],
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {}
+    }
   }
 }
