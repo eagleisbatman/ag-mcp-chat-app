@@ -20,14 +20,13 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 /**
  * Claude-style attach bottom sheet
- * Full-width modal with Camera, Photos, Files cards
+ * Full-width modal with Camera and Photos options
  */
 export default function AttachBottomSheet({
   visible,
   onClose,
   onCamera,
   onPhotos,
-  onFiles,
 }) {
   const { theme } = useApp();
   const insets = useSafeAreaInsets();
@@ -187,19 +186,6 @@ export default function AttachBottomSheet({
             </View>
             <Text style={[styles.optionLabel, { color: theme.text }]}>{t('media.photos')}</Text>
           </Pressable>
-
-          {/* Files Card (placeholder for future) */}
-          <Pressable
-            style={[styles.optionCard, { backgroundColor: isDark ? '#2C2C2E' : '#F2F2F7', opacity: 0.5 }]}
-            disabled
-            android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
-          >
-            <View style={[styles.iconCircle, { backgroundColor: isDark ? '#38383A' : '#E5E5EA' }]}>
-              <AppIcon name="file-text" size={24} color={theme.iconSecondary} prefer="feather" />
-            </View>
-            <Text style={[styles.optionLabel, { color: theme.textMuted }]}>{t('media.files')}</Text>
-            <Text style={[styles.comingSoon, { color: theme.textMuted }]}>{t('common.comingSoon')}</Text>
-          </Pressable>
         </View>
       </Animated.View>
     </Modal>
@@ -280,9 +266,5 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.medium,
     textAlign: 'center',
-  },
-  comingSoon: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    marginTop: 2,
   },
 });

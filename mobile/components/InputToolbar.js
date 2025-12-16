@@ -282,7 +282,6 @@ export default function InputToolbar({
         onClose={closeMediaMenu}
         onCamera={handleTakePhoto}
         onPhotos={handlePickImage}
-        onFiles={() => {}} // Placeholder for future
       />
 
       {/* Unified Input Container - Claude-style */}

@@ -185,6 +185,8 @@ export const STRINGS = {
       cameraFailed: 'Failed to access camera. Please try again.',
       camera: 'Camera',
       gallery: 'Gallery',
+      addToChat: 'Add to Chat',
+      photos: 'Photos',
     },
     voice: {
       microphonePermission: 'Microphone permission required',
@@ -200,6 +202,8 @@ export const STRINGS = {
       done: 'Done',
       transcribing: 'Transcribing...',
       recordingHint: 'Tap Done to transcribe, or Cancel to discard',
+      listening: 'Listening...',
+      waitingForSpeech: 'Waiting for speech...',
     },
     history: {
       title: 'Conversations',
