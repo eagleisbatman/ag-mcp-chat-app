@@ -6,6 +6,14 @@ const API_URL = `${API_BASE_URL}/api/tts`;
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 const TTS_TIMEOUT_MS = 30000; // 30s for TTS generation
 
+// User-friendly error messages (never show raw backend errors)
+const USER_FRIENDLY_ERRORS = {
+  timeout: 'Speech is taking too long. Please try again.',
+  network: 'Cannot connect to speech service. Check your internet.',
+  server: 'Speech service is busy. Please try again.',
+  default: 'Could not generate speech. Please try again.',
+};
+
 /**
  * Convert text to speech audio using Gemini TTS
  * @param {string} text - Text to convert to speech
@@ -27,15 +35,17 @@ export const textToSpeech = async (text, language = 'en') => {
     }, TTS_TIMEOUT_MS);
 
     if (!response.ok) {
-      console.log(`TTS API returned status: ${response.status}`);
+      // Log technical details but return user-friendly message
+      console.log(`TTS API error: ${response.status}`);
+      const errorType = response.status >= 500 ? 'server' : 'default';
       return {
         success: false,
-        error: 'Speech service error - please try again',
+        error: USER_FRIENDLY_ERRORS[errorType],
       };
     }
 
     const data = await response.json();
-    
+
     if (data.success) {
       return {
         success: true,
@@ -46,17 +56,29 @@ export const textToSpeech = async (text, language = 'en') => {
         audioBase64: data.audioBase64,
       };
     } else {
+      // Log raw error but return user-friendly message
+      console.log('TTS service returned error:', data.error || data.message);
       return {
         success: false,
-        error: data.error || 'TTS generation failed',
+        error: USER_FRIENDLY_ERRORS.default,
       };
     }
   } catch (error) {
-    // Use console.log instead of console.error to avoid system alerts
-    console.log('TTS service exception:', error.message);
+    // Log technical details but return user-friendly message
+    console.log('TTS exception:', error.message);
+
+    // Detect error type for appropriate message
+    const msg = error.message?.toLowerCase() || '';
+    let errorType = 'default';
+    if (msg.includes('timeout') || msg.includes('aborted')) {
+      errorType = 'timeout';
+    } else if (msg.includes('network') || msg.includes('fetch')) {
+      errorType = 'network';
+    }
+
     return {
       success: false,
-      error: 'Speech service temporarily unavailable',
+      error: USER_FRIENDLY_ERRORS[errorType],
     };
   }
 };
