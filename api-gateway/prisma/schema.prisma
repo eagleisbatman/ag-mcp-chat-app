@@ -140,16 +140,20 @@ model UserLocation {
 model ChatSession {
   id                    String    @id @default(uuid()) @db.Uuid
   userId                String    @map("user_id") @db.Uuid
-  
+
   // Session info
   title                 String?
   titleGeneratedAt      DateTime? @map("title_generated_at")
   summary               String?
-  
+
+  // Gemini Interactions API - conversation state
+  // This ID allows server-side context management
+  geminiInteractionId   String?   @map("gemini_interaction_id")
+
   // Language context
   primaryLanguageCode   String?   @map("primary_language_code")
   languagesUsed         String[]  @map("languages_used")
-  
+
   // Location context
   locationId            String?   @map("location_id") @db.Uuid
   locationDisplay       String?   @map("location_display")
