@@ -72,9 +72,9 @@
     "cameraFailed": "Failed to access camera. Please try again.",
     "camera": "Camera",
     "gallery": "Gallery",
-    "addToChat": "Add to Chat",
-    "photos": "Photos",
-    "files": "Files"
+    "addToChat": "Upload Image",
+    "uploadHint": "Take or select a photo for plant health diagnosis",
+    "photos": "Photos"
   },
   "voice": {
     "microphonePermission": "Microphone permission required",

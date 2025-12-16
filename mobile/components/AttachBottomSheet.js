@@ -147,9 +147,14 @@ export default function AttachBottomSheet({
 
         {/* Header */}
         <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: theme.text }]}>
-            {t('media.addToChat')}
-          </Text>
+          <View style={styles.headerTextContainer}>
+            <Text style={[styles.headerTitle, { color: theme.text }]}>
+              {t('media.addToChat')}
+            </Text>
+            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>
+              {t('media.uploadHint')}
+            </Text>
+          </View>
           <Pressable
             style={styles.closeButton}
             onPress={handleClose}
@@ -221,14 +226,23 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.md,
   },
+  headerTextContainer: {
+    flex: 1,
+    marginRight: SPACING.md,
+  },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: TYPOGRAPHY.weights.semibold,
+  },
+  headerSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginTop: 4,
+    lineHeight: TYPOGRAPHY.sizes.sm * 1.4,
   },
   closeButton: {
     padding: SPACING.xs,

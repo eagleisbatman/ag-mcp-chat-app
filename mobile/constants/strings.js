@@ -185,7 +185,8 @@ export const STRINGS = {
       cameraFailed: 'Failed to access camera. Please try again.',
       camera: 'Camera',
       gallery: 'Gallery',
-      addToChat: 'Add to Chat',
+      addToChat: 'Upload Image',
+      uploadHint: 'Take or select a photo for plant health diagnosis',
       photos: 'Photos',
     },
     voice: {
