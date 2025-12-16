@@ -15,8 +15,8 @@ import { errorHandler, notFoundHandler } from './middleware/error-handler';
 import aiRouter from './routes/ai';
 import mcpServersRouter from './routes/mcp-servers';
 
-// JavaScript Routes (to be converted)
-const uploadRoutes = require('./routes/uploads');
+// TypeScript Routes (converted)
+import uploadRoutes from './routes/uploads';
 const userRoutes = require('./routes/users');
 const sessionRoutes = require('./routes/sessions');
 const messageRoutes = require('./routes/messages');
