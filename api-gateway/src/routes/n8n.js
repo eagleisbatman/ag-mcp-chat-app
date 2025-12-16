@@ -8,10 +8,11 @@ const router = express.Router();
 // Intent classification now handled by Intent Classification MCP Server
 // Global keywords in GLOBAL_INTENT_KEYWORDS provide fast matching for common queries
 
-const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || 'https://ag-mcp-app.up.railway.app/webhook/api/chat';
-const N8N_WHISPER_URL = process.env.N8N_WHISPER_URL || 'https://ag-mcp-app.up.railway.app/webhook/api/transcribe';
-const N8N_TTS_URL = process.env.N8N_TTS_URL || 'https://ag-mcp-app.up.railway.app/webhook/api/tts';
-const N8N_TITLE_URL = process.env.N8N_TITLE_URL || 'https://ag-mcp-app.up.railway.app/webhook/generate-title';
+// AI Services (replaces n8n for Gemini-based endpoints)
+const AI_SERVICES_URL = process.env.AI_SERVICES_URL || 'https://ag-mcp-ai-services.up.railway.app';
+const AI_SERVICES_KEY = process.env.AI_SERVICES_KEY || '';
+
+// n8n webhooks (only for non-Gemini services)
 const N8N_LOCATION_URL = process.env.N8N_LOCATION_URL || 'https://ag-mcp-app.up.railway.app/webhook/location-lookup';
 const INTENT_CLASSIFICATION_URL = process.env.INTENT_CLASSIFICATION_URL || 'https://intent-classification-mcp.up.railway.app';
 const AGRIVISION_URL = process.env.AGRIVISION_URL || 'https://agrivision-mcp-server.up.railway.app';
@@ -752,9 +753,12 @@ router.post('/chat', async (req, res) => {
     const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
 
     try {
-      const response = await fetch(N8N_WEBHOOK_URL, {
+      const response = await fetch(`${AI_SERVICES_URL}/api/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': AI_SERVICES_KEY,
+        },
         body: JSON.stringify(enhancedBody),
         signal: controller.signal,
       });
@@ -763,8 +767,8 @@ router.post('/chat', async (req, res) => {
 
       if (!response.ok) {
         const errorText = await response.text().catch(() => 'Unknown error');
-        console.error('💬 [Chat] n8n error:', response.status, errorText);
-        throw new Error(`n8n returned ${response.status}`);
+        console.error('💬 [Chat] AI Services error:', response.status, errorText);
+        throw new Error(`AI Services returned ${response.status}`);
       }
 
       const data = await response.json();
@@ -871,22 +875,25 @@ router.post('/transcribe', async (req, res) => {
       }
     }
 
-    const response = await fetch(N8N_WHISPER_URL, {
+    const response = await fetch(`${AI_SERVICES_URL}/api/transcribe`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': AI_SERVICES_KEY,
+      },
+      body: JSON.stringify({
         audio: audioBase64,  // Send raw base64, not data URI
-        language, 
-        mimeType: detectedMimeType 
+        language,
+        mimeType: detectedMimeType
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`n8n transcribe error: ${response.status} - ${errorText}`);
-      return res.status(response.status).json({ 
-        success: false, 
-        error: `Transcription service error: ${response.status}` 
+      console.error(`AI Services transcribe error: ${response.status} - ${errorText}`);
+      return res.status(response.status).json({
+        success: false,
+        error: `Transcription service error: ${response.status}`
       });
     }
 
@@ -921,9 +928,12 @@ router.post('/transcribe', async (req, res) => {
  */
 router.post('/tts', async (req, res) => {
   try {
-    const response = await fetch(N8N_TTS_URL, {
+    const response = await fetch(`${AI_SERVICES_URL}/api/tts`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': AI_SERVICES_KEY,
+      },
       body: JSON.stringify(req.body),
     });
 
@@ -961,19 +971,22 @@ router.post('/tts', async (req, res) => {
 router.post('/generate-title', async (req, res) => {
   try {
     console.log('📝 [Title] Generating title, messages:', req.body.messages?.length || 0);
-    
-    const response = await fetch(N8N_TITLE_URL, {
+
+    const response = await fetch(`${AI_SERVICES_URL}/api/generate-title`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': AI_SERVICES_KEY,
+      },
       body: JSON.stringify(req.body),
     });
-    
+
     if (!response.ok) {
-      console.log('📝 [Title] n8n error:', response.status);
-      return res.status(response.status).json({ 
-        success: false, 
-        error: `n8n returned ${response.status}`,
-        title: 'New Conversation' 
+      console.log('📝 [Title] AI Services error:', response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: `AI Services returned ${response.status}`,
+        title: 'New Conversation'
       });
     }
     
