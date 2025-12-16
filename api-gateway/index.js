@@ -111,7 +111,7 @@ app.delete('/api/debug/clear-all', authenticate, async (req, res) => {
 
 // Import routes
 const uploadRoutes = require('./src/routes/uploads');
-const n8nRoutes = require('./src/routes/n8n');
+const aiRoutes = require('./src/routes/ai');
 const userRoutes = require('./src/routes/users');
 const sessionRoutes = require('./src/routes/sessions');
 const messageRoutes = require('./src/routes/messages');
@@ -123,7 +123,7 @@ const mcpServersRoutes = require('./src/routes/mcp-servers');
 
 // Mount routes (all authenticated)
 app.use('/api/upload', authenticate, uploadRoutes);
-app.use('/api', authenticate, n8nRoutes);
+app.use('/api', authenticate, aiRoutes);
 app.use('/api/users', authenticate, userRoutes);
 app.use('/api/sessions', authenticate, sessionRoutes);
 app.use('/api/messages', authenticate, messageRoutes);
