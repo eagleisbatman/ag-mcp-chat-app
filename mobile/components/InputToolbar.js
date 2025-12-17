@@ -27,7 +27,7 @@ import VoiceRecorder from './VoiceRecorder';
 import AttachBottomSheet from './AttachBottomSheet';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
-import { PlusIcon, ClockIcon, ArrowUpIcon, VoiceWaveIcon } from './ui/LineIcons';
+import { PlusIcon, ClockIcon, VoiceWaveIcon } from './ui/LineIcons';
 import { t } from '../constants/strings';
 
 export default function InputToolbar({
@@ -359,7 +359,7 @@ export default function InputToolbar({
               android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
             >
               {hasText ? (
-                <ArrowUpIcon size={20} color={isDark ? '#000000' : '#FFFFFF'} />
+                <AppIcon name="arrow-up" size={20} color={isDark ? '#000000' : '#FFFFFF'} prefer="feather" />
               ) : (
                 <VoiceWaveIcon size={20} color={theme.icon} />
               )}
