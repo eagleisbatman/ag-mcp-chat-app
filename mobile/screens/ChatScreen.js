@@ -110,7 +110,7 @@ export default function ChatScreen({ navigation, route }) {
               size={36}
               borderRadius={10}
               backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
-              color={theme.iconPrimary || theme.accent}
+              color={theme.icon}
               accessibilityLabel={t('a11y.refreshLocation')}
             />
             <IconButton
@@ -119,7 +119,7 @@ export default function ChatScreen({ navigation, route }) {
               size={36}
               borderRadius={10}
               backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
-              color={theme.iconPrimary || theme.accent}
+              color={theme.icon}
               accessibilityLabel={t('a11y.newChat')}
             />
             <IconButton
@@ -128,7 +128,7 @@ export default function ChatScreen({ navigation, route }) {
               size={36}
               borderRadius={10}
               backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
-              color={theme.iconSecondary || theme.textSecondary}
+              color={theme.icon}
               accessibilityLabel={t('a11y.openSettings')}
             />
           </>

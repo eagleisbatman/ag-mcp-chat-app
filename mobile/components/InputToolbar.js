@@ -319,7 +319,7 @@ export default function InputToolbar({
               accessibilityLabel={t('a11y.attachMedia')}
               android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
             >
-              <PlusIcon size={22} color={theme.iconSecondary} />
+              <PlusIcon size={22} color={theme.icon} />
             </Pressable>
 
             {/* History Button */}
@@ -331,7 +331,7 @@ export default function InputToolbar({
                 accessibilityLabel={t('a11y.openHistory')}
                 android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
               >
-                <ClockIcon size={22} color={theme.iconSecondary} />
+                <ClockIcon size={22} color={theme.icon} />
               </Pressable>
             )}
           </View>
@@ -352,7 +352,7 @@ export default function InputToolbar({
               {hasText ? (
                 <ArrowUpIcon size={20} color="#FFFFFF" />
               ) : (
-                <VoiceWaveIcon size={20} color={isDark ? '#FFFFFF' : theme.text} />
+                <VoiceWaveIcon size={20} color={theme.icon} />
               )}
             </Pressable>
           </View>

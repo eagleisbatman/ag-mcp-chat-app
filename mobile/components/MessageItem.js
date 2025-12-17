@@ -281,7 +281,7 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
     >
       {/* Sender Name */}
       <View style={styles.header}>
-        <Text style={[styles.senderName, { color: isBot ? (theme.iconPrimary || theme.accent) : theme.textSecondary }]}>
+        <Text style={[styles.senderName, { color: isBot ? theme.accent : theme.textSecondary }]}>
           {isBot ? t('chat.senderAssistant') : t('chat.senderYou')}
         </Text>
         <View style={styles.headerRight}>
@@ -296,12 +296,12 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
               android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: false } : undefined}
             >
               {isLoading ? (
-                <ActivityIndicator size="small" color={theme.accent} />
+                <ActivityIndicator size="small" color={theme.icon} />
               ) : (
                 <AppIcon
                   name={isSpeaking ? 'stop-circle' : 'volume-high'}
                   size={18}
-                  color={isSpeaking ? theme.error : theme.accent}
+                  color={isSpeaking ? theme.error : theme.icon}
                 />
               )}
             </Pressable>
@@ -370,7 +370,7 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
                 <Text style={[styles.followUpText, { color: theme.text }]}>
                   {question}
                 </Text>
-                <AppIcon name="arrow-forward" size={16} color={theme.textMuted} />
+                <AppIcon name="arrow-forward" size={16} color={theme.icon} />
               </Pressable>
             ))}
           </View>

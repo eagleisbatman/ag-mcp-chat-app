@@ -47,10 +47,11 @@ export const THEMES = {
     info: '#0056B3',               // Darker blue for better visibility
     infoLight: '#E5F1FF',
 
-    // Icon colors (darker for light mode visibility)
-    iconPrimary: '#1B8A2E',        // Darker green for better contrast
-    iconSecondary: '#6B6B6B',      // Darker gray for icons
-    iconAccent: '#0056B3',         // Darker blue accent
+    // Icon colors - simple black for light mode
+    icon: '#000000',               // Pure black for strong visibility
+    iconPrimary: '#000000',        // Pure black (was green)
+    iconSecondary: '#000000',      // Pure black (was gray)
+    iconAccent: '#000000',         // Pure black (was blue)
   },
   
   dark: {
@@ -99,10 +100,11 @@ export const THEMES = {
     info: '#0A84FF',               // iOS dark blue
     infoLight: '#0D2840',
     
-    // Icon colors (extra bright for dark mode)
-    iconPrimary: '#32DE5A',        // Extra vibrant green
-    iconSecondary: '#98989D',      // Brighter gray
-    iconAccent: '#0A84FF',         // Bright blue
+    // Icon colors - simple white for dark mode
+    icon: '#FFFFFF',               // Pure white for strong visibility
+    iconPrimary: '#FFFFFF',        // Pure white (was green)
+    iconSecondary: '#FFFFFF',      // Pure white (was gray)
+    iconAccent: '#FFFFFF',         // Pure white (was blue)
   },
 };
 
