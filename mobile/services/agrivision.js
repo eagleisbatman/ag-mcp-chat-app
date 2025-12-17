@@ -1,7 +1,8 @@
 // AgriVision MCP Service - Plant disease diagnosis via image analysis
 import { fetchWithTimeout } from '../utils/apiHelpers';
 
-const AGRIVISION_URL = process.env.EXPO_PUBLIC_AGRIVISION_URL || 'https://agrivision-mcp.up.railway.app/mcp';
+// AgriVision URL - should match database seed (agrivision.up.railway.app)
+const AGRIVISION_URL = process.env.EXPO_PUBLIC_AGRIVISION_URL || 'https://agrivision.up.railway.app/mcp';
 const AGRIVISION_TIMEOUT_MS = 45000; // 45s for image analysis
 
 /**
