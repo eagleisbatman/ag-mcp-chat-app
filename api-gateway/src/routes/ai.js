@@ -751,11 +751,112 @@ router.post('/chat', async (req, res) => {
       noDataFallbacks: Object.keys(noDataFallbacks).length > 0 ? noDataFallbacks : null,
     };
 
+    // Check if streaming is requested
+    const useStreaming = req.body.stream === true;
+
     // Call AI Services with timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
 
     try {
+      // ==========================================
+      // STREAMING MODE - Proxy SSE from AI Services V2
+      // ==========================================
+      if (useStreaming) {
+        console.log('💬 [Chat] Starting streaming response...');
+
+        // Set SSE headers
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
+
+        // Build V2 request body
+        const v2Body = {
+          message,
+          language: language || 'en',
+          stream: true,
+          location: latitude && longitude ? {
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            displayName: location?.displayName,
+            country: location?.country,
+          } : undefined,
+          regions: mcpContext.detectedRegions.map(r => r.name),
+        };
+
+        // If there's an image, include it
+        if (image) {
+          v2Body.imageBase64 = image;
+        }
+
+        const response = await fetch(`${AI_SERVICES_URL}/api/v2/chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': AI_SERVICES_KEY,
+          },
+          body: JSON.stringify(v2Body),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          const errorText = await response.text().catch(() => 'Unknown error');
+          console.error('💬 [Chat] AI Services V2 error:', response.status, errorText);
+          res.write(`data: ${JSON.stringify({ type: 'error', error: `AI Services returned ${response.status}` })}\n\n`);
+          res.write('data: [DONE]\n\n');
+          res.end();
+          return;
+        }
+
+        // Send initial metadata
+        res.write(`data: ${JSON.stringify({
+          type: 'meta',
+          mcpToolsUsed: Object.keys(mcpResults),
+          intentsDetected,
+          regions: mcpContext.detectedRegions.map(r => r.name),
+        })}\n\n`);
+
+        // Proxy SSE stream from AI Services
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+
+          // Process complete SSE messages
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              // Forward the SSE line directly to client
+              res.write(line + '\n\n');
+            }
+          }
+        }
+
+        // Send any remaining buffered data
+        if (buffer.startsWith('data: ')) {
+          res.write(buffer + '\n\n');
+        }
+
+        res.write('data: [DONE]\n\n');
+        res.end();
+
+        console.log('💬 [Chat] Streaming complete');
+        return;
+      }
+
+      // ==========================================
+      // NON-STREAMING MODE - Original behavior
+      // ==========================================
       const response = await fetch(`${AI_SERVICES_URL}/api/chat`, {
         method: 'POST',
         headers: {
@@ -821,6 +922,16 @@ router.post('/chat', async (req, res) => {
 
       if (fetchError.name === 'AbortError') {
         console.error('💬 [Chat] Timeout after', CHAT_TIMEOUT_MS, 'ms');
+        // Handle streaming timeout differently
+        if (useStreaming && !res.headersSent) {
+          res.setHeader('Content-Type', 'text/event-stream');
+        }
+        if (useStreaming) {
+          res.write(`data: ${JSON.stringify({ type: 'error', error: 'Request timed out' })}\n\n`);
+          res.write('data: [DONE]\n\n');
+          res.end();
+          return;
+        }
         return res.status(504).json({
           success: false,
           error: 'Request timed out. Please try again.',
@@ -831,6 +942,16 @@ router.post('/chat', async (req, res) => {
     }
   } catch (error) {
     console.error('💬 [Chat] Error:', error.message);
+    // Handle streaming errors
+    if (req.body.stream === true) {
+      if (!res.headersSent) {
+        res.setHeader('Content-Type', 'text/event-stream');
+      }
+      res.write(`data: ${JSON.stringify({ type: 'error', error: error.message })}\n\n`);
+      res.write('data: [DONE]\n\n');
+      res.end();
+      return;
+    }
     res.status(500).json({
       success: false,
       error: 'Failed to process request',

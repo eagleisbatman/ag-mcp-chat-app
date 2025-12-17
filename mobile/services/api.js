@@ -10,7 +10,149 @@ const CHAT_TIMEOUT_MS = 60000; // 60s for chat (includes MCP calls)
 const DEFAULT_TIMEOUT_MS = 30000; // 30s for other endpoints
 
 /**
- * Send chat message with conversation history and location context
+ * Send chat message with STREAMING support
+ * Real-time text chunks are passed to onChunk callback
+ *
+ * @param {object} params - Chat parameters
+ * @param {string} params.message - Current user message
+ * @param {number} params.latitude - User's latitude
+ * @param {number} params.longitude - User's longitude
+ * @param {string} params.language - Language code (e.g., 'en', 'hi')
+ * @param {object} params.locationDetails - Human-readable location (L1-L6)
+ * @param {Array} params.history - Previous messages for context (last 10)
+ * @param {function} params.onChunk - Callback for each text chunk: (text) => void
+ * @param {function} params.onComplete - Callback when stream completes: (fullResponse, followUpQuestions) => void
+ * @param {function} params.onError - Callback on error: (error) => void
+ */
+export const sendChatMessageStreaming = async ({
+  message,
+  latitude,
+  longitude,
+  language,
+  locationDetails,
+  history = [],
+  onChunk,
+  onComplete,
+  onError,
+}) => {
+  try {
+    // Format history for AI Services
+    const formattedHistory = history
+      .filter(m => m._id !== 'welcome')
+      .slice(0, 10)
+      .reverse()
+      .map(m => ({ text: m.text, isBot: m.isBot }));
+
+    // Build location context
+    const locationContext = locationDetails ? {
+      country: locationDetails.level1Country,
+      state: locationDetails.level2State,
+      district: locationDetails.level3District,
+      city: locationDetails.level5City,
+      locality: locationDetails.level6Locality,
+      displayName: locationDetails.displayName,
+    } : null;
+
+    console.log('📤 [API] Starting streaming chat:', {
+      historyCount: formattedHistory.length,
+      location: locationContext?.displayName || `${latitude}, ${longitude}`,
+      language,
+    });
+
+    const requestBody = {
+      message,
+      latitude: latitude || -1.2864,
+      longitude: longitude || 36.8172,
+      language: language || 'en',
+      location: locationContext,
+      history: formattedHistory,
+      stream: true, // Enable streaming
+    };
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': API_KEY,
+        'Accept': 'text/event-stream',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    // Read the SSE stream
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullText = '';
+    let followUpQuestions = [];
+    let metadata = {};
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      // Process complete SSE messages
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+
+          // End of stream
+          if (data === '[DONE]') {
+            console.log('📥 [API] Stream complete:', {
+              textLength: fullText.length,
+              hasFollowUp: followUpQuestions.length > 0,
+            });
+            onComplete?.(fullText, followUpQuestions, metadata);
+            return { success: true };
+          }
+
+          try {
+            const parsed = JSON.parse(data);
+
+            // Handle different chunk types
+            if (parsed.type === 'text' && parsed.text) {
+              fullText += parsed.text;
+              onChunk?.(parsed.text);
+            } else if (parsed.type === 'complete') {
+              // Final response with follow-up questions
+              if (parsed.response) fullText = parsed.response;
+              if (parsed.followUpQuestions) followUpQuestions = parsed.followUpQuestions;
+            } else if (parsed.type === 'meta') {
+              // Metadata (MCP tools, intents, regions)
+              metadata = parsed;
+            } else if (parsed.type === 'error') {
+              throw new Error(parsed.error || 'Stream error');
+            }
+          } catch (parseError) {
+            // Skip unparseable chunks
+            console.warn('📥 [API] Unparseable chunk:', data);
+          }
+        }
+      }
+    }
+
+    // Stream ended without [DONE]
+    onComplete?.(fullText, followUpQuestions, metadata);
+    return { success: true };
+
+  } catch (error) {
+    console.error('📥 [API] Streaming error:', error);
+    onError?.(error);
+    return { success: false, error: error.message };
+  }
+};
+
+/**
+ * Send chat message (non-streaming fallback)
  * @param {object} params - Chat parameters
  * @param {string} params.message - Current user message
  * @param {number} params.latitude - User's latitude
@@ -303,6 +445,7 @@ export const detectRegions = async (lat, lon) => {
 
 export default {
   sendChatMessage,
+  sendChatMessageStreaming,
   getActiveMcpServers,
   getAllMcpServersWithStatus,
   getMcpServersLiveStatus,

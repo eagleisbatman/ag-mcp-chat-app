@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
-import { sendChatMessage } from '../services/api';
+import { sendChatMessage, sendChatMessageStreaming } from '../services/api';
 import { diagnosePlantHealth, formatDiagnosis } from '../services/agrivision';
 import { transcribeAudio as transcribeAudioService } from '../services/transcription';
 import { uploadImage, uploadAudio } from '../services/upload';
@@ -154,6 +154,13 @@ export default function useChat(sessionIdParam = null) {
     }
   }, []);
 
+  // Update a specific message by ID
+  const updateMessage = useCallback((messageId, updates) => {
+    setMessages(prev => prev.map(m =>
+      m._id === messageId ? { ...m, ...updates } : m
+    ));
+  }, []);
+
   const handleSendText = useCallback(async (text) => {
     const userMessage = { _id: Date.now().toString(), text, createdAt: new Date(), isBot: false };
     addMessage(userMessage);
@@ -163,63 +170,114 @@ export default function useChat(sessionIdParam = null) {
     const sessionId = await ensureSession();
     persistMessage(userMessage, sessionId, { inputMethod: 'keyboard' });
 
+    // Create placeholder bot message for streaming
+    const botMsgId = (Date.now() + 1).toString();
+    const botMsg = {
+      _id: botMsgId,
+      text: '', // Start empty, will be filled by streaming
+      createdAt: new Date(),
+      isBot: true,
+      followUpQuestions: [],
+      isStreaming: true, // Flag for UI to show streaming indicator
+    };
+    addMessage(botMsg);
+
+    // Track accumulated text for streaming
+    let accumulatedText = '';
+    let streamingMetadata = {};
+
     try {
-      const result = await sendChatMessage({
+      await sendChatMessageStreaming({
         message: text,
         latitude: location?.latitude,
         longitude: location?.longitude,
         language: language?.code,
-        locationDetails, // Human-readable location for AI context
-        history: messages, // Pass conversation history for context
+        locationDetails,
+        history: messages,
+
+        // Called for each text chunk
+        onChunk: (chunk) => {
+          accumulatedText += chunk;
+          updateMessage(botMsgId, { text: accumulatedText });
+        },
+
+        // Called when stream completes
+        onComplete: (fullText, followUpQuestions, metadata) => {
+          streamingMetadata = metadata;
+
+          // Update message with final text and follow-up questions
+          updateMessage(botMsgId, {
+            text: fullText || accumulatedText,
+            followUpQuestions: followUpQuestions || [],
+            isStreaming: false,
+          });
+
+          // Haptic feedback on completion
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          setNewestBotMessageId(botMsgId);
+          setTimeout(() => setNewestBotMessageId(p => p === botMsgId ? null : p), 8000);
+
+          // Persist the complete message
+          persistMessage({
+            _id: botMsgId,
+            text: fullText || accumulatedText,
+            isBot: true,
+            followUpQuestions: followUpQuestions || [],
+          }, sessionId, {
+            responseLanguageCode: language?.code,
+            followUpQuestions: followUpQuestions || [],
+            metadata: metadata?.intentsDetected ? {
+              intentsDetected: metadata.intentsDetected,
+              mcpToolsUsed: metadata.mcpToolsUsed,
+            } : null,
+          });
+
+          // Generate title after first exchange
+          maybeGenerateTitle(sessionId, [
+            { _id: botMsgId, text: fullText || accumulatedText, isBot: true },
+            userMessage,
+            ...messages,
+          ]);
+
+          setIsTyping(false);
+        },
+
+        // Called on error
+        onError: (error) => {
+          console.error('Streaming error:', error);
+          const errorMsg = parseErrorMessage(error);
+
+          // Update the bot message with error
+          updateMessage(botMsgId, {
+            text: accumulatedText || t('chat.connectionErrorBot'),
+            isStreaming: false,
+          });
+
+          if (isNetworkError(error)) {
+            showWarning(t('chat.noInternet'));
+          } else {
+            showError(errorMsg);
+          }
+
+          setIsTyping(false);
+        },
       });
-      
-      if (!result.success) {
-        const errorMsg = parseErrorMessage(result);
-        if (isNetworkError({ message: result.error })) {
-          showWarning(t('chat.noInternet'));
-        }
-        addMessage({ 
-          _id: (Date.now() + 1).toString(), 
-          text: t('chat.sorryCouldNotProcess', { details: errorMsg }), 
-          createdAt: new Date(), 
-          isBot: true 
-        });
-      } else {
-        const botMsg = {
-          _id: (Date.now() + 1).toString(),
-          text: result.response,
-          createdAt: new Date(),
-          isBot: true,
-          followUpQuestions: result.followUpQuestions || [],
-        };
-        addMessage(botMsg);
-
-        // Save extracted entities for analytics (crops, livestock, practices from user query)
-        const analyticsMetadata = result.extractedEntities ? {
-          extractedEntities: result.extractedEntities,
-          intentsDetected: result.intentsDetected,
-          mcpToolsUsed: result.mcpToolsUsed,
-        } : null;
-
-        persistMessage(botMsg, sessionId, {
-          responseLanguageCode: language?.code,
-          followUpQuestions: result.followUpQuestions || [],
-          metadata: analyticsMetadata,
-        });
-        maybeGenerateTitle(sessionId, [botMsg, userMessage, ...messages]);
-      }
     } catch (error) {
       console.error('Chat error:', error);
       const errorMsg = parseErrorMessage(error);
-      // Offer retry for network errors (connectivity issues) and server errors (5xx)
+
+      // Update the bot message with error
+      updateMessage(botMsgId, {
+        text: accumulatedText || t('chat.connectionErrorBot'),
+        isStreaming: false,
+      });
+
       const shouldRetry = isNetworkError(error) || isServerError(error);
       const retryAction = shouldRetry ? { label: t('common.retry'), onPress: () => handleSendText(text) } : null;
       showError(errorMsg, retryAction);
-      addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.connectionErrorBot'), createdAt: new Date(), isBot: true });
-    } finally {
       setIsTyping(false);
     }
-  }, [location, language, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle]);
+  }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
   const handleSendImage = useCallback(async (imageData) => {
     const userMsg = { _id: Date.now().toString(), text: t('chat.analyzingPlantImage'), image: imageData.uri, createdAt: new Date(), isBot: false };

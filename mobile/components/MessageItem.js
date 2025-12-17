@@ -15,6 +15,7 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
+  const isStreaming = message.isStreaming || false;
   const followUpQuestions = message.followUpQuestions || [];
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
   
@@ -277,9 +278,13 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
       {/* Message Content - Text-only mode (Markdown for bot, plain text for user) */}
       {isBot ? (
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
-          <Markdown style={markdownStyles}>
-            {message.text}
-          </Markdown>
+          {message.text ? (
+            <Markdown style={markdownStyles}>
+              {message.text + (isStreaming ? ' ▋' : '')}
+            </Markdown>
+          ) : isStreaming ? (
+            <Text style={[styles.streamingCursor, { color: theme.textMuted }]}>▋</Text>
+          ) : null}
         </Animated.View>
       ) : (
         <Text style={[styles.messageText, { color: theme.text }]}>
@@ -297,8 +302,8 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
       )}
 
 
-      {/* Follow-up Questions - Vertical List */}
-      {isBot && followUpQuestions.length > 0 && !isAnimating && (
+      {/* Follow-up Questions - Vertical List (only show after streaming completes) */}
+      {isBot && followUpQuestions.length > 0 && !isAnimating && !isStreaming && (
         <View style={styles.followUpContainer}>
           <Text style={[styles.followUpLabel, { color: theme.textMuted }]}>
             {t('chat.tapToAskNext')}
@@ -370,6 +375,10 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
   },
+  streamingCursor: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    opacity: 0.6,
+  },
   image: {
     width: '100%',
     height: 200,
@@ -425,6 +434,8 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
   return (
     prevProps.message._id === nextProps.message._id &&
     prevProps.message.text === nextProps.message.text &&
+    prevProps.message.isStreaming === nextProps.message.isStreaming &&
+    prevProps.message.followUpQuestions?.length === nextProps.message.followUpQuestions?.length &&
     prevProps.isNewMessage === nextProps.isNewMessage
   );
 });
