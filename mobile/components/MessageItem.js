@@ -463,10 +463,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   followUpText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: TYPOGRAPHY.sizes.base,
     flex: 1,
     marginRight: SPACING.sm,
-    lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.normal,
+    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
   },
 });
 

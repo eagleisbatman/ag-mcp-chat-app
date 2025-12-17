@@ -12,6 +12,7 @@ import InputToolbar from '../components/InputToolbar';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
+import TypingIndicator from '../components/ui/TypingIndicator';
 import { t } from '../constants/strings';
 
 export default function ChatScreen({ navigation, route }) {
@@ -160,14 +161,7 @@ export default function ChatScreen({ navigation, route }) {
             scrollEventThrottle={16}
             keyboardShouldPersistTaps="handled"
             ListFooterComponent={isTyping ? (
-              <View style={styles.typingIndicator}>
-                <View style={[styles.typingDot, { backgroundColor: theme.accent }]} />
-                <View style={[styles.typingDot, { backgroundColor: theme.accent, opacity: 0.7 }]} />
-                <View style={[styles.typingDot, { backgroundColor: theme.accent, opacity: 0.4 }]} />
-                <Text style={[styles.typingText, { color: theme.textSecondary }]} numberOfLines={2}>
-                  {thinkingText || t('chat.thinking')}
-                </Text>
-              </View>
+              <TypingIndicator text={thinkingText || t('chat.thinking')} />
             ) : null}
           />
         )}
@@ -231,26 +225,10 @@ const styles = StyleSheet.create({
     flex: 1, 
     position: 'relative',
   },
-  messagesList: { 
+  messagesList: {
     paddingTop: SPACING.sm,
     paddingHorizontal: 0,
     flexGrow: 1,
-  },
-  typingIndicator: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    paddingHorizontal: SPACING.lg, 
-    paddingVertical: SPACING.md, 
-    gap: 6,
-  },
-  typingDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  typingText: { 
-    fontSize: TYPOGRAPHY.sizes.sm,
-    marginLeft: SPACING.sm,
   },
   scrollButtonContainer: { 
     position: 'absolute', 
