@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
-import { sendChatMessage } from '../services/api';
+import { sendChatMessageStreaming } from '../services/api';
 import { diagnosePlantHealth, formatDiagnosis } from '../services/agrivision';
 import { transcribeAudio as transcribeAudioService } from '../services/transcription';
 import { uploadImage, uploadAudio } from '../services/upload';
@@ -171,91 +171,113 @@ export default function useChat(sessionIdParam = null) {
     const sessionId = await ensureSession();
     persistMessage(userMessage, sessionId, { inputMethod: 'keyboard' });
 
+    // Create placeholder bot message for streaming
+    const botMsgId = (Date.now() + 1).toString();
+    const botMsg = {
+      _id: botMsgId,
+      text: '',
+      createdAt: new Date(),
+      isBot: true,
+      followUpQuestions: [],
+    };
+    addMessage(botMsg);
+
+    // Track accumulated text for persistence
+    let accumulatedText = '';
+    let metadata = {};
+
     try {
-      // Show thinking indicator while waiting
+      // Show initial thinking indicator
       setThinkingText(t('chat.thinking'));
 
-      // Call non-streaming API (structured output)
-      const result = await sendChatMessage({
+      // Call streaming API
+      await sendChatMessageStreaming({
         message: text,
         latitude: location?.latitude,
         longitude: location?.longitude,
         language: language?.code,
         locationDetails,
         history: messages,
+        onChunk: (chunk) => {
+          // Append text chunk and update message
+          accumulatedText += chunk;
+          updateMessage(botMsgId, { text: accumulatedText });
+        },
+        onThinking: (thinking) => {
+          // Show AI's thinking process
+          setThinkingText(thinking);
+        },
+        onComplete: (fullText, followUpQuestions, meta) => {
+          // Stream complete - update with final data
+          setThinkingText(null);
+          setIsTyping(false);
+          metadata = meta || {};
+
+          // Update message with final text and follow-up questions
+          updateMessage(botMsgId, {
+            text: fullText || accumulatedText,
+            followUpQuestions: followUpQuestions || [],
+          });
+
+          // Haptic feedback on completion
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+          // Persist the complete message
+          const finalMsg = {
+            _id: botMsgId,
+            text: fullText || accumulatedText,
+            createdAt: new Date(),
+            isBot: true,
+            followUpQuestions: followUpQuestions || [],
+          };
+          persistMessage(finalMsg, sessionId, {
+            responseLanguageCode: language?.code,
+            followUpQuestions: followUpQuestions || [],
+            metadata: meta?.intentsDetected ? {
+              intentsDetected: meta.intentsDetected,
+              mcpToolsUsed: meta.mcpToolsUsed,
+            } : null,
+          });
+
+          // Generate title after first exchange
+          maybeGenerateTitle(sessionId, [finalMsg, userMessage, ...messages]);
+        },
+        onError: (error) => {
+          // Handle streaming error
+          setThinkingText(null);
+          setIsTyping(false);
+
+          const errorMsg = error.message || t('chat.connectionErrorBot');
+          updateMessage(botMsgId, {
+            text: accumulatedText || errorMsg,
+            followUpQuestions: [],
+          });
+
+          if (isNetworkError(error)) {
+            showWarning(t('chat.noInternet'));
+          } else {
+            showError(errorMsg);
+          }
+        },
       });
-
-      // Clear thinking indicator
-      setThinkingText(null);
-
-      if (!result.success) {
-        const errorMsg = result.error || t('chat.connectionErrorBot');
-        const botMsg = {
-          _id: (Date.now() + 1).toString(),
-          text: errorMsg,
-          createdAt: new Date(),
-          isBot: true,
-          followUpQuestions: [],
-        };
-        addMessage(botMsg);
-
-        if (isNetworkError({ message: result.error })) {
-          showWarning(t('chat.noInternet'));
-        } else {
-          showError(errorMsg);
-        }
-      } else {
-        // Create bot message with structured response
-        const botMsgId = (Date.now() + 1).toString();
-        const botMsg = {
-          _id: botMsgId,
-          text: result.response,
-          createdAt: new Date(),
-          isBot: true,
-          followUpQuestions: result.followUpQuestions || [],
-        };
-        addMessage(botMsg);
-
-        // Haptic feedback on completion
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
-        // Persist the complete message
-        persistMessage(botMsg, sessionId, {
-          responseLanguageCode: language?.code,
-          followUpQuestions: result.followUpQuestions || [],
-          metadata: result.intentsDetected ? {
-            intentsDetected: result.intentsDetected,
-            mcpToolsUsed: result.mcpToolsUsed,
-          } : null,
-        });
-
-        // Generate title after first exchange
-        maybeGenerateTitle(sessionId, [botMsg, userMessage, ...messages]);
-      }
     } catch (error) {
       console.error('Chat error:', error);
       const errorMsg = parseErrorMessage(error);
 
-      // Clear thinking indicator
       setThinkingText(null);
+      setIsTyping(false);
 
-      // Add error message
-      const botMsg = {
-        _id: (Date.now() + 1).toString(),
-        text: t('chat.connectionErrorBot'),
-        createdAt: new Date(),
-        isBot: true,
+      // Update bot message with error
+      updateMessage(botMsgId, {
+        text: accumulatedText || t('chat.connectionErrorBot'),
         followUpQuestions: [],
-      };
-      addMessage(botMsg);
+      });
 
       const shouldRetry = isNetworkError(error) || isServerError(error);
       const retryAction = shouldRetry ? { label: t('common.retry'), onPress: () => handleSendText(text) } : null;
       showError(errorMsg, retryAction);
-    } finally {
-      setIsTyping(false);
     }
-  }, [location, language, locationDetails, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
+  }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
   const handleSendImage = useCallback(async (imageData) => {
     const userMsg = { _id: Date.now().toString(), text: t('chat.analyzingPlantImage'), image: imageData.uri, createdAt: new Date(), isBot: false };
