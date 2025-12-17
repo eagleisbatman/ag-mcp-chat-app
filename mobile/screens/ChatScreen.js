@@ -26,6 +26,7 @@ export default function ChatScreen({ navigation, route }) {
   
   const {
     messages, isTyping, isLoadingSession, newestBotMessageId,
+    thinkingText, // Real AI thinking status
     handleSendText, handleSendImage,
     transcribeAudioForInput, uploadAudioInBackground,
     startNewSession,
@@ -163,7 +164,9 @@ export default function ChatScreen({ navigation, route }) {
                 <View style={[styles.typingDot, { backgroundColor: theme.accent }]} />
                 <View style={[styles.typingDot, { backgroundColor: theme.accent, opacity: 0.7 }]} />
                 <View style={[styles.typingDot, { backgroundColor: theme.accent, opacity: 0.4 }]} />
-                <Text style={[styles.typingText, { color: theme.textSecondary }]}>{t('chat.thinking')}</Text>
+                <Text style={[styles.typingText, { color: theme.textSecondary }]} numberOfLines={2}>
+                  {thinkingText || t('chat.thinking')}
+                </Text>
               </View>
             ) : null}
           />

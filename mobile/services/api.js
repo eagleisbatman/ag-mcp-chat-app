@@ -21,6 +21,7 @@ const DEFAULT_TIMEOUT_MS = 30000; // 30s for other endpoints
  * @param {object} params.locationDetails - Human-readable location (L1-L6)
  * @param {Array} params.history - Previous messages for context (last 10)
  * @param {function} params.onChunk - Callback for each text chunk: (text) => void
+ * @param {function} params.onThinking - Callback for thinking updates: (thinking) => void
  * @param {function} params.onComplete - Callback when stream completes: (fullResponse, followUpQuestions) => void
  * @param {function} params.onError - Callback on error: (error) => void
  */
@@ -32,6 +33,7 @@ export const sendChatMessageStreaming = async ({
   locationDetails,
   history = [],
   onChunk,
+  onThinking,
   onComplete,
   onError,
 }) => {
@@ -122,6 +124,9 @@ export const sendChatMessageStreaming = async ({
             if (parsed.type === 'text' && parsed.text) {
               fullText += parsed.text;
               onChunk?.(parsed.text);
+            } else if (parsed.type === 'thinking' && parsed.thinking) {
+              // AI's thinking process (farmer-friendly)
+              onThinking?.(parsed.thinking);
             } else if (parsed.type === 'complete') {
               // Final response with follow-up questions
               if (parsed.response) fullText = parsed.response;

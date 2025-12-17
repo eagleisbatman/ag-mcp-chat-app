@@ -28,6 +28,7 @@ export default function useChat(sessionIdParam = null) {
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingSession, setIsLoadingSession] = useState(false);
   const [newestBotMessageId, setNewestBotMessageId] = useState(null);
+  const [thinkingText, setThinkingText] = useState(null); // Current AI thinking status
   const titleGeneratedRef = useRef(false);
 
   // Load existing session if provided
@@ -199,11 +200,23 @@ export default function useChat(sessionIdParam = null) {
         onChunk: (chunk) => {
           accumulatedText += chunk;
           updateMessage(botMsgId, { text: accumulatedText });
+          // Clear thinking when text starts
+          if (accumulatedText.length > 0) {
+            setThinkingText(null);
+          }
+        },
+
+        // Called for AI thinking updates
+        onThinking: (thinking) => {
+          setThinkingText(thinking);
         },
 
         // Called when stream completes
         onComplete: (fullText, followUpQuestions, metadata) => {
           streamingMetadata = metadata;
+
+          // Clear thinking status
+          setThinkingText(null);
 
           // Update message with final text and follow-up questions
           updateMessage(botMsgId, {
@@ -246,6 +259,9 @@ export default function useChat(sessionIdParam = null) {
         onError: (error) => {
           console.error('Streaming error:', error);
           const errorMsg = parseErrorMessage(error);
+
+          // Clear thinking status
+          setThinkingText(null);
 
           // Update the bot message with error
           updateMessage(botMsgId, {
@@ -382,6 +398,7 @@ export default function useChat(sessionIdParam = null) {
     isTyping,
     isLoadingSession,
     newestBotMessageId,
+    thinkingText, // Current AI thinking status (farmer-friendly)
     handleSendText,
     handleSendImage,
     transcribeAudioForInput,

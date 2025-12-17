@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Platform, Animated, useWindowDimensions } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-markdown-display';
@@ -9,6 +9,47 @@ import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
+
+/**
+ * Sanitize streaming text to prevent partial markdown from rendering incorrectly
+ * During streaming, incomplete markdown syntax like `**bo` shows raw characters
+ * This function trims incomplete patterns from the end of streaming text
+ */
+function sanitizeStreamingMarkdown(text) {
+  if (!text) return text;
+
+  // Patterns that indicate incomplete markdown at the end of text
+  // We check if the text ends with an unclosed pattern and trim it
+
+  // Count open/close markers
+  const starCount = (text.match(/\*+$/g) || [''])[0].length;
+
+  // If ends with odd number of asterisks (incomplete bold/italic), remove them
+  if (starCount > 0 && starCount < 4) {
+    // Check if this is unclosed by counting pairs
+    const openBold = (text.match(/\*\*(?!\s)/g) || []).length;
+    const closeBold = (text.match(/(?<!\s)\*\*/g) || []).length;
+    const openItalic = (text.match(/(?<!\*)\*(?!\*|\s)/g) || []).length;
+    const closeItalic = (text.match(/(?<!\s|\*)\*(?!\*)/g) || []).length;
+
+    // Simple heuristic: if ends with stars and they seem unclosed
+    if (openBold !== closeBold || openItalic !== closeItalic) {
+      text = text.replace(/\*+$/, '');
+    }
+  }
+
+  // Remove trailing incomplete link/image syntax
+  text = text.replace(/\[([^\]]*)?$/, ''); // Unclosed [
+  text = text.replace(/\]\([^)]*$/, '');   // Unclosed (
+
+  // Remove trailing incomplete code blocks
+  text = text.replace(/`+$/, '');
+
+  // Remove trailing incomplete headers that have just started
+  text = text.replace(/\n#{1,6}\s*$/, '\n');
+
+  return text;
+}
 
 function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const { theme, language } = useApp();
@@ -280,7 +321,9 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
           {message.text ? (
             <Markdown style={markdownStyles}>
-              {message.text + (isStreaming ? ' ▋' : '')}
+              {isStreaming
+                ? sanitizeStreamingMarkdown(message.text) + ' ▋'
+                : message.text}
             </Markdown>
           ) : isStreaming ? (
             <Text style={[styles.streamingCursor, { color: theme.textMuted }]}>▋</Text>
