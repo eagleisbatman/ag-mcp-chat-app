@@ -230,52 +230,41 @@ export function ImageIcon({ size = 24, color = '#000' }) {
 }
 
 export function ArrowUpIcon({ size = 20, color = '#FFF' }) {
-  const arrowHeight = size * 0.4;
-  const stemHeight = size * 0.45;
+  const stemHeight = size * 0.5;
+  const chevronSize = size * 0.35;
   return (
     <View style={[styles.iconContainer, { width: size, height: size }]}>
-      {/* Arrow stem */}
+      {/* Vertical stem */}
       <View
-        style={[
-          styles.line,
-          {
-            width: LINE_WIDTH,
-            height: stemHeight,
-            backgroundColor: color,
-            position: 'absolute',
-            bottom: size * 0.2,
-          },
-        ]}
+        style={{
+          width: LINE_WIDTH,
+          height: stemHeight,
+          backgroundColor: color,
+          position: 'absolute',
+          top: size * 0.25,
+        }}
       />
-      {/* Arrow head - left */}
+      {/* Chevron left arm */}
       <View
-        style={[
-          styles.line,
-          {
-            width: LINE_WIDTH,
-            height: arrowHeight,
-            backgroundColor: color,
-            position: 'absolute',
-            top: size * 0.18,
-            transform: [{ rotate: '-45deg' }],
-            left: size * 0.32,
-          },
-        ]}
+        style={{
+          width: chevronSize,
+          height: LINE_WIDTH,
+          backgroundColor: color,
+          position: 'absolute',
+          top: size * 0.25,
+          transform: [{ rotate: '-45deg' }, { translateX: -chevronSize * 0.35 }, { translateY: chevronSize * 0.35 }],
+        }}
       />
-      {/* Arrow head - right */}
+      {/* Chevron right arm */}
       <View
-        style={[
-          styles.line,
-          {
-            width: LINE_WIDTH,
-            height: arrowHeight,
-            backgroundColor: color,
-            position: 'absolute',
-            top: size * 0.18,
-            transform: [{ rotate: '45deg' }],
-            right: size * 0.32,
-          },
-        ]}
+        style={{
+          width: chevronSize,
+          height: LINE_WIDTH,
+          backgroundColor: color,
+          position: 'absolute',
+          top: size * 0.25,
+          transform: [{ rotate: '45deg' }, { translateX: chevronSize * 0.35 }, { translateY: chevronSize * 0.35 }],
+        }}
       />
     </View>
   );
