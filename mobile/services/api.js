@@ -37,67 +37,59 @@ export const sendChatMessageStreaming = async ({
   onComplete,
   onError,
 }) => {
-  try {
-    // Format history for AI Services
-    const formattedHistory = history
-      .filter(m => m._id !== 'welcome')
-      .slice(0, 10)
-      .reverse()
-      .map(m => ({ text: m.text, isBot: m.isBot }));
+  // Format history for AI Services
+  const formattedHistory = history
+    .filter(m => m._id !== 'welcome')
+    .slice(0, 10)
+    .reverse()
+    .map(m => ({ text: m.text, isBot: m.isBot }));
 
-    // Build location context
-    const locationContext = locationDetails ? {
-      country: locationDetails.level1Country,
-      state: locationDetails.level2State,
-      district: locationDetails.level3District,
-      city: locationDetails.level5City,
-      locality: locationDetails.level6Locality,
-      displayName: locationDetails.displayName,
-    } : null;
+  // Build location context
+  const locationContext = locationDetails ? {
+    country: locationDetails.level1Country,
+    state: locationDetails.level2State,
+    district: locationDetails.level3District,
+    city: locationDetails.level5City,
+    locality: locationDetails.level6Locality,
+    displayName: locationDetails.displayName,
+  } : null;
 
-    console.log('📤 [API] Starting streaming chat:', {
-      historyCount: formattedHistory.length,
-      location: locationContext?.displayName || `${latitude}, ${longitude}`,
-      language,
-    });
+  console.log('📤 [API] Starting streaming chat:', {
+    historyCount: formattedHistory.length,
+    location: locationContext?.displayName || `${latitude}, ${longitude}`,
+    language,
+  });
 
-    const requestBody = {
-      message,
-      latitude: latitude || -1.2864,
-      longitude: longitude || 36.8172,
-      language: language || 'en',
-      location: locationContext,
-      history: formattedHistory,
-      stream: true, // Enable streaming
-    };
+  const requestBody = {
+    message,
+    latitude: latitude || -1.2864,
+    longitude: longitude || 36.8172,
+    language: language || 'en',
+    location: locationContext,
+    history: formattedHistory,
+    stream: true, // Enable streaming
+  };
 
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': API_KEY,
-        'Accept': 'text/event-stream',
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    // Read the SSE stream
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
+  // Use XMLHttpRequest for React Native SSE streaming
+  // (fetch doesn't support ReadableStream in RN)
+  return new Promise((resolve) => {
+    const xhr = new XMLHttpRequest();
     let buffer = '';
     let fullText = '';
     let followUpQuestions = [];
     let metadata = {};
+    let lastProcessedIndex = 0;
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+    xhr.open('POST', API_URL, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-API-Key', API_KEY);
+    xhr.setRequestHeader('Accept', 'text/event-stream');
 
-      buffer += decoder.decode(value, { stream: true });
+    // Process SSE data as it arrives
+    xhr.onprogress = () => {
+      const newData = xhr.responseText.slice(lastProcessedIndex);
+      lastProcessedIndex = xhr.responseText.length;
+      buffer += newData;
 
       // Process complete SSE messages
       const lines = buffer.split('\n');
@@ -114,7 +106,8 @@ export const sendChatMessageStreaming = async ({
               hasFollowUp: followUpQuestions.length > 0,
             });
             onComplete?.(fullText, followUpQuestions, metadata);
-            return { success: true };
+            resolve({ success: true });
+            return;
           }
 
           try {
@@ -135,25 +128,63 @@ export const sendChatMessageStreaming = async ({
               // Metadata (MCP tools, intents, regions)
               metadata = parsed;
             } else if (parsed.type === 'error') {
-              throw new Error(parsed.error || 'Stream error');
+              console.error('📥 [API] Stream error:', parsed.error);
+              onError?.(new Error(parsed.error || 'Stream error'));
+              resolve({ success: false, error: parsed.error });
+              return;
             }
           } catch (parseError) {
-            // Skip unparseable chunks
-            console.warn('📥 [API] Unparseable chunk:', data);
+            // Skip unparseable chunks (partial JSON)
           }
         }
       }
-    }
+    };
 
-    // Stream ended without [DONE]
-    onComplete?.(fullText, followUpQuestions, metadata);
-    return { success: true };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        // Process any remaining buffer
+        if (buffer.includes('data: ')) {
+          const remaining = buffer.split('data: ').filter(Boolean);
+          for (const data of remaining) {
+            if (data.trim() === '[DONE]') continue;
+            try {
+              const parsed = JSON.parse(data.trim());
+              if (parsed.type === 'complete') {
+                if (parsed.response) fullText = parsed.response;
+                if (parsed.followUpQuestions) followUpQuestions = parsed.followUpQuestions;
+              }
+            } catch (e) {
+              // Skip
+            }
+          }
+        }
+        onComplete?.(fullText, followUpQuestions, metadata);
+        resolve({ success: true });
+      } else {
+        const error = new Error(`API error: ${xhr.status}`);
+        console.error('📥 [API] HTTP error:', xhr.status);
+        onError?.(error);
+        resolve({ success: false, error: error.message });
+      }
+    };
 
-  } catch (error) {
-    console.error('📥 [API] Streaming error:', error);
-    onError?.(error);
-    return { success: false, error: error.message };
-  }
+    xhr.onerror = () => {
+      const error = new Error('Network request failed');
+      console.error('📥 [API] Network error');
+      onError?.(error);
+      resolve({ success: false, error: error.message });
+    };
+
+    xhr.ontimeout = () => {
+      const error = new Error('Request timeout');
+      console.error('📥 [API] Timeout');
+      onError?.(error);
+      resolve({ success: false, error: error.message });
+    };
+
+    xhr.timeout = CHAT_TIMEOUT_MS;
+    xhr.send(JSON.stringify(requestBody));
+  });
 };
 
 /**

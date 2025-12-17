@@ -282,6 +282,9 @@ export default function useChat(sessionIdParam = null) {
       console.error('Chat error:', error);
       const errorMsg = parseErrorMessage(error);
 
+      // Clear thinking status
+      setThinkingText(null);
+
       // Update the bot message with error
       updateMessage(botMsgId, {
         text: accumulatedText || t('chat.connectionErrorBot'),
