@@ -311,46 +311,55 @@ export default function InputToolbar({
         <View style={styles.iconsRow}>
           {/* Left Icons */}
           <View style={styles.leftIcons}>
-            {/* Plus/Attach Button */}
+            {/* Plus/Attach Button - with background circle like voice button */}
             <Pressable
-              style={styles.iconButton}
+              style={[
+                styles.iconButton,
+                { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
+              ]}
               onPress={openMediaMenu}
               disabled={disabled}
               accessibilityLabel={t('a11y.attachMedia')}
               android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
             >
-              <PlusIcon size={22} color={theme.icon} />
+              <PlusIcon size={20} color={theme.icon} />
             </Pressable>
 
             {/* History Button */}
             {onOpenHistory && (
               <Pressable
-                style={styles.iconButton}
+                style={[
+                  styles.iconButton,
+                  { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
+                ]}
                 onPress={onOpenHistory}
                 disabled={disabled}
                 accessibilityLabel={t('a11y.openHistory')}
                 android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
               >
-                <ClockIcon size={22} color={theme.icon} />
+                <ClockIcon size={20} color={theme.icon} />
               </Pressable>
             )}
           </View>
 
           {/* Right Icons */}
           <View style={styles.rightIcons}>
-            {/* Send/Voice Button */}
+            {/* Send/Voice Button - black/white based on theme */}
             <Pressable
               style={[
                 styles.sendButton,
-                { backgroundColor: hasText ? theme.accent : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)') }
+                { backgroundColor: hasText
+                    ? (isDark ? '#FFFFFF' : '#000000')  // Solid white/black when active
+                    : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)')  // Subtle when inactive
+                }
               ]}
               onPress={hasText ? handleSendText : handleStartRecording}
               disabled={disabled}
               accessibilityLabel={hasText ? t('a11y.sendMessage') : t('a11y.recordVoice')}
-              android_ripple={Platform.OS === 'android' ? { color: 'rgba(255,255,255,0.2)', borderless: true } : undefined}
+              android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
             >
               {hasText ? (
-                <ArrowUpIcon size={20} color="#FFFFFF" />
+                <ArrowUpIcon size={20} color={isDark ? '#000000' : '#FFFFFF'} />
               ) : (
                 <VoiceWaveIcon size={20} color={theme.icon} />
               )}
