@@ -819,16 +819,13 @@ router.post('/chat', async (req, res) => {
           regions: mcpContext.detectedRegions.map(r => r.name),
         })}\n\n`);
 
-        // Proxy SSE stream from AI Services
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
+        // Proxy SSE stream from AI Services (Node.js compatible)
         let buffer = '';
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
+        // Use async iterator for Node.js streams
+        for await (const chunk of response.body) {
+          const text = typeof chunk === 'string' ? chunk : new TextDecoder().decode(chunk);
+          buffer += text;
 
           // Process complete SSE messages
           const lines = buffer.split('\n');
@@ -838,6 +835,11 @@ router.post('/chat', async (req, res) => {
             if (line.startsWith('data: ')) {
               // Forward the SSE line directly to client
               res.write(line + '\n\n');
+
+              // Flush if possible
+              if (typeof res.flush === 'function') {
+                res.flush();
+              }
             }
           }
         }
