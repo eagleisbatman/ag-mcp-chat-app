@@ -59,6 +59,11 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
   const isStreaming = message.isStreaming || false;
   const followUpQuestions = message.followUpQuestions || [];
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
+
+  // Don't render empty streaming messages (typing indicator handles this state)
+  if (isBot && isStreaming && !message.text) {
+    return null;
+  }
   
   // Calculate max width for markdown content (screen - padding)
   const contentMaxWidth = screenWidth - (SPACING.lg * 2);
