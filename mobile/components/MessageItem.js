@@ -325,8 +325,6 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
                 ? sanitizeStreamingMarkdown(message.text) + ' ▋'
                 : message.text}
             </Markdown>
-          ) : isStreaming ? (
-            <Text style={[styles.streamingCursor, { color: theme.textMuted }]}>▋</Text>
           ) : null}
         </Animated.View>
       ) : (
@@ -417,10 +415,6 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
-  },
-  streamingCursor: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    opacity: 0.6,
   },
   image: {
     width: '100%',
