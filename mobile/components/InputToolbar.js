@@ -71,18 +71,19 @@ export default function InputToolbar({
     const keyboardWillShow = Keyboard.addListener(showEvent, (e) => {
       keyboardVisible.current = true;
 
+      // With edge-to-edge, both platforms need manual keyboard offset
+      const targetKeyboardPadding = Math.max(0, e.endCoordinates.height - insets.bottom + KEYBOARD_GAP);
+
       if (Platform.OS === 'android') {
-        // Android with softwareKeyboardLayoutMode: "resize" already handles keyboard
-        // Only add small gap for visual separation
+        // Android uses LayoutAnimation for smoother transitions
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        keyboardHeight.setValue(KEYBOARD_GAP);
+        keyboardHeight.setValue(targetKeyboardPadding);
       } else {
-        // iOS - needs manual keyboard offset
-        const targetKeyboardPadding = Math.max(0, e.endCoordinates.height - insets.bottom + KEYBOARD_GAP);
+        // iOS - animated timing synced with keyboard
         Animated.timing(keyboardHeight, {
           toValue: targetKeyboardPadding,
           duration: e.duration || 250,
-          easing: Easing.bezier(0.17, 0.59, 0.4, 0.77), // iOS keyboard curve approximation
+          easing: Easing.bezier(0.17, 0.59, 0.4, 0.77),
           useNativeDriver: false,
         }).start();
       }
