@@ -205,8 +205,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 16,
     right: 16,
-    borderRadius: 0,
-    borderLeftWidth: 0,
+    borderRadius: 16,
+    borderLeftWidth: 4,
+    overflow: 'hidden',
     ...ELEVATION.md,
     zIndex: 9999,
   },
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
   actionButton: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 0,
+    borderRadius: 8,
   },
   actionText: {
     color: '#FFFFFF',

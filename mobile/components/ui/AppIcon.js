@@ -23,7 +23,7 @@ const FEATHER_ICONS = {
   'x-circle': 'x-circle',
   'alert-circle': 'alert-circle',
   'info': 'info',
-  'menu': 'menu',
+  // 'menu': 'menu', // Removed - use MCI version which renders more reliably
   'chevron-down': 'chevron-down',
   'chevron-right': 'chevron-right',
   'volume-2': 'volume-2',

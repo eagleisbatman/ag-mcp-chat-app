@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Platform } from 'react-native';
+import { Pressable, StyleSheet, Platform, ActivityIndicator } from 'react-native';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING } from '../../constants/themes';
 import AppIcon from './AppIcon';
@@ -8,6 +8,7 @@ export default function IconButton({
   icon,
   onPress,
   disabled = false,
+  loading = false,
   size = 40,
   borderRadius,
   backgroundColor,
@@ -21,6 +22,7 @@ export default function IconButton({
   const resolvedColor = color ?? theme.text;
   const resolvedRadius = borderRadius ?? Math.round(size / 2);
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
+  const isDisabled = disabled || loading;
 
   return (
     <Pressable
@@ -33,12 +35,12 @@ export default function IconButton({
           height: size,
           borderRadius: resolvedRadius,
           backgroundColor: resolvedBackground,
-          opacity: disabled ? 0.6 : 1,
+          opacity: isDisabled ? 0.6 : 1,
         },
         style,
       ]}
       onPress={onPress}
-      disabled={disabled}
+      disabled={isDisabled}
       android_ripple={
         Platform.OS === 'android'
           ? {
@@ -50,7 +52,11 @@ export default function IconButton({
       }
       hitSlop={hitSlop ?? { top: SPACING.sm, bottom: SPACING.sm, left: SPACING.sm, right: SPACING.sm }}
     >
-      <AppIcon name={icon} size={Math.round(size * 0.5)} color={resolvedColor} />
+      {loading ? (
+        <ActivityIndicator size="small" color={resolvedColor} />
+      ) : (
+        <AppIcon name={icon} size={Math.round(size * 0.5)} color={resolvedColor} />
+      )}
     </Pressable>
   );
 }

@@ -78,8 +78,21 @@ export const AppProvider = ({ children }) => {
         const loc = JSON.parse(savedLocation);
         setLocation(loc);
         setLocationStatus('granted');
+
+        // Check if we have valid location details, if not trigger a lookup
+        const parsedDetails = savedLocationDetails ? JSON.parse(savedLocationDetails) : null;
+        if (parsedDetails && parsedDetails.displayName) {
+          setLocationDetails(parsedDetails);
+          console.log('📱 [AppContext] Loaded cached location details:', parsedDetails.displayName);
+        } else if (loc.latitude && loc.longitude) {
+          // No valid cached details, trigger a fresh lookup
+          console.log('📱 [AppContext] No cached location details, triggering lookup...');
+          lookupLocationDetails(loc.latitude, loc.longitude);
+        }
+      } else if (savedLocationDetails) {
+        // Legacy case: have details but no location (shouldn't happen)
+        setLocationDetails(JSON.parse(savedLocationDetails));
       }
-      if (savedLocationDetails) setLocationDetails(JSON.parse(savedLocationDetails));
 
       // Register user with backend (non-blocking)
       registerUserInBackground();
@@ -265,16 +278,25 @@ export const AppProvider = ({ children }) => {
   // Fetch L1-L6 location details from API Gateway (Nominatim/IP-API)
   const lookupLocationDetails = async (latitude, longitude) => {
     console.log('🌍 [AppContext] Looking up location details for:', { latitude, longitude });
-    console.log('🌍 [AppContext] Coordinates valid:', { 
-      latValid: !isNaN(latitude) && latitude !== null, 
-      lonValid: !isNaN(longitude) && longitude !== null 
-    });
-    
+
+    // Validate coordinates
+    if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+      console.log('❌ [AppContext] Invalid coordinates, skipping lookup');
+      return;
+    }
+
     try {
+      console.log('🌍 [AppContext] Calling lookupLocation API...');
       const result = await lookupLocation(latitude, longitude);
-      console.log('🌍 [AppContext] Location lookup RAW result:', JSON.stringify(result, null, 2));
-      
-      if (result.success) {
+      console.log('🌍 [AppContext] Location lookup result:', {
+        success: result.success,
+        displayName: result.displayName,
+        country: result.level1Country,
+        city: result.level5City,
+        error: result.error
+      });
+
+      if (result.success && (result.displayName || result.level1Country)) {
         // Create a normalized result with fallbacks
         const normalizedResult = {
           ...result,
@@ -284,15 +306,17 @@ export const AppProvider = ({ children }) => {
           level2State: result.level2State || result.state || result.regionName || null,
           level1Country: result.level1Country || result.country || null,
         };
-        
+
+        console.log('✅ [AppContext] Normalized location:', normalizedResult.displayName);
         setLocationDetails(normalizedResult);
         await AsyncStorage.setItem('locationDetails', JSON.stringify(normalizedResult));
-        console.log('✅ [AppContext] Location details saved:', normalizedResult.displayName);
-        
+        console.log('✅ [AppContext] Location details saved to storage');
+
         // Sync to DB - with retry if not yet synced
         await syncLocationToDb(normalizedResult, latitude, longitude);
       } else {
-        // Even if lookup fails, set a basic location with coords
+        // Lookup returned but no useful data
+        console.log('⚠️ [AppContext] Location lookup returned no useful data:', result.error || 'no displayName');
         const basicLocation = {
           success: true,
           source: 'gps',
@@ -306,11 +330,10 @@ export const AppProvider = ({ children }) => {
         };
         setLocationDetails(basicLocation);
         await AsyncStorage.setItem('locationDetails', JSON.stringify(basicLocation));
-        console.log('⚠️ [AppContext] Location lookup failed, using coords:', result.error);
       }
     } catch (error) {
       console.log('❌ [AppContext] Location lookup exception:', error.message);
-      // Still set basic coords on error
+      // Still set basic coords on error so UI has something to show
       const basicLocation = {
         success: true,
         source: 'gps',

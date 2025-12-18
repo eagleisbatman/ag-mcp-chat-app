@@ -6,8 +6,8 @@ import {
   StyleSheet,
   Platform,
   Text,
-  KeyboardAvoidingView,
 } from 'react-native';
+import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -181,14 +181,9 @@ export default function InputToolbar({
   const rippleColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
   const hasText = text.trim().length > 0;
 
-  // iOS needs KeyboardAvoidingView, Android uses resize mode from app.json
-  const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
-  const wrapperProps = Platform.OS === 'ios'
-    ? { behavior: 'padding', keyboardVerticalOffset: 0 }
-    : {};
-
   return (
-    <Wrapper {...wrapperProps} style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
+    <KeyboardStickyView offset={{ closed: 0, opened: 0 }} style={{ backgroundColor: theme.background }}>
+      <View style={[styles.wrapper, { paddingBottom: bottomPadding, backgroundColor: theme.background }]}>
       {/* Voice transcription indicator */}
         {isFromVoice && (
           <View style={[styles.voiceIndicator, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>
@@ -236,6 +231,12 @@ export default function InputToolbar({
             maxLength={1000}
             editable={!disabled}
             accessibilityLabel={t('a11y.messageInput')}
+            autoCapitalize="sentences"
+            autoCorrect={true}
+            keyboardType="default"
+            returnKeyType="default"
+            blurOnSubmit={false}
+            underlineColorAndroid="transparent"
           />
 
           {/* Bottom Icons Row */}
@@ -298,7 +299,8 @@ export default function InputToolbar({
             </View>
           </View>
         </View>
-    </Wrapper>
+      </View>
+    </KeyboardStickyView>
   );
 }
 

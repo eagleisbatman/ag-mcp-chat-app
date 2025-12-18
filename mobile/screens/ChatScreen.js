@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image, Alert } from 'react-native';
 
 const logoImage = require('../assets/logo.png');
 import * as Haptics from 'expo-haptics';
@@ -48,19 +48,86 @@ export default function ChatScreen({ navigation, route }) {
     setIsRefreshingLocation(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
+      console.log('📍 [Chat] Requesting location permission...');
       const { status } = await Location.requestForegroundPermissionsAsync();
+      console.log('📍 [Chat] Permission status:', status);
+
       if (status !== 'granted') {
         showWarning(t('chat.locationDenied'));
         return;
       }
-      const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-      await setLocation({ latitude: loc.coords.latitude, longitude: loc.coords.longitude }, 'granted');
-      showSuccess(t('chat.locationUpdated'));
+
+      console.log('📍 [Chat] Getting current position...');
+
+      // First try getLastKnownPositionAsync (instant, from cache)
+      let loc = await Location.getLastKnownPositionAsync();
+      console.log('📍 [Chat] Last known position:', loc?.coords);
+
+      // If no cached location, try watchPositionAsync with high accuracy
+      if (!loc?.coords) {
+        console.log('📍 [Chat] No cached location, trying watchPositionAsync...');
+        loc = await new Promise((resolve, reject) => {
+          let subscription = null;
+          const timeout = setTimeout(() => {
+            if (subscription) subscription.remove();
+            reject(new Error('Location timeout'));
+          }, 15000);
+
+          Location.watchPositionAsync(
+            { accuracy: Location.Accuracy.High, distanceInterval: 0 },
+            (position) => {
+              clearTimeout(timeout);
+              if (subscription) subscription.remove();
+              resolve(position);
+            }
+          ).then(sub => {
+            subscription = sub;
+          }).catch(err => {
+            clearTimeout(timeout);
+            reject(err);
+          });
+        });
+      }
+
+      if (loc?.coords) {
+        console.log('📍 [Chat] Got position:', loc.coords);
+        showSuccess(t('chat.gpsLocationUpdated'));
+        await setLocation({ latitude: loc.coords.latitude, longitude: loc.coords.longitude }, 'granted');
+      } else {
+        // GPS failed, fall back to IP-based location
+        console.log('📍 [Chat] GPS unavailable, falling back to IP location...');
+        showWarning(t('chat.gpsFailed'));
+        await fetchIPLocation();
+      }
     } catch (error) {
-      console.log('Location refresh error:', error);
-      showError(t('chat.locationUpdateFailed'));
+      console.log('❌ [Chat] GPS error:', error.message);
+      // Fall back to IP-based location
+      showWarning(t('chat.gpsFailed'));
+      await fetchIPLocation();
     } finally {
       setIsRefreshingLocation(false);
+    }
+  };
+
+  // Fetch location based on IP address
+  const fetchIPLocation = async () => {
+    try {
+      console.log('🌐 [Chat] Fetching IP-based location...');
+      const { lookupLocation } = require('../services/db');
+
+      const result = await lookupLocation(null, null, 'auto');
+
+      if (result.success && result.latitude && result.longitude) {
+        console.log('🌐 [Chat] IP location result:', result.displayName);
+        await setLocation({ latitude: result.latitude, longitude: result.longitude }, 'granted');
+        showSuccess(t('chat.ipLocationUpdated', { location: result.displayName || 'your region' }));
+      } else {
+        console.log('❌ [Chat] IP location also failed:', result.error);
+        showError(t('chat.locationUpdateFailed'));
+      }
+    } catch (error) {
+      console.log('❌ [Chat] IP location error:', error.message);
+      showError(t('chat.locationUpdateFailed'));
     }
   };
 
@@ -93,11 +160,13 @@ export default function ChatScreen({ navigation, route }) {
           <View style={styles.headerLeft}>
             <Image source={logoImage} style={styles.headerLogo} resizeMode="contain" />
             <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-              {locationDetails?.displayName ||
-                locationDetails?.level5City ||
-                locationDetails?.level3District ||
-                locationDetails?.level2State ||
-                (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('chat.tapLocationToSet'))}
+              {isRefreshingLocation
+                ? t('chat.updatingLocation')
+                : locationDetails?.displayName ||
+                  locationDetails?.level5City ||
+                  locationDetails?.level3District ||
+                  locationDetails?.level2State ||
+                  (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('chat.setLocation'))}
             </Text>
           </View>
         }
@@ -106,7 +175,7 @@ export default function ChatScreen({ navigation, route }) {
             <IconButton
               icon="location"
               onPress={handleRefreshLocation}
-              disabled={isRefreshingLocation}
+              loading={isRefreshingLocation}
               size={36}
               borderRadius={10}
               backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}

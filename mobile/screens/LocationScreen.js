@@ -27,44 +27,110 @@ export default function LocationScreen({ navigation }) {
       console.log('📍 [LocationScreen] Requesting location permission...');
       const { status } = await Location.requestForegroundPermissionsAsync();
       console.log('📍 [LocationScreen] Permission status:', status);
-      
+
       if (status !== 'granted') {
-        setError(t('onboarding.locationDenied'));
-        showWarning(t('onboarding.locationDenied'));
-        setLocation({ latitude: null, longitude: null }, 'denied');
-        setIsLoading(false);
+        // Permission denied - fall back to IP location
+        console.log('📍 [LocationScreen] Permission denied, using IP location...');
+        showWarning(t('onboarding.usingIpLocation'));
+        await fetchIPLocationAndContinue();
         return;
       }
 
       console.log('📍 [LocationScreen] Getting current position...');
-      const loc = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-      console.log('📍 [LocationScreen] Got position:', {
-        lat: loc.coords.latitude,
-        lon: loc.coords.longitude,
-      });
+      try {
+        // First try getLastKnownPositionAsync (instant, from cache)
+        let loc = await Location.getLastKnownPositionAsync();
+        console.log('📍 [LocationScreen] Last known position:', loc?.coords);
 
-      await setLocation(
-        { latitude: loc.coords.latitude, longitude: loc.coords.longitude },
-        'granted'
-      );
+        // If no cached location, try watchPositionAsync with high accuracy
+        if (!loc?.coords) {
+          console.log('📍 [LocationScreen] No cached location, trying watchPositionAsync...');
+          loc = await new Promise((resolve, reject) => {
+            let subscription = null;
+            const timeout = setTimeout(() => {
+              if (subscription) subscription.remove();
+              reject(new Error('Location timeout'));
+            }, 15000);
 
-      console.log('📍 [LocationScreen] Navigating to Language screen');
-      navigation.navigate('Language');
+            Location.watchPositionAsync(
+              { accuracy: Location.Accuracy.High, distanceInterval: 0 },
+              (position) => {
+                clearTimeout(timeout);
+                if (subscription) subscription.remove();
+                resolve(position);
+              }
+            ).then(sub => {
+              subscription = sub;
+            }).catch(err => {
+              clearTimeout(timeout);
+              reject(err);
+            });
+          });
+        }
+
+        if (loc?.coords) {
+          console.log('📍 [LocationScreen] Got GPS position:', {
+            lat: loc.coords.latitude,
+            lon: loc.coords.longitude,
+          });
+
+          await setLocation(
+            { latitude: loc.coords.latitude, longitude: loc.coords.longitude },
+            'granted'
+          );
+          navigation.navigate('Language');
+        } else {
+          // No location from GPS - fall back to IP
+          console.log('📍 [LocationScreen] GPS returned no coords, using IP location...');
+          showWarning(t('onboarding.gpsFailed'));
+          await fetchIPLocationAndContinue();
+        }
+      } catch (gpsError) {
+        // GPS failed - fall back to IP location
+        console.log('📍 [LocationScreen] GPS failed, using IP location...', gpsError.message);
+        showWarning(t('onboarding.gpsFailed'));
+        await fetchIPLocationAndContinue();
+      }
     } catch (err) {
       setError(t('onboarding.locationError'));
       showError(t('onboarding.locationError'));
       console.log('❌ [LocationScreen] Location error:', err);
-    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch location from IP and continue to next screen
+  const fetchIPLocationAndContinue = async () => {
+    try {
+      console.log('🌐 [LocationScreen] Fetching IP-based location...');
+      const { lookupLocation } = require('../services/db');
+
+      const result = await lookupLocation(null, null, 'auto');
+
+      if (result.success && result.latitude && result.longitude) {
+        console.log('🌐 [LocationScreen] IP location:', result.displayName);
+        await setLocation(
+          { latitude: result.latitude, longitude: result.longitude },
+          'granted'
+        );
+        navigation.navigate('Language');
+      } else {
+        console.log('❌ [LocationScreen] IP location also failed:', result.error);
+        setError(t('onboarding.locationError'));
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log('❌ [LocationScreen] IP location error:', error.message);
+      setError(t('onboarding.locationError'));
       setIsLoading(false);
     }
   };
 
   const skipLocation = async () => {
-    // Use default location (Nairobi, Kenya)
-    await setLocation({ latitude: -1.2864, longitude: 36.8172 }, 'denied');
-    navigation.navigate('Language');
+    // Skip button also uses IP-based location
+    console.log('📍 [LocationScreen] User tapped Skip, using IP location...');
+    setIsLoading(true);
+    await fetchIPLocationAndContinue();
   };
 
   return (

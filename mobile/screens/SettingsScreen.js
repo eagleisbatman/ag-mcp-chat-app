@@ -40,27 +40,93 @@ export default function SettingsScreen({ navigation }) {
   const handleUpdateLocation = async () => {
     setIsUpdatingLocation(true);
     try {
+      console.log('📍 [Settings] Requesting location permission...');
       const { status } = await Location.requestForegroundPermissionsAsync();
+      console.log('📍 [Settings] Permission status:', status);
+
       if (status !== 'granted') {
         showWarning(t('settings.locationPermissionDenied'));
         return;
       }
-      
-      const loc = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-      
-      await setLocation(
-        { latitude: loc.coords.latitude, longitude: loc.coords.longitude },
-        'granted'
-      );
-      
-      showSuccess(t('settings.locationUpdated'));
+
+      console.log('📍 [Settings] Getting current position...');
+
+      // First try getLastKnownPositionAsync (instant, from cache)
+      let loc = await Location.getLastKnownPositionAsync();
+      console.log('📍 [Settings] Last known position:', loc?.coords);
+
+      // If no cached location, try watchPositionAsync with high accuracy
+      if (!loc?.coords) {
+        console.log('📍 [Settings] No cached location, trying watchPositionAsync...');
+        loc = await new Promise((resolve, reject) => {
+          let subscription = null;
+          const timeout = setTimeout(() => {
+            if (subscription) subscription.remove();
+            reject(new Error('Location timeout'));
+          }, 15000);
+
+          Location.watchPositionAsync(
+            { accuracy: Location.Accuracy.High, distanceInterval: 0 },
+            (position) => {
+              clearTimeout(timeout);
+              if (subscription) subscription.remove();
+              resolve(position);
+            }
+          ).then(sub => {
+            subscription = sub;
+          }).catch(err => {
+            clearTimeout(timeout);
+            reject(err);
+          });
+        });
+      }
+
+      if (loc?.coords) {
+        console.log('📍 [Settings] Got position:', loc.coords);
+        showSuccess(t('settings.gpsLocationUpdated'));
+        await setLocation(
+          { latitude: loc.coords.latitude, longitude: loc.coords.longitude },
+          'granted'
+        );
+      } else {
+        // GPS failed, fall back to IP-based location
+        console.log('📍 [Settings] GPS unavailable, falling back to IP location...');
+        showWarning(t('settings.gpsFailed'));
+        await fetchIPLocation();
+      }
     } catch (error) {
-      console.log('Location update error:', error);
-      showError(t('settings.locationUpdateFailed'));
+      console.log('❌ [Settings] GPS error:', error.message);
+      // Fall back to IP-based location
+      showWarning(t('settings.gpsFailed'));
+      await fetchIPLocation();
     } finally {
       setIsUpdatingLocation(false);
+    }
+  };
+
+  // Fetch location based on IP address
+  const fetchIPLocation = async () => {
+    try {
+      console.log('🌐 [Settings] Fetching IP-based location...');
+      const { lookupLocation } = require('../services/db');
+
+      // Call API with ipAddress='auto' to trigger IP-based lookup
+      const result = await lookupLocation(null, null, 'auto');
+
+      if (result.success && result.latitude && result.longitude) {
+        console.log('🌐 [Settings] IP location result:', result.displayName);
+        await setLocation(
+          { latitude: result.latitude, longitude: result.longitude },
+          'granted'
+        );
+        showSuccess(t('settings.ipLocationUpdated', { location: result.displayName || 'your region' }));
+      } else {
+        console.log('❌ [Settings] IP location also failed:', result.error);
+        showError(t('settings.locationUpdateFailed'));
+      }
+    } catch (error) {
+      console.log('❌ [Settings] IP location error:', error.message);
+      showError(t('settings.locationUpdateFailed'));
     }
   };
 
@@ -151,15 +217,17 @@ export default function SettingsScreen({ navigation }) {
         <Card>
           <ListRow
             title={
-              locationDetails?.displayName ||
-              (locationStatus === 'granted' ? t('settings.locationEnabled') : t('settings.tapToEnable'))
+              isUpdatingLocation
+                ? t('settings.updatingLocation')
+                : locationDetails?.displayName ||
+                  (location?.latitude ? `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}` : t('settings.locationNotSet'))
             }
             subtitle={
-              location?.latitude
-                ? (locationDetails?.formattedAddress || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`)
-                : ' '
+              location?.latitude && locationDetails?.formattedAddress
+                ? locationDetails.formattedAddress
+                : null
             }
-            hint={t('settings.tapToUpdateLocation')}
+            hint={!isUpdatingLocation ? t('settings.locationHint') : null}
             left={
               <View style={styles.iconContainer}>
                 {isUpdatingLocation ? (
@@ -173,7 +241,7 @@ export default function SettingsScreen({ navigation }) {
               <IconButton
                 icon="refresh"
                 onPress={handleUpdateLocation}
-                disabled={isUpdatingLocation}
+                loading={isUpdatingLocation}
                 size={32}
                 backgroundColor="transparent"
                 color={theme.iconPrimary || theme.accent}
@@ -184,7 +252,7 @@ export default function SettingsScreen({ navigation }) {
             onPress={handleUpdateLocation}
             disabled={isUpdatingLocation}
             paddingHorizontal={SPACING.md}
-            accessibilityLabel={t('common.refresh')}
+            accessibilityLabel={t('settings.locationHint')}
           />
         </Card>
       </View>
