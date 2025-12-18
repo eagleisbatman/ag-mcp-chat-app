@@ -59,7 +59,8 @@
         }
       ],
       "expo-font",
-      "expo-splash-screen"
+      "expo-splash-screen",
+      "react-native-edge-to-edge"
     ],
     "extra": {
       "eas": {}
