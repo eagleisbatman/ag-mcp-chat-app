@@ -42,7 +42,7 @@
     "currentLanguage": "Current"
   },
   "chat": {
-    "welcomeMessage": "Hello! 👋 I'm your farming assistant.\n\nI can help you with:\n• Crops, vegetables, fruits, and flowers\n• Livestock, poultry, and fish farming\n• Pest and disease management\n• Weather and market advice\n\nHow can I help you today?",
+    "welcomeMessage": "Hello! 👋 I'm **FarmerChat**, your farming assistant from the **Digital Green Foundation**.\n\nI can help you with:\n• Crops, vegetables, fruits, and flowers\n• Livestock, poultry, and fish farming\n• Pest and disease management\n• Weather and market advice\n\nHow can I help you today?",
     "locationDenied": "Location permission denied",
     "locationUpdated": "Location updated!",
     "locationUpdateFailed": "Could not update location",
