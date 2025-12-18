@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Platform,
   Text,
+  KeyboardAvoidingView,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
@@ -180,9 +181,15 @@ export default function InputToolbar({
   const rippleColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
   const hasText = text.trim().length > 0;
 
+  // iOS needs KeyboardAvoidingView, Android uses resize mode from app.json
+  const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
+  const wrapperProps = Platform.OS === 'ios'
+    ? { behavior: 'padding', keyboardVerticalOffset: 0 }
+    : {};
+
   return (
-    <View style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
-        {/* Voice transcription indicator */}
+    <Wrapper {...wrapperProps} style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
+      {/* Voice transcription indicator */}
         {isFromVoice && (
           <View style={[styles.voiceIndicator, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>
             <AppIcon name="mic" size={14} color={theme.accent} prefer="feather" />
@@ -291,7 +298,7 @@ export default function InputToolbar({
             </View>
           </View>
         </View>
-      </View>
+    </Wrapper>
   );
 }
 
