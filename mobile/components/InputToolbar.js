@@ -7,8 +7,6 @@ import {
   Platform,
   Text,
 } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -40,18 +38,8 @@ export default function InputToolbar({
   const [showMediaMenu, setShowMediaMenu] = useState(false);
   const textInputRef = useRef(null);
 
-  // Use react-native-keyboard-controller for proper edge-to-edge keyboard handling
-  const { height: keyboardHeight } = useReanimatedKeyboardAnimation();
-
-  // Animated style for keyboard offset
-  const animatedStyle = useAnimatedStyle(() => {
-    const bottomPadding = Math.max(insets.bottom, SPACING.md);
-    // Subtract insets.bottom since keyboard height includes it
-    const keyboardOffset = Math.max(0, keyboardHeight.value - insets.bottom);
-    return {
-      paddingBottom: bottomPadding + keyboardOffset,
-    };
-  });
+  // Bottom padding for safe area
+  const bottomPadding = Math.max(insets.bottom, SPACING.md);
 
   const handleSendText = () => {
     if (!text.trim() || disabled) return;
@@ -193,117 +181,117 @@ export default function InputToolbar({
   const hasText = text.trim().length > 0;
 
   return (
-    <Animated.View style={[styles.wrapper, animatedStyle]}>
-      {/* Voice transcription indicator */}
-      {isFromVoice && (
-        <View style={[styles.voiceIndicator, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>
-          <AppIcon name="mic" size={14} color={theme.accent} prefer="feather" />
-          <Text style={[styles.voiceIndicatorText, { color: theme.accent }]}>
-            {t('chat.fromVoice')}
-          </Text>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('a11y.clearVoiceTranscription')}
-            onPress={handleClearVoiceText}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
-          >
-            <AppIcon name="x-circle" size={18} color={theme.accent} prefer="feather" />
-          </Pressable>
-        </View>
-      )}
-
-      {/* Claude-style Attach Bottom Sheet */}
-      <AttachBottomSheet
-        visible={showMediaMenu}
-        onClose={closeMediaMenu}
-        onCamera={handleTakePhoto}
-        onPhotos={handlePickImage}
-      />
-
-      {/* Unified Input Container - Claude-style */}
-      <View style={[
-        styles.inputContainer,
-        {
-          backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
-          borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
-        }
-      ]}>
-        {/* Text Input Area */}
-        <TextInput
-          ref={textInputRef}
-          style={[styles.textInput, { color: theme.text }]}
-          placeholder={t('chat.messagePlaceholder')}
-          placeholderTextColor={theme.textMuted}
-          value={text}
-          onChangeText={setText}
-          multiline
-          maxLength={1000}
-          editable={!disabled}
-          accessibilityLabel={t('a11y.messageInput')}
-        />
-
-        {/* Bottom Icons Row */}
-        <View style={styles.iconsRow}>
-          {/* Left Icons */}
-          <View style={styles.leftIcons}>
-            {/* Plus/Attach Button - with background circle like voice button */}
+    <View style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
+        {/* Voice transcription indicator */}
+        {isFromVoice && (
+          <View style={[styles.voiceIndicator, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>
+            <AppIcon name="mic" size={14} color={theme.accent} prefer="feather" />
+            <Text style={[styles.voiceIndicatorText, { color: theme.accent }]}>
+              {t('chat.fromVoice')}
+            </Text>
             <Pressable
-              style={[
-                styles.iconButton,
-                { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
-              ]}
-              onPress={openMediaMenu}
-              disabled={disabled}
-              accessibilityLabel={t('a11y.attachMedia')}
+              accessibilityRole="button"
+              accessibilityLabel={t('a11y.clearVoiceTranscription')}
+              onPress={handleClearVoiceText}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
             >
-              <PlusIcon size={20} color={theme.icon} />
+              <AppIcon name="x-circle" size={18} color={theme.accent} prefer="feather" />
             </Pressable>
+          </View>
+        )}
 
-            {/* History Button */}
-            {onOpenHistory && (
+        {/* Claude-style Attach Bottom Sheet */}
+        <AttachBottomSheet
+          visible={showMediaMenu}
+          onClose={closeMediaMenu}
+          onCamera={handleTakePhoto}
+          onPhotos={handlePickImage}
+        />
+
+        {/* Unified Input Container - Claude-style */}
+        <View style={[
+          styles.inputContainer,
+          {
+            backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
+            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
+          }
+        ]}>
+          {/* Text Input Area */}
+          <TextInput
+            ref={textInputRef}
+            style={[styles.textInput, { color: theme.text }]}
+            placeholder={t('chat.messagePlaceholder')}
+            placeholderTextColor={theme.textMuted}
+            value={text}
+            onChangeText={setText}
+            multiline
+            maxLength={1000}
+            editable={!disabled}
+            accessibilityLabel={t('a11y.messageInput')}
+          />
+
+          {/* Bottom Icons Row */}
+          <View style={styles.iconsRow}>
+            {/* Left Icons */}
+            <View style={styles.leftIcons}>
+              {/* Plus/Attach Button - with background circle like voice button */}
               <Pressable
                 style={[
                   styles.iconButton,
                   { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
                 ]}
-                onPress={onOpenHistory}
+                onPress={openMediaMenu}
                 disabled={disabled}
-                accessibilityLabel={t('a11y.openHistory')}
+                accessibilityLabel={t('a11y.attachMedia')}
                 android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
               >
-                <ClockIcon size={20} color={theme.icon} />
+                <PlusIcon size={20} color={theme.icon} />
               </Pressable>
-            )}
-          </View>
 
-          {/* Right Icons */}
-          <View style={styles.rightIcons}>
-            {/* Send/Voice Button - black/white based on theme */}
-            <Pressable
-              style={[
-                styles.sendButton,
-                { backgroundColor: hasText
-                    ? (isDark ? '#FFFFFF' : '#000000')  // Solid white/black when active
-                    : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)')  // Subtle when inactive
-                }
-              ]}
-              onPress={hasText ? handleSendText : handleStartRecording}
-              disabled={disabled}
-              accessibilityLabel={hasText ? t('a11y.sendMessage') : t('a11y.recordVoice')}
-              android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
-            >
-              {hasText ? (
-                <AppIcon name="arrow-up" size={20} color={isDark ? '#000000' : '#FFFFFF'} prefer="feather" />
-              ) : (
-                <VoiceWaveIcon size={20} color={theme.icon} />
+              {/* History Button */}
+              {onOpenHistory && (
+                <Pressable
+                  style={[
+                    styles.iconButton,
+                    { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
+                  ]}
+                  onPress={onOpenHistory}
+                  disabled={disabled}
+                  accessibilityLabel={t('a11y.openHistory')}
+                  android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
+                >
+                  <ClockIcon size={20} color={theme.icon} />
+                </Pressable>
               )}
-            </Pressable>
+            </View>
+
+            {/* Right Icons */}
+            <View style={styles.rightIcons}>
+              {/* Send/Voice Button - black/white based on theme */}
+              <Pressable
+                style={[
+                  styles.sendButton,
+                  { backgroundColor: hasText
+                      ? (isDark ? '#FFFFFF' : '#000000')  // Solid white/black when active
+                      : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)')  // Subtle when inactive
+                  }
+                ]}
+                onPress={hasText ? handleSendText : handleStartRecording}
+                disabled={disabled}
+                accessibilityLabel={hasText ? t('a11y.sendMessage') : t('a11y.recordVoice')}
+                android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
+              >
+                {hasText ? (
+                  <AppIcon name="arrow-up" size={20} color={isDark ? '#000000' : '#FFFFFF'} prefer="feather" />
+                ) : (
+                  <VoiceWaveIcon size={20} color={theme.icon} />
+                )}
+              </Pressable>
+            </View>
           </View>
         </View>
       </View>
-    </Animated.View>
   );
 }
 

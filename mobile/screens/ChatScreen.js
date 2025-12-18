@@ -20,7 +20,7 @@ export default function ChatScreen({ navigation, route }) {
   const { showSuccess, showWarning, showError } = useToast();
   const flatListRef = useRef(null);
   const scrollButtonAnim = useRef(new Animated.Value(0)).current;
-  
+
   // Get session params from navigation
   const sessionId = route?.params?.sessionId;
   const isNewSession = route?.params?.newSession;
@@ -135,7 +135,7 @@ export default function ChatScreen({ navigation, route }) {
         }
       />
 
-      {/* Messages - with bottom padding for floating input */}
+      {/* Messages */}
       <View style={styles.messagesContainer}>
         {isLoadingSession ? (
           <View style={styles.loadingContainer}>
@@ -165,12 +165,12 @@ export default function ChatScreen({ navigation, route }) {
             ) : null}
           />
         )}
-        
+
         {/* Scroll to bottom button */}
         <Animated.View
           style={[
-            styles.scrollButtonContainer, 
-            { 
+            styles.scrollButtonContainer,
+            {
               opacity: scrollButtonAnim,
               transform: [
                 { translateY: scrollButtonAnim.interpolate({ inputRange: [0, 1], outputRange: [60, 0] }) },
