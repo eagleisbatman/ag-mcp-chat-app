@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   TextInput,
@@ -6,18 +6,9 @@ import {
   StyleSheet,
   Platform,
   Text,
-  Keyboard,
-  Animated,
-  Dimensions,
-  LayoutAnimation,
-  UIManager,
-  Easing,
 } from 'react-native';
-
-// Enable LayoutAnimation for Android
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -48,70 +39,19 @@ export default function InputToolbar({
   const [isFromVoice, setIsFromVoice] = useState(false);
   const [showMediaMenu, setShowMediaMenu] = useState(false);
   const textInputRef = useRef(null);
-  const windowHeightBaseline = useRef(Dimensions.get('window').height);
-  const keyboardVisible = useRef(false);
 
-  // Keyboard animation - syncs with iOS keyboard animation
-  const keyboardHeight = useRef(new Animated.Value(0)).current;
+  // Use react-native-keyboard-controller for proper edge-to-edge keyboard handling
+  const { height: keyboardHeight } = useReanimatedKeyboardAnimation();
 
-  useEffect(() => {
-    // Use keyboard will show/hide for smooth animation sync
-    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-
-    const dimSub = Dimensions.addEventListener('change', () => {
-      if (!keyboardVisible.current) {
-        windowHeightBaseline.current = Dimensions.get('window').height;
-      }
-    });
-
-    // Gap between keyboard and input
-    const KEYBOARD_GAP = SPACING.sm;
-
-    const keyboardWillShow = Keyboard.addListener(showEvent, (e) => {
-      keyboardVisible.current = true;
-
-      // With edge-to-edge, both platforms need manual keyboard offset
-      const targetKeyboardPadding = Math.max(0, e.endCoordinates.height - insets.bottom + KEYBOARD_GAP);
-
-      if (Platform.OS === 'android') {
-        // Android uses LayoutAnimation for smoother transitions
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        keyboardHeight.setValue(targetKeyboardPadding);
-      } else {
-        // iOS - animated timing synced with keyboard
-        Animated.timing(keyboardHeight, {
-          toValue: targetKeyboardPadding,
-          duration: e.duration || 250,
-          easing: Easing.bezier(0.17, 0.59, 0.4, 0.77),
-          useNativeDriver: false,
-        }).start();
-      }
-    });
-
-    const keyboardWillHide = Keyboard.addListener(hideEvent, (e) => {
-      keyboardVisible.current = false;
-      windowHeightBaseline.current = Dimensions.get('window').height;
-
-      if (Platform.OS === 'android') {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        keyboardHeight.setValue(0);
-      } else {
-        Animated.timing(keyboardHeight, {
-          toValue: 0,
-          duration: e?.duration || 250,
-          easing: Easing.bezier(0.17, 0.59, 0.4, 0.77),
-          useNativeDriver: false,
-        }).start();
-      }
-    });
-
-    return () => {
-      keyboardWillShow.remove();
-      keyboardWillHide.remove();
-      dimSub?.remove?.();
+  // Animated style for keyboard offset
+  const animatedStyle = useAnimatedStyle(() => {
+    const bottomPadding = Math.max(insets.bottom, SPACING.md);
+    // Subtract insets.bottom since keyboard height includes it
+    const keyboardOffset = Math.max(0, keyboardHeight.value - insets.bottom);
+    return {
+      paddingBottom: bottomPadding + keyboardOffset,
     };
-  }, [keyboardHeight, insets.bottom]);
+  });
 
   const handleSendText = () => {
     if (!text.trim() || disabled) return;
@@ -248,13 +188,12 @@ export default function InputToolbar({
     );
   }
 
-  const bottomPadding = Math.max(insets.bottom, SPACING.md);
   const isDark = theme.name === 'dark';
   const rippleColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
   const hasText = text.trim().length > 0;
 
   return (
-    <Animated.View style={[styles.wrapper, { paddingBottom: Animated.add(bottomPadding, keyboardHeight) }]}>
+    <Animated.View style={[styles.wrapper, animatedStyle]}>
       {/* Voice transcription indicator */}
       {isFromVoice && (
         <View style={[styles.voiceIndicator, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>

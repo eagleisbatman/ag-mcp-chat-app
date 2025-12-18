@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -88,13 +89,15 @@ function AppNavigator() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <SafeAreaProvider>
-        <AppProvider>
-          <ToastProvider>
-            <AppNavigator />
-          </ToastProvider>
-        </AppProvider>
-      </SafeAreaProvider>
+      <KeyboardProvider>
+        <SafeAreaProvider>
+          <AppProvider>
+            <ToastProvider>
+              <AppNavigator />
+            </ToastProvider>
+          </AppProvider>
+        </SafeAreaProvider>
+      </KeyboardProvider>
     </ErrorBoundary>
   );
 }
