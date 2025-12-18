@@ -70,19 +70,15 @@ export default function InputToolbar({
 
     const keyboardWillShow = Keyboard.addListener(showEvent, (e) => {
       keyboardVisible.current = true;
-      const currentWindowHeight = Dimensions.get('window').height;
-      const windowResizedForKeyboard =
-        Platform.OS === 'android' && windowHeightBaseline.current - currentWindowHeight > 50;
-      const targetKeyboardPadding = windowResizedForKeyboard
-        ? KEYBOARD_GAP
-        : Math.max(0, e.endCoordinates.height - insets.bottom + KEYBOARD_GAP);
 
       if (Platform.OS === 'android') {
-        // Use LayoutAnimation for smoother Android transitions
+        // Android with softwareKeyboardLayoutMode: "resize" already handles keyboard
+        // Only add small gap for visual separation
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        keyboardHeight.setValue(targetKeyboardPadding);
+        keyboardHeight.setValue(KEYBOARD_GAP);
       } else {
-        // iOS - use native keyboard animation timing
+        // iOS - needs manual keyboard offset
+        const targetKeyboardPadding = Math.max(0, e.endCoordinates.height - insets.bottom + KEYBOARD_GAP);
         Animated.timing(keyboardHeight, {
           toValue: targetKeyboardPadding,
           duration: e.duration || 250,

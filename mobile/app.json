@@ -10,7 +10,11 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FFFFFF"
+      "backgroundColor": "#FFFFFF",
+      "dark": {
+        "image": "./assets/splash-icon.png",
+        "backgroundColor": "#000000"
+      }
     },
     "assetBundlePatterns": [
       "**/*"
@@ -26,7 +30,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundImage": "./assets/android-background.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#FFFFFF",
+        "monochromeImage": "./assets/adaptive-icon.png"
+      },
+      "splash": {
+        "image": "./assets/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#FFFFFF",
+        "dark": {
+          "image": "./assets/splash-icon.png",
+          "backgroundColor": "#000000"
+        }
       },
       "softwareKeyboardLayoutMode": "resize",
       "package": "org.digitalgreen.agmcp",
@@ -44,7 +58,8 @@
           "locationWhenInUsePermission": "Allow FarmerChat to use your location for regional farming advice."
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-splash-screen"
     ],
     "extra": {
       "eas": {}

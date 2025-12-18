@@ -176,7 +176,7 @@ export default function AttachBottomSheet({
             android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
           >
             <View style={[styles.iconCircle, { backgroundColor: isDark ? '#38383A' : '#E5E5EA' }]}>
-              <CameraIcon size={28} color={theme.iconPrimary} />
+              <CameraIcon size={28} color={isDark ? theme.accent : theme.iconPrimary} />
             </View>
             <Text style={[styles.optionLabel, { color: theme.text }]}>{t('media.camera')}</Text>
           </Pressable>
@@ -188,7 +188,7 @@ export default function AttachBottomSheet({
             android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
           >
             <View style={[styles.iconCircle, { backgroundColor: isDark ? '#38383A' : '#E5E5EA' }]}>
-              <ImageIcon size={28} color={theme.iconPrimary} />
+              <ImageIcon size={28} color={isDark ? theme.accent : theme.iconPrimary} />
             </View>
             <Text style={[styles.optionLabel, { color: theme.text }]}>{t('media.photos')}</Text>
           </Pressable>

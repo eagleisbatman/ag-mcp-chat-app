@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import * as NavigationBar from 'expo-navigation-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -62,7 +63,15 @@ function SyncErrorWatcher() {
 }
 
 function AppNavigator() {
-  const { isLoading, onboardingComplete, theme } = useApp();
+  const { isLoading, onboardingComplete, theme, isDark } = useApp();
+
+  // Set Android navigation bar color to match theme
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      NavigationBar.setBackgroundColorAsync(theme.background);
+      NavigationBar.setButtonStyleAsync(isDark ? 'light' : 'dark');
+    }
+  }, [theme.background, isDark]);
 
   if (isLoading) {
     return (
