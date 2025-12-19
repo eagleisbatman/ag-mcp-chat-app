@@ -23,7 +23,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "org.digitalgreen.agmcp",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "We need your location to provide regional farming advice, weather forecasts, and crop recommendations specific to your area."
+        "NSLocationWhenInUseUsageDescription": "We need your location to provide regional farming advice, weather forecasts, and crop recommendations specific to your area.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
