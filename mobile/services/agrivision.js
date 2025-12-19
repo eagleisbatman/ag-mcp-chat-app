@@ -93,6 +93,7 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
 
 /**
  * Format diagnosis result for display
+ * Creates a clean, aesthetic layout using markdown
  * @param {object} diagnosis - Raw diagnosis from AgriVision
  * @returns {string} Formatted text for chat
  */
@@ -103,37 +104,126 @@ export const formatDiagnosis = (diagnosis) => {
 
   const parts = [];
 
-  // Crop info
-  if (diagnosis.crop) {
-    parts.push(`🌱 **Crop**: ${diagnosis.crop.name || diagnosis.crop}`);
-    if (diagnosis.crop.scientific_name) {
-      parts.push(`   _${diagnosis.crop.scientific_name}_`);
-    }
-  }
+  // ═══════════════════════════════════════
+  // SECTION 1: Quick Summary (compact header)
+  // ═══════════════════════════════════════
+  const cropName = diagnosis.crop?.name || diagnosis.crop || 'Unknown';
+  const scientificName = diagnosis.crop?.scientific_name;
+  const status = diagnosis.health_status?.overall || diagnosis.health_status || 'Unknown';
+  const isHealthy = status.toLowerCase().includes('healthy');
+  const statusEmoji = isHealthy ? '✅' : '⚠️';
+  const growthStage = diagnosis.growth_stage;
 
-  // Health status
-  if (diagnosis.health_status) {
-    const status = diagnosis.health_status.overall || diagnosis.health_status;
-    const emoji = status.toLowerCase().includes('healthy') ? '✅' : '⚠️';
-    parts.push(`${emoji} **Status**: ${status}`);
-  }
+  // Compact header line
+  parts.push(`🌱 **${cropName}**${scientificName ? ` · _${scientificName}_` : ''}`);
+  parts.push(`${statusEmoji} ${status}${growthStage ? ` · 📈 ${growthStage}` : ''}`);
 
-  // Issues
+  // ═══════════════════════════════════════
+  // SECTION 2: Issues Detected
+  // ═══════════════════════════════════════
   if (diagnosis.issues && diagnosis.issues.length > 0) {
-    parts.push('\n**Issues Detected**:');
+    parts.push('\n---');
+    parts.push('**🔍 Issues Found**\n');
+
     diagnosis.issues.forEach((issue, i) => {
-      parts.push(`${i + 1}. **${issue.name || issue}**`);
-      if (issue.category) parts.push(`   Category: ${issue.category}`);
-      if (issue.severity) parts.push(`   Severity: ${issue.severity}`);
-      if (issue.symptoms) {
-        parts.push(`   Symptoms: ${issue.symptoms.join(', ')}`);
+      const issueName = issue.name || issue;
+      const severity = issue.severity;
+      const category = issue.category;
+
+      // Issue header with severity badge
+      const severityBadge = severity ? ` · _${severity}_` : '';
+      parts.push(`**${i + 1}. ${issueName}**${severityBadge}`);
+
+      // Compact details on same conceptual "row"
+      const details = [];
+      if (category) details.push(category);
+      if (issue.stage) details.push(`Stage: ${issue.stage}`);
+      if (issue.causal_agent) details.push(issue.causal_agent);
+      if (details.length > 0) {
+        parts.push(`   ${details.join(' · ')}`);
+      }
+
+      // Symptoms as inline list
+      if (issue.symptoms && issue.symptoms.length > 0) {
+        parts.push(`   _Symptoms:_ ${issue.symptoms.join(', ')}`);
+      }
+
+      // Affected parts
+      if (issue.affected_parts && issue.affected_parts.length > 0) {
+        parts.push(`   _Affected:_ ${issue.affected_parts.join(', ')}`);
       }
     });
   }
 
-  // Growth stage
-  if (diagnosis.growth_stage) {
-    parts.push(`\n📈 **Growth Stage**: ${diagnosis.growth_stage}`);
+  // ═══════════════════════════════════════
+  // SECTION 3: Treatment Recommendations
+  // ═══════════════════════════════════════
+  if (diagnosis.treatment_recommendations && diagnosis.treatment_recommendations.length > 0) {
+    parts.push('\n---');
+    parts.push('**💊 Treatment Options**\n');
+
+    diagnosis.treatment_recommendations.forEach((treatment) => {
+      if (treatment.issue_name && diagnosis.treatment_recommendations.length > 1) {
+        parts.push(`**For ${treatment.issue_name}:**\n`);
+      }
+
+      // Organic options - compact format
+      if (treatment.organic_options && treatment.organic_options.length > 0) {
+        parts.push('🌿 **Natural**');
+        treatment.organic_options.forEach((opt) => {
+          const timing = opt.timing ? ` (${opt.timing})` : '';
+          const freq = opt.frequency ? ` · ${opt.frequency}` : '';
+          parts.push(`• **${opt.name}**${timing}${freq}`);
+          if (opt.application) {
+            parts.push(`  _${opt.application}_`);
+          }
+        });
+      }
+
+      // Chemical options - compact format
+      if (treatment.chemical_options && treatment.chemical_options.length > 0) {
+        parts.push('\n🧪 **Chemical**');
+        treatment.chemical_options.forEach((opt) => {
+          const dosage = opt.dosage ? ` · ${opt.dosage}` : '';
+          parts.push(`• **${opt.active_ingredient}**${dosage}`);
+          if (opt.application) {
+            parts.push(`  _${opt.application}_`);
+          }
+          if (opt.safety_notes) {
+            parts.push(`  ⚠️ ${opt.safety_notes}`);
+          }
+        });
+      }
+
+      // Preventive measures - bullet list
+      if (treatment.preventive_measures && treatment.preventive_measures.length > 0) {
+        parts.push('\n🛡️ **Prevention**');
+        treatment.preventive_measures.forEach((measure) => {
+          parts.push(`• ${measure}`);
+        });
+      }
+    });
+  }
+
+  // ═══════════════════════════════════════
+  // SECTION 4: Additional Notes
+  // ═══════════════════════════════════════
+  const hasNotes = diagnosis.general_recommendations || diagnosis.diagnostic_notes;
+  if (hasNotes) {
+    parts.push('\n---');
+  }
+
+  if (diagnosis.general_recommendations) {
+    parts.push(`📋 ${diagnosis.general_recommendations}`);
+  }
+
+  if (diagnosis.diagnostic_notes) {
+    parts.push(`🔬 _${diagnosis.diagnostic_notes}_`);
+  }
+
+  // Lab test recommendation
+  if (diagnosis.requires_lab_test) {
+    parts.push('\n🧫 _Laboratory testing recommended for confirmation_');
   }
 
   return parts.join('\n');
