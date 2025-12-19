@@ -55,29 +55,22 @@ export default function SettingsScreen({ navigation }) {
       let loc = await Location.getLastKnownPositionAsync();
       console.log('📍 [Settings] Last known position:', loc?.coords);
 
-      // If no cached location, try watchPositionAsync with high accuracy
+      // If no cached location, use getCurrentPositionAsync (active GPS request)
       if (!loc?.coords) {
-        console.log('📍 [Settings] No cached location, trying watchPositionAsync...');
-        loc = await new Promise((resolve, reject) => {
-          let subscription = null;
-          const timeout = setTimeout(() => {
-            if (subscription) subscription.remove();
-            reject(new Error('Location timeout'));
-          }, 15000);
+        console.log('📍 [Settings] No cached location, requesting fresh GPS fix...');
+        loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+          timeout: 15000,
+        });
+        console.log('📍 [Settings] getCurrentPositionAsync result:', loc?.coords);
+      }
 
-          Location.watchPositionAsync(
-            { accuracy: Location.Accuracy.High, distanceInterval: 0 },
-            (position) => {
-              clearTimeout(timeout);
-              if (subscription) subscription.remove();
-              resolve(position);
-            }
-          ).then(sub => {
-            subscription = sub;
-          }).catch(err => {
-            clearTimeout(timeout);
-            reject(err);
-          });
+      // Final fallback: try with lower accuracy if high accuracy fails
+      if (!loc?.coords) {
+        console.log('📍 [Settings] Balanced accuracy failed, trying low accuracy...');
+        loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Low,
+          timeout: 10000,
         });
       }
 
