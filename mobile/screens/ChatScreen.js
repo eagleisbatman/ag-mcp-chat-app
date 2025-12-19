@@ -212,7 +212,6 @@ export default function ChatScreen({ navigation, route }) {
               <MessageItem
                 message={item}
                 isNewMessage={item._id === newestBotMessageId}
-                onFollowUpPress={handleSendText}
               />
             )}
             keyExtractor={(item) => item._id}

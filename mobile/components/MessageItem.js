@@ -51,13 +51,12 @@ function sanitizeStreamingMarkdown(text) {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
+function MessageItem({ message, isNewMessage = false }) {
   const { theme, language } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
   const isStreaming = message.isStreaming || false;
-  const followUpQuestions = message.followUpQuestions || [];
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
   // Don't render empty streaming messages (typing indicator handles this state)
@@ -346,36 +345,6 @@ function MessageItem({ message, isNewMessage = false, onFollowUpPress }) {
           </Text>
         </View>
       )}
-
-
-      {/* Follow-up Questions - Vertical List (only show after streaming completes) */}
-      {isBot && followUpQuestions.length > 0 && !isAnimating && !isStreaming && (
-        <View style={styles.followUpContainer}>
-          <Text style={[styles.followUpLabel, { color: theme.textMuted }]}>
-            {t('chat.tapToAskNext')}
-          </Text>
-          <View style={styles.followUpList}>
-            {followUpQuestions.map((question, index) => (
-              <Pressable
-                key={index}
-                style={styles.followUpItem}
-                onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  onFollowUpPress?.(question);
-                }}
-                accessibilityRole="button"
-                accessibilityLabel={t('a11y.askQuestion', { question })}
-                android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: false } : undefined}
-              >
-                <Text style={[styles.followUpText, { color: theme.text }]}>
-                  {question}
-                </Text>
-                <AppIcon name="arrow-forward" size={16} color={theme.icon} />
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      )}
     </View>
   );
 }
@@ -437,37 +406,6 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
   },
-  // Follow-up questions - vertical list
-  followUpContainer: {
-    marginTop: SPACING.lg,
-    paddingTop: SPACING.md,
-    borderTopWidth: 0,
-  },
-  followUpLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    marginBottom: SPACING.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  followUpList: {
-    gap: SPACING.sm,
-  },
-  followUpItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm + 2,
-    borderRadius: 0,
-    backgroundColor: 'transparent',
-  },
-  followUpText: {
-    fontSize: TYPOGRAPHY.sizes.base,
-    flex: 1,
-    marginRight: SPACING.sm,
-    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
-  },
 });
 
 // Memoize to prevent unnecessary re-renders (fixes VirtualizedList warning)
@@ -477,7 +415,6 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
     prevProps.message._id === nextProps.message._id &&
     prevProps.message.text === nextProps.message.text &&
     prevProps.message.isStreaming === nextProps.message.isStreaming &&
-    prevProps.message.followUpQuestions?.length === nextProps.message.followUpQuestions?.length &&
     prevProps.isNewMessage === nextProps.isNewMessage
   );
 });

@@ -49,7 +49,6 @@ export default function useChat(sessionIdParam = null) {
           createdAt: new Date(m.createdAt),
           isBot: m.role === 'assistant',
           image: m.imageCloudinaryUrl,
-          followUpQuestions: m.followUpQuestions || [], // Load follow-up questions
         })).reverse(); // Newest first for inverted FlatList
         
         setMessages([...loadedMessages, createWelcomeMessage()]);
@@ -186,7 +185,6 @@ export default function useChat(sessionIdParam = null) {
       text: '',
       createdAt: new Date(),
       isBot: true,
-      followUpQuestions: [],
     };
     addMessage(botMsg);
 
@@ -209,15 +207,12 @@ export default function useChat(sessionIdParam = null) {
         onThinking: (thinking) => {
           setThinkingText(thinking);
         },
-        onComplete: (fullText, followUpQuestions, metadata) => {
+        onComplete: (fullText, metadata) => {
           setThinkingText(null);
           setIsTyping(false);
-          
-          // Update message with final text and follow-up questions
-          updateMessage(botMsgId, { 
-            text: fullText, 
-            followUpQuestions: followUpQuestions || [] 
-          });
+
+          // Update message with final text
+          updateMessage(botMsgId, { text: fullText });
 
           // Haptic feedback on completion
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -225,8 +220,7 @@ export default function useChat(sessionIdParam = null) {
           // Persist the complete message
           persistMessage({ ...botMsg, text: fullText }, sessionId, {
             responseLanguageCode: language?.code,
-            followUpQuestions: followUpQuestions || [],
-            metadata: metadata.intentsDetected ? {
+            metadata: metadata?.intentsDetected ? {
               intentsDetected: metadata.intentsDetected,
               mcpToolsUsed: metadata.mcpToolsUsed,
             } : null,

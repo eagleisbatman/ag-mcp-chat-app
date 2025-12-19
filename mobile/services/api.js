@@ -22,7 +22,7 @@ const DEFAULT_TIMEOUT_MS = 30000; // 30s for other endpoints
  * @param {Array} params.history - Previous messages for context (last 10)
  * @param {function} params.onChunk - Callback for each text chunk: (text) => void
  * @param {function} params.onThinking - Callback for thinking updates: (thinking) => void
- * @param {function} params.onComplete - Callback when stream completes: (fullResponse, followUpQuestions) => void
+ * @param {function} params.onComplete - Callback when stream completes: (fullResponse, metadata) => void
  * @param {function} params.onError - Callback on error: (error) => void
  */
 export const sendChatMessageStreaming = async ({
@@ -76,7 +76,6 @@ export const sendChatMessageStreaming = async ({
     const xhr = new XMLHttpRequest();
     let buffer = '';
     let fullText = '';
-    let followUpQuestions = [];
     let metadata = {};
     let lastProcessedIndex = 0;
 
@@ -103,9 +102,8 @@ export const sendChatMessageStreaming = async ({
           if (data === '[DONE]') {
             console.log('📥 [API] Stream complete:', {
               textLength: fullText.length,
-              hasFollowUp: followUpQuestions.length > 0,
             });
-            onComplete?.(fullText, followUpQuestions, metadata);
+            onComplete?.(fullText, metadata);
             resolve({ success: true });
             return;
           }
@@ -121,9 +119,8 @@ export const sendChatMessageStreaming = async ({
               // AI's thinking process (farmer-friendly)
               onThinking?.(parsed.thinking);
             } else if (parsed.type === 'complete') {
-              // Final response with follow-up questions
+              // Final response
               if (parsed.response) fullText = parsed.response;
-              if (parsed.followUpQuestions) followUpQuestions = parsed.followUpQuestions;
             } else if (parsed.type === 'meta') {
               // Metadata (MCP tools, intents, regions)
               metadata = parsed;
@@ -151,14 +148,13 @@ export const sendChatMessageStreaming = async ({
               const parsed = JSON.parse(data.trim());
               if (parsed.type === 'complete') {
                 if (parsed.response) fullText = parsed.response;
-                if (parsed.followUpQuestions) followUpQuestions = parsed.followUpQuestions;
               }
             } catch (e) {
               // Skip
             }
           }
         }
-        onComplete?.(fullText, followUpQuestions, metadata);
+        onComplete?.(fullText, metadata);
         resolve({ success: true });
       } else {
         const error = new Error(`API error: ${xhr.status}`);
@@ -249,14 +245,12 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
 
     const data = await response.json();
     console.log('📥 [API] Chat response:', {
-      hasFollowUp: !!data.followUpQuestions?.length,
-      followUpCount: data.followUpQuestions?.length || 0,
+      responseLength: data.response?.length || 0,
     });
 
     return {
       success: true,
       response: data.response || data.text || 'No response received',
-      followUpQuestions: data.followUpQuestions || [],
       region: data.region,
       language: data.language,
     };
