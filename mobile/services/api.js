@@ -264,6 +264,79 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
 };
 
 /**
+ * Analyze plant image via API Gateway (proxies to AgriVision MCP)
+ * This routes through the gateway to avoid SSE issues in React Native
+ *
+ * @param {object} params - Diagnosis parameters
+ * @param {string} params.imageBase64 - Base64 encoded image (with data: prefix)
+ * @param {number} params.latitude - User's latitude
+ * @param {number} params.longitude - User's longitude
+ * @param {string} params.language - Language code
+ * @param {object} params.locationDetails - Location context
+ */
+export const analyzePlantImage = async ({ imageBase64, latitude, longitude, language, locationDetails }) => {
+  try {
+    console.log('🌿 [API] Starting plant diagnosis via gateway...');
+    console.log('🌿 [API] Image size:', Math.round(imageBase64.length / 1024), 'KB');
+
+    // Build location context
+    const locationContext = locationDetails ? {
+      country: locationDetails.level1Country,
+      state: locationDetails.level2State,
+      district: locationDetails.level3District,
+      city: locationDetails.level5City,
+      locality: locationDetails.level6Locality,
+      displayName: locationDetails.displayName,
+    } : null;
+
+    // Use the chat endpoint with image parameter
+    // The API Gateway handles AgriVision SSE properly
+    const requestBody = {
+      message: 'Analyze this plant image for health issues and provide diagnosis.',
+      latitude: latitude || -1.2864,
+      longitude: longitude || 36.8172,
+      language: language || 'en',
+      location: locationContext,
+      image: imageBase64, // Base64 image for AgriVision
+      stream: false, // Don't stream for diagnosis
+    };
+
+    const response = await fetchWithTimeout(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': API_KEY,
+      },
+      body: JSON.stringify(requestBody),
+    }, CHAT_TIMEOUT_MS);
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('🌿 [API] Diagnosis response received:', {
+      hasResponse: !!data.response,
+      hasDiagnosis: !!data.diagnosis,
+      responseLength: data.response?.length || 0,
+    });
+
+    // The response contains both the text response and diagnosis data
+    return {
+      success: true,
+      response: data.response, // Formatted text for display
+      diagnosis: data.diagnosis, // Raw diagnosis object
+    };
+  } catch (error) {
+    console.error('🌿 [API] Plant diagnosis error:', error);
+    return {
+      success: false,
+      error: error.message || 'Failed to analyze plant image',
+    };
+  }
+};
+
+/**
  * Get active MCP servers for user's location
  * @param {object} params - Query parameters
  * @param {number} params.lat - User's latitude

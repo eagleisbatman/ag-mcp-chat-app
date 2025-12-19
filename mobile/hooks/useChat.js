@@ -4,8 +4,8 @@ import { Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
-import { sendChatMessage, sendChatMessageStreaming } from '../services/api';
-import { diagnosePlantHealth, formatDiagnosis } from '../services/agrivision';
+import { sendChatMessage, sendChatMessageStreaming, analyzePlantImage } from '../services/api';
+import { formatDiagnosis } from '../services/agrivision';
 import { transcribeAudio as transcribeAudioService } from '../services/transcription';
 import { uploadImage, uploadAudio } from '../services/upload';
 import { createSession, saveMessage, generateTitle, updateSession, getSession } from '../services/db';
@@ -261,30 +261,59 @@ export default function useChat(sessionIdParam = null) {
     const sessionId = await ensureSession();
 
     try {
-      const [uploadResult, diagResult] = await Promise.all([
-        uploadImage(imageData.base64),
-        diagnosePlantHealth(imageData.base64)
-      ]);
-      
-      // Handle upload result
-      if (uploadResult.success) {
-        setMessages(prev => prev.map(m => m._id === userMsg._id ? { ...m, cloudinaryUrl: uploadResult.url } : m));
-        persistMessage({ ...userMsg, cloudinaryUrl: uploadResult.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: uploadResult.url });
-      } else {
-        console.warn('Image upload failed:', uploadResult.error);
-        // Continue with diagnosis even if upload failed
+      // Upload image to Cloudinary (non-blocking, for record keeping)
+      const uploadPromise = uploadImage(imageData.base64).then(result => {
+        if (result.success) {
+          setMessages(prev => prev.map(m => m._id === userMsg._id ? { ...m, cloudinaryUrl: result.url } : m));
+          persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
+        } else {
+          console.warn('Image upload failed:', result.error);
+        }
+        return result;
+      });
+
+      // Ensure image has proper data URL format
+      let imageBase64 = imageData.base64;
+      if (!imageBase64.startsWith('data:')) {
+        imageBase64 = `data:image/jpeg;base64,${imageBase64}`;
       }
-      
+
+      // Analyze plant via API Gateway (which handles AgriVision SSE properly)
+      const diagResult = await analyzePlantImage({
+        imageBase64,
+        latitude: location?.latitude,
+        longitude: location?.longitude,
+        language: language?.code,
+        locationDetails,
+      });
+
+      // Wait for upload to complete (non-blocking)
+      await uploadPromise;
+
       // Handle diagnosis result
       if (!diagResult.success) {
         const errorMsg = parseErrorMessage(diagResult);
         showWarning(t('chat.plantAnalysisIssues', { details: errorMsg }));
         addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.analysisCouldNotComplete', { details: errorMsg }), createdAt: new Date(), isBot: true });
       } else {
-        const text = formatDiagnosis(diagResult.diagnosis);
-        const botMsg = { _id: (Date.now() + 1).toString(), text, createdAt: new Date(), isBot: true };
+        // Use the response text if available, otherwise format the diagnosis
+        let displayText;
+        if (diagResult.response) {
+          // API returned formatted response text
+          displayText = diagResult.response;
+        } else if (diagResult.diagnosis) {
+          // Format the raw diagnosis data
+          displayText = formatDiagnosis(diagResult.diagnosis);
+        } else {
+          displayText = t('chat.analysisComplete');
+        }
+
+        const botMsg = { _id: (Date.now() + 1).toString(), text: displayText, createdAt: new Date(), isBot: true };
         addMessage(botMsg);
-        persistMessage(botMsg, sessionId, { diagnosisCrop: diagResult.diagnosis?.crop, diagnosisHealthStatus: diagResult.diagnosis?.healthStatus });
+
+        // Extract crop info for persistence
+        const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
+        persistMessage(botMsg, sessionId, { diagnosisCrop: diagnosisData?.crop, diagnosisHealthStatus: diagnosisData?.health_status });
       }
     } catch (error) {
       console.error('Image analysis error:', error);
@@ -294,7 +323,7 @@ export default function useChat(sessionIdParam = null) {
     } finally {
       setIsTyping(false);
     }
-  }, [addMessage, ensureSession, persistMessage]);
+  }, [location, language, locationDetails, addMessage, ensureSession, persistMessage, showError, showWarning]);
 
   // Transcribe audio for the VoiceRecorder component
   // Returns transcription text without sending to chat
