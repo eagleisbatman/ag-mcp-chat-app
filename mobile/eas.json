@@ -21,6 +21,17 @@
         "resourceClass": "m-medium"
       }
     },
+    "preview-arm64": {
+      "distribution": "internal",
+      "channel": "preview",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "ABI_FILTERS": "arm64-v8a"
+        }
+      }
+    },
     "testflight": {
       "distribution": "store",
       "channel": "testflight",
@@ -48,10 +59,14 @@
       "android": {
         "track": "production"
       },
-      "ios": {}
+      "ios": {
+        "ascAppId": "6756773191"
+      }
     },
     "testflight": {
-      "ios": {}
+      "ios": {
+        "ascAppId": "6756773191"
+      }
     },
     "internal": {
       "android": {
