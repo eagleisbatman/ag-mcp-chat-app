@@ -24,6 +24,8 @@
       "bundleIdentifier": "org.digitalgreen.agmcp",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We need your location to provide regional farming advice, weather forecasts, and crop recommendations specific to your area.",
+        "NSSpeechRecognitionUsageDescription": "FarmerChat uses speech recognition to let you ask questions by voice for hands-free farming assistance.",
+        "NSMicrophoneUsageDescription": "FarmerChat needs microphone access to transcribe your voice questions into text.",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
