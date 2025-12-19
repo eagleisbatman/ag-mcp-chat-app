@@ -21,6 +21,13 @@
         "resourceClass": "m-medium"
       }
     },
+    "testflight": {
+      "distribution": "store",
+      "channel": "testflight",
+      "ios": {
+        "resourceClass": "m-medium"
+      }
+    },
     "internal": {
       "distribution": "internal",
       "channel": "internal",
@@ -41,6 +48,9 @@
       "android": {
         "track": "production"
       },
+      "ios": {}
+    },
+    "testflight": {
       "ios": {}
     },
     "internal": {
