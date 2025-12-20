@@ -221,12 +221,15 @@ export default function useChat(sessionIdParam = null) {
           // Haptic feedback on completion
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
-          // Persist the complete message
+          // Persist the complete message with full intent/classification data
           persistMessage({ ...botMsg, text: fullText }, sessionId, {
             responseLanguageCode: language?.code,
-            metadata: metadata?.intentsDetected ? {
-              intentsDetected: metadata.intentsDetected,
-              mcpToolsUsed: metadata.mcpToolsUsed,
+            metadata: metadata ? {
+              intentsDetected: metadata.intentsDetected || [],
+              mcpToolsUsed: metadata.mcpToolsUsed || [],
+              intentSource: metadata.intentSource,
+              classification: metadata.classification || null,
+              extractedEntities: metadata.extractedEntities || null,
             } : null,
           });
 
