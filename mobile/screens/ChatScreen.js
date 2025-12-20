@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image, InteractionManager } from 'react-native';
 
 const logoImage = require('../assets/logo.png');
 import * as Haptics from 'expo-haptics';
@@ -154,10 +154,11 @@ export default function ChatScreen({ navigation, route }) {
       }
     }
 
-    if (userMessageIndex >= 0) {
-      flatListRef.current?.scrollToIndex({
+    if (userMessageIndex >= 0 && flatListRef.current) {
+      console.log('📜 [Scroll] Scrolling to user message at index:', userMessageIndex);
+      flatListRef.current.scrollToIndex({
         index: userMessageIndex,
-        animated: true,
+        animated: false, // Instant scroll - can't be interrupted
         viewPosition: 0, // Position at top of viewport
       });
     }
@@ -173,9 +174,18 @@ export default function ChatScreen({ navigation, route }) {
   const prevIsTyping = useRef(isTyping);
   useEffect(() => {
     if (isTyping && !prevIsTyping.current) {
-      // Typing just started - scroll to show user's message at top
-      // Small delay to let the message render first
-      setTimeout(() => scrollToUserMessage(), 100);
+      // Typing just started - wait for layout to complete, then scroll
+      // Use InteractionManager for reliable timing after render
+      const handle = InteractionManager.runAfterInteractions(() => {
+        // Additional delay to ensure FlatList has laid out new items
+        setTimeout(() => {
+          scrollToUserMessage();
+          // Backup scroll attempt in case first one was too early
+          setTimeout(() => scrollToUserMessage(), 200);
+        }, 50);
+      });
+
+      return () => handle.cancel();
     }
     prevIsTyping.current = isTyping;
   }, [isTyping, scrollToUserMessage]);
