@@ -9,7 +9,8 @@
     "refresh": "አድስ",
     "clear": "አጽዳ",
     "loading": "እየጫነ ነው…",
-    "skipForNow": "አሁን ዝለል"
+    "skipForNow": "አሁን ዝለል",
+    "comingSoon": "በቅርብ ቀን"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "ቦታ ለማስቀመጥ ይንኩ",
     "senderAssistant": "FarmerChat",
     "senderYou": "እርስዎ",
-    "tapToAskNext": "ቀጣዩን ለመጠየቅ ይንኩ፦"
+    "tapToAskNext": "ቀጣዩን ለመጠየቅ ይንኩ፦",
+    "analysisComplete": "ትንተና ተጠናቋል"
   },
   "media": {
     "photoLibraryPermission": "ፎቶዎችን ለመምረጥ የፎቶ ጋለሪ መዳረሻ ያስፈልጋል። በቅንብሮች ውስጥ ያንቁት።",
@@ -70,7 +72,10 @@
     "pickImageFailed": "ፎቶ መምረጥ አልተሳካም። እባክዎ እንደገና ይሞክሩ።",
     "cameraFailed": "ካሜራውን መክፈት አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
     "camera": "ካሜራ",
-    "gallery": "ጋለሪ"
+    "gallery": "ጋለሪ",
+    "addToChat": "ምስል ስቀል",
+    "uploadHint": "የተክል ጤና ለመመርመር ፎቶ አንሳ ወይም ምረጥ",
+    "photos": "ፎቶዎች"
   },
   "voice": {
     "microphonePermission": "ማይክራፎን ፈቃድ ያስፈልጋል።",
@@ -85,7 +90,9 @@
     "cancel": "ሰርዝ",
     "done": "ጨርስ",
     "transcribing": "እየተፈታተተ ነው...",
-    "recordingHint": "ለመፍታታት \"ጨርስ\" ይጫኑ፤ ለመተው \"ሰርዝ\" ይጫኑ።"
+    "recordingHint": "ለመፍታታት \"ጨርስ\" ይጫኑ፤ ለመተው \"ሰርዝ\" ይጫኑ።",
+    "listening": "እየሰማ ነው...",
+    "waitingForSpeech": "ንግግር በመጠባበቅ ላይ..."
   },
   "history": {
     "title": "ውይይቶች",
@@ -282,7 +289,12 @@
     "offline": "ኢንተርኔት የለም",
     "errorTitle": "ችግር ተፈጠረ",
     "errorFallback": "ያልተጠበቀ ስህተት ተከስቷል",
-    "tryAgain": "እንደገና ይሞክሩ"
+    "tryAgain": "እንደገና ይሞክሩ",
+    "restartRequired": "መተግበሪያ ዳግም ማስጀመር ያስፈልጋል",
+    "restartRequiredMessage": "ወደ {language} ሲቀየር፣ የመተግበሪያውን ገጽታ ለማስተካከል ዳግም ማስጀመር ያስፈልጋል።",
+    "restartNow": "አሁን ዳግም አስጀምር",
+    "pleaseRestart": "እባክዎ ዳግም ያስጀምሩ",
+    "pleaseRestartMessage": "እባክዎ ለውጦቹ እንዲሰሩ መተግበሪያውን ዘግተው መልሰው ይክፈቱ።"
   },
   "errors": {
     "syncFailed": "አገልጋይ ጋር መገናኘት አልተቻለም። አንዳንድ ተግባራት አይሰሩም።",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "የድምጽ መለወጥ አልተሳካም። እንደገና ይናገሩ።",
     "serverError": "የአገልጋይ ስህተት። ቆይተው ይሞክሩ።",
     "requestTimeout": "ጥያቄው ረጅም ጊዜ ወሰደ። ኢንተርኔትዎን ይፈትሹ።",
-    "locationLookupFailed": "አካባቢዎን ማግኘት አልተቻለም።"
+    "locationLookupFailed": "አካባቢዎን ማግኘት አልተቻለም።",
+    "imageUploadFailed": "ምስሉ ሊቀመጥ አልቻለም። መልዕክትዎ ተልኳል።",
+    "audioUploadFailed": "የድምፅ ቅጂው ሊቀመጥ አልቻለም።",
+    "mcpServersFailed": "የኤ አይ አገልግሎቶችን መጫን አልተቻለም። አንዳንድ ተግባራት ላይሰሩ ይችላሉ።",
+    "sessionCreateFailed": "ውይይቱን ማስቀመጥ አልተቻለም። መልዕክቶች ላይቆዩ ይችላሉ።"
   },
   "a11y": {
     "startNewChat": "አዲስ ውይይት ጀምር",
@@ -320,6 +336,7 @@
     "themeMode": "ገጽታ: {mode}",
     "copyMessage": "መልዕክት ቅዳ",
     "askQuestion": "ጠይቅ: {question}",
-    "selectLanguage": "ቋንቋ {name}"
+    "selectLanguage": "ቋንቋ {name}",
+    "openHistory": "ታሪክ ክፈት"
   }
 }

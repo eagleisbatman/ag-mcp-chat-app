@@ -9,7 +9,8 @@
     "refresh": "更新",
     "clear": "クリア",
     "loading": "読み込み中…",
-    "skipForNow": "今はスキップ"
+    "skipForNow": "今はスキップ",
+    "comingSoon": "近日公開"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "場所をタップして設定",
     "senderAssistant": "FarmerChat",
     "senderYou": "あなた",
-    "tapToAskNext": "次に質問するにはタップ:"
+    "tapToAskNext": "次に質問するにはタップ:",
+    "analysisComplete": "分析完了"
   },
   "media": {
     "photoLibraryPermission": "写真を選ぶには、フォトライブラリの許可が必要です。設定で有効にしてください。",
@@ -70,7 +72,10 @@
     "pickImageFailed": "画像の選択に失敗しました。もう一度お試しください。",
     "cameraFailed": "カメラへのアクセスに失敗しました。もう一度お試しください。",
     "camera": "カメラ",
-    "gallery": "ギャラリー"
+    "gallery": "ギャラリー",
+    "addToChat": "画像をアップロード",
+    "uploadHint": "植物の診断用写真を撮るか、選択してください。",
+    "photos": "写真"
   },
   "voice": {
     "microphonePermission": "マイクの許可が必要です",
@@ -85,7 +90,9 @@
     "cancel": "キャンセル",
     "done": "完了",
     "transcribing": "文字起こし中...",
-    "recordingHint": "完了をタップして文字起こし、キャンセルで破棄"
+    "recordingHint": "完了をタップして文字起こし、キャンセルで破棄",
+    "listening": "聞き取り中...",
+    "waitingForSpeech": "発言をお待ちください..."
   },
   "history": {
     "title": "会話",
@@ -282,7 +289,12 @@
     "offline": "インターネット接続なし",
     "errorTitle": "問題が発生しました",
     "errorFallback": "予期せぬエラーが発生しました",
-    "tryAgain": "再試行"
+    "tryAgain": "再試行",
+    "restartRequired": "アプリの再起動が必要",
+    "restartRequiredMessage": "{language}に切り替えるには、レイアウト変更のためアプリの再起動が必要です。",
+    "restartNow": "今すぐ再起動",
+    "pleaseRestart": "再起動してください",
+    "pleaseRestartMessage": "変更を反映させるため、アプリを一度閉じてから開いてください。"
   },
   "errors": {
     "syncFailed": "サーバーに接続できませんでした。一部の機能が利用できません。",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "音声認識に失敗しました。もう一度話しかけてください。",
     "serverError": "サーバーエラーが発生しました。後で再度お試しください。",
     "requestTimeout": "接続に時間がかかりすぎました。通信状況を確認してください。",
-    "locationLookupFailed": "現在地を特定できませんでした。"
+    "locationLookupFailed": "現在地を特定できませんでした。",
+    "imageUploadFailed": "画像を保存できませんでした。メッセージは送信されました。",
+    "audioUploadFailed": "音声を保存できませんでした。",
+    "mcpServersFailed": "AIサービスを読み込めませんでした。一部の機能が利用できない場合があります。",
+    "sessionCreateFailed": "会話を保存できませんでした。メッセージが残らない可能性があります。"
   },
   "a11y": {
     "startNewChat": "新規チャット開始",
@@ -320,6 +336,7 @@
     "themeMode": "テーマ: {mode}",
     "copyMessage": "メッセージをコピー",
     "askQuestion": "質問: {question}",
-    "selectLanguage": "言語 {name}"
+    "selectLanguage": "言語 {name}",
+    "openHistory": "履歴を開く"
   }
 }

@@ -9,7 +9,8 @@
     "refresh": "Segarkan",
     "clear": "Kosongkan",
     "loading": "Memuatkan…",
-    "skipForNow": "Langkau Dulu"
+    "skipForNow": "Langkau Dulu",
+    "comingSoon": "Akan datang"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Ketik lokasi untuk tetapkan",
     "senderAssistant": "FarmerChat",
     "senderYou": "Anda",
-    "tapToAskNext": "Ketik untuk tanya seterusnya:"
+    "tapToAskNext": "Ketik untuk tanya seterusnya:",
+    "analysisComplete": "Analisis selesai"
   },
   "media": {
     "photoLibraryPermission": "Akses galeri diperlukan untuk pilih gambar. Aktifkan di Tetapan.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Gagal pilih gambar. Sila cuba lagi.",
     "cameraFailed": "Gagal akses kamera. Sila cuba lagi.",
     "camera": "Kamera",
-    "gallery": "Galeri"
+    "gallery": "Galeri",
+    "addToChat": "Hantar Gambar",
+    "uploadHint": "Ambil atau pilih gambar untuk periksa tanaman",
+    "photos": "Gambar"
   },
   "voice": {
     "microphonePermission": "Perlu izin mikrofon",
@@ -85,7 +90,9 @@
     "cancel": "Batal",
     "done": "Selesai",
     "transcribing": "Sedang transkripsi...",
-    "recordingHint": "Tekan Selesai untuk transkripsi, atau Batal untuk buang"
+    "recordingHint": "Tekan Selesai untuk transkripsi, atau Batal untuk buang",
+    "listening": "Mendengar...",
+    "waitingForSpeech": "Menunggu ucapan..."
   },
   "history": {
     "title": "Perbualan",
@@ -282,7 +289,12 @@
     "offline": "Tiada sambungan internet",
     "errorTitle": "Maaf, ada masalah.",
     "errorFallback": "Ralat tidak dijangka berlaku.",
-    "tryAgain": "Cuba Lagi"
+    "tryAgain": "Cuba Lagi",
+    "restartRequired": "Perlu Mula Semula Aplikasi",
+    "restartRequiredMessage": "Untuk tukar ke {language}, sila mula semula aplikasi untuk kemas kini paparan.",
+    "restartNow": "Mula Semula Sekarang",
+    "pleaseRestart": "Sila Mula Semula",
+    "pleaseRestartMessage": "Sila tutup dan buka semula aplikasi untuk melihat perubahan."
   },
   "errors": {
     "syncFailed": "Gagal sambung ke pelayan. Ciri mungkin terhad.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Pengecaman suara gagal. Cuba bercakap lagi.",
     "serverError": "Ralat pelayan. Cuba lagi nanti.",
     "requestTimeout": "Permintaan tamat masa. Periksa sambungan.",
-    "locationLookupFailed": "Gagal dapatkan lokasi anda."
+    "locationLookupFailed": "Gagal dapatkan lokasi anda.",
+    "imageUploadFailed": "Gambar tidak dapat disimpan. Mesej anda dihantar.",
+    "audioUploadFailed": "Rakaman suara tidak dapat disimpan.",
+    "mcpServersFailed": "Gagal muat servis AI. Sesetengah fungsi mungkin tiada.",
+    "sessionCreateFailed": "Gagal simpan perbualan. Mesej mungkin tidak kekal."
   },
   "a11y": {
     "startNewChat": "Mula sembang baharu",
@@ -320,6 +336,7 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Salin mesej",
     "askQuestion": "Tanya: {question}",
-    "selectLanguage": "Bahasa {name}"
+    "selectLanguage": "Bahasa {name}",
+    "openHistory": "Buka sejarah"
   }
 }

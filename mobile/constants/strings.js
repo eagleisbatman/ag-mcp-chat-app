@@ -121,6 +121,7 @@ export const STRINGS = {
       clear: 'Clear',
       loading: 'Loading…',
       skipForNow: 'Skip for now',
+      comingSoon: 'Coming soon',
     },
     onboarding: {
       appName: 'FarmerChat',
@@ -185,6 +186,7 @@ export const STRINGS = {
       senderAssistant: 'FarmerChat',
       senderYou: 'You',
       tapToAskNext: 'Tap to ask next:',
+      analysisComplete: 'Analysis complete',
     },
     media: {
       photoLibraryPermission:
@@ -424,6 +426,11 @@ export const STRINGS = {
       errorTitle: 'Oops! Something went wrong',
       errorFallback: 'An unexpected error occurred',
       tryAgain: 'Try Again',
+      restartRequired: 'App Restart Required',
+      restartRequiredMessage: 'Switching to {language} requires restarting the app for layout changes.',
+      restartNow: 'Restart Now',
+      pleaseRestart: 'Please Restart',
+      pleaseRestartMessage: 'Please close and reopen the app for changes to take effect.',
     },
     errors: {
       syncFailed: 'Could not connect to server. Some features may be limited.',
@@ -434,6 +441,10 @@ export const STRINGS = {
       serverError: 'Server error. Please try again later.',
       requestTimeout: 'Request timed out. Check your connection.',
       locationLookupFailed: 'Could not determine your location details.',
+      imageUploadFailed: 'Image could not be saved. Your message was sent.',
+      audioUploadFailed: 'Voice recording could not be saved.',
+      mcpServersFailed: 'Could not load AI services. Some features may be unavailable.',
+      sessionCreateFailed: 'Could not save conversation. Messages may not persist.',
     },
     a11y: {
       startNewChat: 'Start a new chat',

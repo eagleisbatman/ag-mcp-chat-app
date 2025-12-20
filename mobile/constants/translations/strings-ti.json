@@ -9,7 +9,8 @@
     "refresh": "ኣሐድስ",
     "clear": "ኣጽሪ",
     "loading": "ይጽበ…",
-    "skipForNow": "ሕለፍ ግዝያዊ"
+    "skipForNow": "ሕለፍ ግዝያዊ",
+    "comingSoon": "ብቕሩብ"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "ንምቕናዕ ቦታ ጠውቕ",
     "senderAssistant": "FarmerChat",
     "senderYou": "ንስኹም",
-    "tapToAskNext": "ቀጺልኩም ንምሕታት ጠውቑ፦"
+    "tapToAskNext": "ቀጺልኩም ንምሕታት ጠውቑ፦",
+    "analysisComplete": "ምርመራ ተዛዚሙ"
   },
   "media": {
     "photoLibraryPermission": "ምስሊ ንምምራፅ ናብ ማዕከን ምስልታት ምእታው የድሊ። ኣብ ኣቀማምጣ ኣቕንዓዮ።",
@@ -70,7 +72,10 @@
     "pickImageFailed": "ምስሊ ምምራፅ ኣይተኻእለን። እንደገና ፈትን።",
     "cameraFailed": "ናብ ካሜራ ምእታው ኣይተኻእለን። እንደገና ፈትን።",
     "camera": "ካሜራ",
-    "gallery": "ጋለሪ"
+    "gallery": "ጋለሪ",
+    "addToChat": "ስእሊ ኣስክር",
+    "uploadHint": "ንጥዕና ተኽሊ፡ ስእሊ ኣልግስ ወይ ምረጽ",
+    "photos": "ስእልታት"
   },
   "voice": {
     "microphonePermission": "ፍቓድ ማይክሮፎን የድሊ",
@@ -85,7 +90,9 @@
     "cancel": "ስረዝ",
     "done": "ኣብቅዕ",
     "transcribing": "ይቕየር ኣሎ...",
-    "recordingHint": "ንምልዋጥ 'ኣብቅዕ' ጠውቕ፣ ንምጥፋእ ድማ 'ስረዝ'።"
+    "recordingHint": "ንምልዋጥ 'ኣብቅዕ' ጠውቕ፣ ንምጥፋእ ድማ 'ስረዝ'።",
+    "listening": "የዳምጽ ኣሎ...",
+    "waitingForSpeech": "ንዝርባ ይጽበ ኣሎ..."
   },
   "history": {
     "title": "ዘተታት",
@@ -282,7 +289,12 @@
     "offline": "ኢንተርነት የለን",
     "errorTitle": "ሓሓሊፉ!",
     "errorFallback": "ዘይተፈልጠ ጌጋ ኣጋጢሙ",
-    "tryAgain": "እንደገና ፈትን"
+    "tryAgain": "እንደገና ፈትን",
+    "restartRequired": "ምጅማር ኣፕሊኬሽን የድሊ",
+    "restartRequiredMessage": "ናብ {language} ንምቕያር፡ ንለውጥታት ኣቀማምጣ፡ ኣፕሊኬሽን ዳግማይ ምጅማር የድሊ።",
+    "restartNow": "ሕጂ ዳግማይ ጀምር",
+    "pleaseRestart": "በጃኻ ዳግማይ ጀምር",
+    "pleaseRestartMessage": "ለውጥታት ንኽሰርሑ፡ በጃኻ ኣፕሊኬሽን ኣዕጽው እሞ እንደገና ክፈቶ።"
   },
   "errors": {
     "syncFailed": "ከኣገልጋሊት ጋር ኣይተራኸበን። ገለ ኣገልግሎታት ክወስን ይኽእል።",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "ትግርምቲ ድምጺ ኣይሰርሐን። ደጊምካ ተዛረብ።",
     "serverError": "ስሕተት ኣገልጋሊት። ጸኒሕካ ደጊምካ ፈትን።",
     "requestTimeout": "ሕቶ ግዜ ወዲኡ። ርክብካ ኣረጋግጽ።",
-    "locationLookupFailed": "ዝርዝራት ቦታኻ ክውሰን ኣይተኻእለን።"
+    "locationLookupFailed": "ዝርዝራት ቦታኻ ክውሰን ኣይተኻእለን።",
+    "imageUploadFailed": "ስእሊ ክዕቀብ ኣይከኣለን። መልእክትኻ ግን ተላኢኹ እዩ።",
+    "audioUploadFailed": "ቅዳሕ ድምጺ ክዕቀብ ኣይከኣለን።",
+    "mcpServersFailed": "ኣገልግሎታት AI ክጽዕን ኣይከኣለን። ገለ ተግባራት ክርከባ ኣይክእላን እየን።",
+    "sessionCreateFailed": "ዘተ ክዕቀብ ኣይከኣለን። መልእክትታት ኣይቅመጣን ይኾና።"
   },
   "a11y": {
     "startNewChat": "ሓዳስ ዕላል ጀምር",
@@ -320,6 +336,7 @@
     "themeMode": "መልክዕ: {mode}",
     "copyMessage": "መልእኽቲ ቅዳሕ",
     "askQuestion": "ሕተት: {question}",
-    "selectLanguage": "ቋንቋ {name}"
+    "selectLanguage": "ቋንቋ {name}",
+    "openHistory": "ታሪኽ ክፈት"
   }
 }

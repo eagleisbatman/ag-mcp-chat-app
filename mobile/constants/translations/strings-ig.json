@@ -9,7 +9,8 @@
     "refresh": "Megharịa",
     "clear": "Kpochapụ",
     "loading": "Na-ebu…",
-    "skipForNow": "Gafere ugbu a"
+    "skipForNow": "Gafere ugbu a",
+    "comingSoon": "Na-abịa n'oge adịghị anya"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Metụ ọnọdụ aka ka ịtọọ",
     "senderAssistant": "FarmerChat",
     "senderYou": "Gị",
-    "tapToAskNext": "Metụ aka jụọ ihe ọzọ:"
+    "tapToAskNext": "Metụ aka jụọ ihe ọzọ:",
+    "analysisComplete": "Nnyocha agwụla"
   },
   "media": {
     "photoLibraryPermission": "Achọrọ ohere ịnweta foto iji họrọ onyonyo. Gbanye ya na Ntọala.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Enweghị ike ịhọrọ onyonyo. Biko nwaa ọzọ.",
     "cameraFailed": "Enweghị ike ịnweta igwefoto. Biko nwaa ọzọ.",
     "camera": "Igwefoto",
-    "gallery": "Ebe Foto"
+    "gallery": "Ebe Foto",
+    "addToChat": "Bulite foto",
+    "uploadHint": "See ma ọ bụ họrọ foto iji chọpụta ọrịa ihe ubi",
+    "photos": "Foto"
   },
   "voice": {
     "microphonePermission": "Ikike microfonu chọrọ",
@@ -85,7 +90,9 @@
     "cancel": "Kagbuo",
     "done": "Mechaa",
     "transcribing": "Na-aghọta olu...",
-    "recordingHint": "Pịa 'Mechaa' ka ọ ghọta olu, ma ọ bụ 'Kagbuo' ka ị tụfuo ya."
+    "recordingHint": "Pịa 'Mechaa' ka ọ ghọta olu, ma ọ bụ 'Kagbuo' ka ị tụfuo ya.",
+    "listening": "Na-ege ntị...",
+    "waitingForSpeech": "Na-eche ka i kwuo okwu..."
   },
   "history": {
     "title": "Mkparịta ụka",
@@ -282,7 +289,12 @@
     "offline": "Enweghị ịntanetị",
     "errorTitle": "Ewoo! Ihe emehiela",
     "errorFallback": "Nsogbu a na-atụghị anya ya mere",
-    "tryAgain": "Gbalịa ọzọ"
+    "tryAgain": "Gbalịa ọzọ",
+    "restartRequired": "Ngwa ahụ kwesịrị ịmalitegharị",
+    "restartRequiredMessage": "Ịgbanwe gaa {language} chọrọ ka ịmalitegharịa ngwa ahụ maka mgbanwe nhazi.",
+    "restartNow": "Malitegharịa Ugbu a",
+    "pleaseRestart": "Biko Malitegharịa",
+    "pleaseRestartMessage": "Biko mechie ma mepee ngwa ahụ ọzọ ka mgbanwe wee banye."
   },
   "errors": {
     "syncFailed": "Enweghị ike ijikọ na sava. Ụfọdụ atụmatụ nwere ike ịdị oke.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Ntụgharị olu dara. Gbalịa ikwu okwu ọzọ.",
     "serverError": "Mperi sava. Biko gbalịa ọzọ ma emechaa.",
     "requestTimeout": "Oge arịrịọ agwụla. Lelee njikọ gị.",
-    "locationLookupFailed": "Enweghị ike ịchọpụta nkọwa ebe ị nọ."
+    "locationLookupFailed": "Enweghị ike ịchọpụta nkọwa ebe ị nọ.",
+    "imageUploadFailed": "E chekwaaghi foto ahụ. E zigara ozi gị.",
+    "audioUploadFailed": "E chekwaaghi ihe ndekọ olu ahụ.",
+    "mcpServersFailed": "Enweghị ike ibunye ọrụ AI. Ụfọdụ atụmatụ nwere ike ịdịghị.",
+    "sessionCreateFailed": "Enweghị ike ichekwa mkparịta ụka. Ozi nwere ike ghara ịdịgide."
   },
   "a11y": {
     "startNewChat": "Malite Nkata Ọhụrụ",
@@ -320,6 +336,7 @@
     "themeMode": "Agba: {mode}",
     "copyMessage": "Detuo Ozi",
     "askQuestion": "Jụọ: {question}",
-    "selectLanguage": "Asụsụ {name}"
+    "selectLanguage": "Asụsụ {name}",
+    "openHistory": "Mepee akụkọ ihe mere eme"
   }
 }

@@ -9,7 +9,8 @@
     "refresh": "Haareessi",
     "clear": "Qulqulleessi",
     "loading": "Fe'amaa jira…",
-    "skipForNow": "Ammaaf dhiisi"
+    "skipForNow": "Ammaaf dhiisi",
+    "comingSoon": "Dhihoo jira"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Bakka kaa'uuf tuqi",
     "senderAssistant": "FarmerChat",
     "senderYou": "Ati",
-    "tapToAskNext": "Itti aansee gaafachuuf tuqi:"
+    "tapToAskNext": "Itti aansee gaafachuuf tuqi:",
+    "analysisComplete": "Qorannoon xumurameera"
   },
   "media": {
     "photoLibraryPermission": "Suuraa filachuuf hayyami galmee suuraa barbaachisa. Qindaa'ina keessatti dandeessisi.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Suuraa filuun hin milkoofne. Irra deebi'ii yaali.",
     "cameraFailed": "Kaameraa argachuun hin milkoofne. Irra deebi'ii yaali.",
     "camera": "Kaameraa",
-    "gallery": "Galmee suuraa"
+    "gallery": "Galmee suuraa",
+    "addToChat": "Suuraa galchi",
+    "uploadHint": "Suuraa kaasi ykn filadhu - fayyaa biqilaa adda baasuuf.",
+    "photos": "Suuraawwan"
   },
   "voice": {
     "microphonePermission": "Eeyyamma Maayikii barbaachisa",
@@ -85,7 +90,9 @@
     "cancel": "Dhiisi",
     "done": "Xumuri",
     "transcribing": "Barreessaa jira...",
-    "recordingHint": "Barreeffamatti jijjiiruuf 'Xumuri' tuqi, gatuuf 'Dhiisi' tuqi."
+    "recordingHint": "Barreeffamatti jijjiiruuf 'Xumuri' tuqi, gatuuf 'Dhiisi' tuqi.",
+    "listening": "Dhageeffachaa jira...",
+    "waitingForSpeech": "Sagalee eegaa jira..."
   },
   "history": {
     "title": "Haasofiiwwan",
@@ -282,7 +289,12 @@
     "offline": "Intarneetii hin jiru",
     "errorTitle": "Wanti tokko dogoggore!",
     "errorFallback": "Dogoggorri hin eegamne uumame.",
-    "tryAgain": "Irra deebi'i"
+    "tryAgain": "Irra deebi'i",
+    "restartRequired": "App'n deebi'ee eegalamuu qaba",
+    "restartRequiredMessage": "Afaan {language} filachuun App'n akka deebi'ee ka'u barbaada, boca isaa jijjiiruuf.",
+    "restartNow": "Amma deebisee eegalchi",
+    "pleaseRestart": "Maaloo deebisee eegalchi",
+    "pleaseRestartMessage": "Maaloo, jijjiiramaan akka hojjetuuf, App'n cufii deebisii bani."
   },
   "errors": {
     "syncFailed": "Serveriin wal hin qabanne. Hojiin muraasni hir'achuu mala.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Sagalee barreessuun hin milkoofne. Irra deebi'ii dubbadhu.",
     "serverError": "Dogoggorri serverii jira. Booda irra deebi'ii yaali.",
     "requestTimeout": "Gaaffiin yeroo isaa darbe. Hidhaa kee ilaali.",
-    "locationLookupFailed": "Bakka jirtu murteessuu hin dandeenye."
+    "locationLookupFailed": "Bakka jirtu murteessuu hin dandeenye.",
+    "imageUploadFailed": "Suuraan ol kaa'amuu dide. Ergaan kee garuu ergameera.",
+    "audioUploadFailed": "Sagaleen waraabame ol kaa'amuu dide.",
+    "mcpServersFailed": "Tajaajiloonni AI fe'amuu hin dandeenye. Muraasni hojjechuu dhabuu mala.",
+    "sessionCreateFailed": "Haasaan ol kaa'amuu dide. Ergaawwan turuu dhabuu malu."
   },
   "a11y": {
     "startNewChat": "Haasawa haaraa jalqabi",
@@ -320,6 +336,7 @@
     "themeMode": "Bifaa: {mode}",
     "copyMessage": "Ergaa waraabi",
     "askQuestion": "Gaafadhu: {question}",
-    "selectLanguage": "Afaan {name}"
+    "selectLanguage": "Afaan {name}",
+    "openHistory": "Seenaa bani"
   }
 }

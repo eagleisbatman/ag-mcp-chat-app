@@ -9,7 +9,8 @@
     "refresh": "Aktualisieren",
     "clear": "Leeren",
     "loading": "Lädt…",
-    "skipForNow": "Jetzt überspringen"
+    "skipForNow": "Jetzt überspringen",
+    "comingSoon": "Demnächst"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Ort antippen zum Festlegen",
     "senderAssistant": "FarmerChat",
     "senderYou": "Sie",
-    "tapToAskNext": "Antippen, um Weiteres zu fragen:"
+    "tapToAskNext": "Antippen, um Weiteres zu fragen:",
+    "analysisComplete": "Analyse abgeschlossen"
   },
   "media": {
     "photoLibraryPermission": "Zugriff auf Fotosammlung nötig, um Bilder auszuwählen. In Einstellungen aktivieren.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Bild konnte nicht ausgewählt werden. Bitte erneut versuchen.",
     "cameraFailed": "Auf Kamera konnte nicht zugegriffen werden. Bitte erneut versuchen.",
     "camera": "Kamera",
-    "gallery": "Galerie"
+    "gallery": "Galerie",
+    "addToChat": "Bild hochladen",
+    "uploadHint": "Foto aufnehmen oder auswählen zur Pflanzendiagnose",
+    "photos": "Fotos"
   },
   "voice": {
     "microphonePermission": "Mikrofon-Berechtigung erforderlich",
@@ -85,7 +90,9 @@
     "cancel": "Abbrechen",
     "done": "Fertig",
     "transcribing": "Sprache wird erkannt...",
-    "recordingHint": "Fertig tippen für Spracherkennung, Abbrechen zum Verwerfen"
+    "recordingHint": "Fertig tippen für Spracherkennung, Abbrechen zum Verwerfen",
+    "listening": "Höre zu...",
+    "waitingForSpeech": "Warte auf Spracheingabe..."
   },
   "history": {
     "title": "Gespräche",
@@ -282,7 +289,12 @@
     "offline": "Keine Internetverbindung",
     "errorTitle": "Hoppla! Etwas ist schiefgelaufen",
     "errorFallback": "Ein unerwarteter Fehler ist aufgetreten",
-    "tryAgain": "Erneut versuchen"
+    "tryAgain": "Erneut versuchen",
+    "restartRequired": "App-Neustart erforderlich",
+    "restartRequiredMessage": "Für den Wechsel zu {language} muss die App neu gestartet werden, damit die Darstellung angepasst wird.",
+    "restartNow": "Jetzt neu starten",
+    "pleaseRestart": "Bitte neu starten",
+    "pleaseRestartMessage": "Bitte schließen Sie die App und öffnen Sie sie erneut, damit die Änderungen wirksam werden."
   },
   "errors": {
     "syncFailed": "Verbindung zum Server fehlgeschlagen. Funktionen eingeschränkt.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Spracherfassung fehlgeschlagen. Bitte erneut sprechen.",
     "serverError": "Serverfehler. Bitte später versuchen.",
     "requestTimeout": "Anfrage hat zu lange gedauert. Verbindung prüfen.",
-    "locationLookupFailed": "Standort konnte nicht ermittelt werden."
+    "locationLookupFailed": "Standort konnte nicht ermittelt werden.",
+    "imageUploadFailed": "Bild konnte nicht gespeichert werden. Ihre Nachricht wurde gesendet.",
+    "audioUploadFailed": "Sprachaufnahme konnte nicht gespeichert werden.",
+    "mcpServersFailed": "KI-Dienste konnten nicht geladen werden. Einige Funktionen sind möglicherweise nicht verfügbar.",
+    "sessionCreateFailed": "Unterhaltung konnte nicht gespeichert werden. Nachrichten werden möglicherweise nicht gespeichert."
   },
   "a11y": {
     "startNewChat": "Neuen Chat starten",
@@ -320,6 +336,7 @@
     "themeMode": "Design: {mode}",
     "copyMessage": "Nachricht kopieren",
     "askQuestion": "Frage: {question}",
-    "selectLanguage": "Sprache {name}"
+    "selectLanguage": "Sprache {name}",
+    "openHistory": "Verlauf öffnen"
   }
 }

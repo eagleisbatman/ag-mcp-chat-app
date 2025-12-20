@@ -9,7 +9,8 @@
     "refresh": "Actualizează",
     "clear": "Golește",
     "loading": "Se încarcă…",
-    "skipForNow": "Sari peste acum"
+    "skipForNow": "Sari peste acum",
+    "comingSoon": "În curând"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Atinge locația pentru a seta",
     "senderAssistant": "FarmerChat",
     "senderYou": "Tu",
-    "tapToAskNext": "Atinge pentru a întreba:"
+    "tapToAskNext": "Atinge pentru a întreba:",
+    "analysisComplete": "Analiză finalizată"
   },
   "media": {
     "photoLibraryPermission": "Accesul la biblioteca foto este necesar pentru a selecta imagini. Activează din Setări.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Nu s-a putut selecta imaginea. Încearcă din nou.",
     "cameraFailed": "Nu s-a putut accesa camera. Încearcă din nou.",
     "camera": "Cameră",
-    "gallery": "Galerie"
+    "gallery": "Galerie",
+    "addToChat": "Încarcă imagine",
+    "uploadHint": "Fă sau alege o poză pentru diagnostic plantă.",
+    "photos": "Poze"
   },
   "voice": {
     "microphonePermission": "Permisiune microfon necesară",
@@ -85,7 +90,9 @@
     "cancel": "Anulează",
     "done": "Gata",
     "transcribing": "Se transcrie...",
-    "recordingHint": "Atinge Gata pentru a transcrie, sau Anulează pentru a renunța"
+    "recordingHint": "Atinge Gata pentru a transcrie, sau Anulează pentru a renunța",
+    "listening": "Ascult...",
+    "waitingForSpeech": "Aștept să vorbești..."
   },
   "history": {
     "title": "Conversații",
@@ -282,7 +289,12 @@
     "offline": "Fără internet",
     "errorTitle": "Ceva nu a mers bine",
     "errorFallback": "A apărut o eroare neașteptată",
-    "tryAgain": "Reîncearcă"
+    "tryAgain": "Reîncearcă",
+    "restartRequired": "Repornire aplicație necesară",
+    "restartRequiredMessage": "Schimbarea în {language} necesită repornirea aplicației pentru modificarea aspectului.",
+    "restartNow": "Repornește acum",
+    "pleaseRestart": "Repornește aplicația",
+    "pleaseRestartMessage": "Închide și redeschide aplicația pentru ca modificările să se aplice."
   },
   "errors": {
     "syncFailed": "Conexiunea la server a eșuat. Anumite funcții pot fi limitate.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Transcrierea vocală a eșuat. Reîncercați.",
     "serverError": "Eroare server. Încercați mai târziu.",
     "requestTimeout": "Cerere expirată. Verificați conexiunea.",
-    "locationLookupFailed": "Nu s-a putut determina locația."
+    "locationLookupFailed": "Nu s-a putut determina locația.",
+    "imageUploadFailed": "Imaginea nu s-a putut salva. Mesajul tău a fost trimis.",
+    "audioUploadFailed": "Înregistrarea vocală nu s-a putut salva.",
+    "mcpServersFailed": "Serviciile AI nu s-au putut încărca. Unele funcții pot fi indisponibile.",
+    "sessionCreateFailed": "Conversația nu s-a putut salva. Mesajele s-ar putea să nu fie păstrate."
   },
   "a11y": {
     "startNewChat": "Începe o nouă discuție",
@@ -320,6 +336,7 @@
     "themeMode": "Temă: {mode}",
     "copyMessage": "Copiază mesajul",
     "askQuestion": "Întreabă: {question}",
-    "selectLanguage": "Limbă: {name}"
+    "selectLanguage": "Limbă: {name}",
+    "openHistory": "Deschide istoricul"
   }
 }

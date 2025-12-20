@@ -9,7 +9,8 @@
     "refresh": "সতেজ কৰক",
     "clear": "পৰিষ্কাৰ কৰক",
     "loading": "লোড হৈছে…",
-    "skipForNow": "এতিয়া এৰক"
+    "skipForNow": "এতিয়া এৰক",
+    "comingSoon": "শীঘ্ৰেই আহি আছে"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "অৱস্থান ছেট কৰিবলৈ টেপ কৰক",
     "senderAssistant": "FarmerChat",
     "senderYou": "আপুনি",
-    "tapToAskNext": "পৰৱৰ্তী প্ৰশ্ন সুধিবলৈ টেপ কৰক:"
+    "tapToAskNext": "পৰৱৰ্তী প্ৰশ্ন সুধিবলৈ টেপ কৰক:",
+    "analysisComplete": "বিশ্লেষণ সম্পূৰ্ণ হ'ল"
   },
   "media": {
     "photoLibraryPermission": "ছবি বাছনি কৰিবলৈ ফটো লাইব্ৰেৰীৰ অনুমতি লাগে। ছেটিংছত সক্ষম কৰক।",
@@ -70,7 +72,10 @@
     "pickImageFailed": "ছবি বাছনি কৰিব পৰা নগ'ল। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।",
     "cameraFailed": "কেমেৰা ব্যৱহাৰ কৰিব পৰা নগ'ল। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।",
     "camera": "কেমেৰা",
-    "gallery": "গেলেৰী"
+    "gallery": "গেলেৰী",
+    "addToChat": "ছবি আপলোড কৰক",
+    "uploadHint": "গছৰ স্বাস্থ্য পৰীক্ষাৰ বাবে ছবি তোলক বা বাছক",
+    "photos": "ছবি"
   },
   "voice": {
     "microphonePermission": "মাইক্ৰ'ফোনৰ অনুমতি লাগিব",
@@ -85,7 +90,9 @@
     "cancel": "বাতিল",
     "done": "সম্পূৰ্ণ",
     "transcribing": "লিখনি হৈ আছে...",
-    "recordingHint": "লিখনি কৰিবলৈ সম্পূৰ্ণ টিপক, বা বাদ দিবলৈ বাতিল টিপক"
+    "recordingHint": "লিখনি কৰিবলৈ সম্পূৰ্ণ টিপক, বা বাদ দিবলৈ বাতিল টিপক",
+    "listening": "শুনি আছে...",
+    "waitingForSpeech": "কথা কোৱালৈ বাট চাই আছে..."
   },
   "history": {
     "title": "কথোপকথন",
@@ -282,7 +289,12 @@
     "offline": "ইণ্টাৰনেট সংযোগ নাই",
     "errorTitle": "ওহোঁ! কিবা এটা ভুল হৈছে",
     "errorFallback": "এটা অচিনা ভুল হৈছে",
-    "tryAgain": "আকৌ চেষ্টা কৰক"
+    "tryAgain": "আকৌ চেষ্টা কৰক",
+    "restartRequired": "এপটো পুনৰ আৰম্ভ কৰিব লাগিব",
+    "restartRequiredMessage": "{language} ভাষালৈ সলনি কৰিলে লেআউট সলনিৰ বাবে এপটো পুনৰ আৰম্ভ কৰিব লাগিব।",
+    "restartNow": "এতিয়া পুনৰ আৰম্ভ কৰক",
+    "pleaseRestart": "অনুগ্রহ কৰি পুনৰ আৰম্ভ কৰক",
+    "pleaseRestartMessage": "সলনিবোৰ কাৰ্য্যকৰী হ'বলৈ, অনুগ্ৰহ কৰি এপটো বন্ধ কৰি পুনৰ খুলক।"
   },
   "errors": {
     "syncFailed": "ছাৰ্ভাৰৰ সৈতে সংযোগ কৰিব নোৱাৰিল। কিছুমান সুবিধা সীমিত হ'ব পাৰে।",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "মাত বুজাত সমস্যা হ'ল। পুনৰ ক'বলৈ চেষ্টা কৰক।",
     "serverError": "ছাৰ্ভাৰ ত্ৰুটি। অনুগ্ৰহ কৰি পিছত পুনৰ চেষ্টা কৰক।",
     "requestTimeout": "অনুৰোধৰ সময় উকলিল। আপোনাৰ সংযোগ পৰীক্ষা কৰক।",
-    "locationLookupFailed": "আপোনাৰ স্থানৰ বিৱৰণ নিৰ্ধাৰণ কৰিব নোৱাৰিল।"
+    "locationLookupFailed": "আপোনাৰ স্থানৰ বিৱৰণ নিৰ্ধাৰণ কৰিব নোৱাৰিল।",
+    "imageUploadFailed": "ছবিখন সংৰক্ষণ কৰিব পৰা নগ'ল। আপোনাৰ বাৰ্তা পঠিওৱা হৈছে।",
+    "audioUploadFailed": "ভইচ ৰেকৰ্ডিং সংৰক্ষণ কৰিব পৰা নগ'ল।",
+    "mcpServersFailed": "AI সেৱা লোড কৰিব পৰা নগ'ল। কিছুমান সুবিধা উপলব্ধ নহ'ব পাৰে।",
+    "sessionCreateFailed": "কথা-বতৰা সংৰক্ষণ কৰিব পৰা নগ'ল। বাৰ্তাবোৰ নাথাকিব পাৰে।"
   },
   "a11y": {
     "startNewChat": "নতুন কথা-বতৰা আৰম্ভ কৰক",
@@ -320,6 +336,7 @@
     "themeMode": "থিম: {mode}",
     "copyMessage": "বাৰ্তা কপি কৰক",
     "askQuestion": "সোধক: {question}",
-    "selectLanguage": "ভাষা {name}"
+    "selectLanguage": "ভাষা {name}",
+    "openHistory": "ইতিহাস খুলক"
   }
 }

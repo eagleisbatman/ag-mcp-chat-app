@@ -9,7 +9,8 @@
     "refresh": "Rafraîchir",
     "clear": "Effacer",
     "loading": "Chargement…",
-    "skipForNow": "Passer pour l'instant"
+    "skipForNow": "Passer pour l'instant",
+    "comingSoon": "Prochainement"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Touchez la position pour définir",
     "senderAssistant": "FarmerChat",
     "senderYou": "Vous",
-    "tapToAskNext": "Touchez pour la suite :"
+    "tapToAskNext": "Touchez pour la suite :",
+    "analysisComplete": "Analyse terminée"
   },
   "media": {
     "photoLibraryPermission": "L'accès à la galerie photo est requis pour choisir des images. Activez dans les Réglages.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Impossible de choisir l'image. Réessayez.",
     "cameraFailed": "Impossible d'accéder à l'appareil photo. Réessayez.",
     "camera": "Appareil photo",
-    "gallery": "Galerie"
+    "gallery": "Galerie",
+    "addToChat": "Envoyer image",
+    "uploadHint": "Prenez ou choisissez une photo pour le diagnostic des plantes.",
+    "photos": "Photos"
   },
   "voice": {
     "microphonePermission": "Autorisation micro requise",
@@ -85,7 +90,9 @@
     "cancel": "Annuler",
     "done": "Terminé",
     "transcribing": "Transcription en cours...",
-    "recordingHint": "Touchez Terminé pour transcrire, ou Annuler pour ignorer."
+    "recordingHint": "Touchez Terminé pour transcrire, ou Annuler pour ignorer.",
+    "listening": "Écoute...",
+    "waitingForSpeech": "En attente de la voix..."
   },
   "history": {
     "title": "Conversations",
@@ -282,7 +289,12 @@
     "offline": "Pas de connexion internet",
     "errorTitle": "Oups ! Un problème est survenu.",
     "errorFallback": "Une erreur inattendue s'est produite.",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "restartRequired": "Redémarrage nécessaire",
+    "restartRequiredMessage": "Le passage à {language} demande de redémarrer l'appli pour les changements d'affichage.",
+    "restartNow": "Redémarrer maintenant",
+    "pleaseRestart": "Veuillez redémarrer",
+    "pleaseRestartMessage": "Fermez et rouvrez l'appli pour appliquer les changements."
   },
   "errors": {
     "syncFailed": "Connexion au serveur impossible. Certaines fonctions peuvent être limitées.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Transcription vocale échouée. Réessayez.",
     "serverError": "Erreur serveur. Réessayez plus tard.",
     "requestTimeout": "Délai dépassé. Vérifiez votre connexion.",
-    "locationLookupFailed": "Impossible de déterminer votre position."
+    "locationLookupFailed": "Impossible de déterminer votre position.",
+    "imageUploadFailed": "Image non enregistrée. Votre message a été envoyé.",
+    "audioUploadFailed": "Enregistrement vocal non sauvegardé.",
+    "mcpServersFailed": "Services IA non chargés. Certaines fonctions peuvent manquer.",
+    "sessionCreateFailed": "Conversation non sauvegardée. Les messages pourraient ne pas être conservés."
   },
   "a11y": {
     "startNewChat": "Démarrer une nouvelle discussion",
@@ -320,6 +336,7 @@
     "themeMode": "Thème : {mode}",
     "copyMessage": "Copier le message",
     "askQuestion": "Poser la question : {question}",
-    "selectLanguage": "Langue {name}"
+    "selectLanguage": "Langue {name}",
+    "openHistory": "Ouvrir l'historique"
   }
 }

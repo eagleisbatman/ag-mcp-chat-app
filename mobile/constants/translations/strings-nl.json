@@ -9,7 +9,8 @@
     "refresh": "Vernieuwen",
     "clear": "Wissen",
     "loading": "Laden…",
-    "skipForNow": "Nu overslaan"
+    "skipForNow": "Nu overslaan",
+    "comingSoon": "Binnenkort"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Tik op locatie om in te stellen",
     "senderAssistant": "FarmerChat",
     "senderYou": "U",
-    "tapToAskNext": "Tik voor volgende vraag:"
+    "tapToAskNext": "Tik voor volgende vraag:",
+    "analysisComplete": "Analyse klaar"
   },
   "media": {
     "photoLibraryPermission": "Toegang tot fotobibliotheek is nodig om foto's te kiezen. Activeer in Instellingen.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Afbeelding kiezen mislukt. Probeer opnieuw.",
     "cameraFailed": "Toegang tot camera mislukt. Probeer opnieuw.",
     "camera": "Camera",
-    "gallery": "Galerij"
+    "gallery": "Galerij",
+    "addToChat": "Foto uploaden",
+    "uploadHint": "Maak of kies een foto voor plantdiagnose",
+    "photos": "Foto's"
   },
   "voice": {
     "microphonePermission": "Microfoontoegang nodig",
@@ -85,7 +90,9 @@
     "cancel": "Annuleren",
     "done": "Klaar",
     "transcribing": "Spraak herkennen...",
-    "recordingHint": "Tik op Klaar om te herkennen, of Annuleren om te wissen"
+    "recordingHint": "Tik op Klaar om te herkennen, of Annuleren om te wissen",
+    "listening": "Luistert...",
+    "waitingForSpeech": "Wacht op spraak..."
   },
   "history": {
     "title": "Gesprekken",
@@ -282,7 +289,12 @@
     "offline": "Geen internet",
     "errorTitle": "Oeps! Er ging iets mis",
     "errorFallback": "Er ging iets onverwachts mis",
-    "tryAgain": "Probeer opnieuw"
+    "tryAgain": "Probeer opnieuw",
+    "restartRequired": "Herstart app nodig",
+    "restartRequiredMessage": "Om naar {language} te wisselen, moet de app opnieuw worden opgestart voor de weergave.",
+    "restartNow": "Herstart nu",
+    "pleaseRestart": "App herstarten",
+    "pleaseRestartMessage": "Sluit de app en open deze opnieuw om de wijzigingen door te voeren."
   },
   "errors": {
     "syncFailed": "Geen verbinding met server. Sommige functies zijn mogelijk beperkt.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Spraakherkenning mislukt. Probeer opnieuw te spreken.",
     "serverError": "Serverfout. Probeer later opnieuw.",
     "requestTimeout": "Aanvraag verlopen. Controleer uw verbinding.",
-    "locationLookupFailed": "Kan uw locatie niet bepalen."
+    "locationLookupFailed": "Kan uw locatie niet bepalen.",
+    "imageUploadFailed": "Foto kon niet worden opgeslagen. Uw bericht is verzonden.",
+    "audioUploadFailed": "Spraakopname kon niet worden opgeslagen.",
+    "mcpServersFailed": "AI-diensten konden niet worden geladen. Sommige functies zijn mogelijk niet beschikbaar.",
+    "sessionCreateFailed": "Gesprek kon niet worden opgeslagen. Berichten blijven mogelijk niet bewaard."
   },
   "a11y": {
     "startNewChat": "Start een nieuwe chat",
@@ -320,6 +336,7 @@
     "themeMode": "Thema: {mode}",
     "copyMessage": "Bericht kopiëren",
     "askQuestion": "Vraag: {question}",
-    "selectLanguage": "Taal {name}"
+    "selectLanguage": "Taal {name}",
+    "openHistory": "Open geschiedenis"
   }
 }

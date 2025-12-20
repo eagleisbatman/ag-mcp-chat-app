@@ -9,7 +9,8 @@
     "refresh": "Vugurura",
     "clear": "Hanagura",
     "loading": "Irapakira…",
-    "skipForNow": "Simbuka ubu"
+    "skipForNow": "Simbuka ubu",
+    "comingSoon": "Biracyaza"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Kanda aho uherereye uhashyire",
     "senderAssistant": "FarmerChat",
     "senderYou": "Wowe",
-    "tapToAskNext": "Kanda ubaze ubutaha:"
+    "tapToAskNext": "Kanda ubaze ubutaha:",
+    "analysisComplete": "Isesengura ryarangiye"
   },
   "media": {
     "photoLibraryPermission": "Kugirango uhitemo ifoto, FarmerChat ikeneye kureba amafoto yawe. Uyemerere muri Aho Bihindurirwa.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Kwitoranya ifoto byananiranye. Gerageza nanone.",
     "cameraFailed": "Kamera ntabwo yabonetse. Gerageza nanone.",
     "camera": "Kamera",
-    "gallery": "Galeri"
+    "gallery": "Galeri",
+    "addToChat": "Ohereza ifoto",
+    "uploadHint": "Fata cyangwa uhitemo ifoto yo gusuzuma igihingwa.",
+    "photos": "Amafoto"
   },
   "voice": {
     "microphonePermission": "Uruhushya rwa mikoro rurakenewe",
@@ -85,7 +90,9 @@
     "cancel": "Hagarika",
     "done": "Emeza",
     "transcribing": "Irimo guhindurwa...",
-    "recordingHint": "Kanda 'Emeza' ngo ihindurwe, cyangwa 'Hagarika' ngo uyireke"
+    "recordingHint": "Kanda 'Emeza' ngo ihindurwe, cyangwa 'Hagarika' ngo uyireke",
+    "listening": "Ndirikumva...",
+    "waitingForSpeech": "Ntegereje ko uvuga..."
   },
   "history": {
     "title": "Ibiganiro",
@@ -282,7 +289,12 @@
     "offline": "Nta interineti ihari",
     "errorTitle": "Ooops! Habaye ikibazo.",
     "errorFallback": "Habaye ikibazo kitari cyitezwe.",
-    "tryAgain": "Gerageza na none"
+    "tryAgain": "Gerageza na none",
+    "restartRequired": "Porogaramu igomba kongera gufungurwa",
+    "restartRequiredMessage": "Guhindura ururimi rukaba {language} bisaba kongera gufungura porogaramu kugira ngo isura yayo ihinduke.",
+    "restartNow": "Ongera ufungure ubu",
+    "pleaseRestart": "Nyamuneka ongera ufungure",
+    "pleaseRestartMessage": "Nyamuneka funga wongere ufungure porogaramu kugira ngo impinduka zigaragare."
   },
   "errors": {
     "syncFailed": "Ntibyakunze guhuza na seriveri. Ibikoresho bimwe biragabanuka.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Kwandika ijwi byanze. Ongera uvuge.",
     "serverError": "Ikibazo kuri seriveri. Ongera ugerageze nyuma.",
     "requestTimeout": "Icyifuzo cyatinze. Reba interineti yawe.",
-    "locationLookupFailed": "Ntibyakunze kumenya aho uherereye."
+    "locationLookupFailed": "Ntibyakunze kumenya aho uherereye.",
+    "imageUploadFailed": "Ifoto ntiyabashije kubikwa. Ubutumwa bwawe bwoherejwe.",
+    "audioUploadFailed": "Ijwi ntiryabashije kubikwa.",
+    "mcpServersFailed": "Serivisi za AI ntizabashije gufunguka. Zimwe mu mikorere ishobora kutaboneka.",
+    "sessionCreateFailed": "Ikiganiro nticyabashije kubikwa. Ubutumwa bushobora kutazigama."
   },
   "a11y": {
     "startNewChat": "Tangira ikiganiro gishya",
@@ -320,6 +336,7 @@
     "themeMode": "Imiterere: {mode}",
     "copyMessage": "Kwandukura ubutumwa",
     "askQuestion": "Baza: {question}",
-    "selectLanguage": "Ururimi {name}"
+    "selectLanguage": "Ururimi {name}",
+    "openHistory": "Fungura amateka"
   }
 }

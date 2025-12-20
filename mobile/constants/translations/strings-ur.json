@@ -9,7 +9,8 @@
     "refresh": "تازہ کریں",
     "clear": "صاف کریں",
     "loading": "لوڈ ہو رہا ہے…",
-    "skipForNow": "فی الحال چھوڑ دیں"
+    "skipForNow": "فی الحال چھوڑ دیں",
+    "comingSoon": "جلد آرہا ہے"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "مقام متعین کرنے کے لیے ٹیپ کریں۔",
     "senderAssistant": "FarmerChat",
     "senderYou": "آپ",
-    "tapToAskNext": "اگلا سوال پوچھنے کے لیے ٹیپ کریں:"
+    "tapToAskNext": "اگلا سوال پوچھنے کے لیے ٹیپ کریں:",
+    "analysisComplete": "تجزیہ مکمل ہو گیا"
   },
   "media": {
     "photoLibraryPermission": "تصاویر منتخب کرنے کے لیے گیلری تک رسائی درکار ہے۔ سیٹنگز میں فعال کریں۔",
@@ -70,7 +72,10 @@
     "pickImageFailed": "تصویر منتخب نہ ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
     "cameraFailed": "کیمرہ تک رسائی نہ ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
     "camera": "کیمرہ",
-    "gallery": "گیلری"
+    "gallery": "گیلری",
+    "addToChat": "تصویر اپ لوڈ کریں",
+    "uploadHint": "پودے کی صحت جانچنے کے لیے تصویر لیں یا منتخب کریں",
+    "photos": "تصاویر"
   },
   "voice": {
     "microphonePermission": "مائیک کی اجازت درکار ہے",
@@ -85,7 +90,9 @@
     "cancel": "منسوخ کریں",
     "done": "مکمل",
     "transcribing": "تحریر بن رہی ہے...",
-    "recordingHint": "تحریر کے لیے مکمل پر ٹیپ کریں، یا ختم کرنے کے لیے منسوخ کریں"
+    "recordingHint": "تحریر کے لیے مکمل پر ٹیپ کریں، یا ختم کرنے کے لیے منسوخ کریں",
+    "listening": "سن رہا ہے...",
+    "waitingForSpeech": "بولنے کا انتظار ہے..."
   },
   "history": {
     "title": "بات چیت",
@@ -282,7 +289,12 @@
     "offline": "انٹرنیٹ کنکشن نہیں ہے",
     "errorTitle": "اوہو! کچھ گڑبڑ ہو گئی",
     "errorFallback": "اچانک کوئی مسئلہ ہو گیا",
-    "tryAgain": "دوبارہ کوشش کریں"
+    "tryAgain": "دوبارہ کوشش کریں",
+    "restartRequired": "ایپ دوبارہ شروع کریں",
+    "restartRequiredMessage": "{language} میں تبدیل کرنے کے لیے ایپ کو دوبارہ شروع کرنا ضروری ہے تاکہ لے آؤٹ میں تبدیلیاں لاگو ہو سکیں۔",
+    "restartNow": "ابھی دوبارہ شروع کریں",
+    "pleaseRestart": "براہ کرم دوبارہ شروع کریں",
+    "pleaseRestartMessage": "تبدیلیاں لاگو کرنے کے لیے براہ کرم ایپ بند کر کے دوبارہ کھولیں۔"
   },
   "errors": {
     "syncFailed": "سرور سے رابطہ نہ ہو سکا۔ کچھ فیچرز محدود ہو سکتے ہیں۔",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "آواز پہچاننے میں مسئلہ ہوا۔ دوبارہ بولیں۔",
     "serverError": "سرور میں مسئلہ ہے۔ بعد میں کوشش کریں۔",
     "requestTimeout": "درخواست پوری نہیں ہو سکی۔ اپنا انٹرنیٹ چیک کریں۔",
-    "locationLookupFailed": "آپ کی لوکیشن معلوم نہیں ہو سکی۔"
+    "locationLookupFailed": "آپ کی لوکیشن معلوم نہیں ہو سکی۔",
+    "imageUploadFailed": "تصویر محفوظ نہ ہو سکی۔ آپ کا پیغام بھیج دیا گیا ہے۔",
+    "audioUploadFailed": "آواز کی ریکارڈنگ محفوظ نہ ہو سکی۔",
+    "mcpServersFailed": "AI سروسز لوڈ نہیں ہو سکیں۔ کچھ فیچرز دستیاب نہیں ہو سکتے۔",
+    "sessionCreateFailed": "گفتگو محفوظ نہیں ہو سکی۔ پیغامات محفوظ نہ رہیں۔"
   },
   "a11y": {
     "startNewChat": "نئی چیٹ شروع کریں",
@@ -320,6 +336,7 @@
     "themeMode": "تھیم: {mode}",
     "copyMessage": "پیغام کاپی کریں",
     "askQuestion": "پوچھیں: {question}",
-    "selectLanguage": "زبان {name}"
+    "selectLanguage": "زبان {name}",
+    "openHistory": "ہسٹری کھولیں"
   }
 }

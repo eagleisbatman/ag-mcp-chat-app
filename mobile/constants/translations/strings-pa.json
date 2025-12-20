@@ -9,7 +9,8 @@
     "refresh": "ਤਾਜ਼ਾ ਕਰੋ",
     "clear": "ਸਾਫ਼ ਕਰੋ",
     "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ…",
-    "skipForNow": "ਹੁਣ ਲਈ ਛੱਡੋ"
+    "skipForNow": "ਹੁਣ ਲਈ ਛੱਡੋ",
+    "comingSoon": "ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "ਟਿਕਾਣਾ ਸੈੱਟ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ",
     "senderAssistant": "FarmerChat",
     "senderYou": "ਤੁਸੀਂ",
-    "tapToAskNext": "ਅੱਗੇ ਪੁੱਛਣ ਲਈ ਟੈਪ ਕਰੋ:"
+    "tapToAskNext": "ਅੱਗੇ ਪੁੱਛਣ ਲਈ ਟੈਪ ਕਰੋ:",
+    "analysisComplete": "ਵਿਸ਼ਲੇਸ਼ਣ ਪੂਰਾ ਹੋ ਗਿਆ"
   },
   "media": {
     "photoLibraryPermission": "ਤਸਵੀਰਾਂ ਚੁਣਨ ਲਈ ਫੋਟੋ ਗੈਲਰੀ ਤੱਕ ਪਹੁੰਚ ਚਾਹੀਦੀ ਹੈ। ਇਸਨੂੰ ਸੈਟਿੰਗਜ਼ ਵਿੱਚ ਚਾਲੂ ਕਰੋ।",
@@ -70,7 +72,10 @@
     "pickImageFailed": "ਤਸਵੀਰ ਚੁਣਨ 'ਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "cameraFailed": "ਕੈਮਰੇ ਤੱਕ ਪਹੁੰਚਣ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "camera": "ਕੈਮਰਾ",
-    "gallery": "ਗੈਲਰੀ"
+    "gallery": "ਗੈਲਰੀ",
+    "addToChat": "ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ",
+    "uploadHint": "ਪੌਦਿਆਂ ਦੀ ਸਿਹਤ ਜਾਂਚ ਲਈ ਫੋਟੋ ਖਿੱਚੋ ਜਾਂ ਚੁਣੋ",
+    "photos": "ਫੋਟੋਆਂ"
   },
   "voice": {
     "microphonePermission": "ਮਾਈਕ ਦੀ ਇਜਾਜ਼ਤ ਲੋੜੀਂਦੀ ਹੈ",
@@ -85,7 +90,9 @@
     "cancel": "ਰੱਦ ਕਰੋ",
     "done": "ਹੋ ਗਿਆ",
     "transcribing": "ਲਿਖਤ ਬਣ ਰਹੀ ਹੈ...",
-    "recordingHint": "ਲਿਖਤ ਬਣਾਉਣ ਲਈ 'ਹੋ ਗਿਆ' ਦਬਾਓ, ਜਾਂ ਛੱਡਣ ਲਈ 'ਰੱਦ ਕਰੋ'"
+    "recordingHint": "ਲਿਖਤ ਬਣਾਉਣ ਲਈ 'ਹੋ ਗਿਆ' ਦਬਾਓ, ਜਾਂ ਛੱਡਣ ਲਈ 'ਰੱਦ ਕਰੋ'",
+    "listening": "ਸੁਣ ਰਿਹਾ ਹੈ...",
+    "waitingForSpeech": "ਬੋਲਣ ਦੀ ਉਡੀਕ ਕਰ ਰਿਹਾ ਹੈ..."
   },
   "history": {
     "title": "ਗੱਲਬਾਤਾਂ",
@@ -282,7 +289,12 @@
     "offline": "ਇੰਟਰਨੈੱਟ ਨਹੀਂ ਹੈ",
     "errorTitle": "ਓਹੋ! ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ",
     "errorFallback": "ਇੱਕ ਅਣਕਿਆਸੀ ਗਲਤੀ ਹੋ ਗਈ",
-    "tryAgain": "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ"
+    "tryAgain": "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+    "restartRequired": "ਐਪ ਮੁੜ ਚਾਲੂ ਕਰਨਾ ਜ਼ਰੂਰੀ ਹੈ",
+    "restartRequiredMessage": "{language} ਵਿੱਚ ਬਦਲਣ ਲਈ ਲੇਆਉਟ ਤਬਦੀਲੀਆਂ ਵਾਸਤੇ ਐਪ ਨੂੰ ਮੁੜ ਚਾਲੂ ਕਰਨਾ ਜ਼ਰੂਰੀ ਹੈ।",
+    "restartNow": "ਹੁਣੇ ਮੁੜ ਚਾਲੂ ਕਰੋ",
+    "pleaseRestart": "ਕਿਰਪਾ ਕਰਕੇ ਮੁੜ ਚਾਲੂ ਕਰੋ",
+    "pleaseRestartMessage": "ਬਦਲਾਅ ਲਾਗੂ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਨੂੰ ਬੰਦ ਕਰਕੇ ਦੁਬਾਰਾ ਖੋਲ੍ਹੋ।"
   },
   "errors": {
     "syncFailed": "ਸਰਵਰ ਨਾਲ ਜੁੜ ਨਹੀਂ ਸਕਿਆ। ਕੁਝ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਸੀਮਤ ਹੋ ਸਕਦੀਆਂ ਹਨ।",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "ਆਵਾਜ਼ ਪਛਾਣ ਅਸਫਲ ਰਹੀ। ਦੁਬਾਰਾ ਬੋਲਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "serverError": "ਸਰਵਰ ਗਲਤੀ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "requestTimeout": "ਬੇਨਤੀ ਦਾ ਸਮਾਂ ਖਤਮ ਹੋ ਗਿਆ। ਆਪਣਾ ਕਨੈਕਸ਼ਨ ਜਾਂਚੋ।",
-    "locationLookupFailed": "ਤੁਹਾਡੇ ਟਿਕਾਣੇ ਦੀ ਜਾਣਕਾਰੀ ਨਹੀਂ ਮਿਲ ਸਕੀ।"
+    "locationLookupFailed": "ਤੁਹਾਡੇ ਟਿਕਾਣੇ ਦੀ ਜਾਣਕਾਰੀ ਨਹੀਂ ਮਿਲ ਸਕੀ।",
+    "imageUploadFailed": "ਫੋਟੋ ਸੇਵ ਨਹੀਂ ਹੋ ਸਕੀ। ਤੁਹਾਡਾ ਸੁਨੇਹਾ ਭੇਜ ਦਿੱਤਾ ਗਿਆ ਹੈ।",
+    "audioUploadFailed": "ਆਵਾਜ਼ ਰਿਕਾਰਡਿੰਗ ਸੇਵ ਨਹੀਂ ਹੋ ਸਕੀ।",
+    "mcpServersFailed": "AI ਸੇਵਾਵਾਂ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀਆਂ। ਕੁਝ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਉਪਲਬਧ ਨਹੀਂ ਹੋ ਸਕਦੀਆਂ।",
+    "sessionCreateFailed": "ਗੱਲਬਾਤ ਸੇਵ ਨਹੀਂ ਹੋ ਸਕੀ। ਸੁਨੇਹੇ ਸੁਰੱਖਿਅਤ ਨਹੀਂ ਰਹਿ ਸਕਦੇ।"
   },
   "a11y": {
     "startNewChat": "ਇੱਕ ਨਵੀਂ ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ",
@@ -320,6 +336,7 @@
     "themeMode": "ਥੀਮ: {mode}",
     "copyMessage": "ਸੁਨੇਹਾ ਕਾਪੀ ਕਰੋ",
     "askQuestion": "ਪੁੱਛੋ: {question}",
-    "selectLanguage": "ਭਾਸ਼ਾ {name}"
+    "selectLanguage": "ਭਾਸ਼ਾ {name}",
+    "openHistory": "ਇਤਿਹਾਸ ਖੋਲ੍ਹੋ"
   }
 }

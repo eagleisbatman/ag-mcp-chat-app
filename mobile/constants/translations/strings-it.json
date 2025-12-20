@@ -9,7 +9,8 @@
     "refresh": "Aggiorna",
     "clear": "Pulisci",
     "loading": "Caricamento…",
-    "skipForNow": "Salta per ora"
+    "skipForNow": "Salta per ora",
+    "comingSoon": "Prossimamente"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Tocca la posizione per impostare",
     "senderAssistant": "FarmerChat",
     "senderYou": "Tu",
-    "tapToAskNext": "Tocca per chiedere altro:"
+    "tapToAskNext": "Tocca per chiedere altro:",
+    "analysisComplete": "Analisi completata"
   },
   "media": {
     "photoLibraryPermission": "Serve accesso alla galleria per scegliere immagini. Abilita in Impostazioni.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Impossibile scegliere immagine. Riprova.",
     "cameraFailed": "Impossibile accedere alla fotocamera. Riprova.",
     "camera": "Fotocamera",
-    "gallery": "Galleria"
+    "gallery": "Galleria",
+    "addToChat": "Carica immagine",
+    "uploadHint": "Scatta o scegli una foto per la diagnosi della pianta",
+    "photos": "Foto"
   },
   "voice": {
     "microphonePermission": "Permesso microfono richiesto",
@@ -85,7 +90,9 @@
     "cancel": "Annulla",
     "done": "Fatto",
     "transcribing": "Trascrizione in corso...",
-    "recordingHint": "Tocca Fatto per trascrivere, Annulla per scartare"
+    "recordingHint": "Tocca Fatto per trascrivere, Annulla per scartare",
+    "listening": "In ascolto...",
+    "waitingForSpeech": "In attesa di parlare..."
   },
   "history": {
     "title": "Conversazioni",
@@ -282,7 +289,12 @@
     "offline": "Nessuna connessione",
     "errorTitle": "Ops! Qualcosa è andato storto",
     "errorFallback": "Errore imprevisto",
-    "tryAgain": "Riprova"
+    "tryAgain": "Riprova",
+    "restartRequired": "Riavvio app richiesto",
+    "restartRequiredMessage": "Passare a {language} richiede il riavvio dell'app per le modifiche al layout.",
+    "restartNow": "Riavvia ora",
+    "pleaseRestart": "Riavvia l'app",
+    "pleaseRestartMessage": "Chiudi e riapri l'app per applicare le modifiche."
   },
   "errors": {
     "syncFailed": "Server non raggiungibile. Alcune funzionalità potrebbero essere limitate.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Trascrizione vocale fallita. Riprova a parlare.",
     "serverError": "Errore server. Riprova più tardi.",
     "requestTimeout": "Richiesta scaduta. Verifica la connessione.",
-    "locationLookupFailed": "Impossibile rilevare la tua posizione."
+    "locationLookupFailed": "Impossibile rilevare la tua posizione.",
+    "imageUploadFailed": "Immagine non salvata. Il tuo messaggio è stato inviato.",
+    "audioUploadFailed": "Registrazione vocale non salvata.",
+    "mcpServersFailed": "Impossibile caricare i servizi AI. Alcune funzioni potrebbero non essere disponibili.",
+    "sessionCreateFailed": "Impossibile salvare la conversazione. I messaggi potrebbero non essere salvati."
   },
   "a11y": {
     "startNewChat": "Inizia una nuova chat",
@@ -320,6 +336,7 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Copia messaggio",
     "askQuestion": "Chiedi: {question}",
-    "selectLanguage": "Lingua {name}"
+    "selectLanguage": "Lingua {name}",
+    "openHistory": "Apri cronologia"
   }
 }

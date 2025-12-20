@@ -60,6 +60,7 @@
     "sorryCouldNotProcess": "Sorry, I couldn't process that. {details}",
     "analysisCouldNotComplete": "Analysis couldn't complete. {details}",
     "plantAnalysisIssues": "Plant analysis had issues: {details}",
+    "analysisComplete": "Analysis complete",
     "tapLocationToSet": "Tap location to set",
     "senderAssistant": "FarmerChat",
     "senderYou": "You",
@@ -288,17 +289,26 @@
     "offline": "No internet connection",
     "errorTitle": "Oops! Something went wrong",
     "errorFallback": "An unexpected error occurred",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "restartRequired": "App Restart Required",
+    "restartRequiredMessage": "Switching to {language} requires restarting the app for layout changes.",
+    "restartNow": "Restart Now",
+    "pleaseRestart": "Please Restart",
+    "pleaseRestartMessage": "Please close and reopen the app for changes to take effect."
   },
   "errors": {
     "syncFailed": "Could not connect to server. Some features may be limited.",
     "weatherUnavailable": "Weather service is temporarily unavailable. Try again later.",
     "diagnosisTimeout": "Plant diagnosis is taking too long. Please try again.",
     "uploadFailed": "Could not upload image. Check your connection and retry.",
+    "imageUploadFailed": "Image could not be saved. Your message was sent.",
+    "audioUploadFailed": "Voice recording could not be saved.",
     "transcriptionFailed": "Voice transcription failed. Try speaking again.",
     "serverError": "Server error. Please try again later.",
     "requestTimeout": "Request timed out. Check your connection.",
-    "locationLookupFailed": "Could not determine your location details."
+    "locationLookupFailed": "Could not determine your location details.",
+    "mcpServersFailed": "Could not load AI services. Some features may be unavailable.",
+    "sessionCreateFailed": "Could not save conversation. Messages may not persist."
   },
   "a11y": {
     "startNewChat": "Start a new chat",

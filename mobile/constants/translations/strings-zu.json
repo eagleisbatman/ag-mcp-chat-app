@@ -9,7 +9,8 @@
     "refresh": "Vuselela",
     "clear": "Sula",
     "loading": "Kulayishwa…",
-    "skipForNow": "Yeqa okwamanje"
+    "skipForNow": "Yeqa okwamanje",
+    "comingSoon": "Kuyeza maduze"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Thepha indawo ukuze usethe",
     "senderAssistant": "FarmerChat",
     "senderYou": "Wena",
-    "tapToAskNext": "Thepha ukuze ubuze okulandelayo:"
+    "tapToAskNext": "Thepha ukuze ubuze okulandelayo:",
+    "analysisComplete": "Ukuhlola kuqedile"
   },
   "media": {
     "photoLibraryPermission": "Ukufinyelela kugalari yezithombe kuyadingeka ukuze ukhethe izithombe. Vula kuzilungiselelo.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Kwehlulekile ukukhetha isithombe. Sicela uphinde uzame.",
     "cameraFailed": "Kwehlulekile ukufinyelela ikhamera. Sicela uphinde uzame.",
     "camera": "Ikhamera",
-    "gallery": "Igalari"
+    "gallery": "Igalari",
+    "addToChat": "Faka Isithombe",
+    "uploadHint": "Thatha noma khetha isithombe sokubheka impilo yesitshalo.",
+    "photos": "Izithombe"
   },
   "voice": {
     "microphonePermission": "Imvume yekrofoni iyadingeka",
@@ -85,7 +90,9 @@
     "cancel": "Khansela",
     "done": "Qedile",
     "transcribing": "Kubhalwa phansi...",
-    "recordingHint": "Thepha Qedile ukubhala izwi phansi, noma Khansela ukulahla"
+    "recordingHint": "Thepha Qedile ukubhala izwi phansi, noma Khansela ukulahla",
+    "listening": "Ngilalele...",
+    "waitingForSpeech": "Linda ukukhuluma..."
   },
   "history": {
     "title": "Izingxoxo",
@@ -282,7 +289,12 @@
     "offline": "Ayikho inthanethi",
     "errorTitle": "Kukhona okungahambanga kahle.",
     "errorFallback": "Iphutha elingalindelekile lenzekile.",
-    "tryAgain": "Zama futhi"
+    "tryAgain": "Zama futhi",
+    "restartRequired": "Kudingeka Ukuqala Kabusha Uhlelo",
+    "restartRequiredMessage": "Ukushintshela ku-{language} kudinga ukuqala kabusha uhlelo ukuze kushintshe ukubukeka.",
+    "restartNow": "Qala Kabusha Manje",
+    "pleaseRestart": "Sicela Uqale Kabusha",
+    "pleaseRestartMessage": "Sicela uvale bese uvula kabusha uhlelo ukuze izinguquko zibonakale."
   },
   "errors": {
     "syncFailed": "Ayixhumekanga kuseva. Ezinye izinsiza zingavinjelwa.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Ukubhala phansi kwezwi kuhlulekile. Zama ukukhuluma futhi.",
     "serverError": "Iphutha laseva. Sicela uzame futhi ngokuhamba kwesikhathi.",
     "requestTimeout": "Isicelo siphelele isikhathi. Hlola uxhumano lwakho.",
-    "locationLookupFailed": "Ayikwazanga ukuthola indawo yakho."
+    "locationLookupFailed": "Ayikwazanga ukuthola indawo yakho.",
+    "imageUploadFailed": "Isithombe asilondoloziwe. Umlayezo wakho uthunyelwe.",
+    "audioUploadFailed": "Ukuqoshwa kwezwi akulondoloziwe.",
+    "mcpServersFailed": "Izinsizakalo ze-AI azikwazanga ukulayishwa. Ezinye izici zingase zingasebenzi.",
+    "sessionCreateFailed": "Ingxoxo ayilondoloziwe. Imiyalezo ingase ingahlali."
   },
   "a11y": {
     "startNewChat": "Qala ingxoxo entsha",
@@ -320,6 +336,7 @@
     "themeMode": "Itimu: {mode}",
     "copyMessage": "Kopisha umlayezo",
     "askQuestion": "Buza: {question}",
-    "selectLanguage": "Ulimi {name}"
+    "selectLanguage": "Ulimi {name}",
+    "openHistory": "Vula umlando"
   }
 }

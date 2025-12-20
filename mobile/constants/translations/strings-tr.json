@@ -9,7 +9,8 @@
     "refresh": "Yenile",
     "clear": "Temizle",
     "loading": "Yükleniyor…",
-    "skipForNow": "Şimdilik Atla"
+    "skipForNow": "Şimdilik Atla",
+    "comingSoon": "Çok yakında"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Konum ayarlamak için dokunun",
     "senderAssistant": "FarmerChat",
     "senderYou": "Siz",
-    "tapToAskNext": "Sonraki için dokunun:"
+    "tapToAskNext": "Sonraki için dokunun:",
+    "analysisComplete": "Analiz tamamlandı"
   },
   "media": {
     "photoLibraryPermission": "Resim seçmek için galeri erişimi gerekli. Ayarlar'dan etkinleştirin.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Resim seçilemedi. Lütfen tekrar deneyin.",
     "cameraFailed": "Kameraya erişilemedi. Lütfen tekrar deneyin.",
     "camera": "Kamera",
-    "gallery": "Galeri"
+    "gallery": "Galeri",
+    "addToChat": "Fotoğraf Yükle",
+    "uploadHint": "Bitki sağlığı için fotoğraf çek veya seç.",
+    "photos": "Fotoğraflar"
   },
   "voice": {
     "microphonePermission": "Mikrofon izni gerekiyor",
@@ -85,7 +90,9 @@
     "cancel": "İptal",
     "done": "Bitti",
     "transcribing": "Metne çevriliyor...",
-    "recordingHint": "Metne çevirmek için Bitti'ye, vazgeçmek için İptal'e dokunun."
+    "recordingHint": "Metne çevirmek için Bitti'ye, vazgeçmek için İptal'e dokunun.",
+    "listening": "Dinleniyor...",
+    "waitingForSpeech": "Konuşma bekleniyor..."
   },
   "history": {
     "title": "Sohbetler",
@@ -282,7 +289,12 @@
     "offline": "İnternet yok",
     "errorTitle": "Bir sorun oluştu!",
     "errorFallback": "Beklenmeyen bir hata oluştu.",
-    "tryAgain": "Tekrar Dene"
+    "tryAgain": "Tekrar Dene",
+    "restartRequired": "Uygulama Yeniden Başlatılmalı",
+    "restartRequiredMessage": "{language} diline geçmek için uygulamanın yeniden başlatılması gerekiyor.",
+    "restartNow": "Şimdi Yeniden Başlat",
+    "pleaseRestart": "Lütfen Yeniden Başlatın",
+    "pleaseRestartMessage": "Değişikliklerin geçerli olması için uygulamayı kapatıp tekrar açın."
   },
   "errors": {
     "syncFailed": "Sunucuya bağlanılamadı. Bazı özellikler kısıtlı olabilir.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Ses tanıma başarısız oldu. Tekrar konuşmayı deneyin.",
     "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
     "requestTimeout": "İstek zaman aşımına uğradı. Bağlantınızı kontrol edin.",
-    "locationLookupFailed": "Konumunuz tespit edilemedi."
+    "locationLookupFailed": "Konumunuz tespit edilemedi.",
+    "imageUploadFailed": "Fotoğraf kaydedilemedi. Mesajınız gönderildi.",
+    "audioUploadFailed": "Ses kaydı kaydedilemedi.",
+    "mcpServersFailed": "Yapay zeka servisleri yüklenemedi. Bazı özellikler çalışmayabilir.",
+    "sessionCreateFailed": "Konuşma kaydedilemedi. Mesajlar kalıcı olmayabilir."
   },
   "a11y": {
     "startNewChat": "Yeni sohbet başlat",
@@ -320,6 +336,7 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Mesajı kopyala",
     "askQuestion": "Soru: {question}",
-    "selectLanguage": "Dil {name}"
+    "selectLanguage": "Dil {name}",
+    "openHistory": "Geçmişi Aç"
   }
 }

@@ -9,7 +9,8 @@
     "refresh": "Onyesha upya",
     "clear": "Futa",
     "loading": "Inapakia…",
-    "skipForNow": "Ruka kwa sasa"
+    "skipForNow": "Ruka kwa sasa",
+    "comingSoon": "Inakuja hivi karibuni"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Gusa eneo kuweka",
     "senderAssistant": "FarmerChat",
     "senderYou": "Wewe",
-    "tapToAskNext": "Gusa kuuliza ijayo:"
+    "tapToAskNext": "Gusa kuuliza ijayo:",
+    "analysisComplete": "Uchambuzi umekamilika"
   },
   "media": {
     "photoLibraryPermission": "Ruhusa ya Ghala inahitajika kuchagua picha. Washa kwenye Mipangilio.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Imeshindwa kuchagua picha. Tafadhali jaribu tena.",
     "cameraFailed": "Imeshindwa kufikia kamera. Tafadhali jaribu tena.",
     "camera": "Kamera",
-    "gallery": "Ghala"
+    "gallery": "Ghala",
+    "addToChat": "Pakia Picha",
+    "uploadHint": "Piga au chagua picha kwa uchunguzi wa afya ya mimea.",
+    "photos": "Picha"
   },
   "voice": {
     "microphonePermission": "Ruhusa ya maiki inahitajika",
@@ -85,7 +90,9 @@
     "cancel": "Ghairi",
     "done": "Maliza",
     "transcribing": "Inanukuu...",
-    "recordingHint": "Gonga Maliza kunukuu, au Ghairi kuacha"
+    "recordingHint": "Gonga Maliza kunukuu, au Ghairi kuacha",
+    "listening": "Inasikiliza...",
+    "waitingForSpeech": "Inasubiri uongee..."
   },
   "history": {
     "title": "Gumzo",
@@ -282,7 +289,12 @@
     "offline": "Hakuna intaneti",
     "errorTitle": "Lo! Kuna tatizo",
     "errorFallback": "Kosa lisilotarajiwa",
-    "tryAgain": "Jaribu Tena"
+    "tryAgain": "Jaribu Tena",
+    "restartRequired": "App inahitaji kuwashwa upya",
+    "restartRequiredMessage": "Kubadili lugha kwenda {language} kunahitaji kuwasha upya programu ili mabadiliko ya muundo yaonekane.",
+    "restartNow": "Washa upya sasa",
+    "pleaseRestart": "Tafadhali washa upya",
+    "pleaseRestartMessage": "Tafadhali funga na ufungue tena programu ili mabadiliko yaonekane."
   },
   "errors": {
     "syncFailed": "Imeshindwa kuungana na seva. Huduma zingine zinaweza kupungua.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Kugeuza sauti kumefeli. Jaribu kuongea tena.",
     "serverError": "Hitilafu ya seva. Tafadhali jaribu tena baadaye.",
     "requestTimeout": "Muda wa ombi umekwisha. Angalia mtandao wako.",
-    "locationLookupFailed": "Imeshindwa kutambua maelezo ya eneo lako."
+    "locationLookupFailed": "Imeshindwa kutambua maelezo ya eneo lako.",
+    "imageUploadFailed": "Picha haikuweza kuhifadhiwa. Ujumbe wako umetumwa.",
+    "audioUploadFailed": "Sauti haikuweza kuhifadhiwa.",
+    "mcpServersFailed": "Huduma za AI hazikupatikana. Baadhi ya vipengele haviwezi kutumika.",
+    "sessionCreateFailed": "Mazungumzo hayakuweza kuhifadhiwa. Ujumbe huenda usihifadhiwe."
   },
   "a11y": {
     "startNewChat": "Anza gumzo jipya",
@@ -320,6 +336,7 @@
     "themeMode": "Mwonekano: {mode}",
     "copyMessage": "Nakili ujumbe",
     "askQuestion": "Uliza: {question}",
-    "selectLanguage": "Lugha {name}"
+    "selectLanguage": "Lugha {name}",
+    "openHistory": "Fungua historia"
   }
 }

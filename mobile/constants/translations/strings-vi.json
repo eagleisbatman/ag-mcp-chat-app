@@ -9,7 +9,8 @@
     "refresh": "Làm mới",
     "clear": "Xóa",
     "loading": "Đang tải…",
-    "skipForNow": "Bỏ qua tạm thời"
+    "skipForNow": "Bỏ qua tạm thời",
+    "comingSoon": "Sắp có"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Nhấn vị trí để thiết lập",
     "senderAssistant": "FarmerChat",
     "senderYou": "Bạn",
-    "tapToAskNext": "Nhấn để hỏi tiếp:"
+    "tapToAskNext": "Nhấn để hỏi tiếp:",
+    "analysisComplete": "Phân tích xong"
   },
   "media": {
     "photoLibraryPermission": "Cần truy cập thư viện ảnh để chọn ảnh. Bật trong Cài đặt.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Không thể chọn ảnh. Vui lòng thử lại.",
     "cameraFailed": "Không thể truy cập camera. Vui lòng thử lại.",
     "camera": "Camera",
-    "gallery": "Thư viện"
+    "gallery": "Thư viện",
+    "addToChat": "Gửi ảnh",
+    "uploadHint": "Chụp hoặc chọn ảnh để chẩn đoán sức khỏe cây trồng",
+    "photos": "Ảnh"
   },
   "voice": {
     "microphonePermission": "Cần quyền micro",
@@ -85,7 +90,9 @@
     "cancel": "Hủy",
     "done": "Xong",
     "transcribing": "Đang chuyển giọng nói...",
-    "recordingHint": "Bấm Xong để chuyển lời, hoặc Hủy để bỏ qua"
+    "recordingHint": "Bấm Xong để chuyển lời, hoặc Hủy để bỏ qua",
+    "listening": "Đang nghe...",
+    "waitingForSpeech": "Đang chờ bạn nói..."
   },
   "history": {
     "title": "Trò chuyện",
@@ -282,7 +289,12 @@
     "offline": "Mất kết nối mạng",
     "errorTitle": "Ối! Có lỗi rồi",
     "errorFallback": "Đã xảy ra lỗi không mong muốn",
-    "tryAgain": "Thử lại"
+    "tryAgain": "Thử lại",
+    "restartRequired": "Cần khởi động lại ứng dụng",
+    "restartRequiredMessage": "Chuyển sang tiếng {language} cần khởi động lại ứng dụng để thay đổi giao diện.",
+    "restartNow": "Khởi động lại ngay",
+    "pleaseRestart": "Vui lòng khởi động lại",
+    "pleaseRestartMessage": "Vui lòng đóng và mở lại ứng dụng để các thay đổi có hiệu lực."
   },
   "errors": {
     "syncFailed": "Không thể kết nối máy chủ. Một số tính năng có thể hạn chế.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Nhận diện giọng nói thất bại. Thử nói lại.",
     "serverError": "Lỗi máy chủ. Vui lòng thử lại sau.",
     "requestTimeout": "Yêu cầu hết thời gian. Kiểm tra kết nối.",
-    "locationLookupFailed": "Không thể tìm vị trí của bạn."
+    "locationLookupFailed": "Không thể tìm vị trí của bạn.",
+    "imageUploadFailed": "Không thể lưu ảnh. Tin nhắn của bạn đã được gửi.",
+    "audioUploadFailed": "Không thể lưu bản ghi âm giọng nói.",
+    "mcpServersFailed": "Không thể tải dịch vụ AI. Một số tính năng có thể không dùng được.",
+    "sessionCreateFailed": "Không thể lưu cuộc trò chuyện. Tin nhắn có thể không được lưu lại."
   },
   "a11y": {
     "startNewChat": "Bắt đầu trò chuyện mới",
@@ -320,6 +336,7 @@
     "themeMode": "Chủ đề: {mode}",
     "copyMessage": "Sao chép tin nhắn",
     "askQuestion": "Hỏi: {question}",
-    "selectLanguage": "Ngôn ngữ {name}"
+    "selectLanguage": "Ngôn ngữ {name}",
+    "openHistory": "Mở lịch sử"
   }
 }

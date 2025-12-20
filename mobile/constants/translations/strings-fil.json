@@ -9,7 +9,8 @@
     "refresh": "I-update",
     "clear": "Linisin",
     "loading": "Naglo-load…",
-    "skipForNow": "Laktawan Muna"
+    "skipForNow": "Laktawan Muna",
+    "comingSoon": "Malapit na"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "I-tap ang lokasyon para itakda.",
     "senderAssistant": "FarmerChat",
     "senderYou": "Ikaw",
-    "tapToAskNext": "I-tap para magtanong ng susunod:"
+    "tapToAskNext": "I-tap para magtanong ng susunod:",
+    "analysisComplete": "Tapos na ang pagsusuri"
   },
   "media": {
     "photoLibraryPermission": "Kailangan ang access sa Photo library para makapili ng larawan. Payagan sa Settings.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Hindi napili ang larawan. Pakisubukang muli.",
     "cameraFailed": "Hindi ma-access ang Camera. Pakisubukang muli.",
     "camera": "Camera",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "addToChat": "Mag-upload ng Larawan",
+    "uploadHint": "Kumuha o pumili ng larawan para sa pagsusuri ng halaman.",
+    "photos": "Mga Larawan"
   },
   "voice": {
     "microphonePermission": "Kailangan ang Pahintulot sa Mic",
@@ -85,7 +90,9 @@
     "cancel": "Kanselahin",
     "done": "Tapos na",
     "transcribing": "Nagsasalin...",
-    "recordingHint": "Pindutin ang Tapos na para isalin, o Kanselahin para itapon."
+    "recordingHint": "Pindutin ang Tapos na para isalin, o Kanselahin para itapon.",
+    "listening": "Nakikinig...",
+    "waitingForSpeech": "Naghihintay ng salita..."
   },
   "history": {
     "title": "Mga Pag-uusap",
@@ -282,7 +289,12 @@
     "offline": "Walang internet",
     "errorTitle": "Naku! May mali!",
     "errorFallback": "May di-inaasahang problema",
-    "tryAgain": "Subukan Muli"
+    "tryAgain": "Subukan Muli",
+    "restartRequired": "Kailangan I-restart ang App",
+    "restartRequiredMessage": "Para magbago ang layout, kailangan i-restart ang app kapag lumipat sa {language}.",
+    "restartNow": "I-restart Ngayon",
+    "pleaseRestart": "Paki-restart",
+    "pleaseRestartMessage": "Paki-sara at buksang muli ang app para magkabisa ang mga pagbabago."
   },
   "errors": {
     "syncFailed": "Hindi makakonekta sa server. Maaaring limitado ang ilang feature.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Hindi naitala ang boses. Subukan ulit magsalita.",
     "serverError": "Error sa server. Pakisubukan ulit mamaya.",
     "requestTimeout": "Nag-timeout ang hiling. Tingnan ang iyong koneksyon.",
-    "locationLookupFailed": "Hindi makita ang lokasyon mo."
+    "locationLookupFailed": "Hindi makita ang lokasyon mo.",
+    "imageUploadFailed": "Hindi na-save ang larawan. Naipadala ang iyong mensahe.",
+    "audioUploadFailed": "Hindi na-save ang recording ng boses.",
+    "mcpServersFailed": "Hindi ma-load ang serbisyo ng AI. Baka hindi gumana ang ilang feature.",
+    "sessionCreateFailed": "Hindi na-save ang usapan. Baka mawala ang mga mensahe."
   },
   "a11y": {
     "startNewChat": "Magsimula ng bagong usapan",
@@ -320,6 +336,7 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Kopyahin ang mensahe",
     "askQuestion": "Itanong: {question}",
-    "selectLanguage": "Wika {name}"
+    "selectLanguage": "Wika {name}",
+    "openHistory": "Buksan ang Kasaysayan"
   }
 }

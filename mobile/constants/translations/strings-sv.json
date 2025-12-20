@@ -9,7 +9,8 @@
     "refresh": "Uppdatera",
     "clear": "Rensa",
     "loading": "Laddar…",
-    "skipForNow": "Hoppa över nu"
+    "skipForNow": "Hoppa över nu",
+    "comingSoon": "Kommer snart"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Tryck på plats för att ställa in",
     "senderAssistant": "FarmerChat",
     "senderYou": "Du",
-    "tapToAskNext": "Tryck för att fråga nästa:"
+    "tapToAskNext": "Tryck för att fråga nästa:",
+    "analysisComplete": "Analys klar"
   },
   "media": {
     "photoLibraryPermission": "Tillgång till bildbiblioteket behövs för att välja bilder. Aktivera i Inställningar.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Misslyckades att välja bild. Försök igen.",
     "cameraFailed": "Misslyckades att komma åt kameran. Försök igen.",
     "camera": "Kamera",
-    "gallery": "Galleri"
+    "gallery": "Galleri",
+    "addToChat": "Ladda upp bild",
+    "uploadHint": "Ta eller välj ett foto för växtdiagnos",
+    "photos": "Bilder"
   },
   "voice": {
     "microphonePermission": "Mikrofonbehörighet krävs",
@@ -85,7 +90,9 @@
     "cancel": "Avbryt",
     "done": "Klar",
     "transcribing": "Transkriberar...",
-    "recordingHint": "Tryck på Klar för att transkribera, eller Avbryt för att kasta"
+    "recordingHint": "Tryck på Klar för att transkribera, eller Avbryt för att kasta",
+    "listening": "Lyssnar...",
+    "waitingForSpeech": "Väntar på tal..."
   },
   "history": {
     "title": "Samtal",
@@ -282,7 +289,12 @@
     "offline": "Ingen uppkoppling",
     "errorTitle": "Något gick fel",
     "errorFallback": "Ett oväntat fel uppstod",
-    "tryAgain": "Försök igen"
+    "tryAgain": "Försök igen",
+    "restartRequired": "Appen måste startas om",
+    "restartRequiredMessage": "För att byta till {language} behöver appen startas om så att utseendet uppdateras.",
+    "restartNow": "Starta om nu",
+    "pleaseRestart": "Starta om appen",
+    "pleaseRestartMessage": "Stäng och öppna appen igen för att ändringarna ska synas."
   },
   "errors": {
     "syncFailed": "Kunde inte ansluta till servern. Vissa funktioner kan vara begränsade.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Röstigenkänningen misslyckades. Försök att tala igen.",
     "serverError": "Serverfel. Försök igen senare.",
     "requestTimeout": "Begäran tog för lång tid. Kontrollera din anslutning.",
-    "locationLookupFailed": "Kunde inte hitta dina platsuppgifter."
+    "locationLookupFailed": "Kunde inte hitta dina platsuppgifter.",
+    "imageUploadFailed": "Bilden kunde inte sparas. Ditt meddelande skickades.",
+    "audioUploadFailed": "Röstinspelningen kunde inte sparas.",
+    "mcpServersFailed": "Kunde inte ladda AI-tjänster. Vissa funktioner fungerar kanske inte.",
+    "sessionCreateFailed": "Kunde inte spara konversationen. Meddelanden kan försvinna."
   },
   "a11y": {
     "startNewChat": "Starta ny chatt",
@@ -320,6 +336,7 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Kopiera meddelande",
     "askQuestion": "Fråga: {question}",
-    "selectLanguage": "Språk {name}"
+    "selectLanguage": "Språk {name}",
+    "openHistory": "Öppna historik"
   }
 }

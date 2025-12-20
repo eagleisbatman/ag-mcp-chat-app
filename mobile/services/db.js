@@ -3,6 +3,7 @@
 
 import { getDeviceId, getDeviceInfo } from '../utils/deviceInfo';
 import { fetchWithTimeout } from '../utils/apiHelpers';
+import { t } from '../constants/strings';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
@@ -361,7 +362,7 @@ export async function generateTitle(messages, language = 'en') {
     if (!response.ok) {
       const errorText = await response.text();
       console.log('🔌 [DB] Title generation error response:', errorText);
-      return { success: false, title: 'New Conversation', error: `HTTP ${response.status}` };
+      return { success: false, title: t('history.newConversation'), error: `HTTP ${response.status}` };
     }
     
     const data = await response.json();
@@ -369,7 +370,7 @@ export async function generateTitle(messages, language = 'en') {
     return data;
   } catch (error) {
     console.log('❌ [DB] Title generation exception:', error.message);
-    return { success: false, title: 'New Conversation', error: error.message };
+    return { success: false, title: t('history.newConversation'), error: error.message };
   }
 }
 

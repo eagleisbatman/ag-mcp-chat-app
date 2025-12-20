@@ -9,7 +9,8 @@
     "refresh": "Obnovit",
     "clear": "Vyčistit",
     "loading": "Načítání…",
-    "skipForNow": "Přeskočit prozatím"
+    "skipForNow": "Přeskočit prozatím",
+    "comingSoon": "Připravujeme"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Klepnutím nastavte polohu.",
     "senderAssistant": "FarmerChat",
     "senderYou": "Vy",
-    "tapToAskNext": "Klepnutím se zeptejte dále:"
+    "tapToAskNext": "Klepnutím se zeptejte dále:",
+    "analysisComplete": "Analýza dokončena"
   },
   "media": {
     "photoLibraryPermission": "K výběru fotek je nutný přístup do galerie. Povolte v Nastavení.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Nepodařilo se vybrat fotku. Zkuste to znovu.",
     "cameraFailed": "Nepodařil se přístup k fotoaparátu. Zkuste to znovu.",
     "camera": "Fotoaparát",
-    "gallery": "Galerie"
+    "gallery": "Galerie",
+    "addToChat": "Nahrát fotku",
+    "uploadHint": "Vyfoťte nebo vyberte fotku pro diagnózu.",
+    "photos": "Fotky"
   },
   "voice": {
     "microphonePermission": "Vyžadováno povolení mikrofonu",
@@ -85,7 +90,9 @@
     "cancel": "Zrušit",
     "done": "Hotovo",
     "transcribing": "Přepisuji...",
-    "recordingHint": "Klepněte na Hotovo pro přepis, nebo Zrušit pro zahození"
+    "recordingHint": "Klepněte na Hotovo pro přepis, nebo Zrušit pro zahození",
+    "listening": "Poslouchám...",
+    "waitingForSpeech": "Čekám na hlas..."
   },
   "history": {
     "title": "Konverzace",
@@ -282,7 +289,12 @@
     "offline": "Není připojení k internetu",
     "errorTitle": "Jejda! Něco se pokazilo",
     "errorFallback": "Vyskytla se neočekávaná chyba",
-    "tryAgain": "Zkusit znovu"
+    "tryAgain": "Zkusit znovu",
+    "restartRequired": "Nutný restart aplikace",
+    "restartRequiredMessage": "Přepnutí na {language} vyžaduje restart aplikace pro změnu vzhledu.",
+    "restartNow": "Restartovat nyní",
+    "pleaseRestart": "Restartujte prosím",
+    "pleaseRestartMessage": "Prosím, zavřete a znovu otevřete aplikaci, aby se změny projevily."
   },
   "errors": {
     "syncFailed": "Nepodařilo se připojit k serveru. Některé funkce mohou být omezeny.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Přepis řeči se nezdařil. Zkuste to říct znovu.",
     "serverError": "Chyba serveru. Zkuste to prosím později.",
     "requestTimeout": "Požadavek vypršel. Zkontrolujte připojení.",
-    "locationLookupFailed": "Nepodařilo se určit vaši polohu."
+    "locationLookupFailed": "Nepodařilo se určit vaši polohu.",
+    "imageUploadFailed": "Obrázek se nepodařilo uložit. Vaše zpráva byla odeslána.",
+    "audioUploadFailed": "Hlasovou nahrávku se nepodařilo uložit.",
+    "mcpServersFailed": "Nepodařilo se načíst služby AI. Některé funkce nemusí být dostupné.",
+    "sessionCreateFailed": "Nepodařilo se uložit konverzaci. Zprávy se nemusí zachovat."
   },
   "a11y": {
     "startNewChat": "Zahájit nový chat",
@@ -320,6 +336,7 @@
     "themeMode": "Téma: {mode}",
     "copyMessage": "Zkopírovat zprávu",
     "askQuestion": "Zeptat se: {question}",
-    "selectLanguage": "Jazyk {name}"
+    "selectLanguage": "Jazyk {name}",
+    "openHistory": "Otevřít historii"
   }
 }

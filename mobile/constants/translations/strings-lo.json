@@ -9,7 +9,8 @@
     "refresh": "ໂຫຼດໃໝ່",
     "clear": "ລຶບລ້າງ",
     "loading": "ກຳລັງໂຫຼດ…",
-    "skipForNow": "ຂ້າມໄປກ່ອນ"
+    "skipForNow": "ຂ້າມໄປກ່ອນ",
+    "comingSoon": "ກຳລັງຈະມາ"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "ແຕະສະຖານທີ່ເພື່ອຕັ້ງ",
     "senderAssistant": "FarmerChat",
     "senderYou": "ເຈົ້າ",
-    "tapToAskNext": "ແຕະເພື່ອຖາມຕໍ່ໄປ:"
+    "tapToAskNext": "ແຕະເພື່ອຖາມຕໍ່ໄປ:",
+    "analysisComplete": "ວິເຄາະສຳເລັດແລ້ວ"
   },
   "media": {
     "photoLibraryPermission": "ຕ້ອງອະນຸຍາດເຂົ້າເຖິງຄັງຮູບເພື່ອເລືອກຮູບ. ໄປເປີດທີ່ການຕັ້ງຄ່າ.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "ເລືອກຮູບບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່.",
     "cameraFailed": "ເຂົ້າເຖິງກ້ອງບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່.",
     "camera": "ກ້ອງ",
-    "gallery": "ຄັງຮູບ"
+    "gallery": "ຄັງຮູບ",
+    "addToChat": "ສົ່ງຮູບ",
+    "uploadHint": "ຖ່າຍ ຫຼື ເລືອກຮູບ ເພື່ອກວດພືດ",
+    "photos": "ຮູບ"
   },
   "voice": {
     "microphonePermission": "ຕ້ອງອະນຸຍາດໄມໂຄຣໂຟນ",
@@ -85,7 +90,9 @@
     "cancel": "ຍົກເລີກ",
     "done": "ສຳເລັດ",
     "transcribing": "ກຳລັງຖອດສຽງ...",
-    "recordingHint": "ແຕະ 'ສຳເລັດ' ເພື່ອຖອດສຽງ, ຫຼື 'ຍົກເລີກ' ເພື່ອຖິ້ມ"
+    "recordingHint": "ແຕະ 'ສຳເລັດ' ເພື່ອຖອດສຽງ, ຫຼື 'ຍົກເລີກ' ເພື່ອຖິ້ມ",
+    "listening": "ກຳລັງຟັງ...",
+    "waitingForSpeech": "ກຳລັງລໍຖ້າສຽງເວົ້າ..."
   },
   "history": {
     "title": "ການສົນທະນາ",
@@ -282,7 +289,12 @@
     "offline": "ບໍ່ມີອິນເຕີເນັດ",
     "errorTitle": "ໂອຍ! ມີບາງຢ່າງຜິດພາດ",
     "errorFallback": "ເກີດຂໍ້ຜິດພາດ",
-    "tryAgain": "ລອງໃໝ່"
+    "tryAgain": "ລອງໃໝ່",
+    "restartRequired": "ຕ້ອງປິດເປີດແອັບໃໝ່",
+    "restartRequiredMessage": "ການປ່ຽນເປັນພາສາ {language} ຕ້ອງໄດ້ປິດເປີດແອັບໃໝ່ ເພື່ອປ່ຽນຮູບແບບ.",
+    "restartNow": "ເລີ່ມໃໝ່ດຽວນີ້",
+    "pleaseRestart": "ກະລຸນາເລີ່ມໃໝ່",
+    "pleaseRestartMessage": "ກະລຸນາປິດແລ້ວເປີດແອັບໃໝ່ ເພື່ອໃຫ້ການປ່ຽນແປງມີຜົນ."
   },
   "errors": {
     "syncFailed": "ບໍ່ສາມາດເຊື່ອມຕໍ່ເຊີບເວີ. ບາງຟັງຊັນອາດໃຊ້ບໍ່ໄດ້.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "ຖອດສຽງເວົ້າຜິດພາດ. ລອງເວົ້າໃໝ່ອີກຄັ້ງ.",
     "serverError": "ເຊີບເວີມີບັນຫາ. ລອງໃໝ່ພາຍຫຼັງ.",
     "requestTimeout": "ການຮ້ອງຂໍໝົດເວລາ. ກວດສອບອິນເຕີເນັດ.",
-    "locationLookupFailed": "ບໍ່ສາມາດຊອກຫາຕຳແໜ່ງຂອງທ່ານໄດ້."
+    "locationLookupFailed": "ບໍ່ສາມາດຊອກຫາຕຳແໜ່ງຂອງທ່ານໄດ້.",
+    "imageUploadFailed": "ບໍ່ສາມາດບັນທຶກຮູບໄດ້. ຂໍ້ຄວາມຂອງທ່ານຖືກສົ່ງແລ້ວ.",
+    "audioUploadFailed": "ບໍ່ສາມາດບັນທຶກສຽງໄດ້.",
+    "mcpServersFailed": "ບໍ່ສາມາດໂຫຼດລະບົບ AI. ບາງໜ້າທີ່ອາດໃຊ້ບໍ່ໄດ້.",
+    "sessionCreateFailed": "ບໍ່ສາມາດບັນທຶກການສົນທະນາ. ຂໍ້ຄວາມອາດບໍ່ຖືກເກັບໄວ້."
   },
   "a11y": {
     "startNewChat": "ເລີ່ມສົນທະນາໃໝ່",
@@ -320,6 +336,7 @@
     "themeMode": "ຮູບແບບ: {mode}",
     "copyMessage": "ຄັດລອກຂໍ້ຄວາມ",
     "askQuestion": "ຖາມ: {question}",
-    "selectLanguage": "ພາສາ {name}"
+    "selectLanguage": "ພາສາ {name}",
+    "openHistory": "ເປີດປະຫວັດ"
   }
 }

@@ -9,7 +9,8 @@
     "refresh": "Segarkan",
     "clear": "Bersihkan",
     "loading": "Memuat…",
-    "skipForNow": "Lewati Sementara"
+    "skipForNow": "Lewati Sementara",
+    "comingSoon": "Segera Hadir"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Ketuk lokasi untuk mengatur",
     "senderAssistant": "FarmerChat",
     "senderYou": "Anda",
-    "tapToAskNext": "Ketuk untuk tanya selanjutnya:"
+    "tapToAskNext": "Ketuk untuk tanya selanjutnya:",
+    "analysisComplete": "Analisis selesai"
   },
   "media": {
     "photoLibraryPermission": "Akses galeri foto diperlukan untuk pilih gambar. Aktifkan di Pengaturan.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Gagal pilih gambar. Coba lagi.",
     "cameraFailed": "Gagal akses kamera. Coba lagi.",
     "camera": "Kamera",
-    "gallery": "Galeri"
+    "gallery": "Galeri",
+    "addToChat": "Unggah Gambar",
+    "uploadHint": "Ambil atau pilih foto untuk diagnosis kesehatan tanaman",
+    "photos": "Foto"
   },
   "voice": {
     "microphonePermission": "Perlu izin mikrofon",
@@ -85,7 +90,9 @@
     "cancel": "Batal",
     "done": "Selesai",
     "transcribing": "Mentranskripsi...",
-    "recordingHint": "Ketuk Selesai untuk transkripsi, atau Batal untuk membuang"
+    "recordingHint": "Ketuk Selesai untuk transkripsi, atau Batal untuk membuang",
+    "listening": "Mendengarkan...",
+    "waitingForSpeech": "Menunggu ucapan..."
   },
   "history": {
     "title": "Percakapan",
@@ -282,7 +289,12 @@
     "offline": "Tidak ada internet",
     "errorTitle": "Terjadi Kesalahan",
     "errorFallback": "Terjadi kesalahan tak terduga",
-    "tryAgain": "Coba Lagi"
+    "tryAgain": "Coba Lagi",
+    "restartRequired": "Aplikasi Perlu Dimulai Ulang",
+    "restartRequiredMessage": "Mengganti ke bahasa {language} memerlukan mulai ulang aplikasi untuk perubahan tata letak.",
+    "restartNow": "Mulai Ulang Sekarang",
+    "pleaseRestart": "Mohon Mulai Ulang",
+    "pleaseRestartMessage": "Mohon tutup dan buka kembali aplikasi agar perubahan berlaku."
   },
   "errors": {
     "syncFailed": "Gagal terhubung ke server. Beberapa fitur mungkin terbatas.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Transkripsi suara gagal. Coba bicara lagi.",
     "serverError": "Terjadi kesalahan server. Silakan coba lagi nanti.",
     "requestTimeout": "Waktu permintaan habis. Periksa koneksi Anda.",
-    "locationLookupFailed": "Tidak dapat menentukan detail lokasi Anda."
+    "locationLookupFailed": "Tidak dapat menentukan detail lokasi Anda.",
+    "imageUploadFailed": "Gambar tidak dapat disimpan. Pesan Anda telah terkirim.",
+    "audioUploadFailed": "Rekaman suara tidak dapat disimpan.",
+    "mcpServersFailed": "Tidak dapat memuat layanan AI. Beberapa fitur mungkin tidak tersedia.",
+    "sessionCreateFailed": "Tidak dapat menyimpan percakapan. Pesan mungkin tidak tersimpan."
   },
   "a11y": {
     "startNewChat": "Mulai obrolan baru",
@@ -320,6 +336,7 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Salin pesan",
     "askQuestion": "Tanya: {question}",
-    "selectLanguage": "Bahasa {name}"
+    "selectLanguage": "Bahasa {name}",
+    "openHistory": "Buka riwayat"
   }
 }

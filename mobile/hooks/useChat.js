@@ -84,9 +84,13 @@ export default function useChat(sessionIdParam = null) {
       if (result.success) {
         setCurrentSessionId(result.session.id);
         return result.session.id;
+      } else {
+        console.log('Session creation failed:', result.error);
+        showWarning(t('errors.sessionCreateFailed'));
       }
     } catch (e) {
       console.log('Session creation error:', e);
+      showWarning(t('errors.sessionCreateFailed'));
     }
     return null;
   }, [currentSessionId, isDbSynced, language, locationDetails, setCurrentSessionId]);
@@ -268,6 +272,8 @@ export default function useChat(sessionIdParam = null) {
           persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
         } else {
           console.warn('Image upload failed:', result.error);
+          // Show non-intrusive warning - image was analyzed, just not saved
+          showWarning(t('errors.imageUploadFailed'));
         }
         return result;
       });
@@ -370,14 +376,16 @@ export default function useChat(sessionIdParam = null) {
         // Audio stored for record-keeping/analytics, not shown in chat
       } else {
         console.log('⚠️ [useChat] Voice audio upload failed:', result.error);
+        // Show non-intrusive warning - transcription worked, just audio not saved
+        showWarning(t('errors.audioUploadFailed'));
       }
-      
+
       return result;
     } catch (error) {
       console.error('Background audio upload error:', error);
       return { success: false, error: error.message };
     }
-  }, []);
+  }, [showWarning]);
 
   return {
     messages,

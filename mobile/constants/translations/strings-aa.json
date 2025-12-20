@@ -9,7 +9,8 @@
     "refresh": "Oggi Sol",
     "clear": "Qasxa",
     "loading": "Xuurih Raka…",
-    "skipForNow": "Kaah Gat"
+    "skipForNow": "Kaah Gat",
+    "comingSoon": "Maaci kaa an"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Arraabo elle akkem gaba",
     "senderAssistant": "FarmerChat",
     "senderYou": "Koo",
-    "tapToAskNext": "Digri, kaadu esser:"
+    "tapToAskNext": "Digri, kaadu esser:",
+    "analysisComplete": "Xiinat Gitallee"
   },
   "media": {
     "photoLibraryPermission": "Suurataa saytunuh nummayat faxa. Gaddi kinnik kari.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Suurataa saytun gaccise. Saaku kibba.",
     "cameraFailed": "Kaameera geysi gaccise. Saaku kibba.",
     "camera": "Kaameera",
-    "gallery": "Suurat Geydu"
+    "gallery": "Suurat Geydu",
+    "addToChat": "Suurat Solli",
+    "uploadHint": "Loote caafimaata xiinatat suurat caba hinnay doora",
+    "photos": "Suurata"
   },
   "voice": {
     "microphonePermission": "Mikiroofoonih idni abtoh",
@@ -85,7 +90,9 @@
     "cancel": "Digge",
     "done": "Qasa",
     "transcribing": "Qallabah...",
-    "recordingHint": "Qallabuh 'Qasa' guddus, hinnay baahuh 'Digge'."
+    "recordingHint": "Qallabuh 'Qasa' guddus, hinnay baahuh 'Digge'.",
+    "listening": "Wagiigem an...",
+    "waitingForSpeech": "Kolla rabem an..."
   },
   "history": {
     "title": "Gubulluk",
@@ -282,7 +289,12 @@
     "offline": "Net-i cula",
     "errorTitle": "Aha! Xiixim kaak gaba",
     "errorFallback": "Kaafi xiixim kah gaba",
-    "tryAgain": "Derre gita"
+    "tryAgain": "Derre gita",
+    "restartRequired": "Baranama Tubbulu Hajjam",
+    "restartRequiredMessage": "{language}-li fanah naqqaasata akah yabaka, baranama tubbulu hajjam.",
+    "restartNow": "Xiino Tubbulu",
+    "pleaseRestart": "Tubbulu, ayay",
+    "pleaseRestartMessage": "Ayay, baranama waddalaay tubbula caxa akah yabaka."
   },
   "errors": {
     "syncFailed": "Server-ih kussum matakka. Agabu maxaa mabluh makkak.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Saway-itte qande matakka. Kaadu macaara waris.",
     "serverError": "Server-ih xala. Baad kee kabaa kee waris.",
     "requestTimeout": "Adda-haytimi wagittuh yadde. Kussum gita elle ixxig.",
-    "locationLookupFailed": "Sin kaafa elle ixxig matakka."
+    "locationLookupFailed": "Sin kaafa elle ixxig matakka.",
+    "imageUploadFailed": "Suurat dabqisinnon. Koo kay qada solle.",
+    "audioUploadFailed": "Kolla dibuk dabqisinnon.",
+    "mcpServersFailed": "Baaxokommo qande naysisinnon. Amal kashara akeedde kaa aninno.",
+    "sessionCreateFailed": "Kolla dabqisinnon. Qadaata kaal aninno."
   },
   "a11y": {
     "startNewChat": "Macino Baaxo Gabbi",
@@ -320,6 +336,7 @@
     "themeMode": "Midgar: {mode}",
     "copyMessage": "Xaagu Koobi",
     "askQuestion": "Wayti: {question}",
-    "selectLanguage": "Afa {name}"
+    "selectLanguage": "Afa {name}",
+    "openHistory": "Taariix Gubbi"
   }
 }

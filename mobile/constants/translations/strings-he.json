@@ -9,7 +9,8 @@
     "refresh": "רענן",
     "clear": "נקה",
     "loading": "טוען…",
-    "skipForNow": "דלג בינתיים"
+    "skipForNow": "דלג בינתיים",
+    "comingSoon": "בקרוב"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "הקש לקביעת מיקום",
     "senderAssistant": "FarmerChat",
     "senderYou": "אתה",
-    "tapToAskNext": "הקש לשאלה הבאה:"
+    "tapToAskNext": "הקש לשאלה הבאה:",
+    "analysisComplete": "ניתוח הושלם"
   },
   "media": {
     "photoLibraryPermission": "גישה לספריית התמונות דרושה לבחירת תמונות. אפשר בהגדרות.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "בחירת תמונה נכשלה. נסה שוב.",
     "cameraFailed": "גישה למצלמה נכשלה. נסה שוב.",
     "camera": "מצלמה",
-    "gallery": "גלריה"
+    "gallery": "גלריה",
+    "addToChat": "העלה תמונה",
+    "uploadHint": "צלם או בחר תמונה לאבחון בריאות הצמח",
+    "photos": "תמונות"
   },
   "voice": {
     "microphonePermission": "הרשאת מיקרופון נדרשת",
@@ -85,7 +90,9 @@
     "cancel": "ביטול",
     "done": "סיום",
     "transcribing": "מתמלל...",
-    "recordingHint": "הקש סיום לתמלול, או ביטול למחיקה"
+    "recordingHint": "הקש סיום לתמלול, או ביטול למחיקה",
+    "listening": "מקשיב...",
+    "waitingForSpeech": "ממתין לדיבור..."
   },
   "history": {
     "title": "שיחות",
@@ -282,7 +289,12 @@
     "offline": "אין חיבור לאינטרנט",
     "errorTitle": "משהו השתבש",
     "errorFallback": "קרתה תקלה בלתי צפויה",
-    "tryAgain": "נסה שוב"
+    "tryAgain": "נסה שוב",
+    "restartRequired": "נדרשת הפעלה מחדש",
+    "restartRequiredMessage": "מעבר ל{language} דורש הפעלה מחדש של האפליקציה לצורך שינויי תצוגה.",
+    "restartNow": "הפעל מחדש עכשיו",
+    "pleaseRestart": "נא הפעל מחדש",
+    "pleaseRestartMessage": "אנא סגור ופתח מחדש את האפליקציה כדי שהשינויים ייכנסו לתוקף."
   },
   "errors": {
     "syncFailed": "לא ניתן להתחבר לשרת. תכונות מסוימות עשויות להיות מוגבלות.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "התמלול הקולי נכשל. נסה לדבר שוב.",
     "serverError": "שגיאת שרת. נסה שוב מאוחר יותר.",
     "requestTimeout": "פג זמן הבקשה. בדוק את החיבור.",
-    "locationLookupFailed": "לא ניתן לאתר את המיקום."
+    "locationLookupFailed": "לא ניתן לאתר את המיקום.",
+    "imageUploadFailed": "התמונה לא נשמרה. ההודעה שלך נשלחה.",
+    "audioUploadFailed": "הקלטת הקול לא נשמרה.",
+    "mcpServersFailed": "שירותי AI לא נטענו. ייתכן שחלק מהתכונות אינן זמינות.",
+    "sessionCreateFailed": "לא ניתן לשמור את השיחה. הודעות עשויות לא להישמר."
   },
   "a11y": {
     "startNewChat": "התחל צ'אט חדש",
@@ -320,6 +336,7 @@
     "themeMode": "ערכת נושא: {mode}",
     "copyMessage": "העתק הודעה",
     "askQuestion": "שאל: {question}",
-    "selectLanguage": "שפה {name}"
+    "selectLanguage": "שפה {name}",
+    "openHistory": "פתח היסטוריה"
   }
 }

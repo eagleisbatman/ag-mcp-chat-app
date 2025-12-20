@@ -9,7 +9,8 @@
     "refresh": "Atualizar",
     "clear": "Limpar",
     "loading": "Carregando…",
-    "skipForNow": "Pular por enquanto"
+    "skipForNow": "Pular por enquanto",
+    "comingSoon": "Em breve"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Toque para definir local",
     "senderAssistant": "FarmerChat",
     "senderYou": "Você",
-    "tapToAskNext": "Toque para perguntar:"
+    "tapToAskNext": "Toque para perguntar:",
+    "analysisComplete": "Análise completa"
   },
   "media": {
     "photoLibraryPermission": "Acesso à galeria é necessário para selecionar imagens. Ative nas Configurações.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Falha ao selecionar imagem. Tente novamente.",
     "cameraFailed": "Falha ao acessar a câmera. Tente novamente.",
     "camera": "Câmera",
-    "gallery": "Galeria"
+    "gallery": "Galeria",
+    "addToChat": "Enviar Imagem",
+    "uploadHint": "Tire ou selecione uma foto para diagnóstico da planta",
+    "photos": "Fotos"
   },
   "voice": {
     "microphonePermission": "Permissão do microfone necessária",
@@ -85,7 +90,9 @@
     "cancel": "Cancelar",
     "done": "Concluído",
     "transcribing": "Transcrevendo...",
-    "recordingHint": "Toque em Concluído para transcrever, ou em Cancelar para descartar"
+    "recordingHint": "Toque em Concluído para transcrever, ou em Cancelar para descartar",
+    "listening": "Ouvindo...",
+    "waitingForSpeech": "Aguardando você falar..."
   },
   "history": {
     "title": "Conversas",
@@ -282,7 +289,12 @@
     "offline": "Sem internet",
     "errorTitle": "Ops! Algo deu errado",
     "errorFallback": "Ocorreu um erro inesperado",
-    "tryAgain": "Tentar novamente"
+    "tryAgain": "Tentar novamente",
+    "restartRequired": "Reiniciar App",
+    "restartRequiredMessage": "Para mudar para {language}, o aplicativo precisa ser reiniciado para ajustar a tela.",
+    "restartNow": "Reiniciar Agora",
+    "pleaseRestart": "Reinicie o App",
+    "pleaseRestartMessage": "Feche e abra o aplicativo para as mudanças funcionarem."
   },
   "errors": {
     "syncFailed": "Não foi possível conectar. Alguns recursos limitados.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Falha na transcrição de voz. Tente falar novamente.",
     "serverError": "Erro no servidor. Tente novamente mais tarde.",
     "requestTimeout": "Tempo esgotado. Verifique sua conexão.",
-    "locationLookupFailed": "Não foi possível determinar sua localização."
+    "locationLookupFailed": "Não foi possível determinar sua localização.",
+    "imageUploadFailed": "Não foi possível salvar a imagem. Sua mensagem foi enviada.",
+    "audioUploadFailed": "Não foi possível salvar a gravação de voz.",
+    "mcpServersFailed": "Não foi possível carregar os serviços de IA. Algumas funções podem não estar disponíveis.",
+    "sessionCreateFailed": "Não foi possível salvar a conversa. As mensagens podem não ficar gravadas."
   },
   "a11y": {
     "startNewChat": "Iniciar um novo chat",
@@ -320,6 +336,7 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Copiar mensagem",
     "askQuestion": "Perguntar: {question}",
-    "selectLanguage": "Idioma {name}"
+    "selectLanguage": "Idioma {name}",
+    "openHistory": "Abrir histórico"
   }
 }

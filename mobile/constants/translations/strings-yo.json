@@ -9,7 +9,8 @@
     "refresh": "Túnṣe",
     "clear": "Nu kúrò",
     "loading": "Ó ń gbà wọlé...",
-    "skipForNow": "Fò ó nísinsìnyí"
+    "skipForNow": "Fò ó nísinsìnyí",
+    "comingSoon": "Maa bò láìpẹ́"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Tẹ ààyè láti ṣètò.",
     "senderAssistant": "FarmerChat",
     "senderYou": "Ìwọ",
-    "tapToAskNext": "Tẹ́ kí o béèrè èyí tó tẹ̀lé:"
+    "tapToAskNext": "Tẹ́ kí o béèrè èyí tó tẹ̀lé:",
+    "analysisComplete": "Ìṣàyẹ̀wò ti parí"
   },
   "media": {
     "photoLibraryPermission": "A nílò àyè sí ibi ìpamọ fọ́tò láti yan fọ́tò. Múu ṣiṣẹ́ ní Ètò.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Kò ṣeyanjú fọ́tò. Jọ̀wọ́ tún gbìyànjú.",
     "cameraFailed": "Kò ṣeyanjú wíwọlé sí kámẹ́rà. Jọ̀wọ́ tún gbìyànjú.",
     "camera": "Kámẹ́rà",
-    "gallery": "Ibi Fọ́tò"
+    "gallery": "Ibi Fọ́tò",
+    "addToChat": "Fi Fọ́tò ránṣẹ́",
+    "uploadHint": "Yà tàbí yàn fọ́tò fún àyẹ̀wò àìsàn ọ̀gbìn.",
+    "photos": "Fọ́tò"
   },
   "voice": {
     "microphonePermission": "A nílò àṣẹ gbohungbohun",
@@ -85,7 +90,9 @@
     "cancel": "Fagilé",
     "done": "Ṣe tán",
     "transcribing": "Ó ń yí ohùn sí ọ̀rọ̀...",
-    "recordingHint": "Tẹ 'Ṣe tán' láti yí ohùn sí ọ̀rọ̀, tàbí 'Fagilé' láti fi sílẹ̀"
+    "recordingHint": "Tẹ 'Ṣe tán' láti yí ohùn sí ọ̀rọ̀, tàbí 'Fagilé' láti fi sílẹ̀",
+    "listening": "Mo ń gbọ́...",
+    "waitingForSpeech": "Ń dúró de ohùn..."
   },
   "history": {
     "title": "Àwọn Ìjíròrò",
@@ -282,7 +289,12 @@
     "offline": "Kò sí àsopọ̀ Ayélujára",
     "errorTitle": "Àṣìṣe wáyé!",
     "errorFallback": "Àṣìṣe àìròtẹ́lẹ̀ wáyé",
-    "tryAgain": "Tún Gbìyànjú"
+    "tryAgain": "Tún Gbìyànjú",
+    "restartRequired": "App gbọ́dọ̀ tún bẹ̀rẹ̀",
+    "restartRequiredMessage": "Láti yípadà sí èdè {language} béèrè kí o tún app bẹ̀rẹ̀ fún àwọn ìyípadà ìwòran.",
+    "restartNow": "Tún bẹ̀rẹ̀ Nísìnyí",
+    "pleaseRestart": "Jọ̀wọ́ Tún Bẹ̀rẹ̀",
+    "pleaseRestartMessage": "Jọ̀wọ́ pa app náà kí o sì tún ṣí i padà fún àwọn ìyípadà láti jẹun."
   },
   "errors": {
     "syncFailed": "Kò lè so pọ̀ mọ́ ààtàn. Àwọn iṣẹ́ kan lè má ṣiṣẹ́.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Ìkọ̀wé ohùn kò yege. Tún sọ̀rọ̀ padà.",
     "serverError": "Àṣìṣe ààtàn. Jọ̀wọ́ tún gbìyànjú padà lẹ́yìn.",
     "requestTimeout": "Ìbéèrè gba àkókò jù. Ṣàyẹ̀wò àsopọ̀ rẹ.",
-    "locationLookupFailed": "Kò lè rí ibi tí o wà."
+    "locationLookupFailed": "Kò lè rí ibi tí o wà.",
+    "imageUploadFailed": "A kò lè fi Fọ́tò pamọ́. A ti fi ìfiranṣẹ́ rẹ ránṣẹ́.",
+    "audioUploadFailed": "A kò lè fi ohùn pamọ́.",
+    "mcpServersFailed": "A kò lè gba àwọn iṣẹ́ AI. Díẹ̀ lára àwọn ohun èlò kò lè ṣiṣẹ́.",
+    "sessionCreateFailed": "A kò lè fi ìjíròrò pamọ́. Àwọn ìfiranṣẹ́ lè sọnù."
   },
   "a11y": {
     "startNewChat": "Bẹ̀rẹ̀ ìjíròrò tuntun",
@@ -320,6 +336,7 @@
     "themeMode": "Irú ìran: {mode}",
     "copyMessage": "Ṣe àdàkọ ìránṣẹ́",
     "askQuestion": "Béèrè: {question}",
-    "selectLanguage": "Èdè {name}"
+    "selectLanguage": "Èdè {name}",
+    "openHistory": "Ṣí ìtàn"
   }
 }

@@ -9,7 +9,8 @@
     "refresh": "Sabunta",
     "clear": "Share",
     "loading": "Ana ɗorawa…",
-    "skipForNow": "Tsallake Yanzu"
+    "skipForNow": "Tsallake Yanzu",
+    "comingSoon": "Nan gaba"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Matsa wuri don saitawa",
     "senderAssistant": "FarmerChat",
     "senderYou": "Kai",
-    "tapToAskNext": "Matsa don tambaya na gaba:"
+    "tapToAskNext": "Matsa don tambaya na gaba:",
+    "analysisComplete": "An gama bincike"
   },
   "media": {
     "photoLibraryPermission": "Ana buƙatar damar shiga hotuna don zaɓar hotuna. Kunna a Saituna.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "An kasa zaɓar hoto. Sake gwadawa.",
     "cameraFailed": "An kasa samun kyamara. Sake gwadawa.",
     "camera": "Kyamara",
-    "gallery": "Ɗakin Hotuna"
+    "gallery": "Ɗakin Hotuna",
+    "addToChat": "Ɗora Hoto",
+    "uploadHint": "Ɗauki ko zaɓi hoto don gano cutar shuka.",
+    "photos": "Hotuna"
   },
   "voice": {
     "microphonePermission": "Ana buƙatar izinin makirufo",
@@ -85,7 +90,9 @@
     "cancel": "Soke",
     "done": "Gama",
     "transcribing": "Ana fassara murya...",
-    "recordingHint": "Latsa Gama don fassara, ko Soke don sharewa"
+    "recordingHint": "Latsa Gama don fassara, ko Soke don sharewa",
+    "listening": "Ina sauraro...",
+    "waitingForSpeech": "Jiran magana..."
   },
   "history": {
     "title": "Tattaunawa",
@@ -282,7 +289,12 @@
     "offline": "Babu intanet",
     "errorTitle": "Ayyah! An samu matsala.",
     "errorFallback": "An samu kuskure ba zato ba.",
-    "tryAgain": "Gwada sake"
+    "tryAgain": "Gwada sake",
+    "restartRequired": "Sake kunna manhaja",
+    "restartRequiredMessage": "Canzawa zuwa yaren {language} yana buƙatar sake kunna manhajar don canje-canjen tsari.",
+    "restartNow": "Sake Kunna Yanzu",
+    "pleaseRestart": "Don Allah a Sake Kunna",
+    "pleaseRestartMessage": "Don Allah a rufe sannan a sake buɗe manhajar don canje-canje su fara aiki."
   },
   "errors": {
     "syncFailed": "Ba a samu haɗi da sabar ba. Wasu ayyuka za su takaitu.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Rubuta magana ya gagara. Sake yin magana.",
     "serverError": "Kuskuren sabar. Don Allah a sake gwadawa daga baya.",
     "requestTimeout": "Buƙatar ta ƙare lokaci. Duba haɗinka.",
-    "locationLookupFailed": "An gagara tantance bayanan wurinka."
+    "locationLookupFailed": "An gagara tantance bayanan wurinka.",
+    "imageUploadFailed": "Ba a ajiye hoton ba. An aika saƙonka.",
+    "audioUploadFailed": "Ba a ajiye muryar ba.",
+    "mcpServersFailed": "Ba a iya ɗauko hidimomin AI ba. Wasu fasaloli na iya kasa aiki.",
+    "sessionCreateFailed": "Ba a iya adana hirar ba. Saƙonni na iya ɓacewa."
   },
   "a11y": {
     "startNewChat": "Fara sabuwar hira",
@@ -320,6 +336,7 @@
     "themeMode": "Jigo: {mode}",
     "copyMessage": "Kwafi saƙo",
     "askQuestion": "Tambaya: {question}",
-    "selectLanguage": "Harshe {name}"
+    "selectLanguage": "Harshe {name}",
+    "openHistory": "Buɗe Tarihi"
   }
 }

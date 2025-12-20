@@ -9,7 +9,8 @@
     "refresh": "โหลดใหม่",
     "clear": "ล้าง",
     "loading": "กำลังโหลด...",
-    "skipForNow": "ข้ามไปก่อน"
+    "skipForNow": "ข้ามไปก่อน",
+    "comingSoon": "เร็วๆ นี้"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "แตะตำแหน่งเพื่อตั้งค่า",
     "senderAssistant": "FarmerChat",
     "senderYou": "คุณ",
-    "tapToAskNext": "แตะเพื่อถามสิ่งต่อไป:"
+    "tapToAskNext": "แตะเพื่อถามสิ่งต่อไป:",
+    "analysisComplete": "วิเคราะห์เสร็จแล้ว"
   },
   "media": {
     "photoLibraryPermission": "ต้องเข้าถึงคลังรูปภาพเพื่อเลือกรูปภาพ เปิดที่การตั้งค่า",
@@ -70,7 +72,10 @@
     "pickImageFailed": "เลือกรูปไม่สำเร็จ ลองอีกครั้ง",
     "cameraFailed": "เข้าถึงกล้องไม่สำเร็จ ลองอีกครั้ง",
     "camera": "กล้อง",
-    "gallery": "คลังรูปภาพ"
+    "gallery": "คลังรูปภาพ",
+    "addToChat": "อัปโหลดรูป",
+    "uploadHint": "ถ่ายหรือเลือกรูปวินิจฉัยพืช",
+    "photos": "รูปภาพ"
   },
   "voice": {
     "microphonePermission": "ต้องอนุญาตไมโครโฟน",
@@ -85,7 +90,9 @@
     "cancel": "ยกเลิก",
     "done": "เสร็จสิ้น",
     "transcribing": "กำลังถอดเสียง...",
-    "recordingHint": "แตะ 'เสร็จสิ้น' เพื่อถอดเสียง หรือ 'ยกเลิก' เพื่อทิ้ง"
+    "recordingHint": "แตะ 'เสร็จสิ้น' เพื่อถอดเสียง หรือ 'ยกเลิก' เพื่อทิ้ง",
+    "listening": "กำลังฟัง...",
+    "waitingForSpeech": "กำลังรอเสียงพูด..."
   },
   "history": {
     "title": "การสนทนา",
@@ -282,7 +289,12 @@
     "offline": "ไม่มีอินเทอร์เน็ต",
     "errorTitle": "อุ๊ย! มีปัญหา",
     "errorFallback": "มีปัญหาที่ไม่คาดคิด",
-    "tryAgain": "ลองใหม่"
+    "tryAgain": "ลองใหม่",
+    "restartRequired": "ต้องรีสตาร์ทแอป",
+    "restartRequiredMessage": "เปลี่ยนเป็นภาษา {language} ต้องเริ่มแอปใหม่เพื่อปรับหน้าจอ",
+    "restartNow": "รีสตาร์ทตอนนี้",
+    "pleaseRestart": "โปรดเริ่มแอปใหม่",
+    "pleaseRestartMessage": "กรุณาปิดและเปิดแอปใหม่เพื่อให้ตั้งค่ามีผล"
   },
   "errors": {
     "syncFailed": "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ฟังก์ชันบางอย่างอาจจำกัด",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "แปลงเสียงพูดไม่ได้ ลองพูดอีกครั้ง",
     "serverError": "เซิร์ฟเวอร์มีปัญหา โปรดลองใหม่ภายหลัง",
     "requestTimeout": "คำขอหมดเวลา ตรวจสอบการเชื่อมต่อ",
-    "locationLookupFailed": "ระบุรายละเอียดตำแหน่งของคุณไม่ได้"
+    "locationLookupFailed": "ระบุรายละเอียดตำแหน่งของคุณไม่ได้",
+    "imageUploadFailed": "บันทึกรูปไม่ได้ ข้อความถูกส่งแล้ว",
+    "audioUploadFailed": "บันทึกเสียงพูดไม่ได้",
+    "mcpServersFailed": "โหลดบริการ AI ไม่ได้ บางฟังก์ชันอาจใช้งานไม่ได้",
+    "sessionCreateFailed": "บันทึกการสนทนาไม่ได้ ข้อความอาจไม่ถูกเก็บไว้"
   },
   "a11y": {
     "startNewChat": "เริ่มแชทใหม่",
@@ -320,6 +336,7 @@
     "themeMode": "ธีม: {mode}",
     "copyMessage": "คัดลอกข้อความ",
     "askQuestion": "ถาม: {question}",
-    "selectLanguage": "ภาษา {name}"
+    "selectLanguage": "ภาษา {name}",
+    "openHistory": "เปิดประวัติ"
   }
 }

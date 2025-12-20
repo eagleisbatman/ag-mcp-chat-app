@@ -9,7 +9,8 @@
     "refresh": "ताज़ा करें",
     "clear": "साफ करें",
     "loading": "लोड हो रहा है…",
-    "skipForNow": "अभी के लिए छोड़ें"
+    "skipForNow": "अभी के लिए छोड़ें",
+    "comingSoon": "जल्द आ रहा है"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "स्थान सेट करने के लिए टैप करें",
     "senderAssistant": "FarmerChat",
     "senderYou": "आप",
-    "tapToAskNext": "अगला पूछने के लिए टैप करें:"
+    "tapToAskNext": "अगला पूछने के लिए टैप करें:",
+    "analysisComplete": "जाँच पूरी हुई"
   },
   "media": {
     "photoLibraryPermission": "फ़ोटो चुनने के लिए गैलरी एक्सेस ज़रूरी है। सेटिंग्स में चालू करें।",
@@ -70,7 +72,10 @@
     "pickImageFailed": "इमेज चुन नहीं पाए। कृपया फिर कोशिश करें।",
     "cameraFailed": "कैमरा एक्सेस नहीं कर पाए। कृपया फिर कोशिश करें।",
     "camera": "कैमरा",
-    "gallery": "गैलरी"
+    "gallery": "गैलरी",
+    "addToChat": "फोटो अपलोड करें",
+    "uploadHint": "पौधे की बीमारी जानने के लिए फोटो लें या चुनें।",
+    "photos": "फ़ोटो"
   },
   "voice": {
     "microphonePermission": "माइक्रोफ़ोन अनुमति ज़रूरी है",
@@ -85,7 +90,9 @@
     "cancel": "रद्द करें",
     "done": "हो गया",
     "transcribing": "टेक्स्ट में बदल रहा है...",
-    "recordingHint": "टेक्स्ट में बदलने के लिए 'हो गया' दबाएँ, छोड़ने के लिए 'रद्द करें'"
+    "recordingHint": "टेक्स्ट में बदलने के लिए 'हो गया' दबाएँ, छोड़ने के लिए 'रद्द करें'",
+    "listening": "सुन रहा है...",
+    "waitingForSpeech": "बोलने का इंतज़ार कर रहा है..."
   },
   "history": {
     "title": "बातचीत",
@@ -282,7 +289,12 @@
     "offline": "इंटरनेट नहीं है",
     "errorTitle": "कुछ गड़बड़ हुई",
     "errorFallback": "अचानक कोई समस्या आ गई",
-    "tryAgain": "फिर से कोशिश करें"
+    "tryAgain": "फिर से कोशिश करें",
+    "restartRequired": "ऐप रीस्टार्ट ज़रूरी है",
+    "restartRequiredMessage": "{language} भाषा में स्विच करने के लिए ऐप को रीस्टार्ट करना होगा ताकि लेआउट में बदलाव दिखें।",
+    "restartNow": "अभी रीस्टार्ट करें",
+    "pleaseRestart": "कृपया रीस्टार्ट करें",
+    "pleaseRestartMessage": "बदलाव देखने के लिए, कृपया ऐप बंद करके दोबारा खोलें।"
   },
   "errors": {
     "syncFailed": "सर्वर से जुड़ नहीं पाए। कुछ सुविधाएँ सीमित हो सकती हैं।",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "आवाज़ समझ नहीं पाई। फिर से बोलकर देखें।",
     "serverError": "सर्वर में समस्या। कृपया बाद में फिर से कोशिश करें।",
     "requestTimeout": "अनुरोध का समय समाप्त हो गया। अपना कनेक्शन जाँचें।",
-    "locationLookupFailed": "आपकी लोकेशन की जानकारी नहीं मिल पाई।"
+    "locationLookupFailed": "आपकी लोकेशन की जानकारी नहीं मिल पाई।",
+    "imageUploadFailed": "फोटो सेव नहीं हो सकी। आपका मैसेज भेजा जा चुका है।",
+    "audioUploadFailed": "वॉयस रिकॉर्डिंग सेव नहीं हो सकी।",
+    "mcpServersFailed": "AI सेवाएं लोड नहीं हो पाईं। कुछ सुविधाएँ काम नहीं कर सकतीं।",
+    "sessionCreateFailed": "बातचीत सेव नहीं हो पाई। आपके मैसेज सेव नहीं होंगे।"
   },
   "a11y": {
     "startNewChat": "नई चैट शुरू करें",
@@ -320,6 +336,7 @@
     "themeMode": "थीम: {mode}",
     "copyMessage": "मैसेज कॉपी करें",
     "askQuestion": "पूछें: {question}",
-    "selectLanguage": "भाषा {name}"
+    "selectLanguage": "भाषा {name}",
+    "openHistory": "इतिहास खोलें"
   }
 }

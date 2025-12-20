@@ -9,7 +9,8 @@
     "refresh": "به‌روزرسانی",
     "clear": "پاک کردن",
     "loading": "در حال بارگذاری...",
-    "skipForNow": "صرف‌نظر فعلاً"
+    "skipForNow": "صرف‌نظر فعلاً",
+    "comingSoon": "به زودی"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "برای تنظیم مکان ضربه بزنید.",
     "senderAssistant": "FarmerChat",
     "senderYou": "شما",
-    "tapToAskNext": "برای سوال بعدی ضربه بزنید:"
+    "tapToAskNext": "برای سوال بعدی ضربه بزنید:",
+    "analysisComplete": "تحلیل کامل شد"
   },
   "media": {
     "photoLibraryPermission": "برای انتخاب عکس، نیاز به دسترسی به گالری است. در تنظیمات فعال کنید.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "انتخاب عکس انجام نشد. دوباره امتحان کنید.",
     "cameraFailed": "دسترسی به دوربین ممکن نشد. دوباره امتحان کنید.",
     "camera": "دوربین",
-    "gallery": "گالری"
+    "gallery": "گالری",
+    "addToChat": "آپلود عکس",
+    "uploadHint": "برای تشخیص سلامت گیاه، عکس بگیرید یا انتخاب کنید.",
+    "photos": "عکس‌ها"
   },
   "voice": {
     "microphonePermission": "اجازه میکروفون لازم است",
@@ -85,7 +90,9 @@
     "cancel": "لغو",
     "done": "تمام",
     "transcribing": "در حال متن‌سازی...",
-    "recordingHint": "برای تبدیل به متن، «تمام» را بزنید و برای حذف، «لغو» را بزنید."
+    "recordingHint": "برای تبدیل به متن، «تمام» را بزنید و برای حذف، «لغو» را بزنید.",
+    "listening": "در حال گوش دادن...",
+    "waitingForSpeech": "منتظر صحبت..."
   },
   "history": {
     "title": "گفتگوها",
@@ -282,7 +289,12 @@
     "offline": "اینترنت نیست",
     "errorTitle": "مشکلی پیش آمد",
     "errorFallback": "یک خطای غیرمنتظره رخ داد",
-    "tryAgain": "تلاش مجدد"
+    "tryAgain": "تلاش مجدد",
+    "restartRequired": "نیاز به راه‌اندازی مجدد برنامه",
+    "restartRequiredMessage": "با تغییر زبان به {language}، برای اعمال تغییرات ظاهری، برنامه باید دوباره راه‌اندازی شود.",
+    "restartNow": "اکنون راه‌اندازی مجدد",
+    "pleaseRestart": "لطفاً راه‌اندازی مجدد کنید",
+    "pleaseRestartMessage": "لطفاً برنامه را ببندید و دوباره باز کنید تا تغییرات اعمال شوند."
   },
   "errors": {
     "syncFailed": "ارتباط با سرور برقرار نشد. برخی از قابلیت‌ها ممکن است محدود باشند.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "تبدیل گفتار به متن ناموفق بود. لطفاً دوباره صحبت کنید.",
     "serverError": "خطای سرور. لطفاً بعداً دوباره امتحان کنید.",
     "requestTimeout": "مهلت درخواست به پایان رسید. اتصال خود را بررسی کنید.",
-    "locationLookupFailed": "موقعیت مکانی شما شناسایی نشد."
+    "locationLookupFailed": "موقعیت مکانی شما شناسایی نشد.",
+    "imageUploadFailed": "عکس ذخیره نشد. پیام شما ارسال شد.",
+    "audioUploadFailed": "ضبط صدا ذخیره نشد.",
+    "mcpServersFailed": "خدمات هوش مصنوعی بارگذاری نشد. ممکن است برخی قابلیت‌ها در دسترس نباشند.",
+    "sessionCreateFailed": "مکالمه ذخیره نشد. پیام‌ها ممکن است باقی نمانند."
   },
   "a11y": {
     "startNewChat": "شروع گفتگوی جدید",
@@ -320,6 +336,7 @@
     "themeMode": "تم: {mode}",
     "copyMessage": "کپی پیام",
     "askQuestion": "پرسش: {question}",
-    "selectLanguage": "زبان {name}"
+    "selectLanguage": "زبان {name}",
+    "openHistory": "باز کردن تاریخچه"
   }
 }

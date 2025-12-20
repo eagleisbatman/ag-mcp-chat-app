@@ -9,7 +9,8 @@
     "refresh": "রিফ্রেশ",
     "clear": "পরিষ্কার",
     "loading": "লোড হচ্ছে…",
-    "skipForNow": "এখন বাদ দিন"
+    "skipForNow": "এখন বাদ দিন",
+    "comingSoon": "শীঘ্রই আসছে"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "অবস্থান সেট করতে ট্যাপ করুন",
     "senderAssistant": "FarmerChat",
     "senderYou": "আপনি",
-    "tapToAskNext": "পরেরটি জিজ্ঞাসা করতে ট্যাপ করুন:"
+    "tapToAskNext": "পরেরটি জিজ্ঞাসা করতে ট্যাপ করুন:",
+    "analysisComplete": "বিশ্লেষণ সম্পূর্ণ"
   },
   "media": {
     "photoLibraryPermission": "ছবি বেছে নেওয়ার জন্য গ্যালারির অনুমতি প্রয়োজন। সেটিংসে চালু করুন।",
@@ -70,7 +72,10 @@
     "pickImageFailed": "ছবি নেওয়া যায়নি। আবার চেষ্টা করুন।",
     "cameraFailed": "ক্যামেরায় প্রবেশ করা যায়নি। আবার চেষ্টা করুন।",
     "camera": "ক্যামেরা",
-    "gallery": "গ্যালারি"
+    "gallery": "গ্যালারি",
+    "addToChat": "ছবি আপলোড করুন",
+    "uploadHint": "গাছের রোগ দেখতে ছবি তুলুন বা বাছুন।",
+    "photos": "ছবি"
   },
   "voice": {
     "microphonePermission": "মাইক্রোফোন অনুমতি প্রয়োজন",
@@ -85,7 +90,9 @@
     "cancel": "বাতিল",
     "done": "সম্পন্ন",
     "transcribing": "লেখা তৈরি হচ্ছে...",
-    "recordingHint": "লেখা তৈরি করতে সম্পন্ন চাপুন, অথবা বাতিল করতে বাদ দিন"
+    "recordingHint": "লেখা তৈরি করতে সম্পন্ন চাপুন, অথবা বাতিল করতে বাদ দিন",
+    "listening": "শুনছি...",
+    "waitingForSpeech": "বলার অপেক্ষা করছি..."
   },
   "history": {
     "title": "কথোপকথন",
@@ -282,7 +289,12 @@
     "offline": "কোনো ইন্টারনেট সংযোগ নেই",
     "errorTitle": "ওহ! সমস্যা হয়েছে",
     "errorFallback": "একটি অপ্রত্যাশিত সমস্যা হয়েছে",
-    "tryAgain": "আবার চেষ্টা করুন"
+    "tryAgain": "আবার চেষ্টা করুন",
+    "restartRequired": "অ্যাপ পুনরায় চালু করা প্রয়োজন",
+    "restartRequiredMessage": "{language} ভাষায় পরিবর্তনের জন্য অ্যাপ পুনরায় চালু করতে হবে।",
+    "restartNow": "এখনই পুনরায় চালু করুন",
+    "pleaseRestart": "দয়া করে পুনরায় চালু করুন",
+    "pleaseRestartMessage": "পরিবর্তন দেখতে অ্যাপটি বন্ধ করে আবার খুলুন।"
   },
   "errors": {
     "syncFailed": "সার্ভারের সাথে সংযোগ করা যায়নি। কিছু ফিচার সীমিত হতে পারে।",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "ভয়েস ইনপুট ব্যর্থ হয়েছে। আবার কথা বলুন।",
     "serverError": "সার্ভার ত্রুটি। পরে আবার চেষ্টা করুন।",
     "requestTimeout": "অনুরোধের সময় শেষ হয়েছে। আপনার সংযোগ পরীক্ষা করুন।",
-    "locationLookupFailed": "আপনার অবস্থান নির্ণয় করা যায়নি।"
+    "locationLookupFailed": "আপনার অবস্থান নির্ণয় করা যায়নি।",
+    "imageUploadFailed": "ছবি সেভ করা যায়নি। আপনার বার্তা পাঠানো হয়েছে।",
+    "audioUploadFailed": "ভয়েস রেকর্ড সেভ করা যায়নি।",
+    "mcpServersFailed": "এআই (AI) পরিষেবা লোড করা যায়নি। কিছু ফিচার নাও কাজ করতে পারে।",
+    "sessionCreateFailed": "কথাগুলো সেভ করা যায়নি। আপনার মেসেজগুলি পরে নাও থাকতে পারে।"
   },
   "a11y": {
     "startNewChat": "নতুন চ্যাট শুরু করুন",
@@ -320,6 +336,7 @@
     "themeMode": "থিম: {mode}",
     "copyMessage": "মেসেজ কপি করুন",
     "askQuestion": "জিজ্ঞাসা করুন: {question}",
-    "selectLanguage": "ভাষা {name}"
+    "selectLanguage": "ভাষা {name}",
+    "openHistory": "ইতিহাস খুলুন"
   }
 }

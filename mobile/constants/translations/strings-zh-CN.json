@@ -9,7 +9,8 @@
     "refresh": "刷新",
     "clear": "清除",
     "loading": "加载中…",
-    "skipForNow": "暂时跳过"
+    "skipForNow": "暂时跳过",
+    "comingSoon": "即将推出"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "轻触设置定位",
     "senderAssistant": "FarmerChat",
     "senderYou": "您",
-    "tapToAskNext": "点击提问："
+    "tapToAskNext": "点击提问：",
+    "analysisComplete": "分析完成"
   },
   "media": {
     "photoLibraryPermission": "选取图片需要相册权限，请在设置中开启。",
@@ -70,7 +72,10 @@
     "pickImageFailed": "选取图片失败，请重试。",
     "cameraFailed": "相机访问失败，请重试。",
     "camera": "相机",
-    "gallery": "相册"
+    "gallery": "相册",
+    "addToChat": "上传图片",
+    "uploadHint": "拍照或选图诊断作物健康",
+    "photos": "照片"
   },
   "voice": {
     "microphonePermission": "需要麦克风权限",
@@ -85,7 +90,9 @@
     "cancel": "取消",
     "done": "完成",
     "transcribing": "正在转写...",
-    "recordingHint": "点“完成”转写，点“取消”放弃"
+    "recordingHint": "点“完成”转写，点“取消”放弃",
+    "listening": "正在聆听...",
+    "waitingForSpeech": "等待您说话..."
   },
   "history": {
     "title": "对话",
@@ -282,7 +289,12 @@
     "offline": "无网络连接",
     "errorTitle": "出错了",
     "errorFallback": "发生未知错误",
-    "tryAgain": "重试"
+    "tryAgain": "重试",
+    "restartRequired": "应用需要重启",
+    "restartRequiredMessage": "切换到{language}，请重启应用以使布局生效。",
+    "restartNow": "立即重启",
+    "pleaseRestart": "请重启",
+    "pleaseRestartMessage": "请关闭并重新打开应用以使更改生效。"
   },
   "errors": {
     "syncFailed": "连接服务器失败，部分功能受限。",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "语音识别失败。请再试一遍。",
     "serverError": "服务器错误，请稍后再试。",
     "requestTimeout": "请求超时。请检查网络。",
-    "locationLookupFailed": "无法获取您的位置。"
+    "locationLookupFailed": "无法获取您的位置。",
+    "imageUploadFailed": "图片保存失败。您的消息已发送。",
+    "audioUploadFailed": "语音保存失败。",
+    "mcpServersFailed": "AI服务加载失败。部分功能可能不可用。",
+    "sessionCreateFailed": "对话保存失败。消息可能不会保留。"
   },
   "a11y": {
     "startNewChat": "开始新聊天",
@@ -320,6 +336,7 @@
     "themeMode": "主题: {mode}",
     "copyMessage": "复制消息",
     "askQuestion": "提问: {question}",
-    "selectLanguage": "语言 {name}"
+    "selectLanguage": "语言 {name}",
+    "openHistory": "打开历史记录"
   }
 }

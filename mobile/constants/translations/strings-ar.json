@@ -9,7 +9,8 @@
     "refresh": "تحديث",
     "clear": "مسح",
     "loading": "جارٍ التحميل...",
-    "skipForNow": "تخطي الآن"
+    "skipForNow": "تخطي الآن",
+    "comingSoon": "قريباً"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "انقر لتعيين الموقع",
     "senderAssistant": "FarmerChat",
     "senderYou": "أنت",
-    "tapToAskNext": "انقر لتسأل التالي:"
+    "tapToAskNext": "انقر لتسأل التالي:",
+    "analysisComplete": "تم التحليل"
   },
   "media": {
     "photoLibraryPermission": "مطلوب الوصول إلى مكتبة الصور لاختيار الصور. فعّل من الإعدادات.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "فشل اختيار الصورة. يرجى المحاولة مرة أخرى.",
     "cameraFailed": "فشل الوصول إلى الكاميرا. يرجى المحاولة مرة أخرى.",
     "camera": "الكاميرا",
-    "gallery": "المعرض"
+    "gallery": "المعرض",
+    "addToChat": "تحميل صورة",
+    "uploadHint": "التقط أو اختر صورة لتشخيص صحة النبات",
+    "photos": "الصور"
   },
   "voice": {
     "microphonePermission": "مطلوب إذن الميكروفون",
@@ -85,7 +90,9 @@
     "cancel": "إلغاء",
     "done": "تم",
     "transcribing": "جارٍ النسخ...",
-    "recordingHint": "انقر على تم للنسخ، أو إلغاء للتجاهل."
+    "recordingHint": "انقر على تم للنسخ، أو إلغاء للتجاهل.",
+    "listening": "جاري الاستماع...",
+    "waitingForSpeech": "في انتظار حديثك..."
   },
   "history": {
     "title": "محادثات",
@@ -282,7 +289,12 @@
     "offline": "لا يوجد اتصال بالإنترنت",
     "errorTitle": "عذراً! حدث خطأ ما",
     "errorFallback": "حدث خطأ غير متوقع",
-    "tryAgain": "حاول مرة أخرى"
+    "tryAgain": "حاول مرة أخرى",
+    "restartRequired": "يتطلب إعادة تشغيل",
+    "restartRequiredMessage": "يتطلب التبديل إلى {language} إعادة تشغيل التطبيق لتطبيق تغييرات التخطيط.",
+    "restartNow": "إعادة التشغيل الآن",
+    "pleaseRestart": "الرجاء إعادة التشغيل",
+    "pleaseRestartMessage": "الرجاء إغلاق التطبيق وإعادة فتحه لتطبيق التغييرات."
   },
   "errors": {
     "syncFailed": "تعذر الاتصال بالخادم. قد تكون بعض الميزات محدودة.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "فشل تحويل الصوت. حاول التحدث مرة أخرى.",
     "serverError": "خطأ في الخادم. الرجاء المحاولة لاحقًا.",
     "requestTimeout": "انتهت مهلة الطلب. تحقق من اتصالك.",
-    "locationLookupFailed": "تعذر تحديد تفاصيل موقعك."
+    "locationLookupFailed": "تعذر تحديد تفاصيل موقعك.",
+    "imageUploadFailed": "تعذر حفظ الصورة. تم إرسال رسالتك.",
+    "audioUploadFailed": "تعذر حفظ التسجيل الصوتي.",
+    "mcpServersFailed": "تعذر تحميل خدمات الذكاء الاصطناعي. قد لا تتوفر بعض الميزات.",
+    "sessionCreateFailed": "تعذر حفظ المحادثة. قد لا تبقى الرسائل."
   },
   "a11y": {
     "startNewChat": "ابدأ دردشة جديدة",
@@ -320,6 +336,7 @@
     "themeMode": "المظهر: {mode}",
     "copyMessage": "نسخ الرسالة",
     "askQuestion": "اسأل: {question}",
-    "selectLanguage": "اللغة {name}"
+    "selectLanguage": "اللغة {name}",
+    "openHistory": "فتح السجل"
   }
 }

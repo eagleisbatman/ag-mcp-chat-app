@@ -9,7 +9,8 @@
     "refresh": "Cusboonaysii",
     "clear": "Nadiifi",
     "loading": "Soo shubanaya…",
-    "skipForNow": "Hadda ka bood"
+    "skipForNow": "Hadda ka bood",
+    "comingSoon": "Waa soo socotaa"
   },
   "onboarding": {
     "appName": "FarmerChat",
@@ -62,7 +63,8 @@
     "tapLocationToSet": "Taabo goobta si aad u dejiso",
     "senderAssistant": "FarmerChat",
     "senderYou": "Adiga",
-    "tapToAskNext": "Taabo si aad u weydiiso xigta:"
+    "tapToAskNext": "Taabo si aad u weydiiso xigta:",
+    "analysisComplete": "Falanqayntu waa dhammaatay"
   },
   "media": {
     "photoLibraryPermission": "Ogolaanshaha sawirrada ayaa loo baahan yahay si sawirro loo doorto. Ku shid Dejinta.",
@@ -70,7 +72,10 @@
     "pickImageFailed": "Sawir lama dooran karin. Fadlan mar kale isku day.",
     "cameraFailed": "Kamaradda lama helin. Fadlan mar kale isku day.",
     "camera": "Kamarad",
-    "gallery": "Sawirro"
+    "gallery": "Sawirro",
+    "addToChat": "Soo geli Sawir",
+    "uploadHint": "Sawir ka qaad ama ka dooro si loo ogaado caafimaadka geedka",
+    "photos": "Sawirro"
   },
   "voice": {
     "microphonePermission": "Ogolaansho makarafoon ayaa loo baahan yahay",
@@ -85,7 +90,9 @@
     "cancel": "Jooji",
     "done": "Dhamee",
     "transcribing": "Waa la qorayaa...",
-    "recordingHint": "Taabo Dhamee si aad u qorto, ama Jooji si aad u tirtirto."
+    "recordingHint": "Taabo Dhamee si aad u qorto, ama Jooji si aad u tirtirto.",
+    "listening": "Waan dhagaysanayaa...",
+    "waitingForSpeech": "Waxaan sugayaa hadal..."
   },
   "history": {
     "title": "Sheekooyin",
@@ -282,7 +289,12 @@
     "offline": "Internet ma jiro",
     "errorTitle": "Wax baa qaldamay!",
     "errorFallback": "Cilad lama filaan ah baa dhacday",
-    "tryAgain": "Iskuday mar kale"
+    "tryAgain": "Iskuday mar kale",
+    "restartRequired": "App-ka Dib U Furid ayaa Loo Baahan Yahay",
+    "restartRequiredMessage": "Ku wareejinta {language} waxay u baahan tahay in app-ka dib loo furo si ay isbeddelada qaabka u shaqeeyaan.",
+    "restartNow": "Dib u fur Hadda",
+    "pleaseRestart": "Fadlan Dib u fur",
+    "pleaseRestartMessage": "Fadlan xidh oo dib u fur app-ka si isbeddelada ay u shaqeeyaan."
   },
   "errors": {
     "syncFailed": "Lama xiriirin server-ka. Qaar ka mid ah shaqooyinka ayaa xadidan.",
@@ -292,7 +304,11 @@
     "transcriptionFailed": "Beddelidda codka ayaa guuldarraysatay. Mar kale ku hadal.",
     "serverError": "Khalad server-ka ah. Fadlan mar dambe isku day.",
     "requestTimeout": "Codsiga wuu dhammaaday. Hubi xiriirkaaga.",
-    "locationLookupFailed": "Lama go'aamin karin meesha aad joogto."
+    "locationLookupFailed": "Lama go'aamin karin meesha aad joogto.",
+    "imageUploadFailed": "Sawirka lama kaydin karin. Fariintaada waa la diray.",
+    "audioUploadFailed": "Codka lama kaydin karin.",
+    "mcpServersFailed": "Ma shaqayn karaan adeegyada AI. Qaar ka mid ah shaqooyinka ayaa laga yaabaa inaysan diyaar ahayn.",
+    "sessionCreateFailed": "Wada-hadalka lama kaydin karin. Fariimaha laga yaabaa inaysan sii jirin."
   },
   "a11y": {
     "startNewChat": "Bilow sheeko cusub",
@@ -320,6 +336,7 @@
     "themeMode": "Habka: {mode}",
     "copyMessage": "Koobiye fariinta",
     "askQuestion": "Weydii: {question}",
-    "selectLanguage": "Luqadda {name}"
+    "selectLanguage": "Luqadda {name}",
+    "openHistory": "Fur Taariikhda"
   }
 }

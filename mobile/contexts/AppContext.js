@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Updates from 'expo-updates';
 import { registerUser, updatePreferences, saveLocation as saveLocationToDB, lookupLocation } from '../services/db';
 import { THEMES } from '../constants/themes';
-import { setLocale, loadTranslations } from '../constants/strings';
+import { setLocale, loadTranslations, t } from '../constants/strings';
 import { isRTLLanguage } from '../constants/languages';
 
 // Re-export THEMES for backward compatibility
@@ -204,18 +204,18 @@ export const AppProvider = ({ children }) => {
       // App needs to reload for RTL changes to take effect
       // Show alert and reload
       Alert.alert(
-        'App Restart Required',
-        `Switching to ${lang.name} requires restarting the app for layout changes.`,
+        t('system.restartRequired'),
+        t('system.restartRequiredMessage', { language: lang.name }),
         [
           {
-            text: 'Restart Now',
+            text: t('system.restartNow'),
             onPress: async () => {
               try {
                 await Updates.reloadAsync();
               } catch (e) {
                 console.log('⚠️ [AppContext] Could not reload app:', e);
                 // Fallback message if reload fails (dev mode)
-                Alert.alert('Please Restart', 'Please close and reopen the app for changes to take effect.');
+                Alert.alert(t('system.pleaseRestart'), t('system.pleaseRestartMessage'));
               }
             },
           },
