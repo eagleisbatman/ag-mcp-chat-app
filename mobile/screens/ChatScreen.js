@@ -35,6 +35,7 @@ export default function ChatScreen({ navigation, route }) {
   
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
+  const scrollPendingRef = useRef(false); // Track if scroll is already scheduled
 
   // Handle new session request
   useEffect(() => {
@@ -138,13 +139,12 @@ export default function ChatScreen({ navigation, route }) {
     Haptics.selectionAsync();
   }, []);
 
-  // Scroll to show user's message at top when typing starts
+  // Scroll to show user's message at top - uses ref to get latest messages
   const scrollToUserMessage = useCallback(() => {
     // Data after reverse: [oldest...userMessage, botPlaceholder]
     const reversedMessages = [...messages].reverse();
 
     // Find the newest user message (not bot, not welcome)
-    // This is the question user just asked - we want it at the top
     let userMessageIndex = -1;
     for (let i = reversedMessages.length - 1; i >= 0; i--) {
       const msg = reversedMessages[i];
@@ -158,11 +158,15 @@ export default function ChatScreen({ navigation, route }) {
       console.log('📜 [Scroll] Scrolling to user message at index:', userMessageIndex);
       flatListRef.current.scrollToIndex({
         index: userMessageIndex,
-        animated: false, // Instant scroll - can't be interrupted
-        viewPosition: 0, // Position at top of viewport
+        animated: false,
+        viewPosition: 0,
       });
     }
   }, [messages]);
+
+  // Keep a ref to the latest scrollToUserMessage function
+  const scrollToUserMessageRef = useRef(scrollToUserMessage);
+  scrollToUserMessageRef.current = scrollToUserMessage;
 
   const handleScroll = useCallback((event) => {
     const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
@@ -170,25 +174,29 @@ export default function ChatScreen({ navigation, route }) {
     setShowScrollButton(distanceFromBottom > 100);
   }, []);
 
-  // When typing starts, scroll to show user's question at top
+  // When typing starts, scroll to show user's question at top (ONCE only)
   const prevIsTyping = useRef(isTyping);
   useEffect(() => {
-    if (isTyping && !prevIsTyping.current) {
-      // Typing just started - wait for layout to complete, then scroll
-      // Use InteractionManager for reliable timing after render
-      const handle = InteractionManager.runAfterInteractions(() => {
-        // Additional delay to ensure FlatList has laid out new items
+    if (isTyping && !prevIsTyping.current && !scrollPendingRef.current) {
+      // Mark scroll as pending to prevent duplicate triggers
+      scrollPendingRef.current = true;
+
+      // Wait for layout, then scroll ONCE
+      InteractionManager.runAfterInteractions(() => {
         setTimeout(() => {
-          scrollToUserMessage();
-          // Backup scroll attempt in case first one was too early
-          setTimeout(() => scrollToUserMessage(), 200);
+          scrollToUserMessageRef.current();
+          scrollPendingRef.current = false;
         }, 50);
       });
-
-      return () => handle.cancel();
     }
+
+    // Reset when typing ends
+    if (!isTyping && prevIsTyping.current) {
+      scrollPendingRef.current = false;
+    }
+
     prevIsTyping.current = isTyping;
-  }, [isTyping, scrollToUserMessage]);
+  }, [isTyping]); // Only depend on isTyping, not scrollToUserMessage
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
