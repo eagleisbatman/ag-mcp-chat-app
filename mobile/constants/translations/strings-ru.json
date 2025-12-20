@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Не удалось загрузить беседу",
     "startedNewConversation": "Начата новая беседа",
     "connectionErrorBot": "Ошибка соединения. Попробуйте еще раз.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Анализ изображения не удался. Попробуйте еще раз.",
     "sorryCouldNotProcess": "Извините, не удалось обработать. {details}",
     "analysisCouldNotComplete": "Анализ не завершен. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Вы",
     "tapToAskNext": "Нажмите, чтобы спросить следующее:",
-    "analysisComplete": "Анализ завершен"
+    "analysisComplete": "Анализ завершен",
+    "plantPhotoSent": "Фото растения отправлено на анализ"
   },
   "media": {
     "photoLibraryPermission": "Доступ к фотогалерее нужен для выбора изображений. Включите в Настройках.",

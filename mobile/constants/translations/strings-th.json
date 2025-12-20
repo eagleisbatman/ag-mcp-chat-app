@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "โหลดบทสนทนาไม่ได้",
     "startedNewConversation": "เริ่มบทสนทนาใหม่",
     "connectionErrorBot": "เชื่อมต่อผิดพลาด โปรดลองอีกครั้ง",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "วิเคราะห์ภาพไม่สำเร็จ ลองอีกครั้ง",
     "sorryCouldNotProcess": "ขออภัย ประมวลผลไม่ได้ {details}",
     "analysisCouldNotComplete": "วิเคราะห์ไม่สำเร็จ {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "คุณ",
     "tapToAskNext": "แตะเพื่อถามสิ่งต่อไป:",
-    "analysisComplete": "วิเคราะห์เสร็จแล้ว"
+    "analysisComplete": "วิเคราะห์เสร็จแล้ว",
+    "plantPhotoSent": "ส่งรูปพืชให้ตรวจสอบแล้ว"
   },
   "media": {
     "photoLibraryPermission": "ต้องเข้าถึงคลังรูปภาพเพื่อเลือกรูปภาพ เปิดที่การตั้งค่า",

@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "گفتگو لوڈ نہیں ہو سکی۔",
     "startedNewConversation": "نئی گفتگو شروع ہو گئی۔",
     "connectionErrorBot": "کنکشن میں خرابی۔ براہ کرم دوبارہ کوشش کریں۔",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "تصویر کا تجزیہ ناکام ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔",
     "sorryCouldNotProcess": "معذرت، میں اسے پروسیس نہیں کر سکا۔ {details}",
     "analysisCouldNotComplete": "تجزیہ مکمل نہیں ہو سکا۔ {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "آپ",
     "tapToAskNext": "اگلا سوال پوچھنے کے لیے ٹیپ کریں:",
-    "analysisComplete": "تجزیہ مکمل ہو گیا"
+    "analysisComplete": "تجزیہ مکمل ہو گیا",
+    "plantPhotoSent": "پودے کی تصویر جانچ کے لیے بھیج دی گئی۔"
   },
   "media": {
     "photoLibraryPermission": "تصاویر منتخب کرنے کے لیے گیلری تک رسائی درکار ہے۔ سیٹنگز میں فعال کریں۔",

@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "ንግግሩን መጫን አልተቻለም",
     "startedNewConversation": "አዲስ ንግግር ተጀምሯል",
     "connectionErrorBot": "የግንኙነት ስህተት። እባክዎ እንደገና ይሞክሩ።",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "የምስል ትንተና አልተሳካም። እባክዎ እንደገና ይሞክሩ።",
     "sorryCouldNotProcess": "ይቅርታ፣ ያንን ማከናወን አልቻልኩም። {details}",
     "analysisCouldNotComplete": "ትንተናው ሊጠናቀቅ አልቻለም። {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "እርስዎ",
     "tapToAskNext": "ቀጣዩን ለመጠየቅ ይንኩ፦",
-    "analysisComplete": "ትንተና ተጠናቋል"
+    "analysisComplete": "ትንተና ተጠናቋል",
+    "plantPhotoSent": "የእጽ ፎቶ ለምርመራ ተልኳል"
   },
   "media": {
     "photoLibraryPermission": "ፎቶዎችን ለመምረጥ የፎቶ ጋለሪ መዳረሻ ያስፈልጋል። በቅንብሮች ውስጥ ያንቁት።",

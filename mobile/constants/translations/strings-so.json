@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Wadahadalka lama rari karin",
     "startedNewConversation": "Wadahadal cusub ayaa bilowday",
     "connectionErrorBot": "Cilad xiriir. Fadlan mar kale isku day.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Falanqaynta sawirka way guuldarraysatay. Fadlan mar kale isku day.",
     "sorryCouldNotProcess": "Waan ka xumahay, ma aanan farsamayn karin. {details}",
     "analysisCouldNotComplete": "Falanqaynta ma dhamaan karin. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Adiga",
     "tapToAskNext": "Taabo si aad u weydiiso xigta:",
-    "analysisComplete": "Falanqayntu waa dhammaatay"
+    "analysisComplete": "Falanqayntu waa dhammaatay",
+    "plantPhotoSent": "Sawirka geedka falanqaynta loo diray"
   },
   "media": {
     "photoLibraryPermission": "Ogolaanshaha sawirrada ayaa loo baahan yahay si sawirro loo doorto. Ku shid Dejinta.",

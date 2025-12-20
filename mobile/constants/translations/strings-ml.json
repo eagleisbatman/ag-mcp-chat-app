@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "സംഭാഷണം ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല",
     "startedNewConversation": "പുതിയ സംഭാഷണം ആരംഭിച്ചു",
     "connectionErrorBot": "കണക്ഷൻ പിശക്. വീണ്ടും ശ്രമിക്കുക.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ചിത്ര വിശകലനം പരാജയപ്പെട്ടു. വീണ്ടും ശ്രമിക്കുക.",
     "sorryCouldNotProcess": "ക്ഷമിക്കണം, എനിക്ക് അത് പ്രോസസ്സ് ചെയ്യാൻ കഴിഞ്ഞില്ല. {details}",
     "analysisCouldNotComplete": "വിശകലനം പൂർത്തിയാക്കാൻ കഴിഞ്ഞില്ല. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "നിങ്ങൾ",
     "tapToAskNext": "അടുത്തത് ചോദിക്കാൻ ടാപ്പ് ചെയ്യുക:",
-    "analysisComplete": "പരിശോധന പൂർത്തിയായി"
+    "analysisComplete": "പരിശോധന പൂർത്തിയായി",
+    "plantPhotoSent": "ചെടിയുടെ ചിത്രം പരിശോധനയ്ക്കായി അയച്ചു"
   },
   "media": {
     "photoLibraryPermission": "ചിത്രങ്ങൾ തിരഞ്ഞെടുക്കാൻ ഫോട്ടോ ലൈബ്രറി അനുമതി വേണം. സെറ്റിംഗ്സിൽ ഇത് ഓൺ ചെയ്യുക.",

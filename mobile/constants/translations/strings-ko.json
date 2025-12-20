@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "대화를 불러올 수 없습니다",
     "startedNewConversation": "새 대화 시작",
     "connectionErrorBot": "연결 오류. 다시 시도해주세요.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "이미지 분석 실패. 다시 시도해주세요.",
     "sorryCouldNotProcess": "죄송합니다, 처리할 수 없었습니다. {details}",
     "analysisCouldNotComplete": "분석을 완료할 수 없었습니다. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "나",
     "tapToAskNext": "다음 질문하기:",
-    "analysisComplete": "분석 완료"
+    "analysisComplete": "분석 완료",
+    "plantPhotoSent": "식물 사진 분석 전송 완료"
   },
   "media": {
     "photoLibraryPermission": "사진 선택을 위해 앨범 접근 권한이 필요합니다. 설정에서 허용하세요.",

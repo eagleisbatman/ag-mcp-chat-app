@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "ਗੱਲਬਾਤ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ",
     "startedNewConversation": "ਨਵੀਂ ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਹੋਈ",
     "connectionErrorBot": "ਕਨੈਕਸ਼ਨ ਗਲਤੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ਤਸਵੀਰ ਦੀ ਜਾਂਚ ਫੇਲ੍ਹ ਹੋ ਗਈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "sorryCouldNotProcess": "ਮੁਆਫ ਕਰਨਾ, ਮੈਂ ਇਸ ਨੂੰ ਸਮਝ ਨਹੀਂ ਸਕਿਆ। {details}",
     "analysisCouldNotComplete": "ਜਾਂਚ ਪੂਰੀ ਨਹੀਂ ਹੋ ਸਕੀ। {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "ਤੁਸੀਂ",
     "tapToAskNext": "ਅੱਗੇ ਪੁੱਛਣ ਲਈ ਟੈਪ ਕਰੋ:",
-    "analysisComplete": "ਵਿਸ਼ਲੇਸ਼ਣ ਪੂਰਾ ਹੋ ਗਿਆ"
+    "analysisComplete": "ਵਿਸ਼ਲੇਸ਼ਣ ਪੂਰਾ ਹੋ ਗਿਆ",
+    "plantPhotoSent": "ਬੂਟੇ ਦੀ ਫੋਟੋ ਜਾਂਚ ਲਈ ਭੇਜੀ"
   },
   "media": {
     "photoLibraryPermission": "ਤਸਵੀਰਾਂ ਚੁਣਨ ਲਈ ਫੋਟੋ ਗੈਲਰੀ ਤੱਕ ਪਹੁੰਚ ਚਾਹੀਦੀ ਹੈ। ਇਸਨੂੰ ਸੈਟਿੰਗਜ਼ ਵਿੱਚ ਚਾਲੂ ਕਰੋ।",

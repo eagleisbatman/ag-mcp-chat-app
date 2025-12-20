@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Kò lè gbé ìjíròrò wọlé.",
     "startedNewConversation": "Bẹ̀rẹ̀ ìjíròrò tuntun.",
     "connectionErrorBot": "Àṣìṣe àsopọ̀. Jọ̀wọ́ tún gbìyànjú.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Àyẹ̀wò àwòrán kò já sí rere. Jọ̀wọ́ tún gbìyànjú.",
     "sorryCouldNotProcess": "Àforíjì, n kò lè ṣiṣẹ́ lórí rẹ̀. {details}",
     "analysisCouldNotComplete": "Àyẹ̀wò kò lè parí. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Ìwọ",
     "tapToAskNext": "Tẹ́ kí o béèrè èyí tó tẹ̀lé:",
-    "analysisComplete": "Ìṣàyẹ̀wò ti parí"
+    "analysisComplete": "Ìṣàyẹ̀wò ti parí",
+    "plantPhotoSent": "Fọ́tò ọgbin ranṣẹ fún àyẹ̀wò"
   },
   "media": {
     "photoLibraryPermission": "A nílò àyè sí ibi ìpamọ fọ́tò láti yan fọ́tò. Múu ṣiṣẹ́ ní Ètò.",

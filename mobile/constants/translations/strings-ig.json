@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Enweghị ike ibu mkparịta ụka",
     "startedNewConversation": "Malitere mkparịta ụka ọhụrụ",
     "connectionErrorBot": "Njehie njikọ. Biko nwaa ọzọ.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Nyocha foto adaala. Biko nwaa ọzọ.",
     "sorryCouldNotProcess": "Ndo, enweghị m ike hazie nke ahụ. {details}",
     "analysisCouldNotComplete": "Nyocha enweghị ike ịrụzu. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Gị",
     "tapToAskNext": "Metụ aka jụọ ihe ọzọ:",
-    "analysisComplete": "Nnyocha agwụla"
+    "analysisComplete": "Nnyocha agwụla",
+    "plantPhotoSent": "Ezigola foto osisi maka nyocha"
   },
   "media": {
     "photoLibraryPermission": "Achọrọ ohere ịnweta foto iji họrọ onyonyo. Gbanye ya na Ntọala.",

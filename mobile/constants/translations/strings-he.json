@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "לא ניתן לטעון שיחה",
     "startedNewConversation": "התחילה שיחה חדשה",
     "connectionErrorBot": "שגיאת חיבור. אנא נסה שוב.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ניתוח התמונה נכשל. אנא נסה שוב.",
     "sorryCouldNotProcess": "מצטער, לא הצלחתי לעבד זאת. {details}",
     "analysisCouldNotComplete": "הניתוח לא הושלם. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "אתה",
     "tapToAskNext": "הקש לשאלה הבאה:",
-    "analysisComplete": "ניתוח הושלם"
+    "analysisComplete": "ניתוח הושלם",
+    "plantPhotoSent": "נשלחה תמונת צמח לניתוח"
   },
   "media": {
     "photoLibraryPermission": "גישה לספריית התמונות דרושה לבחירת תמונות. אפשר בהגדרות.",

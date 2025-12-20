@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "बातचीत लोड नहीं हो सकी",
     "startedNewConversation": "नई बातचीत शुरू हुई",
     "connectionErrorBot": "कनेक्शन त्रुटि। कृपया फिर से कोशिश करें।",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "तस्वीर का विश्लेषण विफल रहा। कृपया फिर से कोशिश करें।",
     "sorryCouldNotProcess": "माफ़ करें, मैं यह समझ नहीं पाया। {details}",
     "analysisCouldNotComplete": "विश्लेषण पूरा नहीं हो सका। {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "आप",
     "tapToAskNext": "अगला पूछने के लिए टैप करें:",
-    "analysisComplete": "जाँच पूरी हुई"
+    "analysisComplete": "जाँच पूरी हुई",
+    "plantPhotoSent": "पौधे का फोटो विश्लेषण के लिए भेजा गया।"
   },
   "media": {
     "photoLibraryPermission": "फ़ोटो चुनने के लिए गैलरी एक्सेस ज़रूरी है। सेटिंग्स में चालू करें।",

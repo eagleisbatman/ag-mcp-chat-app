@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "会話を読み込めませんでした",
     "startedNewConversation": "新しい会話を開始しました",
     "connectionErrorBot": "接続エラーです。もう一度お試しください。",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "画像解析に失敗しました。もう一度お試しください。",
     "sorryCouldNotProcess": "申し訳ありません、処理できませんでした。{details}",
     "analysisCouldNotComplete": "解析を完了できませんでした。{details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "あなた",
     "tapToAskNext": "次に質問するにはタップ:",
-    "analysisComplete": "分析完了"
+    "analysisComplete": "分析完了",
+    "plantPhotoSent": "作物の写真を分析に送りました。"
   },
   "media": {
     "photoLibraryPermission": "写真を選ぶには、フォトライブラリの許可が必要です。設定で有効にしてください。",

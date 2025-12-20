@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "对话加载失败",
     "startedNewConversation": "已开始新对话",
     "connectionErrorBot": "连接错误。请重试。",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "图片分析失败。请重试。",
     "sorryCouldNotProcess": "抱歉，无法处理。{details}",
     "analysisCouldNotComplete": "分析未能完成。{details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "您",
     "tapToAskNext": "点击提问：",
-    "analysisComplete": "分析完成"
+    "analysisComplete": "分析完成",
+    "plantPhotoSent": "已发送作物照片供分析"
   },
   "media": {
     "photoLibraryPermission": "选取图片需要相册权限，请在设置中开启。",

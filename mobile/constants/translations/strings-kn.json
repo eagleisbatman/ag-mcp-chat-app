@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "ಸಂಭಾಷಣೆ ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
     "startedNewConversation": "ಹೊಸ ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭಿಸಿದೆ",
     "connectionErrorBot": "ಸಂಪರ್ಕ ದೋಷ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ಚಿತ್ರ ವಿಶ್ಲೇಷಣೆ ವಿಫಲವಾಗಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
     "sorryCouldNotProcess": "ಕ್ಷಮಿಸಿ, ಅದನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. {details}",
     "analysisCouldNotComplete": "ವಿಶ್ಲೇಷಣೆ ಪೂರ್ಣಗೊಳ್ಳಲಿಲ್ಲ. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "ನೀವು",
     "tapToAskNext": "ಮುಂದೆ ಕೇಳಲು ಟ್ಯಾಪ್ ಮಾಡಿ:",
-    "analysisComplete": "ವಿಶ್ಲೇಷಣೆ ಪೂರ್ಣಗೊಂಡಿದೆ"
+    "analysisComplete": "ವಿಶ್ಲೇಷಣೆ ಪೂರ್ಣಗೊಂಡಿದೆ",
+    "plantPhotoSent": "ಗಿಡದ ಫೋಟೋವನ್ನು ವಿಶ್ಲೇಷಣೆಗೆ ಕಳುಹಿಸಲಾಗಿದೆ"
   },
   "media": {
     "photoLibraryPermission": "ಚಿತ್ರ ಆಯ್ಕೆ ಮಾಡಲು ಗ್ಯಾಲರಿ ಪ್ರವೇಶ ಬೇಕು. ಸೆಟ್ಟಿಂಗ್ಸ್‌ನಲ್ಲಿ ಆನ್ ಮಾಡಿ.",

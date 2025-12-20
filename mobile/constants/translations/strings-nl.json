@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Gesprek niet geladen",
     "startedNewConversation": "Nieuw gesprek gestart",
     "connectionErrorBot": "Verbindingsfout. Probeer opnieuw.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Afbeeldingsanalyse mislukt. Probeer opnieuw.",
     "sorryCouldNotProcess": "Sorry, ik kon dat niet verwerken. {details}",
     "analysisCouldNotComplete": "Analyse niet voltooid. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "U",
     "tapToAskNext": "Tik voor volgende vraag:",
-    "analysisComplete": "Analyse klaar"
+    "analysisComplete": "Analyse klaar",
+    "plantPhotoSent": "Verzonden plantenfoto voor analyse"
   },
   "media": {
     "photoLibraryPermission": "Toegang tot fotobibliotheek is nodig om foto's te kiezen. Activeer in Instellingen.",

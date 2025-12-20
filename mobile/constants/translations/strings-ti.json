@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "ዕላል ክጽዕን ኣይከኣለን",
     "startedNewConversation": "ሓድሽ ዕላል ተጀሚሩ",
     "connectionErrorBot": "ስሕተት ምትእስሳር። እንደገና ፈትኑ።",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ምምርማር ምስሊ ኣይሰርሕን። እንደገና ፈትኑ።",
     "sorryCouldNotProcess": "ይቕሬታ፣ ነዚ ክሰርሖ ኣይከኣልኩን። {details}",
     "analysisCouldNotComplete": "ምምርማር ክዛዘም ኣይከኣለን። {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "ንስኹም",
     "tapToAskNext": "ቀጺልኩም ንምሕታት ጠውቑ፦",
-    "analysisComplete": "ምርመራ ተዛዚሙ"
+    "analysisComplete": "ምርመራ ተዛዚሙ",
+    "plantPhotoSent": "ስእሊ ተኽሊ ንምምርማር ተላኢኹ"
   },
   "media": {
     "photoLibraryPermission": "ምስሊ ንምምራፅ ናብ ማዕከን ምስልታት ምእታው የድሊ። ኣብ ኣቀማምጣ ኣቕንዓዮ።",

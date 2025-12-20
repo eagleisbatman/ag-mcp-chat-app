@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "कुराकानी लोड गर्न सकिएन।",
     "startedNewConversation": "नयाँ कुराकानी सुरु भयो।",
     "connectionErrorBot": "जडान त्रुटि। कृपया फेरि प्रयास गर्नुहोस्।",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "तस्बिर विश्लेषण असफल भयो। कृपया फेरि प्रयास गर्नुहोस्।",
     "sorryCouldNotProcess": "माफ गर्नुहोस्, मैले त्यो प्रक्रिया गर्न सकिनँ। {details}",
     "analysisCouldNotComplete": "विश्लेषण पूरा हुन सकेन। {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "तपाईं",
     "tapToAskNext": "अर्को सोध्न छुनुहोस्:",
-    "analysisComplete": "विश्लेषण पूरा भयो"
+    "analysisComplete": "विश्लेषण पूरा भयो",
+    "plantPhotoSent": "बिरुवाको फोटो जाँचमा पठाइयो।"
   },
   "media": {
     "photoLibraryPermission": "तस्बिरहरू छनोट गर्न फोटो ग्यालरी पहुँच चाहिन्छ। सेटिङ्समा अन गर्नुहोस्।",

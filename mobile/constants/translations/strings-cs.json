@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Konverzaci se nepodařilo načíst.",
     "startedNewConversation": "Nová konverzace zahájena.",
     "connectionErrorBot": "Chyba připojení. Zkuste znovu.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Analýza snímku selhala. Zkuste znovu.",
     "sorryCouldNotProcess": "Omlouvám se, to se nepodařilo zpracovat. {details}",
     "analysisCouldNotComplete": "Analýza se nedokončila. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Vy",
     "tapToAskNext": "Klepnutím se zeptejte dále:",
-    "analysisComplete": "Analýza dokončena"
+    "analysisComplete": "Analýza dokončena",
+    "plantPhotoSent": "Poslána fotka rostliny k analýze"
   },
   "media": {
     "photoLibraryPermission": "K výběru fotek je nutný přístup do galerie. Povolte v Nastavení.",

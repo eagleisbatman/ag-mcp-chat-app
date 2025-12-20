@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Impossible de charger la conversation",
     "startedNewConversation": "Nouvelle conversation démarrée",
     "connectionErrorBot": "Erreur de connexion. Veuillez réessayer.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Échec de l'analyse d'image. Veuillez réessayer.",
     "sorryCouldNotProcess": "Désolé, je n'ai pas pu traiter cela. {details}",
     "analysisCouldNotComplete": "L'analyse n'a pas pu être terminée. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Vous",
     "tapToAskNext": "Touchez pour la suite :",
-    "analysisComplete": "Analyse terminée"
+    "analysisComplete": "Analyse terminée",
+    "plantPhotoSent": "Photo de plante envoyée pour analyse"
   },
   "media": {
     "photoLibraryPermission": "L'accès à la galerie photo est requis pour choisir des images. Activez dans les Réglages.",

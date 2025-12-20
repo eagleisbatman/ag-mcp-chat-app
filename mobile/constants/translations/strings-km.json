@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "មិនអាចផ្ទុកការសន្ទនាបានទេ",
     "startedNewConversation": "បានចាប់ផ្តើមការសន្ទនាថ្មី",
     "connectionErrorBot": "កំហុសក្នុងការតភ្ជាប់។ សូមព្យាយាមម្តងទៀត។",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ការវិភាគរូបភាពបរាជ័យ។ សូមព្យាយាមម្តងទៀត។",
     "sorryCouldNotProcess": "សូមអភ័យទោស ខ្ញុំមិនអាចដំណើរការបានទេ។ {details}",
     "analysisCouldNotComplete": "ការវិភាគមិនអាចបញ្ចប់បានទេ។ {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "អ្នក",
     "tapToAskNext": "ចុចដើម្បីសួរទៀត៖",
-    "analysisComplete": "វិភាគរួចរាល់"
+    "analysisComplete": "វិភាគរួចរាល់",
+    "plantPhotoSent": "បានផ្ញើរូបថតដំណាំសម្រាប់ពិនិត្យ"
   },
   "media": {
     "photoLibraryPermission": "ត្រូវ​ការ​សិទ្ធិ​ចូល​មើល​រូប​ថត ដើម្បី​ជ្រើស​រើស​រូប​ភាព។ សូម​បើក​ក្នុង​ការ​កំណត់​ទូរសព្ទ។",

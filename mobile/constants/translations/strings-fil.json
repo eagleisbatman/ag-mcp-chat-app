@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Hindi ma-load ang usapan",
     "startedNewConversation": "Nagsimula ng bagong usapan",
     "connectionErrorBot": "Error sa koneksyon. Pakisubukan muli.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Nabigo ang pagsusuri ng larawan. Pakisubukan muli.",
     "sorryCouldNotProcess": "Paumanhin, hindi ko naproseso 'yan. {details}",
     "analysisCouldNotComplete": "Hindi natapos ang pagsusuri. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Ikaw",
     "tapToAskNext": "I-tap para magtanong ng susunod:",
-    "analysisComplete": "Tapos na ang pagsusuri"
+    "analysisComplete": "Tapos na ang pagsusuri",
+    "plantPhotoSent": "Naipadala ang larawan ng halaman para suriin"
   },
   "media": {
     "photoLibraryPermission": "Kailangan ang access sa Photo library para makapili ng larawan. Payagan sa Settings.",

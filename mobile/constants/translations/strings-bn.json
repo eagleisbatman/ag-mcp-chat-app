@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "কথোপকথন লোড করা যায়নি",
     "startedNewConversation": "নতুন কথোপকথন শুরু হয়েছে",
     "connectionErrorBot": "সংযোগ ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ছবি বিশ্লেষণ ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
     "sorryCouldNotProcess": "দুঃখিত, এটি প্রক্রিয়া করা যায়নি। {details}",
     "analysisCouldNotComplete": "বিশ্লেষণ সম্পূর্ণ করা যায়নি। {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "আপনি",
     "tapToAskNext": "পরেরটি জিজ্ঞাসা করতে ট্যাপ করুন:",
-    "analysisComplete": "বিশ্লেষণ সম্পূর্ণ"
+    "analysisComplete": "বিশ্লেষণ সম্পূর্ণ",
+    "plantPhotoSent": "গাছের ছবি পাঠানো হয়েছে যাচাইয়ের জন্য"
   },
   "media": {
     "photoLibraryPermission": "ছবি বেছে নেওয়ার জন্য গ্যালারির অনুমতি প্রয়োজন। সেটিংসে চালু করুন।",

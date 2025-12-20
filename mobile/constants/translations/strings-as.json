@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "বাৰ্তালাপ লোড কৰিব নোৱাৰিলে",
     "startedNewConversation": "নতুন বাৰ্তালাপ আৰম্ভ হ'ল",
     "connectionErrorBot": "সংযোগত ত্ৰুটি। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ছবি বিশ্লেষণ বিফল হ'ল। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।",
     "sorryCouldNotProcess": "দুঃখিত, মই ইয়াক প্ৰচেছ কৰিব নোৱাৰিলোঁ। {details}",
     "analysisCouldNotComplete": "বিশ্লেষণ সম্পূৰ্ণ কৰিব নোৱাৰিলে। {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "আপুনি",
     "tapToAskNext": "পৰৱৰ্তী প্ৰশ্ন সুধিবলৈ টেপ কৰক:",
-    "analysisComplete": "বিশ্লেষণ সম্পূৰ্ণ হ'ল"
+    "analysisComplete": "বিশ্লেষণ সম্পূৰ্ণ হ'ল",
+    "plantPhotoSent": "গছৰ ফটো পৰীক্ষাৰ বাবে পঠিওৱা হ'ল"
   },
   "media": {
     "photoLibraryPermission": "ছবি বাছনি কৰিবলৈ ফটো লাইব্ৰেৰীৰ অনুমতি লাগে। ছেটিংছত সক্ষম কৰক।",

@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Imeshindwa kupakia mazungumzo",
     "startedNewConversation": "Mazungumzo mapya yameanzishwa",
     "connectionErrorBot": "Hitilafu ya muunganisho. Tafadhali jaribu tena.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Uchanganuzi wa picha umeshindwa. Tafadhali jaribu tena.",
     "sorryCouldNotProcess": "Samahani, sikuweza kushughulikia hilo. {details}",
     "analysisCouldNotComplete": "Uchanganuzi haukuweza kukamilika. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Wewe",
     "tapToAskNext": "Gusa kuuliza ijayo:",
-    "analysisComplete": "Uchambuzi umekamilika"
+    "analysisComplete": "Uchambuzi umekamilika",
+    "plantPhotoSent": "Imetumwa picha ya mmea kwa uchunguzi"
   },
   "media": {
     "photoLibraryPermission": "Ruhusa ya Ghala inahitajika kuchagua picha. Washa kwenye Mipangilio.",

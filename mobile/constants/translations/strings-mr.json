@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "संभाषण लोड करता आले नाही",
     "startedNewConversation": "नवीन संभाषण सुरू झाले",
     "connectionErrorBot": "कनेक्शनमध्ये त्रुटी. कृपया पुन्हा प्रयत्न करा.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "प्रतिमा विश्लेषण अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.",
     "sorryCouldNotProcess": "क्षमस्व, मी ते प्रक्रिया करू शकलो नाही. {details}",
     "analysisCouldNotComplete": "विश्लेषण पूर्ण होऊ शकले नाही. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "तुम्ही",
     "tapToAskNext": "पुढील विचारण्यासाठी टॅप करा:",
-    "analysisComplete": "विश्लेषण पूर्ण झाले"
+    "analysisComplete": "विश्लेषण पूर्ण झाले",
+    "plantPhotoSent": "झाडाचा फोटो तपासणीसाठी पाठवला"
   },
   "media": {
     "photoLibraryPermission": "फोटो निवडण्यासाठी गॅलरीची परवानगी हवी आहे. सेटिंग्जमध्ये चालू करा.",

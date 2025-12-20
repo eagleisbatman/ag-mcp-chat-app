@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "உரையாடலை ஏற்ற முடியவில்லை",
     "startedNewConversation": "புதிய உரையாடல் தொடங்கியது",
     "connectionErrorBot": "இணைப்புப் பிழை. மீண்டும் முயற்சிக்கவும்.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "பட பகுப்பாய்வு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.",
     "sorryCouldNotProcess": "மன்னிக்கவும், என்னால் அதைச் செயல்படுத்த முடியவில்லை. {details}",
     "analysisCouldNotComplete": "பகுப்பாய்வை முடிக்க முடியவில்லை. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "நீங்கள்",
     "tapToAskNext": "அடுத்ததைக் கேட்க தட்டவும்:",
-    "analysisComplete": "ஆய்வு முடிந்தது"
+    "analysisComplete": "ஆய்வு முடிந்தது",
+    "plantPhotoSent": "செடிப் படம் ஆய்வுக்கு அனுப்பப்பட்டது"
   },
   "media": {
     "photoLibraryPermission": "புகைப்படங்களைத் தேர்ந்தெடுக்க கேலரி அணுகல் தேவை. அமைப்புகளில் இயக்குங்கள்.",

@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "無法載入對話",
     "startedNewConversation": "已開始新對話",
     "connectionErrorBot": "連線錯誤。請再試一次。",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "圖片分析失敗。請再試一次。",
     "sorryCouldNotProcess": "抱歉，我無法處理。{details}",
     "analysisCouldNotComplete": "分析未能完成。{details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "您",
     "tapToAskNext": "輕觸以提出下一個問題：",
-    "analysisComplete": "分析完成"
+    "analysisComplete": "分析完成",
+    "plantPhotoSent": "已送出植物照片分析"
   },
   "media": {
     "photoLibraryPermission": "選取圖片需要相簿權限，請在設定中開啟。",

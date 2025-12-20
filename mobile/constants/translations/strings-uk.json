@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Не вдалося завантажити розмову",
     "startedNewConversation": "Розпочато нову розмову",
     "connectionErrorBot": "Помилка з'єднання. Спробуйте ще раз.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Аналіз зображення не вдався. Спробуйте ще раз.",
     "sorryCouldNotProcess": "Вибачте, не вдалося обробити. {details}",
     "analysisCouldNotComplete": "Аналіз не вдалося завершити. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Ви",
     "tapToAskNext": "Торкніться, щоб запитати далі:",
-    "analysisComplete": "Аналіз завершено"
+    "analysisComplete": "Аналіз завершено",
+    "plantPhotoSent": "Надіслано фото рослини для аналізу"
   },
   "media": {
     "photoLibraryPermission": "Для вибору зображень потрібен доступ до фотогалереї. Дозвольте в Налаштуваннях.",

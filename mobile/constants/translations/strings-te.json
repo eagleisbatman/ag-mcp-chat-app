@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "చాట్‌ను లోడ్ చేయలేకపోయాను",
     "startedNewConversation": "కొత్త చాట్ ప్రారంభమైంది",
     "connectionErrorBot": "కనెక్షన్ లోపం. దయచేసి మళ్ళీ ప్రయత్నించండి.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "చిత్ర విశ్లేషణ విఫలమైంది. దయచేసి మళ్ళీ ప్రయత్నించండి.",
     "sorryCouldNotProcess": "క్షమించండి, నేను దాన్ని ప్రాసెస్ చేయలేకపోయాను. {details}",
     "analysisCouldNotComplete": "విశ్లేషణ పూర్తి కాలేదు. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "మీరు",
     "tapToAskNext": "తదుపరి అడగడానికి నొక్కండి:",
-    "analysisComplete": "విశ్లేషణ పూర్తయింది"
+    "analysisComplete": "విశ్లేషణ పూర్తయింది",
+    "plantPhotoSent": "మొక్క ఫోటో పరిశీలన కోసం పంపబడింది"
   },
   "media": {
     "photoLibraryPermission": "చిత్రాలు ఎంచుకోవడానికి గ్యాలరీ అనుమతి కావాలి. సెట్టింగ్స్‌లో అనుమతించండి.",

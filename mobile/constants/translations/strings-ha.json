@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Ba a iya ɗaukar zance ba",
     "startedNewConversation": "An fara sabon zance",
     "connectionErrorBot": "Kuskuren haɗi. Da fatan za a sake gwadawa.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Binciken hoto ya gaza. Da fatan za a sake gwadawa.",
     "sorryCouldNotProcess": "Yi haƙuri, ban iya sarrafa hakan ba. {details}",
     "analysisCouldNotComplete": "Binciken ya kasa kammalawa. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Kai",
     "tapToAskNext": "Matsa don tambaya na gaba:",
-    "analysisComplete": "An gama bincike"
+    "analysisComplete": "An gama bincike",
+    "plantPhotoSent": "An tura hoton shuka don a duba"
   },
   "media": {
     "photoLibraryPermission": "Ana buƙatar damar shiga hotuna don zaɓar hotuna. Kunna a Saituna.",

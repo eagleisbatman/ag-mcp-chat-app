@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "વાતચીત લોડ કરી શકાયું નહીં",
     "startedNewConversation": "નવી વાતચીત શરૂ થઈ",
     "connectionErrorBot": "કનેક્શન ભૂલ. કૃપા કરીને ફરી પ્રયાસ કરો.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "છબી વિશ્લેષણ નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.",
     "sorryCouldNotProcess": "માફ કરશો, હું તે પ્રક્રિયા કરી શક્યો નહીં. {details}",
     "analysisCouldNotComplete": "વિશ્લેષણ પૂર્ણ થઈ શક્યું નહીં. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "તમે",
     "tapToAskNext": "આગળ પૂછવા માટે ટેપ કરો:",
-    "analysisComplete": "વિશ્લેષણ પૂર્ણ"
+    "analysisComplete": "વિશ્લેષણ પૂર્ણ",
+    "plantPhotoSent": "છોડનો ફોટો તપાસ માટે મોકલ્યો"
   },
   "media": {
     "photoLibraryPermission": "ફોટા પસંદ કરવા માટે ફોટો ગેલેરીની પરવાનગી જરૂરી છે. સેટિંગ્સમાં ચાલુ કરો.",

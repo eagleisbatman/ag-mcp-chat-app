@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Kunde inte ladda konversation",
     "startedNewConversation": "Ny konversation startad",
     "connectionErrorBot": "Anslutningsfel. Försök igen.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Bildanalys misslyckades. Försök igen.",
     "sorryCouldNotProcess": "Tyvärr, jag kunde inte bearbeta det. {details}",
     "analysisCouldNotComplete": "Analysen kunde inte slutföras. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Du",
     "tapToAskNext": "Tryck för att fråga nästa:",
-    "analysisComplete": "Analys klar"
+    "analysisComplete": "Analys klar",
+    "plantPhotoSent": "Växtbild skickad för analys"
   },
   "media": {
     "photoLibraryPermission": "Tillgång till bildbiblioteket behövs för att välja bilder. Aktivera i Inställningar.",

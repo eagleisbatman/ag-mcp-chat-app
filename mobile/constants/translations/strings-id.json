@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Tidak dapat memuat percakapan",
     "startedNewConversation": "Percakapan baru dimulai",
     "connectionErrorBot": "Kesalahan koneksi. Silakan coba lagi.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Analisis gambar gagal. Silakan coba lagi.",
     "sorryCouldNotProcess": "Maaf, saya tidak bisa memprosesnya. {details}",
     "analysisCouldNotComplete": "Analisis tidak dapat diselesaikan. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Anda",
     "tapToAskNext": "Ketuk untuk tanya selanjutnya:",
-    "analysisComplete": "Analisis selesai"
+    "analysisComplete": "Analisis selesai",
+    "plantPhotoSent": "Foto tanaman terkirim untuk diperiksa"
   },
   "media": {
     "photoLibraryPermission": "Akses galeri foto diperlukan untuk pilih gambar. Aktifkan di Pengaturan.",

@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "ບໍ່ສາມາດໂຫຼດການສົນທະນາໄດ້",
     "startedNewConversation": "ເລີ່ມຕົ້ນການສົນທະນາໃໝ່ແລ້ວ",
     "connectionErrorBot": "ຂໍ້ຜິດພາດການເຊື່ອມຕໍ່. ກະລຸນາລອງໃໝ່.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "ວິເຄາະຮູບພາບລົ້ມເຫຼວ. ກະລຸນາລອງໃໝ່.",
     "sorryCouldNotProcess": "ຂໍອະໄພ, ຂ້ອຍບໍ່ສາມາດດຳເນີນການໄດ້. {details}",
     "analysisCouldNotComplete": "ການວິເຄາະບໍ່ສຳເລັດ. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "ເຈົ້າ",
     "tapToAskNext": "ແຕະເພື່ອຖາມຕໍ່ໄປ:",
-    "analysisComplete": "ວິເຄາະສຳເລັດແລ້ວ"
+    "analysisComplete": "ວິເຄາະສຳເລັດແລ້ວ",
+    "plantPhotoSent": "ສົ່ງຮູບພືດວິເຄາະແລ້ວ"
   },
   "media": {
     "photoLibraryPermission": "ຕ້ອງອະນຸຍາດເຂົ້າເຖິງຄັງຮູບເພື່ອເລືອກຮູບ. ໄປເປີດທີ່ການຕັ້ງຄ່າ.",

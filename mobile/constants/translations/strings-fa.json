@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "گفتگو بارگذاری نشد.",
     "startedNewConversation": "گفتگوی جدید آغاز شد.",
     "connectionErrorBot": "خطای اتصال. دوباره تلاش کنید.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "تجزیه و تحلیل تصویر موفق نبود. دوباره امتحان کنید.",
     "sorryCouldNotProcess": "متاسفم، نتوانستم آن را پردازش کنم. {details}",
     "analysisCouldNotComplete": "تجزیه و تحلیل تکمیل نشد. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "شما",
     "tapToAskNext": "برای سوال بعدی ضربه بزنید:",
-    "analysisComplete": "تحلیل کامل شد"
+    "analysisComplete": "تحلیل کامل شد",
+    "plantPhotoSent": "عکس گیاه برای بررسی ارسال شد."
   },
   "media": {
     "photoLibraryPermission": "برای انتخاب عکس، نیاز به دسترسی به گالری است. در تنظیمات فعال کنید.",

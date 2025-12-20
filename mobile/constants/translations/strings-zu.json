@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Ayikwazanga ukulayisha ingxoxo",
     "startedNewConversation": "Kuqalwe ingxoxo entsha",
     "connectionErrorBot": "Iphutha lokuxhuma. Sicela uzame futhi.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Ukuhlaziya isithombe kwehlulekile. Sicela uzame futhi.",
     "sorryCouldNotProcess": "Uxolo, angikwazanga ukukucubungula lokho. {details}",
     "analysisCouldNotComplete": "Ukuhlaziya akukwazanga ukuqeda. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Wena",
     "tapToAskNext": "Thepha ukuze ubuze okulandelayo:",
-    "analysisComplete": "Ukuhlola kuqedile"
+    "analysisComplete": "Ukuhlola kuqedile",
+    "plantPhotoSent": "Kuthunyelwe isithombe sesitshalo sokuhlaziya"
   },
   "media": {
     "photoLibraryPermission": "Ukufinyelela kugalari yezithombe kuyadingeka ukuze ukhethe izithombe. Vula kuzilungiselelo.",

@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Nu s-a putut încărca conversația",
     "startedNewConversation": "Conversație nouă începută",
     "connectionErrorBot": "Eroare de conexiune. Te rog să încerci din nou.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Analiza imaginii a eșuat. Te rog să încerci din nou.",
     "sorryCouldNotProcess": "Îmi pare rău, nu am putut procesa. {details}",
     "analysisCouldNotComplete": "Analiza nu s-a putut finaliza. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Tu",
     "tapToAskNext": "Atinge pentru a întreba:",
-    "analysisComplete": "Analiză finalizată"
+    "analysisComplete": "Analiză finalizată",
+    "plantPhotoSent": "Poză plantă trimisă spre analiză"
   },
   "media": {
     "photoLibraryPermission": "Accesul la biblioteca foto este necesar pentru a selecta imagini. Activează din Setări.",

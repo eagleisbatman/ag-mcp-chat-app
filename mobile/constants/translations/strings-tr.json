@@ -55,7 +55,6 @@
     "couldNotLoadConversation": "Sohbet yüklenemedi",
     "startedNewConversation": "Yeni sohbet başlatıldı",
     "connectionErrorBot": "Bağlantı hatası. Lütfen tekrar deneyin.",
-    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Resim analizi başarısız oldu. Lütfen tekrar deneyin.",
     "sorryCouldNotProcess": "Üzgünüm, bunu işleyemedim. {details}",
     "analysisCouldNotComplete": "Analiz tamamlanamadı. {details}",
@@ -64,7 +63,8 @@
     "senderAssistant": "FarmerChat",
     "senderYou": "Siz",
     "tapToAskNext": "Sonraki için dokunun:",
-    "analysisComplete": "Analiz tamamlandı"
+    "analysisComplete": "Analiz tamamlandı",
+    "plantPhotoSent": "Bitki fotoğrafı analiz için gönderildi"
   },
   "media": {
     "photoLibraryPermission": "Resim seçmek için galeri erişimi gerekli. Ayarlar'dan etkinleştirin.",
