@@ -47,6 +47,7 @@ export default function ChatScreen({ navigation, route }) {
   const messageHeightsRef = useRef({});      // Map of message._id -> height
   const lastUserMessageIdRef = useRef(null); // Track the last user message we scrolled to
   const shouldScrollToUserRef = useRef(false); // Flag to trigger scroll on next render
+  const blockAutoScrollRef = useRef(false); // Block auto-scroll during initial positioning
 
   // Handle new session request
   useEffect(() => {
@@ -152,8 +153,12 @@ export default function ChatScreen({ navigation, route }) {
     const prevHeight = contentHeightRef.current;
     contentHeightRef.current = height;
 
-    // Auto-scroll during streaming ONLY if user hasn't manually scrolled
-    if (isTyping && !isUserScrollingRef.current && height > prevHeight) {
+    // Auto-scroll during streaming ONLY if:
+    // 1. We're streaming (isTyping)
+    // 2. User hasn't manually scrolled
+    // 3. Not blocked by initial scroll positioning
+    // 4. Content actually grew
+    if (isTyping && !isUserScrollingRef.current && !blockAutoScrollRef.current && height > prevHeight) {
       // Content grew (streaming) - scroll to show new content
       flatListRef.current?.scrollToEnd({ animated: false });
     }
@@ -171,7 +176,8 @@ export default function ChatScreen({ navigation, route }) {
 
     if (typingJustStarted && messagesAdded) {
       // New message sent, typing just started
-      // Wait for layout then scroll
+      // Block auto-scroll until we position the user message
+      blockAutoScrollRef.current = true;
       shouldScrollToUserRef.current = true;
 
       // Use requestAnimationFrame + timeout for reliable timing
@@ -180,6 +186,11 @@ export default function ChatScreen({ navigation, route }) {
           if (shouldScrollToUserRef.current) {
             scrollToUserMessage();
             shouldScrollToUserRef.current = false;
+            // Allow auto-scroll to resume after a short delay
+            // This gives time for the scroll to complete
+            setTimeout(() => {
+              blockAutoScrollRef.current = false;
+            }, 300);
           }
         }, 100);
       });
@@ -188,6 +199,7 @@ export default function ChatScreen({ navigation, route }) {
     // Reset user scrolling flag when typing ends (response complete)
     if (!isTyping && prevIsTypingRef.current) {
       // Keep isUserScrollingRef as-is until next message is sent
+      blockAutoScrollRef.current = false;
     }
 
     prevIsTypingRef.current = isTyping;
