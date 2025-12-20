@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "無法載入對話",
     "startedNewConversation": "已開始新對話",
     "connectionErrorBot": "連線錯誤。請再試一次。",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "圖片分析失敗。請再試一次。",
     "sorryCouldNotProcess": "抱歉，我無法處理。{details}",
     "analysisCouldNotComplete": "分析未能完成。{details}",

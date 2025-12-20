@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "ንግግሩን መጫን አልተቻለም",
     "startedNewConversation": "አዲስ ንግግር ተጀምሯል",
     "connectionErrorBot": "የግንኙነት ስህተት። እባክዎ እንደገና ይሞክሩ።",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "የምስል ትንተና አልተሳካም። እባክዎ እንደገና ይሞክሩ።",
     "sorryCouldNotProcess": "ይቅርታ፣ ያንን ማከናወን አልቻልኩም። {details}",
     "analysisCouldNotComplete": "ትንተናው ሊጠናቀቅ አልቻለም። {details}",

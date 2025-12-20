@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Impossible de charger la conversation",
     "startedNewConversation": "Nouvelle conversation démarrée",
     "connectionErrorBot": "Erreur de connexion. Veuillez réessayer.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Échec de l'analyse d'image. Veuillez réessayer.",
     "sorryCouldNotProcess": "Désolé, je n'ai pas pu traiter cela. {details}",
     "analysisCouldNotComplete": "L'analyse n'a pas pu être terminée. {details}",

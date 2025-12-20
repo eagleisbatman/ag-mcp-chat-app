@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Kò lè gbé ìjíròrò wọlé.",
     "startedNewConversation": "Bẹ̀rẹ̀ ìjíròrò tuntun.",
     "connectionErrorBot": "Àṣìṣe àsopọ̀. Jọ̀wọ́ tún gbìyànjú.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Àyẹ̀wò àwòrán kò já sí rere. Jọ̀wọ́ tún gbìyànjú.",
     "sorryCouldNotProcess": "Àforíjì, n kò lè ṣiṣẹ́ lórí rẹ̀. {details}",
     "analysisCouldNotComplete": "Àyẹ̀wò kò lè parí. {details}",

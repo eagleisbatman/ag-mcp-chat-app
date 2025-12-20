@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Imeshindwa kupakia mazungumzo",
     "startedNewConversation": "Mazungumzo mapya yameanzishwa",
     "connectionErrorBot": "Hitilafu ya muunganisho. Tafadhali jaribu tena.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Uchanganuzi wa picha umeshindwa. Tafadhali jaribu tena.",
     "sorryCouldNotProcess": "Samahani, sikuweza kushughulikia hilo. {details}",
     "analysisCouldNotComplete": "Uchanganuzi haukuweza kukamilika. {details}",

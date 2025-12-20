@@ -72,7 +72,7 @@ export default function InputToolbar({
 
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
-        allowsEditing: false, // No cropping - use original image for plant diagnosis
+        allowsEditing: true, // Enable cropping with free-form aspect ratio
         quality: 0.8,
         base64: true,
       });
@@ -103,7 +103,7 @@ export default function InputToolbar({
       }
 
       const result = await ImagePicker.launchCameraAsync({
-        allowsEditing: false, // No cropping - use original image for plant diagnosis
+        allowsEditing: true, // Enable cropping with free-form aspect ratio
         quality: 0.8,
         base64: true,
       });

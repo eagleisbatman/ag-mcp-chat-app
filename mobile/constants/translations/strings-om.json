@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Marii fe'uu hin dandeenye",
     "startedNewConversation": "Mariin Haaraan Jalqabame",
     "connectionErrorBot": "Dogoggora qunnamtii. Irra deebi'ii yaali.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Qorannoon suuraa kufe. Irra deebi'ii yaali.",
     "sorryCouldNotProcess": "Dhiifama, sana hojjechuu hin dandeenye. {details}",
     "analysisCouldNotComplete": "Qorannoon xumuramu hin dandeenye. {details}",

@@ -327,6 +327,9 @@ export default function useChat(sessionIdParam = null) {
           diagnosisCrop: cropName,
           diagnosisHealthStatus: diagnosisData?.health_status
         });
+
+        // Generate title after first image analysis
+        maybeGenerateTitle(sessionId, [botMsg, userMsg, ...messages]);
       }
     } catch (error) {
       console.error('Image analysis error:', error);
@@ -336,7 +339,7 @@ export default function useChat(sessionIdParam = null) {
     } finally {
       setIsTyping(false);
     }
-  }, [location, language, locationDetails, addMessage, ensureSession, persistMessage, showError, showWarning]);
+  }, [location, language, locationDetails, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
   // Transcribe audio for the VoiceRecorder component
   // Returns transcription text without sending to chat

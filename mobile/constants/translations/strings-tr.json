@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Sohbet yüklenemedi",
     "startedNewConversation": "Yeni sohbet başlatıldı",
     "connectionErrorBot": "Bağlantı hatası. Lütfen tekrar deneyin.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Resim analizi başarısız oldu. Lütfen tekrar deneyin.",
     "sorryCouldNotProcess": "Üzgünüm, bunu işleyemedim. {details}",
     "analysisCouldNotComplete": "Analiz tamamlanamadı. {details}",

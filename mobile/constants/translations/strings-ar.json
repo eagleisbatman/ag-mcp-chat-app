@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "تعذر تحميل المحادثة",
     "startedNewConversation": "بدأت محادثة جديدة",
     "connectionErrorBot": "خطأ في الاتصال. يرجى المحاولة مرة أخرى.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "فشل تحليل الصورة. يرجى المحاولة مرة أخرى.",
     "sorryCouldNotProcess": "عذرًا، لم أتمكن من معالجة ذلك. {details}",
     "analysisCouldNotComplete": "لم يكتمل التحليل. {details}",

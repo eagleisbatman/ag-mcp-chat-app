@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Αδυναμία φόρτωσης συνομιλίας",
     "startedNewConversation": "Ξεκίνησε νέα συνομιλία",
     "connectionErrorBot": "Σφάλμα σύνδεσης. Προσπαθήστε ξανά.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Η ανάλυση εικόνας απέτυχε. Προσπαθήστε ξανά.",
     "sorryCouldNotProcess": "Συγγνώμη, δεν μπόρεσα να το επεξεργαστώ. {details}",
     "analysisCouldNotComplete": "Η ανάλυση δεν ολοκληρώθηκε. {details}",

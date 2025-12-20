@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Qaafo iroote-male",
     "startedNewConversation": "Qaafo cusub iroote",
     "connectionErrorBot": "Intaana diggida. Cusub is qad.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Sawir culeelam diggide. Cusub is qad.",
     "sorryCouldNotProcess": "Ana koo edde cabba, elle gabo-makke. {details}",
     "analysisCouldNotComplete": "Culeelam gabo-makke. {details}",

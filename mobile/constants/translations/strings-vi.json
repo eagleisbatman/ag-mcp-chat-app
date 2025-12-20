@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Không thể tải cuộc trò chuyện",
     "startedNewConversation": "Đã bắt đầu cuộc trò chuyện mới",
     "connectionErrorBot": "Lỗi kết nối. Vui lòng thử lại.",
-    "plantPhotoSent": "📷",
+    "plantPhotoSent": "Sent plant photo for analysis",
     "imageAnalysisFailedBot": "Phân tích ảnh thất bại. Vui lòng thử lại.",
     "sorryCouldNotProcess": "Xin lỗi, tôi không thể xử lý được. {details}",
     "analysisCouldNotComplete": "Không thể hoàn tất phân tích. {details}",
