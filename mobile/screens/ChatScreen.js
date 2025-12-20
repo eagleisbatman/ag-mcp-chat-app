@@ -140,13 +140,23 @@ export default function ChatScreen({ navigation, route }) {
 
   // Scroll to show user's message at top when typing starts
   const scrollToUserMessage = useCallback(() => {
-    // Data is reversed: [oldest...newest], so user's new question is at the END
-    // We need to scroll to the last item (newest message) and position it at top
+    // Data after reverse: [oldest...userMessage, botPlaceholder]
     const reversedMessages = [...messages].reverse();
-    const lastIndex = reversedMessages.length - 1;
-    if (lastIndex >= 0) {
+
+    // Find the newest user message (not bot, not welcome)
+    // This is the question user just asked - we want it at the top
+    let userMessageIndex = -1;
+    for (let i = reversedMessages.length - 1; i >= 0; i--) {
+      const msg = reversedMessages[i];
+      if (!msg.isBot && msg._id !== 'welcome') {
+        userMessageIndex = i;
+        break;
+      }
+    }
+
+    if (userMessageIndex >= 0) {
       flatListRef.current?.scrollToIndex({
-        index: lastIndex,
+        index: userMessageIndex,
         animated: true,
         viewPosition: 0, // Position at top of viewport
       });
