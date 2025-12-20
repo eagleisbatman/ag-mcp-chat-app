@@ -208,35 +208,12 @@ export const getSuggestedLanguages = (countryName) => {
   return [LANGUAGES.find(l => l.code === 'en')];
 };
 
-// Get languages organized with suggestions at top
-export const getLanguagesWithSuggestions = (countryName, selectedCode = null) => {
-  const suggested = getSuggestedLanguages(countryName);
-  const suggestedCodes = new Set(suggested.map(l => l.code));
-
-  // If there's a selected language, ensure it's in suggested
-  if (selectedCode && !suggestedCodes.has(selectedCode)) {
-    const selectedLang = LANGUAGES.find(l => l.code === selectedCode);
-    if (selectedLang) {
-      suggested.unshift(selectedLang);
-      suggestedCodes.add(selectedCode);
-    }
-  }
-
-  // Build sections: Suggested first, then by region
+// Get languages grouped by region (simple list, no location-based suggestions)
+export const getLanguagesByRegion = () => {
   const sections = [];
 
-  if (suggested.length > 0) {
-    sections.push({
-      title: 'Suggested for You',
-      data: suggested,
-    });
-  }
-
-  // Add regional sections (excluding already suggested languages)
   for (const region of REGIONS) {
-    const regionLangs = LANGUAGES.filter(
-      l => l.region === region && !suggestedCodes.has(l.code)
-    );
+    const regionLangs = LANGUAGES.filter(l => l.region === region);
     if (regionLangs.length > 0) {
       sections.push({
         title: region,
