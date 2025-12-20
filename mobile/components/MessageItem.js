@@ -51,7 +51,7 @@ function sanitizeStreamingMarkdown(text) {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false }) {
+function MessageItem({ message, isNewMessage = false, onLayout }) {
   const { theme, language } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
@@ -277,6 +277,11 @@ function MessageItem({ message, isNewMessage = false }) {
         styles.container,
         { backgroundColor: 'transparent' },
       ]}
+      onLayout={(event) => {
+        if (onLayout) {
+          onLayout(event.nativeEvent.layout.height);
+        }
+      }}
     >
       {/* Sender Name */}
       <View style={styles.header}>

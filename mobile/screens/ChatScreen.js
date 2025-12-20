@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image, InteractionManager } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image } from 'react-native';
 
 const logoImage = require('../assets/logo.png');
 import * as Haptics from 'expo-haptics';
@@ -24,106 +24,203 @@ export default function ChatScreen({ navigation, route }) {
   // Get session params from navigation
   const sessionId = route?.params?.sessionId;
   const isNewSession = route?.params?.newSession;
-  
+
   const {
     messages, isTyping, isLoadingSession, newestBotMessageId,
-    thinkingText, // Real AI thinking status
+    thinkingText,
     handleSendText, handleSendImage,
     transcribeAudioForInput, uploadAudioInBackground,
     startNewSession,
   } = useChat(sessionId);
-  
+
+  // ===========================================
+  // SCROLL BEHAVIOR STATE & REFS
+  // ===========================================
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
-  const scrollPendingRef = useRef(false); // Track if scroll is already scheduled
+
+  // Scroll behavior state
+  const isUserScrollingRef = useRef(false);  // True when user manually scrolls
+  const contentHeightRef = useRef(0);        // Total scrollable content height
+  const viewportHeightRef = useRef(0);       // Visible area height
+  const currentScrollYRef = useRef(0);       // Current scroll position
+  const messageHeightsRef = useRef({});      // Map of message._id -> height
+  const lastUserMessageIdRef = useRef(null); // Track the last user message we scrolled to
+  const shouldScrollToUserRef = useRef(false); // Flag to trigger scroll on next render
 
   // Handle new session request
   useEffect(() => {
     if (isNewSession) {
       startNewSession();
+      // Reset scroll state for new session
+      isUserScrollingRef.current = false;
+      lastUserMessageIdRef.current = null;
     }
   }, [isNewSession, startNewSession]);
 
-  // Location refresh handler
-  const handleRefreshLocation = async () => {
-    setIsRefreshingLocation(true);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    try {
-      console.log('📍 [Chat] Requesting location permission...');
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      console.log('📍 [Chat] Permission status:', status);
+  // ===========================================
+  // MESSAGE HEIGHT TRACKING
+  // ===========================================
+  const onMessageLayout = useCallback((messageId, height) => {
+    messageHeightsRef.current[messageId] = height;
+  }, []);
 
-      if (status !== 'granted') {
-        showWarning(t('chat.locationDenied'));
-        return;
+  // Calculate the scroll offset to position a message at the top of the viewport
+  const calculateScrollOffset = useCallback((messageId) => {
+    const reversedMessages = [...messages].reverse();
+    let offset = 0;
+
+    for (const msg of reversedMessages) {
+      if (msg._id === messageId) {
+        break;
       }
-
-      console.log('📍 [Chat] Getting current position...');
-
-      // First try getLastKnownPositionAsync (instant, from cache)
-      let loc = await Location.getLastKnownPositionAsync();
-      console.log('📍 [Chat] Last known position:', loc?.coords);
-
-      // If no cached location, use getCurrentPositionAsync (active GPS request)
-      if (!loc?.coords) {
-        console.log('📍 [Chat] No cached location, requesting fresh GPS fix...');
-        loc = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
-          timeout: 15000,
-        });
-        console.log('📍 [Chat] getCurrentPositionAsync result:', loc?.coords);
-      }
-
-      // Final fallback: try with lower accuracy if high accuracy fails
-      if (!loc?.coords) {
-        console.log('📍 [Chat] Balanced accuracy failed, trying low accuracy...');
-        loc = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Low,
-          timeout: 10000,
-        });
-      }
-
-      if (loc?.coords) {
-        console.log('📍 [Chat] Got position:', loc.coords);
-        showSuccess(t('chat.gpsLocationUpdated'));
-        await setLocation({ latitude: loc.coords.latitude, longitude: loc.coords.longitude }, 'granted');
-      } else {
-        // GPS failed, fall back to IP-based location
-        console.log('📍 [Chat] GPS unavailable, falling back to IP location...');
-        showWarning(t('chat.gpsFailed'));
-        await fetchIPLocation();
-      }
-    } catch (error) {
-      console.log('❌ [Chat] GPS error:', error.message);
-      // Fall back to IP-based location
-      showWarning(t('chat.gpsFailed'));
-      await fetchIPLocation();
-    } finally {
-      setIsRefreshingLocation(false);
+      // Add height of each message above the target
+      offset += messageHeightsRef.current[msg._id] || 80; // Default estimate
     }
-  };
 
-  // Fetch location based on IP address
-  const fetchIPLocation = async () => {
-    try {
-      console.log('🌐 [Chat] Fetching IP-based location...');
-      const { lookupLocation } = require('../services/db');
+    return offset;
+  }, [messages]);
 
-      const result = await lookupLocation(null, null, 'auto');
+  // ===========================================
+  // SCROLL TO USER MESSAGE
+  // ===========================================
+  const scrollToUserMessage = useCallback(() => {
+    const reversedMessages = [...messages].reverse();
 
-      if (result.success && result.latitude && result.longitude) {
-        console.log('🌐 [Chat] IP location result:', result.displayName);
-        await setLocation({ latitude: result.latitude, longitude: result.longitude }, 'granted');
-        showSuccess(t('chat.ipLocationUpdated', { location: result.displayName || 'your region' }));
-      } else {
-        console.log('❌ [Chat] IP location also failed:', result.error);
-        showError(t('chat.locationUpdateFailed'));
+    // Find the newest user message (not bot, not welcome)
+    let targetMessage = null;
+    let targetIndex = -1;
+
+    for (let i = reversedMessages.length - 1; i >= 0; i--) {
+      const msg = reversedMessages[i];
+      if (!msg.isBot && msg._id !== 'welcome') {
+        targetMessage = msg;
+        targetIndex = i;
+        break;
       }
-    } catch (error) {
-      console.log('❌ [Chat] IP location error:', error.message);
-      showError(t('chat.locationUpdateFailed'));
     }
-  };
+
+    if (!targetMessage || !flatListRef.current) {
+      return;
+    }
+
+    // Don't scroll to the same message twice
+    if (lastUserMessageIdRef.current === targetMessage._id) {
+      return;
+    }
+
+    lastUserMessageIdRef.current = targetMessage._id;
+    isUserScrollingRef.current = false; // Reset user scroll flag on new message
+
+    console.log('📜 [Scroll] Scrolling to user message:', targetMessage._id, 'at index:', targetIndex);
+
+    // Use scrollToIndex with viewPosition: 0 to put message at top
+    // This is more reliable than calculating offset for variable-height items
+    flatListRef.current.scrollToIndex({
+      index: targetIndex,
+      animated: false,
+      viewPosition: 0, // 0 = top of viewport
+    });
+  }, [messages]);
+
+  // ===========================================
+  // SCROLL EVENT HANDLERS
+  // ===========================================
+
+  // Track when user manually starts scrolling
+  const handleScrollBeginDrag = useCallback(() => {
+    isUserScrollingRef.current = true;
+    console.log('📜 [Scroll] User started scrolling manually');
+  }, []);
+
+  // Track scroll position and show/hide scroll button
+  const handleScroll = useCallback((event) => {
+    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    currentScrollYRef.current = contentOffset.y;
+
+    const distanceFromBottom = contentSize.height - (contentOffset.y + layoutMeasurement.height);
+    setShowScrollButton(distanceFromBottom > 150);
+  }, []);
+
+  // Track viewport height
+  const handleLayout = useCallback((event) => {
+    viewportHeightRef.current = event.nativeEvent.layout.height;
+  }, []);
+
+  // Track content height and handle streaming auto-scroll
+  const handleContentSizeChange = useCallback((width, height) => {
+    const prevHeight = contentHeightRef.current;
+    contentHeightRef.current = height;
+
+    // Auto-scroll during streaming ONLY if user hasn't manually scrolled
+    if (isTyping && !isUserScrollingRef.current && height > prevHeight) {
+      // Content grew (streaming) - scroll to show new content
+      flatListRef.current?.scrollToEnd({ animated: false });
+    }
+  }, [isTyping]);
+
+  // ===========================================
+  // TRIGGER SCROLL WHEN isTyping STARTS
+  // ===========================================
+  const prevIsTypingRef = useRef(isTyping);
+  const prevMessagesLengthRef = useRef(messages.length);
+
+  useEffect(() => {
+    const typingJustStarted = isTyping && !prevIsTypingRef.current;
+    const messagesAdded = messages.length > prevMessagesLengthRef.current;
+
+    if (typingJustStarted && messagesAdded) {
+      // New message sent, typing just started
+      // Wait for layout then scroll
+      shouldScrollToUserRef.current = true;
+
+      // Use requestAnimationFrame + timeout for reliable timing
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          if (shouldScrollToUserRef.current) {
+            scrollToUserMessage();
+            shouldScrollToUserRef.current = false;
+          }
+        }, 100);
+      });
+    }
+
+    // Reset user scrolling flag when typing ends (response complete)
+    if (!isTyping && prevIsTypingRef.current) {
+      // Keep isUserScrollingRef as-is until next message is sent
+    }
+
+    prevIsTypingRef.current = isTyping;
+    prevMessagesLengthRef.current = messages.length;
+  }, [isTyping, messages.length, scrollToUserMessage]);
+
+  // ===========================================
+  // WRAPPED SEND HANDLERS
+  // ===========================================
+  const handleSend = useCallback(async (text) => {
+    // Reset scroll state before sending
+    isUserScrollingRef.current = false;
+    lastUserMessageIdRef.current = null; // Allow scrolling to new message
+
+    await handleSendText(text);
+  }, [handleSendText]);
+
+  const handleSendImageWrapped = useCallback(async (imageData) => {
+    // Reset scroll state before sending
+    isUserScrollingRef.current = false;
+    lastUserMessageIdRef.current = null;
+
+    await handleSendImage(imageData);
+  }, [handleSendImage]);
+
+  // ===========================================
+  // SCROLL TO BOTTOM BUTTON
+  // ===========================================
+  const scrollToBottom = useCallback(() => {
+    isUserScrollingRef.current = false;
+    flatListRef.current?.scrollToEnd({ animated: true });
+    Haptics.selectionAsync();
+  }, []);
 
   useEffect(() => {
     Animated.spring(scrollButtonAnim, {
@@ -134,73 +231,69 @@ export default function ChatScreen({ navigation, route }) {
     }).start();
   }, [showScrollButton, scrollButtonAnim]);
 
-  const scrollToBottom = useCallback(() => {
-    flatListRef.current?.scrollToEnd({ animated: true });
-    Haptics.selectionAsync();
-  }, []);
-
-  // Scroll to show user's message at top - uses ref to get latest messages
-  const scrollToUserMessage = useCallback(() => {
-    // Data after reverse: [oldest...userMessage, botPlaceholder]
-    const reversedMessages = [...messages].reverse();
-
-    // Find the newest user message (not bot, not welcome)
-    let userMessageIndex = -1;
-    for (let i = reversedMessages.length - 1; i >= 0; i--) {
-      const msg = reversedMessages[i];
-      if (!msg.isBot && msg._id !== 'welcome') {
-        userMessageIndex = i;
-        break;
+  // ===========================================
+  // LOCATION HANDLERS (unchanged)
+  // ===========================================
+  const handleRefreshLocation = async () => {
+    setIsRefreshingLocation(true);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        showWarning(t('chat.locationDenied'));
+        return;
       }
+
+      let loc = await Location.getLastKnownPositionAsync();
+      if (!loc?.coords) {
+        loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+          timeout: 15000,
+        });
+      }
+      if (!loc?.coords) {
+        loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Low,
+          timeout: 10000,
+        });
+      }
+
+      if (loc?.coords) {
+        showSuccess(t('chat.gpsLocationUpdated'));
+        await setLocation({ latitude: loc.coords.latitude, longitude: loc.coords.longitude }, 'granted');
+      } else {
+        showWarning(t('chat.gpsFailed'));
+        await fetchIPLocation();
+      }
+    } catch (error) {
+      showWarning(t('chat.gpsFailed'));
+      await fetchIPLocation();
+    } finally {
+      setIsRefreshingLocation(false);
     }
+  };
 
-    if (userMessageIndex >= 0 && flatListRef.current) {
-      console.log('📜 [Scroll] Scrolling to user message at index:', userMessageIndex);
-      flatListRef.current.scrollToIndex({
-        index: userMessageIndex,
-        animated: false,
-        viewPosition: 0,
-      });
+  const fetchIPLocation = async () => {
+    try {
+      const { lookupLocation } = require('../services/db');
+      const result = await lookupLocation(null, null, 'auto');
+      if (result.success && result.latitude && result.longitude) {
+        await setLocation({ latitude: result.latitude, longitude: result.longitude }, 'granted');
+        showSuccess(t('chat.ipLocationUpdated', { location: result.displayName || 'your region' }));
+      } else {
+        showError(t('chat.locationUpdateFailed'));
+      }
+    } catch (error) {
+      showError(t('chat.locationUpdateFailed'));
     }
-  }, [messages]);
+  };
 
-  // Keep a ref to the latest scrollToUserMessage function
-  const scrollToUserMessageRef = useRef(scrollToUserMessage);
-  scrollToUserMessageRef.current = scrollToUserMessage;
-
-  const handleScroll = useCallback((event) => {
-    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-    const distanceFromBottom = contentSize.height - (contentOffset.y + layoutMeasurement.height);
-    setShowScrollButton(distanceFromBottom > 100);
-  }, []);
-
-  // When typing starts, scroll to show user's question at top (ONCE only)
-  const prevIsTyping = useRef(isTyping);
-  useEffect(() => {
-    if (isTyping && !prevIsTyping.current && !scrollPendingRef.current) {
-      // Mark scroll as pending to prevent duplicate triggers
-      scrollPendingRef.current = true;
-
-      // Wait for layout, then scroll ONCE
-      InteractionManager.runAfterInteractions(() => {
-        setTimeout(() => {
-          scrollToUserMessageRef.current();
-          scrollPendingRef.current = false;
-        }, 50);
-      });
-    }
-
-    // Reset when typing ends
-    if (!isTyping && prevIsTyping.current) {
-      scrollPendingRef.current = false;
-    }
-
-    prevIsTyping.current = isTyping;
-  }, [isTyping]); // Only depend on isTyping, not scrollToUserMessage
-
+  // ===========================================
+  // RENDER
+  // ===========================================
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Header - Clean, logo-only design */}
+      {/* Header */}
       <ScreenHeader
         align="left"
         center={
@@ -252,7 +345,7 @@ export default function ChatScreen({ navigation, route }) {
       />
 
       {/* Messages */}
-      <View style={styles.messagesContainer}>
+      <View style={styles.messagesContainer} onLayout={handleLayout}>
         {isLoadingSession ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={theme.accent} />
@@ -266,31 +359,37 @@ export default function ChatScreen({ navigation, route }) {
               <MessageItem
                 message={item}
                 isNewMessage={item._id === newestBotMessageId}
+                onLayout={(height) => onMessageLayout(item._id, height)}
               />
             )}
             keyExtractor={(item) => item._id}
             contentContainerStyle={styles.messagesList}
             showsVerticalScrollIndicator={false}
+
+            // Scroll tracking
             onScroll={handleScroll}
-            onContentSizeChange={() => {
-              // Only auto-scroll when NOT typing (i.e., when bot response arrives)
-              // When typing, we want user's question to stay visible at top
-              if (!isTyping) {
-                flatListRef.current?.scrollToEnd({ animated: true });
-              }
-            }}
+            onScrollBeginDrag={handleScrollBeginDrag}
+            onContentSizeChange={handleContentSizeChange}
             scrollEventThrottle={16}
+
+            // Keyboard handling
             keyboardShouldPersistTaps="handled"
+
+            // Handle scroll to unmeasured items
             onScrollToIndexFailed={(info) => {
-              // Fallback if item hasn't rendered yet
+              console.log('📜 [Scroll] scrollToIndex failed, retrying...', info.index);
               setTimeout(() => {
-                flatListRef.current?.scrollToIndex({
-                  index: info.index,
-                  animated: true,
-                  viewPosition: 0,
-                });
-              }, 100);
+                if (flatListRef.current && info.index < messages.length) {
+                  flatListRef.current.scrollToIndex({
+                    index: info.index,
+                    animated: false,
+                    viewPosition: 0,
+                  });
+                }
+              }, 200);
             }}
+
+            // Typing indicator at bottom
             ListFooterComponent={isTyping ? (
               <TypingIndicator text={thinkingText || t('chat.thinking')} />
             ) : null}
@@ -322,10 +421,10 @@ export default function ChatScreen({ navigation, route }) {
         </Animated.View>
       </View>
 
-      {/* Floating Input */}
+      {/* Input */}
       <InputToolbar
-        onSendText={handleSendText}
-        onSendImage={handleSendImage}
+        onSendText={handleSend}
+        onSendImage={handleSendImageWrapped}
         transcribeAudio={transcribeAudioForInput}
         uploadAudioInBackground={uploadAudioInBackground}
         disabled={isTyping}
@@ -335,7 +434,7 @@ export default function ChatScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
   },
   headerLeft: {
@@ -348,12 +447,12 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
   },
-  headerSubtitle: { 
+  headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     flex: 1,
   },
-  messagesContainer: { 
-    flex: 1, 
+  messagesContainer: {
+    flex: 1,
     position: 'relative',
   },
   messagesList: {
@@ -361,19 +460,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     flexGrow: 1,
   },
-  scrollButtonContainer: { 
-    position: 'absolute', 
+  scrollButtonContainer: {
+    position: 'absolute',
     bottom: 16,
-    alignSelf: 'center', 
+    alignSelf: 'center',
     zIndex: 100,
   },
-  loadingContainer: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: SPACING.lg,
   },
-  loadingText: { 
+  loadingText: {
     fontSize: TYPOGRAPHY.sizes.base,
   },
 });
