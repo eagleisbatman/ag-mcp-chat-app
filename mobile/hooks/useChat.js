@@ -318,8 +318,15 @@ export default function useChat(sessionIdParam = null) {
         addMessage(botMsg);
 
         // Extract crop info for persistence
+        // Note: diagnosis.crop can be an object { name, scientific_name } or a string
         const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
-        persistMessage(botMsg, sessionId, { diagnosisCrop: diagnosisData?.crop, diagnosisHealthStatus: diagnosisData?.health_status });
+        const cropName = typeof diagnosisData?.crop === 'object'
+          ? diagnosisData.crop.name
+          : diagnosisData?.crop;
+        persistMessage(botMsg, sessionId, {
+          diagnosisCrop: cropName,
+          diagnosisHealthStatus: diagnosisData?.health_status
+        });
       }
     } catch (error) {
       console.error('Image analysis error:', error);
