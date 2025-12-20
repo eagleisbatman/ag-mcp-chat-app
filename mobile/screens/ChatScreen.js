@@ -138,11 +138,33 @@ export default function ChatScreen({ navigation, route }) {
     Haptics.selectionAsync();
   }, []);
 
+  // Scroll to show user's message at top when typing starts
+  const scrollToUserMessage = useCallback(() => {
+    // In reversed array, index 0 is the newest message (user's question)
+    // viewPosition: 0 puts the item at the top of the viewport
+    flatListRef.current?.scrollToIndex({
+      index: 0,
+      animated: true,
+      viewPosition: 0,
+    });
+  }, []);
+
   const handleScroll = useCallback((event) => {
     const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
     const distanceFromBottom = contentSize.height - (contentOffset.y + layoutMeasurement.height);
     setShowScrollButton(distanceFromBottom > 100);
   }, []);
+
+  // When typing starts, scroll to show user's question at top
+  const prevIsTyping = useRef(isTyping);
+  useEffect(() => {
+    if (isTyping && !prevIsTyping.current) {
+      // Typing just started - scroll to show user's message at top
+      // Small delay to let the message render first
+      setTimeout(() => scrollToUserMessage(), 100);
+    }
+    prevIsTyping.current = isTyping;
+  }, [isTyping, scrollToUserMessage]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -218,9 +240,25 @@ export default function ChatScreen({ navigation, route }) {
             contentContainerStyle={styles.messagesList}
             showsVerticalScrollIndicator={false}
             onScroll={handleScroll}
-            onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+            onContentSizeChange={() => {
+              // Only auto-scroll when NOT typing (i.e., when bot response arrives)
+              // When typing, we want user's question to stay visible at top
+              if (!isTyping) {
+                flatListRef.current?.scrollToEnd({ animated: true });
+              }
+            }}
             scrollEventThrottle={16}
             keyboardShouldPersistTaps="handled"
+            onScrollToIndexFailed={(info) => {
+              // Fallback if item hasn't rendered yet
+              setTimeout(() => {
+                flatListRef.current?.scrollToIndex({
+                  index: info.index,
+                  animated: true,
+                  viewPosition: 0,
+                });
+              }, 100);
+            }}
             ListFooterComponent={isTyping ? (
               <TypingIndicator text={thinkingText || t('chat.thinking')} />
             ) : null}
