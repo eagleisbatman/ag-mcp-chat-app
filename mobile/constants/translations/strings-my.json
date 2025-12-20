@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "စကားပြောခန်း တင်မရပါ။",
     "startedNewConversation": "စကားပြောခန်း အသစ် စတင်ပါပြီ။",
     "connectionErrorBot": "ချိတ်ဆက်မှု အမှား။ ပြန်ကြိုးစားပါ။",
-    "analyzingPlantImage": "အပင်ပုံကို ခွဲခြမ်းစိတ်ဖြာနေသည်...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "ပုံခွဲခြမ်းစိတ်ဖြာခြင်း မအောင်မြင်ပါ။ ပြန်ကြိုးစားပါ။",
     "sorryCouldNotProcess": "တောင်းပန်ပါတယ်၊ ဒါကို လုပ်ဆောင်မပေးနိုင်ပါ။ {details}",
     "analysisCouldNotComplete": "ခွဲခြမ်းစိတ်ဖြာမှု မပြီးမြောက်နိုင်ပါ။ {details}",

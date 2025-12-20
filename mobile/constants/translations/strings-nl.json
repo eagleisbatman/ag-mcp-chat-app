@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Gesprek niet geladen",
     "startedNewConversation": "Nieuw gesprek gestart",
     "connectionErrorBot": "Verbindingsfout. Probeer opnieuw.",
-    "analyzingPlantImage": "Plantafbeelding analyseren...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Afbeeldingsanalyse mislukt. Probeer opnieuw.",
     "sorryCouldNotProcess": "Sorry, ik kon dat niet verwerken. {details}",
     "analysisCouldNotComplete": "Analyse niet voltooid. {details}",

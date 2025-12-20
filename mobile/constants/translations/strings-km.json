@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "មិនអាចផ្ទុកការសន្ទនាបានទេ",
     "startedNewConversation": "បានចាប់ផ្តើមការសន្ទនាថ្មី",
     "connectionErrorBot": "កំហុសក្នុងការតភ្ជាប់។ សូមព្យាយាមម្តងទៀត។",
-    "analyzingPlantImage": "កំពុងវិភាគរូបភាពរុក្ខជាតិ...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "ការវិភាគរូបភាពបរាជ័យ។ សូមព្យាយាមម្តងទៀត។",
     "sorryCouldNotProcess": "សូមអភ័យទោស ខ្ញុំមិនអាចដំណើរការបានទេ។ {details}",
     "analysisCouldNotComplete": "ការវិភាគមិនអាចបញ្ចប់បានទេ។ {details}",

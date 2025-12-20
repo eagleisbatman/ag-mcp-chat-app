@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "会話を読み込めませんでした",
     "startedNewConversation": "新しい会話を開始しました",
     "connectionErrorBot": "接続エラーです。もう一度お試しください。",
-    "analyzingPlantImage": "植物画像を解析中...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "画像解析に失敗しました。もう一度お試しください。",
     "sorryCouldNotProcess": "申し訳ありません、処理できませんでした。{details}",
     "analysisCouldNotComplete": "解析を完了できませんでした。{details}",

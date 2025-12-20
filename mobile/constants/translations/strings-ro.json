@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Nu s-a putut încărca conversația",
     "startedNewConversation": "Conversație nouă începută",
     "connectionErrorBot": "Eroare de conexiune. Te rog să încerci din nou.",
-    "analyzingPlantImage": "Analizez imaginea plantei...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Analiza imaginii a eșuat. Te rog să încerci din nou.",
     "sorryCouldNotProcess": "Îmi pare rău, nu am putut procesa. {details}",
     "analysisCouldNotComplete": "Analiza nu s-a putut finaliza. {details}",

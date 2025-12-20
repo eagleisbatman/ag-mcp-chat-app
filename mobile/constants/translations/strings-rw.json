@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Guhamagara uganiro byanze",
     "startedNewConversation": "Uganiro rushya rwatangiye",
     "connectionErrorBot": "Ikibazo cy'umurongo. Ongera ugerageze.",
-    "analyzingPlantImage": "Gusuzuma ishusho y'igihingwa...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Isuzuma ry'ishusho ryaranze. Ongera ugerageze.",
     "sorryCouldNotProcess": "Ndasaba imbabazi, byanze kubitunganya. {details}",
     "analysisCouldNotComplete": "Isuzuma ntiryashoboye kurangira. {details}",

@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Tidak dapat memuat percakapan",
     "startedNewConversation": "Percakapan baru dimulai",
     "connectionErrorBot": "Kesalahan koneksi. Silakan coba lagi.",
-    "analyzingPlantImage": "Menganalisis gambar tanaman...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Analisis gambar gagal. Silakan coba lagi.",
     "sorryCouldNotProcess": "Maaf, saya tidak bisa memprosesnya. {details}",
     "analysisCouldNotComplete": "Analisis tidak dapat diselesaikan. {details}",

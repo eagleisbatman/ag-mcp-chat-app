@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Gespräch konnte nicht geladen werden",
     "startedNewConversation": "Neues Gespräch gestartet",
     "connectionErrorBot": "Verbindungsfehler. Bitte versuchen Sie es erneut.",
-    "analyzingPlantImage": "Pflanzenbild wird analysiert...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Bildanalyse fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "sorryCouldNotProcess": "Entschuldigung, das konnte ich nicht verarbeiten. {details}",
     "analysisCouldNotComplete": "Analyse konnte nicht abgeschlossen werden. {details}",

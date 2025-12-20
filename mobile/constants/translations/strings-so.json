@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Wadahadalka lama rari karin",
     "startedNewConversation": "Wadahadal cusub ayaa bilowday",
     "connectionErrorBot": "Cilad xiriir. Fadlan mar kale isku day.",
-    "analyzingPlantImage": "Sawirka dhirta ayaa la falanqaynayaa...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Falanqaynta sawirka way guuldarraysatay. Fadlan mar kale isku day.",
     "sorryCouldNotProcess": "Waan ka xumahay, ma aanan farsamayn karin. {details}",
     "analysisCouldNotComplete": "Falanqaynta ma dhamaan karin. {details}",

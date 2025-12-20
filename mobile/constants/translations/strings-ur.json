@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "گفتگو لوڈ نہیں ہو سکی۔",
     "startedNewConversation": "نئی گفتگو شروع ہو گئی۔",
     "connectionErrorBot": "کنکشن میں خرابی۔ براہ کرم دوبارہ کوشش کریں۔",
-    "analyzingPlantImage": "پودے کی تصویر کا تجزیہ کیا جا رہا ہے...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "تصویر کا تجزیہ ناکام ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔",
     "sorryCouldNotProcess": "معذرت، میں اسے پروسیس نہیں کر سکا۔ {details}",
     "analysisCouldNotComplete": "تجزیہ مکمل نہیں ہو سکا۔ {details}",

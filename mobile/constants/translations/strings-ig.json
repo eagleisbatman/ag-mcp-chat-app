@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Enweghị ike ibu mkparịta ụka",
     "startedNewConversation": "Malitere mkparịta ụka ọhụrụ",
     "connectionErrorBot": "Njehie njikọ. Biko nwaa ọzọ.",
-    "analyzingPlantImage": "Na-enyocha foto osisi...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Nyocha foto adaala. Biko nwaa ọzọ.",
     "sorryCouldNotProcess": "Ndo, enweghị m ike hazie nke ahụ. {details}",
     "analysisCouldNotComplete": "Nyocha enweghị ike ịrụzu. {details}",

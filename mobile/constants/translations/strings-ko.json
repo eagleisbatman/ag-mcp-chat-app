@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "대화를 불러올 수 없습니다",
     "startedNewConversation": "새 대화 시작",
     "connectionErrorBot": "연결 오류. 다시 시도해주세요.",
-    "analyzingPlantImage": "식물 이미지 분석 중...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "이미지 분석 실패. 다시 시도해주세요.",
     "sorryCouldNotProcess": "죄송합니다, 처리할 수 없었습니다. {details}",
     "analysisCouldNotComplete": "분석을 완료할 수 없었습니다. {details}",

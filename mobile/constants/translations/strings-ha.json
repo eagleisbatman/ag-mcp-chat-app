@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Ba a iya ɗaukar zance ba",
     "startedNewConversation": "An fara sabon zance",
     "connectionErrorBot": "Kuskuren haɗi. Da fatan za a sake gwadawa.",
-    "analyzingPlantImage": "Ana binciken hoton shuka...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Binciken hoto ya gaza. Da fatan za a sake gwadawa.",
     "sorryCouldNotProcess": "Yi haƙuri, ban iya sarrafa hakan ba. {details}",
     "analysisCouldNotComplete": "Binciken ya kasa kammalawa. {details}",

@@ -175,7 +175,7 @@ export const STRINGS = {
       couldNotLoadConversation: 'Could not load conversation',
       startedNewConversation: 'Started new conversation',
       connectionErrorBot: 'Connection error. Please try again.',
-      analyzingPlantImage: 'Analyzing plant image...',
+      plantPhotoSent: '📷',
       imageAnalysisFailedBot: 'Image analysis failed. Please try again.',
       sorryCouldNotProcess: "Sorry, I couldn't process that. {details}",
       analysisCouldNotComplete: "Analysis couldn't complete. {details}",

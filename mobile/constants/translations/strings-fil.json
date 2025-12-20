@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Hindi ma-load ang usapan",
     "startedNewConversation": "Nagsimula ng bagong usapan",
     "connectionErrorBot": "Error sa koneksyon. Pakisubukan muli.",
-    "analyzingPlantImage": "Sinusuri ang larawan ng halaman...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Nabigo ang pagsusuri ng larawan. Pakisubukan muli.",
     "sorryCouldNotProcess": "Paumanhin, hindi ko naproseso 'yan. {details}",
     "analysisCouldNotComplete": "Hindi natapos ang pagsusuri. {details}",

@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Ayikwazanga ukulayisha ingxoxo",
     "startedNewConversation": "Kuqalwe ingxoxo entsha",
     "connectionErrorBot": "Iphutha lokuxhuma. Sicela uzame futhi.",
-    "analyzingPlantImage": "Ihlaziya isithombe sesitshalo...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Ukuhlaziya isithombe kwehlulekile. Sicela uzame futhi.",
     "sorryCouldNotProcess": "Uxolo, angikwazanga ukukucubungula lokho. {details}",
     "analysisCouldNotComplete": "Ukuhlaziya akukwazanga ukuqeda. {details}",

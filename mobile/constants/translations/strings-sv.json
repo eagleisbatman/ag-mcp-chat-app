@@ -55,7 +55,7 @@
     "couldNotLoadConversation": "Kunde inte ladda konversation",
     "startedNewConversation": "Ny konversation startad",
     "connectionErrorBot": "Anslutningsfel. Försök igen.",
-    "analyzingPlantImage": "Analyserar växtbild...",
+    "plantPhotoSent": "📷",
     "imageAnalysisFailedBot": "Bildanalys misslyckades. Försök igen.",
     "sorryCouldNotProcess": "Tyvärr, jag kunde inte bearbeta det. {details}",
     "analysisCouldNotComplete": "Analysen kunde inte slutföras. {details}",
