@@ -1,5 +1,6 @@
 // Chat API service - calls API Gateway → AI Services
 import { fetchWithTimeout } from '../utils/apiHelpers';
+import { getDeviceId } from '../utils/deviceInfo';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_URL = `${API_BASE_URL}/api/chat`;
@@ -8,6 +9,20 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 // Timeout constants
 const CHAT_TIMEOUT_MS = 60000; // 60s for chat (includes MCP calls)
 const DEFAULT_TIMEOUT_MS = 30000; // 30s for other endpoints
+
+// Cached device ID for server-side persistence
+let cachedDeviceId = null;
+
+/**
+ * Get device ID (cached after first call)
+ */
+async function ensureDeviceId() {
+  if (!cachedDeviceId) {
+    cachedDeviceId = await getDeviceId();
+    console.log('📱 [API] Device ID loaded:', cachedDeviceId.substring(0, 20) + '...');
+  }
+  return cachedDeviceId;
+}
 
 /**
  * Send chat message with STREAMING support
@@ -32,11 +47,15 @@ export const sendChatMessageStreaming = async ({
   language,
   locationDetails,
   history = [],
+  sessionId, // Optional: reuse existing session
   onChunk,
   onThinking,
   onComplete,
   onError,
 }) => {
+  // Get device ID for server-side persistence
+  const deviceId = await ensureDeviceId();
+
   // Format history for AI Services
   const formattedHistory = history
     .filter(m => m._id !== 'welcome')
@@ -58,6 +77,7 @@ export const sendChatMessageStreaming = async ({
     historyCount: formattedHistory.length,
     location: locationContext?.displayName || `${latitude}, ${longitude}`,
     language,
+    deviceId: deviceId?.substring(0, 15) + '...',
   });
 
   const requestBody = {
@@ -68,6 +88,9 @@ export const sendChatMessageStreaming = async ({
     location: locationContext,
     history: formattedHistory,
     stream: true, // Enable streaming
+    // Server-side persistence
+    deviceId,
+    sessionId, // Pass existing sessionId if available
   };
 
   // Use XMLHttpRequest for React Native SSE streaming
@@ -192,9 +215,13 @@ export const sendChatMessageStreaming = async ({
  * @param {string} params.language - Language code (e.g., 'en', 'hi')
  * @param {object} params.locationDetails - Human-readable location (L1-L6)
  * @param {Array} params.history - Previous messages for context (last 10)
+ * @param {string} params.sessionId - Optional: reuse existing session
  */
-export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [] }) => {
+export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [], sessionId }) => {
   try {
+    // Get device ID for server-side persistence
+    const deviceId = await ensureDeviceId();
+
     // Format history for AI Services
     const formattedHistory = history
       .filter(m => m._id !== 'welcome') // Exclude welcome message
@@ -219,6 +246,7 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       historyCount: formattedHistory.length,
       location: locationContext?.displayName || `${latitude}, ${longitude}`,
       language,
+      deviceId: deviceId?.substring(0, 15) + '...',
     });
 
     const requestBody = {
@@ -228,6 +256,9 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       language: language || 'en',
       location: locationContext, // Human-readable location for AI context
       history: formattedHistory,
+      // Server-side persistence
+      deviceId,
+      sessionId,
     };
 
     const response = await fetchWithTimeout(API_URL, {
@@ -273,9 +304,13 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
  * @param {number} params.longitude - User's longitude
  * @param {string} params.language - Language code
  * @param {object} params.locationDetails - Location context
+ * @param {string} params.sessionId - Optional: reuse existing session
  */
-export const analyzePlantImage = async ({ imageBase64, latitude, longitude, language, locationDetails }) => {
+export const analyzePlantImage = async ({ imageBase64, latitude, longitude, language, locationDetails, sessionId }) => {
   try {
+    // Get device ID for server-side persistence
+    const deviceId = await ensureDeviceId();
+
     console.log('🌿 [API] Starting plant diagnosis via gateway...');
     console.log('🌿 [API] Image size:', Math.round(imageBase64.length / 1024), 'KB');
 
@@ -299,6 +334,9 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
       location: locationContext,
       image: imageBase64, // Base64 image for AgriVision
       stream: false, // Don't stream for diagnosis
+      // Server-side persistence
+      deviceId,
+      sessionId,
     };
 
     const response = await fetchWithTimeout(API_URL, {
