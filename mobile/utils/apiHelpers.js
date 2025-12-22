@@ -3,16 +3,17 @@
  */
 
 // Standard error messages for common HTTP status codes
+// These are user-friendly and never expose technical details
 const HTTP_ERROR_MESSAGES = {
-  400: 'Invalid request. Please try again.',
-  401: 'Authentication failed. Please restart the app.',
-  403: 'Access denied.',
-  404: 'Service not found.',
-  408: 'Request timed out. Check your connection.',
+  400: 'Something went wrong. Please try again.',
+  401: 'Please restart the app to reconnect.',
+  403: 'Access denied. Please try again later.',
+  404: 'Service not available. Please try again.',
+  408: 'Request took too long. Check your connection.',
   429: 'Too many requests. Please wait a moment.',
-  500: 'Server error. Please try again later.',
-  502: 'Service temporarily unavailable.',
-  503: 'Service is busy. Please try again.',
+  500: 'Our servers are busy. Please try again.',
+  502: 'Service temporarily unavailable. Please try again.',
+  503: 'Service is busy. Please try again shortly.',
 };
 
 // Network error messages
@@ -24,13 +25,14 @@ const NETWORK_ERROR_MESSAGES = {
 
 /**
  * Parse error from various sources into a user-friendly message
+ * Never returns raw technical errors - always user-friendly
  * @param {Error|Response|object} error - Error from fetch or service
  * @returns {string} User-friendly error message
  */
 export function parseErrorMessage(error) {
-  // HTTP Response object
+  // HTTP Response object with status
   if (error?.status) {
-    return HTTP_ERROR_MESSAGES[error.status] || `Error ${error.status}`;
+    return HTTP_ERROR_MESSAGES[error.status] || 'Something went wrong. Please try again.';
   }
 
   // Standard Error object
@@ -39,18 +41,34 @@ export function parseErrorMessage(error) {
     if (error.name in NETWORK_ERROR_MESSAGES) {
       return NETWORK_ERROR_MESSAGES[error.name];
     }
+
+    const msg = error.message?.toLowerCase() || '';
+
     // Network/fetch errors
-    if (error.message?.includes('Network request failed')) {
+    if (msg.includes('network request failed') || msg.includes('failed to fetch')) {
       return 'Network error. Check your internet connection.';
     }
-    if (error.message?.includes('timeout')) {
-      return 'Request timed out. Check your connection.';
+    if (msg.includes('timeout') || msg.includes('aborted')) {
+      return 'Request took too long. Check your connection.';
     }
-    return error.message || 'An unexpected error occurred';
+
+    // Handle "API error: XXX" format from our API calls
+    const statusMatch = error.message?.match(/API error:\s*(\d+)/i);
+    if (statusMatch) {
+      const status = parseInt(statusMatch[1], 10);
+      return HTTP_ERROR_MESSAGES[status] || 'Something went wrong. Please try again.';
+    }
+
+    // Never return raw error messages to user
+    return 'Something went wrong. Please try again.';
   }
 
-  // Service response with error field
+  // Service response with error field - also sanitize
   if (error?.error) {
+    // Don't expose validation errors or technical details
+    if (error.error.includes('Validation') || error.error.includes('API')) {
+      return 'Something went wrong. Please try again.';
+    }
     return error.error;
   }
 

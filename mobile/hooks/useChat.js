@@ -239,14 +239,15 @@ export default function useChat(sessionIdParam = null) {
         onError: (error) => {
           setThinkingText(null);
           setIsTyping(false);
-          
-          const errorMsg = error.message || t('chat.connectionErrorBot');
-          updateMessage(botMsgId, { text: errorMsg });
 
-          if (isNetworkError({ message: error.message })) {
+          // Always show user-friendly error message, never raw API errors
+          const userFriendlyMsg = parseErrorMessage(error);
+          updateMessage(botMsgId, { text: t('chat.connectionErrorBot') });
+
+          if (isNetworkError(error)) {
             showWarning(t('chat.noInternet'));
           } else {
-            showError(errorMsg);
+            showError(userFriendlyMsg);
           }
         }
       });
