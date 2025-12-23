@@ -149,8 +149,9 @@ export const sendChatMessageStreaming = async ({
             } else if (parsed.type === 'tool_result') {
               console.log('✅ [API] Tool result:', parsed.toolName);
             } else if (parsed.type === 'complete') {
-              // Final response
-              if (parsed.response) fullText = parsed.response;
+              // Final response - ALWAYS update if it's the complete chunk
+              console.log('🏁 [API] Received complete chunk', { hasResponse: !!parsed.response });
+              fullText = parsed.response || fullText;
             } else if (parsed.type === 'meta') {
               // Metadata (MCP tools, intents, regions)
               metadata = parsed;
