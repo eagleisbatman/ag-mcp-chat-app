@@ -404,7 +404,8 @@ const styles = StyleSheet.create({
   diagnosisBox: {
     marginTop: SPACING.sm,
     padding: SPACING.md,
-    borderRadius: 0,
+    borderRadius: 16, // Rounded corners for modern card look
+    borderWidth: 1,   // Subtle border
     backgroundColor: 'transparent',
   },
   diagnosisText: {

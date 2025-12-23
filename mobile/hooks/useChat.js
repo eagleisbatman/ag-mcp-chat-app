@@ -271,6 +271,7 @@ export default function useChat(sessionIdParam = null) {
     const userMsg = { _id: Date.now().toString(), text: t('chat.plantPhotoSent'), image: imageData.uri, createdAt: new Date(), isBot: false };
     addMessage(userMsg);
     setIsTyping(true);
+    setThinkingText(t('chat.analyzingImage')); // Show specific thinking text for image analysis
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     const sessionId = await ensureSession();
