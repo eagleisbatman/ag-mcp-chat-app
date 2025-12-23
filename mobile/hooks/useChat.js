@@ -313,27 +313,39 @@ export default function useChat(sessionIdParam = null) {
         showWarning(t('chat.plantAnalysisIssues', { details: errorMsg }));
         addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.analysisCouldNotComplete', { details: errorMsg }), createdAt: new Date(), isBot: true });
       } else {
-        // Use the response text if available, otherwise format the diagnosis
-        let displayText;
-        if (diagResult.response) {
-          // API returned formatted response text
-          displayText = diagResult.response;
-        } else if (diagResult.diagnosis) {
-          // Format the raw diagnosis data
-          displayText = formatDiagnosis(diagResult.diagnosis);
-        } else {
-          displayText = t('chat.analysisComplete');
+        // Use the response text if available
+        let displayText = diagResult.response || t('chat.analysisComplete');
+        
+        // Format the structured diagnosis if available
+        let formattedDiagnosis = null;
+        if (diagResult.diagnosis) {
+          // If it's an error object from the tool, extract the message
+          if (diagResult.diagnosis.error) {
+            console.log('🌿 [useChat] Diagnosis tool reported error:', diagResult.diagnosis.message);
+            // If we don't have a conversational response, use the error message
+            if (!diagResult.response) {
+              displayText = diagResult.diagnosis.message;
+            }
+          } else {
+            formattedDiagnosis = formatDiagnosis(diagResult.diagnosis);
+          }
         }
 
-        const botMsg = { _id: (Date.now() + 1).toString(), text: displayText, createdAt: new Date(), isBot: true };
+        const botMsg = { 
+          _id: (Date.now() + 1).toString(), 
+          text: displayText, 
+          diagnosis: formattedDiagnosis,
+          createdAt: new Date(), 
+          isBot: true 
+        };
         addMessage(botMsg);
 
         // Extract crop info for persistence
-        // Note: diagnosis.crop can be an object { name, scientific_name } or a string
         const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
         const cropName = typeof diagnosisData?.crop === 'object'
           ? diagnosisData.crop.name
           : diagnosisData?.crop;
+        
         persistMessage(botMsg, sessionId, {
           diagnosisCrop: cropName,
           diagnosisHealthStatus: diagnosisData?.health_status

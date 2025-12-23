@@ -390,16 +390,24 @@ export const formatDiagnosis = (diagnosis) => {
   }
 
   if (diagnosis.general_recommendations) {
-    parts.push(`📋 ${diagnosis.general_recommendations}`);
+    parts.push(`📋 **General Advice**\n${diagnosis.general_recommendations}`);
   }
 
   if (diagnosis.diagnostic_notes) {
-    parts.push(`🔬 _${diagnosis.diagnostic_notes}_`);
+    parts.push(`🔬 **Expert Analysis**\n${diagnosis.diagnostic_notes}`);
   }
 
   // Lab test recommendation
   if (diagnosis.requires_lab_test) {
     parts.push('\n🧫 _Laboratory testing recommended for confirmation_');
+  }
+
+  // Add guardrails info if available
+  if (diagnosis._meta?.guardrails) {
+    const gr = diagnosis._meta.guardrails;
+    if (gr.imageQualityFromGuardrails && gr.imageQualityFromGuardrails !== 'good') {
+      parts.push(`\n📷 _Note: Image quality was rated as ${gr.imageQualityFromGuardrails}_`);
+    }
   }
 
   return parts.join('\n');

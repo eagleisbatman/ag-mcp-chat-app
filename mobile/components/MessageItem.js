@@ -344,10 +344,10 @@ function MessageItem({ message, isNewMessage = false, onLayout }) {
 
       {/* Diagnosis Result (for image analysis) */}
       {message.diagnosis && (
-        <View style={styles.diagnosisBox}>
-          <Text style={[styles.diagnosisText, { color: theme.text }]}>
+        <View style={[styles.diagnosisBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)', borderColor: theme.border }]}>
+          <Markdown style={markdownStyles}>
             {message.diagnosis}
-          </Text>
+          </Markdown>
         </View>
       )}
     </View>
