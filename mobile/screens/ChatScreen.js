@@ -48,6 +48,8 @@ export default function ChatScreen({ navigation, route }) {
   const lastUserMessageIdRef = useRef(null); // Track the last user message we scrolled to
   const shouldScrollToUserRef = useRef(false); // Flag to trigger scroll on next render
   const blockAutoScrollRef = useRef(false); // Block auto-scroll during initial positioning
+  const isAnchorLockedRef = useRef(false);   // LOCK: Pins question to top during generation
+  const isAnchorLockedRef = useRef(false);   // LOCK: Pins question to top
 
   // Handle new session request
   useEffect(() => {
@@ -110,8 +112,9 @@ export default function ChatScreen({ navigation, route }) {
 
     lastUserMessageIdRef.current = targetId;
     isUserScrollingRef.current = false; // Reset user scroll flag on new message
+    isAnchorLockedRef.current = true;   // LOCK: Stay focused on this question
 
-    console.log('📜 [Scroll] Aligning newest question to top:', targetId, 'at index:', targetIndex);
+    console.log('📜 [Scroll] TOP-ANCHOR: Aligning recent question to top:', targetId, 'at index:', targetIndex);
 
     // viewPosition: 0 = align the item at the TOP of the visible area
     flatListRef.current.scrollToIndex({
@@ -128,7 +131,8 @@ export default function ChatScreen({ navigation, route }) {
   // Track when user manually starts scrolling
   const handleScrollBeginDrag = useCallback(() => {
     isUserScrollingRef.current = true;
-    console.log('📜 [Scroll] User started scrolling manually');
+    isAnchorLockedRef.current = false; // RELEASE LOCK: User has taken manual control
+    console.log('📜 [Scroll] User started scrolling manually - lock released');
   }, []);
 
   // Track scroll position and show/hide scroll button
@@ -151,8 +155,20 @@ export default function ChatScreen({ navigation, route }) {
     contentHeightRef.current = height;
 
     if (isTyping && !isUserScrollingRef.current && !blockAutoScrollRef.current && height > prevHeight) {
-      // Normal auto-scroll to bottom
-      flatListRef.current?.scrollToEnd({ animated: false });
+      if (isAnchorLockedRef.current) {
+        // We're locked to the top of the question.
+        // We only scroll if the content has now exceeded the visible screen area.
+        const listContentHeight = height;
+        const visibleAreaHeight = viewportHeightRef.current;
+        
+        // This is a rough estimation of when the current interaction fills the screen
+        if (listContentHeight > visibleAreaHeight) {
+          flatListRef.current?.scrollToEnd({ animated: false });
+        }
+      } else {
+        // Normal auto-scroll to bottom
+        flatListRef.current?.scrollToEnd({ animated: false });
+      }
     }
   }, [isTyping]);
 
@@ -168,8 +184,7 @@ export default function ChatScreen({ navigation, route }) {
 
     if (typingJustStarted && messagesAdded) {
       // New message sent, typing just started
-      // Block auto-scroll for the ENTIRE duration of this response
-      // to keep the question anchored at the top.
+      // Block auto-scroll briefly while we position the question at the top
       blockAutoScrollRef.current = true;
       shouldScrollToUserRef.current = true;
 
@@ -179,6 +194,12 @@ export default function ChatScreen({ navigation, route }) {
           if (shouldScrollToUserRef.current) {
             scrollToUserMessage();
             shouldScrollToUserRef.current = false;
+            
+            // Re-enable auto-scroll after a delay so that if the answer
+            // grows past the screen, it will smoothly scroll down.
+            setTimeout(() => {
+              blockAutoScrollRef.current = false;
+            }, 1000);
           }
         }, 150);
       });
