@@ -52,12 +52,12 @@ function sanitizeStreamingMarkdown(text) {
 }
 
 function MessageItem({ message, isNewMessage = false, onLayout }) {
-  const { theme, language } = useApp();
+  const { theme, language, isDark } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
   const isStreaming = message.isStreaming || false;
-  const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
+  const rippleColor = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
   // Don't render empty streaming messages (typing indicator handles this state)
   if (isBot && isStreaming && !message.text) {

@@ -312,8 +312,12 @@ export default function useChat(sessionIdParam = null) {
       if (!diagResult.success) {
         const errorMsg = parseErrorMessage(diagResult);
         showWarning(t('chat.plantAnalysisIssues', { details: errorMsg }));
+        updateMessage(userMsg._id, { text: t('chat.imageAnalysisFailed') || 'Image analysis failed' });
         addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.analysisCouldNotComplete', { details: errorMsg }), createdAt: new Date(), isBot: true });
       } else {
+        // Update user message text to be less prominent now that it's done
+        updateMessage(userMsg._id, { text: t('chat.imageAnalyzed') || 'Plant image' });
+
         // Use the response text if available
         let displayText = diagResult.response || t('chat.analysisComplete');
         
@@ -362,6 +366,7 @@ export default function useChat(sessionIdParam = null) {
       addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.imageAnalysisFailedBot'), createdAt: new Date(), isBot: true });
     } finally {
       setIsTyping(false);
+      setThinkingText(null);
     }
   }, [location, language, locationDetails, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
