@@ -48,6 +48,7 @@ export default function ChatScreen({ navigation, route }) {
   const lastUserMessageIdRef = useRef(null); // Track the last user message we scrolled to
   const shouldScrollToUserRef = useRef(false); // Flag to trigger scroll on next render
   const blockAutoScrollRef = useRef(false); // Block auto-scroll during initial positioning
+  const isAnchorLockedRef = useRef(false);   // NEW: Explicit lock for top-anchoring
 
   // Handle new session request
   useEffect(() => {
@@ -86,13 +87,12 @@ export default function ChatScreen({ navigation, route }) {
   // SCROLL TO USER MESSAGE
   // ===========================================
   const scrollToUserMessage = useCallback(() => {
-    const reversedMessages = [...messages].reverse();
+    const listData = [...messages].reverse();
 
-    // Find the newest user message (not bot, not welcome)
-    // In our inverted list, this is usually at index 1 (0 is the current bot response)
+    // Find the newest user message (search from the end of the list)
     let targetIndex = -1;
-    for (let i = 0; i < reversedMessages.length; i++) {
-      const msg = reversedMessages[i];
+    for (let i = listData.length - 1; i >= 0; i--) {
+      const msg = listData[i];
       if (!msg.isBot && msg._id !== 'welcome') {
         targetIndex = i;
         break;
@@ -104,15 +104,16 @@ export default function ChatScreen({ navigation, route }) {
     }
 
     // Don't scroll to the same message twice
-    const targetId = reversedMessages[targetIndex]._id;
+    const targetId = listData[targetIndex]._id;
     if (lastUserMessageIdRef.current === targetId) {
       return;
     }
 
     lastUserMessageIdRef.current = targetId;
     isUserScrollingRef.current = false; // Reset user scroll flag on new message
+    isAnchorLockedRef.current = true;   // LOCK: We want to stay focused on this question
 
-    console.log('📜 [Scroll] TOP-ANCHOR: Aligning question to top:', targetId, 'at index:', targetIndex);
+    console.log('📜 [Scroll] ANCHOR LOCK: Aligning recent question to top:', targetId, 'at index:', targetIndex);
 
     // viewPosition: 0 = align the item at the TOP of the visible area
     flatListRef.current.scrollToIndex({
@@ -129,7 +130,8 @@ export default function ChatScreen({ navigation, route }) {
   // Track when user manually starts scrolling
   const handleScrollBeginDrag = useCallback(() => {
     isUserScrollingRef.current = true;
-    console.log('📜 [Scroll] User started scrolling manually');
+    isAnchorLockedRef.current = false; // RELEASE LOCK: User has taken manual control
+    console.log('📜 [Scroll] User started scrolling manually - lock released');
   }, []);
 
   // Track scroll position and show/hide scroll button
@@ -151,16 +153,19 @@ export default function ChatScreen({ navigation, route }) {
     const prevHeight = contentHeightRef.current;
     contentHeightRef.current = height;
 
-    // SCROLL LOGIC UPDATE: 
-    // We only want to auto-scroll to the bottom IF the user is NOT in the "Top-Anchored" mode
-    // or if the content has already filled the screen.
-    const isResponseFillingScreen = height > viewportHeightRef.current;
+    // We only want to auto-scroll to the bottom IF:
+    // 1. We're typing (isTyping)
+    // 2. User hasn't manually scrolled (isUserScrollingRef)
+    // 3. We are NOT currently locked to the top of a question (isAnchorLockedRef)
+    
+    const shouldAutoScroll = isTyping && 
+                             !isUserScrollingRef.current && 
+                             !blockAutoScrollRef.current && 
+                             !isAnchorLockedRef.current && 
+                             height > prevHeight;
 
-    if (isTyping && !isUserScrollingRef.current && !blockAutoScrollRef.current && height > prevHeight) {
-      if (isResponseFillingScreen) {
-        // Only scroll to end if the message is actually long enough to need it
-        flatListRef.current?.scrollToEnd({ animated: false });
-      }
+    if (shouldAutoScroll) {
+      flatListRef.current?.scrollToEnd({ animated: false });
     }
   }, [isTyping]);
 
@@ -200,6 +205,7 @@ export default function ChatScreen({ navigation, route }) {
     if (!isTyping && prevIsTypingRef.current) {
       // Keep isUserScrollingRef as-is until next message is sent
       blockAutoScrollRef.current = false;
+      isAnchorLockedRef.current = false; // RELEASE LOCK: Answer is complete
     }
 
     prevIsTypingRef.current = isTyping;
