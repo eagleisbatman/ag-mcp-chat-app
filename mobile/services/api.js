@@ -296,7 +296,7 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
     console.error('Chat API error:', error);
     return {
       success: false,
-      error: error.message || 'Failed to send message',
+      error: parseErrorMessage(error),
     };
   }
 };
@@ -376,7 +376,7 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
     console.error('🌿 [API] Plant diagnosis error:', error);
     return {
       success: false,
-      error: error.message || 'Failed to analyze plant image',
+      error: parseErrorMessage(error),
     };
   }
 };
@@ -425,7 +425,7 @@ export const getActiveMcpServers = async ({ lat, lon } = {}) => {
     console.error('MCP servers API error:', error);
     return {
       success: false,
-      error: error.message || 'Failed to fetch MCP servers',
+      error: parseErrorMessage(error),
       global: [],
       regional: [],
       detectedRegions: [],
@@ -511,7 +511,7 @@ export const getMcpServersLiveStatus = async ({ lat, lon } = {}) => {
     console.error('MCP live status API error:', error);
     return {
       success: false,
-      error: error.message || 'Failed to fetch MCP server status',
+      error: parseErrorMessage(error),
       servers: [],
       grouped: { active: [], degraded: [], inactive: [], comingSoon: [] },
       counts: { total: 0, active: 0, degraded: 0, inactive: 0, comingSoon: 0 },
@@ -554,7 +554,7 @@ export const getMcpServer = async (slug) => {
     console.error('MCP server detail API error:', error);
     return {
       success: false,
-      error: error.message || 'Failed to fetch MCP server details',
+      error: parseErrorMessage(error),
       server: null,
     };
   }
@@ -586,7 +586,7 @@ export const detectRegions = async (lat, lon) => {
     console.error('Detect regions API error:', error);
     return {
       success: false,
-      error: error.message,
+      error: parseErrorMessage(error),
     };
   }
 };
