@@ -132,7 +132,10 @@ export const sendChatMessageStreaming = async ({
           }
 
           try {
-            const parsed = JSON.parse(data);
+            const dataStr = line.slice(6).trim();
+            if (!dataStr) continue;
+
+            const parsed = JSON.parse(dataStr);
             console.log('📥 [API] Stream chunk:', parsed.type, 
               parsed.text ? `(text: ${parsed.text.length} chars)` : 
               parsed.thinking ? `(thinking: ${parsed.thinking.length} chars)` : 
@@ -154,8 +157,11 @@ export const sendChatMessageStreaming = async ({
               console.log('✅ [API] Tool result:', parsed.toolName);
             } else if (parsed.type === 'complete') {
               // Final response - ALWAYS update if it's the complete chunk
-              console.log('🏁 [API] Received complete chunk', { hasResponse: !!parsed.response });
-              fullText = parsed.response || fullText;
+              console.log('🏁 [API] Received complete chunk', { 
+                hasResponse: !!parsed.response, 
+                responseLength: parsed.response?.length || 0 
+              });
+              if (parsed.response) fullText = parsed.response;
             } else if (parsed.type === 'meta') {
               // Metadata (MCP tools, intents, regions)
               metadata = parsed;
