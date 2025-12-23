@@ -57,10 +57,11 @@ export const sendChatMessageStreaming = async ({
   const deviceId = await ensureDeviceId();
 
   // Format history for AI Services
+  // History is newest-first in the hook, but Gemini wants oldest-first
   const formattedHistory = history
     .filter(m => m._id !== 'welcome')
     .slice(0, 10)
-    .reverse()
+    .reverse() // Reverse to get oldest-first
     .map(m => ({ text: m.text, isBot: m.isBot }));
 
   // Build location context
@@ -241,10 +242,11 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
     const deviceId = await ensureDeviceId();
 
     // Format history for AI Services
+    // History is newest-first in the hook, but Gemini wants oldest-first
     const formattedHistory = history
       .filter(m => m._id !== 'welcome') // Exclude welcome message
       .slice(0, 10) // Last 10 messages
-      .reverse() // Oldest first
+      .reverse() // Reverse to get oldest-first
       .map(m => ({
         text: m.text,
         isBot: m.isBot,

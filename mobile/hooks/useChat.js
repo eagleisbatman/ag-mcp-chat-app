@@ -25,6 +25,9 @@ export default function useChat(sessionIdParam = null) {
   const { showError, showWarning, showSuccess } = useToast();
   
   const [messages, setMessages] = useState(() => [createWelcomeMessage()]);
+  
+  // Computed property for newest messages first
+  const newestFirstMessages = messages; 
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingSession, setIsLoadingSession] = useState(false);
   const [newestBotMessageId, setNewestBotMessageId] = useState(null);
@@ -49,7 +52,7 @@ export default function useChat(sessionIdParam = null) {
           createdAt: new Date(m.createdAt),
           isBot: m.role === 'assistant',
           image: m.imageCloudinaryUrl,
-        })).reverse(); // Newest first for inverted FlatList
+        })); // Keep order from DB (newest first usually)
         
         setMessages([...loadedMessages, createWelcomeMessage()]);
         setCurrentSessionId(sessionId);
@@ -203,7 +206,7 @@ export default function useChat(sessionIdParam = null) {
         longitude: location?.longitude,
         language: language?.code,
         locationDetails,
-        history: messages,
+        history: messages.slice(0, 10), // Use slice for history
         onChunk: (chunk) => {
           setThinkingText(null); // Clear thinking when text starts
           updateMessage(botMsgId, { text: (prev) => (prev || '') + chunk });

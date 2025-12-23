@@ -87,12 +87,11 @@ export default function ChatScreen({ navigation, route }) {
   // SCROLL TO USER MESSAGE
   // ===========================================
   const scrollToUserMessage = useCallback(() => {
-    const listData = [...messages].reverse();
-
-    // Find the newest user message (search from the start of the reversed list)
+    // With inverted list, messages are already newest-first
+    // messages[0] is the BotPlaceholder, messages[1] is the User Question
     let targetIndex = -1;
-    for (let i = 0; i < listData.length; i++) {
-      const msg = listData[i];
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
       if (!msg.isBot && msg._id !== 'welcome') {
         targetIndex = i;
         break;
@@ -104,7 +103,7 @@ export default function ChatScreen({ navigation, route }) {
     }
 
     // Don't scroll to the same message twice
-    const targetId = listData[targetIndex]._id;
+    const targetId = messages[targetIndex]._id;
     if (lastUserMessageIdRef.current === targetId) {
       return;
     }
@@ -113,13 +112,13 @@ export default function ChatScreen({ navigation, route }) {
     isUserScrollingRef.current = false; // Reset user scroll flag on new message
     isAnchorLockedRef.current = true;   // LOCK: Stay focused on this question
 
-    console.log('📜 [Scroll] TOP-ANCHOR: Aligning recent question to top:', targetId, 'at index:', targetIndex);
+    console.log('📜 [Scroll] TOP-ANCHOR (Inverted): Aligning recent question to top:', targetId, 'at index:', targetIndex);
 
-    // viewPosition: 0 = align the item at the TOP of the visible area
+    // viewPosition: 1 = align the item at the TOP of the visible area in INVERTED mode
     flatListRef.current.scrollToIndex({
       index: targetIndex,
       animated: true,
-      viewPosition: 0,
+      viewPosition: 1,
     });
   }, [messages]);
 
@@ -136,11 +135,11 @@ export default function ChatScreen({ navigation, route }) {
 
   // Track scroll position and show/hide scroll button
   const handleScroll = useCallback((event) => {
-    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    const { contentOffset } = event.nativeEvent;
     currentScrollYRef.current = contentOffset.y;
 
-    const distanceFromBottom = contentSize.height - (contentOffset.y + layoutMeasurement.height);
-    setShowScrollButton(distanceFromBottom > 150);
+    // In inverted mode, y=0 is the bottom. Higher y is further up the history.
+    setShowScrollButton(contentOffset.y > 200);
   }, []);
 
   // Track viewport height
@@ -153,21 +152,9 @@ export default function ChatScreen({ navigation, route }) {
     const prevHeight = contentHeightRef.current;
     contentHeightRef.current = height;
 
-    if (isTyping && !isUserScrollingRef.current && !blockAutoScrollRef.current && height > prevHeight) {
-      if (isAnchorLockedRef.current) {
-        // We're locked to the top of the question.
-        // We only scroll if the content has now exceeded the visible screen area.
-        const listContentHeight = height;
-        const visibleAreaHeight = viewportHeightRef.current;
-        
-        // This is a rough estimation of when the current interaction fills the screen
-        if (listContentHeight > visibleAreaHeight) {
-          flatListRef.current?.scrollToEnd({ animated: false });
-        }
-      } else {
-        // Normal auto-scroll to bottom
-        flatListRef.current?.scrollToEnd({ animated: false });
-      }
+    if (isTyping && !isUserScrollingRef.current && !blockAutoScrollRef.current && !isAnchorLockedRef.current) {
+      // In inverted mode, newest content grows at offset 0 (bottom)
+      // We don't need to call scrollToEnd, FlatList handles it naturally if offset is near 0.
     }
   }, [isTyping]);
 
@@ -375,7 +362,8 @@ export default function ChatScreen({ navigation, route }) {
         ) : (
           <FlatList
             ref={flatListRef}
-            data={[...messages].reverse()}
+            data={messages} // No manual reverse needed
+            inverted={true}  // Use native inversion
             renderItem={({ item }) => (
               <MessageItem
                 message={item}
@@ -398,20 +386,16 @@ export default function ChatScreen({ navigation, route }) {
 
             // Handle scroll to unmeasured items
             onScrollToIndexFailed={(info) => {
-              console.log('📜 [Scroll] scrollToIndex failed, retrying...', info.index);
-              setTimeout(() => {
-                if (flatListRef.current && info.index < messages.length) {
-                  flatListRef.current.scrollToIndex({
-                    index: info.index,
-                    animated: false,
-                    viewPosition: 0,
-                  });
-                }
-              }, 200);
+              console.log('📜 [Scroll] scrollToIndex failed, using offset fallback');
+              const avgHeight = 100;
+              flatListRef.current?.scrollToOffset({
+                offset: info.index * avgHeight,
+                animated: true,
+              });
             }}
 
-            // Typing indicator at bottom
-            ListFooterComponent={isTyping ? (
+            // Typing indicator (ListHeaderComponent appears at the bottom in inverted mode)
+            ListHeaderComponent={isTyping ? (
               <TypingIndicator text={thinkingText || t('chat.thinking')} />
             ) : null}
           />
