@@ -48,7 +48,6 @@ export default function ChatScreen({ navigation, route }) {
   const lastUserMessageIdRef = useRef(null); // Track the last user message we scrolled to
   const shouldScrollToUserRef = useRef(false); // Flag to trigger scroll on next render
   const blockAutoScrollRef = useRef(false); // Block auto-scroll during initial positioning
-  const isAnchorLockedRef = useRef(false);   // NEW: Explicit lock for top-anchoring
 
   // Handle new session request
   useEffect(() => {
@@ -89,9 +88,9 @@ export default function ChatScreen({ navigation, route }) {
   const scrollToUserMessage = useCallback(() => {
     const listData = [...messages].reverse();
 
-    // Find the newest user message (search from the end of the list)
+    // Find the newest user message (search from the start of the reversed list)
     let targetIndex = -1;
-    for (let i = listData.length - 1; i >= 0; i--) {
+    for (let i = 0; i < listData.length; i++) {
       const msg = listData[i];
       if (!msg.isBot && msg._id !== 'welcome') {
         targetIndex = i;
@@ -111,9 +110,8 @@ export default function ChatScreen({ navigation, route }) {
 
     lastUserMessageIdRef.current = targetId;
     isUserScrollingRef.current = false; // Reset user scroll flag on new message
-    isAnchorLockedRef.current = true;   // LOCK: We want to stay focused on this question
 
-    console.log('📜 [Scroll] ANCHOR LOCK: Aligning recent question to top:', targetId, 'at index:', targetIndex);
+    console.log('📜 [Scroll] Aligning newest question to top:', targetId, 'at index:', targetIndex);
 
     // viewPosition: 0 = align the item at the TOP of the visible area
     flatListRef.current.scrollToIndex({
@@ -130,8 +128,7 @@ export default function ChatScreen({ navigation, route }) {
   // Track when user manually starts scrolling
   const handleScrollBeginDrag = useCallback(() => {
     isUserScrollingRef.current = true;
-    isAnchorLockedRef.current = false; // RELEASE LOCK: User has taken manual control
-    console.log('📜 [Scroll] User started scrolling manually - lock released');
+    console.log('📜 [Scroll] User started scrolling manually');
   }, []);
 
   // Track scroll position and show/hide scroll button
@@ -153,18 +150,8 @@ export default function ChatScreen({ navigation, route }) {
     const prevHeight = contentHeightRef.current;
     contentHeightRef.current = height;
 
-    // We only want to auto-scroll to the bottom IF:
-    // 1. We're typing (isTyping)
-    // 2. User hasn't manually scrolled (isUserScrollingRef)
-    // 3. We are NOT currently locked to the top of a question (isAnchorLockedRef)
-    
-    const shouldAutoScroll = isTyping && 
-                             !isUserScrollingRef.current && 
-                             !blockAutoScrollRef.current && 
-                             !isAnchorLockedRef.current && 
-                             height > prevHeight;
-
-    if (shouldAutoScroll) {
+    if (isTyping && !isUserScrollingRef.current && !blockAutoScrollRef.current && height > prevHeight) {
+      // Normal auto-scroll to bottom
       flatListRef.current?.scrollToEnd({ animated: false });
     }
   }, [isTyping]);
@@ -181,7 +168,8 @@ export default function ChatScreen({ navigation, route }) {
 
     if (typingJustStarted && messagesAdded) {
       // New message sent, typing just started
-      // Block auto-scroll until we position the user message
+      // Block auto-scroll for the ENTIRE duration of this response
+      // to keep the question anchored at the top.
       blockAutoScrollRef.current = true;
       shouldScrollToUserRef.current = true;
 
@@ -191,13 +179,8 @@ export default function ChatScreen({ navigation, route }) {
           if (shouldScrollToUserRef.current) {
             scrollToUserMessage();
             shouldScrollToUserRef.current = false;
-            // Allow auto-scroll to resume after a short delay
-            // This gives time for the scroll to complete
-            setTimeout(() => {
-              blockAutoScrollRef.current = false;
-            }, 300);
           }
-        }, 100);
+        }, 150);
       });
     }
 
