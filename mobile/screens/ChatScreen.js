@@ -48,8 +48,7 @@ export default function ChatScreen({ navigation, route }) {
   const lastUserMessageIdRef = useRef(null); // Track the last user message we scrolled to
   const shouldScrollToUserRef = useRef(false); // Flag to trigger scroll on next render
   const blockAutoScrollRef = useRef(false); // Block auto-scroll during initial positioning
-  const isAnchorLockedRef = useRef(false);   // LOCK: Pins question to top during generation
-  const isAnchorLockedRef = useRef(false);   // LOCK: Pins question to top
+  const isAnchorLockedRef = useRef(false);   // LOCK: Stay focused on this question
 
   // Handle new session request
   useEffect(() => {
