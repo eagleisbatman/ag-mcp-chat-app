@@ -133,7 +133,11 @@ export const sendChatMessageStreaming = async ({
 
           try {
             const parsed = JSON.parse(data);
-            console.log('📥 [API] Stream chunk:', parsed.type, parsed.text ? `(${parsed.text.length} chars)` : '');
+            console.log('📥 [API] Stream chunk:', parsed.type, 
+              parsed.text ? `(text: ${parsed.text.length} chars)` : 
+              parsed.thinking ? `(thinking: ${parsed.thinking.length} chars)` : 
+              parsed.toolName ? `(tool: ${parsed.toolName})` : ''
+            );
 
             // Handle different chunk types
             if (parsed.type === 'text') {
