@@ -44,6 +44,17 @@ export function parseErrorMessage(error) {
 
     const msg = error.message?.toLowerCase() || '';
 
+    // If message is a JSON string (sometimes happens with API errors), try to parse it
+    if (error.message?.includes('{')) {
+      try {
+        const parsed = JSON.parse(error.message.substring(error.message.indexOf('{')));
+        if (parsed.error?.message) return parsed.error.message;
+        if (parsed.message) return parsed.message;
+      } catch (e) {
+        // Fallback to standard check
+      }
+    }
+
     // Network/fetch errors
     if (msg.includes('network request failed') || msg.includes('failed to fetch')) {
       return 'Network error. Check your internet connection.';

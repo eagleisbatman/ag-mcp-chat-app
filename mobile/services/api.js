@@ -133,14 +133,21 @@ export const sendChatMessageStreaming = async ({
 
           try {
             const parsed = JSON.parse(data);
+            console.log('📥 [API] Stream chunk:', parsed.type, parsed.text ? `(${parsed.text.length} chars)` : '');
 
             // Handle different chunk types
-            if (parsed.type === 'text' && parsed.text) {
-              fullText += parsed.text;
-              onChunk?.(parsed.text);
+            if (parsed.type === 'text') {
+              // Even empty text or whitespace should be processed if it's explicitly sent
+              const text = parsed.text || '';
+              fullText += text;
+              onChunk?.(text);
             } else if (parsed.type === 'thinking' && parsed.thinking) {
               // AI's thinking process (farmer-friendly)
               onThinking?.(parsed.thinking);
+            } else if (parsed.type === 'tool_call') {
+              console.log('🛠️ [API] Tool call:', parsed.toolName);
+            } else if (parsed.type === 'tool_result') {
+              console.log('✅ [API] Tool result:', parsed.toolName);
             } else if (parsed.type === 'complete') {
               // Final response
               if (parsed.response) fullText = parsed.response;

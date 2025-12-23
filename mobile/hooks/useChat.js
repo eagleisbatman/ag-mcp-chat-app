@@ -240,13 +240,20 @@ export default function useChat(sessionIdParam = null) {
           setThinkingText(null);
           setIsTyping(false);
 
-          // Always show user-friendly error message, never raw API errors
+          // Get user-friendly error message
           const userFriendlyMsg = parseErrorMessage(error);
-          updateMessage(botMsgId, { text: t('chat.connectionErrorBot') });
+          
+          // If it's a server error but we have a partial response, keep it
+          // Otherwise show error message in bubble
+          updateMessage(botMsgId, { 
+            text: (prev) => prev && prev.length > 10 ? prev : t('chat.connectionErrorBot') 
+          });
 
           if (isNetworkError(error)) {
             showWarning(t('chat.noInternet'));
           } else {
+            // Log full error for debugging but show friendly one to user
+            console.error('📱 [Chat] API Error Details:', error);
             showError(userFriendlyMsg);
           }
         }
