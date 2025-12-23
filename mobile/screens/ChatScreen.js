@@ -89,38 +89,36 @@ export default function ChatScreen({ navigation, route }) {
     const reversedMessages = [...messages].reverse();
 
     // Find the newest user message (not bot, not welcome)
-    let targetMessage = null;
+    // In our inverted list, this is usually at index 1 (0 is the current bot response)
     let targetIndex = -1;
-
-    for (let i = reversedMessages.length - 1; i >= 0; i--) {
+    for (let i = 0; i < reversedMessages.length; i++) {
       const msg = reversedMessages[i];
       if (!msg.isBot && msg._id !== 'welcome') {
-        targetMessage = msg;
         targetIndex = i;
         break;
       }
     }
 
-    if (!targetMessage || !flatListRef.current) {
+    if (targetIndex === -1 || !flatListRef.current) {
       return;
     }
 
     // Don't scroll to the same message twice
-    if (lastUserMessageIdRef.current === targetMessage._id) {
+    const targetId = reversedMessages[targetIndex]._id;
+    if (lastUserMessageIdRef.current === targetId) {
       return;
     }
 
-    lastUserMessageIdRef.current = targetMessage._id;
+    lastUserMessageIdRef.current = targetId;
     isUserScrollingRef.current = false; // Reset user scroll flag on new message
 
-    console.log('📜 [Scroll] Scrolling to user message:', targetMessage._id, 'at index:', targetIndex);
+    console.log('📜 [Scroll] TOP-ANCHOR: Aligning question to top:', targetId, 'at index:', targetIndex);
 
-    // Use scrollToIndex with viewPosition: 0 to put message at top
-    // This is more reliable than calculating offset for variable-height items
+    // viewPosition: 0 = align the item at the TOP of the visible area
     flatListRef.current.scrollToIndex({
       index: targetIndex,
-      animated: false,
-      viewPosition: 0, // 0 = top of viewport
+      animated: true,
+      viewPosition: 0,
     });
   }, [messages]);
 
@@ -153,14 +151,16 @@ export default function ChatScreen({ navigation, route }) {
     const prevHeight = contentHeightRef.current;
     contentHeightRef.current = height;
 
-    // Auto-scroll during streaming ONLY if:
-    // 1. We're streaming (isTyping)
-    // 2. User hasn't manually scrolled
-    // 3. Not blocked by initial scroll positioning
-    // 4. Content actually grew
+    // SCROLL LOGIC UPDATE: 
+    // We only want to auto-scroll to the bottom IF the user is NOT in the "Top-Anchored" mode
+    // or if the content has already filled the screen.
+    const isResponseFillingScreen = height > viewportHeightRef.current;
+
     if (isTyping && !isUserScrollingRef.current && !blockAutoScrollRef.current && height > prevHeight) {
-      // Content grew (streaming) - scroll to show new content
-      flatListRef.current?.scrollToEnd({ animated: false });
+      if (isResponseFillingScreen) {
+        // Only scroll to end if the message is actually long enough to need it
+        flatListRef.current?.scrollToEnd({ animated: false });
+      }
     }
   }, [isTyping]);
 
