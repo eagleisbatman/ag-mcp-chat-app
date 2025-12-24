@@ -87,38 +87,24 @@ export default function ChatScreen({ navigation, route }) {
   // SCROLL TO USER MESSAGE
   // ===========================================
   const scrollToUserMessage = useCallback(() => {
-    // With inverted list, messages are already newest-first
-    // messages[0] is the BotPlaceholder, messages[1] is the User Question
+    // Find the newest user message (at index 1 usually in inverted list)
     let targetIndex = -1;
     for (let i = 0; i < messages.length; i++) {
-      const msg = messages[i];
-      if (!msg.isBot && msg._id !== 'welcome') {
+      if (!messages[i].isBot && messages[i]._id !== 'welcome') {
         targetIndex = i;
         break;
       }
     }
 
-    if (targetIndex === -1 || !flatListRef.current) {
-      return;
-    }
+    if (targetIndex === -1 || !flatListRef.current) return;
 
-    // Don't scroll to the same message twice
-    const targetId = messages[targetIndex]._id;
-    if (lastUserMessageIdRef.current === targetId) {
-      return;
-    }
+    // Use scrollToOffset for more reliable positioning at the top
+    console.log('📜 [Scroll] TOP-ANCHOR: Aligning to newest question:', messages[targetIndex]._id);
 
-    lastUserMessageIdRef.current = targetId;
-    isUserScrollingRef.current = false; // Reset user scroll flag on new message
-    isAnchorLockedRef.current = true;   // LOCK: Stay focused on this question
-
-    console.log('📜 [Scroll] TOP-ANCHOR (Inverted): Aligning recent question to top:', targetId, 'at index:', targetIndex);
-
-    // viewPosition: 1 = align the item at the TOP of the visible area in INVERTED mode
     flatListRef.current.scrollToIndex({
       index: targetIndex,
       animated: true,
-      viewPosition: 1,
+      viewPosition: 1, // 1 = top of viewport in inverted mode
     });
   }, [messages]);
 

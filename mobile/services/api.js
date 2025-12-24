@@ -384,6 +384,12 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
       success: true,
       response: data.response, // Formatted text for display
       diagnosis: data.diagnosis, // Raw diagnosis object
+      metadata: {
+        intentsDetected: data.intentsDetected || [],
+        mcpToolsUsed: data.mcpToolsUsed || [],
+        extractedEntities: data.extractedEntities || null,
+        intentSource: data.intentSource,
+      },
     };
   } catch (error) {
     console.error('🌿 [API] Plant diagnosis error:', error);

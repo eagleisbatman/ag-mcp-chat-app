@@ -224,16 +224,14 @@ export default function useChat(sessionIdParam = null) {
           // Haptic feedback on completion
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
-          // Persist the complete message with full intent/classification data
+          // Persist the complete message with full intent/classification/tool data
           persistMessage({ ...botMsg, text: fullText }, sessionId, {
             responseLanguageCode: language?.code,
-            metadata: metadata ? {
-              intentsDetected: metadata.intentsDetected || [],
-              mcpToolsUsed: metadata.mcpToolsUsed || [],
-              intentSource: metadata.intentSource,
-              classification: metadata.classification || null,
-              extractedEntities: metadata.extractedEntities || null,
-            } : null,
+            metadata: metadata || null, // Full metadata object from gateway
+            // Specific diagnosis fields for database columns
+            diagnosisCrop: metadata?.diagnosis?.crop?.name || metadata?.diagnosis?.crop,
+            diagnosisHealthStatus: metadata?.diagnosis?.health_status,
+            diagnosisIssues: metadata?.diagnosis?.issues,
           });
 
           // Generate title after first exchange
@@ -356,7 +354,9 @@ export default function useChat(sessionIdParam = null) {
         
         persistMessage(botMsg, sessionId, {
           diagnosisCrop: cropName,
-          diagnosisHealthStatus: diagnosisData?.health_status
+          diagnosisHealthStatus: diagnosisData?.health_status,
+          diagnosisIssues: diagnosisData?.issues,
+          metadata: diagResult.metadata,
         });
 
         // Generate title after first image analysis
