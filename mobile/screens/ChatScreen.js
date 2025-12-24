@@ -450,6 +450,7 @@ const styles = StyleSheet.create({
     paddingTop: SPACING.sm,
     paddingHorizontal: 0,
     flexGrow: 1,
+    justifyContent: 'flex-end', // Anchor content to bottom (appears at top in inverted mode)
   },
   scrollButtonContainer: {
     position: 'absolute',
