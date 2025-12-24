@@ -14,6 +14,38 @@ const DEFAULT_TIMEOUT_MS = 30000; // 30s for other endpoints
 let cachedDeviceId = null;
 
 /**
+ * Get device's local date/time info for AI context
+ * No permissions needed - uses device's timezone settings
+ */
+function getLocalDateTime() {
+  const now = new Date();
+  const timezoneOffset = now.getTimezoneOffset(); // Minutes from UTC
+  const offsetHours = -timezoneOffset / 60; // Convert to hours (negative because getTimezoneOffset returns opposite sign)
+  const offsetSign = offsetHours >= 0 ? '+' : '-';
+  const offsetStr = `${offsetSign}${String(Math.abs(Math.floor(offsetHours))).padStart(2, '0')}:${String(Math.abs(timezoneOffset % 60)).padStart(2, '0')}`;
+
+  // Get timezone name if available (e.g., "Asia/Kolkata", "Africa/Addis_Ababa")
+  let timezoneName = 'Unknown';
+  try {
+    timezoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  } catch (e) {
+    // Fallback if Intl not available
+  }
+
+  return {
+    isoDateTime: now.toISOString(),           // UTC ISO format
+    localDateTime: now.toString(),            // Full local string
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,                // 1-12
+    day: now.getDate(),
+    hour: now.getHours(),
+    minute: now.getMinutes(),
+    timezone: timezoneName,
+    utcOffset: offsetStr,                     // e.g., "+05:30" or "-08:00"
+  };
+}
+
+/**
  * Get device ID (cached after first call)
  */
 async function ensureDeviceId() {
@@ -92,6 +124,8 @@ export const sendChatMessageStreaming = async ({
     // Server-side persistence
     deviceId,
     sessionId, // Pass existing sessionId if available
+    // Device's local date/time for seasonal context (no permissions needed)
+    clientDateTime: getLocalDateTime(),
   };
 
   // Use XMLHttpRequest for React Native SSE streaming
@@ -279,6 +313,8 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       // Server-side persistence
       deviceId,
       sessionId,
+      // Device's local date/time for seasonal context
+      clientDateTime: getLocalDateTime(),
     };
 
     const response = await fetchWithTimeout(API_URL, {
@@ -357,6 +393,8 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
       // Server-side persistence
       deviceId,
       sessionId,
+      // Device's local date/time for seasonal context
+      clientDateTime: getLocalDateTime(),
     };
 
     const response = await fetchWithTimeout(API_URL, {
