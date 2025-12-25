@@ -8,11 +8,11 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/logo.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF",
       "dark": {
-        "image": "./assets/logo.png",
+        "image": "./assets/splash-icon.png",
         "backgroundColor": "#000000"
       }
     },
@@ -37,11 +37,11 @@
         "monochromeImage": "./assets/adaptive-icon.png"
       },
       "splash": {
-        "image": "./assets/logo.png",
+        "image": "./assets/splash-icon.png",
         "resizeMode": "contain",
         "backgroundColor": "#FFFFFF",
         "dark": {
-          "image": "./assets/logo.png",
+          "image": "./assets/splash-icon.png",
           "backgroundColor": "#000000"
         }
       },
