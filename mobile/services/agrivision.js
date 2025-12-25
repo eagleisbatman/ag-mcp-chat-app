@@ -278,6 +278,14 @@ export const formatDiagnosis = (diagnosis) => {
     return String(diagnosis || 'Unable to analyze image');
   }
 
+  // Check for guardrails failure
+  // If the image was rejected, we don't want to show a confusing "Diagnosis Card"
+  // with "Unknown Crop" and "Critical Health". The chat bubble (friendly_response)
+  // already explains the rejection clearly.
+  if (diagnosis._meta?.guardrails?.passed === false) {
+    return null;
+  }
+
   const parts = [];
 
   // ═══════════════════════════════════════
