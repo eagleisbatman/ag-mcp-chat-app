@@ -7,7 +7,7 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
-const logoImage = require('../assets/logo.png');
+const logoImage = require('../assets/splash-icon.png');
 
 export default function WelcomeScreen({ navigation }) {
   const { theme } = useApp();
@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   logoImage: {
-    width: 80,
-    height: 80,
+    width: 120,
+    height: 120,
     backgroundColor: 'transparent',
   },
   title: {
