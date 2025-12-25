@@ -24,7 +24,7 @@ import { t } from '../constants/strings';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MAX_RECORDING_DURATION = 120; // 2 minutes max
 const SILENCE_THRESHOLD = -45; // dB threshold for silence detection
-const WAVEFORM_POINTS = 50; // Number of points in sine wave
+const WAVEFORM_POINTS = 80; // More points for a smoother line
 
 export default function VoiceRecorder({ 
   onTranscriptionComplete, 
@@ -201,27 +201,23 @@ export default function VoiceRecorder({
 
   const handleMeteringUpdate = (metering) => {
     // Normalize metering value (-160 to 0) to 0-1
-    // Adjust sensitivity - speech usually happens between -40 and -10
-    const normalized = Math.max(0, (metering + 50) / 50);
+    // High sensitivity: map -55dB to -5dB as the active range
+    const normalized = Math.max(0, (metering + 55) / 50);
     setAudioLevel(normalized);
 
     // Detect if user is speaking (above silence threshold)
     if (metering > SILENCE_THRESHOLD) {
-      // User is speaking
       setIsSpeaking(true);
-      // Clear any pending silence timeout
       if (silenceTimeoutRef.current) {
         clearTimeout(silenceTimeoutRef.current);
         silenceTimeoutRef.current = null;
       }
     } else {
-      // Audio below threshold - wait a bit before marking as silent
-      // to avoid flickering during brief pauses
       if (!silenceTimeoutRef.current) {
         silenceTimeoutRef.current = setTimeout(() => {
           setIsSpeaking(false);
           silenceTimeoutRef.current = null;
-        }, 200); // 200ms debounce
+        }, 400); // Longer debounce for smoother UI
       }
     }
   };
@@ -347,57 +343,48 @@ export default function VoiceRecorder({
               </Text>
             </View>
 
-            {/* Animated Sine Waveform */}
+            {/* Animated Sine Waveform (Thin & Elegant) */}
             <View style={styles.waveformContainer}>
-              {isSpeaking ? (
-                // Animated sine wave when speaking
-                <View style={styles.sineWaveContainer}>
-                  {Array.from({ length: WAVEFORM_POINTS }).map((_, index) => {
-                    const position = (index / WAVEFORM_POINTS) * 100;
-                    
-                    // Create more complex, realistic waveform pattern
-                    const frequency1 = Math.PI * 4;
-                    const frequency2 = Math.PI * 8;
-                    const sin1 = Math.sin((index / WAVEFORM_POINTS) * frequency1);
-                    const sin2 = Math.sin((index / WAVEFORM_POINTS) * frequency2) * 0.5;
-                    const baseOffset = sin1 + sin2;
+              <View style={styles.sineWaveContainer}>
+                {Array.from({ length: WAVEFORM_POINTS }).map((_, index) => {
+                  const position = (index / (WAVEFORM_POINTS - 1)) * 100;
+                  
+                  // Wave math for multiple frequencies
+                  const freq = Math.PI * 4;
+                  const offset = (index / (WAVEFORM_POINTS - 1)) * freq;
+                  
+                  // Taper the wave at the edges so it looks contained
+                  const edgeFade = Math.sin((index / (WAVEFORM_POINTS - 1)) * Math.PI);
 
-                    return (
-                      <Animated.View
-                        key={index}
-                        style={[
-                          styles.sineWavePoint,
-                          {
-                            backgroundColor: theme.accentBright || theme.accent,
-                            left: `${position}%`,
-                            transform: [
-                              {
-                                translateY: waveAmplitude.interpolate({
-                                  inputRange: [0, 1],
-                                  outputRange: [0, baseOffset * 25],
-                                }),
-                              },
-                              {
-                                scaleY: waveAmplitude.interpolate({
-                                  inputRange: [0, 1],
-                                  outputRange: [0.3, 1.5],
-                                }),
-                              },
-                            ],
-                            opacity: waveAmplitude.interpolate({
-                              inputRange: [0, 0.5, 1],
-                              outputRange: [0.4, 0.8, 1],
-                            }),
-                          },
-                        ]}
-                      />
-                    );
-                  })}
-                </View>
-              ) : (
-                // Flat line when silent
-                <View style={[styles.silentLine, { backgroundColor: theme.textMuted }]} />
-              )}
+                  return (
+                    <Animated.View
+                      key={index}
+                      style={[
+                        styles.sineWavePoint,
+                        {
+                          backgroundColor: theme.accent,
+                          left: `${position}%`,
+                          transform: [
+                            {
+                              translateY: Animated.multiply(
+                                waveAmplitude,
+                                Animated.multiply(
+                                  new Animated.Value(edgeFade * 20), // Max ripple height
+                                  wavePhase.interpolate({
+                                    inputRange: [0, 2 * Math.PI],
+                                    outputRange: [Math.sin(offset), Math.sin(offset + 2 * Math.PI)]
+                                  })
+                                )
+                              )
+                            }
+                          ],
+                          opacity: isSpeaking ? 0.8 : 0.15,
+                        },
+                      ]}
+                    />
+                  );
+                })}
+              </View>
 
               {/* Speaking indicator */}
               <Text style={[styles.speakingHint, { color: theme.textMuted }]}>
@@ -443,7 +430,6 @@ export default function VoiceRecorder({
 
 const styles = StyleSheet.create({
   wrapper: {
-    // Removed absolute positioning for keyboard compatibility
     paddingHorizontal: SPACING.floatingInputMargin,
     paddingTop: SPACING.sm,
   },
@@ -458,7 +444,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: SPACING.lg,
+    marginBottom: SPACING.md,
   },
   recordingIndicator: {
     flexDirection: 'row',
@@ -483,21 +469,21 @@ const styles = StyleSheet.create({
   waveformContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 80,
+    height: 60, // Reduced from 80 to prevent overlap
     marginBottom: SPACING.lg,
   },
   sineWaveContainer: {
     width: '100%',
-    height: 50,
+    height: 40, // Reduced from 50
     position: 'relative',
   },
   sineWavePoint: {
     position: 'absolute',
-    width: 3,
-    height: 20,
-    borderRadius: 1.5,
+    width: 2, // Thinner line
+    height: 2, // 2px height makes it look like a line/dot
+    borderRadius: 1,
     top: '50%',
-    marginTop: -10,
+    marginTop: -1,
   },
   silentLine: {
     width: '80%',

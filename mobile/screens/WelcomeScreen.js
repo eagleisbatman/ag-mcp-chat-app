@@ -107,8 +107,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   logoImage: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
+    backgroundColor: 'transparent',
   },
   title: {
     fontSize: TYPOGRAPHY.sizes['3xl'],
