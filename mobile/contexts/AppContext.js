@@ -307,7 +307,7 @@ export const AppProvider = ({ children }) => {
           level1Country: result.level1Country || result.country || null,
         };
 
-        console.log('✅ [AppContext] Normalized location:', normalizedResult.displayName);
+        console.log('✅ [AppContext] Location found via', result.source, ':', normalizedResult.displayName);
         setLocationDetails(normalizedResult);
         await AsyncStorage.setItem('locationDetails', JSON.stringify(normalizedResult));
         console.log('✅ [AppContext] Location details saved to storage');

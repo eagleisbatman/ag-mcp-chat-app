@@ -191,6 +191,8 @@ export const STRINGS = {
       senderYou: 'You',
       tapToAskNext: 'Tap to ask next:',
       analysisComplete: 'Analysis complete',
+      lowAccuracy: 'Low Accuracy',
+      tapToImprove: 'Tap to improve',
     },
     media: {
       photoLibraryPermission:

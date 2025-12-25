@@ -291,18 +291,30 @@ export default function ChatScreen({ navigation, route }) {
       <ScreenHeader
         align="left"
         center={
-          <View style={styles.headerLeft}>
+          <Pressable 
+            style={styles.headerLeft} 
+            onPress={handleRefreshLocation}
+            accessibilityRole="button"
+            accessibilityLabel={t('a11y.refreshLocation')}
+          >
             <Image source={logoImage} style={styles.headerLogo} resizeMode="contain" />
-            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-              {isRefreshingLocation
-                ? t('chat.updatingLocation')
-                : locationDetails?.displayName ||
-                  locationDetails?.level5City ||
-                  locationDetails?.level3District ||
-                  locationDetails?.level2State ||
-                  (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('chat.setLocation'))}
-            </Text>
-          </View>
+            <View style={styles.headerTextContainer}>
+              <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
+                {isRefreshingLocation
+                  ? t('chat.updatingLocation')
+                  : locationDetails?.displayName ||
+                    locationDetails?.level5City ||
+                    locationDetails?.level3District ||
+                    locationDetails?.level2State ||
+                    (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('chat.setLocation'))}
+              </Text>
+              {!isRefreshingLocation && locationDetails?.source === 'ip' && (
+                <Text style={[styles.accuracyNudge, { color: theme.warning }]}>
+                  {t('chat.lowAccuracy')} • {t('chat.tapToImprove')}
+                </Text>
+              )}
+            </View>
+          </Pressable>
         }
         right={
           <>
@@ -434,13 +446,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: SPACING.sm,
   },
+  headerTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   headerLogo: {
     width: 32,
     height: 32,
   },
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    flex: 1,
+  },
+  accuracyNudge: {
+    fontSize: 10,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    marginTop: -2,
   },
   messagesContainer: {
     flex: 1,
