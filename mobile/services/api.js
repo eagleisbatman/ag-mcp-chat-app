@@ -20,9 +20,12 @@ let cachedDeviceId = null;
 function getLocalDateTime() {
   const now = new Date();
   const timezoneOffset = now.getTimezoneOffset(); // Minutes from UTC
-  const offsetHours = -timezoneOffset / 60; // Convert to hours (negative because getTimezoneOffset returns opposite sign)
+  const offsetHours = -timezoneOffset / 60; // Convert to hours
   const offsetSign = offsetHours >= 0 ? '+' : '-';
-  const offsetStr = `${offsetSign}${String(Math.abs(Math.floor(offsetHours))).padStart(2, '0')}:${String(Math.abs(timezoneOffset % 60)).padStart(2, '0')}`;
+  const absOffsetHours = Math.abs(offsetHours);
+  const hours = Math.floor(absOffsetHours);
+  const minutes = Math.round((absOffsetHours - hours) * 60);
+  const offsetStr = `${offsetSign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 
   // Get timezone name if available (e.g., "Asia/Kolkata", "Africa/Addis_Ababa")
   let timezoneName = 'Unknown';
