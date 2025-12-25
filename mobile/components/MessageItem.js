@@ -52,7 +52,7 @@ function sanitizeStreamingMarkdown(text) {
 }
 
 function MessageItem({ message, isNewMessage = false, onLayout }) {
-  const { theme, language, isDark } = useApp();
+  const { theme, language, isDark, locationDetails } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
@@ -228,8 +228,8 @@ function MessageItem({ message, isNewMessage = false, onLayout }) {
       // Get the text to speak (message text or diagnosis)
       const textToSpeak = message.diagnosis || message.text;
       
-      // Call TTS service (pass language code, not object)
-      const result = await textToSpeech(textToSpeak, language?.code || 'en');
+      // Call TTS service (pass language code, location)
+      const result = await textToSpeech(textToSpeak, language?.code || 'en', locationDetails);
       
       // Use audioUrl (Cloudinary) or fallback to audioBase64
       const audioSource = result.audioUrl || result.audioBase64;

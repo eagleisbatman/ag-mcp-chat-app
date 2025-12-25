@@ -18,10 +18,12 @@ const USER_FRIENDLY_ERRORS = {
  * Convert text to speech audio using Gemini TTS
  * @param {string} text - Text to convert to speech
  * @param {string} language - Language code (e.g., 'en', 'hi', 'sw')
+ * @param {object} location - User's location for accent localization
  * @returns {Promise<{success: boolean, audioUrl?: string, error?: string}>}
  */
-export const textToSpeech = async (text, language = 'en') => {
+export const textToSpeech = async (text, language = 'en', location = null) => {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(API_URL, {
       method: 'POST',
       headers: {
@@ -31,6 +33,8 @@ export const textToSpeech = async (text, language = 'en') => {
       body: JSON.stringify({
         text,
         language,
+        location,
+        deviceId,
       }),
     }, TTS_TIMEOUT_MS);
 
