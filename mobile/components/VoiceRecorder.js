@@ -24,7 +24,7 @@ import { t } from '../constants/strings';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MAX_RECORDING_DURATION = 120; // 2 minutes max
 const SILENCE_THRESHOLD = -45; // dB threshold for silence detection
-const WAVEFORM_POINTS = 80; // More points for a smoother line
+const WAVEFORM_POINTS = 120; // High resolution for a 'liquid line' look
 
 export default function VoiceRecorder({ 
   onTranscriptionComplete, 
@@ -93,12 +93,12 @@ export default function VoiceRecorder({
   // Animate sine wave phase continuously when speaking
   useEffect(() => {
     if (isSpeaking && isRecording) {
-      // Start continuous phase animation
+      // Start continuous phase animation for the 'liquid' ripple effect
       const animatePhase = () => {
         waveAnimationRef.current = Animated.loop(
           Animated.timing(wavePhase, {
             toValue: 2 * Math.PI,
-            duration: 800,
+            duration: 1000, // Slower, more elegant ripple
             useNativeDriver: true,
             easing: Easing.linear,
           })
@@ -106,11 +106,11 @@ export default function VoiceRecorder({
         waveAnimationRef.current.start();
       };
 
-      // Animate amplitude based on audio level
+      // Animate amplitude based on audio level - high sensitivity mapping
       Animated.spring(waveAmplitude, {
-        toValue: Math.min(1, audioLevel * 2),
-        friction: 5,
-        tension: 80,
+        toValue: Math.min(1.2, audioLevel * 2.5),
+        friction: 6,
+        tension: 100,
         useNativeDriver: true,
       }).start();
 
@@ -121,8 +121,8 @@ export default function VoiceRecorder({
         waveAnimationRef.current.stop();
       }
       Animated.timing(waveAmplitude, {
-        toValue: 0.05,
-        duration: 300,
+        toValue: 0.05, // Keeps a tiny 'pulse' alive even in silence
+        duration: 400,
         useNativeDriver: true,
       }).start();
     }
@@ -201,8 +201,9 @@ export default function VoiceRecorder({
 
   const handleMeteringUpdate = (metering) => {
     // Normalize metering value (-160 to 0) to 0-1
-    // High sensitivity: map -55dB to -5dB as the active range
-    const normalized = Math.max(0, (metering + 55) / 50);
+    // EXTREME sensitivity: map -60dB to -10dB as the active range
+    // Speech usually peaks at -10 to -20, whispers at -45 to -55
+    const normalized = Math.max(0, (metering + 60) / 50);
     setAudioLevel(normalized);
 
     // Detect if user is speaking (above silence threshold)
@@ -217,7 +218,7 @@ export default function VoiceRecorder({
         silenceTimeoutRef.current = setTimeout(() => {
           setIsSpeaking(false);
           silenceTimeoutRef.current = null;
-        }, 400); // Longer debounce for smoother UI
+        }, 400); // 400ms debounce
       }
     }
   };
@@ -239,16 +240,14 @@ export default function VoiceRecorder({
   const handleDone = useCallback(async () => {
     if (!recordingRef.current || isTranscribing) return;
 
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // SNAP UX: Provide immediate feedback
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    setIsTranscribing(true); // Show local loading state
 
     // Stop timers and animation
     if (timerRef.current) clearInterval(timerRef.current);
     if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
     if (waveAnimationRef.current) waveAnimationRef.current.stop();
-
-    setIsRecording(false);
-    setIsSpeaking(false);
-    setIsTranscribing(true);
 
     try {
       await recordingRef.current.stopAndUnloadAsync();
@@ -265,7 +264,7 @@ export default function VoiceRecorder({
         encoding: 'base64',
       });
 
-      // Transcribe
+      // Execute transcription
       const result = await transcribeAudio({
         uri,
         base64,
@@ -274,7 +273,6 @@ export default function VoiceRecorder({
       });
 
       if (result.success && result.transcription) {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         onTranscriptionComplete(result.transcription, { uri, base64, duration: recordingDuration });
       } else {
         showError(result.error || t('voice.couldNotTranscribeAudio'));
@@ -343,18 +341,20 @@ export default function VoiceRecorder({
               </Text>
             </View>
 
-            {/* Animated Sine Waveform (Thin & Elegant) */}
+            {/* Animated Liquid Line Waveform */}
             <View style={styles.waveformContainer}>
               <View style={styles.sineWaveContainer}>
                 {Array.from({ length: WAVEFORM_POINTS }).map((_, index) => {
-                  const position = (index / (WAVEFORM_POINTS - 1)) * 100;
+                  const x = index / (WAVEFORM_POINTS - 1);
+                  const position = x * 100;
                   
-                  // Wave math for multiple frequencies
-                  const freq = Math.PI * 4;
-                  const offset = (index / (WAVEFORM_POINTS - 1)) * freq;
+                  // Wave parameters
+                  const frequency = Math.PI * 4;
+                  const offset = x * frequency;
                   
-                  // Taper the wave at the edges so it looks contained
-                  const edgeFade = Math.sin((index / (WAVEFORM_POINTS - 1)) * Math.PI);
+                  // Gaussian-like taper: stays flat at edges (x=0 and x=1), wiggles in middle
+                  // formula: exp(-0.5 * ((x - 0.5) / 0.25)^2)
+                  const taper = Math.exp(-0.5 * Math.pow((x - 0.5) / 0.22, 2));
 
                   return (
                     <Animated.View
@@ -368,17 +368,17 @@ export default function VoiceRecorder({
                             {
                               translateY: Animated.multiply(
                                 waveAmplitude,
-                                Animated.multiply(
-                                  new Animated.Value(edgeFade * 20), // Max ripple height
-                                  wavePhase.interpolate({
-                                    inputRange: [0, 2 * Math.PI],
-                                    outputRange: [Math.sin(offset), Math.sin(offset + 2 * Math.PI)]
-                                  })
-                                )
+                                wavePhase.interpolate({
+                                  inputRange: [0, 2 * Math.PI],
+                                  outputRange: [
+                                    Math.sin(offset) * taper * 25, 
+                                    Math.sin(offset + 2 * Math.PI) * taper * 25
+                                  ]
+                                })
                               )
                             }
                           ],
-                          opacity: isSpeaking ? 0.8 : 0.15,
+                          opacity: isSpeaking ? 0.9 : 0.2,
                         },
                       ]}
                     />
@@ -469,27 +469,22 @@ const styles = StyleSheet.create({
   waveformContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 60, // Reduced from 80 to prevent overlap
+    height: 60,
     marginBottom: SPACING.lg,
+    overflow: 'hidden', // Ensures zero overlap with surrounding text
   },
   sineWaveContainer: {
     width: '100%',
-    height: 40, // Reduced from 50
+    height: 40,
     position: 'relative',
   },
   sineWavePoint: {
     position: 'absolute',
-    width: 2, // Thinner line
-    height: 2, // 2px height makes it look like a line/dot
-    borderRadius: 1,
+    width: 1.5, // Thin thread look
+    height: 1.5,
+    borderRadius: 0.75,
     top: '50%',
-    marginTop: -1,
-  },
-  silentLine: {
-    width: '80%',
-    height: 2,
-    borderRadius: 1,
-    opacity: 0.3,
+    marginTop: -0.75,
   },
   speakingHint: {
     marginTop: SPACING.sm,
@@ -538,3 +533,4 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
+
