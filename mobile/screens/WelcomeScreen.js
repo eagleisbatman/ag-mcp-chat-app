@@ -20,7 +20,11 @@ export default function WelcomeScreen({ navigation }) {
       {/* Hero Section */}
       <View style={styles.hero}>
         <View style={styles.iconContainer}>
-          <Image source={logoImage} style={styles.logoImage} resizeMode="contain" />
+          <Image 
+            source={logoImage} 
+            style={[styles.logoImage, { backgroundColor: 'transparent' }]} 
+            resizeMode="contain" 
+          />
         </View>
         
         <Text style={[styles.title, { color: theme.text }]}>

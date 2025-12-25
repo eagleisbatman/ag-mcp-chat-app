@@ -52,7 +52,7 @@ export default function useChat(sessionIdParam = null) {
           createdAt: new Date(m.createdAt),
           isBot: m.role === 'assistant',
           image: m.imageCloudinaryUrl,
-        })); // Keep order from DB (newest first usually)
+        })).reverse(); // Reverse to match newest-first order for inverted FlatList
         
         setMessages([...loadedMessages, createWelcomeMessage()]);
         setCurrentSessionId(sessionId);

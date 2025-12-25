@@ -145,7 +145,13 @@ export default function VoiceRecorder({
 
   const startRecording = async () => {
     try {
-      const { status } = await Audio.requestPermissionsAsync();
+      let { status } = await Audio.getPermissionsAsync();
+      
+      if (status !== 'granted') {
+        const response = await Audio.requestPermissionsAsync();
+        status = response.status;
+      }
+
       if (status !== 'granted') {
         showError(t('voice.microphonePermission'));
         onCancel();
@@ -195,7 +201,8 @@ export default function VoiceRecorder({
 
   const handleMeteringUpdate = (metering) => {
     // Normalize metering value (-160 to 0) to 0-1
-    const normalized = Math.max(0, (metering + 60) / 60);
+    // Adjust sensitivity - speech usually happens between -40 and -10
+    const normalized = Math.max(0, (metering + 50) / 50);
     setAudioLevel(normalized);
 
     // Detect if user is speaking (above silence threshold)
@@ -317,7 +324,7 @@ export default function VoiceRecorder({
         {isTranscribing ? (
           // Transcribing State
           <View style={styles.transcribingContainer}>
-            <ActivityIndicator size="large" color={theme.iconPrimary || theme.accent} />
+            <ActivityIndicator size="large" color={theme.accent} />
             <Text style={[styles.transcribingText, { color: theme.text }]}>
               {t('voice.transcribing')}
             </Text>
@@ -347,8 +354,13 @@ export default function VoiceRecorder({
                 <View style={styles.sineWaveContainer}>
                   {Array.from({ length: WAVEFORM_POINTS }).map((_, index) => {
                     const position = (index / WAVEFORM_POINTS) * 100;
-                    // Create sine wave pattern
-                    const baseOffset = Math.sin((index / WAVEFORM_POINTS) * Math.PI * 4);
+                    
+                    // Create more complex, realistic waveform pattern
+                    const frequency1 = Math.PI * 4;
+                    const frequency2 = Math.PI * 8;
+                    const sin1 = Math.sin((index / WAVEFORM_POINTS) * frequency1);
+                    const sin2 = Math.sin((index / WAVEFORM_POINTS) * frequency2) * 0.5;
+                    const baseOffset = sin1 + sin2;
 
                     return (
                       <Animated.View
@@ -362,19 +374,19 @@ export default function VoiceRecorder({
                               {
                                 translateY: waveAmplitude.interpolate({
                                   inputRange: [0, 1],
-                                  outputRange: [0, baseOffset * 20],
+                                  outputRange: [0, baseOffset * 25],
                                 }),
                               },
                               {
                                 scaleY: waveAmplitude.interpolate({
                                   inputRange: [0, 1],
-                                  outputRange: [0.3, 1],
+                                  outputRange: [0.3, 1.5],
                                 }),
                               },
                             ],
                             opacity: waveAmplitude.interpolate({
                               inputRange: [0, 0.5, 1],
-                              outputRange: [0.3, 0.7, 1],
+                              outputRange: [0.4, 0.8, 1],
                             }),
                           },
                         ]}
@@ -396,7 +408,7 @@ export default function VoiceRecorder({
             {/* Action Buttons */}
             <View style={styles.actionsRow}>
               <Pressable
-                style={[styles.cancelButton, { backgroundColor: theme.errorLight }]}
+                style={[styles.cancelButton, { backgroundColor: isDark ? 'rgba(255, 69, 58, 0.15)' : theme.errorLight }]}
                 onPress={handleCancel}
                 accessibilityRole="button"
                 accessibilityLabel={t('a11y.cancelRecording')}
@@ -407,7 +419,7 @@ export default function VoiceRecorder({
               </Pressable>
 
               <Pressable
-                style={[styles.doneButton, { backgroundColor: theme.iconPrimary || theme.accent }]}
+                style={[styles.doneButton, { backgroundColor: theme.accent }]}
                 onPress={handleDone}
                 accessibilityRole="button"
                 accessibilityLabel={t('a11y.finishRecording')}
