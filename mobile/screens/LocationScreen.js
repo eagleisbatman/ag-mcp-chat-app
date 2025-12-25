@@ -100,22 +100,31 @@ export default function LocationScreen({ navigation }) {
 
       const result = await lookupLocation(null, null, 'auto');
 
-      if (result.success && result.latitude && result.longitude) {
-        console.log('🌐 [LocationScreen] IP location:', result.displayName);
+      if (result.success) {
+        console.log('🌐 [LocationScreen] IP location lookup complete:', result.displayName);
+        
+        // Show informative message if using IP (unless it's the "none" fallback)
+        if (result.source === 'ip') {
+          showWarning(t('onboarding.usingIpLocation'));
+        }
+
         await setLocation(
           { latitude: result.latitude, longitude: result.longitude },
           'granted'
         );
         navigation.navigate('Language');
       } else {
-        console.log('❌ [LocationScreen] IP location also failed:', result.error);
-        setError(t('onboarding.locationError'));
-        setIsLoading(false);
+        // This case is now handled by the gateway returning a success:true fallback,
+        // but we keep this for extra safety.
+        console.log('⚠️ [LocationScreen] IP location returned failure, using default fallback');
+        await setLocation({ latitude: 0, longitude: 0 }, 'denied');
+        navigation.navigate('Language');
       }
     } catch (error) {
-      console.log('❌ [LocationScreen] IP location error:', error.message);
-      setError(t('onboarding.locationError'));
-      setIsLoading(false);
+      console.log('❌ [LocationScreen] IP location error, using default fallback:', error.message);
+      // Don't block the user, just use a default location
+      await setLocation({ latitude: 0, longitude: 0 }, 'denied');
+      navigation.navigate('Language');
     }
   };
 
