@@ -362,13 +362,25 @@ export default function ChatScreen({ navigation, route }) {
             ref={flatListRef}
             data={messages} // No manual reverse needed
             inverted={true}  // Use native inversion
-            renderItem={({ item }) => (
-              <MessageItem
-                message={item}
-                isNewMessage={item._id === newestBotMessageId}
-                onLayout={(height) => onMessageLayout(item._id, height)}
-              />
-            )}
+            renderItem={({ item, index }) => {
+              // Calculate diagnosis number for Sequential Headers (Screen 14)
+              // Since messages are inverted, we count from the end
+              let diagnosisTitle = null;
+              if (item.diagnosis) {
+                const diagnosisCount = messages.filter(m => m.diagnosis).length;
+                const indexInDiagnosisList = messages.filter((m, i) => i >= index && m.diagnosis).length;
+                diagnosisTitle = t('chat.diagnosisNumber', { number: indexInDiagnosisList }) || `DIAGNOSIS #${indexInDiagnosisList}`;
+              }
+
+              return (
+                <MessageItem
+                  message={item}
+                  isNewMessage={item._id === newestBotMessageId}
+                  diagnosisTitle={diagnosisTitle}
+                  onLayout={(height) => onMessageLayout(item._id, height)}
+                />
+              );
+            }}
             keyExtractor={(item) => item._id}
             contentContainerStyle={styles.messagesList}
             showsVerticalScrollIndicator={false}

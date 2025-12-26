@@ -83,7 +83,9 @@ export default function InputToolbar({
         onSendImage({
           uri: asset.uri,
           base64: asset.base64,
+          text: text.trim(), // Include existing text question
         });
+        setText(''); // Clear text after sending with image
       }
     } catch (error) {
       console.error('Image picker error:', error);
@@ -114,7 +116,9 @@ export default function InputToolbar({
         onSendImage({
           uri: asset.uri,
           base64: asset.base64,
+          text: text.trim(), // Include existing text question
         });
+        setText(''); // Clear text after sending with image
       }
     } catch (error) {
       console.error('Camera error:', error);

@@ -77,6 +77,8 @@ export default function useChat(sessionIdParam = null) {
             isBot: m.role === 'assistant',
             image: m.imageCloudinaryUrl,
             diagnosis: reconstructedDiagnosis, // UI hides the bubble if this exists
+            diagnosisData: metadata?.diagnosis || null, // Pass raw data to native card
+            questionAnswer: metadata?.questionAnswer || null, // Reconstruct question answer
             ttsAudioUrl: m.ttsAudioUrl,
           };
         }).reverse(); // Reverse to match newest-first order for inverted FlatList
@@ -309,7 +311,8 @@ export default function useChat(sessionIdParam = null) {
   }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
   const handleSendImage = useCallback(async (imageData) => {
-    const userMsg = { _id: Date.now().toString(), text: t('chat.plantPhotoSent'), image: imageData.uri, createdAt: new Date(), isBot: false };
+    const userMsgText = imageData.text || t('chat.plantPhotoSent');
+    const userMsg = { _id: Date.now().toString(), text: userMsgText, image: imageData.uri, createdAt: new Date(), isBot: false };
     addMessage(userMsg);
     setIsTyping(true);
     setThinkingText(t('chat.analyzingImage')); // Show specific thinking text for image analysis
@@ -339,13 +342,14 @@ export default function useChat(sessionIdParam = null) {
         imageBase64 = `data:image/jpeg;base64,${imageBase64}`;
       }
 
-      // Analyze plant via API Gateway (which handles AgriVision SSE properly)
+      // Analyze plant via API Gateway
       const diagResult = await analyzePlantImage({
         imageBase64,
         latitude: location?.latitude,
         longitude: location?.longitude,
         language: language?.code,
         locationDetails,
+        question: imageData.text, // Pass the user's text question to the tool
       });
 
       // Wait for upload to complete (non-blocking)
@@ -385,7 +389,9 @@ export default function useChat(sessionIdParam = null) {
         const botMsg = { 
           _id: (Date.now() + 1).toString(), 
           text: ttsText, // Generic text for TTS
-          diagnosis: formattedDiagnosis, // The single technical card
+          diagnosis: formattedDiagnosis, // Fallback card text
+          diagnosisData: diagnosisData, // Structured data for native card
+          questionAnswer: diagResult.response, // AI's specific answer to user's question
           createdAt: new Date(), 
           isBot: true 
         };
@@ -404,6 +410,7 @@ export default function useChat(sessionIdParam = null) {
           metadata: {
             ...(diagResult.metadata || {}),
             diagnosis: diagnosisData,
+            questionAnswer: diagResult.response,
           },
         });
 

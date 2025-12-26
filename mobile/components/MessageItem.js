@@ -7,7 +7,8 @@ import { useToast } from '../contexts/ToastContext';
 import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
-import AppIcon from './ui/AppIcon';
+import DiagnosisCard from './DiagnosisCard';
+import DiagnosisSummary from './DiagnosisSummary';
 import { t } from '../constants/strings';
 
 /**
@@ -51,7 +52,7 @@ function sanitizeStreamingMarkdown(text) {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false, onLayout }) {
+function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout }) {
   const { theme, language, isDark, locationDetails } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
@@ -345,7 +346,17 @@ function MessageItem({ message, isNewMessage = false, onLayout }) {
       {/* Message Content - Text-only mode (Markdown for bot, plain text for user) */}
       {isBot ? (
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
-          {message.text ? (
+          {/* Previous Diagnosis Summary (Screen 13 context) */}
+          {message.metadata?.previousDiagnosis && (
+            <DiagnosisSummary 
+              crop={message.metadata.previousDiagnosis.crop}
+              status={message.metadata.previousDiagnosis.status}
+              issue={message.metadata.previousDiagnosis.issue}
+            />
+          )}
+
+          {/* Hide the standard text bubble if a diagnosis card is present to avoid duplication */}
+          {message.text && !message.diagnosis ? (
             <Markdown style={markdownStyles}>
               {isStreaming
                 ? sanitizeStreamingMarkdown(message.text) + ' ▋'
@@ -359,13 +370,15 @@ function MessageItem({ message, isNewMessage = false, onLayout }) {
         </Text>
       )}
 
-      {/* Diagnosis Result (for image analysis) */}
+      {/* Diagnosis Result (for image analysis) - High-fidelity native card */}
       {message.diagnosis && (
-        <View style={[styles.diagnosisBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)', borderColor: theme.border }]}>
-          <Markdown style={markdownStyles}>
-            {message.diagnosis}
-          </Markdown>
-        </View>
+        <DiagnosisCard 
+          diagnosis={message.diagnosisData || message.diagnosis} 
+          title={diagnosisTitle}
+          questionAnswer={message.questionAnswer}
+          onReadAloud={handleSpeak}
+          isSpeaking={isSpeaking}
+        />
       )}
     </View>
   );
