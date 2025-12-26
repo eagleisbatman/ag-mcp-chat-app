@@ -7,8 +7,6 @@ import { useToast } from '../contexts/ToastContext';
 import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
-import DiagnosisCard from './DiagnosisCard';
-import DiagnosisSummary from './DiagnosisSummary';
 import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
 
@@ -347,21 +345,11 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout }
       {/* Message Content - Text-only mode (Markdown for bot, plain text for user) */}
       {isBot ? (
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
-          {/* Previous Diagnosis Summary (Screen 13 context) */}
-          {message.metadata?.previousDiagnosis && (
-            <DiagnosisSummary 
-              crop={message.metadata.previousDiagnosis.crop}
-              status={message.metadata.previousDiagnosis.status}
-              issue={message.metadata.previousDiagnosis.issue}
-            />
-          )}
-
-          {/* Hide the standard text bubble if a diagnosis card is present to avoid duplication */}
-          {message.text && !message.diagnosis ? (
+          {message.text || message.diagnosis ? (
             <Markdown style={markdownStyles}>
               {isStreaming
                 ? sanitizeStreamingMarkdown(message.text) + ' ▋'
-                : message.text}
+                : (message.diagnosis || message.text)}
             </Markdown>
           ) : null}
         </Animated.View>
@@ -369,17 +357,6 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout }
         <Text style={[styles.messageText, { color: theme.text }]}>
           {message.text}
         </Text>
-      )}
-
-      {/* Diagnosis Result (for image analysis) - High-fidelity native card */}
-      {message.diagnosis && (
-        <DiagnosisCard 
-          diagnosis={message.diagnosisData || message.diagnosis} 
-          title={diagnosisTitle}
-          questionAnswer={message.questionAnswer}
-          onReadAloud={handleSpeak}
-          isSpeaking={isSpeaking}
-        />
       )}
     </View>
   );

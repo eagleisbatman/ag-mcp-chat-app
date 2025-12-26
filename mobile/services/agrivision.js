@@ -247,163 +247,75 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
 
 /**
  * Format diagnosis result for display
- * Creates a clean, aesthetic layout using markdown
- * @param {object} diagnosis - Raw diagnosis from AgriVision (object or JSON string)
- * @returns {string} Formatted text for chat
+ * Creates a minimalist markdown representation of the aggregation data
+ * @param {object} diagnosis - Raw diagnosis from AgriVision
+ * @returns {string} Formatted markdown
  */
 export const formatDiagnosis = (diagnosis) => {
-  // Handle string input - try to parse as JSON
   if (typeof diagnosis === 'string') {
     try {
       diagnosis = JSON.parse(diagnosis);
-    } catch (e1) {
-      // JSON might have actual newlines - try to fix them
-      try {
-        const fixedJson = diagnosis
-          .replace(/\r\n/g, '\\n')
-          .replace(/\n/g, '\\n')
-          .replace(/\r/g, '\\n')
-          .replace(/\t/g, '\\t');
-        diagnosis = JSON.parse(fixedJson);
-      } catch (e2) {
-        // Last resort - return raw string
-        console.warn('[formatDiagnosis] Could not parse diagnosis string');
-        return diagnosis;
-      }
+    } catch (e) {
+      return diagnosis;
     }
   }
 
-  // Safety check - if still not an object, return as string
   if (!diagnosis || typeof diagnosis !== 'object') {
     return String(diagnosis || 'Unable to analyze image');
   }
 
-  // Check for guardrails failure or error stubs
-  // If the image was rejected or we have an error stub, we don't want to show 
-  // a confusing "Diagnosis Card" with "Unknown Crop" and "Critical Health". 
-  // The chat bubble (friendly_response) already explains the situation.
-  if (
-    diagnosis._meta?.guardrails?.passed === false || 
-    diagnosis._error || 
-    (diagnosis.friendly_response && (!diagnosis.issues || diagnosis.issues.length === 0) && (diagnosis.crop === 'Unknown' || !diagnosis.crop))
-  ) {
-    return null;
-  }
-
-  // DEDUPLICATION LOGIC:
-  // If the diagnosis object contains a 'friendly_response', it means the 
-  // model has already provided a full text explanation. In this case, 
-  // we only show the structured metadata in the card to avoid duplication.
-  const hasFriendlyResponse = !!diagnosis.friendly_response;
+  // Handle specialized error states (Network/Timeout)
+  if (diagnosis.isNetworkError) return `📡 **Connection Error**\n\n${diagnosis.diagnostic_notes || 'Please check your internet and try again.'}`;
+  if (diagnosis.isTimeout) return `⏳ **Analysis Timed Out**\n\n${diagnosis.diagnostic_notes || 'The service is taking too long. Please try a clearer photo.'}`;
 
   const parts = [];
 
-  // ═══════════════════════════════════════
-  // SECTION 1: Quick Summary (compact header)
-  // ═══════════════════════════════════════
-  const cropName = diagnosis.crop?.name || diagnosis.crop || 'Unknown';
-  const scientificName = diagnosis.crop?.scientific_name;
-  const status = diagnosis.health_status?.overall || diagnosis.health_status || 'Unknown';
+  // 1. Primary Identification & Status
+  const cropRaw = diagnosis.crop?.name || diagnosis.crop;
+  const cropName = (cropRaw && cropRaw.toLowerCase() !== 'unknown') ? cropRaw : null;
+  const status = diagnosis.health_status?.overall || diagnosis.health_status || 'Analyzed';
   const isHealthy = status.toLowerCase().includes('healthy');
   const statusEmoji = isHealthy ? '✅' : '⚠️';
-  const growthStage = diagnosis.growth_stage;
-  const confidence = diagnosis.health_confidence || diagnosis.crop?.confidence;
 
-  // Compact header line
-  parts.push(`🌱 **${cropName}**${scientificName ? ` · _${scientificName}_` : ''}`);
-  parts.push(`${statusEmoji} ${status}${growthStage ? ` · 📈 ${growthStage}` : ''}`);
-  if (confidence) {
-    parts.push(`🎯 **Confidence**: ${confidence}`);
+  if (cropName) {
+    parts.push(`🌱 **${cropName}** · ${statusEmoji} **${status}**`);
+  } else {
+    parts.push(`${statusEmoji} **${status}**`);
   }
 
-  // ═══════════════════════════════════════
-  // SECTION 2: Issues Detected
-  // ═══════════════════════════════════════
-  // We only show issues in the card if there's no friendly response, 
-  // or if they provide additional structured detail.
+  // 2. Issues & Symptoms (Clean list)
   if (diagnosis.issues && diagnosis.issues.length > 0) {
-    parts.push('\n---');
-    parts.push('**🔍 Analysis Details**\n');
-
-    diagnosis.issues.forEach((issue, i) => {
+    diagnosis.issues.forEach((issue) => {
       const issueName = issue.name || issue;
-      const severity = issue.severity;
-      const category = issue.category;
-
-      // Issue header with severity badge
-      const severityBadge = severity ? ` · _${severity}_` : '';
-      parts.push(`**${i + 1}. ${issueName}**${severityBadge}`);
-
-      if (!hasFriendlyResponse) {
-        // Only show deep details in card if they aren't in the chat bubble
-        const details = [];
-        if (category) details.push(category);
-        if (issue.stage) details.push(`Stage: ${issue.stage}`);
-        if (issue.causal_agent) details.push(issue.causal_agent);
-        if (details.length > 0) {
-          parts.push(`   ${details.join(' · ')}`);
-        }
-
-        if (issue.symptoms && issue.symptoms.length > 0) {
-          parts.push(`   _Symptoms:_ ${issue.symptoms.join(', ')}`);
-        }
+      const severity = issue.severity ? ` (${issue.severity})` : '';
+      parts.push(`\n**${issueName}${severity}**`);
+      
+      if (issue.symptoms?.length > 0) {
+        parts.push(`_${issue.symptoms.join(', ')}_`);
       }
     });
   }
 
-  // ═══════════════════════════════════════
-  // SECTION 3: Treatment & Recommendations
-  // ═══════════════════════════════════════
-  // CRITICAL: We skip this section if there's a friendly response 
-  // to avoid the "Two types of analysis" frustration.
-  if (!hasFriendlyResponse && diagnosis.treatment_recommendations && diagnosis.treatment_recommendations.length > 0) {
+  // 3. Simple Recommendations
+  if (diagnosis.treatment_recommendations && diagnosis.treatment_recommendations.length > 0) {
     parts.push('\n---');
-    parts.push('**💊 Treatment Options**\n');
-
     diagnosis.treatment_recommendations.forEach((treatment) => {
-      if (treatment.issue_name && diagnosis.treatment_recommendations.length > 1) {
-        parts.push(`**For ${treatment.issue_name}:**\n`);
+      if (treatment.organic_options?.length > 0) {
+        parts.push(`🌿 **Organic**: ${treatment.organic_options.map(o => o.name).join(', ')}`);
       }
-
-      if (treatment.organic_options && treatment.organic_options.length > 0) {
-        parts.push('🌿 **Natural**');
-        treatment.organic_options.forEach((opt) => {
-          parts.push(`• **${opt.name}**`);
-          if (opt.application) parts.push(`  _${opt.application}_`);
-        });
-      }
-
-      if (treatment.chemical_options && treatment.chemical_options.length > 0) {
-        parts.push('\n🧪 **Chemical**');
-        treatment.chemical_options.forEach((opt) => {
-          parts.push(`• **${opt.active_ingredient}**`);
-          if (opt.application) parts.push(`  _${opt.application}_`);
-        });
+      if (treatment.chemical_options?.length > 0) {
+        parts.push(`🧪 **Chemical**: ${treatment.chemical_options.map(o => o.active_ingredient).join(', ')}`);
       }
     });
   }
 
-  // ═══════════════════════════════════════
-  // SECTION 4: Technical Metadata
-  // ═══════════════════════════════════════
-  // Always show these, as they are usually not in the chat bubble
-  const quality = diagnosis.image_quality || diagnosis._meta?.guardrails?.imageQualityFromGuardrails;
-  const labTest = diagnosis.requires_lab_test;
-
-  if (quality || labTest || (diagnosis.diagnostic_notes && !hasFriendlyResponse)) {
-    parts.push('\n---');
-    if (diagnosis.diagnostic_notes && !hasFriendlyResponse) {
-      parts.push(`🔬 **Expert Notes**: ${diagnosis.diagnostic_notes}`);
-    }
-    if (quality) {
-      parts.push(`📷 **Image Quality**: ${quality}`);
-    }
-    if (labTest) {
-      parts.push('🧫 _Laboratory testing recommended for confirmation_');
-    }
+  // 4. Expert Notes (if any)
+  const notes = diagnosis.diagnostic_notes || diagnosis.general_recommendations;
+  if (notes && !isHealthy) {
+    parts.push(`\n📝 ${notes}`);
   }
 
-  return parts.length > 0 ? parts.join('\n') : null;
+  return parts.join('\n');
 };
 
 export default { diagnosePlantHealth, formatDiagnosis };

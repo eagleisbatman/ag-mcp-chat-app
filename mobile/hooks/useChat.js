@@ -47,38 +47,12 @@ export default function useChat(sessionIdParam = null) {
       const result = await getSession(sessionId, 50);
       if (result.success && result.session?.messages) {
         const loadedMessages = result.session.messages.map(m => {
-          // Reconstruct diagnosis card from structured DB data
-          let reconstructedDiagnosis = null;
-          
-          // Strategy: Use metadata for perfect reconstruction
-          let metadata = null;
-          try {
-            metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
-          } catch (e) {
-            console.warn('Metadata parse error for message:', m.id);
-          }
-          
-          if (metadata?.diagnosis) {
-            reconstructedDiagnosis = formatDiagnosis(metadata.diagnosis);
-          } else if (m.diagnosisCrop || m.diagnosisHealthStatus) {
-            // Fallback to columns for older messages
-            const diagObj = {
-              crop: m.diagnosisCrop,
-              health_status: m.diagnosisHealthStatus,
-              issues: m.diagnosisIssues || [],
-            };
-            reconstructedDiagnosis = formatDiagnosis(diagObj);
-          }
-
           return {
             _id: m.id,
-            text: m.content, // Keep original text for TTS
+            text: m.content,
             createdAt: new Date(m.createdAt),
             isBot: m.role === 'assistant',
             image: m.imageCloudinaryUrl,
-            diagnosis: reconstructedDiagnosis, // UI hides the bubble if this exists
-            diagnosisData: metadata?.diagnosis || null, // Pass raw data to native card
-            questionAnswer: metadata?.questionAnswer || null, // Reconstruct question answer
             ttsAudioUrl: m.ttsAudioUrl,
           };
         }).reverse(); // Reverse to match newest-first order for inverted FlatList
@@ -391,10 +365,9 @@ export default function useChat(sessionIdParam = null) {
           persistUpdate(dbUserMessageId, { content: analyzedText });
         }
 
-        // PURE TECHNICAL CARD:
-        const ttsText = t('chat.analysisComplete') || 'Plant analysis complete';
-        
-        // Format the structured diagnosis into the professional technical card
+        // MINIMALIST AGGREGATION:
+        // We set botMsg.text directly to the formatted aggregation result.
+        // This ensures a single unified bubble with only high-quality technical data.
         let formattedDiagnosis = null;
         if (diagResult.diagnosis) {
           formattedDiagnosis = formatDiagnosis(diagResult.diagnosis);
@@ -402,16 +375,14 @@ export default function useChat(sessionIdParam = null) {
 
         const botMsg = { 
           _id: (Date.now() + 1).toString(), 
-          text: ttsText, // Generic text for TTS
-          diagnosis: formattedDiagnosis, // Fallback card text
-          diagnosisData: diagnosisData, // Structured data for native card
-          questionAnswer: diagResult.response, // AI's specific answer to user's question
+          text: formattedDiagnosis || t('chat.analysisComplete'), 
           createdAt: new Date(), 
           isBot: true 
         };
         addMessage(botMsg);
 
         // Extract crop info for persistence
+        const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
         const cropName = typeof diagnosisData?.crop === 'object'
           ? diagnosisData.crop.name
           : diagnosisData?.crop;
@@ -424,7 +395,6 @@ export default function useChat(sessionIdParam = null) {
           metadata: {
             ...(diagResult.metadata || {}),
             diagnosis: diagnosisData,
-            questionAnswer: diagResult.response,
           },
         });
 
