@@ -18,20 +18,37 @@ export default function OfflineIndicator() {
   const slideAnim = useState(new Animated.Value(-50))[0];
 
   useEffect(() => {
+    // Settle time: wait a moment before starting to show the offline indicator
+    // This avoids the 'yellow flicker' during initial app launch probe
+    let isSettled = false;
+    const settleTimeout = setTimeout(() => {
+      isSettled = true;
+    }, 1500);
+
     // Subscribe to network state updates
     const unsubscribe = NetInfo.addEventListener(state => {
-      const offline = !state.isConnected || !state.isInternetReachable;
-      setIsOffline(offline);
+      // FIX: state.isConnected and state.isInternetReachable can be 'null' during initial probe.
+      // We only want to show the offline banner if they are EXPLICITLY false.
+      const offline = state.isConnected === false || state.isInternetReachable === false;
       
-      // Animate in/out
-      Animated.spring(slideAnim, {
-        toValue: offline ? 0 : -50,
-        useNativeDriver: true,
-        friction: 8,
-      }).start();
+      // Only set offline if we've settled OR it's a transition from online to offline
+      if (isSettled || offline) {
+        setIsOffline(offline);
+        
+        // Animate in/out
+        Animated.spring(slideAnim, {
+          toValue: offline ? 0 : -50,
+          useNativeDriver: true,
+          friction: 8,
+          tension: 40,
+        }).start();
+      }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      clearTimeout(settleTimeout);
+    };
   }, [slideAnim]);
 
   if (!isOffline) return null;
