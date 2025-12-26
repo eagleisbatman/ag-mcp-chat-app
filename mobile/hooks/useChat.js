@@ -357,10 +357,24 @@ export default function useChat(sessionIdParam = null) {
 
       // Handle diagnosis result
       if (!diagResult.success) {
-        const errorMsg = parseErrorMessage(diagResult);
-        showWarning(t('chat.plantAnalysisIssues', { details: errorMsg }));
-        updateMessage(userMsg._id, { text: t('chat.imageAnalysisFailed') || 'Image analysis failed' });
-        addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.analysisCouldNotComplete', { details: errorMsg }), createdAt: new Date(), isBot: true });
+        const isTimeout = diagResult.error?.includes('timeout') || diagResult.status === 408;
+        const isNetError = isNetworkError(diagResult.error) || !diagResult.status;
+
+        // Create a professional Error Card instead of a simple text bubble
+        const errorBotMsg = {
+          _id: (Date.now() + 1).toString(),
+          text: t('chat.imageAnalysisFailedBot'),
+          diagnosisData: {
+            isNetworkError: isNetError,
+            isTimeout: isTimeout,
+            diagnostic_notes: parseErrorMessage(diagResult)
+          },
+          createdAt: new Date(),
+          isBot: true
+        };
+        addMessage(errorBotMsg);
+        
+        showWarning(isNetError ? t('chat.noInternet') : t('chat.imageAnalysisFailed'));
       } else {
         const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
         

@@ -32,6 +32,10 @@ export default function DiagnosisCard({ diagnosis, title, questionAnswer, onRead
 
   // 1. Detection & Rejection Logic
   const statusRaw = (data.health_status?.overall || data.health_status || '').toLowerCase();
+  
+  // Specific Error Types
+  const isNetworkError = data.isNetworkError || false;
+  const isTimeout = data.isTimeout || false;
   const isRejected = statusRaw.includes('n/a') || 
                     statusRaw.includes('rejected') || 
                     (data.diagnostic_notes && data.diagnostic_notes.toLowerCase().includes('rejected'));
@@ -43,13 +47,17 @@ export default function DiagnosisCard({ diagnosis, title, questionAnswer, onRead
   const cropName = data.crop?.name || data.crop;
   const scientificName = data.crop?.scientific_name;
   const displayStatus = data.health_status?.overall || data.health_status || (isRejected ? 'Rejected' : 'Healthy');
+  const growthStage = data.growth_stage || data.stage;
+  const confidence = data.health_confidence || data.crop?.confidence;
   const issues = data.issues || [];
+  const symptoms = (issues[0]?.symptoms || []).join(', ');
   const treatments = data.treatment_recommendations || [];
   const notes = data.diagnostic_notes || data.general_recommendations;
   const quality = data.image_quality;
 
   // 3. Status Badge Helper
   const getStatusStyle = () => {
+    if (isNetworkError || isTimeout) return { bg: '#F2F2F7', text: '#666', icon: 'cloud-off-outline', label: isTimeout ? 'TIMEOUT' : 'OFFLINE' };
     if (isRejected) return { bg: '#FFE6E6', text: '#C00', icon: 'x-circle', label: t('chat.statusRejected') || 'REJECTED' };
     if (displayStatus.toLowerCase().includes('healthy')) return { bg: '#E6F4E6', text: '#080', icon: 'check-circle', label: t('chat.statusHealthy') || 'HEALTHY' };
     return { bg: '#FFF4E6', text: '#B86800', icon: 'alert-triangle', label: t('chat.statusDiseased') || 'DISEASED' };
@@ -57,45 +65,67 @@ export default function DiagnosisCard({ diagnosis, title, questionAnswer, onRead
 
   const statusStyle = getStatusStyle();
 
+  // 4. Dynamic Tips Helper (Screens 9 & 10)
+  const getTips = () => {
+    if (isPoorQuality) return [
+      t('chat.tipSteady') || 'Hold camera steady (brace against body)',
+      t('chat.tipCloser') || 'Move closer to the plant (6-12 inches)',
+      t('chat.tipLight') || 'Use natural daylight, avoid shadows',
+      t('chat.tipFocus') || 'Tap screen to focus before capturing'
+    ];
+    if (isNetworkError || isTimeout) return [
+      t('chat.tipSignal') || 'Move to an area with better signal',
+      t('chat.tipWifi') || 'Check if Wi-Fi or Data is enabled',
+      t('chat.tipWait') || 'Wait a moment and try again'
+    ];
+    return [
+      t('chat.tipCloseup') || 'Take a close-up of the plant',
+      t('chat.tipFocusIssue') || 'Focus on the affected leaves or stems',
+      t('chat.tipVisibility') || 'Ensure the plant is clearly visible',
+      t('chat.tipLighting') || 'Use good natural lighting'
+    ];
+  };
+
   // ═══════════════════════════════════════
-  // RENDER: Error/Rejection Card (Screen 9 & 10)
+  // RENDER: Error/Rejection Card (Screen 9, 10, 11, 12)
   // ═══════════════════════════════════════
-  if (isRejected || isPoorQuality) {
+  if (isRejected || isPoorQuality || isNetworkError || isTimeout) {
+    const errorIcon = isNetworkError ? 'cloud-off-outline' : (isTimeout ? 'clock' : (isPoorQuality ? 'alert-circle' : 'x-circle'));
+    const errorTitle = isNetworkError ? (t('chat.connectionError') || 'Connection Error') : 
+                       (isTimeout ? (t('chat.timeoutError') || 'Analysis Timed Out') : 
+                       (isPoorQuality ? (t('chat.qualityTooLow') || 'Image Quality Too Low') : 
+                       (t('chat.imageNotSuitable') || 'Image Not Suitable')));
+    const errorColor = (isNetworkError || isTimeout) ? theme.textMuted : (isPoorQuality ? '#B86800' : '#C00');
+
     return (
-      <View style={[styles.errorCard, { borderColor: isPoorQuality ? '#F90' : '#C00' }]}>
+      <View style={[styles.errorCard, { borderColor: errorColor }]}>
         <View style={styles.errorHeader}>
-          <AppIcon name={isPoorQuality ? 'alert-circle' : 'x-circle'} size={22} color={isPoorQuality ? '#B86800' : '#C00'} />
-          <Text style={[styles.errorTitle, { color: isPoorQuality ? '#B86800' : '#C00' }]}>
-            {isPoorQuality ? t('chat.qualityTooLow') || 'Image Quality Too Low' : t('chat.imageNotSuitable') || 'Image Not Suitable'}
-          </Text>
+          <AppIcon name={errorIcon} size={22} color={errorColor} />
+          <Text style={[styles.errorTitle, { color: errorColor }]}>{errorTitle}</Text>
         </View>
         
         <Text style={[styles.errorText, { color: theme.textSecondary }]}>
-          {notes || (isPoorQuality ? t('chat.poorQualityDesc') : t('chat.nonAgricultureDesc'))}
+          {notes || (isPoorQuality ? t('chat.poorQualityDesc') : (isNetworkError || isTimeout ? t('chat.networkErrorDesc') : t('chat.nonAgricultureDesc')))}
         </Text>
 
         <View style={[styles.tipsBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#F5F5F5' }]}>
-          <Text style={[styles.tipsTitle, { color: theme.text }]}>{t('chat.tipsForPhoto') || 'Tips for a good photo:'}</Text>
-          <View style={styles.tipRow}>
-            <View style={[styles.tipDot, { backgroundColor: theme.textMuted }]} />
-            <Text style={[styles.tipText, { color: theme.textSecondary }]}>{t('chat.tip1') || 'Take a close-up of the plant'}</Text>
-          </View>
-          <View style={styles.tipRow}>
-            <View style={[styles.tipDot, { backgroundColor: theme.textMuted }]} />
-            <Text style={[styles.tipText, { color: theme.textSecondary }]}>{t('chat.tip2') || 'Ensure the plant is clearly visible'}</Text>
-          </View>
-          <View style={styles.tipRow}>
-            <View style={[styles.tipDot, { backgroundColor: theme.textMuted }]} />
-            <Text style={[styles.tipText, { color: theme.textSecondary }]}>{t('chat.tip3') || 'Use good natural lighting'}</Text>
-          </View>
+          <Text style={[styles.tipsTitle, { color: theme.text }]}>{t('chat.youCanTry') || 'You can try:'}</Text>
+          {getTips().map((tip, i) => (
+            <View key={i} style={styles.tipRow}>
+              <View style={[styles.tipDot, { backgroundColor: theme.textMuted }]} />
+              <Text style={[styles.tipText, { color: theme.textSecondary }]}>{tip}</Text>
+            </View>
+          ))}
         </View>
 
         <Pressable 
           style={[styles.retryBtn, { backgroundColor: theme.text }]}
           onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
         >
-          <AppIcon name="camera" size={16} color={theme.background} prefer="feather" />
-          <Text style={[styles.retryBtnText, { color: theme.background }]}>{t('chat.tryAgain') || 'Try Again'}</Text>
+          <AppIcon name={isNetworkError || isTimeout ? 'refresh-cw' : 'camera'} size={16} color={theme.background} prefer="feather" />
+          <Text style={[styles.retryBtnText, { color: theme.background }]}>
+            {isNetworkError || isTimeout ? (t('chat.retry') || 'Retry Analysis') : (t('chat.tryAgain') || 'Try Again')}
+          </Text>
         </Pressable>
       </View>
     );
@@ -156,6 +186,34 @@ export default function DiagnosisCard({ diagnosis, title, questionAnswer, onRead
           </View>
         )}
 
+        {/* Row: Symptoms (Screen 8) */}
+        {symptoms && (
+          <View style={styles.row}>
+            <Text style={[styles.label, { color: theme.textMuted }]}>{t('chat.labelSymptoms') || 'SYMPTOMS'}</Text>
+            <Text style={[styles.valueText, { color: theme.textSecondary, fontSize: 12 }]}>{symptoms}</Text>
+          </View>
+        )}
+
+        {/* Row: Stage & Confidence (Screen 7) */}
+        {(growthStage || confidence) && (
+          <View style={styles.row}>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              {growthStage && (
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.label, { color: theme.textMuted }]}>{t('chat.labelStage') || 'STAGE'}</Text>
+                  <Text style={[styles.valueText, { color: theme.text }]}>{growthStage}</Text>
+                </View>
+              )}
+              {confidence && (
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.label, { color: theme.textMuted }]}>{t('chat.labelConfidence') || 'CONFIDENCE'}</Text>
+                  <Text style={[styles.valueText, { color: theme.text }]}>{confidence}</Text>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+
         {/* Treatment Section (Screen 8) */}
         {treatments.length > 0 && (
           <View style={[styles.section, { borderTopColor: theme.text }]}>
@@ -197,6 +255,7 @@ export default function DiagnosisCard({ diagnosis, title, questionAnswer, onRead
           </View>
         )}
       </View>
+
 
       {/* Footer (Screen 7) */}
       <View style={[styles.footer, { borderTopColor: theme.border }]}>
