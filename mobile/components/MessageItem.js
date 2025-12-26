@@ -9,6 +9,7 @@ import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import DiagnosisCard from './DiagnosisCard';
 import DiagnosisSummary from './DiagnosisSummary';
+import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
 
 /**
