@@ -426,6 +426,7 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
       response: data.response, // Formatted text for display
       diagnosis: data.diagnosis, // Raw diagnosis object
       metadata: {
+        ...(data._meta || {}), // Preserve gateway metadata
         intentsDetected: data.intentsDetected || [],
         mcpToolsUsed: data.mcpToolsUsed || [],
         extractedEntities: data.extractedEntities || null,

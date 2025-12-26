@@ -290,6 +290,12 @@ export const formatDiagnosis = (diagnosis) => {
     return null;
   }
 
+  // DEDUPLICATION LOGIC:
+  // If the diagnosis object contains a 'friendly_response', it means the 
+  // model has already provided a full text explanation. In this case, 
+  // we only show the structured metadata in the card to avoid duplication.
+  const hasFriendlyResponse = !!diagnosis.friendly_response;
+
   const parts = [];
 
   // ═══════════════════════════════════════
@@ -301,17 +307,23 @@ export const formatDiagnosis = (diagnosis) => {
   const isHealthy = status.toLowerCase().includes('healthy');
   const statusEmoji = isHealthy ? '✅' : '⚠️';
   const growthStage = diagnosis.growth_stage;
+  const confidence = diagnosis.health_confidence || diagnosis.crop?.confidence;
 
   // Compact header line
   parts.push(`🌱 **${cropName}**${scientificName ? ` · _${scientificName}_` : ''}`);
   parts.push(`${statusEmoji} ${status}${growthStage ? ` · 📈 ${growthStage}` : ''}`);
+  if (confidence) {
+    parts.push(`🎯 **Confidence**: ${confidence}`);
+  }
 
   // ═══════════════════════════════════════
   // SECTION 2: Issues Detected
   // ═══════════════════════════════════════
+  // We only show issues in the card if there's no friendly response, 
+  // or if they provide additional structured detail.
   if (diagnosis.issues && diagnosis.issues.length > 0) {
     parts.push('\n---');
-    parts.push('**🔍 Issues Found**\n');
+    parts.push('**🔍 Analysis Details**\n');
 
     diagnosis.issues.forEach((issue, i) => {
       const issueName = issue.name || issue;
@@ -322,31 +334,29 @@ export const formatDiagnosis = (diagnosis) => {
       const severityBadge = severity ? ` · _${severity}_` : '';
       parts.push(`**${i + 1}. ${issueName}**${severityBadge}`);
 
-      // Compact details on same conceptual "row"
-      const details = [];
-      if (category) details.push(category);
-      if (issue.stage) details.push(`Stage: ${issue.stage}`);
-      if (issue.causal_agent) details.push(issue.causal_agent);
-      if (details.length > 0) {
-        parts.push(`   ${details.join(' · ')}`);
-      }
+      if (!hasFriendlyResponse) {
+        // Only show deep details in card if they aren't in the chat bubble
+        const details = [];
+        if (category) details.push(category);
+        if (issue.stage) details.push(`Stage: ${issue.stage}`);
+        if (issue.causal_agent) details.push(issue.causal_agent);
+        if (details.length > 0) {
+          parts.push(`   ${details.join(' · ')}`);
+        }
 
-      // Symptoms as inline list
-      if (issue.symptoms && issue.symptoms.length > 0) {
-        parts.push(`   _Symptoms:_ ${issue.symptoms.join(', ')}`);
-      }
-
-      // Affected parts
-      if (issue.affected_parts && issue.affected_parts.length > 0) {
-        parts.push(`   _Affected:_ ${issue.affected_parts.join(', ')}`);
+        if (issue.symptoms && issue.symptoms.length > 0) {
+          parts.push(`   _Symptoms:_ ${issue.symptoms.join(', ')}`);
+        }
       }
     });
   }
 
   // ═══════════════════════════════════════
-  // SECTION 3: Treatment Recommendations
+  // SECTION 3: Treatment & Recommendations
   // ═══════════════════════════════════════
-  if (diagnosis.treatment_recommendations && diagnosis.treatment_recommendations.length > 0) {
+  // CRITICAL: We skip this section if there's a friendly response 
+  // to avoid the "Two types of analysis" frustration.
+  if (!hasFriendlyResponse && diagnosis.treatment_recommendations && diagnosis.treatment_recommendations.length > 0) {
     parts.push('\n---');
     parts.push('**💊 Treatment Options**\n');
 
@@ -355,74 +365,45 @@ export const formatDiagnosis = (diagnosis) => {
         parts.push(`**For ${treatment.issue_name}:**\n`);
       }
 
-      // Organic options - compact format
       if (treatment.organic_options && treatment.organic_options.length > 0) {
         parts.push('🌿 **Natural**');
         treatment.organic_options.forEach((opt) => {
-          const timing = opt.timing ? ` (${opt.timing})` : '';
-          const freq = opt.frequency ? ` · ${opt.frequency}` : '';
-          parts.push(`• **${opt.name}**${timing}${freq}`);
-          if (opt.application) {
-            parts.push(`  _${opt.application}_`);
-          }
+          parts.push(`• **${opt.name}**`);
+          if (opt.application) parts.push(`  _${opt.application}_`);
         });
       }
 
-      // Chemical options - compact format
       if (treatment.chemical_options && treatment.chemical_options.length > 0) {
         parts.push('\n🧪 **Chemical**');
         treatment.chemical_options.forEach((opt) => {
-          const dosage = opt.dosage ? ` · ${opt.dosage}` : '';
-          parts.push(`• **${opt.active_ingredient}**${dosage}`);
-          if (opt.application) {
-            parts.push(`  _${opt.application}_`);
-          }
-          if (opt.safety_notes) {
-            parts.push(`  ⚠️ ${opt.safety_notes}`);
-          }
-        });
-      }
-
-      // Preventive measures - bullet list
-      if (treatment.preventive_measures && treatment.preventive_measures.length > 0) {
-        parts.push('\n🛡️ **Prevention**');
-        treatment.preventive_measures.forEach((measure) => {
-          parts.push(`• ${measure}`);
+          parts.push(`• **${opt.active_ingredient}**`);
+          if (opt.application) parts.push(`  _${opt.application}_`);
         });
       }
     });
   }
 
   // ═══════════════════════════════════════
-  // SECTION 4: Additional Notes
+  // SECTION 4: Technical Metadata
   // ═══════════════════════════════════════
-  const hasNotes = diagnosis.general_recommendations || diagnosis.diagnostic_notes;
-  if (hasNotes) {
+  // Always show these, as they are usually not in the chat bubble
+  const quality = diagnosis.image_quality || diagnosis._meta?.guardrails?.imageQualityFromGuardrails;
+  const labTest = diagnosis.requires_lab_test;
+
+  if (quality || labTest || (diagnosis.diagnostic_notes && !hasFriendlyResponse)) {
     parts.push('\n---');
-  }
-
-  if (diagnosis.general_recommendations) {
-    parts.push(`📋 **General Advice**\n${diagnosis.general_recommendations}`);
-  }
-
-  if (diagnosis.diagnostic_notes) {
-    parts.push(`🔬 **Expert Analysis**\n${diagnosis.diagnostic_notes}`);
-  }
-
-  // Lab test recommendation
-  if (diagnosis.requires_lab_test) {
-    parts.push('\n🧫 _Laboratory testing recommended for confirmation_');
-  }
-
-  // Add guardrails info if available
-  if (diagnosis._meta?.guardrails) {
-    const gr = diagnosis._meta.guardrails;
-    if (gr.imageQualityFromGuardrails && gr.imageQualityFromGuardrails !== 'good') {
-      parts.push(`\n📷 _Note: Image quality was rated as ${gr.imageQualityFromGuardrails}_`);
+    if (diagnosis.diagnostic_notes && !hasFriendlyResponse) {
+      parts.push(`🔬 **Expert Notes**: ${diagnosis.diagnostic_notes}`);
+    }
+    if (quality) {
+      parts.push(`📷 **Image Quality**: ${quality}`);
+    }
+    if (labTest) {
+      parts.push('🧫 _Laboratory testing recommended for confirmation_');
     }
   }
 
-  return parts.join('\n');
+  return parts.length > 0 ? parts.join('\n') : null;
 };
 
 export default { diagnosePlantHealth, formatDiagnosis };

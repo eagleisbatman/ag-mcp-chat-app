@@ -370,13 +370,15 @@ export default function useChat(sessionIdParam = null) {
         // Format the structured diagnosis if available
         let formattedDiagnosis = null;
         if (diagResult.diagnosis) {
+          // Ensure friendly_response is in the object for deduplication
+          if (typeof diagResult.diagnosis === 'object') {
+            diagResult.diagnosis.friendly_response = displayText;
+          }
+          
           // If it's an error object from the tool, extract the message
           if (diagResult.diagnosis.error) {
             console.log('🌿 [useChat] Diagnosis tool reported error:', diagResult.diagnosis.message);
-            // If we don't have a conversational response, use the error message
-            if (!diagResult.response) {
-              displayText = diagResult.diagnosis.message;
-            }
+            if (!diagResult.response) displayText = diagResult.diagnosis.message;
           } else {
             formattedDiagnosis = formatDiagnosis(diagResult.diagnosis);
           }
@@ -398,9 +400,13 @@ export default function useChat(sessionIdParam = null) {
           : diagnosisData?.crop;
         
         // Include the full diagnosis in metadata for perfect history reconstruction
+        // Crucial: ensure friendly_response is saved so reconstruction matches real-time
         const enrichedMetadata = {
           ...(diagResult.metadata || {}),
-          diagnosis: diagnosisData,
+          diagnosis: {
+            ...diagnosisData,
+            friendly_response: displayText
+          },
         };
 
         persistMessage(botMsg, sessionId, {
