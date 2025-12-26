@@ -52,6 +52,7 @@ export default function useChat(sessionIdParam = null) {
           createdAt: new Date(m.createdAt),
           isBot: m.role === 'assistant',
           image: m.imageCloudinaryUrl,
+          ttsAudioUrl: m.ttsAudioUrl, // Support instant playback from history
         })).reverse(); // Reverse to match newest-first order for inverted FlatList
         
         setMessages([...loadedMessages, createWelcomeMessage()]);

@@ -222,6 +222,18 @@ function MessageItem({ message, isNewMessage = false, onLayout }) {
       return;
     }
 
+    // 1. Instant Playback for Cached Messages
+    // If the message already has a TTS URL (from history) or previous play
+    if (message.ttsAudioUrl) {
+      console.log('🔊 [MessageItem] Playing from cache:', message.ttsAudioUrl);
+      setIsSpeaking(true);
+      const success = await playAudio(message.ttsAudioUrl, (status) => {
+        if (status.didJustFinish) setIsSpeaking(false);
+      });
+      if (!success) setIsSpeaking(false);
+      return;
+    }
+
     setIsLoading(true);
     
     try {
@@ -236,6 +248,11 @@ function MessageItem({ message, isNewMessage = false, onLayout }) {
       
       if (result.success && audioSource) {
         setIsSpeaking(true);
+        
+        // Save the URL to message object so next play is instant
+        if (result.audioUrl) {
+          message.ttsAudioUrl = result.audioUrl;
+        }
         
         // Play the audio (supports both URL and base64)
         const playSuccess = await playAudio(audioSource, (status) => {

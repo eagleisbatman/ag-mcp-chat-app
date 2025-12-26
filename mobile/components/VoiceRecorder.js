@@ -24,7 +24,7 @@ import { t } from '../constants/strings';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MAX_RECORDING_DURATION = 120; // 2 minutes max
 const SILENCE_THRESHOLD = -45; // dB threshold for silence detection
-const WAVEFORM_POINTS = 120; // High resolution for a 'liquid line' look
+const WAVEFORM_POINTS = 150; // Ultra-high resolution for 'liquid line'
 
 export default function VoiceRecorder({ 
   onTranscriptionComplete, 
@@ -50,6 +50,7 @@ export default function VoiceRecorder({
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const wavePhase = useRef(new Animated.Value(0)).current;
   const waveAmplitude = useRef(new Animated.Value(0)).current;
+  const textOpacity = useRef(new Animated.Value(0.6)).current;
   const waveAnimationRef = useRef(null);
   const silenceTimeoutRef = useRef(null);
 
@@ -64,6 +65,14 @@ export default function VoiceRecorder({
       tension: 40,
       useNativeDriver: true,
     }).start();
+
+    // Pulse animation for the listening text
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(textOpacity, { toValue: 1, duration: 1000, useNativeDriver: true, easing: Easing.inOut(Easing.sin) }),
+        Animated.timing(textOpacity, { toValue: 0.4, duration: 1000, useNativeDriver: true, easing: Easing.inOut(Easing.sin) }),
+      ])
+    ).start();
 
     return () => {
       cleanup();
@@ -98,7 +107,7 @@ export default function VoiceRecorder({
         waveAnimationRef.current = Animated.loop(
           Animated.timing(wavePhase, {
             toValue: 2 * Math.PI,
-            duration: 1000, // Slower, more elegant ripple
+            duration: 1200, // Silkier ripple
             useNativeDriver: true,
             easing: Easing.linear,
           })
@@ -109,8 +118,8 @@ export default function VoiceRecorder({
       // Animate amplitude based on audio level - high sensitivity mapping
       Animated.spring(waveAmplitude, {
         toValue: Math.min(1.2, audioLevel * 2.5),
-        friction: 6,
-        tension: 100,
+        friction: 7,
+        tension: 80,
         useNativeDriver: true,
       }).start();
 
@@ -121,8 +130,8 @@ export default function VoiceRecorder({
         waveAnimationRef.current.stop();
       }
       Animated.timing(waveAmplitude, {
-        toValue: 0.05, // Keeps a tiny 'pulse' alive even in silence
-        duration: 400,
+        toValue: 0.03, // Keeps a tiny 'thread' alive
+        duration: 500,
         useNativeDriver: true,
       }).start();
     }
@@ -201,8 +210,7 @@ export default function VoiceRecorder({
 
   const handleMeteringUpdate = (metering) => {
     // Normalize metering value (-160 to 0) to 0-1
-    // EXTREME sensitivity: map -60dB to -10dB as the active range
-    // Speech usually peaks at -10 to -20, whispers at -45 to -55
+    // High sensitivity: map -60dB to -10dB as the active range
     const normalized = Math.max(0, (metering + 60) / 50);
     setAudioLevel(normalized);
 
@@ -240,7 +248,6 @@ export default function VoiceRecorder({
   const handleDone = useCallback(async () => {
     if (!recordingRef.current || isTranscribing) return;
 
-    // SNAP UX: Provide immediate feedback
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setIsTranscribing(true); // Show local loading state
 
@@ -353,7 +360,6 @@ export default function VoiceRecorder({
                   const offset = x * frequency;
                   
                   // Gaussian-like taper: stays flat at edges (x=0 and x=1), wiggles in middle
-                  // formula: exp(-0.5 * ((x - 0.5) / 0.25)^2)
                   const taper = Math.exp(-0.5 * Math.pow((x - 0.5) / 0.22, 2));
 
                   return (
@@ -386,10 +392,10 @@ export default function VoiceRecorder({
                 })}
               </View>
 
-              {/* Speaking indicator */}
-              <Text style={[styles.speakingHint, { color: theme.textMuted }]}>
+              {/* Speaking indicator with subtle pulse */}
+              <Animated.Text style={[styles.speakingHint, { color: theme.textMuted, opacity: textOpacity }]}>
                 {isSpeaking ? t('voice.listening') : t('voice.waitingForSpeech')}
-              </Text>
+              </Animated.Text>
             </View>
 
             {/* Action Buttons */}
@@ -469,27 +475,30 @@ const styles = StyleSheet.create({
   waveformContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 60,
-    marginBottom: SPACING.lg,
-    overflow: 'hidden', // Ensures zero overlap with surrounding text
+    height: 100, // Increased height to ensure zero overlap
+    marginVertical: SPACING.md,
+    overflow: 'hidden',
   },
   sineWaveContainer: {
     width: '100%',
-    height: 40,
+    height: 60,
     position: 'relative',
   },
   sineWavePoint: {
     position: 'absolute',
-    width: 1.5, // Thin thread look
-    height: 1.5,
-    borderRadius: 0.75,
+    width: 1, // Ultra-thin look
+    height: 1,
+    borderRadius: 0.5,
     top: '50%',
-    marginTop: -0.75,
+    marginTop: -0.5,
   },
   speakingHint: {
-    marginTop: SPACING.sm,
+    marginTop: SPACING.md,
     fontSize: TYPOGRAPHY.sizes.xs,
     textAlign: 'center',
+    fontWeight: TYPOGRAPHY.weights.medium,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
   },
   actionsRow: {
     flexDirection: 'row',
@@ -533,4 +542,3 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
-
