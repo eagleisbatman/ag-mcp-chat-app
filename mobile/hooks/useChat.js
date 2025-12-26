@@ -47,9 +47,17 @@ export default function useChat(sessionIdParam = null) {
       const result = await getSession(sessionId, 50);
       if (result.success && result.session?.messages) {
         const loadedMessages = result.session.messages.map(m => {
+          // Reconstruct diagnosis from metadata for native card
+          let diagnosisData = null;
+          try {
+            const metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
+            diagnosisData = metadata?.diagnosis || null;
+          } catch (e) {}
+
           return {
             _id: m.id,
             text: m.content,
+            diagnosisData: diagnosisData, // Hydrate for the native report card
             createdAt: new Date(m.createdAt),
             isBot: m.role === 'assistant',
             image: m.imageCloudinaryUrl,
@@ -375,7 +383,8 @@ export default function useChat(sessionIdParam = null) {
 
         const botMsg = { 
           _id: (Date.now() + 1).toString(), 
-          text: formattedDiagnosis || t('chat.analysisComplete'), 
+          text: ttsText, 
+          diagnosisData: diagnosisData, // Structured data for native card
           createdAt: new Date(), 
           isBot: true 
         };

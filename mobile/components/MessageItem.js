@@ -8,6 +8,7 @@ import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
+import DiagnosisCard from './DiagnosisCard';
 import { t } from '../constants/strings';
 
 /**
@@ -345,13 +346,23 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout }
       {/* Message Content - Text-only mode (Markdown for bot, plain text for user) */}
       {isBot ? (
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
-          {message.text || message.diagnosis ? (
+          {/* Hide text bubble if we have a native diagnosis card */}
+          {message.text && !message.diagnosisData ? (
             <Markdown style={markdownStyles}>
               {isStreaming
                 ? sanitizeStreamingMarkdown(message.text) + ' ▋'
-                : (message.diagnosis || message.text)}
+                : message.text}
             </Markdown>
           ) : null}
+
+          {/* Native structured report card (aggregation data only) */}
+          {message.diagnosisData && (
+            <DiagnosisCard 
+              diagnosis={message.diagnosisData}
+              onReadAloud={handleSpeak}
+              isSpeaking={isSpeaking}
+            />
+          )}
         </Animated.View>
       ) : (
         <Text style={[styles.messageText, { color: theme.text }]}>
