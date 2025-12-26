@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image, Pressable } from 'react-native';
 
 const logoImage = require('../assets/logo.png');
 import * as Haptics from 'expo-haptics';
