@@ -49,7 +49,16 @@ export default function useChat(sessionIdParam = null) {
         const loadedMessages = result.session.messages.map(m => {
           // Reconstruct diagnosis card from structured DB data
           let reconstructedDiagnosis = null;
-          if (m.diagnosisCrop || m.diagnosisHealthStatus || m.diagnosisIssues) {
+          
+          // Strategy: Try to use full JSON stored in metadata first (best),
+          // fallback to columns if metadata is missing (legacy).
+          const metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
+          
+          if (metadata?.diagnosis) {
+            // Full diagnosis object found in metadata - use it for perfect reconstruction
+            reconstructedDiagnosis = formatDiagnosis(metadata.diagnosis);
+          } else if (m.diagnosisCrop || m.diagnosisHealthStatus || m.diagnosisIssues) {
+            // Partial reconstruction from dedicated columns
             const diagObj = {
               crop: m.diagnosisCrop,
               health_status: m.diagnosisHealthStatus,
@@ -64,7 +73,7 @@ export default function useChat(sessionIdParam = null) {
             createdAt: new Date(m.createdAt),
             isBot: m.role === 'assistant',
             image: m.imageCloudinaryUrl,
-            diagnosis: reconstructedDiagnosis, // Fix: Hydrate the diagnosis card in history
+            diagnosis: reconstructedDiagnosis,
             ttsAudioUrl: m.ttsAudioUrl,
           };
         }).reverse(); // Reverse to match newest-first order for inverted FlatList
@@ -350,7 +359,7 @@ export default function useChat(sessionIdParam = null) {
         const analyzedText = t('chat.imageAnalyzed') || 'Plant image';
         updateMessage(userMsg._id, { text: analyzedText });
 
-        // Fix: Update database user message text so history is correct
+        // Update database user message text so history is correct
         if (dbUserMessageId) {
           persistUpdate(dbUserMessageId, { content: analyzedText });
         }
@@ -388,11 +397,17 @@ export default function useChat(sessionIdParam = null) {
           ? diagnosisData.crop.name
           : diagnosisData?.crop;
         
+        // Include the full diagnosis in metadata for perfect history reconstruction
+        const enrichedMetadata = {
+          ...(diagResult.metadata || {}),
+          diagnosis: diagnosisData,
+        };
+
         persistMessage(botMsg, sessionId, {
           diagnosisCrop: cropName,
           diagnosisHealthStatus: diagnosisData?.health_status,
           diagnosisIssues: diagnosisData?.issues,
-          metadata: diagResult.metadata,
+          metadata: enrichedMetadata,
         });
 
         // Generate title after first image analysis
