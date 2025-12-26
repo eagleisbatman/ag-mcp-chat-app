@@ -64,6 +64,17 @@ function SyncErrorWatcher() {
 
 function AppNavigator() {
   const { isLoading, onboardingComplete, theme, isDark } = useApp();
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    if (!isLoading) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [isLoading, fadeAnim]);
 
   if (isLoading) {
     return (
@@ -74,7 +85,7 @@ function AppNavigator() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
+    <Animated.View style={{ flex: 1, backgroundColor: theme.background, opacity: fadeAnim }}>
       {/* SystemBars handles both status bar and navigation bar for edge-to-edge */}
       <SystemBars style={isDark ? 'light' : 'dark'} />
       <OfflineIndicator />
@@ -82,7 +93,7 @@ function AppNavigator() {
       <NavigationContainer>
         {onboardingComplete ? <MainStack /> : <OnboardingStack />}
       </NavigationContainer>
-    </View>
+    </Animated.View>
   );
 }
 
