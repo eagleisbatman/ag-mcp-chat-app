@@ -212,7 +212,7 @@ export default function ChatScreen({ navigation, route }) {
   // ===========================================
   const scrollToBottom = useCallback(() => {
     isUserScrollingRef.current = false;
-    flatListRef.current?.scrollToEnd({ animated: true });
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
     Haptics.selectionAsync();
   }, []);
 
