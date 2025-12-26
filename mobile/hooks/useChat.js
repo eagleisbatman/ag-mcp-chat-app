@@ -46,14 +46,28 @@ export default function useChat(sessionIdParam = null) {
     try {
       const result = await getSession(sessionId, 50);
       if (result.success && result.session?.messages) {
-        const loadedMessages = result.session.messages.map(m => ({
-          _id: m.id,
-          text: m.content,
-          createdAt: new Date(m.createdAt),
-          isBot: m.role === 'assistant',
-          image: m.imageCloudinaryUrl,
-          ttsAudioUrl: m.ttsAudioUrl, // Support instant playback from history
-        })).reverse(); // Reverse to match newest-first order for inverted FlatList
+        const loadedMessages = result.session.messages.map(m => {
+          // Reconstruct diagnosis card from structured DB data
+          let reconstructedDiagnosis = null;
+          if (m.diagnosisCrop || m.diagnosisHealthStatus || m.diagnosisIssues) {
+            const diagObj = {
+              crop: m.diagnosisCrop,
+              health_status: m.diagnosisHealthStatus,
+              issues: m.diagnosisIssues || [],
+            };
+            reconstructedDiagnosis = formatDiagnosis(diagObj);
+          }
+
+          return {
+            _id: m.id,
+            text: m.content,
+            createdAt: new Date(m.createdAt),
+            isBot: m.role === 'assistant',
+            image: m.imageCloudinaryUrl,
+            diagnosis: reconstructedDiagnosis, // Fix: Hydrate the diagnosis card in history
+            ttsAudioUrl: m.ttsAudioUrl,
+          };
+        }).reverse(); // Reverse to match newest-first order for inverted FlatList
         
         setMessages([...loadedMessages, createWelcomeMessage()]);
         setCurrentSessionId(sessionId);
@@ -101,9 +115,9 @@ export default function useChat(sessionIdParam = null) {
 
   // Save message to database
   const persistMessage = useCallback(async (message, sessionId, extra = {}) => {
-    if (!isDbSynced || !sessionId) return;
+    if (!isDbSynced || !sessionId) return null;
     try {
-      await saveMessage({
+      const result = await saveMessage({
         sessionId,
         role: message.isBot ? 'assistant' : 'user',
         content: message.text,
@@ -113,10 +127,23 @@ export default function useChat(sessionIdParam = null) {
         imageCloudinaryUrl: message.cloudinaryUrl,
         ...extra,
       });
+      return result.success ? result.message?.id : null;
     } catch (e) {
       console.log('Message save error:', e);
+      return null;
     }
   }, [isDbSynced, language]);
+
+  // Update an existing message in the database
+  const persistUpdate = useCallback(async (messageId, updates) => {
+    if (!isDbSynced || !messageId) return;
+    try {
+      const { updateMessage: updateDbMessage } = require('../services/db');
+      await updateDbMessage(messageId, updates);
+    } catch (e) {
+      console.log('DB message update error:', e);
+    }
+  }, [isDbSynced]);
 
   // Generate title after first exchange (user message + bot response)
   const maybeGenerateTitle = useCallback(async (sessionId, allMessages) => {
@@ -277,16 +304,18 @@ export default function useChat(sessionIdParam = null) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     const sessionId = await ensureSession();
+    let dbUserMessageId = null;
 
     try {
       // Upload image to Cloudinary (non-blocking, for record keeping)
-      const uploadPromise = uploadImage(imageData.base64).then(result => {
+      const uploadPromise = uploadImage(imageData.base64).then(async result => {
         if (result.success) {
           setMessages(prev => prev.map(m => m._id === userMsg._id ? { ...m, cloudinaryUrl: result.url } : m));
-          persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
+          dbUserMessageId = await persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
         } else {
           console.warn('Image upload failed:', result.error);
-          // Show non-intrusive warning - image was analyzed, just not saved
+          // Save without cloudinary URL if upload fails
+          dbUserMessageId = await persistMessage(userMsg, sessionId, { inputMethod: 'image' });
           showWarning(t('errors.imageUploadFailed'));
         }
         return result;
@@ -317,8 +346,14 @@ export default function useChat(sessionIdParam = null) {
         updateMessage(userMsg._id, { text: t('chat.imageAnalysisFailed') || 'Image analysis failed' });
         addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.analysisCouldNotComplete', { details: errorMsg }), createdAt: new Date(), isBot: true });
       } else {
-        // Update user message text to be less prominent now that it's done
-        updateMessage(userMsg._id, { text: t('chat.imageAnalyzed') || 'Plant image' });
+        // Update local UI
+        const analyzedText = t('chat.imageAnalyzed') || 'Plant image';
+        updateMessage(userMsg._id, { text: analyzedText });
+
+        // Fix: Update database user message text so history is correct
+        if (dbUserMessageId) {
+          persistUpdate(dbUserMessageId, { content: analyzedText });
+        }
 
         // Use the response text if available
         let displayText = diagResult.response || t('chat.analysisComplete');
@@ -372,7 +407,7 @@ export default function useChat(sessionIdParam = null) {
       setIsTyping(false);
       setThinkingText(null);
     }
-  }, [location, language, locationDetails, messages, addMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
+  }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, persistUpdate, maybeGenerateTitle, showError, showWarning]);
 
   // Transcribe audio for the VoiceRecorder component
   // Returns transcription text without sending to chat
