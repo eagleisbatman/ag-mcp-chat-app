@@ -293,10 +293,11 @@ export default function useChat(sessionIdParam = null) {
   }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
   const handleSendImage = useCallback(async (imageData) => {
-    // User message shows the image + any text question they typed (if any)
-    // No default "Sent plant photo..." text - TypingIndicator handles the analyzing state
+    // User message shows the image + any text question they typed
+    // If no text, use a placeholder for DB storage (required by backend)
     const userMsgText = imageData.text || null;
-    const userMsg = { _id: Date.now().toString(), text: userMsgText, image: imageData.uri, createdAt: new Date(), isBot: false };
+    const userMsgTextForDb = imageData.text || '[Image for plant diagnosis]'; // Required for DB
+    const userMsg = { _id: Date.now().toString(), text: userMsgText, textForDb: userMsgTextForDb, image: imageData.uri, createdAt: new Date(), isBot: false };
     addMessage(userMsg);
     setIsTyping(true);
     setThinkingText(t('chat.analyzingImage')); // Show specific thinking text for image analysis
@@ -310,11 +311,12 @@ export default function useChat(sessionIdParam = null) {
       const uploadPromise = uploadImage(imageData.base64).then(async result => {
         if (result.success) {
           setMessages(prev => prev.map(m => m._id === userMsg._id ? { ...m, cloudinaryUrl: result.url } : m));
-          dbUserMessageId = await persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
+          // Use textForDb for persistence (backend requires content)
+          dbUserMessageId = await persistMessage({ ...userMsg, text: userMsgTextForDb, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
         } else {
           console.warn('Image upload failed:', result.error);
-          // Save without cloudinary URL if upload fails
-          dbUserMessageId = await persistMessage(userMsg, sessionId, { inputMethod: 'image' });
+          // Save without cloudinary URL if upload fails - use textForDb for persistence
+          dbUserMessageId = await persistMessage({ ...userMsg, text: userMsgTextForDb }, sessionId, { inputMethod: 'image' });
           showWarning(t('errors.imageUploadFailed'));
         }
         return result;
@@ -361,26 +363,29 @@ export default function useChat(sessionIdParam = null) {
         showWarning(isNetError ? t('chat.noInternet') : t('chat.imageAnalysisFailed'));
       } else {
         const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
-        
-        // Keep user message unchanged - shows "Sent plant photo for analysis" with image
-        // No need to update text after analysis
 
-        // Bot message shows ONLY the DiagnosisCard (no duplicate text)
+        // Extract crop info for persistence and summary
+        const cropName = typeof diagnosisData?.crop === 'object'
+          ? diagnosisData.crop.name
+          : diagnosisData?.crop;
+        const healthStatus = diagnosisData?.health_status?.overall || diagnosisData?.health_status || 'analyzed';
+        const issues = diagnosisData?.issues?.map(i => i.name || i).join(', ');
+
+        // Generate text summary for database storage (required by backend)
+        // This text is NOT shown in UI - DiagnosisCard handles display
+        const diagnosisSummary = `[Plant Diagnosis] ${cropName || 'Plant'}: ${healthStatus}${issues ? `. Issues: ${issues}` : ''}`;
+
+        // Bot message shows ONLY the DiagnosisCard (no duplicate text in UI)
         // The card handles all display: healthy, diseased, rejection, etc.
         const botMsg = {
           _id: (Date.now() + 1).toString(),
-          text: null, // No text - DiagnosisCard shows everything
+          text: diagnosisSummary, // Summary text for DB storage (hidden in UI when diagnosisData present)
           diagnosisData: diagnosisData, // Structured data for native card
           createdAt: new Date(),
           isBot: true
         };
         addMessage(botMsg);
 
-        // Extract crop info for persistence
-        const cropName = typeof diagnosisData?.crop === 'object'
-          ? diagnosisData.crop.name
-          : diagnosisData?.crop;
-        
         // Save full technical data in metadata for perfect history reconstruction
         persistMessage(botMsg, sessionId, {
           diagnosisCrop: cropName,

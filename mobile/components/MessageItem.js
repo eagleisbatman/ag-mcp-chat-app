@@ -453,6 +453,8 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
   return (
     prevProps.message._id === nextProps.message._id &&
     prevProps.message.text === nextProps.message.text &&
+    prevProps.message.image === nextProps.message.image &&
+    prevProps.message.diagnosisData === nextProps.message.diagnosisData &&
     prevProps.message.isStreaming === nextProps.message.isStreaming &&
     prevProps.isNewMessage === nextProps.isNewMessage
   );
