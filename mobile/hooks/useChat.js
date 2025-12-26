@@ -50,15 +50,18 @@ export default function useChat(sessionIdParam = null) {
           // Reconstruct diagnosis card from structured DB data
           let reconstructedDiagnosis = null;
           
-          // Strategy: Try to use full JSON stored in metadata first (best),
-          // fallback to columns if metadata is missing (legacy).
-          const metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
+          // Strategy: Use metadata for perfect reconstruction
+          let metadata = null;
+          try {
+            metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
+          } catch (e) {
+            console.warn('Metadata parse error for message:', m.id);
+          }
           
           if (metadata?.diagnosis) {
-            // Full diagnosis object found in metadata - use it for perfect reconstruction
             reconstructedDiagnosis = formatDiagnosis(metadata.diagnosis);
-          } else if (m.diagnosisCrop || m.diagnosisHealthStatus || m.diagnosisIssues) {
-            // Partial reconstruction from dedicated columns
+          } else if (m.diagnosisCrop || m.diagnosisHealthStatus) {
+            // Fallback to columns for older messages
             const diagObj = {
               crop: m.diagnosisCrop,
               health_status: m.diagnosisHealthStatus,
@@ -69,11 +72,11 @@ export default function useChat(sessionIdParam = null) {
 
           return {
             _id: m.id,
-            text: m.content,
+            text: m.content, // Keep original text for TTS
             createdAt: new Date(m.createdAt),
             isBot: m.role === 'assistant',
             image: m.imageCloudinaryUrl,
-            diagnosis: reconstructedDiagnosis,
+            diagnosis: reconstructedDiagnosis, // UI hides the bubble if this exists
             ttsAudioUrl: m.ttsAudioUrl,
           };
         }).reverse(); // Reverse to match newest-first order for inverted FlatList
@@ -355,8 +358,14 @@ export default function useChat(sessionIdParam = null) {
         updateMessage(userMsg._id, { text: t('chat.imageAnalysisFailed') || 'Image analysis failed' });
         addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.analysisCouldNotComplete', { details: errorMsg }), createdAt: new Date(), isBot: true });
       } else {
-        // Update local UI
-        const analyzedText = t('chat.imageAnalyzed') || 'Plant image';
+        const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
+        
+        // Determine if this was a rejection
+        const statusRaw = (diagnosisData.health_status?.overall || diagnosisData.health_status || '').toLowerCase();
+        const isRejected = statusRaw.includes('n/a') || statusRaw.includes('rejected') || (diagnosisData.diagnostic_notes && diagnosisData.diagnostic_notes.toLowerCase().includes('rejected'));
+
+        // Update local UI with appropriate text
+        const analyzedText = isRejected ? (t('chat.imageAnalyzed') || 'Photo') : (t('chat.imageAnalyzed') || 'Plant image');
         updateMessage(userMsg._id, { text: analyzedText });
 
         // Update database user message text so history is correct
@@ -364,56 +373,38 @@ export default function useChat(sessionIdParam = null) {
           persistUpdate(dbUserMessageId, { content: analyzedText });
         }
 
-        // Use the response text if available
-        let displayText = diagResult.response || t('chat.analysisComplete');
+        // PURE TECHNICAL CARD:
+        const ttsText = t('chat.analysisComplete') || 'Plant analysis complete';
         
-        // Format the structured diagnosis if available
+        // Format the structured diagnosis into the professional technical card
         let formattedDiagnosis = null;
         if (diagResult.diagnosis) {
-          // Ensure friendly_response is in the object for deduplication
-          if (typeof diagResult.diagnosis === 'object') {
-            diagResult.diagnosis.friendly_response = displayText;
-          }
-          
-          // If it's an error object from the tool, extract the message
-          if (diagResult.diagnosis.error) {
-            console.log('🌿 [useChat] Diagnosis tool reported error:', diagResult.diagnosis.message);
-            if (!diagResult.response) displayText = diagResult.diagnosis.message;
-          } else {
-            formattedDiagnosis = formatDiagnosis(diagResult.diagnosis);
-          }
+          formattedDiagnosis = formatDiagnosis(diagResult.diagnosis);
         }
 
         const botMsg = { 
           _id: (Date.now() + 1).toString(), 
-          text: displayText, 
-          diagnosis: formattedDiagnosis,
+          text: ttsText, // Generic text for TTS
+          diagnosis: formattedDiagnosis, // The single technical card
           createdAt: new Date(), 
           isBot: true 
         };
         addMessage(botMsg);
 
         // Extract crop info for persistence
-        const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
         const cropName = typeof diagnosisData?.crop === 'object'
           ? diagnosisData.crop.name
           : diagnosisData?.crop;
         
-        // Include the full diagnosis in metadata for perfect history reconstruction
-        // Crucial: ensure friendly_response is saved so reconstruction matches real-time
-        const enrichedMetadata = {
-          ...(diagResult.metadata || {}),
-          diagnosis: {
-            ...diagnosisData,
-            friendly_response: displayText
-          },
-        };
-
+        // Save full technical data in metadata for perfect history reconstruction
         persistMessage(botMsg, sessionId, {
           diagnosisCrop: cropName,
           diagnosisHealthStatus: diagnosisData?.health_status,
           diagnosisIssues: diagnosisData?.issues,
-          metadata: enrichedMetadata,
+          metadata: {
+            ...(diagResult.metadata || {}),
+            diagnosis: diagnosisData,
+          },
         });
 
         // Generate title after first image analysis
