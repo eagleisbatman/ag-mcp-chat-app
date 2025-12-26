@@ -139,6 +139,7 @@ export const sendChatMessageStreaming = async ({
     let fullText = '';
     let metadata = {};
     let lastProcessedIndex = 0;
+    let completed = false; // Guard against double onComplete calls
 
     xhr.open('POST', API_URL, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -161,10 +162,13 @@ export const sendChatMessageStreaming = async ({
 
           // End of stream
           if (data === '[DONE]') {
-            console.log('📥 [API] Stream complete:', {
-              textLength: fullText.length,
-            });
-            onComplete?.(fullText, metadata);
+            if (!completed) {
+              completed = true;
+              console.log('📥 [API] Stream complete:', {
+                textLength: fullText.length,
+              });
+              onComplete?.(fullText, metadata);
+            }
             resolve({ success: true });
             return;
           }
@@ -233,7 +237,11 @@ export const sendChatMessageStreaming = async ({
             }
           }
         }
-        onComplete?.(fullText, metadata);
+        // Only call onComplete if not already called by [DONE] handler
+        if (!completed) {
+          completed = true;
+          onComplete?.(fullText, metadata);
+        }
         resolve({ success: true });
       } else {
         const error = new Error(`API error: ${xhr.status}`);
