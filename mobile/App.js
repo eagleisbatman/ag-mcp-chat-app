@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Animated } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NavigationContainer } from '@react-navigation/native';
