@@ -293,7 +293,9 @@ export default function useChat(sessionIdParam = null) {
   }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
   const handleSendImage = useCallback(async (imageData) => {
-    const userMsgText = imageData.text || t('chat.plantPhotoSent');
+    // User message shows the image + any text question they typed (if any)
+    // No default "Sent plant photo..." text - TypingIndicator handles the analyzing state
+    const userMsgText = imageData.text || null;
     const userMsg = { _id: Date.now().toString(), text: userMsgText, image: imageData.uri, createdAt: new Date(), isBot: false };
     addMessage(userMsg);
     setIsTyping(true);
@@ -360,38 +362,21 @@ export default function useChat(sessionIdParam = null) {
       } else {
         const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
         
-        // Determine if this was a rejection
-        const statusRaw = (diagnosisData.health_status?.overall || diagnosisData.health_status || '').toLowerCase();
-        const isRejected = statusRaw.includes('n/a') || statusRaw.includes('rejected') || (diagnosisData.diagnostic_notes && diagnosisData.diagnostic_notes.toLowerCase().includes('rejected'));
+        // Keep user message unchanged - shows "Sent plant photo for analysis" with image
+        // No need to update text after analysis
 
-        // Update local UI with appropriate text
-        const analyzedText = isRejected ? (t('chat.imageAnalyzed') || 'Photo') : (t('chat.imageAnalyzed') || 'Plant image');
-        updateMessage(userMsg._id, { text: analyzedText });
-
-        // Update database user message text so history is correct
-        if (dbUserMessageId) {
-          persistUpdate(dbUserMessageId, { content: analyzedText });
-        }
-
-        // MINIMALIST AGGREGATION:
-        // We set botMsg.text directly to the formatted aggregation result.
-        // This ensures a single unified bubble with only high-quality technical data.
-        let formattedDiagnosis = null;
-        if (diagResult.diagnosis) {
-          formattedDiagnosis = formatDiagnosis(diagResult.diagnosis);
-        }
-
-        const botMsg = { 
-          _id: (Date.now() + 1).toString(), 
-          text: ttsText, 
+        // Bot message shows ONLY the DiagnosisCard (no duplicate text)
+        // The card handles all display: healthy, diseased, rejection, etc.
+        const botMsg = {
+          _id: (Date.now() + 1).toString(),
+          text: null, // No text - DiagnosisCard shows everything
           diagnosisData: diagnosisData, // Structured data for native card
-          createdAt: new Date(), 
-          isBot: true 
+          createdAt: new Date(),
+          isBot: true
         };
         addMessage(botMsg);
 
         // Extract crop info for persistence
-        const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
         const cropName = typeof diagnosisData?.crop === 'object'
           ? diagnosisData.crop.name
           : diagnosisData?.crop;

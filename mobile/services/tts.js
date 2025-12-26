@@ -1,5 +1,6 @@
 // Text-to-Speech service - calls API Gateway → AI Services TTS → Cloudinary
 import { fetchWithTimeout } from '../utils/apiHelpers';
+import { getDeviceId } from '../utils/deviceInfo';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_URL = `${API_BASE_URL}/api/tts`;

@@ -19,6 +19,7 @@ export default function ChatScreen({ navigation, route }) {
   const { theme, isDark, language, location, locationDetails, setLocation } = useApp();
   const { showSuccess, showWarning, showError } = useToast();
   const flatListRef = useRef(null);
+  const inputToolbarRef = useRef(null);
   const scrollButtonAnim = useRef(new Animated.Value(0)).current;
 
   // Get session params from navigation
@@ -207,6 +208,17 @@ export default function ChatScreen({ navigation, route }) {
     await handleSendImage(imageData);
   }, [handleSendImage]);
 
+  // Retry handler for diagnosis errors - opens attach bottom sheet
+  const handleDiagnosisRetry = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    // Scroll to bottom first, then open attach sheet
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+    }
+    // Open the attach bottom sheet
+    inputToolbarRef.current?.openAttachSheet();
+  }, []);
+
   // ===========================================
   // SCROLL TO BOTTOM BUTTON
   // ===========================================
@@ -367,6 +379,7 @@ export default function ChatScreen({ navigation, route }) {
                 message={item}
                 isNewMessage={item._id === newestBotMessageId}
                 onLayout={(height) => onMessageLayout(item._id, height)}
+                onRetry={handleDiagnosisRetry}
               />
             )}
             keyExtractor={(item) => item._id}
@@ -426,6 +439,7 @@ export default function ChatScreen({ navigation, route }) {
 
       {/* Input */}
       <InputToolbar
+        ref={inputToolbarRef}
         onSendText={handleSend}
         onSendImage={handleSendImageWrapped}
         transcribeAudio={transcribeAudioForInput}

@@ -52,7 +52,7 @@ function sanitizeStreamingMarkdown(text) {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout }) {
+function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, onRetry }) {
   const { theme, language, isDark, locationDetails } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
@@ -236,10 +236,22 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout }
     }
 
     setIsLoading(true);
-    
+
     try {
-      // Get the text to speak (message text or diagnosis)
-      const textToSpeak = message.diagnosis || message.text;
+      // Get the text to speak
+      let textToSpeak = message.text;
+
+      // For diagnosis messages, generate speakable text from diagnosisData
+      if (!textToSpeak && message.diagnosisData) {
+        const d = message.diagnosisData;
+        const crop = d.crop?.name || d.crop || 'Plant';
+        const status = d.health_status?.overall || d.health_status || 'analyzed';
+        const stage = d.growth_stage ? `, growth stage ${d.growth_stage}` : '';
+        const issues = d.issues?.length > 0
+          ? `. Issues found: ${d.issues.map(i => i.name || i).join(', ')}`
+          : '';
+        textToSpeak = `${crop}${stage}. Status: ${status}${issues}`;
+      }
       
       // Call TTS service (pass language code, location)
       const result = await textToSpeech(textToSpeak, language?.code || 'en', locationDetails);
@@ -357,17 +369,19 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout }
 
           {/* Native structured report card (aggregation data only) */}
           {message.diagnosisData && (
-            <DiagnosisCard 
+            <DiagnosisCard
               diagnosis={message.diagnosisData}
-              onReadAloud={handleSpeak}
-              isSpeaking={isSpeaking}
+              onRetry={onRetry}
             />
           )}
         </Animated.View>
       ) : (
-        <Text style={[styles.messageText, { color: theme.text }]}>
-          {message.text}
-        </Text>
+        // User message - only show text if it exists (image messages may have no text)
+        message.text ? (
+          <Text style={[styles.messageText, { color: theme.text }]}>
+            {message.text}
+          </Text>
+        ) : null
       )}
     </View>
   );

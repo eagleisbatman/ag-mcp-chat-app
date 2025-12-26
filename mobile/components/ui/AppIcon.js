@@ -70,6 +70,18 @@ const ION_TO_MCI = {
   'stop-circle': 'stop-circle',
   leaf: 'sprout',
   'leaf-outline': 'sprout-outline',
+  // Diagnosis card icons
+  sprout: 'sprout',
+  target: 'target',
+  flask: 'flask',
+  signal: 'signal',
+  'zoom-in': 'magnify-plus',
+  move: 'cursor-move',
+  sun: 'white-balance-sunny',
+  'wifi-off': 'wifi-off',
+  'alert-triangle': 'alert',
+  percent: 'percent',
+  seedling: 'sprout',
 };
 
 /**

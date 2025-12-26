@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import {
   View,
   TextInput,
@@ -20,7 +20,7 @@ import AppIcon from './ui/AppIcon';
 import { PlusIcon, ClockIcon, VoiceWaveIcon } from './ui/LineIcons';
 import { t } from '../constants/strings';
 
-export default function InputToolbar({
+const InputToolbar = forwardRef(function InputToolbar({
   onSendText,
   onSendImage,
   onSendVoiceText,
@@ -28,7 +28,7 @@ export default function InputToolbar({
   uploadAudioInBackground,
   onOpenHistory,
   disabled = false,
-}) {
+}, ref) {
   const { theme } = useApp();
   const { showError, showWarning, showSuccess } = useToast();
   const insets = useSafeAreaInsets();
@@ -38,6 +38,11 @@ export default function InputToolbar({
   const [isFromVoice, setIsFromVoice] = useState(false);
   const [showMediaMenu, setShowMediaMenu] = useState(false);
   const textInputRef = useRef(null);
+
+  // Expose methods to parent via ref
+  useImperativeHandle(ref, () => ({
+    openAttachSheet: () => setShowMediaMenu(true),
+  }));
 
   // Bottom padding for safe area
   const bottomPadding = Math.max(insets.bottom, SPACING.md);
@@ -304,7 +309,9 @@ export default function InputToolbar({
       </View>
     </KeyboardStickyView>
   );
-}
+});
+
+export default InputToolbar;
 
 const styles = StyleSheet.create({
   wrapper: {
