@@ -7,7 +7,7 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
-const logoImage = require('../assets/splash-icon.png');
+const logoImage = require('../assets/logo.png');
 
 export default function WelcomeScreen({ navigation }) {
   const { theme } = useApp();
