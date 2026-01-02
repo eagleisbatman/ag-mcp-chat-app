@@ -82,6 +82,8 @@ PODS:
     - Yoga
   - ExpoSpeechRecognition (3.0.1):
     - ExpoModulesCore
+  - ExpoSplashScreen (31.0.13):
+    - ExpoModulesCore
   - EXStructuredHeaders (5.0.0)
   - EXUpdates (29.0.15):
     - EASClient
@@ -2144,6 +2146,7 @@ DEPENDENCIES:
   - ExpoLocation (from `../node_modules/expo-location/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSpeechRecognition (from `../node_modules/expo-speech-recognition/ios`)
+  - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - EXStructuredHeaders (from `../node_modules/expo-structured-headers/ios`)
   - EXUpdates (from `../node_modules/expo-updates/ios`)
   - EXUpdatesInterface (from `../node_modules/expo-updates-interface/ios`)
@@ -2267,6 +2270,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-modules-core"
   ExpoSpeechRecognition:
     :path: "../node_modules/expo-speech-recognition/ios"
+  ExpoSplashScreen:
+    :path: "../node_modules/expo-splash-screen/ios"
   EXStructuredHeaders:
     :path: "../node_modules/expo-structured-headers/ios"
   EXUpdates:
@@ -2445,6 +2450,7 @@ SPEC CHECKSUMS:
   ExpoLocation: d5b61cb4970fa982e39ca94246a206a0c3b812ca
   ExpoModulesCore: f3da4f1ab5a8375d0beafab763739dbee8446583
   ExpoSpeechRecognition: ba4748362e203efcfbe428ad13007ed3cd6bce3a
+  ExpoSplashScreen: bc3cffefca2716e5f22350ca109badd7e50ec14d
   EXStructuredHeaders: c951e77f2d936f88637421e9588c976da5827368
   EXUpdates: 28bf14af4317c217b738a26bbef1f70978437451
   EXUpdatesInterface: 5adf50cb41e079c861da6d9b4b954c3db9a50734
