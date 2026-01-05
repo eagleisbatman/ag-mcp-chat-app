@@ -96,7 +96,11 @@
     "transcribing": "Trascrizione in corso...",
     "recordingHint": "Tocca Fatto per trascrivere, Annulla per scartare",
     "listening": "In ascolto...",
-    "waitingForSpeech": "In attesa di parlare..."
+    "waitingForSpeech": "In attesa di parlare...",
+    "languageMismatch": "Parla in {{expected}}. Rilevata lingua: {{detected}}.",
+    "noSpeechDetected": "Nessuna voce rilevata. Parla chiaramente e riprova.",
+    "audioTooShort": "Audio troppo corto. Parla per almeno 1 secondo.",
+    "audioQualityPoor": "Audio scarso. Riprova in un ambiente più silenzioso."
   },
   "history": {
     "title": "Conversazioni",

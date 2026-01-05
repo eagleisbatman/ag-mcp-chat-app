@@ -96,7 +96,11 @@
     "transcribing": "文字起こし中...",
     "recordingHint": "完了をタップして文字起こし、キャンセルで破棄",
     "listening": "聞き取り中...",
-    "waitingForSpeech": "発言をお待ちください..."
+    "waitingForSpeech": "発言をお待ちください...",
+    "languageMismatch": "{{expected}}でお話しください。{{detected}}と認識されました。",
+    "noSpeechDetected": "声が聞こえません。はっきり話して、もう一度お試しください。",
+    "audioTooShort": "話す時間が短すぎます。1秒以上お話しください。",
+    "audioQualityPoor": "音声が聞き取りにくいです。もっと静かな場所で、もう一度お試しください。"
   },
   "history": {
     "title": "会話",

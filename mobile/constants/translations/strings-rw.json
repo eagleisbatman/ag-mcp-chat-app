@@ -96,7 +96,11 @@
     "transcribing": "Irimo guhindurwa...",
     "recordingHint": "Kanda 'Emeza' ngo ihindurwe, cyangwa 'Hagarika' ngo uyireke",
     "listening": "Ndirikumva...",
-    "waitingForSpeech": "Ntegereje ko uvuga..."
+    "waitingForSpeech": "Ntegereje ko uvuga...",
+    "languageMismatch": "Nyamuneka vuga mu {{expected}}. Ijwi ryawe ryagaragaye ko ari mu {{detected}}.",
+    "noSpeechDetected": "Nta jwi ryagaragaye. Nyamuneka vuga neza wongere.",
+    "audioTooShort": "Ijwi ni rigufi. Nyamuneka vuga byibuze isegonda 1.",
+    "audioQualityPoor": "Ijwi ntiryumvikana neza. Ongera ahantu hatuje."
   },
   "history": {
     "title": "Ibiganiro",

@@ -96,7 +96,11 @@
     "transcribing": "Se transcrie...",
     "recordingHint": "Atinge Gata pentru a transcrie, sau Anulează pentru a renunța",
     "listening": "Ascult...",
-    "waitingForSpeech": "Aștept să vorbești..."
+    "waitingForSpeech": "Aștept să vorbești...",
+    "languageMismatch": "Vă rugăm să vorbiți în {{expected}}. Limba detectată este {{detected}}.",
+    "noSpeechDetected": "Nu s-a detectat voce. Vă rugăm vorbiți clar și încercați din nou.",
+    "audioTooShort": "Audio prea scurt. Vă rugăm vorbiți cel puțin 1 secundă.",
+    "audioQualityPoor": "Calitate audio slabă. Încercați într-un loc mai liniștit."
   },
   "history": {
     "title": "Conversații",

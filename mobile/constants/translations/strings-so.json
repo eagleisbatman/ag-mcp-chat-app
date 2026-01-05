@@ -96,7 +96,11 @@
     "transcribing": "Waa la qorayaa...",
     "recordingHint": "Taabo Dhamee si aad u qorto, ama Jooji si aad u tirtirto.",
     "listening": "Waan dhagaysanayaa...",
-    "waitingForSpeech": "Waxaan sugayaa hadal..."
+    "waitingForSpeech": "Waxaan sugayaa hadal...",
+    "languageMismatch": "Fadlan ku hadal afka {{expected}}. Codkaaga waxaa la garwaaqsaday inuu yahay {{detected}}.",
+    "noSpeechDetected": "Cod lama helin. Fadlan si cad u hadal oo mar labaad isku day.",
+    "audioTooShort": "Duubis gaaban. Fadlan ku hadal ugu yaraan 1 ilbiriqsi.",
+    "audioQualityPoor": "Tayada codku way liidataa. Mar labaad isku day meel deggan."
   },
   "history": {
     "title": "Sheekooyin",

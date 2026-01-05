@@ -96,7 +96,11 @@
     "transcribing": "מתמלל...",
     "recordingHint": "הקש סיום לתמלול, או ביטול למחיקה",
     "listening": "מקשיב...",
-    "waitingForSpeech": "ממתין לדיבור..."
+    "waitingForSpeech": "ממתין לדיבור...",
+    "languageMismatch": "אנא דבר ב{{expected}}. הדיבור שלך זוהה כ{{detected}}.",
+    "noSpeechDetected": "לא זוהה דיבור. אנא דבר ברור ונסה שוב.",
+    "audioTooShort": "הקלטה קצרה מדי. אנא דבר לפחות שנייה אחת.",
+    "audioQualityPoor": "איכות שמע נמוכה מדי. נסה שוב בסביבה שקטה יותר."
   },
   "history": {
     "title": "שיחות",

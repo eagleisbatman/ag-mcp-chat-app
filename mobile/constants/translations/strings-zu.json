@@ -96,7 +96,11 @@
     "transcribing": "Kubhalwa phansi...",
     "recordingHint": "Thepha Qedile ukubhala izwi phansi, noma Khansela ukulahla",
     "listening": "Ngilalele...",
-    "waitingForSpeech": "Linda ukukhuluma..."
+    "waitingForSpeech": "Linda ukukhuluma...",
+    "languageMismatch": "Sicela ukhulume ngesi{{expected}}. Ulimi lwakho luthe luyi-{{detected}}.",
+    "noSpeechDetected": "Ayikho inkulumo ezwakalile. Sicela ukhulume kahle, uzame futhi.",
+    "audioTooShort": "Ukuqoshwa kufushane kakhulu. Sicela ukhulume okungenani isekhondi elilodwa.",
+    "audioQualityPoor": "Umsindo awucacile. Zama futhi endaweni ethulile."
   },
   "history": {
     "title": "Izingxoxo",

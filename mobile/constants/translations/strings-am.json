@@ -96,7 +96,11 @@
     "transcribing": "እየተፈታተተ ነው...",
     "recordingHint": "ለመፍታታት \"ጨርስ\" ይጫኑ፤ ለመተው \"ሰርዝ\" ይጫኑ።",
     "listening": "እየሰማ ነው...",
-    "waitingForSpeech": "ንግግር በመጠባበቅ ላይ..."
+    "waitingForSpeech": "ንግግር በመጠባበቅ ላይ...",
+    "languageMismatch": "እባክዎ በ{{expected}} ይናገሩ። ንግግርዎ በ{{detected}} ተገኝቷል።",
+    "noSpeechDetected": "ድምጽ አልተገኘም። በግልጽ ይናገሩና እንደገና ይሞክሩ።",
+    "audioTooShort": "ድምጹ አጭር ነው። ቢያንስ ለ1 ሰከንድ ይናገሩ።",
+    "audioQualityPoor": "የድምጽ ጥራት ዝቅተኛ ነው። ጸጥ ባለ ቦታ እንደገና ይሞክሩ።"
   },
   "history": {
     "title": "ውይይቶች",

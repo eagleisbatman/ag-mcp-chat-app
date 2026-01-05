@@ -282,7 +282,31 @@ export default function VoiceRecorder({
       if (result.success && result.transcription) {
         onTranscriptionComplete(result.transcription, { uri, base64, duration: recordingDuration });
       } else {
-        showError(result.error || t('voice.couldNotTranscribeAudio'));
+        // Handle specific error codes with localized messages
+        let errorMessage;
+
+        switch (result.errorCode) {
+          case 'LANGUAGE_MISMATCH':
+            // Show language-specific error with detected language info
+            errorMessage = t('voice.languageMismatch', {
+              expected: result.errorDetails?.expected || language?.name || 'selected language',
+              detected: result.errorDetails?.detected || 'another language',
+            });
+            break;
+          case 'NO_SPEECH':
+            errorMessage = t('voice.noSpeechDetected');
+            break;
+          case 'AUDIO_TOO_SHORT':
+            errorMessage = t('voice.audioTooShort');
+            break;
+          case 'AUDIO_QUALITY':
+            errorMessage = t('voice.audioQualityPoor');
+            break;
+          default:
+            errorMessage = result.error || t('voice.couldNotTranscribeAudio');
+        }
+
+        showError(errorMessage);
         onCancel();
       }
 

@@ -96,7 +96,11 @@
     "transcribing": "Đang chuyển giọng nói...",
     "recordingHint": "Bấm Xong để chuyển lời, hoặc Hủy để bỏ qua",
     "listening": "Đang nghe...",
-    "waitingForSpeech": "Đang chờ bạn nói..."
+    "waitingForSpeech": "Đang chờ bạn nói...",
+    "languageMismatch": "Vui lòng nói bằng tiếng {{expected}}. Hệ thống phát hiện bạn nói tiếng {{detected}}.",
+    "noSpeechDetected": "Không phát hiện giọng nói. Vui lòng nói rõ và thử lại.",
+    "audioTooShort": "Ghi âm quá ngắn. Vui lòng nói ít nhất 1 giây.",
+    "audioQualityPoor": "Chất lượng âm thanh kém. Vui lòng thử lại ở nơi yên tĩnh hơn."
   },
   "history": {
     "title": "Trò chuyện",

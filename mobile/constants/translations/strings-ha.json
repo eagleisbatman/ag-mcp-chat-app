@@ -96,7 +96,11 @@
     "transcribing": "Ana fassara murya...",
     "recordingHint": "Latsa Gama don fassara, ko Soke don sharewa",
     "listening": "Ina sauraro...",
-    "waitingForSpeech": "Jiran magana..."
+    "waitingForSpeech": "Jiran magana...",
+    "languageMismatch": "Don Allah kayi magana da {{expected}}. An gano maganarka da {{detected}}.",
+    "noSpeechDetected": "Ba a ji magana ba. Don Allah kayi magana a sarari kuma ka sake gwadawa.",
+    "audioTooShort": "Murya tayi gajeruwa. Don Allah kayi magana na akalla daƙiƙa 1.",
+    "audioQualityPoor": "Ingancin murya yayi ƙasa. Sake gwadawa a wajen da babu hayaniya."
   },
   "history": {
     "title": "Tattaunawa",

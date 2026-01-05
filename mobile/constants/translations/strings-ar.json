@@ -96,7 +96,11 @@
     "transcribing": "جارٍ النسخ...",
     "recordingHint": "انقر على تم للنسخ، أو إلغاء للتجاهل.",
     "listening": "جاري الاستماع...",
-    "waitingForSpeech": "في انتظار حديثك..."
+    "waitingForSpeech": "في انتظار حديثك...",
+    "languageMismatch": "من فضلك تحدث بـ {{expected}}. تم رصد كلامك بـ {{detected}}.",
+    "noSpeechDetected": "لم يتم رصد كلام. من فضلك تحدث بوضوح وحاول مرة أخرى.",
+    "audioTooShort": "التسجيل قصير جداً. من فضلك تحدث لثانية واحدة على الأقل.",
+    "audioQualityPoor": "جودة الصوت منخفضة جداً. حاول مرة أخرى في مكان أهدأ."
   },
   "history": {
     "title": "محادثات",

@@ -96,7 +96,11 @@
     "transcribing": "Inanukuu...",
     "recordingHint": "Gonga Maliza kunukuu, au Ghairi kuacha",
     "listening": "Inasikiliza...",
-    "waitingForSpeech": "Inasubiri uongee..."
+    "waitingForSpeech": "Inasubiri uongee...",
+    "languageMismatch": "Tafadhali zungumza kwa {{expected}}. Sauti yako ilitambuliwa kama {{detected}}.",
+    "noSpeechDetected": "Hakuna sauti. Tafadhali zungumza wazi na ujaribu tena.",
+    "audioTooShort": "Sauti fupi sana. Tafadhali zungumza kwa angalau sekunde 1.",
+    "audioQualityPoor": "Sauti hafifu sana. Jaribu tena mahali penye utulivu."
   },
   "history": {
     "title": "Gumzo",

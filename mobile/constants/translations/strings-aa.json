@@ -96,7 +96,11 @@
     "transcribing": "Qallabah...",
     "recordingHint": "Qallabuh 'Qasa' guddus, hinnay baahuh 'Digge'.",
     "listening": "Wagiigem an...",
-    "waitingForSpeech": "Kolla rabem an..."
+    "waitingForSpeech": "Kolla rabem an...",
+    "languageMismatch": "Fak kaay {{expected}} akkal qhali. Ke qhalat tanat tanat {{detected}} gubat cawwe.",
+    "noSpeechDetected": "Qhalat umman hin cawwa. Calaana qhali kaay, qhali yakka.",
+    "audioTooShort": "Qhalat tanat-le saaqat. Baadit-le 1 second qhali.",
+    "audioQualityPoor": "Qhalat tanat-le qhiibih. Wadar gubak qhali yakka."
   },
   "history": {
     "title": "Gubulluk",

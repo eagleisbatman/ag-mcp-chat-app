@@ -96,7 +96,11 @@
     "transcribing": "Metne çevriliyor...",
     "recordingHint": "Metne çevirmek için Bitti'ye, vazgeçmek için İptal'e dokunun.",
     "listening": "Dinleniyor...",
-    "waitingForSpeech": "Konuşma bekleniyor..."
+    "waitingForSpeech": "Konuşma bekleniyor...",
+    "languageMismatch": "Lütfen {{expected}} dilinde konuşun. Konuşmanız {{detected}} olarak algılandı.",
+    "noSpeechDetected": "Konuşma algılanmadı. Lütfen net konuşup tekrar deneyin.",
+    "audioTooShort": "Kayıt çok kısa. Lütfen en az 1 saniye konuşun.",
+    "audioQualityPoor": "Ses kalitesi çok düşük. Daha sakin bir yerde tekrar deneyin."
   },
   "history": {
     "title": "Sohbetler",

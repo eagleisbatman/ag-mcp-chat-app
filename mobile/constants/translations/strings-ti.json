@@ -96,7 +96,11 @@
     "transcribing": "ይቕየር ኣሎ...",
     "recordingHint": "ንምልዋጥ 'ኣብቅዕ' ጠውቕ፣ ንምጥፋእ ድማ 'ስረዝ'።",
     "listening": "የዳምጽ ኣሎ...",
-    "waitingForSpeech": "ንዝርባ ይጽበ ኣሎ..."
+    "waitingForSpeech": "ንዝርባ ይጽበ ኣሎ...",
+    "languageMismatch": "በ{{expected}} ተዛረቡ። ድምጽኹም ብ{{detected}} ተለልዩ።",
+    "noSpeechDetected": "ድምጺ ኣይተረኽበን። ብንጹር ተዛረቡ እሞ እንደገና ፈትኑ።",
+    "audioTooShort": "ቅዳሕ ሓጺር እዩ። እንተወሓደ ንሓንቲ ሰከንድ ተዛረቡ።",
+    "audioQualityPoor": "ጥራት ድምጺ ትሑት እዩ። ኣብ ዝሃድአ ቦታ እንደገና ፈትኑ።"
   },
   "history": {
     "title": "ዘተታት",

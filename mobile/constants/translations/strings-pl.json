@@ -96,7 +96,11 @@
     "transcribing": "Przepisywanie...",
     "recordingHint": "Naciśnij Gotowe, aby przepisać, lub Anuluj, aby odrzucić",
     "listening": "Słucham...",
-    "waitingForSpeech": "Czekam na głos..."
+    "waitingForSpeech": "Czekam na głos...",
+    "languageMismatch": "Proszę mówić po {{expected}}. Wykryto {{detected}}.",
+    "noSpeechDetected": "Nie wykryto mowy. Proszę mówić wyraźnie i spróbować ponownie.",
+    "audioTooShort": "Zbyt krótkie nagranie. Proszę mówić przez co najmniej 1 sekundę.",
+    "audioQualityPoor": "Słaba jakość dźwięku. Proszę spróbować ponownie w cichszym miejscu."
   },
   "history": {
     "title": "Rozmowy",

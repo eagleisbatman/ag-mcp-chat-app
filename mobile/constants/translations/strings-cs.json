@@ -96,7 +96,11 @@
     "transcribing": "Přepisuji...",
     "recordingHint": "Klepněte na Hotovo pro přepis, nebo Zrušit pro zahození",
     "listening": "Poslouchám...",
-    "waitingForSpeech": "Čekám na hlas..."
+    "waitingForSpeech": "Čekám na hlas...",
+    "languageMismatch": "Mluvte prosím jazykem {{expected}}. Rozpoznal jsem {{detected}}.",
+    "noSpeechDetected": "Nic jsem neslyšel. Mluvte zřetelně a zkuste to znovu.",
+    "audioTooShort": "Příliš krátká nahrávka. Mluvte alespoň 1 sekundu.",
+    "audioQualityPoor": "Špatná kvalita zvuku. Zkuste to znovu v tišším prostředí."
   },
   "history": {
     "title": "Konverzace",

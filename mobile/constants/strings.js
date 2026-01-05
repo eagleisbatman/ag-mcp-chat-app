@@ -223,6 +223,10 @@ export const STRINGS = {
       recordingHint: 'Tap Done to transcribe, or Cancel to discard',
       listening: 'Listening...',
       waitingForSpeech: 'Waiting for speech...',
+      languageMismatch: 'Please speak in {expected}. Your speech was detected as {detected}.',
+      noSpeechDetected: 'No speech detected. Please speak clearly and try again.',
+      audioTooShort: 'Recording too short. Please speak for at least 1 second.',
+      audioQualityPoor: 'Audio quality too low. Try again in a quieter environment.',
     },
     history: {
       title: 'Conversations',

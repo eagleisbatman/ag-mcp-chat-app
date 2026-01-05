@@ -96,7 +96,11 @@
     "transcribing": "Barreessaa jira...",
     "recordingHint": "Barreeffamatti jijjiiruuf 'Xumuri' tuqi, gatuuf 'Dhiisi' tuqi.",
     "listening": "Dhageeffachaa jira...",
-    "waitingForSpeech": "Sagalee eegaa jira..."
+    "waitingForSpeech": "Sagalee eegaa jira...",
+    "languageMismatch": "Maaloo afaan {{expected}} dubbadhu. Sagaleen kee afaan {{detected}} akka ta'e beekame.",
+    "noSpeechDetected": "Sagaleen hin dhageenye. Maaloo ifatti dubbadhuutii irra deebi'i.",
+    "audioTooShort": "Sagaleen kee gabaabaadha. Maaloo yoo xiqqaate sekendii 1f dubbadhu.",
+    "audioQualityPoor": "Qulqullinni sagalee gadaanaadha. Bakka cal'isaa ta'eetti irra deebi'i."
   },
   "history": {
     "title": "Haasofiiwwan",

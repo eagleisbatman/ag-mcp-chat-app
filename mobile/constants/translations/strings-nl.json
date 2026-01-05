@@ -96,7 +96,11 @@
     "transcribing": "Spraak herkennen...",
     "recordingHint": "Tik op Klaar om te herkennen, of Annuleren om te wissen",
     "listening": "Luistert...",
-    "waitingForSpeech": "Wacht op spraak..."
+    "waitingForSpeech": "Wacht op spraak...",
+    "languageMismatch": "Spreek in {{expected}}. Uw stem klonk als {{detected}}.",
+    "noSpeechDetected": "Niets gehoord. Spreek duidelijk en probeer opnieuw.",
+    "audioTooShort": "Opname te kort. Praat minstens 1 seconde.",
+    "audioQualityPoor": "Slecht geluid. Probeer het opnieuw op een stillere plek."
   },
   "history": {
     "title": "Gesprekken",

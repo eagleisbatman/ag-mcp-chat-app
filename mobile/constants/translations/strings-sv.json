@@ -96,7 +96,11 @@
     "transcribing": "Transkriberar...",
     "recordingHint": "Tryck på Klar för att transkribera, eller Avbryt för att kasta",
     "listening": "Lyssnar...",
-    "waitingForSpeech": "Väntar på tal..."
+    "waitingForSpeech": "Väntar på tal...",
+    "languageMismatch": "Tala på {{expected}}. Ditt tal upptäcktes som {{detected}}.",
+    "noSpeechDetected": "Inget tal upptäcktes. Tala tydligt och försök igen.",
+    "audioTooShort": "Inspelningen för kort. Tala i minst 1 sekund.",
+    "audioQualityPoor": "Ljudkvaliteten för låg. Försök igen i en tystare miljö."
   },
   "history": {
     "title": "Samtal",

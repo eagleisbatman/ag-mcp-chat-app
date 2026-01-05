@@ -96,7 +96,11 @@
     "transcribing": "Расшифровка...",
     "recordingHint": "Нажмите «Готово» для расшифровки, «Отмена» – для удаления.",
     "listening": "Слушаю...",
-    "waitingForSpeech": "Жду речь..."
+    "waitingForSpeech": "Жду речь...",
+    "languageMismatch": "Пожалуйста, говорите на {{expected}}. Обнаружен язык: {{detected}}.",
+    "noSpeechDetected": "Речь не обнаружена. Говорите чётче и повторите.",
+    "audioTooShort": "Запись слишком короткая. Говорите не менее 1 секунды.",
+    "audioQualityPoor": "Качество звука низкое. Повторите в тихом месте."
   },
   "history": {
     "title": "Беседы",

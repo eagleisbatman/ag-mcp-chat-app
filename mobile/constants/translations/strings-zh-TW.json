@@ -96,7 +96,11 @@
     "transcribing": "轉寫中...",
     "recordingHint": "點擊「完成」轉寫，或「取消」捨棄。",
     "listening": "聆聽中...",
-    "waitingForSpeech": "等待語音..."
+    "waitingForSpeech": "等待語音...",
+    "languageMismatch": "請說{{expected}}語。偵測到{{detected}}語。",
+    "noSpeechDetected": "未偵測到語音。請說清楚並重試。",
+    "audioTooShort": "錄音太短。請至少說1秒鐘。",
+    "audioQualityPoor": "語音品質太差。請在安靜的環境中重試。"
   },
   "history": {
     "title": "聊天記錄",

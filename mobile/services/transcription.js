@@ -36,19 +36,23 @@ export const transcribeAudio = async (audioBase64, language = null) => {
     }
 
     const data = await response.json();
-    
-    // Check if API returned success: false
+
+    // Check if API returned success: false with structured error
     if (data.success === false) {
       return {
         success: false,
         error: data.error || 'Transcription failed',
+        errorCode: data.errorCode || null,
+        errorDetails: data.errorDetails || null,
+        requestedLanguage: data.requestedLanguage || language,
+        detectedLanguage: data.detectedLanguage || null,
       };
     }
-    
+
     return {
       success: true,
       text: data.text || data.transcription || '',
-      language: data.detected_language || language,
+      language: data.detectedLanguage || data.detected_language || language,
     };
   } catch (error) {
     console.error('Whisper transcription error:', error);

@@ -96,7 +96,11 @@
     "transcribing": "음성 변환 중...",
     "recordingHint": "완료를 눌러 변환, 취소를 눌러 삭제",
     "listening": "듣는 중...",
-    "waitingForSpeech": "말씀해주세요."
+    "waitingForSpeech": "말씀해주세요.",
+    "languageMismatch": "{{expected}}으로 말씀해주세요. {{detected}}(으)로 인식됐습니다.",
+    "noSpeechDetected": "음성이 감지되지 않았습니다. 또렷하게 다시 말씀해주세요.",
+    "audioTooShort": "말씀이 너무 짧아요. 1초 이상 말해주세요.",
+    "audioQualityPoor": "소리가 잘 안 들려요. 조용한 곳에서 다시 말해주세요."
   },
   "history": {
     "title": "대화",

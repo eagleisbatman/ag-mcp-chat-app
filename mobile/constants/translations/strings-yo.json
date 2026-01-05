@@ -96,7 +96,11 @@
     "transcribing": "Ó ń yí ohùn sí ọ̀rọ̀...",
     "recordingHint": "Tẹ 'Ṣe tán' láti yí ohùn sí ọ̀rọ̀, tàbí 'Fagilé' láti fi sílẹ̀",
     "listening": "Mo ń gbọ́...",
-    "waitingForSpeech": "Ń dúró de ohùn..."
+    "waitingForSpeech": "Ń dúró de ohùn...",
+    "languageMismatch": "Jọ̀wọ́ sọ̀rọ̀ ní èdè {{expected}}. Èdè {{detected}} ni a gbọ́.",
+    "noSpeechDetected": "Kò sí ohùn tí a gbọ́. Sọ̀rọ̀ kedere, tún gbìyànjú.",
+    "audioTooShort": "Ohùn kéré. Sọ̀rọ̀ fún kéré tán ìṣẹ́jú àáyá kan.",
+    "audioQualityPoor": "Didara ohùn kéré. Tún gbìyànjú níbi tó dákẹ́ rọ́rọ́."
   },
   "history": {
     "title": "Àwọn Ìjíròrò",

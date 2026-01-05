@@ -96,7 +96,11 @@
     "transcribing": "Sprache wird erkannt...",
     "recordingHint": "Fertig tippen für Spracherkennung, Abbrechen zum Verwerfen",
     "listening": "Höre zu...",
-    "waitingForSpeech": "Warte auf Spracheingabe..."
+    "waitingForSpeech": "Warte auf Spracheingabe...",
+    "languageMismatch": "Bitte sprechen Sie in {{expected}}. Ihre Sprache wurde als {{detected}} erkannt.",
+    "noSpeechDetected": "Keine Sprache erkannt. Sprechen Sie deutlich und versuchen Sie es erneut.",
+    "audioTooShort": "Aufnahme zu kurz. Bitte sprechen Sie mindestens 1 Sekunde lang.",
+    "audioQualityPoor": "Audioqualität zu schlecht. Versuchen Sie es in einer ruhigeren Umgebung erneut."
   },
   "history": {
     "title": "Gespräche",

@@ -96,7 +96,11 @@
     "transcribing": "Na-aghọta olu...",
     "recordingHint": "Pịa 'Mechaa' ka ọ ghọta olu, ma ọ bụ 'Kagbuo' ka ị tụfuo ya.",
     "listening": "Na-ege ntị...",
-    "waitingForSpeech": "Na-eche ka i kwuo okwu..."
+    "waitingForSpeech": "Na-eche ka i kwuo okwu...",
+    "languageMismatch": "Biko kwuo okwu na {{expected}}. Edebere okwu gị dị ka {{detected}}.",
+    "noSpeechDetected": "Enweghị okwu a nụrụ. Biko kwuo okwu n'ụzọ doro anya ma gbalịa ọzọ.",
+    "audioTooShort": "Okwu gị dị mkpụmkpụ. Biko kwuo okwu karịa otu sekọnd.",
+    "audioQualityPoor": "Ụda adịghị mma. Biko gbalịa ọzọ n'ebe dị jụụ karịa."
   },
   "history": {
     "title": "Mkparịta ụka",

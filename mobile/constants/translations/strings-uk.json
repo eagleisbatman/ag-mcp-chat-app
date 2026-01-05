@@ -96,7 +96,11 @@
     "transcribing": "Розпізнавання...",
     "recordingHint": "Натисніть «Готово» для розпізнавання, або «Скасувати» для відхилення",
     "listening": "Слухаю...",
-    "waitingForSpeech": "Чекаю на мовлення..."
+    "waitingForSpeech": "Чекаю на мовлення...",
+    "languageMismatch": "Говоріть {{expected}}. Розпізнано: {{detected}}.",
+    "noSpeechDetected": "Голосу не чути. Говоріть чіткіше та повторіть.",
+    "audioTooShort": "Закороткий запис. Кажіть хоча б 1 секунду.",
+    "audioQualityPoor": "Якість звуку низька. Спробуйте в тихішому місці."
   },
   "history": {
     "title": "Бесіди",

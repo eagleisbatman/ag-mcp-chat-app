@@ -96,7 +96,11 @@
     "transcribing": "正在转写...",
     "recordingHint": "点“完成”转写，点“取消”放弃",
     "listening": "正在聆听...",
-    "waitingForSpeech": "等待您说话..."
+    "waitingForSpeech": "等待您说话...",
+    "languageMismatch": "请用{{expected}}说话。系统识别为{{detected}}。",
+    "noSpeechDetected": "未听到声音。请说清楚，再试一次。",
+    "audioTooShort": "录音太短。请至少说1秒。",
+    "audioQualityPoor": "音质太差。请找个安静点的地方再试一次。"
   },
   "history": {
     "title": "对话",

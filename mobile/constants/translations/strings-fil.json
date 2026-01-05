@@ -96,7 +96,11 @@
     "transcribing": "Nagsasalin...",
     "recordingHint": "Pindutin ang Tapos na para isalin, o Kanselahin para itapon.",
     "listening": "Nakikinig...",
-    "waitingForSpeech": "Naghihintay ng salita..."
+    "waitingForSpeech": "Naghihintay ng salita...",
+    "languageMismatch": "Pakiusap, magsalita sa {{expected}}. Ang salita mo ay natukoy bilang {{detected}}.",
+    "noSpeechDetected": "Walang narinig na salita. Pakiusap, magsalita nang malinaw at subukang muli.",
+    "audioTooShort": "Masyadong maikli ang boses. Pakiusap, magsalita nang kahit 1 segundo.",
+    "audioQualityPoor": "Malabo ang tunog. Subukang muli sa mas tahimik na lugar."
   },
   "history": {
     "title": "Mga Pag-uusap",

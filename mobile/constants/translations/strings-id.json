@@ -96,7 +96,11 @@
     "transcribing": "Mentranskripsi...",
     "recordingHint": "Ketuk Selesai untuk transkripsi, atau Batal untuk membuang",
     "listening": "Mendengarkan...",
-    "waitingForSpeech": "Menunggu ucapan..."
+    "waitingForSpeech": "Menunggu ucapan...",
+    "languageMismatch": "Tolong bicara dalam {{expected}}. Suara Anda terdeteksi sebagai {{detected}}.",
+    "noSpeechDetected": "Tidak ada suara terdeteksi. Tolong bicara yang jelas dan coba lagi.",
+    "audioTooShort": "Rekaman terlalu pendek. Tolong bicara setidaknya 1 detik.",
+    "audioQualityPoor": "Kualitas suara terlalu rendah. Coba lagi di tempat yang lebih tenang."
   },
   "history": {
     "title": "Percakapan",
