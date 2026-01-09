@@ -535,5 +535,70 @@
       "agriculturalImpact": "शेतीवरील परिणाम"
     },
     "dataSource": "Tomorrow.io कडून हवामानाची माहिती"
+  },
+  "schemes": {
+    "title": "सरकारी योजना",
+    "eligibility": "योज्यतेचे निकष",
+    "checkEligibility": "योज्यता तपासा",
+    "screeningQuestions": "चाचणी प्रश्न",
+    "answerQuestions": "तुम्ही पात्र आहात की नाही हे तपासण्यासाठी प्रश्नांची उत्तरे द्या",
+    "eligibleSchemes": "पात्र योजना",
+    "noSchemesFound": "तुमच्या प्रोफाइलशी जुळणारी कोणतीही योजना आढळली नाही",
+    "journeyUrl": "अर्ज लिंक",
+    "startApplication": "अर्ज सुरू करा",
+    "schemeName": "योजनेचे नाव",
+    "schemeDescription": "वर्णन",
+    "benefits": "लाभ",
+    "eligibilityCriteria": "पात्रता निकष",
+    "requiredDocuments": "आवश्यक कागदपत्रे",
+    "nextSteps": "पुढील पायऱ्या",
+    "totalSchemes": "एकूण योजना",
+    "provider": "प्रदाता",
+    "haqdarshak": "हकदर्शक",
+    "knowYourSchemes": "तुमच्या योजना जाणून घ्या",
+    "indiaOnly": "केवळ भारतात उपलब्ध",
+    "questions": {
+      "gender": "लिंग",
+      "age": "वय",
+      "maritalStatus": "वैवाहिक स्थिती",
+      "monthlyIncome": "मासिक घरगुती उत्पन्न",
+      "landOwnership": "जमीन मालकी",
+      "rationCardType": "शिधापत्रिका प्रकार",
+      "religion": "धर्म",
+      "casteCategory": "जात प्रवर्ग",
+      "occupationalStatus": "व्यावसायिक स्थिती",
+      "natureOfJob": "नोकरीचा प्रकार",
+      "personalIncome": "वैयक्तिक मासिक उत्पन्न"
+    },
+    "answers": {
+      "male": "पुरुष",
+      "female": "स्त्री",
+      "other": "इतर",
+      "married": "विवाहित",
+      "unmarried": "अविवाहित",
+      "widowed": "विधवा",
+      "divorced": "घटस्फोटित",
+      "separated": " विभक्त",
+      "farmer": "शेतकरी",
+      "farmLaborer": "शेतमजूर",
+      "fisherman": "मच्छीमार",
+      "animalHusbandry": "पशुपालन",
+      "dairyFarmer": "दुग्ध व्यवसाय करणारे शेतकरी",
+      "poultryFarmer": "कुक्कुटपालन करणारे शेतकरी",
+      "landOwner": "जमीन मालक",
+      "landless": "भूमिहीन",
+      "sharecropper": "भागीदारी शेती करणारे"
+    },
+    "documents": {
+      "aadhaarCard": "आधार कार्ड",
+      "bankPassbook": "बँक पासबुक",
+      "landRecords": "जमिनीचे रेकॉर्ड",
+      "rationCard": "रेशन कार्ड",
+      "casteCertificate": "जातीचे प्रमाणपत्र",
+      "incomeCertificate": "उत्पन्न प्रमाणपत्र",
+      "voterID": "मतदार ओळखपत्र",
+      "passport": "पासपोर्ट फोटो"
+    },
+    "dataSource": "हकदर्शककडील योजनेचा डेटा"
   }
-}
+}\n

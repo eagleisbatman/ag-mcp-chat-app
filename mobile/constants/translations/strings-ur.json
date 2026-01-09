@@ -535,5 +535,70 @@
       "agriculturalImpact": "زرعی اثرات"
     },
     "dataSource": "موسمی ڈیٹا Tomorrow.io سے"
+  },
+  "schemes": {
+    "title": "حکومتی اسکیمیں",
+    "eligibility": "اسکیم کی اہلیت",
+    "checkEligibility": "اہلیت چیک کریں",
+    "screeningQuestions": "جانچ کے سوالات",
+    "answerQuestions": "اپنی اہلیت جانچنے کے لیے سوالوں کے جواب دیں",
+    "eligibleSchemes": "مستحق اسکیمیں",
+    "noSchemesFound": "آپ کے پروفائل سے ملنے والی کوئی اسکیم نہیں ملی",
+    "journeyUrl": "درخواست کا لنک",
+    "startApplication": "درخواست شروع کریں",
+    "schemeName": "اسکیم کا نام",
+    "schemeDescription": "تفصیل",
+    "benefits": "فوائد",
+    "eligibilityCriteria": "اہلیت کا معیار",
+    "requiredDocuments": "مطلوبہ دستاویزات",
+    "nextSteps": "اگلے اقدامات",
+    "totalSchemes": "کل اسکیمیں",
+    "provider": "فراہم کنندہ",
+    "haqdarshak": "حقدارشک",
+    "knowYourSchemes": "اپنی اسکیمیں جانیں",
+    "indiaOnly": "صرف ہندوستان میں دستیاب ہے",
+    "questions": {
+      "gender": "جنس",
+      "age": "عمر",
+      "maritalStatus": "ازدواجی حیثیت",
+      "monthlyIncome": "ماہانہ گھریلو آمدنی",
+      "landOwnership": "اراضی کی ملکیت",
+      "rationCardType": "راشن کارڈ کی قسم",
+      "religion": "مذہب",
+      "casteCategory": "ذات کی قسم",
+      "occupationalStatus": "پیشہ ورانہ حیثیت",
+      "natureOfJob": "ملازمت کی نوعیت",
+      "personalIncome": "ذاتی ماہانہ آمدنی"
+    },
+    "answers": {
+      "male": "مرد",
+      "female": "خاتون",
+      "other": "دیگر",
+      "married": "شادی شدہ",
+      "unmarried": "غیر شادی شدہ",
+      "widowed": "بیوہ",
+      "divorced": "طلاق یافتہ",
+      "separated": "علیحدہ",
+      "farmer": "کسان",
+      "farmLaborer": "زرعی مزدور",
+      "fisherman": "ماہی گیر",
+      "animalHusbandry": "جانور پالنے والا",
+      "dairyFarmer": "ڈیری فارمر",
+      "poultryFarmer": "پولٹری فارمر",
+      "landOwner": "زمیں دار",
+      "landless": "بے زمین",
+      "sharecropper": "مزارع"
+    },
+    "documents": {
+      "aadhaarCard": "آدھار کارڈ",
+      "bankPassbook": "بینک پاس بک",
+      "landRecords": "زمین کے ریکارڈ",
+      "rationCard": "راشن کارڈ",
+      "casteCertificate": "ذات کا سرٹیفکیٹ",
+      "incomeCertificate": "آمدنی کا سرٹیفکیٹ",
+      "voterID": "ووٹر شناختی کارڈ",
+      "passport": "پاسپورٹ تصویر"
+    },
+    "dataSource": "حقدارشک سے اسکیم کا ڈیٹا"
   }
-}
+}\n

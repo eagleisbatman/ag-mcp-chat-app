@@ -535,5 +535,70 @@
       "agriculturalImpact": "কৃষিক্ষেত্রে প্রভাব"
     },
     "dataSource": "আবহাওয়ার তথ্য Tomorrow.io থেকে"
+  },
+  "schemes": {
+    "title": "সরকারি প্রকল্পসমূহ",
+    "eligibility": "প্রকল্পের যোগ্যতা",
+    "checkEligibility": "যোগ্যতা যাচাই করুন",
+    "screeningQuestions": "বাছাই প্রশ্ন",
+    "answerQuestions": "আপনার যোগ্যতা যাচাই করার জন্য প্রশ্নগুলোর উত্তর দিন",
+    "eligibleSchemes": "যোগ্য প্রকল্পসমূহ",
+    "noSchemesFound": "আপনার প্রোফাইলের সাথে মেলে এমন কোনও প্রকল্প পাওয়া যায়নি",
+    "journeyUrl": "আবেদন লিঙ্ক",
+    "startApplication": "আবেদন শুরু করুন",
+    "schemeName": "প্রকল্পের নাম",
+    "schemeDescription": "বিবরণ",
+    "benefits": "সুবিধা",
+    "eligibilityCriteria": "যোগ্যতার মানদণ্ড",
+    "requiredDocuments": "প্রয়োজনীয় নথি",
+    "nextSteps": "পরবর্তী পদক্ষেপ",
+    "totalSchemes": "মোট প্রকল্প",
+    "provider": "সরবরাহকারী",
+    "haqdarshak": "হকদার্শক",
+    "knowYourSchemes": "আপনার প্রকল্পগুলি জানুন",
+    "indiaOnly": "শুধুমাত্র ভারতে উপলব্ধ",
+    "questions": {
+      "gender": "লিঙ্গ",
+      "age": "বয়স",
+      "maritalStatus": "বৈবাহিক অবস্থা",
+      "monthlyIncome": "মাসিক পারিবারিক আয়",
+      "landOwnership": "জমির মালিকানা",
+      "rationCardType": "রেশন কার্ডের ধরণ",
+      "religion": "ধর্ম",
+      "casteCategory": "জাতিগত শ্রেণী",
+      "occupationalStatus": "পেশাগত অবস্থা",
+      "natureOfJob": "চাকরির ধরণ",
+      "personalIncome": "ব্যক্তিগত মাসিক আয়"
+    },
+    "answers": {
+      "male": "পুরুষ",
+      "female": "মহিলা",
+      "other": "অন্যান্য",
+      "married": "বিবাহিত",
+      "unmarried": "অবিবাহিত",
+      "widowed": "বিধবা",
+      "divorced": "তালাকপ্রাপ্ত",
+      "separated": "বিচ্ছিন্ন",
+      "farmer": "কৃষক",
+      "farmLaborer": "কৃষি শ্রমিক",
+      "fisherman": "জেলে",
+      "animalHusbandry": "পশুপালন",
+      "dairyFarmer": "দুগ্ধ খামারী",
+      "poultryFarmer": "পোল্ট্রি খামারী",
+      "landOwner": "জমির মালিক",
+      "landless": "ভূমিহীন",
+      "sharecropper": "ভাগচাষী"
+    },
+    "documents": {
+      "aadhaarCard": "আধার কার্ড",
+      "bankPassbook": "ব্যাঙ্ক পাসবুক",
+      "landRecords": "জমির রেকর্ড",
+      "rationCard": "রেশন কার্ড",
+      "casteCertificate": "জাতি শংসাপত্র",
+      "incomeCertificate": "আয় শংসাপত্র",
+      "voterID": "ভোটার আইডি",
+      "passport": "পাসপোর্ট ছবি"
+    },
+    "dataSource": "হকদার্শক থেকে প্রকল্পের ডেটা"
   }
-}
+}\n

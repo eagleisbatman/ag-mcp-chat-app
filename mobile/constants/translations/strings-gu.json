@@ -535,5 +535,70 @@
       "agriculturalImpact": "કૃષિ પર અસર"
     },
     "dataSource": "હવામાન ડેટા Tomorrow.io તરફથી"
+  },
+  "schemes": {
+    "title": "સરકારી યોજનાઓ",
+    "eligibility": "યોજના પાત્રતા",
+    "checkEligibility": "પાત્રતા તપાસો",
+    "screeningQuestions": "ચકાસણી પ્રશ્નો",
+    "answerQuestions": "તમારી પાત્રતા ચકાસવા માટે પ્રશ્નોના જવાબ આપો",
+    "eligibleSchemes": "પાત્ર યોજનાઓ",
+    "noSchemesFound": "તમારી પ્રોફાઇલ સાથે મેળ ખાતી કોઈ યોજના મળી નથી",
+    "journeyUrl": "એપ્લિકેશન લિંક",
+    "startApplication": "એપ્લિકેશન શરૂ કરો",
+    "schemeName": "યોજનાનું નામ",
+    "schemeDescription": "વર્ણન",
+    "benefits": "લાભો",
+    "eligibilityCriteria": "પાત્રતા માપદંડ",
+    "requiredDocuments": "જરૂરી દસ્તાવેજો",
+    "nextSteps": "આગળના પગલાં",
+    "totalSchemes": "કુલ યોજનાઓ",
+    "provider": "પ્રદાતા",
+    "haqdarshak": "હકદર્શક",
+    "knowYourSchemes": "તમારી યોજનાઓ જાણો",
+    "indiaOnly": "ફક્ત ભારતમાં ઉપલબ્ધ છે",
+    "questions": {
+      "gender": "જાતિ",
+      "age": "ઉંમર",
+      "maritalStatus": "વૈવાહિક સ્થિતિ",
+      "monthlyIncome": "માસિક ઘરની આવક",
+      "landOwnership": "જમીનની માલિકી",
+      "rationCardType": "રાશન કાર્ડ પ્રકાર",
+      "religion": "ધર્મ",
+      "casteCategory": "જાતિ વર્ગ",
+      "occupationalStatus": "વ્યવસાયિક સ્થિતિ",
+      "natureOfJob": "નોકરીનો પ્રકાર",
+      "personalIncome": "વ્યક્તિગત માસિક આવક"
+    },
+    "answers": {
+      "male": "પુરુષ",
+      "female": "સ્ત્રી",
+      "other": "અન્ય",
+      "married": "પરિણીત",
+      "unmarried": "અપરિણીત",
+      "widowed": "વિધવા",
+      "divorced": "છૂટાછેડા લીધેલ",
+      "separated": "વિભક્ત",
+      "farmer": "ખેડૂત",
+      "farmLaborer": "ખેત મજૂર",
+      "fisherman": "માછીમાર",
+      "animalHusbandry": "પશુપાલન",
+      "dairyFarmer": "ડેરી ખેડૂત",
+      "poultryFarmer": "મરઘાં ખેડૂત",
+      "landOwner": "જમીન માલિક",
+      "landless": "ભૂમિહીન",
+      "sharecropper": "ભાગ ખેડૂત"
+    },
+    "documents": {
+      "aadhaarCard": "આધાર કાર્ડ",
+      "bankPassbook": "બેંક પાસબુક",
+      "landRecords": "જમીન રેકોર્ડ",
+      "rationCard": "રાશન કાર્ડ",
+      "casteCertificate": "જાતિ પ્રમાણપત્ર",
+      "incomeCertificate": "આવક પ્રમાણપત્ર",
+      "voterID": "મતદાર આઈડી",
+      "passport": "પાસપોર્ટ ફોટો"
+    },
+    "dataSource": "હકદર્શક તરફથી યોજના ડેટા"
   }
-}
+}\n

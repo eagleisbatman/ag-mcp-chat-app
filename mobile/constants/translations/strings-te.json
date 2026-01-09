@@ -535,5 +535,70 @@
       "agriculturalImpact": "వ్యవసాయ ప్రభావం"
     },
     "dataSource": "Tomorrow.io నుండి వాతావరణ డేటా"
+  },
+  "schemes": {
+    "title": "ప్రభుత్వ పథకాలు",
+    "eligibility": "పథకం అర్హత",
+    "checkEligibility": "అర్హతను తనిఖీ చేయండి",
+    "screeningQuestions": "స్క్రీనింగ్ ప్రశ్నలు",
+    "answerQuestions": "మీ అర్హతను తనిఖీ చేయడానికి ప్రశ్నలకు సమాధానం ఇవ్వండి",
+    "eligibleSchemes": "అర్హత కలిగిన పథకాలు",
+    "noSchemesFound": "మీ ప్రొఫైల్‌కు సరిపోయే పథకాలు కనుగొనబడలేదు",
+    "journeyUrl": "అప్లికేషన్ లింక్",
+    "startApplication": "అప్లికేషన్ ప్రారంభించండి",
+    "schemeName": "పథకం పేరు",
+    "schemeDescription": "వివరణ",
+    "benefits": "ప్రయోజనాలు",
+    "eligibilityCriteria": "అర్హత ప్రమాణాలు",
+    "requiredDocuments": "అవసరమైన పత్రాలు",
+    "nextSteps": "తదుపరి చర్యలు",
+    "totalSchemes": "మొత్తం పథకాలు",
+    "provider": "ప్రొవైడర్",
+    "haqdarshak": "హక్‌దర్శక్",
+    "knowYourSchemes": "మీ పథకాలను తెలుసుకోండి",
+    "indiaOnly": "భారతదేశంలో మాత్రమే అందుబాటులో ఉంది",
+    "questions": {
+      "gender": "లింగం",
+      "age": "వయస్సు",
+      "maritalStatus": "వైవాహిక స్థితి",
+      "monthlyIncome": "నెలవారీ గృహ ఆదాయం",
+      "landOwnership": "భూమి యాజమాన్యం",
+      "rationCardType": "రేషన్ కార్డ్ రకం",
+      "religion": "మతం",
+      "casteCategory": "కుల వర్గం",
+      "occupationalStatus": "వృత్తిపరమైన స్థితి",
+      "natureOfJob": "ఉద్యోగం యొక్క స్వభావం",
+      "personalIncome": "వ్యక్తిగత నెలవారీ ఆదాయం"
+    },
+    "answers": {
+      "male": "మగ",
+      "female": "ఆడ",
+      "other": "ఇతర",
+      "married": "వివాహం అయింది",
+      "unmarried": "అవివాహితుడు",
+      "widowed": "విధవరాలు",
+      "divorced": "విడాకులు తీసుకున్నారు",
+      "separated": "విడిపోయారు",
+      "farmer": "రైతు",
+      "farmLaborer": "వ్యవసాయ కూలీ",
+      "fisherman": "చేపల వేటగాడు",
+      "animalHusbandry": "పశుసంవర్ధక",
+      "dairyFarmer": "పాడి రైతు",
+      "poultryFarmer": "కోళ్ల పెంపకం దారుడు",
+      "landOwner": "భూ యజమాని",
+      "landless": "భూమి లేని",
+      "sharecropper": "కౌలు రైతు"
+    },
+    "documents": {
+      "aadhaarCard": "ఆధార్ కార్డు",
+      "bankPassbook": "బ్యాంక్ పాస్‌బుక్",
+      "landRecords": "భూ రికార్డులు",
+      "rationCard": "రేషన్ కార్డు",
+      "casteCertificate": "కుల ధృవీకరణ పత్రం",
+      "incomeCertificate": "ఆదాయ ధృవీకరణ పత్రం",
+      "voterID": "ఓటరు ID",
+      "passport": "పాస్‌పోర్ట్ ఫోటో"
+    },
+    "dataSource": "హక్‌దర్శక్ నుండి పథకం డేటా"
   }
-}
+}\n

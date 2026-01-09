@@ -535,5 +535,70 @@
       "agriculturalImpact": "কৃষিৰ ওপৰত প্ৰভাৱ"
     },
     "dataSource": "Tomorrow.io ৰ পৰা বতৰৰ তথ্য"
+  },
+  "schemes": {
+    "title": "চৰকাৰী আঁচনিসমূহ",
+    "eligibility": "আঁচনিৰ যোগ্যতা",
+    "checkEligibility": "যোগ্যতা পৰীক্ষা কৰক",
+    "screeningQuestions": "স্ক্রীনিং প্রশ্নসমূহ",
+    "answerQuestions": "আপোনাৰ যোগ্যতা পৰীক্ষা কৰিবলৈ প্রশ্নসমূহৰ উত্তৰ দিয়ক",
+    "eligibleSchemes": "যোগ্য আঁচনিসমূহ",
+    "noSchemesFound": "আপোনাৰ প্রোফাইলৰ সৈতে মিল থকা কোনো আঁচনি পোৱা নগ'ল",
+    "journeyUrl": "আবেদনৰ লিংক",
+    "startApplication": "আবেদন আৰম্ভ কৰক",
+    "schemeName": "আঁচনিৰ নাম",
+    "schemeDescription": "বিৱৰণ",
+    "benefits": "সুবিধাসমূহ",
+    "eligibilityCriteria": "যোগ্যতাৰ মাপকাঠি",
+    "requiredDocuments": "প্রয়োজনীয় নথি-পত্র",
+    "nextSteps": "পৰৱৰ্তী পদক্ষেপসমূহ",
+    "totalSchemes": "মুঠ আঁচনি",
+    "provider": "যোগান ধৰোঁতা",
+    "haqdarshak": "হকদৰ্শক",
+    "knowYourSchemes": "আপোনাৰ আঁচনিসমূহ জানক",
+    "indiaOnly": "কেৱল ভাৰতত উপলব্ধ",
+    "questions": {
+      "gender": "লিংগ",
+      "age": "বয়স",
+      "maritalStatus": "বৈবাহিক স্থিতি",
+      "monthlyIncome": "মাহেকীয়া পাৰিবাৰিক আয়",
+      "landOwnership": "ভূমিৰ মালিকীস্বত্ব",
+      "rationCardType": "ৰেশ্যন কাৰ্ডৰ প্ৰকাৰ",
+      "religion": "ধৰ্ম",
+      "casteCategory": "জাতিৰ শ্ৰেণী",
+      "occupationalStatus": "বৃত্তিগত স্থিতি",
+      "natureOfJob": "কামৰ প্ৰকৃতি",
+      "personalIncome": "ব্যক্তিগত মাহেকীয়া আয়"
+    },
+    "answers": {
+      "male": "পুৰুষ",
+      "female": "মহিলা",
+      "other": "অন্যান্য",
+      "married": "বিবাহিত",
+      "unmarried": "অবিবাহিত",
+      "widowed": "বিধৱা",
+      "divorced": "বিবাহ বিচ্ছেদিত",
+      "separated": "পৃথকীকৃত",
+      "farmer": "কৃষক",
+      "farmLaborer": "কৃষি শ্রমিক",
+      "fisherman": "মাছুৱৈ",
+      "animalHusbandry": "পশু পালন",
+      "dairyFarmer": "গাখীৰৰ কৃষক",
+      "poultryFarmer": "পোল্ট্রি কৃষক",
+      "landOwner": "ভূমিৰ মালিক",
+      "landless": "ভূমিহীন",
+      "sharecropper": "ভাগৰ খেতিয়ক"
+    },
+    "documents": {
+      "aadhaarCard": "আধাৰ কাৰ্ড",
+      "bankPassbook": "বেংকৰ পাছবুক",
+      "landRecords": "ভূমিৰ ৰেকৰ্ড",
+      "rationCard": "ৰেচন কাৰ্ড",
+      "casteCertificate": "জাতিৰ প্ৰমাণপত্ৰ",
+      "incomeCertificate": "আয়ৰ প্ৰমাণপত্ৰ",
+      "voterID": "ভোটাৰ আইডি",
+      "passport": "পাচপ’ৰ্ট ফটো"
+    },
+    "dataSource": "হকদৰ্শকৰ পৰা আঁচনিৰ তথ্য"
   }
-}
+}\n

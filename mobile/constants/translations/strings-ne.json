@@ -535,5 +535,70 @@
       "agriculturalImpact": "कृषिमा असर"
     },
     "dataSource": "Tomorrow.io बाट मौसमको जानकारी"
+  },
+  "schemes": {
+    "title": "सरकारी योजनाहरू",
+    "eligibility": "योजनाको योग्यता",
+    "checkEligibility": "योग्यता जाँच गर्नुहोस्",
+    "screeningQuestions": "छनौट प्रश्नहरू",
+    "answerQuestions": "तपाईंको योग्यता जाँच गर्न प्रश्नहरूको उत्तर दिनुहोस्",
+    "eligibleSchemes": "योग्य योजनाहरू",
+    "noSchemesFound": "तपाईंको प्रोफाइलसँग मिल्दो कुनै योजना फेला परेन",
+    "journeyUrl": "आवेदन लिङ्क",
+    "startApplication": "आवेदन सुरु गर्नुहोस्",
+    "schemeName": "योजनाको नाम",
+    "schemeDescription": "विवरण",
+    "benefits": "लाभहरू",
+    "eligibilityCriteria": "योग्यता मापदण्ड",
+    "requiredDocuments": "आवश्यक कागजातहरू",
+    "nextSteps": "अर्को चरणहरू",
+    "totalSchemes": "कुल योजनाहरू",
+    "provider": "प्रदायक",
+    "haqdarshak": "हकदर्शक",
+    "knowYourSchemes": "आफ्नो योजनाहरू जान्नुहोस्",
+    "indiaOnly": "भारतमा मात्र उपलब्ध छ",
+    "questions": {
+      "gender": "लिङ्ग",
+      "age": "उमेर",
+      "maritalStatus": "वैवाहिक स्थिति",
+      "monthlyIncome": "मासिक घरायसी आय",
+      "landOwnership": "जग्गा स्वामित्व",
+      "rationCardType": "राशन कार्डको प्रकार",
+      "religion": "धर्म",
+      "casteCategory": "जाति श्रेणी",
+      "occupationalStatus": "व्यावसायिक स्थिति",
+      "natureOfJob": "कामको प्रकृति",
+      "personalIncome": "व्यक्तिगत मासिक आय"
+    },
+    "answers": {
+      "male": "पुरुष",
+      "female": "महिला",
+      "other": "अन्य",
+      "married": "विवाहित",
+      "unmarried": "अविवाहित",
+      "widowed": "विधवा",
+      "divorced": "तलाकप्राप्त",
+      "separated": "अलग",
+      "farmer": "किसान",
+      "farmLaborer": "कृषि मजदुर",
+      "fisherman": "माछा मार्ने",
+      "animalHusbandry": "पशुपालन",
+      "dairyFarmer": "दुग्ध किसान",
+      "poultryFarmer": "कुखुरापालक किसान",
+      "landOwner": "जग्गा मालिक",
+      "landless": "भूमिहीन",
+      "sharecropper": "अंशबण्डामा खेती गर्ने"
+    },
+    "documents": {
+      "aadhaarCard": "आधार कार्ड",
+      "bankPassbook": "बैंक पासबुक",
+      "landRecords": "भूमिको अभिलेख",
+      "rationCard": "राशन कार्ड",
+      "casteCertificate": "जाति प्रमाणपत्र",
+      "incomeCertificate": "आय प्रमाणपत्र",
+      "voterID": "मतदाता परिचय पत्र",
+      "passport": "पासपोर्ट फोटो"
+    },
+    "dataSource": "हकदर्शकबाट योजना डेटा"
   }
-}
+}\n

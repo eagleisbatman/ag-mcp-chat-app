@@ -535,5 +535,70 @@
       "agriculturalImpact": "ಕೃಷಿ ಪರಿಣಾಮ"
     },
     "dataSource": "ಹವಾಮಾನ ಮಾಹಿತಿ Tomorrow.io ನಿಂದ"
+  },
+  "schemes": {
+    "title": "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು",
+    "eligibility": "ಯೋಜನೆಯ ಅರ್ಹತೆ",
+    "checkEligibility": "ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಿ",
+    "screeningQuestions": "ಪರಿಶೀಲನಾ ಪ್ರಶ್ನೆಗಳು",
+    "answerQuestions": "ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಲು ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ",
+    "eligibleSchemes": "ಅರ್ಹ ಯೋಜನೆಗಳು",
+    "noSchemesFound": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್‌ಗೆ ಹೊಂದಾಣಿಕೆಯಾಗುವ ಯಾವುದೇ ಯೋಜನೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+    "journeyUrl": "ಅರ್ಜಿ ಲಿಂಕ್",
+    "startApplication": "ಅರ್ಜಿಯನ್ನು ಪ್ರಾರಂಭಿಸಿ",
+    "schemeName": "ಯೋಜನೆಯ ಹೆಸರು",
+    "schemeDescription": "ವಿವರಣೆ",
+    "benefits": "ಪ್ರಯೋಜನಗಳು",
+    "eligibilityCriteria": "ಅರ್ಹತಾ ಮಾನದಂಡ",
+    "requiredDocuments": "ಬೇಕಾಗುವ ದಾಖಲೆಗಳು",
+    "nextSteps": "ಮುಂದಿನ ಕ್ರಮಗಳು",
+    "totalSchemes": "ಒಟ್ಟು ಯೋಜನೆಗಳು",
+    "provider": "ಒದಗಿಸುವವರು",
+    "haqdarshak": "ಹಕ್‌ದಾರ್ಶಕ್",
+    "knowYourSchemes": "ನಿಮ್ಮ ಯೋಜನೆಗಳನ್ನು ತಿಳಿಯಿರಿ",
+    "indiaOnly": "ಭಾರತದಲ್ಲಿ ಮಾತ್ರ ಲಭ್ಯವಿದೆ",
+    "questions": {
+      "gender": "ಲಿಂಗ",
+      "age": "ವಯಸ್ಸು",
+      "maritalStatus": "ವೈವಾಹಿಕ ಸ್ಥಿತಿ",
+      "monthlyIncome": "ಮಾಸಿಕ ಮನೆ ಆದಾಯ",
+      "landOwnership": "ಭೂ ಮಾಲೀಕತ್ವ",
+      "rationCardType": "ಪಡಿತರ ಚೀಟಿ ಪ್ರಕಾರ",
+      "religion": "ಧರ್ಮ",
+      "casteCategory": "ಜಾತಿ ವರ್ಗ",
+      "occupationalStatus": "ಉದ್ಯೋಗ ಸ್ಥಿತಿ",
+      "natureOfJob": "ಕೆಲಸದ ಸ್ವರೂಪ",
+      "personalIncome": "ವೈಯಕ್ತಿಕ ಮಾಸಿಕ ಆದಾಯ"
+    },
+    "answers": {
+      "male": "ಪುರುಷ",
+      "female": "ಮಹಿಳೆ",
+      "other": "ಇತರೆ",
+      "married": "ವಿವಾಹಿತ",
+      "unmarried": "ಅವಿವಾಹಿತ",
+      "widowed": "ವಿಧವೆ",
+      "divorced": "ವಿಚ್ಛೇದಿತ",
+      "separated": "ಬೇರ್ಪಟ್ಟವರು",
+      "farmer": "ರೈತ",
+      "farmLaborer": "ಕೃಷಿ ಕಾರ್ಮಿಕ",
+      "fisherman": "ಮೀನುಗಾರ",
+      "animalHusbandry": "ಪ್ರಾಣಿ ಸಾಕಣೆ",
+      "dairyFarmer": "ಡೈರಿ ರೈತ",
+      "poultryFarmer": "ಕೋಳಿ ರೈತ",
+      "landOwner": "ಭೂಮಾಲೀಕ",
+      "landless": "ಭೂ ರಹಿತ",
+      "sharecropper": "ಪಾಲುದಾರ"
+    },
+    "documents": {
+      "aadhaarCard": "ಆಧಾರ್ ಕಾರ್ಡ್",
+      "bankPassbook": "ಬ್ಯಾಂಕ್ ಪಾಸ್ಬುಕ್",
+      "landRecords": "ಭೂ ದಾಖಲೆಗಳು",
+      "rationCard": "ಪಡಿತರ ಚೀಟಿ",
+      "casteCertificate": "ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ",
+      "incomeCertificate": "ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ",
+      "voterID": "ಮತದಾರರ ಗುರುತಿನ ಚೀಟಿ",
+      "passport": "ಪಾಸ್ಪೋರ್ಟ್ ಫೋಟೋ"
+    },
+    "dataSource": "ಹಕ್‌ದಾರ್ಶಕ್‌ನಿಂದ ಯೋಜನಾ ಡೇಟಾ"
   }
-}
+}\n

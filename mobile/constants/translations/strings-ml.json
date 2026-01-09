@@ -535,5 +535,70 @@
       "agriculturalImpact": "കാർഷിക പ്രഭാവം"
     },
     "dataSource": "കാലാവസ്ഥാ വിവരങ്ങൾ Tomorrow.io-യിൽ നിന്ന്"
+  },
+  "schemes": {
+    "title": "ഗവൺമെന്റ് പദ്ധതികൾ",
+    "eligibility": "പദ്ധതിയുടെ യോഗ്യത",
+    "checkEligibility": "യോഗ്യത പരിശോധിക്കുക",
+    "screeningQuestions": "സ്ക്രീനിംഗ് ചോദ്യങ്ങൾ",
+    "answerQuestions": "നിങ്ങളുടെ യോഗ്യത പരിശോധിക്കാൻ ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകുക",
+    "eligibleSchemes": "യോഗ്യമായ പദ്ധതികൾ",
+    "noSchemesFound": "നിങ്ങളുടെ പ്രൊഫൈലുമായി പൊരുത്തപ്പെടുന്ന പദ്ധതികളൊന്നും കണ്ടെത്തിയില്ല",
+    "journeyUrl": "അപേക്ഷാ ലിങ്ക്",
+    "startApplication": "അപേക്ഷ ആരംഭിക്കുക",
+    "schemeName": "പദ്ധതിയുടെ പേര്",
+    "schemeDescription": "വിവരണം",
+    "benefits": "ആനുകൂല്യങ്ങൾ",
+    "eligibilityCriteria": "യോഗ്യതാ മാനദണ്ഡം",
+    "requiredDocuments": "ആവശ്യമായ രേഖകൾ",
+    "nextSteps": "തുടർന്നുള്ള നടപടികൾ",
+    "totalSchemes": "ആകെ പദ്ധതികൾ",
+    "provider": "ദാതാവ്",
+    "haqdarshak": "ഹഖ്ദാർശക്",
+    "knowYourSchemes": "നിങ്ങളുടെ പദ്ധതികൾ അറിയുക",
+    "indiaOnly": "ഇന്ത്യയിൽ മാത്രം ലഭ്യമാണ്",
+    "questions": {
+      "gender": "ലിംഗം",
+      "age": "പ്രായം",
+      "maritalStatus": "വിവാഹ നില",
+      "monthlyIncome": "പ്രതിമാസ ഗാർഹിക വരുമാനം",
+      "landOwnership": "ഭൂമിയുടെ ഉടമസ്ഥാവകാശം",
+      "rationCardType": "റേഷൻ കാർഡ് തരം",
+      "religion": "മതം",
+      "casteCategory": "ജാതി വിഭാഗം",
+      "occupationalStatus": "തൊഴിൽപരമായ സ്ഥിതി",
+      "natureOfJob": "ജോലിയുടെ സ്വഭാവം",
+      "personalIncome": "വ്യക്തിഗത പ്രതിമാസ വരുമാനം"
+    },
+    "answers": {
+      "male": "പുരുഷൻ",
+      "female": "സ്ത്രീ",
+      "other": "മറ്റുള്ളവ",
+      "married": "വിവാഹിതൻ",
+      "unmarried": "അവിവാഹിതൻ",
+      "widowed": "വിധവ",
+      "divorced": "വിവാഹമോചിതൻ",
+      "separated": "വേർപിരിഞ്ഞവർ",
+      "farmer": "കർഷകൻ",
+      "farmLaborer": "കൃഷി തൊഴിലാളി",
+      "fisherman": "മത്സ്യത്തൊഴിലാളി",
+      "animalHusbandry": "മൃഗസംരക്ഷണം",
+      "dairyFarmer": "ക്ഷീര കർഷകൻ",
+      "poultryFarmer": " poultry കർഷകൻ",
+      "landOwner": "ഭൂവുടമ",
+      "landless": "ഭൂമിയില്ലാത്തവൻ",
+      "sharecropper": "പാട്ടത്തിനെടുത്ത് കൃഷി ചെയ്യുന്നയാൾ"
+    },
+    "documents": {
+      "aadhaarCard": "ആധാർ കാർഡ്",
+      "bankPassbook": "ബാങ്ക് പാസ്ബുക്ക്",
+      "landRecords": "ഭൂമി രേഖകൾ",
+      "rationCard": "റേഷൻ കാർഡ്",
+      "casteCertificate": "ജാതി സർട്ടിഫിക്കറ്റ്",
+      "incomeCertificate": "വരുമാന സർട്ടിഫിക്കറ്റ്",
+      "voterID": "വോട്ടർ ഐഡി",
+      "passport": "പാസ്പോർട്ട് ഫോട്ടോ"
+    },
+    "dataSource": "ഹഖ്ദാർശകിൽ നിന്നുള്ള സ്കീം ഡാറ്റ"
   }
-}
+}\n

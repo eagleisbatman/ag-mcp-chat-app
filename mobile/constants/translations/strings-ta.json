@@ -535,5 +535,70 @@
       "agriculturalImpact": "வேளாண்மைக்கான தாக்கம்"
     },
     "dataSource": "வானிலை தரவு Tomorrow.io இலிருந்து"
+  },
+  "schemes": {
+    "title": "அரசு திட்டங்கள்",
+    "eligibility": "திட்ட தகுதி",
+    "checkEligibility": "தகுதியை சரிபார்க்கவும்",
+    "screeningQuestions": "திரையிடல் கேள்விகள்",
+    "answerQuestions": "உங்கள் தகுதியை சரிபார்க்க கேள்விகளுக்கு பதிலளிக்கவும்",
+    "eligibleSchemes": "தகுதியான திட்டங்கள்",
+    "noSchemesFound": "உங்கள் சுயவிவரத்துடன் பொருந்தும் திட்டங்கள் எதுவும் இல்லை",
+    "journeyUrl": "விண்ணப்ப இணைப்பு",
+    "startApplication": "விண்ணப்பத்தை தொடங்கவும்",
+    "schemeName": "திட்டத்தின் பெயர்",
+    "schemeDescription": "விளக்கம்",
+    "benefits": "நன்மைகள்",
+    "eligibilityCriteria": "தகுதி வரம்புகள்",
+    "requiredDocuments": "தேவையான ஆவணங்கள்",
+    "nextSteps": "அடுத்த கட்டங்கள்",
+    "totalSchemes": "மொத்த திட்டங்கள்",
+    "provider": "வழங்குநர்",
+    "haqdarshak": "ஹக்தார்ஷக்",
+    "knowYourSchemes": "உங்கள் திட்டங்களை அறிந்து கொள்ளுங்கள்",
+    "indiaOnly": "இந்தியாவில் மட்டும் கிடைக்கும்",
+    "questions": {
+      "gender": "பாலினம்",
+      "age": "வயது",
+      "maritalStatus": "திருமண நிலை",
+      "monthlyIncome": "மாதாந்திர வீட்டு வருமானம்",
+      "landOwnership": "நில உடைமை",
+      "rationCardType": "ரேஷன் கார்டு வகை",
+      "religion": "மதம்",
+      "casteCategory": "சாதிப் பிரிவு",
+      "occupationalStatus": "தொழில் நிலை",
+      "natureOfJob": "வேலையின் தன்மை",
+      "personalIncome": "தனிப்பட்ட மாதாந்திர வருமானம்"
+    },
+    "answers": {
+      "male": "ஆண்",
+      "female": "பெண்",
+      "other": "மற்றவை",
+      "married": "திருமணமானவர்",
+      "unmarried": "திருமணமாகாதவர்",
+      "widowed": "விதவை",
+      "divorced": "விவாகரத்து பெற்றவர்",
+      "separated": "பிரிந்தவர்",
+      "farmer": "விவசாயி",
+      "farmLaborer": "விவசாயத் தொழிலாளி",
+      "fisherman": "மீனவர்",
+      "animalHusbandry": "கால்நடை வளர்ப்பு",
+      "dairyFarmer": "பால் பண்ணையாளர்",
+      "poultryFarmer": "கோழிப் பண்ணையாளர்",
+      "landOwner": "நில உரிமையாளர்",
+      "landless": "நிலமற்றவர்",
+      "sharecropper": "பங்குதாரர்"
+    },
+    "documents": {
+      "aadhaarCard": "ஆதார் அட்டை",
+      "bankPassbook": "வங்கி கணக்கு புத்தகம்",
+      "landRecords": "நில ஆவணங்கள்",
+      "rationCard": "ரேஷன் கார்டு",
+      "casteCertificate": "சாதி சான்றிதழ்",
+      "incomeCertificate": "வருமான சான்றிதழ்",
+      "voterID": "வாக்காளர் அடையாள அட்டை",
+      "passport": "பாஸ்போர்ட் புகைப்படம்"
+    },
+    "dataSource": "ஹக்தார்ஷக்கிலிருந்து திட்டத் தரவு"
   }
-}
+}\n

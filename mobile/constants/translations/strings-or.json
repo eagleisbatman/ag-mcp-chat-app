@@ -535,5 +535,70 @@
       "agriculturalImpact": "କୃଷି ପ୍ରଭାବ"
     },
     "dataSource": "Tomorrow.io ରୁ ପାଣିପାଗ ତଥ୍ୟ"
+  },
+  "schemes": {
+    "title": "ସରକାରୀ ଯୋଜନା",
+    "eligibility": "ଯୋଜନା ଯୋଗ୍ୟତା",
+    "checkEligibility": "ଯୋଗ୍ୟତା ଯାଞ୍ଚ କରନ୍ତୁ",
+    "screeningQuestions": "ସ୍କ୍ରିନିଂ ପ୍ରଶ୍ନ",
+    "answerQuestions": "ଆପଣଙ୍କ ଯୋଗ୍ୟତା ଯାଞ୍ଚ କରିବାକୁ ପ୍ରଶ୍ନଗୁଡ଼ିକର ଉତ୍ତର ଦିଅନ୍ତୁ",
+    "eligibleSchemes": "ଯୋଗ୍ୟ ଯୋଜନା",
+    "noSchemesFound": "ଆପଣଙ୍କ ପ୍ରୋଫାଇଲ୍ ସହିତ ମେଳ ଖାଉଥିବା କୌଣସି ଯୋଜନା ମିଳିଲା ନାହିଁ",
+    "journeyUrl": "ଆବେଦନ ଲିଙ୍କ୍",
+    "startApplication": "ଆବେଦନ ଆରମ୍ଭ କରନ୍ତୁ",
+    "schemeName": "ଯୋଜନା ନାମ",
+    "schemeDescription": "ବର୍ଣ୍ଣନା",
+    "benefits": "ଲାଭ",
+    "eligibilityCriteria": "ଯୋଗ୍ୟତା ମାନଦଣ୍ଡ",
+    "requiredDocuments": "ଆବଶ୍ୟକୀୟ ଡକ୍ୟୁମେଣ୍ଟ",
+    "nextSteps": "ପରବର୍ତ୍ତୀ ପଦକ୍ଷେପ",
+    "totalSchemes": "ମୋଟ ଯୋଜନା",
+    "provider": "ପ୍ରଦାନକାରୀ",
+    "haqdarshak": "ହକଦର୍ଶକ",
+    "knowYourSchemes": "ଆପଣଙ୍କ ଯୋଜନା ବିଷୟରେ ଜାଣନ୍ତୁ",
+    "indiaOnly": "କେବଳ ଭାରତରେ ଉପଲବ୍ଧ",
+    "questions": {
+      "gender": "ଲିଙ୍ଗ",
+      "age": "ବୟସ",
+      "maritalStatus": "ବୈବାହିକ ସ୍ଥିତି",
+      "monthlyIncome": "ମାସିକ ଘରୋଇ ଆୟ",
+      "landOwnership": "ଜମି ମାଲିକାନା",
+      "rationCardType": "ରାସନ କାର୍ଡ ପ୍ରକାର",
+      "religion": "ଧର୍ମ",
+      "casteCategory": "ଜାତି ବର୍ଗ",
+      "occupationalStatus": "ବୃତ୍ତିଗତ ସ୍ଥିତି",
+      "natureOfJob": "ଚାକିରିର ପ୍ରକୃତି",
+      "personalIncome": "ବ୍ୟକ୍ତିଗତ ମାସିକ ଆୟ"
+    },
+    "answers": {
+      "male": "ପୁରୁଷ",
+      "female": "ମହିଳା",
+      "other": "ଅନ୍ୟ",
+      "married": "ବିବାହିତ",
+      "unmarried": "ଅବିବାହିତ",
+      "widowed": "ବିଧବା",
+      "divorced": "ଛାଡପତ୍ରପ୍ରାପ୍ତ",
+      "separated": "ବିଚ୍ଛିନ୍ନ",
+      "farmer": "କୃଷକ",
+      "farmLaborer": "କୃଷି ଶ୍ରମିକ",
+      "fisherman": "ମତ୍ସ୍ୟଜୀବୀ",
+      "animalHusbandry": "ପଶୁପାଳନ",
+      "dairyFarmer": "ଡେରୀ ଚାଷୀ",
+      "poultryFarmer": "କୁକୁଡ଼ା ଚାଷୀ",
+      "landOwner": "ଜମି ମାଲିକ",
+      "landless": "ଜମିହୀନ",
+      "sharecropper": "ଭାଗଚାଷୀ"
+    },
+    "documents": {
+      "aadhaarCard": "ଆଧାର କାର୍ଡ",
+      "bankPassbook": "ବ୍ୟାଙ୍କ ପାସବୁକ୍",
+      "landRecords": "ଜମି ରେକର୍ଡ",
+      "rationCard": "ରାସନ କାର୍ଡ",
+      "casteCertificate": "ଜାତି ପ୍ରମାଣପତ୍ର",
+      "incomeCertificate": "ଆୟ ପ୍ରମାଣପତ୍ର",
+      "voterID": "ଭୋଟର ପରିଚୟ ପତ୍ର",
+      "passport": "ପାସପୋର୍ଟ ଫଟୋ"
+    },
+    "dataSource": "ହକଦର୍ଶକଙ୍କ ଠାରୁ ଯୋଜନା ତଥ୍ୟ"
   }
-}
+}\n
