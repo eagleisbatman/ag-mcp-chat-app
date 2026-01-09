@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { ActivityIndicator, View, StyleSheet, Animated } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
@@ -8,14 +8,21 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AppProvider, useApp } from './contexts/AppContext';
 import { ToastProvider, useToast } from './contexts/ToastContext';
+// OneSignal notifications disabled for now - uncomment when ready
+// import { NotificationProvider, useNotifications } from './contexts/NotificationContext';
 import OfflineIndicator from './components/OfflineIndicator';
 import ErrorBoundary from './components/ErrorBoundary';
+// import NotificationHandler from './components/notifications/NotificationHandler';
 
 // Screens
 import WelcomeScreen from './screens/WelcomeScreen';
 import LocationScreen from './screens/LocationScreen';
 import LanguageScreen from './screens/LanguageScreen';
+// HomeScreen disabled - uses content API that's not deployed yet
+// import HomeScreen from './screens/HomeScreen';
 import ChatScreen from './screens/ChatScreen';
+// ContentDetailScreen disabled - uses content API that's not deployed yet
+// import ContentDetailScreen from './screens/ContentDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import LanguageSelectScreen from './screens/LanguageSelectScreen';
 import HistoryScreen from './screens/HistoryScreen';
@@ -62,6 +69,9 @@ function SyncErrorWatcher() {
   return null;
 }
 
+// OneSignal notifications disabled for now - uncomment when ready
+// function NotificationRegistration() { ... }
+
 function AppNavigator() {
   const { isLoading, onboardingComplete, theme, isDark } = useApp();
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
@@ -90,8 +100,12 @@ function AppNavigator() {
       <SystemBars style={isDark ? 'light' : 'dark'} />
       <OfflineIndicator />
       <SyncErrorWatcher />
+      {/* OneSignal notifications disabled for now */}
+      {/* <NotificationRegistration /> */}
       <NavigationContainer>
         {onboardingComplete ? <MainStack /> : <OnboardingStack />}
+        {/* NotificationHandler disabled for now */}
+        {/* {onboardingComplete && <NotificationHandler />} */}
       </NavigationContainer>
     </Animated.View>
   );
@@ -103,9 +117,12 @@ export default function App() {
       <KeyboardProvider>
         <SafeAreaProvider>
           <AppProvider>
-            <ToastProvider>
-              <AppNavigator />
-            </ToastProvider>
+            {/* NotificationProvider disabled for now - uncomment when OneSignal is set up */}
+            {/* <NotificationProvider> */}
+              <ToastProvider>
+                <AppNavigator />
+              </ToastProvider>
+            {/* </NotificationProvider> */}
           </AppProvider>
         </SafeAreaProvider>
       </KeyboardProvider>

@@ -13,6 +13,8 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import TypingIndicator from '../components/ui/TypingIndicator';
+import WeatherWidget from '../components/weather/WeatherWidget';
+import { weatherService } from '../services/weather';
 import { t } from '../constants/strings';
 
 export default function ChatScreen({ navigation, route }) {
@@ -33,6 +35,13 @@ export default function ChatScreen({ navigation, route }) {
     transcribeAudioForInput, uploadAudioInBackground,
     startNewSession,
   } = useChat(sessionId);
+
+  // ===========================================
+  // WEATHER WIDGET STATE
+  // ===========================================
+  const [weatherData, setWeatherData] = useState(null);
+  const [weatherLoading, setWeatherLoading] = useState(false);
+  const [weatherError, setWeatherError] = useState(false);
 
   // ===========================================
   // SCROLL BEHAVIOR STATE & REFS
@@ -60,6 +69,43 @@ export default function ChatScreen({ navigation, route }) {
       lastUserMessageIdRef.current = null;
     }
   }, [isNewSession, startNewSession]);
+
+  // ===========================================
+  // FETCH WEATHER DATA
+  // ===========================================
+  useEffect(() => {
+    const fetchWeather = async () => {
+      if (!location?.latitude || !location?.longitude) {
+        return;
+      }
+
+      setWeatherLoading(true);
+      setWeatherError(false);
+
+      try {
+        const data = await weatherService.getCurrentAndForecast(
+          location.latitude,
+          location.longitude,
+          language || 'en'
+        );
+        // Use app's location name instead of AccuWeather's
+        if (locationDetails?.displayName) {
+          data.location = {
+            ...data.location,
+            city: locationDetails.displayName,
+          };
+        }
+        setWeatherData(data);
+      } catch (error) {
+        console.error('[Weather] Failed to fetch weather:', error);
+        setWeatherError(true); // Hide widget on error
+      } finally {
+        setWeatherLoading(false);
+      }
+    };
+
+    fetchWeather();
+  }, [location?.latitude, location?.longitude, language, locationDetails?.displayName]);
 
   // ===========================================
   // MESSAGE HEIGHT TRACKING
@@ -409,6 +455,16 @@ export default function ChatScreen({ navigation, route }) {
             ListHeaderComponent={isTyping ? (
               <TypingIndicator text={thinkingText || t('chat.thinking')} />
             ) : null}
+
+            // Weather widget (ListFooterComponent appears at the top in inverted mode)
+            // On error, widget returns null and welcome message shows at top
+            ListFooterComponent={
+              <WeatherWidget
+                data={weatherData}
+                loading={weatherLoading}
+                error={weatherError}
+              />
+            }
           />
         )}
 
