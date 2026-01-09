@@ -382,7 +382,16 @@
     "tipWaitRetry": "Wait a moment and retry",
     "retry": "Retry",
     "tryAgain": "Try Again",
-    "takeBetterPhoto": "Take Better Photo"
+    "takeBetterPhoto": "Take Better Photo",
+    "prevention": "Prevention",
+    "cause": "Cause",
+    "scientificName": "Scientific Name",
+    "likelihood": "Likelihood",
+    "affectedCrops": "Affected Crops",
+    "pathogenType": "Pathogen Type",
+    "disease": "Disease",
+    "recommendations": "Recommendations",
+    "analyzedViaPlantix": "Analyzed via Plantix"
   },
   "a11y": {
     "startNewChat": "Start a new chat",
