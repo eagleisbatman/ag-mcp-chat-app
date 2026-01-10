@@ -157,7 +157,7 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
                 <View style={[styles.statBadge, { backgroundColor: theme.info + '20' }]}>
                   <Ionicons name="thermometer-outline" size={14} color={theme.info} />
                   <Text style={[styles.statText, { color: theme.info }]}>
-                    {t('weather.humidity') || 'Humidity'}: {Math.round(current.humidity)}%
+                    {Math.round(current.humidity)}%
                   </Text>
                 </View>
               )}
@@ -165,7 +165,7 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
                 <View style={[styles.statBadge, { backgroundColor: theme.accent + '20' }]}>
                   <Ionicons name="flag-outline" size={14} color={theme.accent} />
                   <Text style={[styles.statText, { color: theme.accent }]}>
-                    {t('weather.wind') || 'Wind'}: {Math.round(current.windSpeed)} {t('weather.windUnit') || 'km/h'}
+                    {Math.round(current.windSpeed)} {t('weather.windUnit') || 'km/h'}
                   </Text>
                 </View>
               )}
