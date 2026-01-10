@@ -5,12 +5,16 @@ import {
   StyleSheet,
   ScrollView,
   Animated,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import { t } from '../../constants/strings';
 import WeatherIcon from './WeatherIcon';
+
+// Tomorrow.io "Powered by" logo
+const TOMORROW_IO_LOGO = require('../../assets/logos/Powered_by_Tomorrow-Black.png');
 
 /**
  * Skeleton placeholder with pulse animation
@@ -133,7 +137,7 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
       <View style={styles.currentRow}>
         {/* Left: Icon + Temperature */}
         <View style={styles.tempSection}>
-          <WeatherIcon code={current?.weatherIcon} size={48} />
+          <WeatherIcon code={current?.weatherIcon} size={48} provider={provider} />
           <Text style={[styles.temperature, { color: theme.text }]}>
             {Math.round(current.temperature)}°
           </Text>
@@ -193,7 +197,7 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
                     ? (t('weather.today') || 'Today')
                     : getDayName(day.date)}
                 </Text>
-                <WeatherIcon code={day.dayIcon} size={32} />
+                <WeatherIcon code={day.dayIcon} size={32} provider={provider} />
                 <Text style={[styles.forecastTemp, { color: theme.text }]}>
                   {Math.round(day.tempMax)}°
                 </Text>
@@ -214,9 +218,17 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
       {/* Provider attribution */}
       {providerName && (
         <View style={[styles.providerRow, { borderTopColor: theme.surfaceVariant }]}>
-          <Text style={[styles.providerText, { color: theme.textMuted }]}>
-            {t('weather.dataFrom') || 'Data from'} {providerName}
-          </Text>
+          {provider === 'tomorrow-io' ? (
+            <Image
+              source={TOMORROW_IO_LOGO}
+              style={styles.poweredByLogo}
+              resizeMode="contain"
+            />
+          ) : (
+            <Text style={[styles.providerText, { color: theme.textMuted }]}>
+              {t('weather.dataFrom') || 'Data from'} {providerName}
+            </Text>
+          )}
         </View>
       )}
     </View>
@@ -430,6 +442,10 @@ const styles = StyleSheet.create({
   providerText: {
     fontSize: 10,
     fontWeight: TYPOGRAPHY.weights.medium,
+  },
+  poweredByLogo: {
+    height: 16,
+    width: 100,
   },
 });
 
