@@ -324,7 +324,11 @@
       "wheat": "கோதுமை",
       "maize": "மக்காச்சோளம்",
       "beans": "பயறுகள்"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "இணைய இணைப்பு இல்லை",
@@ -534,7 +538,32 @@
       "sprayWindows": "தெளிப்பு நேரம்",
       "agriculturalImpact": "வேளாண்மைக்கான தாக்கம்"
     },
-    "dataSource": "வானிலை தரவு Tomorrow.io இலிருந்து"
+    "dataSource": "வானிலை தரவு Tomorrow.io இலிருந்து",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   },
   "schemes": {
     "title": "அரசு திட்டங்கள்",
@@ -601,4 +630,4 @@
     },
     "dataSource": "ஹக்தார்ஷக்கிலிருந்து திட்டத் தரவு"
   }
-}\n
+}

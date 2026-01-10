@@ -324,7 +324,11 @@
       "wheat": "ઘઉં",
       "maize": "મકાઈ",
       "beans": "કઠોળ"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "ઇન્ટરનેટ નથી",
@@ -534,7 +538,32 @@
       "sprayWindows": "છંટકાવના સમયગાળા",
       "agriculturalImpact": "કૃષિ પર અસર"
     },
-    "dataSource": "હવામાન ડેટા Tomorrow.io તરફથી"
+    "dataSource": "હવામાન ડેટા Tomorrow.io તરફથી",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   },
   "schemes": {
     "title": "સરકારી યોજનાઓ",
@@ -601,4 +630,4 @@
     },
     "dataSource": "હકદર્શક તરફથી યોજના ડેટા"
   }
-}\n
+}

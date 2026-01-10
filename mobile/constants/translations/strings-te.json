@@ -324,7 +324,11 @@
       "wheat": "గోధుమ",
       "maize": "మొక్కజొన్న",
       "beans": "బీన్స్"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "ఇంటర్నెట్ లేదు",
@@ -534,7 +538,32 @@
       "sprayWindows": "పిచికారీ సమయాలు",
       "agriculturalImpact": "వ్యవసాయ ప్రభావం"
     },
-    "dataSource": "Tomorrow.io నుండి వాతావరణ డేటా"
+    "dataSource": "Tomorrow.io నుండి వాతావరణ డేటా",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   },
   "schemes": {
     "title": "ప్రభుత్వ పథకాలు",
@@ -601,4 +630,4 @@
     },
     "dataSource": "హక్‌దర్శక్ నుండి పథకం డేటా"
   }
-}\n
+}

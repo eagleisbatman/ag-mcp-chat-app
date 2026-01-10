@@ -324,7 +324,11 @@
       "wheat": "ଗହମ",
       "maize": "ମକା",
       "beans": "ଡାଲି"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "ଇଣ୍ଟରନେଟ୍ ନାହିଁ",
@@ -534,7 +538,32 @@
       "sprayWindows": "ସ୍ପ୍ରେ ପାଇଁ ସମୟ",
       "agriculturalImpact": "କୃଷି ପ୍ରଭାବ"
     },
-    "dataSource": "Tomorrow.io ରୁ ପାଣିପାଗ ତଥ୍ୟ"
+    "dataSource": "Tomorrow.io ରୁ ପାଣିପାଗ ତଥ୍ୟ",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   },
   "schemes": {
     "title": "ସରକାରୀ ଯୋଜନା",
@@ -601,4 +630,4 @@
     },
     "dataSource": "ହକଦର୍ଶକଙ୍କ ଠାରୁ ଯୋଜନା ତଥ୍ୟ"
   }
-}\n
+}

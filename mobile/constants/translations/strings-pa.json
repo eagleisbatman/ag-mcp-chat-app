@@ -324,7 +324,11 @@
       "wheat": "ਕਣਕ",
       "maize": "ਮੱਕੀ",
       "beans": "ਫਲ਼ੀਆਂ"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "ਇੰਟਰਨੈੱਟ ਨਹੀਂ",
@@ -534,7 +538,32 @@
       "sprayWindows": "ਸਪਰੇਅ ਦੇ ਸਮੇਂ",
       "agriculturalImpact": "ਖੇਤੀ 'ਤੇ ਪ੍ਰਭਾਵ"
     },
-    "dataSource": "Tomorrow.io ਤੋਂ ਮੌਸਮ ਡਾਟਾ"
+    "dataSource": "Tomorrow.io ਤੋਂ ਮੌਸਮ ਡਾਟਾ",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   },
   "schemes": {
     "title": "ਸਰਕਾਰੀ ਸਕੀਮਾਂ",
@@ -601,4 +630,4 @@
     },
     "dataSource": "ਹੱਕਦਾਰਸ਼ਕ ਤੋਂ ਸਕੀਮ ਡਾਟਾ"
   }
-}\n
+}

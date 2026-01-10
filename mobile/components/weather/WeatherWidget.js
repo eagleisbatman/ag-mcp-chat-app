@@ -58,8 +58,17 @@ const SkeletonBox = ({ width, height, style }) => {
  * WeatherWidget - Compact weather card with current conditions and forecast strip
  * Location is shown in header, so not duplicated here
  */
-const WeatherWidget = ({ data, loading, error }) => {
+// Provider display names
+const PROVIDER_NAMES = {
+  'accuweather': 'AccuWeather',
+  'tomorrow-io': 'Tomorrow.io',
+  'gap-weather': 'GAP Weather',
+  'weatherapi': 'WeatherAPI',
+};
+
+const WeatherWidget = ({ data, loading, error, provider }) => {
   const { theme } = useApp();
+  const providerName = PROVIDER_NAMES[provider] || provider;
 
   // Don't render if there's an error - let welcome message show instead
   if (error) {
@@ -134,7 +143,7 @@ const WeatherWidget = ({ data, loading, error }) => {
         <View style={styles.infoSection}>
           {current?.weatherText && (
             <Text style={[styles.conditions, { color: theme.text }]} numberOfLines={1}>
-              {current.weatherText}
+              {getTranslatedWeatherText(current.weatherText)}
             </Text>
           )}
 
@@ -201,6 +210,15 @@ const WeatherWidget = ({ data, loading, error }) => {
           })}
         </ScrollView>
       )}
+
+      {/* Provider attribution */}
+      {providerName && (
+        <View style={[styles.providerRow, { borderTopColor: theme.surfaceVariant }]}>
+          <Text style={[styles.providerText, { color: theme.textMuted }]}>
+            {t('weather.dataFrom') || 'Data from'} {providerName}
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -217,6 +235,91 @@ const DAY_KEYS = [
   'weather.dayFri',
   'weather.daySat',
 ];
+
+/**
+ * Map API weather text to translation key
+ * Handles common variations from AccuWeather/Tomorrow.io
+ */
+const WEATHER_TEXT_MAP = {
+  // Clear conditions
+  'clear': 'clear',
+  'sunny': 'clear',
+  'clear sky': 'clear',
+  'mostly clear': 'mostlyClear',
+  'fair': 'mostlyClear',
+
+  // Cloudy conditions
+  'cloudy': 'cloudy',
+  'overcast': 'cloudy',
+  'partly cloudy': 'partlyCloudy',
+  'partly sunny': 'partlyCloudy',
+  'intermittent clouds': 'partlyCloudy',
+  'mostly cloudy': 'mostlyCloudy',
+  'dreary': 'mostlyCloudy',
+
+  // Fog
+  'fog': 'fog',
+  'foggy': 'fog',
+  'haze': 'lightFog',
+  'mist': 'lightFog',
+  'light fog': 'lightFog',
+
+  // Rain
+  'rain': 'rain',
+  'rainy': 'rain',
+  'showers': 'rain',
+  'drizzle': 'drizzle',
+  'light rain': 'lightRain',
+  'light drizzle': 'drizzle',
+  'heavy rain': 'heavyRain',
+  'rain heavy': 'heavyRain',
+
+  // Snow
+  'snow': 'snow',
+  'snowy': 'snow',
+  'flurries': 'flurries',
+  'light snow': 'lightSnow',
+  'heavy snow': 'heavySnow',
+
+  // Freezing conditions
+  'freezing rain': 'freezingRain',
+  'freezing drizzle': 'freezingDrizzle',
+  'light freezing rain': 'lightFreezingRain',
+  'heavy freezing rain': 'heavyFreezingRain',
+  'ice pellets': 'icePellets',
+  'sleet': 'icePellets',
+  'light ice pellets': 'lightIcePellets',
+  'heavy ice pellets': 'heavyIcePellets',
+
+  // Storms
+  'thunderstorm': 'thunderstorm',
+  'thunderstorms': 'thunderstorm',
+  't-storms': 'thunderstorm',
+  'thunder': 'thunderstorm',
+};
+
+/**
+ * Get translated weather condition text
+ * @param {string} weatherText - Original weather text from API
+ * @returns {string} - Translated weather condition
+ */
+const getTranslatedWeatherText = (weatherText) => {
+  if (!weatherText) return '';
+
+  const normalizedText = weatherText.toLowerCase().trim();
+  const translationKey = WEATHER_TEXT_MAP[normalizedText];
+
+  if (translationKey) {
+    const translated = t(`weather.conditions.${translationKey}`);
+    // If translation exists and is different from the key, use it
+    if (translated && !translated.startsWith('weather.conditions.')) {
+      return translated;
+    }
+  }
+
+  // Fallback: return original text
+  return weatherText;
+};
 
 /**
  * Get translated day name from date string
@@ -317,6 +420,16 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: TYPOGRAPHY.weights.medium,
     marginLeft: 2,
+  },
+  providerRow: {
+    borderTopWidth: 1,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.xs,
+    alignItems: 'flex-end',
+  },
+  providerText: {
+    fontSize: 10,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
 });
 

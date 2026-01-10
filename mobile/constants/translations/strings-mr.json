@@ -324,7 +324,11 @@
       "wheat": "गहू",
       "maize": "मका",
       "beans": "शेंगा"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "इंटरनेट नाही",
@@ -534,7 +538,32 @@
       "sprayWindows": "फवारणीसाठी योग्य वेळ",
       "agriculturalImpact": "शेतीवरील परिणाम"
     },
-    "dataSource": "Tomorrow.io कडून हवामानाची माहिती"
+    "dataSource": "Tomorrow.io कडून हवामानाची माहिती",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   },
   "schemes": {
     "title": "सरकारी योजना",
@@ -601,4 +630,4 @@
     },
     "dataSource": "हकदर्शककडील योजनेचा डेटा"
   }
-}\n
+}

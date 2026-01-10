@@ -324,7 +324,11 @@
       "wheat": "ဂျုံ",
       "maize": "ပြောင်း",
       "beans": "ပဲ"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "အင်တာနက် မရှိပါ",
@@ -534,6 +538,31 @@
       "sprayWindows": "ဆေးဖျန်းရန် အချိန်များ",
       "agriculturalImpact": "စိုက်ပျိုးရေးအပေါ် သက်ရောက်မှု"
     },
-    "dataSource": "ရာသီဥတုအချက်အလက်များကို Tomorrow.io မှ ရရှိသည်။"
+    "dataSource": "ရာသီဥတုအချက်အလက်များကို Tomorrow.io မှ ရရှိသည်။",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   }
 }

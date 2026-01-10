@@ -23,18 +23,19 @@ export default function OfflineIndicator() {
     let isSettled = false;
     const settleTimeout = setTimeout(() => {
       isSettled = true;
-    }, 1500);
+    }, 2000);
 
     // Subscribe to network state updates
     const unsubscribe = NetInfo.addEventListener(state => {
-      // FIX: state.isConnected and state.isInternetReachable can be 'null' during initial probe.
-      // We only want to show the offline banner if they are EXPLICITLY false.
-      const offline = state.isConnected === false || state.isInternetReachable === false;
-      
-      // Only set offline if we've settled OR it's a transition from online to offline
-      if (isSettled || offline) {
+      // Only consider offline if isConnected is EXPLICITLY false.
+      // We ignore isInternetReachable entirely because it's unreliable,
+      // especially in iOS simulators where it often returns false even with working internet.
+      const offline = state.isConnected === false;
+
+      // Only update state if we've settled (to avoid initial flicker) or going online
+      if (isSettled || !offline) {
         setIsOffline(offline);
-        
+
         // Animate in/out
         Animated.spring(slideAnim, {
           toValue: offline ? 0 : -50,

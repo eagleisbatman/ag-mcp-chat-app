@@ -324,7 +324,11 @@
       "wheat": "Qamadi",
       "maize": "Galley",
       "beans": "Digir"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "Ma jiro internet",
@@ -534,6 +538,31 @@
       "sprayWindows": "Waqtiyada Buufiska",
       "agriculturalImpact": "Saameynta Beeraha"
     },
-    "dataSource": "Xogta cimilada waxaa laga keenay Tomorrow.io"
+    "dataSource": "Xogta cimilada waxaa laga keenay Tomorrow.io",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   }
 }

@@ -324,7 +324,11 @@
       "wheat": "ಗೋಧಿ",
       "maize": "ಮೆಕ್ಕೆಜೋಳ",
       "beans": "ಬೀನ್ಸ್"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ",
@@ -534,7 +538,32 @@
       "sprayWindows": "ಸಿಂಪಡಣೆಯ ಸಮಯ",
       "agriculturalImpact": "ಕೃಷಿ ಪರಿಣಾಮ"
     },
-    "dataSource": "ಹವಾಮಾನ ಮಾಹಿತಿ Tomorrow.io ನಿಂದ"
+    "dataSource": "ಹವಾಮಾನ ಮಾಹಿತಿ Tomorrow.io ನಿಂದ",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   },
   "schemes": {
     "title": "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು",
@@ -601,4 +630,4 @@
     },
     "dataSource": "ಹಕ್‌ದಾರ್ಶಕ್‌ನಿಂದ ಯೋಜನಾ ಡೇಟಾ"
   }
-}\n
+}

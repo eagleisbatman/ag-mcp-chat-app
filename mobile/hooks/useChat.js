@@ -34,6 +34,20 @@ export default function useChat(sessionIdParam = null) {
   const [thinkingText, setThinkingText] = useState(null); // Current AI thinking status
   const titleGeneratedRef = useRef(false);
 
+  // Update welcome message when language changes
+  useEffect(() => {
+    setMessages(prev => {
+      // Find and update the welcome message
+      const welcomeIndex = prev.findIndex(m => m._id === 'welcome');
+      if (welcomeIndex !== -1) {
+        const updated = [...prev];
+        updated[welcomeIndex] = createWelcomeMessage();
+        return updated;
+      }
+      return prev;
+    });
+  }, [language]);
+
   // Load existing session if provided
   useEffect(() => {
     if (sessionIdParam && isDbSynced) {

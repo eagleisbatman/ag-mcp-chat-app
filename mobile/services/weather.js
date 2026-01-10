@@ -12,17 +12,22 @@ const DEFAULT_TIMEOUT_MS = 30000; // 30s for weather endpoints
  */
 export const weatherService = {
   /**
-   * Get current conditions and 7-day forecast in a single call
+   * Get current conditions and forecast in a single call
    * @param {number} latitude - User's latitude
    * @param {number} longitude - User's longitude
    * @param {string} language - Language code (e.g., 'en', 'hi')
-   * @returns {Promise<{current: object, forecast: object, location: object}>}
+   * @param {string} provider - Preferred weather provider (e.g., 'accuweather', 'tomorrow-io')
+   * @returns {Promise<{current: object, forecast: object, location: object, provider: string}>}
    */
-  async getCurrentAndForecast(latitude, longitude, language = 'en') {
+  async getCurrentAndForecast(latitude, longitude, language = 'en', provider = 'accuweather') {
     try {
+      // Different providers support different forecast days
+      // AccuWeather: 5 days, Tomorrow.io: 7 days
+      const forecastDays = provider === 'tomorrow-io' ? 7 : 5;
+
       const [current, forecast] = await Promise.all([
-        this.getCurrent(latitude, longitude, language),
-        this.getForecast(latitude, longitude, 5, language), // AccuWeather free tier max is 5 days
+        this.getCurrent(latitude, longitude, language, provider),
+        this.getForecast(latitude, longitude, forecastDays, language, provider),
       ]);
 
       // Use location from forecast if current doesn't have city name
@@ -34,6 +39,7 @@ export const weatherService = {
         current: current.data,
         forecast: forecast.data,
         location,
+        provider: current.provider || provider,
       };
     } catch (error) {
       console.error('Error fetching weather data:', error);
@@ -46,9 +52,10 @@ export const weatherService = {
    * @param {number} latitude - User's latitude
    * @param {number} longitude - User's longitude
    * @param {string} language - Language code
-   * @returns {Promise<{success: boolean, data: object, location: object}>}
+   * @param {string} provider - Preferred weather provider
+   * @returns {Promise<{success: boolean, data: object, location: object, provider: string}>}
    */
-  async getCurrent(latitude, longitude, language = 'en') {
+  async getCurrent(latitude, longitude, language = 'en', provider = 'accuweather') {
     try {
       const url = `${API_BASE_URL}/api/weather/current`;
 
@@ -62,6 +69,7 @@ export const weatherService = {
           latitude,
           longitude,
           language,
+          provider, // Pass preferred provider to API
         }),
       }, DEFAULT_TIMEOUT_MS);
 
@@ -95,6 +103,7 @@ export const weatherService = {
           latitude: locationData.latitude,
           longitude: locationData.longitude,
         },
+        provider: result.data?.provider || provider,
       };
     } catch (error) {
       console.error('Current weather error:', error);
@@ -115,7 +124,7 @@ export const weatherService = {
    * @param {string} language - Language code
    * @returns {Promise<{success: boolean, data: object}>}
    */
-  async getForecast(latitude, longitude, days = 5, language = 'en') {
+  async getForecast(latitude, longitude, days = 5, language = 'en', provider = 'accuweather') {
     try {
       const url = `${API_BASE_URL}/api/weather/forecast`;
 
@@ -130,6 +139,7 @@ export const weatherService = {
           longitude,
           days,
           language,
+          provider, // Pass preferred provider to API
         }),
       }, DEFAULT_TIMEOUT_MS);
 

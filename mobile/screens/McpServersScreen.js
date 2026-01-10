@@ -6,7 +6,10 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -19,6 +22,9 @@ import ListRow from '../components/ui/ListRow';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
+import { updatePreferences } from '../services/db';
+
+const STORAGE_KEY = '@service_preferences';
 
 // Internal servers that should be hidden from users
 const INTERNAL_SERVERS = [
@@ -31,13 +37,28 @@ const INTERNAL_SERVERS = [
   'entity-extraction',
 ];
 
+// Categories with selectable global providers
+// User can choose their preferred provider for these capabilities
+const SELECTABLE_PROVIDERS = {
+  plant_health: {
+    capability: 'plant-diagnosis',
+    providers: ['agrivision', 'plantix'],
+    default: 'agrivision',
+  },
+  weather: {
+    capability: 'weather',
+    providers: ['accuweather', 'tomorrow-io'],
+    default: 'accuweather',
+  },
+};
+
 // Service category configuration - labels use string keys
 const SERVICE_CATEGORIES = {
   plant_health: {
     labelKey: 'mcp.categories.plantHealth',
     icon: 'leaf-circle',
     color: '#4CAF50',
-    servers: ['agrivision'],
+    servers: ['agrivision', 'plantix'],
   },
   soil: {
     labelKey: 'mcp.categories.soil',
@@ -65,66 +86,103 @@ const SERVICE_CATEGORIES = {
   },
 };
 
-// Server display info - uses string keys for localization
+// Server display info - brand names kept as-is (not translated)
+// Logos can be local require() or remote URLs
 const SERVER_INFO = {
   'agrivision': {
+    name: 'AgriVision',
     stringKey: 'mcp.services.agrivision',
     icon: 'leaf-circle',
+    logo: null,
+  },
+  'plantix': {
+    name: 'Plantix',
+    stringKey: 'mcp.services.plantix',
+    icon: 'leaf-maple',
+    logo: 'https://plantix.net/favicon.ico',
   },
   'isda-soil': {
+    name: 'iSDA Soil',
     stringKey: 'mcp.services.isdaSoil',
     icon: 'terrain',
+    logo: null,
   },
   'accuweather': {
+    name: 'AccuWeather',
     stringKey: 'mcp.services.accuweather',
     icon: 'weather-partly-cloudy',
+    logo: require('../assets/logos/accuweather.png'),
   },
   'gap-weather': {
+    name: 'GAP Weather',
     stringKey: 'mcp.services.gapWeather',
     icon: 'weather-lightning-rainy',
+    logo: null,
   },
   'edacap': {
+    name: 'EDACAP Climate',
     stringKey: 'mcp.services.edacap',
     icon: 'weather-cloudy-arrow-right',
+    logo: null,
   },
   'weatherapi': {
+    name: 'WeatherAPI',
     stringKey: 'mcp.services.weatherapi',
     icon: 'weather-sunny',
+    logo: null,
   },
   'tomorrow-io': {
+    name: 'Tomorrow.io',
     stringKey: 'mcp.services.tomorrowIo',
     icon: 'cloud-sync',
+    logo: null,
   },
   'feed-formulation': {
+    name: 'Feed Formulation',
     stringKey: 'mcp.services.feedFormulation',
     icon: 'cow',
+    logo: null,
   },
   'nextgen': {
+    name: 'NextGen Fertilizer',
     stringKey: 'mcp.services.nextgen',
     icon: 'flask-outline',
+    logo: null,
   },
   'decision-tree': {
+    name: 'Decision Tree',
     stringKey: 'mcp.services.decisionTree',
     icon: 'source-branch',
+    logo: null,
   },
   'gap-agriculture': {
+    name: 'GAP Agriculture',
     stringKey: 'mcp.services.gapAgriculture',
     icon: 'sprout',
+    logo: null,
   },
 };
 
-function ServiceCard({ server, theme, onPress }) {
+function ServiceCard({ server, theme, onPress, isSelectable, isSelected, onSelect }) {
   const isActive = server.displayStatus === 'active';
+  const isComingSoon = server.displayStatus === 'coming_soon';
   const serverInfo = SERVER_INFO[server.slug];
   const info = serverInfo ? {
-    name: t(`${serverInfo.stringKey}.name`),
+    name: serverInfo.name, // Brand names not translated
     description: t(`${serverInfo.stringKey}.tagline`),
     icon: serverInfo.icon,
+    logo: serverInfo.logo,
   } : {
     name: server.name?.replace(' MCP', '').replace(' Server', ''),
     description: server.description || t('mcp.fallback.service'),
     icon: 'puzzle',
+    logo: null,
   };
+
+  // Only allow selection if server is active
+  const canSelect = isSelectable && isActive;
+  // Show "In Use" badge if this is selected AND active
+  const isInUse = isSelected && isActive;
 
   return (
     <Card style={[styles.serviceCard, !isActive && styles.serviceCardInactive]}>
@@ -133,16 +191,51 @@ function ServiceCard({ server, theme, onPress }) {
         subtitle={info.description}
         onPress={onPress}
         left={
-          <View style={[styles.serviceIcon, { backgroundColor: isActive ? theme.accent + '15' : theme.surfaceVariant }]}>
-            <MaterialCommunityIcons
-              name={info.icon}
-              size={20}
-              color={isActive ? theme.accent : theme.textMuted}
-            />
-          </View>
+          info.logo ? (
+            <View style={[styles.serviceIcon, styles.logoContainer, { backgroundColor: theme.surface }]}>
+              <Image
+                source={typeof info.logo === 'string' ? { uri: info.logo } : info.logo}
+                style={styles.serviceLogo}
+                resizeMode="contain"
+              />
+            </View>
+          ) : (
+            <View style={[styles.serviceIcon, { backgroundColor: isActive ? theme.accent + '15' : theme.surfaceVariant }]}>
+              <MaterialCommunityIcons
+                name={info.icon}
+                size={20}
+                color={isActive ? theme.accent : theme.textMuted}
+              />
+            </View>
+          )
         }
         right={
-          <View style={[styles.statusDot, { backgroundColor: isActive ? theme.success : theme.textMuted }]} />
+          <View style={styles.rightContainer}>
+            {isInUse && (
+              <View style={[styles.inUseBadge, { backgroundColor: theme.success + '20' }]}>
+                <Text style={[styles.inUseText, { color: theme.success }]}>{t('mcp.inUse')}</Text>
+              </View>
+            )}
+            {canSelect && (
+              <TouchableOpacity
+                onPress={onSelect}
+                style={styles.radioButton}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                {isSelected ? (
+                  <MaterialCommunityIcons name="radiobox-marked" size={22} color={theme.accent} />
+                ) : (
+                  <MaterialCommunityIcons name="radiobox-blank" size={22} color={theme.textMuted} />
+                )}
+              </TouchableOpacity>
+            )}
+            {isComingSoon && (
+              <View style={[styles.comingSoonBadge, { backgroundColor: theme.warning + '20' }]}>
+                <Text style={[styles.comingSoonText, { color: theme.warning }]}>{t('mcp.comingSoon')}</Text>
+              </View>
+            )}
+            <View style={[styles.statusDot, { backgroundColor: isActive ? theme.success : theme.textMuted }]} />
+          </View>
         }
         showChevron={true}
         paddingHorizontal={SPACING.md}
@@ -151,11 +244,18 @@ function ServiceCard({ server, theme, onPress }) {
   );
 }
 
-function CategorySection({ category, servers, theme, onServerPress }) {
+function CategorySection({ category, servers, theme, onServerPress, preferences, onSelectProvider }) {
   const config = SERVICE_CATEGORIES[category];
   if (!config || servers.length === 0) return null;
 
   const activeCount = servers.filter(s => s.displayStatus === 'active').length;
+  const selectableConfig = SELECTABLE_PROVIDERS[category];
+
+  // Only show selection if there are multiple ACTIVE providers in the selectable list
+  const activeSelectableProviders = selectableConfig
+    ? servers.filter(s => selectableConfig.providers.includes(s.slug) && s.displayStatus === 'active')
+    : [];
+  const hasSelectableProviders = activeSelectableProviders.length > 1;
 
   return (
     <View style={styles.categorySection}>
@@ -169,26 +269,83 @@ function CategorySection({ category, servers, theme, onServerPress }) {
         </Text>
       </View>
 
-      {servers.map((server) => (
-        <ServiceCard
-          key={server.slug}
-          server={server}
-          theme={theme}
-          onPress={() => onServerPress(server.slug)}
-        />
-      ))}
+      {/* Show selection hint for categories with choices */}
+      {hasSelectableProviders && (
+        <Text style={[styles.selectionHint, { color: theme.textMuted }]}>
+          {t('mcp.selectPreferred')}
+        </Text>
+      )}
+
+      {servers.map((server) => {
+        const isSelectable = hasSelectableProviders && selectableConfig.providers.includes(server.slug);
+        const isSelected = isSelectable && preferences[category] === server.slug;
+
+        return (
+          <ServiceCard
+            key={server.slug}
+            server={server}
+            theme={theme}
+            onPress={() => onServerPress(server.slug)}
+            isSelectable={isSelectable}
+            isSelected={isSelected}
+            onSelect={() => onSelectProvider(category, server.slug)}
+          />
+        );
+      })}
     </View>
   );
 }
 
 export default function McpServersScreen({ navigation }) {
   const { theme, location, locationDetails } = useApp();
-  const { showError } = useToast();
+  const { showError, showSuccess } = useToast();
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [mcpData, setMcpData] = useState(null);
   const [error, setError] = useState(null);
+  const [preferences, setPreferences] = useState({});
+
+  // Load saved preferences
+  useEffect(() => {
+    loadPreferences();
+  }, []);
+
+  const loadPreferences = async () => {
+    try {
+      const stored = await AsyncStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        setPreferences(JSON.parse(stored));
+      } else {
+        // Set defaults
+        const defaults = {};
+        Object.entries(SELECTABLE_PROVIDERS).forEach(([category, config]) => {
+          defaults[category] = config.default;
+        });
+        setPreferences(defaults);
+      }
+    } catch (error) {
+      console.error('Failed to load service preferences:', error);
+    }
+  };
+
+  const handleSelectProvider = useCallback(async (category, providerSlug) => {
+    const newPreferences = { ...preferences, [category]: providerSlug };
+    setPreferences(newPreferences);
+
+    try {
+      // Save locally
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newPreferences));
+
+      // Sync to backend
+      const result = await updatePreferences({ servicePreferences: newPreferences });
+      if (result.success) {
+        showSuccess(t('mcp.preferencesSaved'));
+      }
+    } catch (error) {
+      console.error('Failed to save preference:', error);
+    }
+  }, [preferences, showSuccess]);
 
   const fetchMcpServers = useCallback(async () => {
     try {
@@ -322,6 +479,8 @@ export default function McpServersScreen({ navigation }) {
               servers={serversByCategory[category] || []}
               theme={theme}
               onServerPress={handleServerPress}
+              preferences={preferences}
+              onSelectProvider={handleSelectProvider}
             />
           ))}
 
@@ -393,7 +552,7 @@ const styles = StyleSheet.create({
   categoryHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
     gap: SPACING.sm,
   },
   categoryIcon: {
@@ -411,6 +570,11 @@ const styles = StyleSheet.create({
   categoryCount: {
     fontSize: TYPOGRAPHY.sizes.sm,
   },
+  selectionHint: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginBottom: SPACING.sm,
+    marginLeft: SPACING.xs,
+  },
   serviceCard: {
     marginBottom: SPACING.sm,
   },
@@ -423,6 +587,41 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logoContainer: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
+    overflow: 'hidden',
+  },
+  serviceLogo: {
+    width: 24,
+    height: 24,
+  },
+  inUseBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  inUseText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+  },
+  rightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  radioButton: {
+    padding: 2,
+  },
+  comingSoonBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  comingSoonText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
   statusDot: {
     width: 8,

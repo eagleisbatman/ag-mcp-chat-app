@@ -6,6 +6,7 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useApp } from '../contexts/AppContext';
@@ -19,84 +20,116 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
-// Server display info with string keys for localization
+// Server display info - brand names kept as-is (not translated)
 const SERVER_INFO = {
   'agrivision': {
+    name: 'AgriVision',
     stringKey: 'mcp.services.agrivision',
     icon: 'leaf-circle',
+    logo: null,
     color: '#4CAF50',
     featureKeys: ['diseaseDetection', 'pestIdentification', 'nutrientAnalysis', 'treatmentAdvice'],
     coverageKeys: ['worldwide'],
     cropKeys: ['all'],
   },
+  'plantix': {
+    name: 'Plantix',
+    stringKey: 'mcp.services.plantix',
+    icon: 'leaf-maple',
+    logo: 'https://plantix.net/favicon.ico',
+    color: '#43A047',
+    featureKeys: ['diseaseDetection', 'pestIdentification', 'cropIdentification', 'treatmentAdvice'],
+    coverageKeys: ['worldwide'],
+    cropKeys: ['all'],
+  },
   'isda-soil': {
+    name: 'iSDA Soil',
     stringKey: 'mcp.services.isdaSoil',
     icon: 'terrain',
+    logo: null,
     color: '#8B4513',
     featureKeys: ['soilPh', 'nitrogen', 'phosphorus', 'potassium'],
     coverageKeys: ['africa'],
   },
   'accuweather': {
+    name: 'AccuWeather',
     stringKey: 'mcp.services.accuweather',
     icon: 'weather-partly-cloudy',
+    logo: require('../assets/logos/accuweather.png'),
     color: '#2196F3',
     featureKeys: ['currentWeather', 'temperature', 'humidity', 'forecast'],
     coverageKeys: ['worldwide'],
   },
   'gap-weather': {
+    name: 'GAP Weather',
     stringKey: 'mcp.services.gapWeather',
     icon: 'weather-lightning-rainy',
+    logo: null,
     color: '#1565C0',
     featureKeys: ['precipitation', 'evapotranspiration', 'solarRadiation', 'wind'],
     coverageKeys: ['kenya', 'eastAfrica'],
   },
   'edacap': {
+    name: 'EDACAP Climate',
     stringKey: 'mcp.services.edacap',
     icon: 'weather-cloudy-arrow-right',
+    logo: null,
     color: '#0D47A1',
     featureKeys: ['seasonalOutlook', 'rainfallProbability', 'temperatureTrend', 'cropForecasts'],
     coverageKeys: ['ethiopia'],
   },
   'weatherapi': {
+    name: 'WeatherAPI',
     stringKey: 'mcp.services.weatherapi',
     icon: 'weather-sunny',
+    logo: null,
     color: '#FF9800',
     featureKeys: ['currentWeather', 'forecast', 'historical', 'astronomy'],
     coverageKeys: ['worldwide'],
   },
   'tomorrow-io': {
+    name: 'Tomorrow.io',
     stringKey: 'mcp.services.tomorrowIo',
     icon: 'cloud-sync',
+    logo: null,
     color: '#673AB7',
     featureKeys: ['nowcast', 'forecasts', 'alerts', 'historical'],
     coverageKeys: ['worldwide'],
   },
   'feed-formulation': {
+    name: 'Feed Formulation',
     stringKey: 'mcp.services.feedFormulation',
     icon: 'cow',
+    logo: null,
     color: '#4CAF50',
     featureKeys: ['dietOptimization', 'nutrientBalance', 'localFeeds', 'costCalculation'],
     coverageKeys: ['ethiopia'],
   },
   'nextgen': {
+    name: 'NextGen Fertilizer',
     stringKey: 'mcp.services.nextgen',
     icon: 'flask-outline',
+    logo: null,
     color: '#E91E63',
     featureKeys: ['organicFertilizers', 'inorganicFertilizers', 'expectedYield', 'siteSpecific'],
     coverageKeys: ['ethiopia'],
     cropKeys: ['wheat', 'maize'],
   },
   'decision-tree': {
+    name: 'Decision Tree',
     stringKey: 'mcp.services.decisionTree',
     icon: 'source-branch',
+    logo: null,
     color: '#009688',
     featureKeys: ['growthStage', 'recommendations', 'weatherBased', 'actions'],
     coverageKeys: ['kenya'],
     cropKeys: ['maize', 'beans'],
   },
   'gap-agriculture': {
+    name: 'GAP Agriculture',
     stringKey: 'mcp.services.gapAgriculture',
     icon: 'sprout',
+    logo: null,
     color: '#8BC34A',
     featureKeys: ['cropAdvice', 'bestPractices', 'seasonalTips', 'localKnowledge'],
     coverageKeys: ['eastAfrica'],
@@ -161,10 +194,11 @@ export default function McpServerDetailScreen({ navigation, route }) {
   // Get display info from our config or fallback to API data
   const serverConfig = SERVER_INFO[slug];
   const info = serverConfig ? {
-    name: t(`${serverConfig.stringKey}.name`),
+    name: serverConfig.name, // Brand names not translated
     tagline: t(`${serverConfig.stringKey}.tagline`),
     description: t(`${serverConfig.stringKey}.description`),
     icon: serverConfig.icon,
+    logo: serverConfig.logo,
     color: serverConfig.color,
     featureKeys: serverConfig.featureKeys || [],
     // Resolve coverageKeys to localized region names
@@ -176,6 +210,7 @@ export default function McpServerDetailScreen({ navigation, route }) {
     tagline: server?.description || t('mcp.fallback.service'),
     description: server?.longDescription || t('mcp.fallback.description'),
     icon: 'puzzle',
+    logo: null,
     color: theme.accent,
     featureKeys: [],
     coverage: [],
@@ -227,9 +262,19 @@ export default function McpServerDetailScreen({ navigation, route }) {
         >
           {/* Header */}
           <View style={styles.headerSection}>
-            <View style={[styles.iconContainer, { backgroundColor: displayColor + '15' }]}>
-              <MaterialCommunityIcons name={info.icon} size={40} color={displayColor} />
-            </View>
+            {info.logo ? (
+              <View style={[styles.iconContainer, styles.logoContainer, { backgroundColor: theme.surface }]}>
+                <Image
+                  source={typeof info.logo === 'string' ? { uri: info.logo } : info.logo}
+                  style={styles.detailLogo}
+                  resizeMode="contain"
+                />
+              </View>
+            ) : (
+              <View style={[styles.iconContainer, { backgroundColor: displayColor + '15' }]}>
+                <MaterialCommunityIcons name={info.icon} size={40} color={displayColor} />
+              </View>
+            )}
             <Text style={[styles.title, { color: theme.text }]}>{info.name}</Text>
             <Text style={[styles.tagline, { color: theme.textMuted }]}>{info.tagline}</Text>
 
@@ -340,6 +385,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: SPACING.md,
+  },
+  logoContainer: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
+    overflow: 'hidden',
+  },
+  detailLogo: {
+    width: 56,
+    height: 56,
   },
   title: {
     fontSize: TYPOGRAPHY.sizes['2xl'],

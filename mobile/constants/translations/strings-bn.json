@@ -324,7 +324,11 @@
       "wheat": "গম",
       "maize": "ভুট্টা",
       "beans": "শিম"
-    }
+    },
+    "selectPreferred": "Select your preferred provider",
+    "preferencesSaved": "Preference saved",
+    "comingSoon": "Coming Soon",
+    "inUse": "In Use"
   },
   "system": {
     "offline": "ইন্টারনেট সংযোগ নেই",
@@ -534,7 +538,32 @@
       "sprayWindows": "স্প্রে করার সময়",
       "agriculturalImpact": "কৃষিক্ষেত্রে প্রভাব"
     },
-    "dataSource": "আবহাওয়ার তথ্য Tomorrow.io থেকে"
+    "dataSource": "আবহাওয়ার তথ্য Tomorrow.io থেকে",
+    "current": "Current Weather",
+    "forecast": "Forecast",
+    "high": "High",
+    "low": "Low",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "precipitation": "Precipitation",
+    "feelsLike": "Feels like",
+    "uvIndex": "UV Index",
+    "visibility": "Visibility",
+    "alert": "Weather Alert",
+    "alertDismiss": "Dismiss",
+    "loading": "Loading weather...",
+    "today": "Today",
+    "windUnit": "km/h",
+    "dataFrom": "Data from",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "tapForDetails": "Tap for details",
+    "yourLocation": "Your Location"
   },
   "schemes": {
     "title": "সরকারি প্রকল্পসমূহ",
@@ -601,4 +630,4 @@
     },
     "dataSource": "হকদার্শক থেকে প্রকল্পের ডেটা"
   }
-}\n
+}
