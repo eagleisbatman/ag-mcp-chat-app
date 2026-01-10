@@ -109,7 +109,7 @@ const TOMORROW_IO_ICON_MAP = {
   5101: { day: '51010_snow_heavy_large', night: '51010_snow_heavy_large' },
 
   // Freezing precipitation
-  6000: { day: '60000_freezing_drizzle_large', night: '60000_freezing_drizzle_large' },
+  6000: { day: '60000_freezing_rain_drizzle_large', night: '60000_freezing_rain_drizzle_large' },
   6200: { day: '62000_freezing_rain_light_large', night: '62000_freezing_rain_light_large' },
   6001: { day: '60010_freezing_rain_large', night: '60010_freezing_rain_large' },
   6201: { day: '62010_freezing_rain_heavy_large', night: '62010_freezing_rain_heavy_large' },
@@ -144,7 +144,7 @@ const TOMORROW_IO_ICONS = {
   '50010_flurries_large': require('../../assets/weather-icons/tomorrow-io/50010_flurries_large.png'),
   '51000_snow_light_large': require('../../assets/weather-icons/tomorrow-io/51000_snow_light_large.png'),
   '51010_snow_heavy_large': require('../../assets/weather-icons/tomorrow-io/51010_snow_heavy_large.png'),
-  '60000_freezing_drizzle_large': require('../../assets/weather-icons/tomorrow-io/60000_freezing_drizzle_large.png'),
+  '60000_freezing_rain_drizzle_large': require('../../assets/weather-icons/tomorrow-io/60000_freezing_rain_drizzle_large.png'),
   '60010_freezing_rain_large': require('../../assets/weather-icons/tomorrow-io/60010_freezing_rain_large.png'),
   '62000_freezing_rain_light_large': require('../../assets/weather-icons/tomorrow-io/62000_freezing_rain_light_large.png'),
   '62010_freezing_rain_heavy_large': require('../../assets/weather-icons/tomorrow-io/62010_freezing_rain_heavy_large.png'),
