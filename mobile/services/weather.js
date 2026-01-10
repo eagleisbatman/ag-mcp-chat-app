@@ -155,7 +155,7 @@ export const weatherService = {
         date: day.date,
         tempMax: day.max_temp,
         tempMin: day.min_temp,
-        dayIcon: 1, // AccuWeather doesn't return icon codes in this format
+        dayIcon: day.weather_icon || 1, // Weather code from API (AccuWeather/Tomorrow.io)
         precipitationProbability: day.day_precipitation_probability || 0,
         conditions: day.day_conditions,
       }));
