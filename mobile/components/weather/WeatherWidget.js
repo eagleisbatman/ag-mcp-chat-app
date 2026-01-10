@@ -155,17 +155,17 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
             <View style={styles.statsRow}>
               {hasHumidity && (
                 <View style={[styles.statBadge, { backgroundColor: theme.info + '20' }]}>
-                  <Ionicons name="water" size={14} color={theme.info} />
+                  <Ionicons name="thermometer-outline" size={14} color={theme.info} />
                   <Text style={[styles.statText, { color: theme.info }]}>
-                    {current.humidity}%
+                    {t('weather.humidity') || 'Humidity'}: {Math.round(current.humidity)}%
                   </Text>
                 </View>
               )}
               {hasWind && (
                 <View style={[styles.statBadge, { backgroundColor: theme.accent + '20' }]}>
-                  <Ionicons name="navigate" size={14} color={theme.accent} />
+                  <Ionicons name="flag-outline" size={14} color={theme.accent} />
                   <Text style={[styles.statText, { color: theme.accent }]}>
-                    {Math.round(current.windSpeed)} {t('weather.windUnit') || 'km/h'}
+                    {t('weather.wind') || 'Wind'}: {Math.round(current.windSpeed)} {t('weather.windUnit') || 'km/h'}
                   </Text>
                 </View>
               )}
@@ -203,7 +203,7 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
                 </Text>
                 {hasRain && (
                   <View style={styles.rainChance}>
-                    <Ionicons name="water" size={11} color={theme.info} />
+                    <Ionicons name="rainy-outline" size={11} color={theme.info} />
                     <Text style={[styles.rainText, { color: theme.info }]}>
                       {day.precipitationProbability}%
                     </Text>
