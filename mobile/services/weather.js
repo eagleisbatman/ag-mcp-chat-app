@@ -30,10 +30,26 @@ export const weatherService = {
         this.getForecast(latitude, longitude, forecastDays, language, provider),
       ]);
 
+      // Log any failures
+      if (!current.success) {
+        console.warn('[Weather] Current conditions failed:', current.error);
+      }
+      if (!forecast.success) {
+        console.warn('[Weather] Forecast failed:', forecast.error);
+      }
+
       // Use location from forecast if current doesn't have city name
       const location = current.location?.city
         ? current.location
         : forecast.location || current.location;
+
+      // Log successful data retrieval
+      console.log('[Weather] Data retrieved:', {
+        hasCurrent: !!current.data,
+        hasForecast: !!forecast.data,
+        forecastDays: forecast.data?.daily?.length || 0,
+        provider: current.provider || provider,
+      });
 
       return {
         current: current.data,
