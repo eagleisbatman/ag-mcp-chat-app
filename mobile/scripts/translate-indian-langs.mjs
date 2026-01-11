@@ -18,7 +18,11 @@ const INDIAN_LANGUAGES = [
 ];
 
 const TRANSLATIONS_DIR = "/Users/eagleisbatman/digitalgreen_projects/GAP_PROTOTYPE/ag-mcp-chat-app/mobile/constants/translations";
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "AIzaSyBCnTLKKB5TTfe8HngaqFG9E_d3cdPk694";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+if (!GEMINI_API_KEY) {
+  console.error('Error: GEMINI_API_KEY environment variable is required');
+  process.exit(1);
+}
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
