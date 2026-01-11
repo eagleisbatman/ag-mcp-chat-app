@@ -296,6 +296,10 @@ export const STRINGS = {
       statusActive: 'Active',
       statusUnavailable: 'Not available in your region',
       locationNotSet: 'Location not set',
+      selectPreferred: 'Select your preferred provider',
+      preferencesSaved: 'Preference saved',
+      comingSoon: 'Coming Soon',
+      inUse: 'In Use',
       // Section titles
       sectionAbout: 'About',
       sectionFeatures: 'Features',
@@ -315,6 +319,11 @@ export const STRINGS = {
           name: 'AgriVision',
           tagline: 'AI-powered plant disease detection and diagnosis',
           description: 'Analyze plant images to identify diseases, pests, and nutrient deficiencies. Get instant diagnosis with treatment recommendations and prevention tips.',
+        },
+        plantix: {
+          name: 'Plantix',
+          tagline: 'Plant disease diagnosis with 21 language support',
+          description: 'Identify plant diseases from photos using Plantix AI. Supports 21 languages natively with treatment recommendations and prevention tips for crops worldwide.',
         },
         isdaSoil: {
           name: 'ISDA Soil',
@@ -373,6 +382,7 @@ export const STRINGS = {
         pestIdentification: 'Pest Identification',
         nutrientAnalysis: 'Nutrient Analysis',
         treatmentAdvice: 'Treatment Advice',
+        cropIdentification: 'Crop Identification',
         soilPh: 'Soil pH',
         nitrogen: 'Nitrogen',
         phosphorus: 'Phosphorus',
@@ -557,6 +567,7 @@ export const STRINGS = {
       loading: 'Loading weather...',
       today: 'Today',
       windUnit: 'km/h',
+      dataFrom: 'Data from',
       daySun: 'Sun',
       dayMon: 'Mon',
       dayTue: 'Tue',

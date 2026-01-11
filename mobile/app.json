@@ -43,6 +43,36 @@
         "ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "notificationChannels": [
+        {
+          "id": "weather_alerts",
+          "name": "Weather Alerts",
+          "description": "Notifications about weather conditions affecting your crops",
+          "importance": "high",
+          "sound": "default"
+        },
+        {
+          "id": "urgent_alerts",
+          "name": "Urgent Alerts",
+          "description": "Critical weather warnings requiring immediate attention",
+          "importance": "max",
+          "sound": "default",
+          "vibration": true
+        },
+        {
+          "id": "content_updates",
+          "name": "Content Updates",
+          "description": "New articles, podcasts, and agricultural information",
+          "importance": "default",
+          "sound": "default"
+        },
+        {
+          "id": "engagement",
+          "name": "Tips & Reminders",
+          "description": "Agricultural tips and helpful reminders",
+          "importance": "low"
+        }
       ]
     },
     "plugins": [
