@@ -111,6 +111,16 @@ export default function ChatScreen({ navigation, route }) {
         language || 'en',
         weatherPref // Pass preferred provider
       );
+
+      // Log weather data for debugging
+      console.log('[ChatScreen] Weather data received:', {
+        hasCurrent: !!data.current,
+        currentTemp: data.current?.temperature,
+        hasForecast: !!data.forecast,
+        forecastDays: data.forecast?.daily?.length || 0,
+        provider: data.provider,
+      });
+
       // Use app's location name instead of provider's
       if (locationDetails?.displayName) {
         data.location = {
