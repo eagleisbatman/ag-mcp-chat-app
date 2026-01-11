@@ -135,7 +135,7 @@
   "settings": {
     "title": "Izilungiselelo",
     "sectionConversations": "IZINGXOXO",
-    "sectionAiServices": "IZINKONZO ZE-AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "INDAWO",
     "sectionLanguage": "ULIMI",
     "sectionAppearance": "UKUBUKEKA",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Thepha ukuze ubuyekeze indawo"
   },
   "mcp": {
-    "title": "Izinsiza ze-AI",
+    "title": "ag-mcp",
     "loading": "Kulayishwa izinsiza...",
     "loadingDetails": "Kulayishwa...",
     "footer": "Ukutholakala kwensiza kuncike endaweni yakho",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Uhlelo oluqalwe yiDigital Green Foundation"
   },
   "system": {
     "offline": "Ayikho i-inthanethi",

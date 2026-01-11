@@ -20,6 +20,10 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
 
+// Tomorrow.io logos for light/dark mode
+const TOMORROW_IO_LOGO_LIGHT = require('../assets/logos/Powered_by_Tomorrow-Black.png');
+const TOMORROW_IO_LOGO_DARK = require('../assets/logos/Powered_by_Tomorrow-White.png');
+
 // Server display info - brand names kept as-is (not translated)
 const SERVER_INFO = {
   'agrivision': {
@@ -91,7 +95,7 @@ const SERVER_INFO = {
     name: 'Tomorrow.io',
     stringKey: 'mcp.services.tomorrowIo',
     icon: 'cloud-sync',
-    logo: null,
+    logo: require('../assets/logos/Powered_by_Tomorrow-Black.png'),
     color: '#673AB7',
     featureKeys: ['nowcast', 'forecasts', 'alerts', 'historical'],
     coverageKeys: ['worldwide'],
@@ -154,7 +158,7 @@ function FeatureItem({ featureKey, theme, color }) {
 
 export default function McpServerDetailScreen({ navigation, route }) {
   const { slug } = route.params;
-  const { theme } = useApp();
+  const { theme, isDark } = useApp();
   const { showError } = useToast();
 
   const [loading, setLoading] = useState(true);
@@ -193,12 +197,16 @@ export default function McpServerDetailScreen({ navigation, route }) {
 
   // Get display info from our config or fallback to API data
   const serverConfig = SERVER_INFO[slug];
+  // Tomorrow.io has a wide "Powered by" logo that needs special handling
+  const isTomorrowIo = slug === 'tomorrow-io';
+  // Select correct Tomorrow.io logo based on theme
+  const tomorrowIoLogo = isDark ? TOMORROW_IO_LOGO_DARK : TOMORROW_IO_LOGO_LIGHT;
   const info = serverConfig ? {
     name: serverConfig.name, // Brand names not translated
     tagline: t(`${serverConfig.stringKey}.tagline`),
     description: t(`${serverConfig.stringKey}.description`),
     icon: serverConfig.icon,
-    logo: serverConfig.logo,
+    logo: isTomorrowIo ? tomorrowIoLogo : serverConfig.logo,
     color: serverConfig.color,
     featureKeys: serverConfig.featureKeys || [],
     // Resolve coverageKeys to localized region names
@@ -263,10 +271,15 @@ export default function McpServerDetailScreen({ navigation, route }) {
           {/* Header */}
           <View style={styles.headerSection}>
             {info.logo ? (
-              <View style={[styles.iconContainer, styles.logoContainer, { backgroundColor: theme.surface }]}>
+              <View style={[
+                styles.iconContainer,
+                styles.logoContainer,
+                isTomorrowIo && styles.wideLogoContainer,
+                { backgroundColor: theme.surface }
+              ]}>
                 <Image
                   source={typeof info.logo === 'string' ? { uri: info.logo } : info.logo}
-                  style={styles.detailLogo}
+                  style={isTomorrowIo ? styles.wideDetailLogo : styles.detailLogo}
                   resizeMode="contain"
                 />
               </View>
@@ -394,6 +407,16 @@ const styles = StyleSheet.create({
   detailLogo: {
     width: 56,
     height: 56,
+  },
+  wideLogoContainer: {
+    width: 160,
+    height: 50,
+    borderRadius: 8,
+    borderWidth: 0,
+  },
+  wideDetailLogo: {
+    width: 140,
+    height: 40,
   },
   title: {
     fontSize: TYPOGRAPHY.sizes['2xl'],

@@ -135,7 +135,7 @@
   "settings": {
     "title": "सेटिङ्स",
     "sectionConversations": "कुराकानीहरू",
-    "sectionAiServices": "एआई सेवाहरू",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "स्थान",
     "sectionLanguage": "भाषा",
     "sectionAppearance": "स्वरूप",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "स्थान अपडेट गर्न ट्याप गर्नुहोस्"
   },
   "mcp": {
-    "title": "AI सेवाहरू",
+    "title": "ag-mcp",
     "loading": "सेवाहरू लोड हुँदैछ...",
     "loadingDetails": "लोड हुँदैछ...",
     "footer": "सेवा उपलब्धता स्थान अनुसार",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "डिजिटल ग्रीन फाउन्डेशनको एक पहल"
   },
   "system": {
     "offline": "इन्टरनेट छैन",

@@ -135,7 +135,7 @@
   "settings": {
     "title": "ဆက်တင်များ",
     "sectionConversations": "ပြောဆိုမှုများ",
-    "sectionAiServices": "AI ဝန်ဆောင်မှုများ",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "တည်နေရာ",
     "sectionLanguage": "ဘာသာစကား",
     "sectionAppearance": "အသွင်အပြင်",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "တည်နေရာ အပ်ဒိတ်လုပ်ရန် နှိပ်ပါ"
   },
   "mcp": {
-    "title": "AI ဝန်ဆောင်မှုများ",
+    "title": "ag-mcp",
     "loading": "ဝန်ဆောင်မှုများ တင်နေသည်...",
     "loadingDetails": "တင်နေသည်...",
     "footer": "ဝန်ဆောင်မှုရရှိနိုင်မှုသည် သင့်တည်နေရာပေါ်မူတည်သည်",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ဒစ်ဂျစ်တယ်ဂရင်းဖောင်ဒေးရှင်း၏ စီမံဆောင်ရွက်မှု။"
   },
   "system": {
     "offline": "အင်တာနက် မရှိပါ",

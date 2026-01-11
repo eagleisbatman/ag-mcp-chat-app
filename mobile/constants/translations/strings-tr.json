@@ -135,7 +135,7 @@
   "settings": {
     "title": "Ayarlar",
     "sectionConversations": "SOHBETLER",
-    "sectionAiServices": "YAPAY ZEKA HİZMETLERİ",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "KONUM",
     "sectionLanguage": "DİL",
     "sectionAppearance": "GÖRÜNÜM",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Konumu güncellemek için dokunun"
   },
   "mcp": {
-    "title": "Yapay Zeka Hizmetleri",
+    "title": "ag-mcp",
     "loading": "Hizmetler yükleniyor...",
     "loadingDetails": "Yükleniyor...",
     "footer": "Hizmet uygunluğu konumunuza göre değişir",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Digital Green Foundation'ın bir girişimi"
   },
   "system": {
     "offline": "İnternet yok",

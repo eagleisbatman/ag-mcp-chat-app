@@ -249,7 +249,7 @@ export const STRINGS = {
     settings: {
       title: 'Settings',
       sectionConversations: 'CONVERSATIONS',
-      sectionAiServices: 'AI SERVICES',
+      sectionAiServices: 'ag-mcp',
       sectionLocation: 'LOCATION',
       sectionLanguage: 'LANGUAGE',
       sectionAppearance: 'APPEARANCE',
@@ -282,7 +282,8 @@ export const STRINGS = {
       appInfoPoweredBy: 'Powered by Digital Green Foundation',
     },
     mcp: {
-      title: 'AI Services',
+      title: 'ag-mcp',
+      description: 'An initiative by Digital Green Foundation',
       loading: 'Loading services...',
       loadingDetails: 'Loading...',
       footer: 'Service availability depends on your location',

@@ -135,7 +135,7 @@
   "settings": {
     "title": "הגדרות",
     "sectionConversations": "שיחות",
-    "sectionAiServices": "שירותי AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "מיקום",
     "sectionLanguage": "שפה",
     "sectionAppearance": "מראה",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "הקש לעדכון מיקום"
   },
   "mcp": {
-    "title": "שירותי בינה מלאכותית",
+    "title": "ag-mcp",
     "loading": "טוען שירותים...",
     "loadingDetails": "טוען...",
     "footer": "זמינות השירותים תלויה במיקום",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "יוזמה של קרן דיגיטל גרין"
   },
   "system": {
     "offline": "אין חיבור לאינטרנט",

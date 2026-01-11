@@ -135,7 +135,7 @@
   "settings": {
     "title": "Ntọala",
     "sectionConversations": "MKPARỊTA ỤKA",
-    "sectionAiServices": "ỌRỤ AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "EBE",
     "sectionLanguage": "ASỤSỤ",
     "sectionAppearance": "Ọdịdị",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Metụ ka imelite ọnọdụ gị"
   },
   "mcp": {
-    "title": "Ọrụ AKỌ",
+    "title": "ag-mcp",
     "loading": "Na-ebute ọrụ...",
     "loadingDetails": "Na-ebute...",
     "footer": "Ịnweta ọrụ dabere n'ebe ị nọ",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Atụmatụ sitere na Digital Green Foundation"
   },
   "system": {
     "offline": "Enweghị ịntanetị",

@@ -135,7 +135,7 @@
   "settings": {
     "title": "Saituna",
     "sectionConversations": "HIRARRAKI",
-    "sectionAiServices": "AYYUKAN AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "WURI",
     "sectionLanguage": "HARSHE",
     "sectionAppearance": "FITOWA",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Danna don sabunta wuri"
   },
   "mcp": {
-    "title": "Hidimar AI",
+    "title": "ag-mcp",
     "loading": "Ana ɗora hidimomi...",
     "loadingDetails": "Ana ɗorawa...",
     "footer": "Samuwar hidima ya danganta da wurinka",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Wani shiri daga Digital Green Foundation"
   },
   "system": {
     "offline": "Babu Intanet",

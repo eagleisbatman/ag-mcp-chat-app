@@ -80,22 +80,28 @@ export const weatherService = {
       const result = await response.json();
 
       // Map API response to widget-expected format
+      // Handle both normalized (Tomorrow.io) and raw (AccuWeather) field names
       const currentData = result.data?.current || {};
       const locationData = result.data?.location || {};
 
+      // Extract values with fallbacks for different field naming conventions
+      const temperature = currentData.temperature ?? currentData.temperature_c;
+      const humidity = currentData.humidity ?? currentData.humidity_percent;
+      const windSpeed = currentData.wind_speed ?? currentData.wind_speed_kmh;
+
       console.log('[Weather] Current conditions fetched:', {
-        temp: currentData.temperature,
+        temp: temperature,
         conditions: currentData.conditions,
       });
 
       return {
         success: true,
         data: {
-          temperature: currentData.temperature,
+          temperature,
           weatherText: currentData.conditions,
           weatherIcon: currentData.weather_icon || 1, // Default sunny
-          humidity: currentData.humidity,
-          windSpeed: currentData.wind_speed,
+          humidity,
+          windSpeed,
           precipitation: currentData.has_precipitation ? 1 : 0,
         },
         location: {
@@ -150,13 +156,14 @@ export const weatherService = {
       const result = await response.json();
 
       // Map API response to widget-expected format
+      // Handle both normalized (Tomorrow.io) and raw (AccuWeather) field names
       const forecastArray = result.data?.forecast || [];
       const daily = forecastArray.map(day => ({
         date: day.date,
-        tempMax: day.max_temp,
-        tempMin: day.min_temp,
+        tempMax: day.max_temp ?? day.max_temp_c,
+        tempMin: day.min_temp ?? day.min_temp_c,
         dayIcon: day.weather_icon || 1, // Weather code from API (AccuWeather/Tomorrow.io)
-        precipitationProbability: day.day_precipitation_probability || 0,
+        precipitationProbability: day.day_precipitation_probability ?? day.day_precipitation_probability_percent ?? 0,
         conditions: day.day_conditions,
       }));
 

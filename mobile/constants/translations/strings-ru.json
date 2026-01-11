@@ -135,7 +135,7 @@
   "settings": {
     "title": "Настройки",
     "sectionConversations": "РАЗГОВОРЫ",
-    "sectionAiServices": "УСЛУГИ ИИ",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "МЕСТОПОЛОЖЕНИЕ",
     "sectionLanguage": "ЯЗЫК",
     "sectionAppearance": "ВНЕШНИЙ ВИД",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Нажмите, чтобы обновить местоположение"
   },
   "mcp": {
-    "title": "Сервисы ИИ",
+    "title": "ag-mcp",
     "loading": "Загрузка сервисов...",
     "loadingDetails": "Загрузка...",
     "footer": "Доступность услуг зависит от вашего местоположения",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Инициатива Фонда Digital Green"
   },
   "system": {
     "offline": "Нет интернета",

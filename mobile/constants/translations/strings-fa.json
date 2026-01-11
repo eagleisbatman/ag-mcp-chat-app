@@ -135,7 +135,7 @@
   "settings": {
     "title": "تنظیمات",
     "sectionConversations": "گفتگوها",
-    "sectionAiServices": "خدمات هوش مصنوعی",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "موقعیت",
     "sectionLanguage": "زبان",
     "sectionAppearance": "ظاهر",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "برای به‌روزرسانی مکان بزنید"
   },
   "mcp": {
-    "title": "خدمات هوش مصنوعی",
+    "title": "ag-mcp",
     "loading": "در حال بارگذاری خدمات...",
     "loadingDetails": "در حال بارگذاری...",
     "footer": "دسترسی خدمات، وابسته به موقعیت مکانی شماست.",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ابتکاری از بنیاد دیجیتال گرین"
   },
   "system": {
     "offline": "اینترنت قطع است",

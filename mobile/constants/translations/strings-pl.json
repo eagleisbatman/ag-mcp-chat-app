@@ -135,7 +135,7 @@
   "settings": {
     "title": "Ustawienia",
     "sectionConversations": "ROZMOWY",
-    "sectionAiServices": "USŁUGI AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "LOKALIZACJA",
     "sectionLanguage": "JĘZYK",
     "sectionAppearance": "WYGLĄD",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Dotknij, aby zaktualizować lokalizację"
   },
   "mcp": {
-    "title": "Usługi AI",
+    "title": "ag-mcp",
     "loading": "Ładowanie usług...",
     "loadingDetails": "Ładowanie...",
     "footer": "Dostępność usług zależy od Twojej lokalizacji",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Inicjatywa Fundacji Digital Green"
   },
   "system": {
     "offline": "Brak internetu",

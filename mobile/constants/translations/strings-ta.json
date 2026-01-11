@@ -135,7 +135,7 @@
   "settings": {
     "title": "அமைப்புகள்",
     "sectionConversations": "உரையாடல்கள்",
-    "sectionAiServices": "AI சேவைகள்",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "இருப்பிடம்",
     "sectionLanguage": "மொழி",
     "sectionAppearance": "தோற்றம்",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "இருப்பிடத்தைப் புதுப்பிக்க தட்டவும்"
   },
   "mcp": {
-    "title": "AI சேவைகள்",
+    "title": "ag-mcp",
     "loading": "சேவைகள் ஏற்றப்படுகிறது...",
     "loadingDetails": "ஏற்றப்படுகிறது...",
     "footer": "சேவை கிடைக்கும் தன்மை உங்கள் இருப்பிடத்தைப் பொறுத்தது",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "டிஜிட்டல் க்ரீன் ஃபவுண்டேஷனின் ஒரு முயற்சி"
   },
   "system": {
     "offline": "இணைய இணைப்பு இல்லை",

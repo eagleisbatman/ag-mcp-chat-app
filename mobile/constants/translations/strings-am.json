@@ -135,7 +135,7 @@
   "settings": {
     "title": "ቅንብሮች",
     "sectionConversations": "ውይይቶች",
-    "sectionAiServices": "የአይአይ አገልግሎቶች",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "አካባቢ",
     "sectionLanguage": "ቋንቋ",
     "sectionAppearance": "ገጽታ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "አካባቢን ለማዘመን ይንኩ"
   },
   "mcp": {
-    "title": "የአይአይ አገልግሎቶች",
+    "title": "ag-mcp",
     "loading": "አገልግሎቶች በመጫን ላይ...",
     "loadingDetails": "በመጫን ላይ...",
     "footer": "የአገልግሎቶች መገኘት በአካባቢዎ ይወሰናል",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "የዲጂታል ግሪን ፋውንዴሽን ተነሳሽነት"
   },
   "system": {
     "offline": "ኢንተርኔት የለም",

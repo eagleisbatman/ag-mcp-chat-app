@@ -135,7 +135,7 @@
   "settings": {
     "title": "Tetapan",
     "sectionConversations": "PERBUALAN",
-    "sectionAiServices": "PERKHIDMATAN AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "LOKASI",
     "sectionLanguage": "BAHASA",
     "sectionAppearance": "PAPARAN",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Ketik untuk kemas kini lokasi"
   },
   "mcp": {
-    "title": "Servis AI",
+    "title": "ag-mcp",
     "loading": "Memuatkan servis...",
     "loadingDetails": "Memuatkan...",
     "footer": "Ketersediaan servis bergantung lokasi anda",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Inisiatif oleh Digital Green Foundation"
   },
   "system": {
     "offline": "Tiada Sambungan Internet",

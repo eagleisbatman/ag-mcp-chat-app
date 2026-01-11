@@ -135,7 +135,7 @@
   "settings": {
     "title": "设置",
     "sectionConversations": "对话",
-    "sectionAiServices": "AI 服务",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "位置",
     "sectionLanguage": "语言",
     "sectionAppearance": "外观",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "点击更新位置"
   },
   "mcp": {
-    "title": "AI 服务",
+    "title": "ag-mcp",
     "loading": "正在加载服务...",
     "loadingDetails": "正在加载...",
     "footer": "服务可用性取决于您的位置",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "由数字绿色基金会发起的一项倡议"
   },
   "system": {
     "offline": "无网络连接",

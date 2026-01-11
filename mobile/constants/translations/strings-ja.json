@@ -135,7 +135,7 @@
   "settings": {
     "title": "設定",
     "sectionConversations": "会話",
-    "sectionAiServices": "AIサービス",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "位置情報",
     "sectionLanguage": "言語",
     "sectionAppearance": "表示",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "タップして場所を更新"
   },
   "mcp": {
-    "title": "AIサービス",
+    "title": "ag-mcp",
     "loading": "サービスを読み込み中...",
     "loadingDetails": "読み込み中...",
     "footer": "サービスは現在地により異なります",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "デジタル・グリーン財団による取り組み"
   },
   "system": {
     "offline": "ネット接続がありません",

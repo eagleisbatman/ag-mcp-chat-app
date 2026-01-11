@@ -135,7 +135,7 @@
   "settings": {
     "title": "Einstellungen",
     "sectionConversations": "UNTERHALTUNGEN",
-    "sectionAiServices": "KI-DIENSTE",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "STANDORT",
     "sectionLanguage": "SPRACHE",
     "sectionAppearance": "AUSSEHEN",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Tippen zum Standort aktualisieren"
   },
   "mcp": {
-    "title": "KI-Dienste",
+    "title": "ag-mcp",
     "loading": "Dienste werden geladen...",
     "loadingDetails": "Lädt...",
     "footer": "Verfügbarkeit der Dienste hängt von Ihrem Standort ab",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Eine Initiative von Digital Green Foundation"
   },
   "system": {
     "offline": "Keine Internetverbindung",

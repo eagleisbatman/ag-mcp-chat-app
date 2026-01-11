@@ -135,7 +135,7 @@
   "settings": {
     "title": "Qindaa'ina",
     "sectionConversations": "HAASA'AA",
-    "sectionAiServices": "TAJAAJILA AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "IDDOO",
     "sectionLanguage": "AFAAN",
     "sectionAppearance": "FUULA",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Bakka haaromsuuf tuqi"
   },
   "mcp": {
-    "title": "Tajaajiloota AI",
+    "title": "ag-mcp",
     "loading": "Tajaajiloota fe'amaa jira...",
     "loadingDetails": "Fe'amaa jira...",
     "footer": "Tajaajilootni bakka kee irratti hundaa'a",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Ka'umsa Dhaabbata Diijitaal Griin Faawundeeshinii"
   },
   "system": {
     "offline": "Intarneetii hin jiru",

@@ -135,7 +135,7 @@
   "settings": {
     "title": "Setting",
     "sectionConversations": "USAPAN",
-    "sectionAiServices": "SERBISYO NG AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "LOKASYON",
     "sectionLanguage": "WIKA",
     "sectionAppearance": "ITSURA",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Pindutin para i-update ang lokasyon"
   },
   "mcp": {
-    "title": "Mga Serbisyo ng AI",
+    "title": "ag-mcp",
     "loading": "Ikinakarga ang mga serbisyo...",
     "loadingDetails": "Ikinakarga...",
     "footer": "Nakadepende sa iyong lokasyon ang serbisyo.",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Isang inisyatibo ng Digital Green Foundation"
   },
   "system": {
     "offline": "Walang internet",

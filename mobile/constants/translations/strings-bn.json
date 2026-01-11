@@ -135,7 +135,7 @@
   "settings": {
     "title": "সেটিংস",
     "sectionConversations": "কথাবার্তা",
-    "sectionAiServices": "এআই পরিষেবা",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "অবস্থান",
     "sectionLanguage": "ভাষা",
     "sectionAppearance": "চেহারা",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "অবস্থান আপডেট করতে চাপুন"
   },
   "mcp": {
-    "title": "এআই সেবা",
+    "title": "ag-mcp",
     "loading": "সেবা লোড হচ্ছে...",
     "loadingDetails": "লোড হচ্ছে...",
     "footer": "আপনার এলাকার উপর সেবার প্রাপ্যতা নির্ভর করে",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ডিজিটাল গ্রিন ফাউন্ডেশন-এর একটি উদ্যোগ"
   },
   "system": {
     "offline": "ইন্টারনেট সংযোগ নেই",

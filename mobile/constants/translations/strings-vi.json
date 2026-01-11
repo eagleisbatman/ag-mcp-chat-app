@@ -135,7 +135,7 @@
   "settings": {
     "title": "Cài đặt",
     "sectionConversations": "TRÒ CHUYỆN",
-    "sectionAiServices": "DỊCH VỤ AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "VỊ TRÍ",
     "sectionLanguage": "NGÔN NGỮ",
     "sectionAppearance": "GIAO DIỆN",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Chạm để cập nhật vị trí"
   },
   "mcp": {
-    "title": "Dịch vụ AI",
+    "title": "ag-mcp",
     "loading": "Đang tải dịch vụ...",
     "loadingDetails": "Đang tải...",
     "footer": "Dịch vụ khả dụng tùy thuộc vị trí của bạn",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Một sáng kiến của Digital Green Foundation"
   },
   "system": {
     "offline": "Mất mạng",

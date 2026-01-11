@@ -135,7 +135,7 @@
   "settings": {
     "title": "ക്രമീകരണങ്ങൾ",
     "sectionConversations": "സംഭാഷണങ്ങൾ",
-    "sectionAiServices": "AI സേവനങ്ങൾ",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "സ്ഥലം",
     "sectionLanguage": "ഭാഷ",
     "sectionAppearance": "രൂപം",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "ലൊക്കേഷൻ അപ്ഡേറ്റ് ചെയ്യാൻ തൊടുക"
   },
   "mcp": {
-    "title": "AI സേവനങ്ങൾ",
+    "title": "ag-mcp",
     "loading": "സേവനങ്ങൾ ലോഡ് ചെയ്യുന്നു...",
     "loadingDetails": "ലോഡ് ചെയ്യുന്നു...",
     "footer": "സേവന ലഭ്യത നിങ്ങളുടെ സ്ഥലത്തെ ആശ്രയിച്ചിരിക്കുന്നു",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ഡിജിറ്റൽ ഗ്രീൻ ഫൗണ്ടേഷന്റെ ഒരു സംരംഭം"
   },
   "system": {
     "offline": "ഇൻ്റർനെറ്റ് ലഭ്യമല്ല",

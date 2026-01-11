@@ -135,7 +135,7 @@
   "settings": {
     "title": "ছেটিংছ",
     "sectionConversations": "কথা-বতৰা",
-    "sectionAiServices": "এ আই সেৱা",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "স্থান",
     "sectionLanguage": "ভাষা",
     "sectionAppearance": "দেখাত",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "স্থান আপডেট কৰিবলৈ টিপক"
   },
   "mcp": {
-    "title": "এ আই সেৱাসমূহ",
+    "title": "ag-mcp",
     "loading": "সেৱাসমূহ লোড হৈ আছে...",
     "loadingDetails": "লোড হৈ আছে...",
     "footer": "সেৱা উপলব্ধতা আপোনাৰ অৱস্থানৰ ওপৰত নিৰ্ভৰ কৰে",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Digital Green Foundation ৰ এটা উদ্যোগ।"
   },
   "system": {
     "offline": "ইণ্টাৰনেট সংযোগ নাই",
