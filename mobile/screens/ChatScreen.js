@@ -78,12 +78,20 @@ export default function ChatScreen({ navigation, route }) {
   // ===========================================
   // FETCH WEATHER DATA (always fresh, no caching)
   // ===========================================
+  const isFetchingWeatherRef = useRef(false);
+
   const fetchWeather = useCallback(async () => {
+    // Need location (either GPS or IP-based)
     if (!location?.latitude || !location?.longitude) {
       return;
     }
 
-    // Always reset states before fetching
+    // Prevent concurrent fetches
+    if (isFetchingWeatherRef.current) {
+      return;
+    }
+
+    isFetchingWeatherRef.current = true;
     setWeatherLoading(true);
     setWeatherError(false);
 
@@ -121,10 +129,16 @@ export default function ChatScreen({ navigation, route }) {
       setWeatherError(true);
     } finally {
       setWeatherLoading(false);
+      isFetchingWeatherRef.current = false;
     }
   }, [location?.latitude, location?.longitude, language, locationDetails?.displayName]);
 
-  // Fetch weather on screen focus (covers both initial load and navigation back)
+  // Fetch weather when location/language changes (handles initial load + location updates)
+  useEffect(() => {
+    fetchWeather();
+  }, [fetchWeather]);
+
+  // Also fetch on screen focus (handles navigation back from other screens)
   useFocusEffect(
     useCallback(() => {
       fetchWeather();
