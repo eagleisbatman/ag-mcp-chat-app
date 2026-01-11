@@ -47,7 +47,6 @@ export default function ChatScreen({ navigation, route }) {
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherError, setWeatherError] = useState(false);
   const [weatherProvider, setWeatherProvider] = useState(null);
-  const lastWeatherPrefsRef = useRef(null);
 
   // ===========================================
   // SCROLL BEHAVIOR STATE & REFS
@@ -77,49 +76,35 @@ export default function ChatScreen({ navigation, route }) {
   }, [isNewSession, startNewSession]);
 
   // ===========================================
-  // FETCH WEATHER DATA
+  // FETCH WEATHER DATA (always fresh, no caching)
   // ===========================================
-  const fetchWeather = useCallback(async (forceRefresh = false) => {
+  const fetchWeather = useCallback(async () => {
     if (!location?.latitude || !location?.longitude) {
       return;
     }
 
-    // Load service preferences
-    let prefs = {};
-    try {
-      const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
-      if (stored) prefs = JSON.parse(stored);
-    } catch (e) {
-      console.log('[Weather] Failed to load service prefs:', e);
-    }
-
-    const weatherPref = prefs.weather || 'accuweather';
-
-    // Skip if not forced and prefs haven't changed
-    if (!forceRefresh && lastWeatherPrefsRef.current === weatherPref && weatherData) {
-      return;
-    }
-
-    lastWeatherPrefsRef.current = weatherPref;
+    // Always reset states before fetching
     setWeatherLoading(true);
     setWeatherError(false);
 
     try {
+      // Load service preferences
+      let prefs = {};
+      try {
+        const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
+        if (stored) prefs = JSON.parse(stored);
+      } catch (e) {
+        console.log('[Weather] Failed to load service prefs:', e);
+      }
+
+      const weatherPref = prefs.weather || 'accuweather';
+
       const data = await weatherService.getCurrentAndForecast(
         location.latitude,
         location.longitude,
         language || 'en',
-        weatherPref // Pass preferred provider
+        weatherPref
       );
-
-      // Log weather data for debugging
-      console.log('[ChatScreen] Weather data received:', {
-        hasCurrent: !!data.current,
-        currentTemp: data.current?.temperature,
-        hasForecast: !!data.forecast,
-        forecastDays: data.forecast?.daily?.length || 0,
-        provider: data.provider,
-      });
 
       // Use app's location name instead of provider's
       if (locationDetails?.displayName) {
@@ -128,7 +113,7 @@ export default function ChatScreen({ navigation, route }) {
           city: locationDetails.displayName,
         };
       }
-      // Store provider info for display
+
       setWeatherProvider(data.provider || weatherPref);
       setWeatherData(data);
     } catch (error) {
@@ -137,17 +122,12 @@ export default function ChatScreen({ navigation, route }) {
     } finally {
       setWeatherLoading(false);
     }
-  }, [location?.latitude, location?.longitude, language, locationDetails?.displayName, weatherData]);
+  }, [location?.latitude, location?.longitude, language, locationDetails?.displayName]);
 
-  // Initial weather fetch
-  useEffect(() => {
-    fetchWeather(true);
-  }, [location?.latitude, location?.longitude, language]);
-
-  // Refresh weather when screen comes into focus (e.g., returning from settings)
+  // Fetch weather on screen focus (covers both initial load and navigation back)
   useFocusEffect(
     useCallback(() => {
-      fetchWeather(false); // Will only refresh if prefs changed
+      fetchWeather();
     }, [fetchWeather])
   );
 

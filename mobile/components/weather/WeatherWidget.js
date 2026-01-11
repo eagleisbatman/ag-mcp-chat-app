@@ -75,17 +75,6 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
     return null;
   }
 
-  // Debug logging for forecast data
-  if (data && !loading) {
-    console.log('[WeatherWidget] Rendering:', {
-      hasData: !!data,
-      hasCurrent: !!data?.current,
-      hasForecast: !!data?.forecast,
-      forecastDays: data?.forecast?.daily?.length || 0,
-      provider,
-    });
-  }
-
   // Skeleton loading state
   if (loading) {
     return (
