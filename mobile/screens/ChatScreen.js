@@ -1,5 +1,7 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image, Pressable } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const logoImage = require('../assets/logo.png');
 import * as Haptics from 'expo-haptics';
@@ -16,6 +18,8 @@ import TypingIndicator from '../components/ui/TypingIndicator';
 import WeatherWidget from '../components/weather/WeatherWidget';
 import { weatherService } from '../services/weather';
 import { t } from '../constants/strings';
+
+const SERVICE_PREFS_KEY = '@service_preferences';
 
 export default function ChatScreen({ navigation, route }) {
   const { theme, isDark, language, location, locationDetails, setLocation } = useApp();
@@ -42,6 +46,8 @@ export default function ChatScreen({ navigation, route }) {
   const [weatherData, setWeatherData] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherError, setWeatherError] = useState(false);
+  const [weatherProvider, setWeatherProvider] = useState(null);
+  const lastWeatherPrefsRef = useRef(null);
 
   // ===========================================
   // SCROLL BEHAVIOR STATE & REFS
@@ -73,39 +79,67 @@ export default function ChatScreen({ navigation, route }) {
   // ===========================================
   // FETCH WEATHER DATA
   // ===========================================
+  const fetchWeather = useCallback(async (forceRefresh = false) => {
+    if (!location?.latitude || !location?.longitude) {
+      return;
+    }
+
+    // Load service preferences
+    let prefs = {};
+    try {
+      const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
+      if (stored) prefs = JSON.parse(stored);
+    } catch (e) {
+      console.log('[Weather] Failed to load service prefs:', e);
+    }
+
+    const weatherPref = prefs.weather || 'accuweather';
+
+    // Skip if not forced and prefs haven't changed
+    if (!forceRefresh && lastWeatherPrefsRef.current === weatherPref && weatherData) {
+      return;
+    }
+
+    lastWeatherPrefsRef.current = weatherPref;
+    setWeatherLoading(true);
+    setWeatherError(false);
+
+    try {
+      const data = await weatherService.getCurrentAndForecast(
+        location.latitude,
+        location.longitude,
+        language || 'en',
+        weatherPref // Pass preferred provider
+      );
+      // Use app's location name instead of provider's
+      if (locationDetails?.displayName) {
+        data.location = {
+          ...data.location,
+          city: locationDetails.displayName,
+        };
+      }
+      // Store provider info for display
+      setWeatherProvider(data.provider || weatherPref);
+      setWeatherData(data);
+    } catch (error) {
+      console.error('[Weather] Failed to fetch weather:', error);
+      setWeatherError(true);
+    } finally {
+      setWeatherLoading(false);
+    }
+  }, [location?.latitude, location?.longitude, language, locationDetails?.displayName, weatherData]);
+
+  // Initial weather fetch
   useEffect(() => {
-    const fetchWeather = async () => {
-      if (!location?.latitude || !location?.longitude) {
-        return;
-      }
+    fetchWeather(true);
+  }, [location?.latitude, location?.longitude, language]);
 
-      setWeatherLoading(true);
-      setWeatherError(false);
-
-      try {
-        const data = await weatherService.getCurrentAndForecast(
-          location.latitude,
-          location.longitude,
-          language || 'en'
-        );
-        // Use app's location name instead of AccuWeather's
-        if (locationDetails?.displayName) {
-          data.location = {
-            ...data.location,
-            city: locationDetails.displayName,
-          };
-        }
-        setWeatherData(data);
-      } catch (error) {
-        console.error('[Weather] Failed to fetch weather:', error);
-        setWeatherError(true); // Hide widget on error
-      } finally {
-        setWeatherLoading(false);
-      }
-    };
-
-    fetchWeather();
-  }, [location?.latitude, location?.longitude, language, locationDetails?.displayName]);
+  // Refresh weather when screen comes into focus (e.g., returning from settings)
+  useFocusEffect(
+    useCallback(() => {
+      fetchWeather(false); // Will only refresh if prefs changed
+    }, [fetchWeather])
+  );
 
   // ===========================================
   // MESSAGE HEIGHT TRACKING
@@ -463,6 +497,7 @@ export default function ChatScreen({ navigation, route }) {
                 data={weatherData}
                 loading={weatherLoading}
                 error={weatherError}
+                provider={weatherProvider}
               />
             }
           />

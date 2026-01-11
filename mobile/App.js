@@ -1,33 +1,73 @@
+console.log('[App] Starting App.js imports...');
+
 import React, { useEffect, useCallback } from 'react';
+console.log('[App] React imported');
+
 import { ActivityIndicator, View, StyleSheet, Animated } from 'react-native';
+console.log('[App] react-native imported');
+
 import { SystemBars } from 'react-native-edge-to-edge';
+console.log('[App] edge-to-edge imported');
+
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+console.log('[App] keyboard-controller imported');
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+console.log('[App] navigation imported');
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+console.log('[App] safe-area imported');
 
 import { AppProvider, useApp } from './contexts/AppContext';
+console.log('[App] AppContext imported');
+
 import { ToastProvider, useToast } from './contexts/ToastContext';
+console.log('[App] ToastContext imported');
+
 // OneSignal notifications disabled for now - uncomment when ready
 // import { NotificationProvider, useNotifications } from './contexts/NotificationContext';
 import OfflineIndicator from './components/OfflineIndicator';
+console.log('[App] OfflineIndicator imported');
+
 import ErrorBoundary from './components/ErrorBoundary';
+console.log('[App] ErrorBoundary imported');
+
 // import NotificationHandler from './components/notifications/NotificationHandler';
 
 // Screens
 import WelcomeScreen from './screens/WelcomeScreen';
+console.log('[App] WelcomeScreen imported');
+
 import LocationScreen from './screens/LocationScreen';
+console.log('[App] LocationScreen imported');
+
 import LanguageScreen from './screens/LanguageScreen';
+console.log('[App] LanguageScreen imported');
+
 // HomeScreen disabled - uses content API that's not deployed yet
 // import HomeScreen from './screens/HomeScreen';
 import ChatScreen from './screens/ChatScreen';
+console.log('[App] ChatScreen imported');
+
 // ContentDetailScreen disabled - uses content API that's not deployed yet
 // import ContentDetailScreen from './screens/ContentDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
+console.log('[App] SettingsScreen imported');
+
 import LanguageSelectScreen from './screens/LanguageSelectScreen';
+console.log('[App] LanguageSelectScreen imported');
+
 import HistoryScreen from './screens/HistoryScreen';
+console.log('[App] HistoryScreen imported');
+
 import McpServersScreen from './screens/McpServersScreen';
+console.log('[App] McpServersScreen imported');
+
 import McpServerDetailScreen from './screens/McpServerDetailScreen';
+console.log('[App] McpServerDetailScreen imported');
+
+console.log('[App] All imports complete!');
 
 const Stack = createNativeStackNavigator();
 

@@ -6,10 +6,13 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Switch,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
+// OneSignal disabled for now - uncomment when ready
+// import { useNotifications } from '../contexts/NotificationContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
@@ -21,17 +24,28 @@ import { t } from '../constants/strings';
 export default function SettingsScreen({ navigation }) {
   const { showSuccess, showWarning, showError } = useToast();
   const [isUpdatingLocation, setIsUpdatingLocation] = useState(false);
-  const { 
-    theme, 
-    themeMode, 
+  const {
+    theme,
+    themeMode,
     setThemeMode,
-    language, 
-    location, 
+    language,
+    location,
     locationStatus,
     locationDetails,
     setLocation,
-    resetOnboarding 
+    resetOnboarding
   } = useApp();
+
+  // OneSignal notifications disabled for now
+  // const {
+  //   isPermissionGranted: notificationsEnabled,
+  //   preferences: notificationPrefs,
+  //   updatePreferences: updateNotificationPrefs,
+  //   requestPermission: requestNotificationPermission,
+  // } = useNotifications();
+  const notificationsEnabled = false; // Disabled until OneSignal is set up
+  const notificationPrefs = {};
+  const isUpdatingNotifications = false;
 
   const handleChangeLanguage = () => {
     navigation.navigate('LanguageSelect');
@@ -203,6 +217,24 @@ export default function SettingsScreen({ navigation }) {
           />
         </Card>
       </View>
+
+      {/* 1.6. Notifications Section - Disabled until OneSignal is set up */}
+      {/* <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t('settings.sectionNotifications')}</Text>
+        <Card>
+          <ListRow
+            title={t('settings.enableNotifications')}
+            subtitle={t('settings.enableNotificationsSubtitle')}
+            left={
+              <View style={styles.iconContainer}>
+                <AppIcon name="notifications-off" size={18} color={theme.textMuted} />
+              </View>
+            }
+            paddingHorizontal={SPACING.md}
+            accessibilityLabel={t('settings.enableNotifications')}
+          />
+        </Card>
+      </View> */}
 
       {/* 2. Location Section */}
       <View style={styles.section}>
