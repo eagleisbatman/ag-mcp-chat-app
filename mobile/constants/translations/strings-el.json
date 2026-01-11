@@ -135,7 +135,7 @@
   "settings": {
     "title": "Ρυθμίσεις",
     "sectionConversations": "ΣΥΝΟΜΙΛΙΕΣ",
-    "sectionAiServices": "ΥΠΗΡΕΣΙΕΣ Α.Ι.",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ΤΟΠΟΘΕΣΙΑ",
     "sectionLanguage": "ΓΛΩΣΣΑ",
     "sectionAppearance": "ΕΜΦΑΝΙΣΗ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Πατήστε για ενημέρωση τοποθεσίας"
   },
   "mcp": {
-    "title": "Έξυπνες Υπηρεσίες",
+    "title": "ag-mcp",
     "loading": "Φόρτωση υπηρεσιών...",
     "loadingDetails": "Φόρτωση...",
     "footer": "Η διαθεσιμότητα των υπηρεσιών εξαρτάται από την τοποθεσία σας",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Μια πρωτοβουλία από Digital Green Foundation"
   },
   "system": {
     "offline": "Χωρίς σύνδεση internet",

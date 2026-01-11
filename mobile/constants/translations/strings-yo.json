@@ -135,7 +135,7 @@
   "settings": {
     "title": "Ètò",
     "sectionConversations": "ÌJÍRÒRÒ",
-    "sectionAiServices": "IṢẸ́ AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "IPÒ",
     "sectionLanguage": "ÈDÈ",
     "sectionAppearance": "ÌRÍSÍ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Fọwọ́ tẹ̀ láti ṣe àtúnṣe ipò"
   },
   "mcp": {
-    "title": "Iṣẹ́ AI",
+    "title": "ag-mcp",
     "loading": "Ń kó àwọn iṣẹ́ wọlé...",
     "loadingDetails": "Ń kó wọlé...",
     "footer": "Ìṣe iṣẹ́ dá lórí ibi tí ẹ wà",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Ìpilẹ̀ṣẹ̀ láti ọwọ́ Digital Green Foundation"
   },
   "system": {
     "offline": "Kò sí Íntánẹ́ẹ̀tì",

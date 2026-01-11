@@ -135,7 +135,7 @@
   "settings": {
     "title": "Налаштування",
     "sectionConversations": "РОЗМОВИ",
-    "sectionAiServices": "AI-СЕРВІСИ",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ЛОКАЦІЯ",
     "sectionLanguage": "МОВА",
     "sectionAppearance": "ВИГЛЯД",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Натисніть, щоб оновити місцезнаходження"
   },
   "mcp": {
-    "title": "Сервіси ШІ",
+    "title": "ag-mcp",
     "loading": "Завантаження сервісів...",
     "loadingDetails": "Завантаження...",
     "footer": "Доступність сервісів залежить від вашого місцезнаходження",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Ініціатива від Digital Green Foundation"
   },
   "system": {
     "offline": "Немає інтернету",

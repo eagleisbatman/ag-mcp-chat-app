@@ -135,7 +135,7 @@
   "settings": {
     "title": "ترتیبات",
     "sectionConversations": "گفتگوئیں",
-    "sectionAiServices": "AI خدمات",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "مقام",
     "sectionLanguage": "زبان",
     "sectionAppearance": "انداز",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "مقام اپڈیٹ کرنے کے لیے ٹیپ کریں"
   },
   "mcp": {
-    "title": "AI خدمات",
+    "title": "ag-mcp",
     "loading": "خدمات لوڈ ہو رہی ہیں...",
     "loadingDetails": "لوڈ ہو رہا ہے...",
     "footer": "خدمات کی دستیابی آپ کے مقام پر منحصر ہے۔",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ڈیجیٹل گرین فاؤنڈیشن کی ایک پہل"
   },
   "system": {
     "offline": "انٹرنیٹ نہیں",

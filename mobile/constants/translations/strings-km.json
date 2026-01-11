@@ -135,7 +135,7 @@
   "settings": {
     "title": "ការកំណត់",
     "sectionConversations": "ការសន្ទនា",
-    "sectionAiServices": "សេវា AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ទីតាំង",
     "sectionLanguage": "ភាសា",
     "sectionAppearance": "រូបរាង",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "ចុចដើម្បីធ្វើបច្ចុប្បន្នភាពទីតាំង"
   },
   "mcp": {
-    "title": "សេវា AI",
+    "title": "ag-mcp",
     "loading": "កំពុងផ្ទុកសេវា...",
     "loadingDetails": "កំពុងផ្ទុក...",
     "footer": "សេវាមានឬអត់ តាមទីតាំងអ្នក",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "គំនិតផ្តួចផ្តើមដោយមូលនិធិឌីជីថលហ្គ្រីន"
   },
   "system": {
     "offline": "អត់មានអ៊ីនធឺណិត",

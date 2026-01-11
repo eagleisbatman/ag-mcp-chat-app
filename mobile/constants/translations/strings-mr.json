@@ -135,7 +135,7 @@
   "settings": {
     "title": "सेटिंग्ज",
     "sectionConversations": "गप्पा",
-    "sectionAiServices": "एआय सेवा",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "स्थान",
     "sectionLanguage": "भाषा",
     "sectionAppearance": "देखावा",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "स्थान अपडेट करण्यासाठी टॅप करा"
   },
   "mcp": {
-    "title": "एआय सेवा",
+    "title": "ag-mcp",
     "loading": "सेवा लोड होत आहेत...",
     "loadingDetails": "लोड होत आहे...",
     "footer": "सेवेची उपलब्धता तुमच्या स्थानावर अवलंबून आहे",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "डिजिटल ग्रीन फाउंडेशनची एक पहल"
   },
   "system": {
     "offline": "इंटरनेट नाही",

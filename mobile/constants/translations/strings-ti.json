@@ -135,7 +135,7 @@
   "settings": {
     "title": "ቅንብራት",
     "sectionConversations": "ዘረባታት",
-    "sectionAiServices": "AI ኣገልግሎታት",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ቦታ",
     "sectionLanguage": "ቋንቋ",
     "sectionAppearance": "መልክዕ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "ንቦታኻ ንምሕዳስ ጠውቕ"
   },
   "mcp": {
-    "title": "AI ኣገልግሎታት",
+    "title": "ag-mcp",
     "loading": "ኣገልግሎታት ይጽዕን ኣሎ...",
     "loadingDetails": "ይጽዕን ኣሎ...",
     "footer": "ኣገልግሎት ኣብ ቦታኹም ይምርኮስ",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ሓደ ውጥን ብ ዲጂታል ግሪን ፋውንዴሽን"
   },
   "system": {
     "offline": "ኢንተርነት የለን",

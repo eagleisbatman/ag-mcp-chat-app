@@ -135,7 +135,7 @@
   "settings": {
     "title": "Dejimo",
     "sectionConversations": "WADAHADALADA",
-    "sectionAiServices": "ADEEGYADA AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "GOOBTA",
     "sectionLanguage": "LUUQADA",
     "sectionAppearance": "MUQAALKA",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Taabo si aad goobta u cusboonaysiiso"
   },
   "mcp": {
-    "title": "Adeegyada AI",
+    "title": "ag-mcp",
     "loading": "Adeegyada ayaa soo degaya...",
     "loadingDetails": "Soo degaya...",
     "footer": "Adeeggu waxa uu ku xidhan yahay goobtaada",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Hindise ay waddo Hay'adda Digital Green"
   },
   "system": {
     "offline": "Ma jiro internet",

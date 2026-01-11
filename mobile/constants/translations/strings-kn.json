@@ -135,7 +135,7 @@
   "settings": {
     "title": "ಸೆಟ್ಟಿಂಗ್ಸ್",
     "sectionConversations": "ಸಂಭಾಷಣೆಗಳು",
-    "sectionAiServices": "AI ಸೇವೆಗಳು",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ಸ್ಥಳ",
     "sectionLanguage": "ಭಾಷೆ",
     "sectionAppearance": "ನೋಟ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "ಸ್ಥಳವನ್ನು ನವೀಕರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ"
   },
   "mcp": {
-    "title": "AI ಸೇವೆಗಳು",
+    "title": "ag-mcp",
     "loading": "ಸೇವೆಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...",
     "loadingDetails": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
     "footer": "ನಿಮ್ಮ ಸ್ಥಳದ ಪ್ರಕಾರ ಸೇವೆಗಳು ಲಭ್ಯ.",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ಡಿಜಿಟಲ್ ಗ್ರೀನ್ ಫೌಂಡೇಶನ್ ನಿಂದ ಒಂದು ಉಪಕ್ರಮ"
   },
   "system": {
     "offline": "ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ",

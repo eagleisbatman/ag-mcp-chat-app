@@ -135,7 +135,7 @@
   "settings": {
     "title": "Inställningar",
     "sectionConversations": "SAMTAL",
-    "sectionAiServices": "AI-TJÄNSTER",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "PLATS",
     "sectionLanguage": "SPRÅK",
     "sectionAppearance": "UTSEENDE",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Tryck för att uppdatera plats"
   },
   "mcp": {
-    "title": "AI-tjänster",
+    "title": "ag-mcp",
     "loading": "Laddar tjänster...",
     "loadingDetails": "Laddar...",
     "footer": "Tjänsternas tillgänglighet beror på din plats",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Ett initiativ av Digital Green Foundation"
   },
   "system": {
     "offline": "Ingen internetanslutning",

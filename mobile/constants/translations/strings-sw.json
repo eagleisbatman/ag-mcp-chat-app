@@ -135,7 +135,7 @@
   "settings": {
     "title": "Mipangilio",
     "sectionConversations": "MAZUNGUMZO",
-    "sectionAiServices": "HUDUMA ZA AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "MAHALI",
     "sectionLanguage": "LUGHA",
     "sectionAppearance": "MUONEKANO",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Gusa ili kusasisha eneo"
   },
   "mcp": {
-    "title": "Huduma za AI",
+    "title": "ag-mcp",
     "loading": "Inapakia huduma...",
     "loadingDetails": "Inapakia...",
     "footer": "Upatikanaji wa huduma hutegemea eneo lako",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Mpango wa Digital Green Foundation"
   },
   "system": {
     "offline": "Hakuna intaneti",

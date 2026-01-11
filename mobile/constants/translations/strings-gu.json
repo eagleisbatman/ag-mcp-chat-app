@@ -135,7 +135,7 @@
   "settings": {
     "title": "સેટિંગ્સ",
     "sectionConversations": "વાતચીત",
-    "sectionAiServices": "AI સેવાઓ",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "સ્થાન",
     "sectionLanguage": "ભાષા",
     "sectionAppearance": "દેખાવ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "સ્થાન અપડેટ કરવા ટેપ કરો"
   },
   "mcp": {
-    "title": "AI સેવાઓ",
+    "title": "ag-mcp",
     "loading": "સેવાઓ લોડ થઈ રહી છે...",
     "loadingDetails": "લોડ થઈ રહ્યું છે...",
     "footer": "સેવા તમારા સ્થાન પર આધારિત છે",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ડિજિટલ ગ્રીન ફાઉન્ડેશન દ્વારા એક પહેલ"
   },
   "system": {
     "offline": "ઇન્ટરનેટ નથી",

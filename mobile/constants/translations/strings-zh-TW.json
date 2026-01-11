@@ -135,7 +135,7 @@
   "settings": {
     "title": "設定",
     "sectionConversations": "對話",
-    "sectionAiServices": "AI 服務",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "位置",
     "sectionLanguage": "語言",
     "sectionAppearance": "外觀",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "輕觸以更新位置"
   },
   "mcp": {
-    "title": "AI 服務",
+    "title": "ag-mcp",
     "loading": "載入服務中...",
     "loadingDetails": "載入中...",
     "footer": "服務依您所在位置提供",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "由數碼綠色基金會發起"
   },
   "system": {
     "offline": "無網路連線",

@@ -135,7 +135,7 @@
   "settings": {
     "title": "설정",
     "sectionConversations": "대화",
-    "sectionAiServices": "AI 서비스",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "위치",
     "sectionLanguage": "언어",
     "sectionAppearance": "화면",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "눌러서 위치 업데이트"
   },
   "mcp": {
-    "title": "AI 서비스",
+    "title": "ag-mcp",
     "loading": "서비스 불러오는 중...",
     "loadingDetails": "불러오는 중...",
     "footer": "서비스 이용은 위치에 따라 달라집니다.",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "디지털 그린 재단의 사업"
   },
   "system": {
     "offline": "인터넷 연결 없음",

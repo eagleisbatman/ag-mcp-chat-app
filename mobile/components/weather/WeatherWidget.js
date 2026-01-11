@@ -5,16 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   Animated,
-  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import { t } from '../../constants/strings';
 import WeatherIcon from './WeatherIcon';
-
-// Tomorrow.io "Powered by" logo
-const TOMORROW_IO_LOGO = require('../../assets/logos/Powered_by_Tomorrow-Black.png');
 
 /**
  * Skeleton placeholder with pulse animation
@@ -218,17 +214,9 @@ const WeatherWidget = ({ data, loading, error, provider }) => {
       {/* Provider attribution */}
       {providerName && (
         <View style={[styles.providerRow, { borderTopColor: theme.surfaceVariant }]}>
-          {provider === 'tomorrow-io' ? (
-            <Image
-              source={TOMORROW_IO_LOGO}
-              style={styles.poweredByLogo}
-              resizeMode="contain"
-            />
-          ) : (
-            <Text style={[styles.providerText, { color: theme.textMuted }]}>
-              {t('weather.dataFrom') || 'Data from'} {providerName}
-            </Text>
-          )}
+          <Text style={[styles.providerText, { color: theme.textMuted }]}>
+            {t('weather.dataFrom') || 'Data from'} {providerName}
+          </Text>
         </View>
       )}
     </View>
@@ -442,10 +430,6 @@ const styles = StyleSheet.create({
   providerText: {
     fontSize: 10,
     fontWeight: TYPOGRAPHY.weights.medium,
-  },
-  poweredByLogo: {
-    height: 16,
-    width: 100,
   },
 });
 

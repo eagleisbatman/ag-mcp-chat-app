@@ -135,7 +135,7 @@
   "settings": {
     "title": "Configurações",
     "sectionConversations": "CONVERSAS",
-    "sectionAiServices": "SERVIÇOS DE IA",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "LOCALIZAÇÃO",
     "sectionLanguage": "IDIOMA",
     "sectionAppearance": "APARÊNCIA",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Toque para atualizar localização"
   },
   "mcp": {
-    "title": "Serviços de IA",
+    "title": "ag-mcp",
     "loading": "Carregando serviços...",
     "loadingDetails": "Carregando...",
     "footer": "A disponibilidade do serviço depende da sua localização",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Uma iniciativa da Digital Green Foundation"
   },
   "system": {
     "offline": "Sem internet",

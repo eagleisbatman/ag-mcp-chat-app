@@ -135,7 +135,7 @@
   "settings": {
     "title": "Setări",
     "sectionConversations": "CONVERSAȚII",
-    "sectionAiServices": "SERVICII AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "LOCAȚIE",
     "sectionLanguage": "LIMBĂ",
     "sectionAppearance": "ASPECT",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Atinge pentru a actualiza locația"
   },
   "mcp": {
-    "title": "Servicii AI",
+    "title": "ag-mcp",
     "loading": "Se încarcă servicii...",
     "loadingDetails": "Se încarcă...",
     "footer": "Disponibilitatea serviciilor depinde de locație",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "O inițiativă a Fundației Digital Green"
   },
   "system": {
     "offline": "Fără conexiune internet",

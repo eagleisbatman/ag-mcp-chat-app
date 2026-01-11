@@ -135,7 +135,7 @@
   "settings": {
     "title": "الإعدادات",
     "sectionConversations": "المحادثات",
-    "sectionAiServices": "خدمات الذكاء",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "الموقع",
     "sectionLanguage": "اللغة",
     "sectionAppearance": "المظهر",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "انقر لتحديث الموقع"
   },
   "mcp": {
-    "title": "الخدمات الذكية",
+    "title": "ag-mcp",
     "loading": "جاري تحميل الخدمات...",
     "loadingDetails": "جاري التحميل...",
     "footer": "توفر الخدمة يعتمد على موقعك",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "مبادرة من مؤسسة ديجيتال جرين"
   },
   "system": {
     "offline": "لا يوجد إنترنت",

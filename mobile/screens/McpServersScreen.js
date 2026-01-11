@@ -26,6 +26,10 @@ import { updatePreferences } from '../services/db';
 
 const STORAGE_KEY = '@service_preferences';
 
+// Tomorrow.io logos for light/dark mode
+const TOMORROW_IO_LOGO_LIGHT = require('../assets/logos/Powered_by_Tomorrow-Black.png');
+const TOMORROW_IO_LOGO_DARK = require('../assets/logos/Powered_by_Tomorrow-White.png');
+
 // Internal servers that should be hidden from users
 const INTERNAL_SERVERS = [
   'content',
@@ -135,7 +139,7 @@ const SERVER_INFO = {
     name: 'Tomorrow.io',
     stringKey: 'mcp.services.tomorrowIo',
     icon: 'cloud-sync',
-    logo: null,
+    logo: require('../assets/logos/Powered_by_Tomorrow-Black.png'),
   },
   'feed-formulation': {
     name: 'Feed Formulation',
@@ -163,15 +167,21 @@ const SERVER_INFO = {
   },
 };
 
-function ServiceCard({ server, theme, onPress, isSelectable, isSelected, onSelect }) {
+function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected, onSelect }) {
   const isActive = server.displayStatus === 'active';
   const isComingSoon = server.displayStatus === 'coming_soon';
   const serverInfo = SERVER_INFO[server.slug];
+
+  // Tomorrow.io has a wide "Powered by" logo that needs special handling
+  const isTomorrowIo = server.slug === 'tomorrow-io';
+  // Select correct Tomorrow.io logo based on theme
+  const tomorrowIoLogo = isDark ? TOMORROW_IO_LOGO_DARK : TOMORROW_IO_LOGO_LIGHT;
+
   const info = serverInfo ? {
     name: serverInfo.name, // Brand names not translated
     description: t(`${serverInfo.stringKey}.tagline`),
     icon: serverInfo.icon,
-    logo: serverInfo.logo,
+    logo: isTomorrowIo ? tomorrowIoLogo : serverInfo.logo,
   } : {
     name: server.name?.replace(' MCP', '').replace(' Server', ''),
     description: server.description || t('mcp.fallback.service'),
@@ -192,10 +202,15 @@ function ServiceCard({ server, theme, onPress, isSelectable, isSelected, onSelec
         onPress={onPress}
         left={
           info.logo ? (
-            <View style={[styles.serviceIcon, styles.logoContainer, { backgroundColor: theme.surface }]}>
+            <View style={[
+              styles.serviceIcon,
+              styles.logoContainer,
+              isTomorrowIo && styles.wideLogoContainer,
+              { backgroundColor: theme.surface }
+            ]}>
               <Image
                 source={typeof info.logo === 'string' ? { uri: info.logo } : info.logo}
-                style={styles.serviceLogo}
+                style={isTomorrowIo ? styles.wideLogo : styles.serviceLogo}
                 resizeMode="contain"
               />
             </View>
@@ -244,7 +259,7 @@ function ServiceCard({ server, theme, onPress, isSelectable, isSelected, onSelec
   );
 }
 
-function CategorySection({ category, servers, theme, onServerPress, preferences, onSelectProvider }) {
+function CategorySection({ category, servers, theme, isDark, onServerPress, preferences, onSelectProvider }) {
   const config = SERVICE_CATEGORIES[category];
   if (!config || servers.length === 0) return null;
 
@@ -285,6 +300,7 @@ function CategorySection({ category, servers, theme, onServerPress, preferences,
             key={server.slug}
             server={server}
             theme={theme}
+            isDark={isDark}
             onPress={() => onServerPress(server.slug)}
             isSelectable={isSelectable}
             isSelected={isSelected}
@@ -297,7 +313,7 @@ function CategorySection({ category, servers, theme, onServerPress, preferences,
 }
 
 export default function McpServersScreen({ navigation }) {
-  const { theme, location, locationDetails } = useApp();
+  const { theme, isDark, location, locationDetails } = useApp();
   const { showError, showSuccess } = useToast();
 
   const [loading, setLoading] = useState(true);
@@ -457,6 +473,11 @@ export default function McpServersScreen({ navigation }) {
             />
           }
         >
+          {/* Initiative Description */}
+          <Text style={[styles.descriptionText, { color: theme.textMuted }]}>
+            {t('mcp.description')}
+          </Text>
+
           {/* Location Summary */}
           <View style={styles.summarySection}>
             <View style={styles.locationRow}>
@@ -478,6 +499,7 @@ export default function McpServersScreen({ navigation }) {
               category={category}
               servers={serversByCategory[category] || []}
               theme={theme}
+              isDark={isDark}
               onServerPress={handleServerPress}
               preferences={preferences}
               onSelectProvider={handleSelectProvider}
@@ -546,6 +568,11 @@ const styles = StyleSheet.create({
   summaryText: {
     fontSize: TYPOGRAPHY.sizes.sm,
   },
+  descriptionText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontStyle: 'italic',
+    marginBottom: SPACING.md,
+  },
   categorySection: {
     marginBottom: SPACING.xl,
   },
@@ -596,6 +623,14 @@ const styles = StyleSheet.create({
   serviceLogo: {
     width: 24,
     height: 24,
+  },
+  wideLogoContainer: {
+    width: 80,
+    borderWidth: 0,
+  },
+  wideLogo: {
+    width: 72,
+    height: 28,
   },
   inUseBadge: {
     paddingHorizontal: SPACING.sm,

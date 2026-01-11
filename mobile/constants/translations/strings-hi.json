@@ -135,7 +135,7 @@
   "settings": {
     "title": "सेटिंग्स",
     "sectionConversations": "बातचीत",
-    "sectionAiServices": "एआई सेवाएं",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "स्थान",
     "sectionLanguage": "भाषा",
     "sectionAppearance": "दिखावट",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "जगह अपडेट करने के लिए टैप करें"
   },
   "mcp": {
-    "title": "AI सेवाएँ",
+    "title": "ag-mcp",
     "loading": "सेवाएँ लोड हो रही हैं...",
     "loadingDetails": "लोड हो रहा है...",
     "footer": "सेवा की उपलब्धता आपके स्थान पर निर्भर करती है",
@@ -328,7 +328,8 @@
       "wheat": "गेहूं",
       "maize": "मक्का",
       "beans": "फलियाँ"
-    }
+    },
+    "description": "डिजिटल ग्रीन फ़ाउंडेशन द्वारा एक पहल"
   },
   "system": {
     "offline": "इंटरनेट कनेक्शन नहीं है",

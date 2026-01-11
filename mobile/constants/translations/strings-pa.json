@@ -135,7 +135,7 @@
   "settings": {
     "title": "ਸੈਟਿੰਗਾਂ",
     "sectionConversations": "ਗੱਲਬਾਤ",
-    "sectionAiServices": "AI ਸੇਵਾਵਾਂ",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ਟਿਕਾਣਾ",
     "sectionLanguage": "ਭਾਸ਼ਾ",
     "sectionAppearance": "ਦਿੱਖ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "ਟਿਕਾਣਾ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ"
   },
   "mcp": {
-    "title": "ਏ.ਆਈ. ਸੇਵਾਵਾਂ",
+    "title": "ag-mcp",
     "loading": "ਸੇਵਾਵਾਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ...",
     "loadingDetails": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
     "footer": "ਸੇਵਾ ਦੀ ਉਪਲਬਧਤਾ ਤੁਹਾਡੇ ਟਿਕਾਣੇ 'ਤੇ ਨਿਰਭਰ ਕਰਦੀ ਹੈ",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ਡਿਜੀਟਲ ਗ੍ਰੀਨ ਫਾਊਂਡੇਸ਼ਨ ਵੱਲੋਂ ਇੱਕ ਪਹਿਲ"
   },
   "system": {
     "offline": "ਇੰਟਰਨੈੱਟ ਨਹੀਂ",

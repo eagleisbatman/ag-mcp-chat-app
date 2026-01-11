@@ -135,7 +135,7 @@
   "settings": {
     "title": "సెట్టింగ్స్",
     "sectionConversations": "సంభాషణలు",
-    "sectionAiServices": "AI సేవలు",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "స్థానం",
     "sectionLanguage": "భాష",
     "sectionAppearance": "రూపు",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "లొకేషన్‌ను అప్‌డేట్ చేయడానికి నొక్కండి"
   },
   "mcp": {
-    "title": "AI సేవలు",
+    "title": "ag-mcp",
     "loading": "సేవలు లోడ్ అవుతున్నాయి...",
     "loadingDetails": "లోడ్ అవుతోంది...",
     "footer": "మీ ప్రాంతాన్ని బట్టి సేవలు అందుబాటులో ఉంటాయి",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "డిజిటల్ గ్రీన్ ఫౌండేషన్ యొక్క ఒక చొరవ"
   },
   "system": {
     "offline": "ఇంటర్నెట్ లేదు",

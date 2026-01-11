@@ -135,7 +135,7 @@
   "settings": {
     "title": "Mici",
     "sectionConversations": "BARIYYAATU",
-    "sectionAiServices": "AI CADDAYYAT",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "BAXSU",
     "sectionLanguage": "AFO",
     "sectionAppearance": "BAXEEDA",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Amaada agabissam digdi"
   },
   "mcp": {
-    "title": "Caqlala'a Macaawis",
+    "title": "ag-mcp",
     "loading": "Macaawis Rabbaana...",
     "loadingDetails": "Rabbaana...",
     "footer": "Macaawis sin baadal qimba.",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Digital Green Foundation-ih mashruuc"
   },
   "system": {
     "offline": "Intarnet mali",

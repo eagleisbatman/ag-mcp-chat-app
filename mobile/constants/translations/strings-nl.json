@@ -135,7 +135,7 @@
   "settings": {
     "title": "Instellingen",
     "sectionConversations": "GESPREKKEN",
-    "sectionAiServices": "AI DIENSTEN",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "LOCATIE",
     "sectionLanguage": "TAAL",
     "sectionAppearance": "UITERLIJK",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Tik om locatie bij te werken"
   },
   "mcp": {
-    "title": "AI Diensten",
+    "title": "ag-mcp",
     "loading": "Diensten laden...",
     "loadingDetails": "Laden...",
     "footer": "Beschikbaarheid is afhankelijk van uw locatie",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Een initiatief van Digital Green Foundation"
   },
   "system": {
     "offline": "Geen internetverbinding",

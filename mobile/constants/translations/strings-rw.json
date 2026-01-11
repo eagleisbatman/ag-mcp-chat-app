@@ -135,7 +135,7 @@
   "settings": {
     "title": "Igenamiterere",
     "sectionConversations": "IBIGANIRO",
-    "sectionAiServices": "SERIVISI ZA AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "AHANTU",
     "sectionLanguage": "URURIMI",
     "sectionAppearance": "IMITERERE",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Kanda uvugurure aho uherereye"
   },
   "mcp": {
-    "title": "Serivisi za AI",
+    "title": "ag-mcp",
     "loading": "Serivisi zirimo kwinjira...",
     "loadingDetails": "Biratunganywa...",
     "footer": "Serivisi ziboneka bitewe n'aho uherereye",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Umushinga wa Digital Green Foundation"
   },
   "system": {
     "offline": "Nta interineti",

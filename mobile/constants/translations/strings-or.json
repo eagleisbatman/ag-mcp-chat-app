@@ -135,7 +135,7 @@
   "settings": {
     "title": "ସେଟିଙ୍ଗ୍ସ",
     "sectionConversations": "କଥାବାର୍ତ୍ତା",
-    "sectionAiServices": "AI ସେବାସମୂହ",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ଅବସ୍ଥାନ",
     "sectionLanguage": "ଭାଷା",
     "sectionAppearance": "ରୂପ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "ସ୍ଥାନ ଅପଡେଟ୍ କରିବାକୁ ଟାପ୍ କରନ୍ତୁ"
   },
   "mcp": {
-    "title": "AI ସେବା",
+    "title": "ag-mcp",
     "loading": "ସେବା ଲୋଡ୍ ହେଉଛି...",
     "loadingDetails": "ଲୋଡ୍ ହେଉଛି...",
     "footer": "ଆପଣଙ୍କ ଅଞ୍ଚଳ ଅନୁଯାୟୀ ସେବା ଉପଲବ୍ଧ",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ଡିଜିଟାଲ୍ ଗ୍ରୀନ୍ ଫାଉଣ୍ଡେସନ୍‌ଙ୍କ ଏକ ପଦକ୍ଷେପ"
   },
   "system": {
     "offline": "ଇଣ୍ଟରନେଟ୍ ନାହିଁ",

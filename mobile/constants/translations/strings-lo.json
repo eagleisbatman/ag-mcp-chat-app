@@ -135,7 +135,7 @@
   "settings": {
     "title": "ການຕັ້ງຄ່າ",
     "sectionConversations": "ການສົນທະນາ",
-    "sectionAiServices": "ບໍລິການ AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ສະຖານທີ່",
     "sectionLanguage": "ພາສາ",
     "sectionAppearance": "ຮູບແບບ",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "ແຕະເພື່ອອັບເດດສະຖານທີ່"
   },
   "mcp": {
-    "title": "ບໍລິການ AI",
+    "title": "ag-mcp",
     "loading": "ກຳລັງໂຫຼດບໍລິການ...",
     "loadingDetails": "ກຳລັງໂຫຼດ...",
     "footer": "ບໍລິການຂຶ້ນກັບພື້ນທີ່ຂອງທ່ານ",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "ການລິເລີ່ມໂດຍ ມູນນິທິ ດິຈິຕອລ ກຣີນ"
   },
   "system": {
     "offline": "ບໍ່ມີອິນເຕີເນັດ",

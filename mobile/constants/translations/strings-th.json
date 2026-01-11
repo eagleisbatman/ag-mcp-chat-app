@@ -135,7 +135,7 @@
   "settings": {
     "title": "การตั้งค่า",
     "sectionConversations": "สนทนา",
-    "sectionAiServices": "บริการ AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "ตำแหน่ง",
     "sectionLanguage": "ภาษา",
     "sectionAppearance": "รูปลักษณ์",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "แตะเพื่ออัปเดตตำแหน่ง"
   },
   "mcp": {
-    "title": "บริการ AI",
+    "title": "ag-mcp",
     "loading": "กำลังโหลดบริการ...",
     "loadingDetails": "กำลังโหลด...",
     "footer": "บริการขึ้นอยู่กับตำแหน่งของคุณ",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "โครงการริเริ่มโดย มูลนิธิดิจิทัลกรีน"
   },
   "system": {
     "offline": "ไม่มีอินเทอร์เน็ต",

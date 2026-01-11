@@ -135,7 +135,7 @@
   "settings": {
     "title": "Nastavení",
     "sectionConversations": "KONVERZACE",
-    "sectionAiServices": "SLUŽBY AI",
+    "sectionAiServices": "ag-mcp",
     "sectionLocation": "POLOHA",
     "sectionLanguage": "JAZYK",
     "sectionAppearance": "VZHLED",
@@ -183,7 +183,7 @@
     "tapToUpdateLocation": "Klepnutím aktualizujete polohu"
   },
   "mcp": {
-    "title": "Služby s AI",
+    "title": "ag-mcp",
     "loading": "Načítám služby...",
     "loadingDetails": "Načítám...",
     "footer": "Dostupnost služeb závisí na vaší poloze",
@@ -328,7 +328,8 @@
     "selectPreferred": "Select your preferred provider",
     "preferencesSaved": "Preference saved",
     "comingSoon": "Coming Soon",
-    "inUse": "In Use"
+    "inUse": "In Use",
+    "description": "Iniciativa Nadace Digital Green"
   },
   "system": {
     "offline": "Žádné připojení k internetu",
