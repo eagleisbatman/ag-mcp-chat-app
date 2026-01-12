@@ -177,20 +177,44 @@ export async function safeApiCall(apiCall, { logError = true } = {}) {
 
 /**
  * Check if an error is a network/connectivity error
+ * Must be specific to avoid false positives from coding errors (TypeErrors)
  * @param {Error} error
  * @returns {boolean}
  */
 export function isNetworkError(error) {
   if (!error) return false;
   const msg = error.message?.toLowerCase() || '';
-  return (
-    error.name === 'TypeError' ||
-    error.name === 'AbortError' ||
-    msg.includes('network') ||
-    msg.includes('timeout') ||
-    msg.includes('aborted') ||
-    msg.includes('failed to fetch')
-  );
+
+  // AbortError is definitely a cancellation/timeout
+  if (error.name === 'AbortError') return true;
+
+  // Check for specific network-related error messages
+  // These are the actual messages from fetch/XHR when network fails
+  const networkErrorPatterns = [
+    'network request failed',  // React Native fetch network error
+    'failed to fetch',         // Browser fetch network error
+    'networkerror',            // Generic network error
+    'net::err_',               // Chrome network errors
+    'network error',           // Generic
+    'no internet',             // Custom
+    'offline',                 // Custom
+  ];
+
+  for (const pattern of networkErrorPatterns) {
+    if (msg.includes(pattern)) return true;
+  }
+
+  // TypeError alone is NOT enough - it must have network-related message
+  // This prevents false positives from coding errors like "Cannot read property of undefined"
+  if (error.name === 'TypeError') {
+    // Only treat TypeError as network error if message indicates network issue
+    return msg.includes('network') || msg.includes('fetch');
+  }
+
+  // Timeout messages
+  if (msg.includes('timeout') || msg.includes('aborted')) return true;
+
+  return false;
 }
 
 /**
