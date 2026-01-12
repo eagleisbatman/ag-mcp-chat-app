@@ -26,6 +26,19 @@ function normalizeImageQuality(imgQuality) {
 }
 
 /**
+ * Convert Plantix likelihood to display-friendly severity
+ */
+function normalizeLikelihood(likelihood) {
+  if (!likelihood) return null;
+  const l = likelihood.toLowerCase();
+  // Map Plantix likelihood values to severity labels
+  if (l === 'likely' || l === 'very_likely') return 'High';
+  if (l === 'possible') return 'Moderate';
+  if (l === 'unlikely' || l === 'very_unlikely') return 'Low';
+  return likelihood; // Return as-is if unknown
+}
+
+/**
  * Normalize diagnosis data from different providers (AgriVision vs Plantix)
  */
 function normalizeDiagnosis(data) {
@@ -36,12 +49,30 @@ function normalizeDiagnosis(data) {
 
   if (isPlantix) {
     // Convert Plantix format to unified format
-    const diagnoses = data.diagnoses || [];
-    const firstDiag = diagnoses[0] || {};
+    const allDiagnoses = data.diagnoses || [];
+
+    // Filter out "Healthy" from issues - it's not an actual issue
+    const actualIssues = allDiagnoses.filter(d => {
+      const name = (d.disease_name || d.name || '').toLowerCase();
+      return name !== 'healthy';
+    });
+
+    // Determine actual health status based on real issues
+    // If there are actual issues with likelihood > very_unlikely, plant isn't fully healthy
+    const hasRealIssues = actualIssues.some(d => {
+      const likelihood = (d.likelihood || '').toLowerCase();
+      return likelihood !== 'very_unlikely';
+    });
+
+    // Override health_status if we have real issues but Plantix said "Healthy"
+    let healthStatus = data.health_assessment?.status || 'Analyzed';
+    if (hasRealIssues && healthStatus.toLowerCase() === 'healthy') {
+      healthStatus = 'Issue Detected';
+    }
 
     return {
       _provider: 'plantix',
-      health_status: data.health_assessment?.status || 'Analyzed',
+      health_status: healthStatus,
       health_summary: data.health_assessment?.summary || '',
       image_quality: normalizeImageQuality(data.image_quality),
       diagnostic_notes: data.health_assessment?.summary || '',
@@ -49,17 +80,18 @@ function normalizeDiagnosis(data) {
         name: data.identified_crops[0].name,
         confidence: data.identified_crops[0].confidence_percent ? `${data.identified_crops[0].confidence_percent}%` : null
       } : null,
-      // Convert Plantix diagnoses to unified issues format
-      issues: diagnoses.map(d => ({
+      // Convert Plantix diagnoses to unified issues format (excluding "Healthy")
+      issues: actualIssues.map(d => ({
         name: d.disease_name || d.name,
         scientific_name: d.scientific_name,
-        severity: d.likelihood || d.severity,
+        severity: normalizeLikelihood(d.likelihood) || d.severity,
+        likelihood: d.likelihood, // Keep original for reference
         symptoms: d.symptoms || [],
-        _treatments: d.treatments || [], // Keep for later
+        _treatments: d.treatments || [],
         _prevention: d.prevention || []
       })),
-      // Flatten treatments from all diagnoses
-      treatment_recommendations: diagnoses.length > 0 ? diagnoses.map(d => ({
+      // Flatten treatments from actual issues only
+      treatment_recommendations: actualIssues.length > 0 ? actualIssues.map(d => ({
         issue_name: d.disease_name || d.name,
         organic_options: (d.treatments || [])
           .filter(t => t.type === 'organic')
