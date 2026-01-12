@@ -410,7 +410,13 @@
     "pathogenType": "ରୋଗଜୀବାଣୁ ପ୍ରକାର",
     "disease": "ରୋଗ",
     "recommendations": "ପରାମର୍ଶ",
-    "analyzedViaPlantix": "ପ୍ଲାଣ୍ଟିକ୍ସ ମାଧ୍ୟମରେ ବିଶ୍ଳେଷଣ କରାଗଲା"
+    "analyzedViaPlantix": "ପ୍ଲାଣ୍ଟିକ୍ସ ମାଧ୍ୟମରେ ବିଶ୍ଳେଷଣ କରାଗଲା",
+    "healthyTitle": "ଭଲ ଖବର!",
+    "healthyMessage": "କୌଣସି ରୋଗ, କୀଟ କିମ୍ବା ପୋଷକ ତତ୍ତ୍ୱ ଅଭାବ ମିଳିଲା ନାହିଁ।",
+    "healthyTips": "ଭଲ କାମ ଜାରି ରଖନ୍ତୁ:",
+    "healthyTipMonitor": "ନିୟମିତ ଭାବେ ଯାଞ୍ଚ କରୁଥିବେ",
+    "healthyTipWater": "ସଠିକ୍ ଜଳସେଚନ ଜାରି ରଖନ୍ତୁ",
+    "healthyTipNutrition": "ଆପଣଙ୍କ ସାର ପ୍ରୟୋଗ ସମୟସୂଚୀ ଅନୁସରଣ କରନ୍ତୁ"
   },
   "a11y": {
     "startNewChat": "ନୂଆ ଚାଟ୍ ଆରମ୍ଭ କରନ୍ତୁ",

@@ -410,7 +410,13 @@
     "pathogenType": "Irú Kòkòrò Àrùn",
     "disease": "Àrùn",
     "recommendations": "Àwọn Ìmọ̀ràn",
-    "analyzedViaPlantix": "Ṣe àyẹ̀wò pẹ̀lú Plantix"
+    "analyzedViaPlantix": "Ṣe àyẹ̀wò pẹ̀lú Plantix",
+    "healthyTitle": "Ìròyìn dáadáa!",
+    "healthyMessage": "Kò sí àrùn, kòkòrò, tàbí àìní oúnjẹ tí a rí.",
+    "healthyTips": "Máa ṣe iṣẹ́ dáadáa:",
+    "healthyTipMonitor": "Máa wo ọ̀gbìn rẹ lọ́pọ̀ ìgbà",
+    "healthyTipWater": "Máa bomi fún ọ̀gbìn rẹ dáadáa",
+    "healthyTipNutrition": "Tẹ̀lé àkọlé fífi àjílẹ̀ rẹ"
   },
   "a11y": {
     "startNewChat": "Bẹ̀rẹ̀ ìfọ̀rọ̀ránṣẹ́ tuntun",

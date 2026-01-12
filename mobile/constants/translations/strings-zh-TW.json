@@ -410,7 +410,13 @@
     "pathogenType": "病原體類型",
     "disease": "病害",
     "recommendations": "建議",
-    "analyzedViaPlantix": "透過 Plantix 分析"
+    "analyzedViaPlantix": "透過 Plantix 分析",
+    "healthyTitle": "好消息！",
+    "healthyMessage": "未偵測到病害、蟲害或營養缺乏。",
+    "healthyTips": "繼續保持：",
+    "healthyTipMonitor": "繼續定期監測",
+    "healthyTipWater": "保持適當澆水",
+    "healthyTipNutrition": "遵循您的施肥計劃"
   },
   "a11y": {
     "startNewChat": "開始新聊天",

@@ -410,7 +410,13 @@
     "pathogenType": "Typ patogenu",
     "disease": "Choroba",
     "recommendations": "Doporučení",
-    "analyzedViaPlantix": "Analyzováno přes Plantix"
+    "analyzedViaPlantix": "Analyzováno přes Plantix",
+    "healthyTitle": "Dobrá zpráva!",
+    "healthyMessage": "Nebyly zjištěny žádné choroby, škůdci ani nedostatek živin.",
+    "healthyTips": "Pokračujte v dobré práci:",
+    "healthyTipMonitor": "Pokračujte v pravidelné kontrole",
+    "healthyTipWater": "Udržujte správné zavlažování",
+    "healthyTipNutrition": "Dodržujte plán hnojení"
   },
   "a11y": {
     "startNewChat": "Začít nový chat",

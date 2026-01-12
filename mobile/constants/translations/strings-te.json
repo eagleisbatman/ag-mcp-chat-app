@@ -410,7 +410,13 @@
     "pathogenType": "వ్యాధికారక రకం",
     "disease": "వ్యాధి",
     "recommendations": "సిఫార్సులు",
-    "analyzedViaPlantix": "Plantix ద్వారా విశ్లేషించబడింది"
+    "analyzedViaPlantix": "Plantix ద్వారా విశ్లేషించబడింది",
+    "healthyTitle": "మంచి వార్త!",
+    "healthyMessage": "ఏ వ్యాధి, పురుగులు లేదా పోషక లోపం కనుగొనబడలేదు.",
+    "healthyTips": "మంచి పని కొనసాగించండి:",
+    "healthyTipMonitor": "క్రమం తప్పకుండా పరిశీలిస్తూ ఉండండి",
+    "healthyTipWater": "సరైన నీరు పెట్టడం కొనసాగించండి",
+    "healthyTipNutrition": "మీ ఎరువుల షెడ్యూల్‌ను అనుసరించండి"
   },
   "a11y": {
     "startNewChat": "కొత్త సంభాషణ ప్రారంభించండి",

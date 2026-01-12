@@ -410,7 +410,13 @@
     "pathogenType": "રોગકારક પ્રકાર",
     "disease": "રોગ",
     "recommendations": "ભલામણો",
-    "analyzedViaPlantix": "પ્લાન્ટિક્સ દ્વારા વિશ્લેષણ કરેલ"
+    "analyzedViaPlantix": "પ્લાન્ટિક્સ દ્વારા વિશ્લેષણ કરેલ",
+    "healthyTitle": "સારા સમાચાર!",
+    "healthyMessage": "કોઈ રોગ, જીવાત કે પોષક તત્વોની ઉણપ મળી નથી.",
+    "healthyTips": "સારું કામ ચાલુ રાખો:",
+    "healthyTipMonitor": "નિયમિત તપાસ કરતા રહો",
+    "healthyTipWater": "યોગ્ય પાણી આપવાનું ચાલુ રાખો",
+    "healthyTipNutrition": "તમારી ખાતર આપવાની યોજના અનુસરો"
   },
   "a11y": {
     "startNewChat": "નવી ચેટ શરૂ કરો",

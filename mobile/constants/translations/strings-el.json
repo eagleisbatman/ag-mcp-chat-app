@@ -410,7 +410,13 @@
     "pathogenType": "Τύπος Παθογόνου",
     "disease": "Ασθένεια",
     "recommendations": "Συστάσεις",
-    "analyzedViaPlantix": "Αναλύθηκε μέσω Plantix"
+    "analyzedViaPlantix": "Αναλύθηκε μέσω Plantix",
+    "healthyTitle": "Καλά νέα!",
+    "healthyMessage": "Δεν εντοπίστηκαν ασθένειες, παράσιτα ή έλλειψη θρεπτικών συστατικών.",
+    "healthyTips": "Συνεχίστε την καλή δουλειά:",
+    "healthyTipMonitor": "Συνεχίστε την τακτική παρακολούθηση",
+    "healthyTipWater": "Διατηρήστε το σωστό πότισμα",
+    "healthyTipNutrition": "Ακολουθήστε το πρόγραμμα λίπανσης"
   },
   "a11y": {
     "startNewChat": "Ξεκινήστε νέα συνομιλία",

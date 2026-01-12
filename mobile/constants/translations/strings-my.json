@@ -410,7 +410,13 @@
     "pathogenType": "ရောဂါပိုး အမျိုးအစား",
     "disease": "ရောဂါ",
     "recommendations": "အကြံပြုချက်များ",
-    "analyzedViaPlantix": "Plantix မှတဆင့် ခွဲခြမ်းစိတ်ဖြာထားသည်"
+    "analyzedViaPlantix": "Plantix မှတဆင့် ခွဲခြမ်းစိတ်ဖြာထားသည်",
+    "healthyTitle": "သတင်းကောင်း!",
+    "healthyMessage": "ရောဂါ၊ ပိုးမွှား သို့မဟုတ် အာဟာရချို့တဲ့မှု မတွေ့ရှိပါ။",
+    "healthyTips": "အလုပ်ကောင်းကို ဆက်လုပ်ပါ:",
+    "healthyTipMonitor": "ပုံမှန်စောင့်ကြည့်ခြင်းကို ဆက်လုပ်ပါ",
+    "healthyTipWater": "ရေလောင်းခြင်းကို မှန်ကန်စွာ ထိန်းသိမ်းပါ",
+    "healthyTipNutrition": "မြေသြဇာအစီအစဉ်ကို လိုက်နာပါ"
   },
   "a11y": {
     "startNewChat": "စကားဝိုင်းအသစ် စတင်ပါ",

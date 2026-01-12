@@ -410,7 +410,13 @@
     "pathogenType": "ਜਰਾਸੀਮ ਦੀ ਕਿਸਮ",
     "disease": "ਬਿਮਾਰੀ",
     "recommendations": "ਸਿਫ਼ਾਰਸ਼ਾਂ",
-    "analyzedViaPlantix": "ਪਲੈਨਟਿਕਸ ਰਾਹੀਂ ਜਾਂਚਿਆ"
+    "analyzedViaPlantix": "ਪਲੈਨਟਿਕਸ ਰਾਹੀਂ ਜਾਂਚਿਆ",
+    "healthyTitle": "ਚੰਗੀ ਖ਼ਬਰ!",
+    "healthyMessage": "ਕੋਈ ਬਿਮਾਰੀ, ਕੀੜੇ ਜਾਂ ਪੋਸ਼ਕ ਤੱਤਾਂ ਦੀ ਕਮੀ ਨਹੀਂ ਮਿਲੀ।",
+    "healthyTips": "ਚੰਗਾ ਕੰਮ ਜਾਰੀ ਰੱਖੋ:",
+    "healthyTipMonitor": "ਨਿਯਮਿਤ ਤੌਰ 'ਤੇ ਜਾਂਚ ਕਰਦੇ ਰਹੋ",
+    "healthyTipWater": "ਸਹੀ ਸਿੰਚਾਈ ਜਾਰੀ ਰੱਖੋ",
+    "healthyTipNutrition": "ਆਪਣੀ ਖਾਦ ਪਾਉਣ ਦੀ ਸਮਾਂ-ਸੂਚੀ ਦੀ ਪਾਲਣਾ ਕਰੋ"
   },
   "a11y": {
     "startNewChat": "ਨਵੀਂ ਗੱਲਬਾਤ ਸ਼ੁਰੂ ਕਰੋ",

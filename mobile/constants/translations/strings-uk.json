@@ -410,7 +410,13 @@
     "pathogenType": "Тип патогену",
     "disease": "Хвороба",
     "recommendations": "Рекомендації",
-    "analyzedViaPlantix": "Проаналізовано через Plantix"
+    "analyzedViaPlantix": "Проаналізовано через Plantix",
+    "healthyTitle": "Хороші новини!",
+    "healthyMessage": "Хвороб, шкідників або дефіциту поживних речовин не виявлено.",
+    "healthyTips": "Продовжуйте в тому ж дусі:",
+    "healthyTipMonitor": "Продовжуйте регулярний моніторинг",
+    "healthyTipWater": "Підтримуйте правильний полив",
+    "healthyTipNutrition": "Дотримуйтесь графіка внесення добрив"
   },
   "a11y": {
     "startNewChat": "Почати новий чат",

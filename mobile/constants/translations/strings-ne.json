@@ -410,7 +410,13 @@
     "pathogenType": "रोगजनकको प्रकार",
     "disease": "रोग",
     "recommendations": "सिफारिसहरू",
-    "analyzedViaPlantix": "प्लान्टिक्स मार्फत विश्लेषण गरियो"
+    "analyzedViaPlantix": "प्लान्टिक्स मार्फत विश्लेषण गरियो",
+    "healthyTitle": "राम्रो समाचार!",
+    "healthyMessage": "कुनै रोग, कीरा वा पोषक तत्वको कमी फेला परेन।",
+    "healthyTips": "राम्रो काम जारी राख्नुहोस्:",
+    "healthyTipMonitor": "नियमित निगरानी जारी राख्नुहोस्",
+    "healthyTipWater": "उचित सिंचाई कायम राख्नुहोस्",
+    "healthyTipNutrition": "आफ्नो मल दिने तालिका पालना गर्नुहोस्"
   },
   "a11y": {
     "startNewChat": "नयाँ कुराकानी सुरु गर्नुहोस्",

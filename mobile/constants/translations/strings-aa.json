@@ -410,7 +410,13 @@
     "pathogenType": "Pathogen Kay",
     "disease": "Biqila",
     "recommendations": "Nafaqaa",
-    "analyzedViaPlantix": "Plantix kee ginni"
+    "analyzedViaPlantix": "Plantix kee ginni",
+    "healthyTitle": "Qado nakkay!",
+    "healthyMessage": "Biqila, kudaani, wala nafaqaa hanquu hin argamne.",
+    "healthyTips": "Hojii gaarii itti fufi:",
+    "healthyTipMonitor": "Mudda hundaa qaqqabuu itti fufi",
+    "healthyTipWater": "Bishaanii qubaqee dhuga'uu itti fufi",
+    "healthyTipNutrition": "Sagantaa xabbo kee hordofi"
   },
   "a11y": {
     "startNewChat": "Chat cusub qimbis",
