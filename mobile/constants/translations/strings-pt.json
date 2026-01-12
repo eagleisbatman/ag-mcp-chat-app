@@ -410,7 +410,13 @@
     "pathogenType": "Tipo de Patógeno",
     "disease": "Doença",
     "recommendations": "Recomendações",
-    "analyzedViaPlantix": "Analisado via Plantix"
+    "analyzedViaPlantix": "Analisado via Plantix",
+    "healthyTitle": "Boas notícias!",
+    "healthyMessage": "Nenhuma doença, praga ou deficiência nutricional detectada.",
+    "healthyTips": "Continue assim:",
+    "healthyTipMonitor": "Continue monitorando regularmente",
+    "healthyTipWater": "Mantenha a irrigação adequada",
+    "healthyTipNutrition": "Siga seu cronograma de fertilização"
   },
   "a11y": {
     "startNewChat": "Iniciar um novo chat",

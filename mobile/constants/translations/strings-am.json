@@ -410,7 +410,13 @@
     "pathogenType": "በሽታ አምጪ ዓይነት",
     "disease": "በሽታ",
     "recommendations": "ምክሮች",
-    "analyzedViaPlantix": "በPlantix ተተንትኗል"
+    "analyzedViaPlantix": "በPlantix ተተንትኗል",
+    "healthyTitle": "ጥሩ ዜና!",
+    "healthyMessage": "በሽታ፣ ተባይ ወይም የተመጣጠነ ምግብ እጥረት አልተገኘም።",
+    "healthyTips": "ጥሩ ሥራ ቀጥል:",
+    "healthyTipMonitor": "በመደበኛነት መከታተል ቀጥል",
+    "healthyTipWater": "ትክክለኛ ውሃ ማጠጣት ቀጥል",
+    "healthyTipNutrition": "የማዳበሪያ መርሃግብርህን ተከተል"
   },
   "a11y": {
     "startNewChat": "አዲስ ውይይት ጀምር",

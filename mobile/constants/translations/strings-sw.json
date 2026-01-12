@@ -410,7 +410,13 @@
     "pathogenType": "Aina ya Vimelea",
     "disease": "Ugonjwa",
     "recommendations": "Mapendekezo",
-    "analyzedViaPlantix": "Imetathminiwa kupitia Plantix"
+    "analyzedViaPlantix": "Imetathminiwa kupitia Plantix",
+    "healthyTitle": "Habari njema!",
+    "healthyMessage": "Hakuna ugonjwa, wadudu, wala upungufu wa virutubisho uliogunduliwa.",
+    "healthyTips": "Endelea na kazi nzuri:",
+    "healthyTipMonitor": "Endelea kufuatilia mara kwa mara",
+    "healthyTipWater": "Endelea kumwagilia vizuri",
+    "healthyTipNutrition": "Fuata ratiba yako ya mbolea"
   },
   "a11y": {
     "startNewChat": "Anzisha gumzo jipya",

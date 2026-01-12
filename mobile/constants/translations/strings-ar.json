@@ -410,7 +410,13 @@
     "pathogenType": "نوع المسبب المرضي",
     "disease": "المرض",
     "recommendations": "توصيات",
-    "analyzedViaPlantix": "تم التحليل عبر Plantix"
+    "analyzedViaPlantix": "تم التحليل عبر Plantix",
+    "healthyTitle": "أخبار جيدة!",
+    "healthyMessage": "لم يتم اكتشاف أي أمراض أو آفات أو نقص في العناصر الغذائية.",
+    "healthyTips": "استمر في العمل الجيد:",
+    "healthyTipMonitor": "استمر في المراقبة بانتظام",
+    "healthyTipWater": "حافظ على الري المناسب",
+    "healthyTipNutrition": "اتبع جدول التسميد الخاص بك"
   },
   "a11y": {
     "startNewChat": "ابدأ محادثة جديدة",

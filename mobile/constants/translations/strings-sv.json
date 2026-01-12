@@ -410,7 +410,13 @@
     "pathogenType": "Patogentyp",
     "disease": "Sjukdom",
     "recommendations": "Rekommendationer",
-    "analyzedViaPlantix": "Analyserad via Plantix"
+    "analyzedViaPlantix": "Analyserad via Plantix",
+    "healthyTitle": "Goda nyheter!",
+    "healthyMessage": "Inga sjukdomar, skadedjur eller näringsbrist upptäcktes.",
+    "healthyTips": "Fortsätt det goda arbetet:",
+    "healthyTipMonitor": "Fortsätt övervaka regelbundet",
+    "healthyTipWater": "Behåll korrekt bevattning",
+    "healthyTipNutrition": "Följ ditt gödselschema"
   },
   "a11y": {
     "startNewChat": "Starta ny chatt",

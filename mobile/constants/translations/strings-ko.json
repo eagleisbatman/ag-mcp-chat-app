@@ -410,7 +410,13 @@
     "pathogenType": "병원체 종류",
     "disease": "질병",
     "recommendations": "권장 사항",
-    "analyzedViaPlantix": "Plantix로 분석됨"
+    "analyzedViaPlantix": "Plantix로 분석됨",
+    "healthyTitle": "좋은 소식!",
+    "healthyMessage": "질병, 해충 또는 영양 결핍이 발견되지 않았습니다.",
+    "healthyTips": "계속 잘 하세요:",
+    "healthyTipMonitor": "정기적인 모니터링을 계속하세요",
+    "healthyTipWater": "적절한 물주기를 유지하세요",
+    "healthyTipNutrition": "비료 일정을 따르세요"
   },
   "a11y": {
     "startNewChat": "새 채팅 시작",

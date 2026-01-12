@@ -410,7 +410,13 @@
     "pathogenType": "نوع عامل بیماری‌زا",
     "disease": "بیماری",
     "recommendations": "توصیه‌ها",
-    "analyzedViaPlantix": "تحلیل شده توسط Plantix"
+    "analyzedViaPlantix": "تحلیل شده توسط Plantix",
+    "healthyTitle": "خبر خوب!",
+    "healthyMessage": "هیچ بیماری، آفت یا کمبود مواد مغذی تشخیص داده نشد.",
+    "healthyTips": "به کار خوب ادامه دهید:",
+    "healthyTipMonitor": "به نظارت منظم ادامه دهید",
+    "healthyTipWater": "آبیاری مناسب را حفظ کنید",
+    "healthyTipNutrition": "برنامه کوددهی خود را دنبال کنید"
   },
   "a11y": {
     "startNewChat": "شروع گفتگوی جدید",

@@ -410,7 +410,13 @@
     "pathogenType": "Тип возбудителя",
     "disease": "Заболевание",
     "recommendations": "Рекомендации",
-    "analyzedViaPlantix": "Анализ через Plantix"
+    "analyzedViaPlantix": "Анализ через Plantix",
+    "healthyTitle": "Хорошие новости!",
+    "healthyMessage": "Болезней, вредителей и дефицита питательных веществ не обнаружено.",
+    "healthyTips": "Продолжайте в том же духе:",
+    "healthyTipMonitor": "Продолжайте регулярный мониторинг",
+    "healthyTipWater": "Поддерживайте правильный полив",
+    "healthyTipNutrition": "Следуйте графику внесения удобрений"
   },
   "a11y": {
     "startNewChat": "Начать новый чат",

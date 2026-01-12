@@ -410,7 +410,13 @@
     "pathogenType": "Nau'in Cutar",
     "disease": "Cuta",
     "recommendations": "Shawarwari",
-    "analyzedViaPlantix": "An bincika ta Plantix"
+    "analyzedViaPlantix": "An bincika ta Plantix",
+    "healthyTitle": "Labari mai kyau!",
+    "healthyMessage": "Ba a sami cuta, kwari, ko rashin abinci mai gina jiki ba.",
+    "healthyTips": "Ci gaba da aikin kirki:",
+    "healthyTipMonitor": "Ci gaba da dubawa akai-akai",
+    "healthyTipWater": "Ci gaba da ban ruwa yadda ya kamata",
+    "healthyTipNutrition": "Bi jadawalin taki"
   },
   "a11y": {
     "startNewChat": "Fara sabon zance",

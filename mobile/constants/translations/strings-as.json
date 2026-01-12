@@ -410,7 +410,13 @@
     "pathogenType": "ৰোগ সৃষ্টিকাৰীৰ প্ৰকাৰ",
     "disease": "ৰোগ",
     "recommendations": "পৰামৰ্শসমূহ",
-    "analyzedViaPlantix": "Plantix ৰ জৰিয়তে বিশ্লেষণ কৰা হৈছে"
+    "analyzedViaPlantix": "Plantix ৰ জৰিয়তে বিশ্লেষণ কৰা হৈছে",
+    "healthyTitle": "ভাল খবৰ!",
+    "healthyMessage": "কোনো ৰোগ, কীট-পতংগ বা পুষ্টিৰ অভাৱ পোৱা নগ'ল।",
+    "healthyTips": "ভাল কাম চলাই ৰাখক:",
+    "healthyTipMonitor": "নিয়মীয়াকৈ পৰ্যবেক্ষণ অব্যাহত ৰাখক",
+    "healthyTipWater": "সঠিক পানী যোগান অব্যাহত ৰাখক",
+    "healthyTipNutrition": "আপোনাৰ সাৰ প্ৰয়োগৰ সময়সূচী অনুসৰণ কৰক"
   },
   "a11y": {
     "startNewChat": "এটা নতুন কথা আৰম্ভ কৰক",

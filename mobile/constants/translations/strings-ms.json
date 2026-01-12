@@ -410,7 +410,13 @@
     "pathogenType": "Jenis Patogen",
     "disease": "Penyakit",
     "recommendations": "Cadangan",
-    "analyzedViaPlantix": "Dianalisis melalui Plantix"
+    "analyzedViaPlantix": "Dianalisis melalui Plantix",
+    "healthyTitle": "Berita baik!",
+    "healthyMessage": "Tiada penyakit, perosak, atau kekurangan nutrien dikesan.",
+    "healthyTips": "Teruskan kerja yang baik:",
+    "healthyTipMonitor": "Teruskan memantau secara berkala",
+    "healthyTipWater": "Kekalkan penyiraman yang betul",
+    "healthyTipNutrition": "Ikut jadual pembajaan anda"
   },
   "a11y": {
     "startNewChat": "Mulakan sembang baru",

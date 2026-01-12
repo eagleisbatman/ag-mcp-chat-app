@@ -410,7 +410,13 @@
     "pathogenType": "بیماری کی قسم",
     "disease": "بیماری",
     "recommendations": "تجاویز",
-    "analyzedViaPlantix": "Plantix کے ذریعے تجزیہ کیا گیا"
+    "analyzedViaPlantix": "Plantix کے ذریعے تجزیہ کیا گیا",
+    "healthyTitle": "خوشخبری!",
+    "healthyMessage": "کوئی بیماری، کیڑے یا غذائیت کی کمی نہیں پائی گئی۔",
+    "healthyTips": "اچھا کام جاری رکھیں:",
+    "healthyTipMonitor": "باقاعدگی سے نگرانی جاری رکھیں",
+    "healthyTipWater": "مناسب پانی دینا جاری رکھیں",
+    "healthyTipNutrition": "اپنے کھاد ڈالنے کے شیڈول پر عمل کریں"
   },
   "a11y": {
     "startNewChat": "نئی چیٹ شروع کریں",

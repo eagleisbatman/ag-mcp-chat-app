@@ -410,7 +410,13 @@
     "pathogenType": "ປະເພດເຊື້ອພະຍາດ",
     "disease": "ພະຍາດ",
     "recommendations": "ຄໍາແນະນໍາ",
-    "analyzedViaPlantix": "ວິເຄາະໂດຍ Plantix"
+    "analyzedViaPlantix": "ວິເຄາະໂດຍ Plantix",
+    "healthyTitle": "ຂ່າວດີ!",
+    "healthyMessage": "ບໍ່ພົບພະຍາດ, ແມງໄມ້, ຫຼືການຂາດສານອາຫານ.",
+    "healthyTips": "ສືບຕໍ່ເຮັດດີ:",
+    "healthyTipMonitor": "ສືບຕໍ່ຕິດຕາມເປັນປະຈຳ",
+    "healthyTipWater": "ຮັກສາການຫົດນ້ຳທີ່ເໝາະສົມ",
+    "healthyTipNutrition": "ປະຕິບັດຕາມຕາຕະລາງການໃສ່ຝຸ່ນ"
   },
   "a11y": {
     "startNewChat": "ເລີ່ມແຊັດໃໝ່",

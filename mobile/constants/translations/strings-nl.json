@@ -410,7 +410,13 @@
     "pathogenType": "Pathogeentype",
     "disease": "Ziekte",
     "recommendations": "Aanbevelingen",
-    "analyzedViaPlantix": "Geanalyseerd via Plantix"
+    "analyzedViaPlantix": "Geanalyseerd via Plantix",
+    "healthyTitle": "Goed nieuws!",
+    "healthyMessage": "Geen ziekten, plagen of voedingstekorten gedetecteerd.",
+    "healthyTips": "Ga zo door:",
+    "healthyTipMonitor": "Blijf regelmatig controleren",
+    "healthyTipWater": "Handhaaf de juiste bewatering",
+    "healthyTipNutrition": "Volg uw bemestingsschema"
   },
   "a11y": {
     "startNewChat": "Start nieuwe chat",

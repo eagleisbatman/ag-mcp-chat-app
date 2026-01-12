@@ -410,7 +410,13 @@
     "pathogenType": "रोगजनकाचा प्रकार",
     "disease": "रोग",
     "recommendations": "शिफारसी",
-    "analyzedViaPlantix": "प्लांटिक्सद्वारे विश्लेषण केले"
+    "analyzedViaPlantix": "प्लांटिक्सद्वारे विश्लेषण केले",
+    "healthyTitle": "चांगली बातमी!",
+    "healthyMessage": "कोणतेही रोग, कीड किंवा पोषक तत्वांची कमतरता आढळली नाही.",
+    "healthyTips": "चांगले काम सुरू ठेवा:",
+    "healthyTipMonitor": "नियमितपणे तपासत राहा",
+    "healthyTipWater": "योग्य पाणी देणे सुरू ठेवा",
+    "healthyTipNutrition": "आपल्या खत देण्याच्या वेळापत्रकाचे पालन करा"
   },
   "a11y": {
     "startNewChat": "नवीन गप्पा सुरू करा",

@@ -410,7 +410,13 @@
     "pathogenType": "রোগজীবাণুর ধরন",
     "disease": "রোগ",
     "recommendations": "পরামর্শ",
-    "analyzedViaPlantix": "Plantix দ্বারা বিশ্লেষিত"
+    "analyzedViaPlantix": "Plantix দ্বারা বিশ্লেষিত",
+    "healthyTitle": "সুখবর!",
+    "healthyMessage": "কোন রোগ, পোকামাকড় বা পুষ্টির ঘাটতি পাওয়া যায়নি।",
+    "healthyTips": "ভালো কাজ চালিয়ে যান:",
+    "healthyTipMonitor": "নিয়মিত পর্যবেক্ষণ করতে থাকুন",
+    "healthyTipWater": "সঠিক সেচ বজায় রাখুন",
+    "healthyTipNutrition": "আপনার সার দেওয়ার সময়সূচী অনুসরণ করুন"
   },
   "a11y": {
     "startNewChat": "নতুন চ্যাট শুরু করুন",
