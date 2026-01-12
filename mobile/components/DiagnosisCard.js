@@ -7,17 +7,95 @@ import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
 
 /**
+ * Helper to normalize image quality from different provider formats
+ * AgriVision returns string: "good"
+ * Plantix returns object: {focus: "good", distance: "good"}
+ */
+function normalizeImageQuality(imgQuality) {
+  if (!imgQuality) return '';
+  if (typeof imgQuality === 'string') return imgQuality.toLowerCase();
+  if (typeof imgQuality === 'object') {
+    // Plantix format: {focus, distance, quality_warning}
+    const parts = [];
+    if (imgQuality.focus) parts.push(`focus: ${imgQuality.focus}`);
+    if (imgQuality.distance) parts.push(`distance: ${imgQuality.distance}`);
+    if (imgQuality.quality_warning) parts.push(imgQuality.quality_warning);
+    return parts.length > 0 ? parts.join(', ').toLowerCase() : 'analyzed';
+  }
+  return '';
+}
+
+/**
+ * Normalize diagnosis data from different providers (AgriVision vs Plantix)
+ */
+function normalizeDiagnosis(data) {
+  if (!data) return null;
+
+  // Detect provider format
+  const isPlantix = !!(data.health_assessment || data.diagnoses);
+
+  if (isPlantix) {
+    // Convert Plantix format to unified format
+    const diagnoses = data.diagnoses || [];
+    const firstDiag = diagnoses[0] || {};
+
+    return {
+      _provider: 'plantix',
+      health_status: data.health_assessment?.status || 'Analyzed',
+      health_summary: data.health_assessment?.summary || '',
+      image_quality: normalizeImageQuality(data.image_quality),
+      diagnostic_notes: data.health_assessment?.summary || '',
+      crop: data.identified_crops?.[0]?.name ? {
+        name: data.identified_crops[0].name,
+        confidence: data.identified_crops[0].confidence_percent ? `${data.identified_crops[0].confidence_percent}%` : null
+      } : null,
+      // Convert Plantix diagnoses to unified issues format
+      issues: diagnoses.map(d => ({
+        name: d.disease_name || d.name,
+        scientific_name: d.scientific_name,
+        severity: d.likelihood || d.severity,
+        symptoms: d.symptoms || [],
+        _treatments: d.treatments || [], // Keep for later
+        _prevention: d.prevention || []
+      })),
+      // Flatten treatments from all diagnoses
+      treatment_recommendations: diagnoses.length > 0 ? diagnoses.map(d => ({
+        issue_name: d.disease_name || d.name,
+        organic_options: (d.treatments || [])
+          .filter(t => t.type === 'organic')
+          .map(t => ({ name: t.description?.substring(0, 100) || 'See details', description: t.description })),
+        chemical_options: (d.treatments || [])
+          .filter(t => t.type === 'chemical')
+          .map(t => ({ name: t.description?.substring(0, 100) || 'See details', description: t.description })),
+        preventive_measures: (d.prevention || []).map(p => p.action || p)
+      })) : [],
+      // Pass through original data for anything we missed
+      _raw: data
+    };
+  }
+
+  // AgriVision format - already in expected format, just normalize image_quality
+  return {
+    ...data,
+    _provider: 'agrivision',
+    image_quality: normalizeImageQuality(data.image_quality)
+  };
+}
+
+/**
  * Plant Diagnosis Display - No card styling, matches normal text flow
  * Uses same font sizes as markdown content (TYPOGRAPHY.sizes.base = 16)
+ * Supports both AgriVision and Plantix response formats
  */
 export default function DiagnosisCard({ diagnosis, onRetry }) {
   const { theme } = useApp();
 
   const data = useMemo(() => {
+    let parsed = diagnosis;
     if (typeof diagnosis === 'string') {
-      try { return JSON.parse(diagnosis); } catch (e) { return null; }
+      try { parsed = JSON.parse(diagnosis); } catch (e) { return null; }
     }
-    return diagnosis;
+    return normalizeDiagnosis(parsed);
   }, [diagnosis]);
 
   if (!data || typeof data !== 'object') return null;
@@ -26,8 +104,8 @@ export default function DiagnosisCard({ diagnosis, onRetry }) {
   const isNetworkError = data.isNetworkError;
   const isTimeout = data.isTimeout;
   const status = (data.health_status?.overall || data.health_status || '').toLowerCase();
-  const imageQuality = (data.image_quality || '').toLowerCase();
-  const notes = data.diagnostic_notes || '';
+  const imageQuality = data.image_quality || ''; // Already normalized
+  const notes = data.diagnostic_notes || data.health_summary || '';
   const notesLower = notes.toLowerCase();
 
   // Detect rejection type from diagnostic notes
@@ -118,7 +196,7 @@ export default function DiagnosisCard({ diagnosis, onRetry }) {
       {data.image_quality && (
         <View style={styles.row}>
           <Text style={[styles.label, { color: theme.textMuted }]}>{t('diagnosis.quality')}</Text>
-          <Text style={[styles.value, { color: theme.text }]}>{data.image_quality}</Text>
+          <Text style={[styles.value, { color: theme.text, textTransform: 'capitalize' }]}>{data.image_quality}</Text>
         </View>
       )}
 
