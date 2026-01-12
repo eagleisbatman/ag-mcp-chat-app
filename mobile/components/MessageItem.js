@@ -377,7 +377,8 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
         </Animated.View>
       ) : (
         // User message - only show text if it exists (image messages may have no text)
-        message.text ? (
+        // Hide placeholder text used for DB storage
+        message.text && !message.text.startsWith('[Image for') ? (
           <Text style={[styles.messageText, { color: theme.text }]}>
             {message.text}
           </Text>
