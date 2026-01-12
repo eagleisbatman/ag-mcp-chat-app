@@ -484,6 +484,13 @@ export const STRINGS = {
       chemical: 'Chemical',
       severity: 'Severity',
       symptoms: 'Symptoms',
+      // Healthy plant messages
+      healthyTitle: 'Healthy Plant',
+      healthyMessage: 'Your plant appears healthy! No diseases or issues were detected.',
+      healthyTips: 'Tips to keep it healthy:',
+      healthyTipMonitor: 'Monitor regularly for early signs of problems',
+      healthyTipWater: 'Maintain proper watering schedule',
+      healthyTipNutrition: 'Ensure adequate nutrition and sunlight',
       // Error states
       networkErrorTitle: 'Connection Error',
       networkErrorMessage: 'Could not analyze your image. Please check your internet connection and try again.',
