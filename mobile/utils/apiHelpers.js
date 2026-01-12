@@ -16,9 +16,8 @@ const HTTP_ERROR_MESSAGES = {
   503: 'Service is busy. Please try again shortly.',
 };
 
-// Network error messages
-const NETWORK_ERROR_MESSAGES = {
-  TypeError: 'Network error. Check your internet connection.',
+// Known error type messages (NOT including TypeError - it's too broad)
+const ERROR_TYPE_MESSAGES = {
   AbortError: 'Request was cancelled.',
   TimeoutError: 'Request timed out.',
 };
@@ -37,12 +36,22 @@ export function parseErrorMessage(error) {
 
   // Standard Error object
   if (error instanceof Error) {
-    // Check for known error types
-    if (error.name in NETWORK_ERROR_MESSAGES) {
-      return NETWORK_ERROR_MESSAGES[error.name];
+    const msg = error.message?.toLowerCase() || '';
+
+    // Check for known error types (AbortError, TimeoutError)
+    if (error.name in ERROR_TYPE_MESSAGES) {
+      return ERROR_TYPE_MESSAGES[error.name];
     }
 
-    const msg = error.message?.toLowerCase() || '';
+    // TypeError needs message inspection - not all TypeErrors are network errors
+    if (error.name === 'TypeError') {
+      // Only show network message if it's actually a network error
+      if (msg.includes('network') || msg.includes('fetch')) {
+        return 'Network error. Check your internet connection.';
+      }
+      // Other TypeErrors are likely coding issues - show generic message
+      return 'Something went wrong. Please try again.';
+    }
 
     // If message is a JSON string (sometimes happens with API errors), try to parse it
     if (error.message?.includes('{')) {
@@ -55,7 +64,7 @@ export function parseErrorMessage(error) {
       }
     }
 
-    // Network/fetch errors
+    // Network/fetch errors (explicit message patterns)
     if (msg.includes('network request failed') || msg.includes('failed to fetch')) {
       return 'Network error. Check your internet connection.';
     }
