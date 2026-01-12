@@ -57,16 +57,10 @@ function normalizeDiagnosis(data) {
       return name !== 'healthy';
     });
 
-    // Determine actual health status based on real issues
-    // If there are actual issues with likelihood > very_unlikely, plant isn't fully healthy
-    const hasRealIssues = actualIssues.some(d => {
-      const likelihood = (d.likelihood || '').toLowerCase();
-      return likelihood !== 'very_unlikely';
-    });
-
-    // Override health_status if we have real issues but Plantix said "Healthy"
+    // If ANY issues are displayed, status should NOT be "Healthy"
+    // This prevents confusing UX where status says "Healthy" but issues are listed
     let healthStatus = data.health_assessment?.status || 'Analyzed';
-    if (hasRealIssues && healthStatus.toLowerCase() === 'healthy') {
+    if (actualIssues.length > 0 && healthStatus.toLowerCase() === 'healthy') {
       healthStatus = 'Issue Detected';
     }
 
@@ -95,10 +89,10 @@ function normalizeDiagnosis(data) {
         issue_name: d.disease_name || d.name,
         organic_options: (d.treatments || [])
           .filter(t => t.type === 'organic')
-          .map(t => ({ name: t.description?.substring(0, 100) || 'See details', description: t.description })),
+          .map(t => ({ name: t.description || 'See details', description: t.description })),
         chemical_options: (d.treatments || [])
           .filter(t => t.type === 'chemical')
-          .map(t => ({ name: t.description?.substring(0, 100) || 'See details', description: t.description })),
+          .map(t => ({ name: t.description || 'See details', description: t.description })),
         preventive_measures: (d.prevention || []).map(p => p.action || p)
       })) : [],
       // Pass through original data for anything we missed
