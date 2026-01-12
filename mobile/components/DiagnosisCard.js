@@ -270,12 +270,18 @@ export default function DiagnosisCard({ diagnosis, onRetry }) {
         </View>
       )}
 
-      {/* Treatment Recommendations */}
+      {/* Treatment Recommendations - grouped by issue */}
       {data.treatment_recommendations?.length > 0 && (
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('diagnosis.treatment')}</Text>
           {data.treatment_recommendations.map((treatment, i) => (
-            <View key={i}>
+            <View key={i} style={styles.treatmentBlock}>
+              {/* Show which issue this treatment is for */}
+              {treatment.issue_name && data.treatment_recommendations.length > 1 && (
+                <Text style={[styles.text, { color: theme.text, fontWeight: TYPOGRAPHY.weights.semibold, marginBottom: SPACING.xs }]}>
+                  {treatment.issue_name}:
+                </Text>
+              )}
               {treatment.organic_options?.length > 0 && (
                 <View style={styles.treatmentRow}>
                   <AppIcon name="leaf" size={16} color={theme.success} />
@@ -299,8 +305,8 @@ export default function DiagnosisCard({ diagnosis, onRetry }) {
         </View>
       )}
 
-      {/* Diagnostic notes */}
-      {notes && !isHealthy && (
+      {/* Diagnostic notes - only show if no issues (to avoid contradicting messages) */}
+      {notes && !isHealthy && (!data.issues || data.issues.length === 0) && (
         <Text style={[styles.text, { color: theme.textSecondary, fontStyle: 'italic', marginTop: SPACING.sm }]}>
           {notes}
         </Text>
@@ -473,6 +479,11 @@ const styles = StyleSheet.create({
   // Issue items
   issueItem: {
     marginBottom: SPACING.xs,
+  },
+
+  // Treatment block - groups treatments for each issue
+  treatmentBlock: {
+    marginBottom: SPACING.md,
   },
 
   // Treatment rows
