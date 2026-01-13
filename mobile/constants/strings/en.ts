@@ -69,6 +69,7 @@ export const en = {
     couldNotLoadConversation: 'Could not load conversation',
     startedNewConversation: 'Started new conversation',
     connectionErrorBot: 'Connection error. Please try again.',
+    servicesWarmingUp: 'Services warming up, retrying...',
     plantPhotoSent: 'Sent plant photo for analysis',
     analyzingImage: 'Analyzing your image...',
     analyzeImage: 'Analyzing your image...',
