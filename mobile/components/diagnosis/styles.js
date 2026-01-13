@@ -97,3 +97,6 @@ export const diagnosisStyles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.medium,
   },
 });
+
+// Alias for simpler imports
+export const styles = diagnosisStyles;
