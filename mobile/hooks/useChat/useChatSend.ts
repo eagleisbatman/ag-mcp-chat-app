@@ -14,6 +14,48 @@ import { uploadImage, uploadAudio } from '../../services/upload';
 import { parseErrorMessage, isNetworkError } from '../../utils/apiHelpers';
 import { t } from '../../constants/strings';
 import { processFailedDiagnosis, processSuccessfulDiagnosis } from './diagnosisProcessor';
+import { Message } from '../../types';
+
+interface UseChatSendOptions {
+  messages: Message[];
+  addMessage: (message: Message) => void;
+  updateMessage: (messageId: string, updates: Record<string, unknown>) => void;
+  ensureSession: () => Promise<string | null>;
+  persistMessage: (message: Message & { cloudinaryUrl?: string }, sessionId: string | null, extra?: Record<string, unknown>) => Promise<string | null>;
+  maybeGenerateTitle: (sessionId: string | null, allMessages: Message[]) => Promise<void>;
+}
+
+interface ImageData {
+  uri: string;
+  base64: string;
+  text?: string;
+}
+
+interface AudioData {
+  base64: string;
+  language?: string;
+}
+
+interface TranscribeResult {
+  success: boolean;
+  transcription?: string;
+  error?: string;
+}
+
+interface UploadResult {
+  success: boolean;
+  url?: string;
+  error?: string;
+}
+
+interface UseChatSendReturn {
+  isTyping: boolean;
+  thinkingText: string | null;
+  handleSendText: (text: string, isRetry?: boolean) => Promise<void>;
+  handleSendImage: (imageData: ImageData) => Promise<void>;
+  transcribeAudioForInput: (audioData: AudioData) => Promise<TranscribeResult>;
+  uploadAudioInBackground: (audioData: AudioData | null) => Promise<UploadResult>;
+}
 
 export default function useChatSend({
   messages,
@@ -22,17 +64,22 @@ export default function useChatSend({
   ensureSession,
   persistMessage,
   maybeGenerateTitle,
-}) {
+}: UseChatSendOptions): UseChatSendReturn {
   const { language, location, locationDetails } = useApp();
   const { showError, showWarning } = useToast();
   
   const [isTyping, setIsTyping] = useState(false);
-  const [thinkingText, setThinkingText] = useState(null);
+  const [thinkingText, setThinkingText] = useState<string | null>(null);
   const retryCountRef = useRef(0);
   const MAX_RETRIES = 1; // Retry once on timeout (handles cold starts)
 
-  const handleSendText = useCallback(async (text, isRetry = false) => {
-    const userMessage = { _id: Date.now().toString(), text, createdAt: new Date(), isBot: false };
+  const handleSendText = useCallback(async (text: string, isRetry = false): Promise<void> => {
+    const userMessage: Message = { 
+      _id: Date.now().toString(), 
+      text, 
+      createdAt: new Date(), 
+      isBot: false 
+    };
     addMessage(userMessage);
     setIsTyping(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -41,7 +88,7 @@ export default function useChatSend({
     persistMessage(userMessage, sessionId, { inputMethod: 'keyboard' });
 
     const botMsgId = (Date.now() + 1).toString();
-    const botMsg = { _id: botMsgId, text: '', createdAt: new Date(), isBot: true };
+    const botMsg: Message = { _id: botMsgId, text: '', createdAt: new Date(), isBot: true };
     addMessage(botMsg);
 
     try {
@@ -54,28 +101,29 @@ export default function useChatSend({
         language: language?.code,
         locationDetails,
         history: messages.slice(0, 10),
-        onChunk: (chunk) => {
+        onChunk: (chunk: string) => {
           setThinkingText(null);
-          updateMessage(botMsgId, { text: (prev) => (prev || '') + chunk });
+          updateMessage(botMsgId, { text: (prev: string) => (prev || '') + chunk });
         },
-        onThinking: (thinking) => setThinkingText(thinking),
-        onComplete: (fullText, metadata) => {
+        onThinking: (thinking: string) => setThinkingText(thinking),
+        onComplete: (fullText: string, metadata?: Record<string, unknown>) => {
           setThinkingText(null);
           setIsTyping(false);
           updateMessage(botMsgId, { text: fullText });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
+          const diagnosisMetadata = metadata?.diagnosis as Record<string, unknown> | undefined;
           persistMessage({ ...botMsg, text: fullText }, sessionId, {
             responseLanguageCode: language?.code,
             metadata: metadata || null,
-            diagnosisCrop: metadata?.diagnosis?.crop?.name || metadata?.diagnosis?.crop,
-            diagnosisHealthStatus: metadata?.diagnosis?.health_status,
-            diagnosisIssues: metadata?.diagnosis?.issues,
-          });
+            diagnosisCrop: diagnosisMetadata?.crop?.name || diagnosisMetadata?.crop,
+            diagnosisHealthStatus: diagnosisMetadata?.health_status,
+            diagnosisIssues: diagnosisMetadata?.issues,
+          } as Record<string, unknown>);
 
           maybeGenerateTitle(sessionId, [{ ...botMsg, text: fullText }, userMessage, ...messages]);
         },
-        onError: (error) => {
+        onError: (error: Error) => {
           const isTimeout = error?.message?.includes('timeout');
           
           // Auto-retry once on timeout (handles Railway cold starts)
@@ -85,7 +133,6 @@ export default function useChatSend({
             setThinkingText(t('chat.servicesWarmingUp') || 'Services warming up, retrying...');
             
             // Remove the empty bot message and retry
-            // The retry will create a new bot message
             handleSendText(text, true);
             return;
           }
@@ -94,7 +141,7 @@ export default function useChatSend({
           setThinkingText(null);
           setIsTyping(false);
           updateMessage(botMsgId, { 
-            text: (prev) => prev && prev.length > 10 ? prev : t('chat.connectionErrorBot') 
+            text: (prev: string) => prev && prev.length > 10 ? prev : t('chat.connectionErrorBot') 
           });
 
           if (isNetworkError(error)) {
@@ -115,10 +162,10 @@ export default function useChatSend({
     }
   }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
-  const handleSendImage = useCallback(async (imageData) => {
+  const handleSendImage = useCallback(async (imageData: ImageData): Promise<void> => {
     // Always use a text value - never null - to prevent API validation errors
     const userMsgText = imageData.text || '[Image for plant diagnosis]';
-    const userMsg = { 
+    const userMsg: Message = { 
       _id: Date.now().toString(), 
       text: userMsgText, 
       image: imageData.uri, 
@@ -134,8 +181,8 @@ export default function useChatSend({
 
     try {
       // Upload image to Cloudinary
-      const uploadPromise = uploadImage(imageData.base64).then(async result => {
-        if (result.success) {
+      const uploadPromise = uploadImage(imageData.base64).then(async (result: UploadResult) => {
+        if (result.success && result.url) {
           await persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
         } else {
           await persistMessage(userMsg, sessionId, { inputMethod: 'image' });
@@ -173,14 +220,19 @@ export default function useChatSend({
       }
     } catch (error) {
       showError(parseErrorMessage(error));
-      addMessage({ _id: (Date.now() + 1).toString(), text: t('chat.imageAnalysisFailedBot'), createdAt: new Date(), isBot: true });
+      addMessage({ 
+        _id: (Date.now() + 1).toString(), 
+        text: t('chat.imageAnalysisFailedBot'), 
+        createdAt: new Date(), 
+        isBot: true 
+      });
     } finally {
       setIsTyping(false);
       setThinkingText(null);
     }
   }, [location, language, locationDetails, messages, addMessage, persistMessage, ensureSession, maybeGenerateTitle, showError, showWarning]);
 
-  const transcribeAudioForInput = useCallback(async (audioData) => {
+  const transcribeAudioForInput = useCallback(async (audioData: AudioData): Promise<TranscribeResult> => {
     try {
       const result = await transcribeAudioService(audioData.base64, audioData.language || language?.code);
       
@@ -194,7 +246,7 @@ export default function useChatSend({
     }
   }, [language]);
 
-  const uploadAudioInBackground = useCallback(async (audioData) => {
+  const uploadAudioInBackground = useCallback(async (audioData: AudioData | null): Promise<UploadResult> => {
     if (!audioData?.base64) return { success: false };
     
     try {
@@ -207,7 +259,7 @@ export default function useChatSend({
 
       return result;
     } catch (error) {
-      return { success: false, error: error.message };
+      return { success: false, error: (error as Error).message };
     }
   }, [showWarning]);
 

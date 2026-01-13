@@ -2,7 +2,7 @@
  * Chat session management hook
  * Handles session creation, loading, and persistence
  */
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, Dispatch, SetStateAction, MutableRefObject } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { useToast } from '../../contexts/ToastContext';
 import { 
@@ -12,16 +12,37 @@ import {
   generateTitle 
 } from '../../services/db';
 import { t } from '../../constants/strings';
+import { Message } from '../../types';
+
+interface DbMessage {
+  id: string;
+  content: string;
+  role: 'user' | 'assistant';
+  createdAt: string;
+  imageCloudinaryUrl?: string;
+  ttsAudioUrl?: string;
+  metadata?: string | Record<string, unknown>;
+}
+
+interface UseChatSessionReturn {
+  messages: Message[];
+  setMessages: Dispatch<SetStateAction<Message[]>>;
+  isLoadingSession: boolean;
+  titleGeneratedRef: MutableRefObject<boolean>;
+  startNewSession: () => void;
+  ensureSession: () => Promise<string | null>;
+  maybeGenerateTitle: (sessionId: string | null, allMessages: Message[]) => Promise<void>;
+}
 
 // Create welcome message dynamically so it uses current language
-export const createWelcomeMessage = () => ({
+export const createWelcomeMessage = (): Message => ({
   _id: 'welcome',
   text: t('chat.welcomeMessage'),
   createdAt: new Date(),
   isBot: true,
 });
 
-export default function useChatSession(sessionIdParam = null) {
+export default function useChatSession(sessionIdParam: string | null = null): UseChatSessionReturn {
   const { 
     language, 
     locationDetails, 
@@ -31,7 +52,7 @@ export default function useChatSession(sessionIdParam = null) {
   } = useApp();
   const { showError, showWarning, showSuccess } = useToast();
   
-  const [messages, setMessages] = useState(() => [createWelcomeMessage()]);
+  const [messages, setMessages] = useState<Message[]>(() => [createWelcomeMessage()]);
   const [isLoadingSession, setIsLoadingSession] = useState(false);
   const titleGeneratedRef = useRef(false);
 
@@ -48,24 +69,17 @@ export default function useChatSession(sessionIdParam = null) {
     });
   }, [language]);
 
-  // Load existing session if provided
-  useEffect(() => {
-    if (sessionIdParam && isDbSynced) {
-      loadSession(sessionIdParam);
-    }
-  }, [sessionIdParam, isDbSynced]);
-
-  const loadSession = async (sessionId) => {
+  const loadSession = useCallback(async (sessionId: string) => {
     setIsLoadingSession(true);
     try {
       const result = await getSession(sessionId, 50);
       if (result.success && result.session?.messages) {
-        const loadedMessages = result.session.messages.map(m => {
+        const loadedMessages: Message[] = (result.session.messages as DbMessage[]).map(m => {
           // Reconstruct diagnosis from metadata for native card
           let diagnosisData = null;
           try {
             const metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
-            diagnosisData = metadata?.diagnosis || null;
+            diagnosisData = (metadata as Record<string, unknown>)?.diagnosis || null;
           } catch (e) {
             // Ignore parse errors
           }
@@ -90,7 +104,14 @@ export default function useChatSession(sessionIdParam = null) {
     } finally {
       setIsLoadingSession(false);
     }
-  };
+  }, [setCurrentSessionId, showError]);
+
+  // Load existing session if provided
+  useEffect(() => {
+    if (sessionIdParam && isDbSynced) {
+      loadSession(sessionIdParam);
+    }
+  }, [sessionIdParam, isDbSynced, loadSession]);
 
   const startNewSession = useCallback(() => {
     setMessages([createWelcomeMessage()]);
@@ -99,7 +120,7 @@ export default function useChatSession(sessionIdParam = null) {
     showSuccess(t('chat.startedNewConversation'));
   }, [setCurrentSessionId, showSuccess]);
 
-  const ensureSession = useCallback(async () => {
+  const ensureSession = useCallback(async (): Promise<string | null> => {
     if (currentSessionId) return currentSessionId;
     if (!isDbSynced) return null;
     
@@ -108,7 +129,7 @@ export default function useChatSession(sessionIdParam = null) {
         primaryLanguageCode: language?.code,
         locationDisplay: locationDetails?.displayName,
       });
-      if (result.success) {
+      if (result.success && result.session) {
         setCurrentSessionId(result.session.id);
         return result.session.id;
       } else {
@@ -120,7 +141,7 @@ export default function useChatSession(sessionIdParam = null) {
     return null;
   }, [currentSessionId, isDbSynced, language, locationDetails, setCurrentSessionId, showWarning]);
 
-  const maybeGenerateTitle = useCallback(async (sessionId, allMessages) => {
+  const maybeGenerateTitle = useCallback(async (sessionId: string | null, allMessages: Message[]): Promise<void> => {
     if (titleGeneratedRef.current || !sessionId || !isDbSynced) return;
     
     const userMessages = allMessages.filter(m => !m.isBot && m._id !== 'welcome');

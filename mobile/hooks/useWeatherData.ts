@@ -7,21 +7,40 @@ import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { weatherService } from '../services/weather';
 import { log, error as logError } from '../utils/logger';
+import { LocationDetails, WeatherData } from '../types';
 
 const SERVICE_PREFS_KEY = '@service_preferences';
 
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+interface ServicePreferences {
+  weather?: string;
+  [key: string]: string | undefined;
+}
+
+interface UseWeatherDataReturn {
+  weatherData: WeatherData | null;
+  weatherLoading: boolean;
+  weatherError: boolean;
+  weatherProvider: string | null;
+  refreshWeather: () => Promise<void>;
+}
+
 /**
  * Hook for fetching and managing weather data
- * @param {object} location - Location object with latitude/longitude
- * @param {object} locationDetails - Location details with displayName
- * @param {string} language - Current language code
- * @returns {object} Weather state and controls
  */
-export default function useWeatherData(location, locationDetails, language) {
-  const [weatherData, setWeatherData] = useState(null);
+export default function useWeatherData(
+  location: Location | null,
+  locationDetails: LocationDetails | null,
+  language: string
+): UseWeatherDataReturn {
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherError, setWeatherError] = useState(false);
-  const [weatherProvider, setWeatherProvider] = useState(null);
+  const [weatherProvider, setWeatherProvider] = useState<string | null>(null);
   
   const isFetchingRef = useRef(false);
 
@@ -42,7 +61,7 @@ export default function useWeatherData(location, locationDetails, language) {
 
     try {
       // Load service preferences
-      let prefs = {};
+      let prefs: ServicePreferences = {};
       try {
         const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
         if (stored) prefs = JSON.parse(stored);

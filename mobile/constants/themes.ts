@@ -1,6 +1,65 @@
 // Theme color definitions - Pure dark/light with vibrant accents
+import { TextStyle } from 'react-native';
 
-export const THEMES = {
+export interface ThemeColors {
+  name: 'light' | 'dark';
+  // Base colors
+  background: string;
+  surface: string;
+  surfaceVariant: string;
+  surfaceElevated: string;
+  
+  // Text hierarchy
+  text: string;
+  textSecondary: string;
+  textMuted: string;
+  
+  // Accent colors
+  accent: string;
+  accentBright: string;
+  accentLight: string;
+  accentDark: string;
+  
+  // Borders & separators
+  border: string;
+  borderLight: string;
+  
+  // Message bubbles
+  userMessage: string;
+  userMessageText: string;
+  botMessage: string;
+  botMessageText: string;
+  
+  // Input
+  inputBackground: string;
+  inputBorder: string;
+  
+  // Status bar
+  statusBar: 'light' | 'dark';
+  
+  // Semantic colors
+  error: string;
+  errorLight: string;
+  success: string;
+  successLight: string;
+  warning: string;
+  warningLight: string;
+  info: string;
+  infoLight: string;
+  
+  // Icon colors
+  icon: string;
+  iconPrimary: string;
+  iconSecondary: string;
+  iconAccent: string;
+}
+
+export interface ThemeSystem {
+  light: ThemeColors;
+  dark: ThemeColors;
+}
+
+export const THEMES: ThemeSystem = {
   light: {
     name: 'light',
     // Pure bright white base
@@ -109,7 +168,38 @@ export const THEMES = {
 };
 
 // Typography system
-export const TYPOGRAPHY = {
+export interface TypographySizes {
+  xs: number;
+  sm: number;
+  base: number;
+  md: number;
+  lg: number;
+  xl: number;
+  '2xl': number;
+  '3xl': number;
+}
+
+export interface TypographyLineHeights {
+  tight: number;
+  normal: number;
+  relaxed: number;
+  loose: number;
+}
+
+export interface TypographyWeights {
+  regular: TextStyle['fontWeight'];
+  medium: TextStyle['fontWeight'];
+  semibold: TextStyle['fontWeight'];
+  bold: TextStyle['fontWeight'];
+}
+
+export interface TypographySystem {
+  sizes: TypographySizes;
+  lineHeights: TypographyLineHeights;
+  weights: TypographyWeights;
+}
+
+export const TYPOGRAPHY: TypographySystem = {
   // Font sizes
   sizes: {
     xs: 12,
@@ -138,7 +228,39 @@ export const TYPOGRAPHY = {
 };
 
 // Standard spacing/sizing constants
-export const SPACING = {
+export interface SpacingSystem {
+  // Base spacing scale
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+  '2xl': number;
+  '3xl': number;
+  
+  // Component-specific
+  headerPaddingOffset: number;
+  headerMinPadding: number;
+  horizontalPadding: number;
+  
+  // Border radius scale
+  radiusSm: number;
+  radiusMd: number;
+  radiusLg: number;
+  radiusXl: number;
+  radiusFull: number;
+  
+  // Legacy (for compatibility)
+  borderRadius: number;
+  iconButtonSize: number;
+  
+  // Input toolbar
+  inputHeight: number;
+  inputPadding: number;
+  floatingInputMargin: number;
+}
+
+export const SPACING: SpacingSystem = {
   // Base spacing scale
   xs: 4,
   sm: 8,

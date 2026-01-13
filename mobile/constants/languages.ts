@@ -2,7 +2,20 @@
 // Organized by region with native names for display
 // isRTL: true for right-to-left languages (Arabic, Urdu, Persian, Hebrew)
 
-export const LANGUAGES = [
+export interface Language {
+  code: string;
+  name: string;
+  nativeName: string;
+  region: string;
+  isRTL?: boolean;
+}
+
+export interface LanguageSection {
+  title: string;
+  data: Language[];
+}
+
+export const LANGUAGES: Language[] = [
   // Indian Languages
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', region: 'India' },
   { code: 'te', name: 'Telugu', nativeName: 'తెలుగు', region: 'India' },
@@ -71,11 +84,10 @@ export const LANGUAGES = [
 ];
 
 // Get unique regions for filtering
-export const REGIONS = [...new Set(LANGUAGES.map(l => l.region))];
+export const REGIONS: string[] = [...new Set(LANGUAGES.map(l => l.region))];
 
 // Country to suggested languages mapping
-// Maps country names (from reverse geocoding) to language codes
-const COUNTRY_LANGUAGE_MAP = {
+const COUNTRY_LANGUAGE_MAP: Record<string, string[]> = {
   // South Asia
   'India': ['hi', 'te', 'kn', 'mr', 'ta', 'bn', 'gu', 'ml', 'pa', 'or', 'as', 'en'],
   'Nepal': ['ne', 'hi', 'en'],
@@ -187,30 +199,31 @@ const COUNTRY_LANGUAGE_MAP = {
 };
 
 // Get suggested languages based on country name
-export const getSuggestedLanguages = (countryName) => {
+export const getSuggestedLanguages = (countryName: string | null | undefined): Language[] => {
   if (!countryName) return [];
 
   // Try exact match first
   const codes = COUNTRY_LANGUAGE_MAP[countryName];
   if (codes) {
-    return codes.map(code => LANGUAGES.find(l => l.code === code)).filter(Boolean);
+    return codes.map(code => LANGUAGES.find(l => l.code === code)).filter((l): l is Language => l !== undefined);
   }
 
   // Try partial match (e.g., "United States of America" -> "United States")
   const countryLower = countryName.toLowerCase();
   for (const [key, langCodes] of Object.entries(COUNTRY_LANGUAGE_MAP)) {
     if (countryLower.includes(key.toLowerCase()) || key.toLowerCase().includes(countryLower)) {
-      return langCodes.map(code => LANGUAGES.find(l => l.code === code)).filter(Boolean);
+      return langCodes.map(code => LANGUAGES.find(l => l.code === code)).filter((l): l is Language => l !== undefined);
     }
   }
 
   // No match - return English as default
-  return [LANGUAGES.find(l => l.code === 'en')];
+  const english = LANGUAGES.find(l => l.code === 'en');
+  return english ? [english] : [];
 };
 
 // Get languages grouped by region (simple list, no location-based suggestions)
-export const getLanguagesByRegion = () => {
-  const sections = [];
+export const getLanguagesByRegion = (): LanguageSection[] => {
+  const sections: LanguageSection[] = [];
 
   for (const region of REGIONS) {
     const regionLangs = LANGUAGES.filter(l => l.region === region);
@@ -226,7 +239,7 @@ export const getLanguagesByRegion = () => {
 };
 
 // Search function for language picker
-export const searchLanguages = (query) => {
+export const searchLanguages = (query: string | null | undefined): Language[] => {
   if (!query) return LANGUAGES;
   const lowerQuery = query.toLowerCase();
   return LANGUAGES.filter(
@@ -238,13 +251,12 @@ export const searchLanguages = (query) => {
 };
 
 // Check if a language is RTL
-export const isRTLLanguage = (code) => {
+export const isRTLLanguage = (code: string): boolean => {
   const lang = LANGUAGES.find(l => l.code === code);
   return lang?.isRTL === true;
 };
 
 // Get RTL language codes
-export const RTL_LANGUAGES = LANGUAGES.filter(l => l.isRTL).map(l => l.code);
+export const RTL_LANGUAGES: string[] = LANGUAGES.filter(l => l.isRTL).map(l => l.code);
 
 export default LANGUAGES;
-

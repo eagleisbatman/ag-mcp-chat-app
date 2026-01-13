@@ -4,23 +4,24 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, Dimensions } from 'react-native';
+import { View, StyleSheet, Animated, Dimensions, ViewStyle, DimensionValue } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import PropTypes from 'prop-types';
 import { useApp } from '../../contexts/AppContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+interface SkeletonProps {
+  width?: DimensionValue;
+  height?: number;
+  borderRadius?: number;
+  style?: ViewStyle;
+}
+
 /**
  * Skeleton placeholder component
- * @param {object} props
- * @param {number} props.width - Width of skeleton (default: 100%)
- * @param {number} props.height - Height of skeleton (default: 16)
- * @param {number} props.borderRadius - Border radius (default: 4)
- * @param {object} props.style - Additional styles
  */
-function Skeleton({ width = '100%', height = 16, borderRadius = 4, style }) {
-  const { theme, isDark } = useApp();
+function Skeleton({ width = '100%', height = 16, borderRadius = 4, style }: SkeletonProps): JSX.Element {
+  const { isDark } = useApp();
   const shimmerAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -76,17 +77,18 @@ function Skeleton({ width = '100%', height = 16, borderRadius = 4, style }) {
   );
 }
 
-Skeleton.propTypes = {
-  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  height: PropTypes.number,
-  borderRadius: PropTypes.number,
-  style: PropTypes.object,
-};
+interface SkeletonTextProps {
+  lines?: number;
+  lineHeight?: number;
+  spacing?: number;
+  lastLineWidth?: DimensionValue;
+  style?: ViewStyle;
+}
 
 /**
  * Text skeleton - for text placeholders
  */
-export function SkeletonText({ lines = 1, lineHeight = 16, spacing = 8, lastLineWidth = '60%', style }) {
+export function SkeletonText({ lines = 1, lineHeight = 16, spacing = 8, lastLineWidth = '60%', style }: SkeletonTextProps): JSX.Element {
   return (
     <View style={[styles.textContainer, style]}>
       {Array.from({ length: lines }).map((_, index) => (
@@ -101,44 +103,39 @@ export function SkeletonText({ lines = 1, lineHeight = 16, spacing = 8, lastLine
   );
 }
 
-SkeletonText.propTypes = {
-  lines: PropTypes.number,
-  lineHeight: PropTypes.number,
-  spacing: PropTypes.number,
-  lastLineWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  style: PropTypes.object,
-};
+interface SkeletonCircleProps {
+  size?: number;
+  style?: ViewStyle;
+}
 
 /**
  * Circle skeleton - for avatars/icons
  */
-export function SkeletonCircle({ size = 40, style }) {
+export function SkeletonCircle({ size = 40, style }: SkeletonCircleProps): JSX.Element {
   return <Skeleton width={size} height={size} borderRadius={size / 2} style={style} />;
 }
 
-SkeletonCircle.propTypes = {
-  size: PropTypes.number,
-  style: PropTypes.object,
-};
+interface SkeletonCardProps {
+  height?: number;
+  style?: ViewStyle;
+}
 
 /**
  * Card skeleton - for card-shaped placeholders
  */
-export function SkeletonCard({ height = 120, style }) {
+export function SkeletonCard({ height = 120, style }: SkeletonCardProps): JSX.Element {
   return <Skeleton height={height} borderRadius={12} style={style} />;
 }
 
-SkeletonCard.propTypes = {
-  height: PropTypes.number,
-  style: PropTypes.object,
-};
+interface SkeletonMessageProps {
+  isBot?: boolean;
+  style?: ViewStyle;
+}
 
 /**
  * Message skeleton - resembles a chat message
  */
-export function SkeletonMessage({ isBot = true, style }) {
-  const { theme } = useApp();
-  
+export function SkeletonMessage({ isBot = true, style }: SkeletonMessageProps): JSX.Element {
   return (
     <View style={[styles.messageContainer, style]}>
       <Skeleton width={80} height={12} borderRadius={2} style={{ marginBottom: 8 }} />
@@ -147,15 +144,14 @@ export function SkeletonMessage({ isBot = true, style }) {
   );
 }
 
-SkeletonMessage.propTypes = {
-  isBot: PropTypes.bool,
-  style: PropTypes.object,
-};
+interface SkeletonWeatherProps {
+  style?: ViewStyle;
+}
 
 /**
  * Weather widget skeleton
  */
-export function SkeletonWeather({ style }) {
+export function SkeletonWeather({ style }: SkeletonWeatherProps): JSX.Element {
   return (
     <View style={[styles.weatherContainer, style]}>
       <View style={styles.weatherRow}>
@@ -169,14 +165,14 @@ export function SkeletonWeather({ style }) {
   );
 }
 
-SkeletonWeather.propTypes = {
-  style: PropTypes.object,
-};
+interface SkeletonSessionItemProps {
+  style?: ViewStyle;
+}
 
 /**
  * Session list item skeleton
  */
-export function SkeletonSessionItem({ style }) {
+export function SkeletonSessionItem({ style }: SkeletonSessionItemProps): JSX.Element {
   return (
     <View style={[styles.sessionItem, style]}>
       <View style={styles.sessionContent}>
@@ -186,10 +182,6 @@ export function SkeletonSessionItem({ style }) {
     </View>
   );
 }
-
-SkeletonSessionItem.propTypes = {
-  style: PropTypes.object,
-};
 
 const styles = StyleSheet.create({
   skeleton: {
