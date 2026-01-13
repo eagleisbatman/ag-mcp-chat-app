@@ -7,6 +7,7 @@ import {
   Platform,
   Text,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
@@ -310,6 +311,16 @@ const InputToolbar = forwardRef(function InputToolbar({
     </KeyboardStickyView>
   );
 });
+
+InputToolbar.propTypes = {
+  onSendText: PropTypes.func.isRequired,
+  onSendImage: PropTypes.func.isRequired,
+  onSendVoiceText: PropTypes.func,
+  transcribeAudio: PropTypes.func.isRequired,
+  uploadAudioInBackground: PropTypes.func,
+  onOpenHistory: PropTypes.func,
+  disabled: PropTypes.bool,
+};
 
 export default InputToolbar;
 

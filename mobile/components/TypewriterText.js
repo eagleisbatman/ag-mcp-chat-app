@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text } from 'react-native';
+import PropTypes from 'prop-types';
 
 /**
  * TypewriterText - Displays text with a typewriter animation effect

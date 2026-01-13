@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -132,3 +133,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+ShimmerText.propTypes = {
+  text: PropTypes.string.isRequired,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  fontSize: PropTypes.number,
+};

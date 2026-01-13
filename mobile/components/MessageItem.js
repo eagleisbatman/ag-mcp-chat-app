@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Platform, Animated, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator, Platform, Animated, useWindowDimensions } from 'react-native';
+import PropTypes from 'prop-types';
+import { Image } from 'expo-image';
 import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -348,7 +350,9 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
         <Image 
           source={{ uri: message.image }} 
           style={styles.image}
-          resizeMode="cover"
+          contentFit="cover"
+          transition={200}
+          placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
         />
       )}
       
@@ -444,6 +448,23 @@ const styles = StyleSheet.create({
     lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
   },
 });
+
+MessageItem.propTypes = {
+  message: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    text: PropTypes.string,
+    createdAt: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string, PropTypes.number]),
+    isBot: PropTypes.bool,
+    image: PropTypes.string,
+    diagnosisData: PropTypes.object,
+    ttsAudioUrl: PropTypes.string,
+    isStreaming: PropTypes.bool,
+  }).isRequired,
+  isNewMessage: PropTypes.bool,
+  diagnosisTitle: PropTypes.string,
+  onLayout: PropTypes.func,
+  onRetry: PropTypes.func,
+};
 
 // Memoize to prevent unnecessary re-renders (fixes VirtualizedList warning)
 export default React.memo(MessageItem, (prevProps, nextProps) => {

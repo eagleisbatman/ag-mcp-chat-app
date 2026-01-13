@@ -1,10 +1,11 @@
 /**
  * Device information utility
- * Uses expo-device and expo-application for device identification
+ * Uses expo-device, expo-application, and expo-crypto for device identification
  */
 
 import * as Device from 'expo-device';
 import * as Application from 'expo-application';
+import * as Crypto from 'expo-crypto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import type { DeviceInfo } from '../types';
@@ -16,7 +17,7 @@ type DeviceType = 'phone' | 'tablet' | 'desktop' | 'tv' | 'unknown';
 
 /**
  * Generate a unique device ID
- * Uses native device identifiers when available, falls back to UUID
+ * Uses native device identifiers when available, falls back to cryptographically secure UUID
  */
 async function generateDeviceId(): Promise<string> {
   // Try to get a native identifier
@@ -30,12 +31,9 @@ async function generateDeviceId(): Promise<string> {
     if (iosId) return `ios_${iosId}`;
   }
 
-  // Fallback: generate a UUID-like string
-  // Note: Math.random() is not cryptographically secure
-  // Consider using expo-crypto for production
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 15);
-  return `device_${timestamp}_${random}`;
+  // Fallback: generate a cryptographically secure UUID using expo-crypto
+  const uuid = Crypto.randomUUID();
+  return `device_${uuid}`;
 }
 
 /**

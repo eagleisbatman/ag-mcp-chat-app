@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
@@ -159,5 +160,13 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
   },
 });
+
+ContentCarousel.propTypes = {
+  title: PropTypes.string,
+  items: PropTypes.array,
+  onItemPress: PropTypes.func,
+  onSeeAll: PropTypes.func,
+  loading: PropTypes.bool,
+};
 
 export default ContentCarousel;

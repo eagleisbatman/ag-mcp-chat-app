@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING } from '../../constants/themes';
 import { ELEVATION } from '../../constants/elevation';
@@ -42,3 +43,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 });
+
+Card.propTypes = {
+  children: PropTypes.node,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  backgroundColor: PropTypes.string,
+  borderColor: PropTypes.string,
+  borderWidth: PropTypes.number,
+  radius: PropTypes.number,
+  padding: PropTypes.number,
+  elevation: PropTypes.oneOf(['sm', 'md', 'lg', 'xl']),
+};

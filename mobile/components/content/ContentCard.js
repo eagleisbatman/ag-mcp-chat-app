@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
+import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
@@ -61,7 +63,9 @@ const ContentCard = ({ item, onPress, variant = 'default' }) => {
           <Image
             source={{ uri: item.thumbnailUrl || item.coverImageUrl }}
             style={styles.image}
-            resizeMode="cover"
+            contentFit="cover"
+            transition={200}
+            placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
           />
         ) : (
           <View style={[styles.imagePlaceholder, { backgroundColor: theme.surfaceVariant }]}>
@@ -243,5 +247,21 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
 });
+
+ContentCard.propTypes = {
+  item: PropTypes.shape({
+    type: PropTypes.oneOf(['article', 'podcast', 'video']),
+    thumbnailUrl: PropTypes.string,
+    coverImageUrl: PropTypes.string,
+    title: PropTypes.string,
+    summary: PropTypes.string,
+    duration: PropTypes.number,
+    readingTime: PropTypes.number,
+    publishedAt: PropTypes.string,
+    topics: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
+  onPress: PropTypes.func,
+  variant: PropTypes.oneOf(['default', 'compact']),
+};
 
 export default ContentCard;

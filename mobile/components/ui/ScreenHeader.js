@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
@@ -119,3 +120,16 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
 });
+
+ScreenHeader.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  center: PropTypes.node,
+  left: PropTypes.node,
+  right: PropTypes.node,
+  backgroundColor: PropTypes.string,
+  borderColor: PropTypes.string,
+  borderBottom: PropTypes.bool,
+  align: PropTypes.oneOf(['center', 'left']),
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+};

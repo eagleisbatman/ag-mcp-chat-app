@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../../contexts/AppContext';
@@ -120,5 +121,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+QuickActions.propTypes = {
+  onAskQuestion: PropTypes.func,
+  onTakePhoto: PropTypes.func,
+  onViewHistory: PropTypes.func,
+};
 
 export default QuickActions;

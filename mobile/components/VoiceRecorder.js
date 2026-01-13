@@ -10,6 +10,7 @@ import {
   Platform,
   Easing,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Haptics from 'expo-haptics';
@@ -566,3 +567,9 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
+
+VoiceRecorder.propTypes = {
+  onTranscriptionComplete: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  transcribeAudio: PropTypes.func.isRequired,
+};

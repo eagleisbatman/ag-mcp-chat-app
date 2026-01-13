@@ -9,6 +9,7 @@ import {
   Modal,
   Platform,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../contexts/AppContext';
@@ -283,3 +284,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+AttachBottomSheet.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onCamera: PropTypes.func.isRequired,
+  onPhotos: PropTypes.func.isRequired,
+};
