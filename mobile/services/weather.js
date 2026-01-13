@@ -1,10 +1,9 @@
 // Weather API service - calls API Gateway for weather data
 import { fetchWithTimeout, parseErrorMessage } from '../utils/apiHelpers';
+import { API_BASE_URL, API_KEY, TIMEOUTS } from '../utils/config';
+import { log, error as logError } from '../utils/logger';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
-
-const DEFAULT_TIMEOUT_MS = 30000; // 30s for weather endpoints
+const DEFAULT_TIMEOUT_MS = TIMEOUTS.WEATHER;
 
 /**
  * Weather Service
@@ -42,7 +41,7 @@ export const weatherService = {
         provider: current.provider || provider,
       };
     } catch (error) {
-      console.error('Error fetching weather data:', error);
+      logError('Error fetching weather data:', error);
       throw error;
     }
   },
@@ -89,7 +88,7 @@ export const weatherService = {
       const humidity = currentData.humidity ?? currentData.humidity_percent;
       const windSpeed = currentData.wind_speed ?? currentData.wind_speed_kmh;
 
-      console.log('[Weather] Current conditions fetched:', {
+      log('[Weather] Current conditions fetched:', {
         temp: temperature,
         conditions: currentData.conditions,
       });
@@ -112,7 +111,7 @@ export const weatherService = {
         provider: result.data?.provider || provider,
       };
     } catch (error) {
-      console.error('Current weather error:', error);
+      logError('Current weather error:', error);
       return {
         success: false,
         error: parseErrorMessage(error),
@@ -170,7 +169,7 @@ export const weatherService = {
       // Get location from forecast response
       const locationData = result.data?.location || {};
 
-      console.log('[Weather] Forecast fetched:', {
+      log('[Weather] Forecast fetched:', {
         days: daily.length,
         city: locationData.name,
       });
@@ -185,7 +184,7 @@ export const weatherService = {
         },
       };
     } catch (error) {
-      console.error('Weather forecast error:', error);
+      logError('Weather forecast error:', error);
       return {
         success: false,
         error: parseErrorMessage(error),
@@ -214,7 +213,7 @@ export const weatherService = {
 
       if (!response.ok) {
         // Alerts are optional, don't throw on error
-        console.warn('Weather alerts unavailable:', response.status);
+        log('Weather alerts unavailable:', response.status);
         return [];
       }
 
@@ -222,12 +221,12 @@ export const weatherService = {
       const alerts = result.alerts || [];
 
       if (alerts.length > 0) {
-        console.log('[Weather] Alerts fetched:', alerts.length);
+        log('[Weather] Alerts fetched:', alerts.length);
       }
 
       return alerts;
     } catch (error) {
-      console.warn('Failed to fetch weather alerts:', error);
+      log('Failed to fetch weather alerts:', error);
       return [];
     }
   },
@@ -267,7 +266,7 @@ export const weatherService = {
         data: result.data || [],
       };
     } catch (error) {
-      console.error('Hourly forecast error:', error);
+      logError('Hourly forecast error:', error);
       return {
         success: false,
         error: parseErrorMessage(error),

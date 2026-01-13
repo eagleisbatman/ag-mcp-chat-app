@@ -2,9 +2,11 @@
  * API Helper utilities - standardized error handling, retry logic, etc.
  */
 
+import type { ApiResponse } from '../types';
+
 // Standard error messages for common HTTP status codes
 // These are user-friendly and never expose technical details
-const HTTP_ERROR_MESSAGES = {
+const HTTP_ERROR_MESSAGES: Record<number, string> = {
   400: 'Something went wrong. Please try again.',
   401: 'Please restart the app to reconnect.',
   403: 'Access denied. Please try again later.',
@@ -17,21 +19,31 @@ const HTTP_ERROR_MESSAGES = {
 };
 
 // Known error type messages (NOT including TypeError - it's too broad)
-const ERROR_TYPE_MESSAGES = {
+const ERROR_TYPE_MESSAGES: Record<string, string> = {
   AbortError: 'Request was cancelled.',
   TimeoutError: 'Request timed out.',
 };
 
+interface ErrorWithStatus {
+  status?: number;
+  error?: string;
+  response?: { status?: number };
+  message?: string;
+  name?: string;
+}
+
 /**
  * Parse error from various sources into a user-friendly message
  * Never returns raw technical errors - always user-friendly
- * @param {Error|Response|object} error - Error from fetch or service
- * @returns {string} User-friendly error message
+ * @param error - Error from fetch or service
+ * @returns User-friendly error message
  */
-export function parseErrorMessage(error) {
+export function parseErrorMessage(error: ErrorWithStatus | Error | unknown): string {
+  const err = error as ErrorWithStatus;
+
   // HTTP Response object with status
-  if (error?.status) {
-    return HTTP_ERROR_MESSAGES[error.status] || 'Something went wrong. Please try again.';
+  if (err?.status) {
+    return HTTP_ERROR_MESSAGES[err.status] || 'Something went wrong. Please try again.';
   }
 
   // Standard Error object
@@ -59,7 +71,7 @@ export function parseErrorMessage(error) {
         const parsed = JSON.parse(error.message.substring(error.message.indexOf('{')));
         if (parsed.error?.message) return parsed.error.message;
         if (parsed.message) return parsed.message;
-      } catch (e) {
+      } catch {
         // Fallback to standard check
       }
     }
@@ -84,12 +96,12 @@ export function parseErrorMessage(error) {
   }
 
   // Service response with error field - also sanitize
-  if (error?.error) {
+  if (err?.error) {
     // Don't expose validation errors or technical details
-    if (error.error.includes('Validation') || error.error.includes('API')) {
+    if (err.error.includes('Validation') || err.error.includes('API')) {
       return 'Something went wrong. Please try again.';
     }
-    return error.error;
+    return err.error;
   }
 
   // Fallback
@@ -98,12 +110,15 @@ export function parseErrorMessage(error) {
 
 /**
  * Fetch with timeout support
- * @param {string} url - URL to fetch
- * @param {RequestInit} options - Fetch options
- * @param {number} timeout - Timeout in ms (default 30s)
- * @returns {Promise<Response>}
+ * @param url - URL to fetch
+ * @param options - Fetch options
+ * @param timeout - Timeout in ms (default 30s)
  */
-export async function fetchWithTimeout(url, options = {}, timeout = 30000) {
+export async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeout: number = 30000
+): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -118,37 +133,47 @@ export async function fetchWithTimeout(url, options = {}, timeout = 30000) {
   }
 }
 
+interface RetryConfig {
+  maxRetries?: number;
+  baseDelay?: number;
+  timeout?: number;
+}
+
+interface ErrorWithStatusCode extends Error {
+  status?: number;
+}
+
 /**
  * Fetch with retry logic (exponential backoff)
- * @param {string} url - URL to fetch
- * @param {RequestInit} options - Fetch options
- * @param {object} config - Retry configuration
- * @returns {Promise<Response>}
+ * @param url - URL to fetch
+ * @param options - Fetch options
+ * @param config - Retry configuration
  */
 export async function fetchWithRetry(
-  url, 
-  options = {}, 
-  { maxRetries = 2, baseDelay = 1000, timeout = 30000 } = {}
-) {
-  let lastError;
+  url: string,
+  options: RequestInit = {},
+  { maxRetries = 2, baseDelay = 1000, timeout = 30000 }: RetryConfig = {}
+): Promise<Response> {
+  let lastError: Error | undefined;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetchWithTimeout(url, options, timeout);
-      
+
       // Don't retry client errors (4xx), only server errors (5xx)
       if (response.ok || (response.status >= 400 && response.status < 500)) {
         return response;
       }
-      
+
       // Server error - will retry
-      lastError = new Error(`HTTP ${response.status}`);
-      lastError.status = response.status;
-    } catch (error) {
+      const error = new Error(`HTTP ${response.status}`) as ErrorWithStatusCode;
+      error.status = response.status;
       lastError = error;
-      
+    } catch (error) {
+      lastError = error as Error;
+
       // Don't retry abort errors
-      if (error.name === 'AbortError') {
+      if ((error as Error).name === 'AbortError') {
         throw error;
       }
     }
@@ -163,16 +188,23 @@ export async function fetchWithRetry(
   throw lastError;
 }
 
+interface SafeApiCallOptions {
+  logError?: boolean;
+}
+
 /**
  * Standard API call wrapper with error handling
- * @param {function} apiCall - Async function that makes the API call
- * @param {object} options - Options for error handling
- * @returns {Promise<object>} - { success: true, data } or { success: false, error }
+ * @param apiCall - Async function that makes the API call
+ * @param options - Options for error handling
+ * @returns { success: true, data } or { success: false, error }
  */
-export async function safeApiCall(apiCall, { logError = true } = {}) {
+export async function safeApiCall<T>(
+  apiCall: () => Promise<T>,
+  { logError = true }: SafeApiCallOptions = {}
+): Promise<ApiResponse<T>> {
   try {
     const result = await apiCall();
-    return result;
+    return { success: true, data: result };
   } catch (error) {
     if (logError) {
       console.error('API call failed:', error);
@@ -187,15 +219,15 @@ export async function safeApiCall(apiCall, { logError = true } = {}) {
 /**
  * Check if an error is a network/connectivity error
  * Must be specific to avoid false positives from coding errors (TypeErrors)
- * @param {Error} error
- * @returns {boolean}
  */
-export function isNetworkError(error) {
+export function isNetworkError(error: Error | unknown): boolean {
   if (!error) return false;
-  const msg = error.message?.toLowerCase() || '';
+  
+  const err = error as Error;
+  const msg = err.message?.toLowerCase() || '';
 
   // AbortError is definitely a cancellation/timeout
-  if (error.name === 'AbortError') return true;
+  if (err.name === 'AbortError') return true;
 
   // Check for specific network-related error messages
   // These are the actual messages from fetch/XHR when network fails
@@ -215,7 +247,7 @@ export function isNetworkError(error) {
 
   // TypeError alone is NOT enough - it must have network-related message
   // This prevents false positives from coding errors like "Cannot read property of undefined"
-  if (error.name === 'TypeError') {
+  if (err.name === 'TypeError') {
     // Only treat TypeError as network error if message indicates network issue
     return msg.includes('network') || msg.includes('fetch');
   }
@@ -228,16 +260,18 @@ export function isNetworkError(error) {
 
 /**
  * Check if an error is a server error (5xx)
- * @param {Error|object} error
- * @returns {boolean}
  */
-export function isServerError(error) {
+export function isServerError(error: ErrorWithStatus | Error | unknown): boolean {
   if (!error) return false;
+  
+  const err = error as ErrorWithStatus;
+  
   // Check error.status directly (from our custom errors)
-  const status = error?.status || error?.response?.status;
-  if (status >= 500 && status < 600) return true;
+  const status = err?.status || err?.response?.status;
+  if (status && status >= 500 && status < 600) return true;
+  
   // Check error message for HTTP status codes
-  const msg = error.message || '';
+  const msg = err?.message || '';
   const match = msg.match(/API error:\s*(\d+)/);
   if (match) {
     const code = parseInt(match[1], 10);
@@ -254,4 +288,3 @@ export default {
   isNetworkError,
   isServerError,
 };
-

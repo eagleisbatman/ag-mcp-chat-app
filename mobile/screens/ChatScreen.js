@@ -17,6 +17,7 @@ import IconButton from '../components/ui/IconButton';
 import TypingIndicator from '../components/ui/TypingIndicator';
 import WeatherWidget from '../components/weather/WeatherWidget';
 import { weatherService } from '../services/weather';
+import { lookupLocation } from '../services/db';
 import { t } from '../constants/strings';
 
 const SERVICE_PREFS_KEY = '@service_preferences';
@@ -365,7 +366,6 @@ export default function ChatScreen({ navigation, route }) {
 
   const fetchIPLocation = async () => {
     try {
-      const { lookupLocation } = require('../services/db');
       const result = await lookupLocation(null, null, 'auto');
       if (result.success && result.latitude && result.longitude) {
         await setLocation({ latitude: result.latitude, longitude: result.longitude }, 'granted');

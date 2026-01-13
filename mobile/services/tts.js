@@ -1,10 +1,10 @@
 // Text-to-Speech service - calls API Gateway → AI Services TTS → Cloudinary
 import { fetchWithTimeout } from '../utils/apiHelpers';
 import { getDeviceId } from '../utils/deviceInfo';
+import { API_BASE_URL, API_KEY } from '../utils/config';
+import { log } from '../utils/logger';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_URL = `${API_BASE_URL}/api/tts`;
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 const TTS_TIMEOUT_MS = 65000; // 65s for TTS generation (AI Services uses 60s timeout)
 
 // User-friendly error messages (never show raw backend errors)
@@ -41,7 +41,7 @@ export const textToSpeech = async (text, language = 'en', location = null) => {
 
     if (!response.ok) {
       // Log technical details but return user-friendly message
-      console.log(`TTS API error: ${response.status}`);
+      log(`TTS API error: ${response.status}`);
       const errorType = response.status >= 500 ? 'server' : 'default';
       return {
         success: false,
@@ -62,7 +62,7 @@ export const textToSpeech = async (text, language = 'en', location = null) => {
       };
     } else {
       // Log raw error but return user-friendly message
-      console.log('TTS service returned error:', data.error || data.message);
+      log('TTS service returned error:', data.error || data.message);
       return {
         success: false,
         error: USER_FRIENDLY_ERRORS.default,
@@ -70,7 +70,7 @@ export const textToSpeech = async (text, language = 'en', location = null) => {
     }
   } catch (error) {
     // Log technical details but return user-friendly message
-    console.log('TTS exception:', error.message);
+    log('TTS exception:', error.message);
 
     // Detect error type for appropriate message
     const msg = error.message?.toLowerCase() || '';

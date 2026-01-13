@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Platform, Animated, useWindowDimensions } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { generateDiagnosisTTSText } from '../utils/diagnosisNormalizer';
+import { log } from '../utils/logger';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
@@ -69,9 +69,10 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
   // Calculate max width for markdown content (screen - padding)
   const contentMaxWidth = screenWidth - (SPACING.lg * 2);
   
-  // TTS state
+  // TTS state - use local state for audioUrl to avoid prop mutation
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [localTtsUrl, setLocalTtsUrl] = useState(message.ttsAudioUrl);
   
   // Animation state for smooth fade-in (replaces jarring typewriter)
   const [fadeAnim] = useState(() => new Animated.Value(isNewMessage ? 0 : 1));
@@ -226,10 +227,11 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
 
     // 1. Instant Playback for Cached Messages
     // If the message already has a TTS URL (from history) or previous play
-    if (message.ttsAudioUrl) {
-      console.log('🔊 [MessageItem] Playing from cache:', message.ttsAudioUrl);
+    const cachedUrl = localTtsUrl || message.ttsAudioUrl;
+    if (cachedUrl) {
+      log('🔊 [MessageItem] Playing from cache:', cachedUrl);
       setIsSpeaking(true);
-      const success = await playAudio(message.ttsAudioUrl, (status) => {
+      const success = await playAudio(cachedUrl, (status) => {
         if (status.didJustFinish) setIsSpeaking(false);
       });
       if (!success) setIsSpeaking(false);
@@ -258,9 +260,10 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
       if (result.success && audioSource) {
         setIsSpeaking(true);
         
-        // Save the URL to message object so next play is instant
+        // Save the URL to local state for instant playback next time
+        // This avoids mutating the message prop directly
         if (result.audioUrl) {
-          message.ttsAudioUrl = result.audioUrl;
+          setLocalTtsUrl(result.audioUrl);
         }
         
         // Play the audio (supports both URL and base64)
@@ -275,13 +278,11 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
           showError(t('voice.audioPlaybackFailed'));
         }
       } else {
-        // Log error but don't use console.error (can trigger system alerts)
-        console.log('TTS service error:', result.error);
+        log('TTS service error:', result.error);
         showError(t('voice.voiceUnavailableLater'));
       }
     } catch (error) {
-      // Log error but don't use console.error
-      console.log('TTS exception:', error.message);
+      log('TTS exception:', error.message);
       showError(t('voice.voiceUnavailable'));
     } finally {
       setIsLoading(false);

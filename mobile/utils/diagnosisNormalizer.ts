@@ -3,16 +3,80 @@
  * Used by DiagnosisCard (display) and TTS (audio)
  */
 
+import type { DiagnosisData, DiagnosisIssue, Treatment } from '../types';
+
+interface ImageQualityObject {
+  focus?: string;
+  distance?: string;
+  quality_warning?: string;
+}
+
+interface PlantixDiagnosis {
+  disease_name?: string;
+  name?: string;
+  scientific_name?: string;
+  likelihood?: string;
+  severity?: string;
+  symptoms?: string[];
+  treatments?: Array<{ type?: string; description?: string }>;
+  prevention?: Array<{ action?: string } | string>;
+}
+
+interface PlantixCrop {
+  name?: string;
+  confidence_percent?: number;
+}
+
+interface PlantixFormat {
+  health_assessment?: {
+    status?: string;
+    summary?: string;
+  };
+  diagnoses?: PlantixDiagnosis[];
+  identified_crops?: PlantixCrop[];
+  growth_stage?: string;
+  image_quality?: string | ImageQualityObject;
+}
+
+interface NormalizedDiagnosis {
+  _provider: 'plantix' | 'agrivision';
+  health_status: string;
+  health_summary?: string;
+  image_quality: string;
+  diagnostic_notes?: string;
+  crop?: {
+    name: string;
+    confidence?: string | null;
+  } | string | null;
+  growth_stage?: string | null;
+  issues?: Array<{
+    name: string;
+    scientific_name?: string;
+    severity?: string | null;
+    likelihood?: string;
+    symptoms?: string[];
+    _treatments?: Array<{ type?: string; description?: string }>;
+    _prevention?: Array<{ action?: string } | string>;
+  }>;
+  treatment_recommendations?: Array<{
+    issue_name: string;
+    organic_options?: Array<{ name: string; description?: string }>;
+    chemical_options?: Array<{ name?: string; description?: string; active_ingredient?: string }>;
+    preventive_measures?: string[];
+  }>;
+  _raw?: unknown;
+}
+
 /**
  * Helper to normalize image quality from different provider formats
  * AgriVision returns string: "good"
  * Plantix returns object: {focus: "good", distance: "good"}
  */
-export function normalizeImageQuality(imgQuality) {
+export function normalizeImageQuality(imgQuality: string | ImageQualityObject | null | undefined): string {
   if (!imgQuality) return '';
   if (typeof imgQuality === 'string') return imgQuality.toLowerCase();
   if (typeof imgQuality === 'object') {
-    const parts = [];
+    const parts: string[] = [];
     if (imgQuality.focus) parts.push(`focus: ${imgQuality.focus}`);
     if (imgQuality.distance) parts.push(`distance: ${imgQuality.distance}`);
     if (imgQuality.quality_warning) parts.push(imgQuality.quality_warning);
@@ -24,7 +88,7 @@ export function normalizeImageQuality(imgQuality) {
 /**
  * Convert Plantix likelihood to display-friendly severity
  */
-export function normalizeLikelihood(likelihood) {
+export function normalizeLikelihood(likelihood: string | null | undefined): string | null {
   if (!likelihood) return null;
   const l = likelihood.toLowerCase();
   if (l === 'likely' || l === 'very_likely') return 'High';
@@ -37,20 +101,25 @@ export function normalizeLikelihood(likelihood) {
  * Normalize diagnosis data from different providers (AgriVision vs Plantix)
  * Returns a unified format that works for both display and TTS
  */
-export function normalizeDiagnosis(data) {
+export function normalizeDiagnosis(data: DiagnosisData | string | null | undefined): NormalizedDiagnosis | null {
   if (!data) return null;
 
   // Handle string input (JSON)
-  let parsed = data;
+  let parsed: PlantixFormat | DiagnosisData = data as PlantixFormat | DiagnosisData;
   if (typeof data === 'string') {
-    try { parsed = JSON.parse(data); } catch (e) { return null; }
+    try {
+      parsed = JSON.parse(data);
+    } catch {
+      return null;
+    }
   }
 
   // Detect provider format
-  const isPlantix = !!(parsed.health_assessment || parsed.diagnoses);
+  const plantixData = parsed as PlantixFormat;
+  const isPlantix = !!(plantixData.health_assessment || plantixData.diagnoses);
 
   if (isPlantix) {
-    const allDiagnoses = parsed.diagnoses || [];
+    const allDiagnoses = plantixData.diagnoses || [];
 
     // Filter out "Healthy" from issues
     const actualIssues = allDiagnoses.filter(d => {
@@ -59,7 +128,7 @@ export function normalizeDiagnosis(data) {
     });
 
     // Adjust status if issues exist but status says "Healthy"
-    let healthStatus = parsed.health_assessment?.status || 'Analyzed';
+    let healthStatus = plantixData.health_assessment?.status || 'Analyzed';
     if (actualIssues.length > 0 && healthStatus.toLowerCase() === 'healthy') {
       healthStatus = 'Issue Detected';
     }
@@ -67,16 +136,18 @@ export function normalizeDiagnosis(data) {
     return {
       _provider: 'plantix',
       health_status: healthStatus,
-      health_summary: parsed.health_assessment?.summary || '',
-      image_quality: normalizeImageQuality(parsed.image_quality),
-      diagnostic_notes: parsed.health_assessment?.summary || '',
-      crop: parsed.identified_crops?.[0]?.name ? {
-        name: parsed.identified_crops[0].name,
-        confidence: parsed.identified_crops[0].confidence_percent ? `${parsed.identified_crops[0].confidence_percent}%` : null
+      health_summary: plantixData.health_assessment?.summary || '',
+      image_quality: normalizeImageQuality(plantixData.image_quality),
+      diagnostic_notes: plantixData.health_assessment?.summary || '',
+      crop: plantixData.identified_crops?.[0]?.name ? {
+        name: plantixData.identified_crops[0].name,
+        confidence: plantixData.identified_crops[0].confidence_percent
+          ? `${plantixData.identified_crops[0].confidence_percent}%`
+          : null
       } : null,
-      growth_stage: parsed.growth_stage || null,
+      growth_stage: plantixData.growth_stage || null,
       issues: actualIssues.map(d => ({
-        name: d.disease_name || d.name,
+        name: d.disease_name || d.name || '',
         scientific_name: d.scientific_name,
         severity: normalizeLikelihood(d.likelihood) || d.severity,
         likelihood: d.likelihood,
@@ -85,25 +156,29 @@ export function normalizeDiagnosis(data) {
         _prevention: d.prevention || []
       })),
       treatment_recommendations: actualIssues.length > 0 ? actualIssues.map(d => ({
-        issue_name: d.disease_name || d.name,
+        issue_name: d.disease_name || d.name || '',
         organic_options: (d.treatments || [])
           .filter(t => t.type === 'organic')
           .map(t => ({ name: t.description || 'See details', description: t.description })),
         chemical_options: (d.treatments || [])
           .filter(t => t.type === 'chemical')
           .map(t => ({ name: t.description || 'See details', description: t.description })),
-        preventive_measures: (d.prevention || []).map(p => p.action || p)
+        preventive_measures: (d.prevention || []).map(p =>
+          typeof p === 'string' ? p : p.action || ''
+        )
       })) : [],
       _raw: parsed
     };
   }
 
   // AgriVision format - already normalized
+  const agrivisionData = parsed as DiagnosisData & { image_quality?: string };
   return {
-    ...parsed,
+    ...agrivisionData,
     _provider: 'agrivision',
-    image_quality: normalizeImageQuality(parsed.image_quality)
-  };
+    health_status: agrivisionData.status || 'unknown',
+    image_quality: normalizeImageQuality(agrivisionData.image_quality)
+  } as NormalizedDiagnosis;
 }
 
 /**
@@ -111,18 +186,18 @@ export function normalizeDiagnosis(data) {
  * Creates natural, spoken sentences for audio playback
  * Includes: crop, status, issues, symptoms, treatments, prevention
  */
-export function generateDiagnosisTTSText(diagnosisData) {
+export function generateDiagnosisTTSText(diagnosisData: DiagnosisData | string | null | undefined): string {
   if (!diagnosisData) return '';
 
   const data = normalizeDiagnosis(diagnosisData);
   if (!data) return '';
 
-  const parts = [];
+  const parts: string[] = [];
 
   // 1. Crop identification
-  const cropName = data.crop?.name || data.crop || 'Plant';
+  const cropName = typeof data.crop === 'object' ? data.crop?.name : data.crop || 'Plant';
   const growthStage = data.growth_stage;
-  
+
   if (growthStage) {
     parts.push(`This is a ${cropName} in the ${growthStage} growth stage.`);
   } else {
@@ -130,7 +205,7 @@ export function generateDiagnosisTTSText(diagnosisData) {
   }
 
   // 2. Health status
-  const status = data.health_status?.overall || data.health_status || 'analyzed';
+  const status = data.health_status || 'analyzed';
   const isHealthy = status.toLowerCase().includes('healthy');
 
   if (isHealthy && (!data.issues || data.issues.length === 0)) {
@@ -142,13 +217,13 @@ export function generateDiagnosisTTSText(diagnosisData) {
   parts.push(`Health status: ${status}.`);
 
   // 3. Issues detected
-  if (data.issues?.length > 0) {
-    const issueNames = data.issues.map(i => i.name || i).join(', ');
+  if (data.issues && data.issues.length > 0) {
+    const issueNames = data.issues.map(i => i.name || String(i)).join(', ');
     parts.push(`Issues detected: ${issueNames}.`);
 
     // Add symptoms for each issue
     data.issues.forEach(issue => {
-      if (issue.symptoms?.length > 0) {
+      if (issue.symptoms && issue.symptoms.length > 0) {
         const symptomsText = issue.symptoms.slice(0, 3).join(', ');
         parts.push(`Symptoms of ${issue.name || 'this issue'} include: ${symptomsText}.`);
       }
@@ -159,14 +234,14 @@ export function generateDiagnosisTTSText(diagnosisData) {
   }
 
   // 4. Treatment recommendations
-  if (data.treatment_recommendations?.length > 0) {
+  if (data.treatment_recommendations && data.treatment_recommendations.length > 0) {
     parts.push(`Treatment recommendations:`);
 
     data.treatment_recommendations.forEach(treatment => {
       // Organic options
-      if (treatment.organic_options?.length > 0) {
+      if (treatment.organic_options && treatment.organic_options.length > 0) {
         const organicNames = treatment.organic_options
-          .map(o => o.name || o.description || o)
+          .map(o => o.name || o.description || String(o))
           .filter(Boolean)
           .slice(0, 2)
           .join(', ');
@@ -176,9 +251,9 @@ export function generateDiagnosisTTSText(diagnosisData) {
       }
 
       // Chemical options
-      if (treatment.chemical_options?.length > 0) {
+      if (treatment.chemical_options && treatment.chemical_options.length > 0) {
         const chemicalNames = treatment.chemical_options
-          .map(o => o.active_ingredient || o.name || o.description || o)
+          .map(o => o.active_ingredient || o.name || o.description || String(o))
           .filter(Boolean)
           .slice(0, 2)
           .join(', ');
@@ -188,7 +263,7 @@ export function generateDiagnosisTTSText(diagnosisData) {
       }
 
       // Prevention measures
-      if (treatment.preventive_measures?.length > 0) {
+      if (treatment.preventive_measures && treatment.preventive_measures.length > 0) {
         const preventionText = treatment.preventive_measures
           .slice(0, 2)
           .join('. ');
@@ -211,18 +286,26 @@ export function generateDiagnosisTTSText(diagnosisData) {
  * Generate a brief TTS summary (for previews or quick reads)
  * Shorter version with just crop, status, and issue names
  */
-export function generateDiagnosisTTSBrief(diagnosisData) {
+export function generateDiagnosisTTSBrief(diagnosisData: DiagnosisData | string | null | undefined): string {
   if (!diagnosisData) return '';
 
   const data = normalizeDiagnosis(diagnosisData);
   if (!data) return '';
 
-  const cropName = data.crop?.name || data.crop || 'Plant';
-  const status = data.health_status?.overall || data.health_status || 'analyzed';
+  const cropName = typeof data.crop === 'object' ? data.crop?.name : data.crop || 'Plant';
+  const status = data.health_status || 'analyzed';
   const stage = data.growth_stage ? `, ${data.growth_stage} stage` : '';
-  const issues = data.issues?.length > 0
-    ? `. Issues: ${data.issues.map(i => i.name || i).join(', ')}`
+  const issues = data.issues && data.issues.length > 0
+    ? `. Issues: ${data.issues.map(i => i.name || String(i)).join(', ')}`
     : '';
 
   return `${cropName}${stage}. Status: ${status}${issues}`;
 }
+
+export default {
+  normalizeImageQuality,
+  normalizeLikelihood,
+  normalizeDiagnosis,
+  generateDiagnosisTTSText,
+  generateDiagnosisTTSBrief,
+};

@@ -1,14 +1,14 @@
 // Chat API service - calls API Gateway → AI Services
 import { fetchWithTimeout, parseErrorMessage } from '../utils/apiHelpers';
 import { getDeviceId } from '../utils/deviceInfo';
+import { API_BASE_URL, API_KEY, TIMEOUTS } from '../utils/config';
+import { log } from '../utils/logger';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
 const API_URL = `${API_BASE_URL}/api/chat`;
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
 
 // Timeout constants
-const CHAT_TIMEOUT_MS = 60000; // 60s for chat (includes MCP calls)
-const DEFAULT_TIMEOUT_MS = 30000; // 30s for other endpoints
+const CHAT_TIMEOUT_MS = TIMEOUTS.CHAT;
+const DEFAULT_TIMEOUT_MS = TIMEOUTS.DEFAULT;
 
 // Cached device ID for server-side persistence
 let cachedDeviceId = null;
@@ -54,7 +54,7 @@ function getLocalDateTime() {
 async function ensureDeviceId() {
   if (!cachedDeviceId) {
     cachedDeviceId = await getDeviceId();
-    console.log('📱 [API] Device ID loaded:', cachedDeviceId.substring(0, 20) + '...');
+    log('📱 [API] Device ID loaded:', cachedDeviceId.substring(0, 20) + '...');
   }
   return cachedDeviceId;
 }
@@ -109,7 +109,7 @@ export const sendChatMessageStreaming = async ({
     displayName: locationDetails.displayName,
   } : null;
 
-  console.log('📤 [API] Starting streaming chat:', {
+  log('📤 [API] Starting streaming chat:', {
     historyCount: formattedHistory.length,
     location: locationContext?.displayName || `${latitude}, ${longitude}`,
     language,
@@ -164,7 +164,7 @@ export const sendChatMessageStreaming = async ({
           if (data === '[DONE]') {
             if (!completed) {
               completed = true;
-              console.log('📥 [API] Stream complete:', {
+              log('📥 [API] Stream complete:', {
                 textLength: fullText.length,
               });
               onComplete?.(fullText, metadata);
@@ -178,7 +178,7 @@ export const sendChatMessageStreaming = async ({
             if (!dataStr) continue;
 
             const parsed = JSON.parse(dataStr);
-            console.log('📥 [API] Stream chunk:', parsed.type, 
+            log('📥 [API] Stream chunk:', parsed.type, 
               parsed.text ? `(text: ${parsed.text.length} chars)` : 
               parsed.thinking ? `(thinking: ${parsed.thinking.length} chars)` : 
               parsed.toolName ? `(tool: ${parsed.toolName})` : ''
@@ -194,12 +194,12 @@ export const sendChatMessageStreaming = async ({
               // AI's thinking process (farmer-friendly)
               onThinking?.(parsed.thinking);
             } else if (parsed.type === 'tool_call') {
-              console.log('🛠️ [API] Tool call:', parsed.toolName);
+              log('🛠️ [API] Tool call:', parsed.toolName);
             } else if (parsed.type === 'tool_result') {
-              console.log('✅ [API] Tool result:', parsed.toolName);
+              log('✅ [API] Tool result:', parsed.toolName);
             } else if (parsed.type === 'complete') {
               // Final response - ALWAYS update if it's the complete chunk
-              console.log('🏁 [API] Received complete chunk', { 
+              log('🏁 [API] Received complete chunk', { 
                 hasResponse: !!parsed.response, 
                 responseLength: parsed.response?.length || 0 
               });
@@ -208,7 +208,7 @@ export const sendChatMessageStreaming = async ({
               // Metadata (MCP tools, intents, regions)
               metadata = parsed;
             } else if (parsed.type === 'error') {
-              console.error('📥 [API] Stream error:', parsed.error);
+              log('📥 [API] Stream error:', parsed.error);
               onError?.(new Error(parsed.error || 'Stream error'));
               resolve({ success: false, error: parsed.error });
               return;
@@ -245,7 +245,7 @@ export const sendChatMessageStreaming = async ({
         resolve({ success: true });
       } else {
         const error = new Error(`API error: ${xhr.status}`);
-        console.error('📥 [API] HTTP error:', xhr.status);
+        log('📥 [API] HTTP error:', xhr.status);
         onError?.(error);
         resolve({ success: false, error: error.message });
       }
@@ -253,14 +253,14 @@ export const sendChatMessageStreaming = async ({
 
     xhr.onerror = () => {
       const error = new Error('Network request failed');
-      console.error('📥 [API] Network error');
+      log('📥 [API] Network error');
       onError?.(error);
       resolve({ success: false, error: error.message });
     };
 
     xhr.ontimeout = () => {
       const error = new Error('Request timeout');
-      console.error('📥 [API] Timeout');
+      log('📥 [API] Timeout');
       onError?.(error);
       resolve({ success: false, error: error.message });
     };
@@ -307,7 +307,7 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       displayName: locationDetails.displayName,
     } : null;
 
-    console.log('📤 [API] Sending chat with:', {
+    log('📤 [API] Sending chat with:', {
       historyCount: formattedHistory.length,
       location: locationContext?.displayName || `${latitude}, ${longitude}`,
       language,
@@ -342,7 +342,7 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
     }
 
     const data = await response.json();
-    console.log('📥 [API] Chat response:', {
+    log('📥 [API] Chat response:', {
       responseLength: data.response?.length || 0,
     });
 
@@ -353,7 +353,7 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       language: data.language,
     };
   } catch (error) {
-    console.error('Chat API error:', error);
+    log('Chat API error:', error);
     return {
       success: false,
       error: parseErrorMessage(error),
@@ -378,8 +378,8 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
     // Get device ID for server-side persistence
     const deviceId = await ensureDeviceId();
 
-    console.log('🌿 [API] Starting plant diagnosis via gateway...');
-    console.log('🌿 [API] Image size:', Math.round(imageBase64.length / 1024), 'KB');
+    log('🌿 [API] Starting plant diagnosis via gateway...');
+    log('🌿 [API] Image size:', Math.round(imageBase64.length / 1024), 'KB');
 
     // Build location context
     const locationContext = locationDetails ? {
@@ -422,7 +422,7 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
     }
 
     const data = await response.json();
-    console.log('🌿 [API] Diagnosis response received:', {
+    log('🌿 [API] Diagnosis response received:', {
       hasResponse: !!data.response,
       hasDiagnosis: !!data.diagnosis,
       responseLength: data.response?.length || 0,
@@ -442,7 +442,7 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
       },
     };
   } catch (error) {
-    console.error('🌿 [API] Plant diagnosis error:', error);
+    log('🌿 [API] Plant diagnosis error:', error);
     return {
       success: false,
       error: parseErrorMessage(error),
@@ -477,7 +477,7 @@ export const getActiveMcpServers = async ({ lat, lon } = {}) => {
     }
 
     const data = await response.json();
-    console.log('📥 [API] MCP servers response:', {
+    log('📥 [API] MCP servers response:', {
       globalCount: data.global?.length || 0,
       regionalCount: data.regional?.length || 0,
       totalActive: data.totalActive,
@@ -491,7 +491,7 @@ export const getActiveMcpServers = async ({ lat, lon } = {}) => {
       totalActive: data.totalActive || 0,
     };
   } catch (error) {
-    console.error('MCP servers API error:', error);
+    log('MCP servers API error:', error);
     return {
       success: false,
       error: parseErrorMessage(error),
@@ -529,7 +529,7 @@ export const getAllMcpServersWithStatus = async ({ lat, lon } = {}) => {
 
     return await response.json();
   } catch (error) {
-    console.error('All MCP servers API error:', error);
+    log('All MCP servers API error:', error);
     return {
       success: false,
       error: error.message || 'Failed to fetch MCP servers',
@@ -566,7 +566,7 @@ export const getMcpServersLiveStatus = async ({ lat, lon } = {}) => {
     }
 
     const data = await response.json();
-    console.log('📥 [API] MCP live status:', {
+    log('📥 [API] MCP live status:', {
       active: data.counts?.active || 0,
       degraded: data.counts?.degraded || 0,
       inactive: data.counts?.inactive || 0,
@@ -577,7 +577,7 @@ export const getMcpServersLiveStatus = async ({ lat, lon } = {}) => {
       ...data,
     };
   } catch (error) {
-    console.error('MCP live status API error:', error);
+    log('MCP live status API error:', error);
     return {
       success: false,
       error: parseErrorMessage(error),
@@ -609,7 +609,7 @@ export const getMcpServer = async (slug) => {
     }
 
     const data = await response.json();
-    console.log('📥 [API] MCP server detail:', {
+    log('📥 [API] MCP server detail:', {
       slug,
       hasMarketing: !!data.server?.tagline,
       healthStatus: data.server?.healthStatus,
@@ -620,7 +620,7 @@ export const getMcpServer = async (slug) => {
       server: data.server,
     };
   } catch (error) {
-    console.error('MCP server detail API error:', error);
+    log('MCP server detail API error:', error);
     return {
       success: false,
       error: parseErrorMessage(error),
@@ -652,7 +652,7 @@ export const detectRegions = async (lat, lon) => {
 
     return await response.json();
   } catch (error) {
-    console.error('Detect regions API error:', error);
+    log('Detect regions API error:', error);
     return {
       success: false,
       error: parseErrorMessage(error),

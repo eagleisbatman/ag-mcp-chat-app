@@ -8,7 +8,7 @@ import { sendChatMessage, sendChatMessageStreaming, analyzePlantImage } from '..
 import { formatDiagnosis } from '../services/agrivision';
 import { transcribeAudio as transcribeAudioService } from '../services/transcription';
 import { uploadImage, uploadAudio } from '../services/upload';
-import { createSession, saveMessage, generateTitle, updateSession, getSession } from '../services/db';
+import { createSession, saveMessage, generateTitle, updateSession, getSession, updateMessage as updateDbMessage } from '../services/db';
 import { parseErrorMessage, isNetworkError, isServerError } from '../utils/apiHelpers';
 import { t } from '../constants/strings';
 
@@ -148,10 +148,9 @@ export default function useChat(sessionIdParam = null) {
   const persistUpdate = useCallback(async (messageId, updates) => {
     if (!isDbSynced || !messageId) return;
     try {
-      const { updateMessage: updateDbMessage } = require('../services/db');
       await updateDbMessage(messageId, updates);
     } catch (e) {
-      console.log('DB message update error:', e);
+      // Silently log DB errors - non-critical
     }
   }, [isDbSynced]);
 
