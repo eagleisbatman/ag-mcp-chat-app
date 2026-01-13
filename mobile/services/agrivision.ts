@@ -1,14 +1,49 @@
 // AgriVision MCP Service - Plant disease diagnosis via image analysis
+import { log, error as logError } from '../utils/logger';
 
 // AgriVision URL - should match database seed (agrivision.up.railway.app)
 const AGRIVISION_URL = process.env.EXPO_PUBLIC_AGRIVISION_URL || 'https://agrivision.up.railway.app/mcp';
 const AGRIVISION_TIMEOUT_MS = 45000; // 45s for image analysis
 
+// Type definitions
+export interface DiagnosisIssue {
+  name?: string;
+  severity?: string;
+  symptoms?: string[];
+}
+
+export interface TreatmentOption {
+  name?: string;
+  active_ingredient?: string;
+}
+
+export interface TreatmentRecommendation {
+  organic_options?: TreatmentOption[];
+  chemical_options?: TreatmentOption[];
+}
+
+export interface DiagnosisData {
+  crop?: { name?: string } | string;
+  health_status?: { overall?: string } | string;
+  issues?: DiagnosisIssue[];
+  treatment_recommendations?: TreatmentRecommendation[];
+  diagnostic_notes?: string;
+  general_recommendations?: string;
+  isNetworkError?: boolean;
+  isTimeout?: boolean;
+}
+
+export interface DiagnosisResult {
+  success: boolean;
+  diagnosis?: DiagnosisData | string;
+  error?: string;
+}
+
 /**
  * Read SSE stream completely using fetch + ReadableStream or XHR fallback
  * The MCP server sends SSE responses that need to be fully consumed
  */
-const fetchSSEResponse = async (url, body, timeout) => {
+const fetchSSEResponse = async (url: string, body: string, timeout: number): Promise<string> => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -29,7 +64,7 @@ const fetchSSEResponse = async (url, body, timeout) => {
 
     // Try to use ReadableStream if available (React Native 0.71+)
     if (response.body && typeof response.body.getReader === 'function') {
-      console.log('[SSE] Using ReadableStream');
+      log('[SSE] Using ReadableStream');
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let fullText = '';
@@ -38,17 +73,17 @@ const fetchSSEResponse = async (url, body, timeout) => {
         const { done, value } = await reader.read();
         if (done) break;
         fullText += decoder.decode(value, { stream: true });
-        console.log('[SSE] Chunk received, total length:', fullText.length);
+        log('[SSE] Chunk received, total length:', fullText.length);
       }
 
-      console.log('[SSE] Stream complete, total length:', fullText.length);
+      log('[SSE] Stream complete, total length:', fullText.length);
       return fullText;
     }
 
     // Fallback: use response.text() and hope it waits for completion
-    console.log('[SSE] Using response.text() fallback');
+    log('[SSE] Using response.text() fallback');
     const text = await response.text();
-    console.log('[SSE] Text response length:', text.length);
+    log('[SSE] Text response length:', text.length);
     return text;
 
   } finally {
@@ -60,7 +95,7 @@ const fetchSSEResponse = async (url, body, timeout) => {
  * XHR-based SSE reader with progress monitoring
  * Waits for the complete response by checking for SSE message terminator
  */
-const fetchWithXHR = (url, body, timeout) => {
+const fetchWithXHR = (url: string, body: string, timeout: number): Promise<string> => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     let resolved = false;
@@ -71,14 +106,14 @@ const fetchWithXHR = (url, body, timeout) => {
     xhr.timeout = timeout;
 
     // Check for complete SSE message periodically
-    const checkForComplete = () => {
+    const checkForComplete = (): void => {
       if (resolved) return;
 
       const text = xhr.responseText || '';
       // SSE messages end with \n\n, and we expect JSON with closing braces
       // Look for the pattern that indicates a complete response
       if (text.includes('"}\n\n') || text.includes('"}}\n\n')) {
-        console.log('[XHR] Complete SSE message detected, length:', text.length);
+        log('[XHR] Complete SSE message detected, length:', text.length);
         resolved = true;
         xhr.abort();
         resolve(text);
@@ -86,17 +121,17 @@ const fetchWithXHR = (url, body, timeout) => {
     };
 
     // Monitor progress
-    xhr.onprogress = () => {
-      console.log('[XHR] Progress, current length:', xhr.responseText?.length || 0);
+    xhr.onprogress = (): void => {
+      log('[XHR] Progress, current length:', xhr.responseText?.length || 0);
       checkForComplete();
     };
 
-    xhr.onreadystatechange = () => {
+    xhr.onreadystatechange = (): void => {
       if (xhr.readyState === 3) {
         checkForComplete();
       } else if (xhr.readyState === 4 && !resolved) {
         // Request finished
-        console.log('[XHR] Finished, length:', xhr.responseText?.length || 0);
+        log('[XHR] Finished, length:', xhr.responseText?.length || 0);
         if (xhr.status >= 200 && xhr.status < 300) {
           resolve(xhr.responseText || '');
         } else if (xhr.status !== 0) {
@@ -105,11 +140,11 @@ const fetchWithXHR = (url, body, timeout) => {
       }
     };
 
-    xhr.onerror = () => {
+    xhr.onerror = (): void => {
       if (!resolved) reject(new Error('Network request failed'));
     };
 
-    xhr.ontimeout = () => {
+    xhr.ontimeout = (): void => {
       if (!resolved) reject(new Error('Request timeout'));
     };
 
@@ -119,11 +154,14 @@ const fetchWithXHR = (url, body, timeout) => {
 
 /**
  * Diagnose plant health from an image using AgriVision MCP
- * @param {string} imageBase64 - Base64 encoded image (with or without data: prefix)
- * @param {string} crop - Optional crop type hint (e.g., 'maize', 'tomato')
- * @returns {Promise<object>} Diagnosis result
+ * @param imageBase64 - Base64 encoded image (with or without data: prefix)
+ * @param crop - Optional crop type hint (e.g., 'maize', 'tomato')
+ * @returns Promise with diagnosis result
  */
-export const diagnosePlantHealth = async (imageBase64, crop = null) => {
+export const diagnosePlantHealth = async (
+  imageBase64: string,
+  crop: string | null = null
+): Promise<DiagnosisResult> => {
   try {
     // Ensure image has proper data URL format
     let imageData = imageBase64;
@@ -146,21 +184,22 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
     };
 
     const body = JSON.stringify(mcpRequest);
-    console.log('[diagnosePlantHealth] Sending request, body length:', body.length);
+    log('[diagnosePlantHealth] Sending request, body length:', body.length);
 
     // Try multiple approaches to get the SSE response
-    let text;
+    let text: string;
     try {
       // First try fetch with ReadableStream
       text = await fetchSSEResponse(AGRIVISION_URL, body, AGRIVISION_TIMEOUT_MS);
     } catch (e) {
-      console.log('[diagnosePlantHealth] fetchSSEResponse failed:', e.message, '- trying XHR');
+      const err = e as Error;
+      log('[diagnosePlantHealth] fetchSSEResponse failed:', err.message, '- trying XHR');
       // Fallback to XHR with progress monitoring
       text = await fetchWithXHR(AGRIVISION_URL, body, AGRIVISION_TIMEOUT_MS);
     }
 
-    console.log('[diagnosePlantHealth] Raw response length:', text.length);
-    console.log('[diagnosePlantHealth] Raw response first 300 chars:', text.substring(0, 300));
+    log('[diagnosePlantHealth] Raw response length:', text.length);
+    log('[diagnosePlantHealth] Raw response first 300 chars:', text.substring(0, 300));
 
     // Extract JSON-RPC response from SSE format
     // Format: "event: message\ndata: {json}\n\n"
@@ -179,26 +218,27 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
     // Remove trailing newlines
     jsonData = jsonData.replace(/\n+$/, '');
 
-    console.log('[diagnosePlantHealth] JSON data length after SSE strip:', jsonData.length);
+    log('[diagnosePlantHealth] JSON data length after SSE strip:', jsonData.length);
 
     // Parse the JSON-RPC response
-    let parsed;
+    let parsed: { error?: { message?: string }; result?: { content?: Array<{ text?: string }> } };
     try {
       parsed = JSON.parse(jsonData);
-      console.log('[diagnosePlantHealth] JSON-RPC parsed successfully');
+      log('[diagnosePlantHealth] JSON-RPC parsed successfully');
     } catch (e) {
-      console.error('[diagnosePlantHealth] JSON-RPC parse failed:', e.message);
-      console.log('[diagnosePlantHealth] Trying to find JSON object in response...');
+      const err = e as Error;
+      logError('[diagnosePlantHealth] JSON-RPC parse failed:', err.message);
+      log('[diagnosePlantHealth] Trying to find JSON object in response...');
 
       // Try to extract JSON object from anywhere in the response
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         try {
           parsed = JSON.parse(jsonMatch[0]);
-          console.log('[diagnosePlantHealth] Extracted and parsed JSON object');
+          log('[diagnosePlantHealth] Extracted and parsed JSON object');
         } catch (e2) {
-          console.error('[diagnosePlantHealth] Extracted JSON parse also failed');
-          throw new Error('Could not parse response: ' + e.message);
+          logError('[diagnosePlantHealth] Extracted JSON parse also failed');
+          throw new Error('Could not parse response: ' + err.message);
         }
       } else {
         throw new Error('No JSON found in response');
@@ -213,23 +253,24 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
     // Extract diagnosis text from JSON-RPC result
     const diagnosisText = parsed.result?.content?.[0]?.text;
     if (!diagnosisText) {
-      console.error('[diagnosePlantHealth] No diagnosis text in response:', JSON.stringify(parsed).substring(0, 200));
+      logError('[diagnosePlantHealth] No diagnosis text in response:', JSON.stringify(parsed).substring(0, 200));
       throw new Error('No diagnosis result in response');
     }
 
-    console.log('[diagnosePlantHealth] Diagnosis text length:', diagnosisText.length);
-    console.log('[diagnosePlantHealth] Diagnosis text preview:', diagnosisText.substring(0, 150));
+    log('[diagnosePlantHealth] Diagnosis text length:', diagnosisText.length);
+    log('[diagnosePlantHealth] Diagnosis text preview:', diagnosisText.substring(0, 150));
 
     // The diagnosis text is JSON - parse it
     try {
-      const diagnosis = JSON.parse(diagnosisText);
-      console.log('[diagnosePlantHealth] Diagnosis parsed, keys:', Object.keys(diagnosis));
+      const diagnosis = JSON.parse(diagnosisText) as DiagnosisData;
+      log('[diagnosePlantHealth] Diagnosis parsed, keys:', Object.keys(diagnosis));
       return {
         success: true,
         diagnosis,
       };
     } catch (e) {
-      console.log('[diagnosePlantHealth] Diagnosis JSON parse failed:', e.message);
+      const err = e as Error;
+      log('[diagnosePlantHealth] Diagnosis JSON parse failed:', err.message);
       // Return as text - formatDiagnosis will handle display
       return {
         success: true,
@@ -237,10 +278,11 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
       };
     }
   } catch (error) {
-    console.error('AgriVision error:', error);
+    const err = error as Error;
+    logError('AgriVision error:', err);
     return {
       success: false,
-      error: error.message || 'Failed to analyze image',
+      error: err.message || 'Failed to analyze image',
     };
   }
 };
@@ -248,13 +290,13 @@ export const diagnosePlantHealth = async (imageBase64, crop = null) => {
 /**
  * Format diagnosis result for display
  * Creates a minimalist markdown representation of the aggregation data
- * @param {object} diagnosis - Raw diagnosis from AgriVision
- * @returns {string} Formatted markdown
+ * @param diagnosis - Raw diagnosis from AgriVision
+ * @returns Formatted markdown
  */
-export const formatDiagnosis = (diagnosis) => {
+export const formatDiagnosis = (diagnosis: DiagnosisData | string | null | undefined): string => {
   if (typeof diagnosis === 'string') {
     try {
-      diagnosis = JSON.parse(diagnosis);
+      diagnosis = JSON.parse(diagnosis) as DiagnosisData;
     } catch (e) {
       return diagnosis;
     }
@@ -268,12 +310,12 @@ export const formatDiagnosis = (diagnosis) => {
   if (diagnosis.isNetworkError) return `📡 **Connection Error**\n\n${diagnosis.diagnostic_notes || 'Please check your internet and try again.'}`;
   if (diagnosis.isTimeout) return `⏳ **Analysis Timed Out**\n\n${diagnosis.diagnostic_notes || 'The service is taking too long. Please try a clearer photo.'}`;
 
-  const parts = [];
+  const parts: string[] = [];
 
   // 1. Primary Identification & Status
-  const cropRaw = diagnosis.crop?.name || diagnosis.crop;
+  const cropRaw = typeof diagnosis.crop === 'object' ? diagnosis.crop?.name : diagnosis.crop;
   const cropName = (cropRaw && cropRaw.toLowerCase() !== 'unknown') ? cropRaw : null;
-  const status = diagnosis.health_status?.overall || diagnosis.health_status || 'Analyzed';
+  const status = (typeof diagnosis.health_status === 'object' ? diagnosis.health_status?.overall : diagnosis.health_status) || 'Analyzed';
   const isHealthy = status.toLowerCase().includes('healthy');
   const statusEmoji = isHealthy ? '✅' : '⚠️';
 
@@ -286,11 +328,11 @@ export const formatDiagnosis = (diagnosis) => {
   // 2. Issues & Symptoms (Clean list)
   if (diagnosis.issues && diagnosis.issues.length > 0) {
     diagnosis.issues.forEach((issue) => {
-      const issueName = issue.name || issue;
+      const issueName = issue.name || (issue as unknown as string);
       const severity = issue.severity ? ` (${issue.severity})` : '';
       parts.push(`\n**${issueName}${severity}**`);
       
-      if (issue.symptoms?.length > 0) {
+      if (issue.symptoms?.length && issue.symptoms.length > 0) {
         parts.push(`_${issue.symptoms.join(', ')}_`);
       }
     });
@@ -300,10 +342,10 @@ export const formatDiagnosis = (diagnosis) => {
   if (diagnosis.treatment_recommendations && diagnosis.treatment_recommendations.length > 0) {
     parts.push('\n---');
     diagnosis.treatment_recommendations.forEach((treatment) => {
-      if (treatment.organic_options?.length > 0) {
+      if (treatment.organic_options?.length && treatment.organic_options.length > 0) {
         parts.push(`🌿 **Organic**: ${treatment.organic_options.map(o => o.name).join(', ')}`);
       }
-      if (treatment.chemical_options?.length > 0) {
+      if (treatment.chemical_options?.length && treatment.chemical_options.length > 0) {
         parts.push(`🧪 **Chemical**: ${treatment.chemical_options.map(o => o.active_ingredient).join(', ')}`);
       }
     });
@@ -319,4 +361,3 @@ export const formatDiagnosis = (diagnosis) => {
 };
 
 export default { diagnosePlantHealth, formatDiagnosis };
-

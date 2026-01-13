@@ -11,13 +11,159 @@ const CHAT_TIMEOUT_MS = TIMEOUTS.CHAT;
 const DEFAULT_TIMEOUT_MS = TIMEOUTS.DEFAULT;
 
 // Cached device ID for server-side persistence
-let cachedDeviceId = null;
+let cachedDeviceId: string | null = null;
+
+// Type definitions
+export interface LocationDetails {
+  level1Country?: string;
+  level2State?: string;
+  level3District?: string;
+  level5City?: string;
+  level6Locality?: string;
+  displayName?: string;
+}
+
+export interface LocationContext {
+  country?: string;
+  state?: string;
+  district?: string;
+  city?: string;
+  locality?: string;
+  displayName?: string;
+}
+
+export interface HistoryMessage {
+  _id?: string;
+  text: string;
+  isBot: boolean;
+}
+
+export interface ClientDateTime {
+  isoDateTime: string;
+  localDateTime: string;
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  timezone: string;
+  utcOffset: string;
+}
+
+export interface ChatMetadata {
+  intentsDetected?: string[];
+  mcpToolsUsed?: string[];
+  extractedEntities?: Record<string, unknown> | null;
+  intentSource?: string;
+  [key: string]: unknown;
+}
+
+export interface StreamingChatParams {
+  message: string;
+  latitude?: number;
+  longitude?: number;
+  language?: string;
+  locationDetails?: LocationDetails;
+  history?: HistoryMessage[];
+  sessionId?: string;
+  onChunk?: (text: string) => void;
+  onThinking?: (thinking: string) => void;
+  onComplete?: (fullResponse: string, metadata: ChatMetadata) => void;
+  onError?: (error: Error) => void;
+}
+
+export interface ChatParams {
+  message: string;
+  latitude?: number;
+  longitude?: number;
+  language?: string;
+  locationDetails?: LocationDetails;
+  history?: HistoryMessage[];
+  sessionId?: string;
+}
+
+export interface ChatResult {
+  success: boolean;
+  response?: string;
+  region?: string;
+  language?: string;
+  error?: string;
+}
+
+export interface PlantDiagnosisParams {
+  imageBase64: string;
+  latitude?: number;
+  longitude?: number;
+  language?: string;
+  locationDetails?: LocationDetails;
+  sessionId?: string;
+}
+
+export interface PlantDiagnosisResult {
+  success: boolean;
+  response?: string;
+  diagnosis?: Record<string, unknown>;
+  metadata?: ChatMetadata;
+  error?: string;
+}
+
+export interface McpServer {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string;
+  status?: string;
+  healthStatus?: string;
+  tagline?: string;
+  regions?: string[];
+  isActive?: boolean;
+}
+
+export interface McpServersResult {
+  success: boolean;
+  global?: McpServer[];
+  regional?: McpServer[];
+  detectedRegions?: string[];
+  totalActive?: number;
+  error?: string;
+}
+
+export interface McpServersStatusResult {
+  success: boolean;
+  servers?: McpServer[];
+  grouped?: {
+    active: McpServer[];
+    degraded: McpServer[];
+    inactive: McpServer[];
+    comingSoon: McpServer[];
+  };
+  counts?: {
+    total: number;
+    active: number;
+    degraded: number;
+    inactive: number;
+    comingSoon: number;
+  };
+  error?: string;
+}
+
+export interface McpServerResult {
+  success: boolean;
+  server?: McpServer | null;
+  error?: string;
+}
+
+export interface RegionsResult {
+  success: boolean;
+  regions?: string[];
+  error?: string;
+}
 
 /**
  * Get device's local date/time info for AI context
  * No permissions needed - uses device's timezone settings
  */
-function getLocalDateTime() {
+function getLocalDateTime(): ClientDateTime {
   const now = new Date();
   const timezoneOffset = now.getTimezoneOffset(); // Minutes from UTC
   const offsetHours = -timezoneOffset / 60; // Convert to hours
@@ -51,7 +197,7 @@ function getLocalDateTime() {
 /**
  * Get device ID (cached after first call)
  */
-async function ensureDeviceId() {
+async function ensureDeviceId(): Promise<string> {
   if (!cachedDeviceId) {
     cachedDeviceId = await getDeviceId();
     log('📱 [API] Device ID loaded:', cachedDeviceId.substring(0, 20) + '...');
@@ -60,20 +206,22 @@ async function ensureDeviceId() {
 }
 
 /**
+ * Build location context from location details
+ */
+function buildLocationContext(locationDetails: LocationDetails | undefined): LocationContext | null {
+  return locationDetails ? {
+    country: locationDetails.level1Country,
+    state: locationDetails.level2State,
+    district: locationDetails.level3District,
+    city: locationDetails.level5City,
+    locality: locationDetails.level6Locality,
+    displayName: locationDetails.displayName,
+  } : null;
+}
+
+/**
  * Send chat message with STREAMING support
  * Real-time text chunks are passed to onChunk callback
- *
- * @param {object} params - Chat parameters
- * @param {string} params.message - Current user message
- * @param {number} params.latitude - User's latitude
- * @param {number} params.longitude - User's longitude
- * @param {string} params.language - Language code (e.g., 'en', 'hi')
- * @param {object} params.locationDetails - Human-readable location (L1-L6)
- * @param {Array} params.history - Previous messages for context (last 10)
- * @param {function} params.onChunk - Callback for each text chunk: (text) => void
- * @param {function} params.onThinking - Callback for thinking updates: (thinking) => void
- * @param {function} params.onComplete - Callback when stream completes: (fullResponse, metadata) => void
- * @param {function} params.onError - Callback on error: (error) => void
  */
 export const sendChatMessageStreaming = async ({
   message,
@@ -82,12 +230,12 @@ export const sendChatMessageStreaming = async ({
   language,
   locationDetails,
   history = [],
-  sessionId, // Optional: reuse existing session
+  sessionId,
   onChunk,
   onThinking,
   onComplete,
   onError,
-}) => {
+}: StreamingChatParams): Promise<{ success: boolean; error?: string }> => {
   // Get device ID for server-side persistence
   const deviceId = await ensureDeviceId();
 
@@ -100,14 +248,7 @@ export const sendChatMessageStreaming = async ({
     .map(m => ({ text: m.text, isBot: m.isBot }));
 
   // Build location context
-  const locationContext = locationDetails ? {
-    country: locationDetails.level1Country,
-    state: locationDetails.level2State,
-    district: locationDetails.level3District,
-    city: locationDetails.level5City,
-    locality: locationDetails.level6Locality,
-    displayName: locationDetails.displayName,
-  } : null;
+  const locationContext = buildLocationContext(locationDetails);
 
   log('📤 [API] Starting streaming chat:', {
     historyCount: formattedHistory.length,
@@ -137,7 +278,7 @@ export const sendChatMessageStreaming = async ({
     const xhr = new XMLHttpRequest();
     let buffer = '';
     let fullText = '';
-    let metadata = {};
+    let metadata: ChatMetadata = {};
     let lastProcessedIndex = 0;
     let completed = false; // Guard against double onComplete calls
 
@@ -147,7 +288,7 @@ export const sendChatMessageStreaming = async ({
     xhr.setRequestHeader('Accept', 'text/event-stream');
 
     // Process SSE data as it arrives
-    xhr.onprogress = () => {
+    xhr.onprogress = (): void => {
       const newData = xhr.responseText.slice(lastProcessedIndex);
       lastProcessedIndex = xhr.responseText.length;
       buffer += newData;
@@ -177,7 +318,14 @@ export const sendChatMessageStreaming = async ({
             const dataStr = line.slice(6).trim();
             if (!dataStr) continue;
 
-            const parsed = JSON.parse(dataStr);
+            const parsed = JSON.parse(dataStr) as {
+              type: string;
+              text?: string;
+              thinking?: string;
+              toolName?: string;
+              response?: string;
+              error?: string;
+            };
             log('📥 [API] Stream chunk:', parsed.type, 
               parsed.text ? `(text: ${parsed.text.length} chars)` : 
               parsed.thinking ? `(thinking: ${parsed.thinking.length} chars)` : 
@@ -206,7 +354,7 @@ export const sendChatMessageStreaming = async ({
               if (parsed.response) fullText = parsed.response;
             } else if (parsed.type === 'meta') {
               // Metadata (MCP tools, intents, regions)
-              metadata = parsed;
+              metadata = parsed as unknown as ChatMetadata;
             } else if (parsed.type === 'error') {
               log('📥 [API] Stream error:', parsed.error);
               onError?.(new Error(parsed.error || 'Stream error'));
@@ -220,7 +368,7 @@ export const sendChatMessageStreaming = async ({
       }
     };
 
-    xhr.onload = () => {
+    xhr.onload = (): void => {
       if (xhr.status >= 200 && xhr.status < 300) {
         // Process any remaining buffer
         if (buffer.includes('data: ')) {
@@ -228,7 +376,7 @@ export const sendChatMessageStreaming = async ({
           for (const data of remaining) {
             if (data.trim() === '[DONE]') continue;
             try {
-              const parsed = JSON.parse(data.trim());
+              const parsed = JSON.parse(data.trim()) as { type: string; response?: string };
               if (parsed.type === 'complete') {
                 if (parsed.response) fullText = parsed.response;
               }
@@ -251,14 +399,14 @@ export const sendChatMessageStreaming = async ({
       }
     };
 
-    xhr.onerror = () => {
+    xhr.onerror = (): void => {
       const error = new Error('Network request failed');
       log('📥 [API] Network error');
       onError?.(error);
       resolve({ success: false, error: error.message });
     };
 
-    xhr.ontimeout = () => {
+    xhr.ontimeout = (): void => {
       const error = new Error('Request timeout');
       log('📥 [API] Timeout');
       onError?.(error);
@@ -272,40 +420,29 @@ export const sendChatMessageStreaming = async ({
 
 /**
  * Send chat message (non-streaming fallback)
- * @param {object} params - Chat parameters
- * @param {string} params.message - Current user message
- * @param {number} params.latitude - User's latitude
- * @param {number} params.longitude - User's longitude
- * @param {string} params.language - Language code (e.g., 'en', 'hi')
- * @param {object} params.locationDetails - Human-readable location (L1-L6)
- * @param {Array} params.history - Previous messages for context (last 10)
- * @param {string} params.sessionId - Optional: reuse existing session
  */
-export const sendChatMessage = async ({ message, latitude, longitude, language, locationDetails, history = [], sessionId }) => {
+export const sendChatMessage = async ({
+  message,
+  latitude,
+  longitude,
+  language,
+  locationDetails,
+  history = [],
+  sessionId,
+}: ChatParams): Promise<ChatResult> => {
   try {
     // Get device ID for server-side persistence
     const deviceId = await ensureDeviceId();
 
     // Format history for AI Services
-    // History is newest-first in the hook, but Gemini wants oldest-first
     const formattedHistory = history
-      .filter(m => m._id !== 'welcome') // Exclude welcome message
-      .slice(0, 10) // Last 10 messages
-      .reverse() // Reverse to get oldest-first
-      .map(m => ({
-        text: m.text,
-        isBot: m.isBot,
-      }));
+      .filter(m => m._id !== 'welcome')
+      .slice(0, 10)
+      .reverse()
+      .map(m => ({ text: m.text, isBot: m.isBot }));
 
     // Build location context string for AI
-    const locationContext = locationDetails ? {
-      country: locationDetails.level1Country,
-      state: locationDetails.level2State,
-      district: locationDetails.level3District,
-      city: locationDetails.level5City,
-      locality: locationDetails.level6Locality,
-      displayName: locationDetails.displayName,
-    } : null;
+    const locationContext = buildLocationContext(locationDetails);
 
     log('📤 [API] Sending chat with:', {
       historyCount: formattedHistory.length,
@@ -319,12 +456,10 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
       latitude: latitude || -1.2864,
       longitude: longitude || 36.8172,
       language: language || 'en',
-      location: locationContext, // Human-readable location for AI context
+      location: locationContext,
       history: formattedHistory,
-      // Server-side persistence
       deviceId,
       sessionId,
-      // Device's local date/time for seasonal context
       clientDateTime: getLocalDateTime(),
     };
 
@@ -363,48 +498,33 @@ export const sendChatMessage = async ({ message, latitude, longitude, language, 
 
 /**
  * Analyze plant image via API Gateway (proxies to AgriVision MCP)
- * This routes through the gateway to avoid SSE issues in React Native
- *
- * @param {object} params - Diagnosis parameters
- * @param {string} params.imageBase64 - Base64 encoded image (with data: prefix)
- * @param {number} params.latitude - User's latitude
- * @param {number} params.longitude - User's longitude
- * @param {string} params.language - Language code
- * @param {object} params.locationDetails - Location context
- * @param {string} params.sessionId - Optional: reuse existing session
  */
-export const analyzePlantImage = async ({ imageBase64, latitude, longitude, language, locationDetails, sessionId }) => {
+export const analyzePlantImage = async ({
+  imageBase64,
+  latitude,
+  longitude,
+  language,
+  locationDetails,
+  sessionId,
+}: PlantDiagnosisParams): Promise<PlantDiagnosisResult> => {
   try {
-    // Get device ID for server-side persistence
     const deviceId = await ensureDeviceId();
 
     log('🌿 [API] Starting plant diagnosis via gateway...');
     log('🌿 [API] Image size:', Math.round(imageBase64.length / 1024), 'KB');
 
-    // Build location context
-    const locationContext = locationDetails ? {
-      country: locationDetails.level1Country,
-      state: locationDetails.level2State,
-      district: locationDetails.level3District,
-      city: locationDetails.level5City,
-      locality: locationDetails.level6Locality,
-      displayName: locationDetails.displayName,
-    } : null;
+    const locationContext = buildLocationContext(locationDetails);
 
-    // Use the chat endpoint with image parameter
-    // The API Gateway handles AgriVision SSE properly
     const requestBody = {
       message: 'Analyze this plant image for health issues and provide diagnosis.',
       latitude: latitude || -1.2864,
       longitude: longitude || 36.8172,
       language: language || 'en',
       location: locationContext,
-      image: imageBase64, // Base64 image for AgriVision
-      stream: false, // Don't stream for diagnosis
-      // Server-side persistence
+      image: imageBase64,
+      stream: false,
       deviceId,
       sessionId,
-      // Device's local date/time for seasonal context
       clientDateTime: getLocalDateTime(),
     };
 
@@ -428,13 +548,12 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
       responseLength: data.response?.length || 0,
     });
 
-    // The response contains both the text response and diagnosis data
     return {
       success: true,
-      response: data.response, // Formatted text for display
-      diagnosis: data.diagnosis, // Raw diagnosis object
+      response: data.response,
+      diagnosis: data.diagnosis,
       metadata: {
-        ...(data._meta || {}), // Preserve gateway metadata
+        ...(data._meta || {}),
         intentsDetected: data.intentsDetected || [],
         mcpToolsUsed: data.mcpToolsUsed || [],
         extractedEntities: data.extractedEntities || null,
@@ -452,15 +571,12 @@ export const analyzePlantImage = async ({ imageBase64, latitude, longitude, lang
 
 /**
  * Get active MCP servers for user's location
- * @param {object} params - Query parameters
- * @param {number} params.lat - User's latitude
- * @param {number} params.lon - User's longitude
  */
-export const getActiveMcpServers = async ({ lat, lon } = {}) => {
+export const getActiveMcpServers = async ({ lat, lon }: { lat?: number; lon?: number } = {}): Promise<McpServersResult> => {
   try {
     const queryParams = new URLSearchParams();
-    if (lat !== undefined) queryParams.append('lat', lat);
-    if (lon !== undefined) queryParams.append('lon', lon);
+    if (lat !== undefined) queryParams.append('lat', lat.toString());
+    if (lon !== undefined) queryParams.append('lon', lon.toString());
     
     const url = `${API_BASE_URL}/api/mcp-servers/active${queryParams.toString() ? `?${queryParams}` : ''}`;
 
@@ -505,13 +621,12 @@ export const getActiveMcpServers = async ({ lat, lon } = {}) => {
 
 /**
  * Get ALL MCP servers with active/inactive status based on user's location
- * Shows all available integrations with regional availability indicator
  */
-export const getAllMcpServersWithStatus = async ({ lat, lon } = {}) => {
+export const getAllMcpServersWithStatus = async ({ lat, lon }: { lat?: number; lon?: number } = {}): Promise<McpServersStatusResult> => {
   try {
     const queryParams = new URLSearchParams();
-    if (lat !== undefined) queryParams.append('lat', lat);
-    if (lon !== undefined) queryParams.append('lon', lon);
+    if (lat !== undefined) queryParams.append('lat', lat.toString());
+    if (lon !== undefined) queryParams.append('lon', lon.toString());
     
     const url = `${API_BASE_URL}/api/mcp-servers/all-with-status${queryParams.toString() ? `?${queryParams}` : ''}`;
 
@@ -532,24 +647,19 @@ export const getAllMcpServersWithStatus = async ({ lat, lon } = {}) => {
     log('All MCP servers API error:', error);
     return {
       success: false,
-      error: error.message || 'Failed to fetch MCP servers',
-      allServers: [],
-      activeServers: [],
-      inactiveServers: [],
-      counts: { total: 0, activeForUser: 0, inactiveForUser: 0 },
+      error: (error as Error).message || 'Failed to fetch MCP servers',
     };
   }
 };
 
 /**
  * Get LIVE status of all MCP servers with real-time health checks
- * Returns: active (working), degraded (API issues), inactive (not in region), coming_soon
  */
-export const getMcpServersLiveStatus = async ({ lat, lon } = {}) => {
+export const getMcpServersLiveStatus = async ({ lat, lon }: { lat?: number; lon?: number } = {}): Promise<McpServersStatusResult> => {
   try {
     const queryParams = new URLSearchParams();
-    if (lat !== undefined) queryParams.append('lat', lat);
-    if (lon !== undefined) queryParams.append('lon', lon);
+    if (lat !== undefined) queryParams.append('lat', lat.toString());
+    if (lon !== undefined) queryParams.append('lon', lon.toString());
     
     const url = `${API_BASE_URL}/api/mcp-servers/live-status${queryParams.toString() ? `?${queryParams}` : ''}`;
 
@@ -590,9 +700,8 @@ export const getMcpServersLiveStatus = async ({ lat, lon } = {}) => {
 
 /**
  * Get a specific MCP server by slug with full marketing content
- * @param {string} slug - Server slug (e.g., 'accuweather', 'nextgen')
  */
-export const getMcpServer = async (slug) => {
+export const getMcpServer = async (slug: string): Promise<McpServerResult> => {
   try {
     const url = `${API_BASE_URL}/api/mcp-servers/${slug}`;
 
@@ -631,10 +740,8 @@ export const getMcpServer = async (slug) => {
 
 /**
  * Detect regions for a given location
- * @param {number} lat - Latitude
- * @param {number} lon - Longitude
  */
-export const detectRegions = async (lat, lon) => {
+export const detectRegions = async (lat: number, lon: number): Promise<RegionsResult> => {
   try {
     const url = `${API_BASE_URL}/api/regions/detect?lat=${lat}&lon=${lon}`;
 
@@ -669,4 +776,3 @@ export default {
   getMcpServer,
   detectRegions,
 };
-
