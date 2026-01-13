@@ -130,9 +130,9 @@ export default function useChatSession(sessionIdParam = null) {
     
     try {
       const contextMessages = allMessages
-        .filter(m => m._id !== 'welcome')
+        .filter(m => m._id !== 'welcome' && m.text) // Filter out messages with null text
         .slice(0, 6)
-        .map(m => ({ role: m.isBot ? 'assistant' : 'user', content: m.text }));
+        .map(m => ({ role: m.isBot ? 'assistant' : 'user', content: m.text || '' }));
       
       const result = await generateTitle(contextMessages, language?.code);
       

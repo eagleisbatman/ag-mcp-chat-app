@@ -241,11 +241,12 @@ export const sendChatMessageStreaming = async ({
 
   // Format history for AI Services
   // History is newest-first in the hook, but Gemini wants oldest-first
+  // Filter out messages with null/empty text to prevent validation errors
   const formattedHistory = history
-    .filter(m => m._id !== 'welcome')
+    .filter(m => m._id !== 'welcome' && m.text)
     .slice(0, 10)
     .reverse() // Reverse to get oldest-first
-    .map(m => ({ text: m.text, isBot: m.isBot }));
+    .map(m => ({ text: m.text || '', isBot: m.isBot }));
 
   // Build location context
   const locationContext = buildLocationContext(locationDetails);
@@ -435,11 +436,12 @@ export const sendChatMessage = async ({
     const deviceId = await ensureDeviceId();
 
     // Format history for AI Services
+    // Filter out messages with null/empty text to prevent validation errors
     const formattedHistory = history
-      .filter(m => m._id !== 'welcome')
+      .filter(m => m._id !== 'welcome' && m.text)
       .slice(0, 10)
       .reverse()
-      .map(m => ({ text: m.text, isBot: m.isBot }));
+      .map(m => ({ text: m.text || '', isBot: m.isBot }));
 
     // Build location context string for AI
     const locationContext = buildLocationContext(locationDetails);
