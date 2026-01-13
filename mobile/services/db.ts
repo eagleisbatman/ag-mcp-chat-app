@@ -27,31 +27,40 @@ export interface LocationData {
   latitude?: number;
   longitude?: number;
   displayName?: string;
+  formattedAddress?: string;
   level1Country?: string;
+  level1CountryCode?: string;
   level2State?: string;
   level3District?: string;
+  level4SubDistrict?: string;
   level5City?: string;
   level6Locality?: string;
+  source?: 'gps' | 'ip' | 'manual' | string;
+  isPrimary?: boolean;
 }
 
 export interface Session {
   id: string;
+  deviceId?: string;
   title?: string;
   status?: string;
   createdAt?: string;
   updatedAt?: string;
   messageCount?: number;
+  messages?: Message[];
 }
 
 export interface Message {
   id?: string;
   _id?: string;
-  text: string;
+  text: string | null;
   isBot: boolean;
   createdAt?: string | Date;
   image?: string;
   diagnosisData?: Record<string, unknown>;
   ttsAudioUrl?: string;
+  role?: string;
+  content?: string;
 }
 
 export interface ApiResult<T = unknown> {
@@ -77,13 +86,24 @@ export interface MessageResult extends ApiResult {
 }
 
 export interface LocationLookupResult extends ApiResult {
+  latitude?: number;
+  longitude?: number;
   source?: string;
   displayName?: string;
+  formattedAddress?: string;
   level1Country?: string;
+  level1CountryCode?: string;
   level2State?: string;
   level3District?: string;
+  level4SubDistrict?: string;
   level5City?: string;
   level6Locality?: string;
+  // Alternative field names from some API responses
+  city?: string;
+  district?: string;
+  state?: string;
+  regionName?: string;
+  country?: string;
 }
 
 export interface TitleResult extends ApiResult {
@@ -438,7 +458,7 @@ export async function lookupLocation(
 /**
  * Generate session title via AI Services
  */
-export async function generateTitle(messages: Message[], language: string = 'en'): Promise<TitleResult> {
+export async function generateTitle(messages: Array<{ role: string; content: string }>, language: string = 'en'): Promise<TitleResult> {
   try {
     log('🔌 [DB] Generating title with', messages.length, 'messages, language:', language);
     

@@ -37,7 +37,7 @@ export default function ThemeToggle({ style }: ThemeToggleProps): JSX.Element {
       borderRadius={0}
       backgroundColor="transparent"
       color={theme.accent}
-      style={style}
+      style={style as ViewStyle | ViewStyle[] | undefined}
       accessibilityLabel={t('a11y.themeMode', { mode: themeMode })}
     />
   );

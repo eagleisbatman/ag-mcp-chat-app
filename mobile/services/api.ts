@@ -97,6 +97,7 @@ export interface PlantDiagnosisParams {
   language?: string;
   locationDetails?: LocationDetails;
   sessionId?: string;
+  question?: string;
 }
 
 export interface PlantDiagnosisResult {

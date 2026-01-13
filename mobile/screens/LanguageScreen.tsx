@@ -26,6 +26,8 @@ interface Language {
   code: string;
   name: string;
   nativeName: string;
+  region: string;
+  isRTL?: boolean;
 }
 
 interface LanguageSection {

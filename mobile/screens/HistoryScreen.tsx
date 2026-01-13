@@ -28,7 +28,7 @@ interface Session {
   title?: string;
   messageCount?: number;
   lastMessageAt?: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 interface HistoryScreenProps {

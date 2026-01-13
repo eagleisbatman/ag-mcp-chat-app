@@ -126,7 +126,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
 
   // Helper to sync location to DB with retry
   const syncLocationToDb = async (
-    locationResult: LocationLookupResult, 
+    locationResult: LocationLookupResult | LocationDetails, 
     latitude: number, 
     longitude: number, 
     retryCount = 0

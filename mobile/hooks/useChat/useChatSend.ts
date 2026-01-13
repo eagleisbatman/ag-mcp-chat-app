@@ -113,10 +113,11 @@ export default function useChatSend({
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
           const diagnosisMetadata = metadata?.diagnosis as Record<string, unknown> | undefined;
+          const diagnosisCrop = diagnosisMetadata?.crop as { name?: string } | string | undefined;
           persistMessage({ ...botMsg, text: fullText }, sessionId, {
             responseLanguageCode: language?.code,
             metadata: metadata || null,
-            diagnosisCrop: diagnosisMetadata?.crop?.name || diagnosisMetadata?.crop,
+            diagnosisCrop: typeof diagnosisCrop === 'object' ? diagnosisCrop?.name : diagnosisCrop,
             diagnosisHealthStatus: diagnosisMetadata?.health_status,
             diagnosisIssues: diagnosisMetadata?.issues,
           } as Record<string, unknown>);

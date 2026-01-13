@@ -365,7 +365,7 @@ interface McpServersScreenProps {
 }
 
 interface McpData {
-  servers: McpServer[];
+  servers?: McpServer[];
   success?: boolean;
   error?: string;
 }

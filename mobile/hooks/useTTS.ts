@@ -3,8 +3,9 @@
  * Handles TTS generation, caching, and playback
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { textToSpeech } from '../services/tts';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { AVPlaybackStatus } from 'expo-av';
+import { textToSpeech, TTSLocation } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
 import { generateDiagnosisTTSText } from '../utils/diagnosisNormalizer';
 import { log } from '../utils/logger';
@@ -25,10 +26,6 @@ interface UseTTSReturn {
   stopSpeaking: () => void;
 }
 
-interface PlaybackStatus {
-  didJustFinish?: boolean;
-}
-
 /**
  * Hook for Text-to-Speech functionality
  */
@@ -36,6 +33,16 @@ export default function useTTS({ message, language, locationDetails, onError }: 
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [localTtsUrl, setLocalTtsUrl] = useState<string | undefined>(message?.ttsAudioUrl);
+
+  // Convert LocationDetails to TTSLocation format
+  const ttsLocation = useMemo((): TTSLocation | null => {
+    if (!locationDetails) return null;
+    return {
+      country: locationDetails.level1Country,
+      state: locationDetails.level2State,
+      city: locationDetails.level5City || locationDetails.displayName,
+    };
+  }, [locationDetails]);
 
   /**
    * Get text to speak from message
@@ -67,8 +74,8 @@ export default function useTTS({ message, language, locationDetails, onError }: 
     if (cachedUrl) {
       log('🔊 [TTS] Playing from cache:', cachedUrl);
       setIsSpeaking(true);
-      const success = await playAudio(cachedUrl, (status: PlaybackStatus) => {
-        if (status.didJustFinish) setIsSpeaking(false);
+      const success = await playAudio(cachedUrl, (status: AVPlaybackStatus) => {
+        if (status.isLoaded && status.didJustFinish) setIsSpeaking(false);
       });
       if (!success) setIsSpeaking(false);
       return;
@@ -84,7 +91,7 @@ export default function useTTS({ message, language, locationDetails, onError }: 
         return;
       }
 
-      const result = await textToSpeech(textToSpeak, language || 'en', locationDetails);
+      const result = await textToSpeech(textToSpeak, language || 'en', ttsLocation);
       const audioSource = result.audioUrl || result.audioBase64;
 
       if (result.success && audioSource) {
@@ -95,8 +102,8 @@ export default function useTTS({ message, language, locationDetails, onError }: 
           setLocalTtsUrl(result.audioUrl);
         }
 
-        const playSuccess = await playAudio(audioSource, (status: PlaybackStatus) => {
-          if (status.didJustFinish) {
+        const playSuccess = await playAudio(audioSource, (status: AVPlaybackStatus) => {
+          if (status.isLoaded && status.didJustFinish) {
             setIsSpeaking(false);
           }
         });
@@ -115,7 +122,7 @@ export default function useTTS({ message, language, locationDetails, onError }: 
     } finally {
       setIsLoading(false);
     }
-  }, [isSpeaking, localTtsUrl, message, language, locationDetails, getTextToSpeak, onError]);
+  }, [isSpeaking, localTtsUrl, message, language, ttsLocation, getTextToSpeak, onError]);
 
   /**
    * Stop audio on cleanup

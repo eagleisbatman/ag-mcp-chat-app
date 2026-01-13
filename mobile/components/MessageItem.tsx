@@ -242,7 +242,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
       log('🔊 [MessageItem] Playing from cache:', cachedUrl);
       setIsSpeaking(true);
       const success = await playAudio(cachedUrl, (status) => {
-        if (status.didJustFinish) setIsSpeaking(false);
+        if (status.isLoaded && status.didJustFinish) setIsSpeaking(false);
       });
       if (!success) setIsSpeaking(false);
       return;
@@ -257,7 +257,14 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
         textToSpeak = generateDiagnosisTTSText(message.diagnosisData);
       }
       
-      const result = await textToSpeech(textToSpeak || '', language?.code || 'en', locationDetails);
+      // Convert LocationDetails to TTSLocation format
+      const ttsLocation = locationDetails ? {
+        country: locationDetails.level1Country,
+        state: locationDetails.level2State,
+        city: locationDetails.level5City || locationDetails.displayName,
+      } : null;
+      
+      const result = await textToSpeech(textToSpeak || '', language?.code || 'en', ttsLocation);
       
       const audioSource = result.audioUrl || result.audioBase64;
       
@@ -269,7 +276,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
         }
         
         const playSuccess = await playAudio(audioSource, (status) => {
-          if (status.didJustFinish) {
+          if (status.isLoaded && status.didJustFinish) {
             setIsSpeaking(false);
           }
         });

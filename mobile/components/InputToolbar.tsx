@@ -49,7 +49,7 @@ interface InputToolbarProps {
   onSendImage: (data: ImageData) => void;
   onSendVoiceText?: (text: string) => void;
   transcribeAudio: (data: { uri: string; base64: string; duration: number; language: string }) => Promise<TranscriptionResult>;
-  uploadAudioInBackground?: (data: AudioData) => Promise<void>;
+  uploadAudioInBackground?: (data: AudioData) => Promise<unknown>;
   onOpenHistory?: () => void;
   disabled?: boolean;
 }
