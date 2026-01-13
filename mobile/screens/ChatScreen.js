@@ -1,9 +1,8 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated, Image, Pressable } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Animated } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const logoImage = require('../assets/logo.png');
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 import { useApp } from '../contexts/AppContext';
@@ -12,8 +11,9 @@ import useChat from '../hooks/useChat';
 import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
-import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
+import ChatHeader from '../components/chat/ChatHeader';
+import ScrollToBottomButton from '../components/chat/ScrollToBottomButton';
 import TypingIndicator from '../components/ui/TypingIndicator';
 import WeatherWidget from '../components/weather/WeatherWidget';
 import { weatherService } from '../services/weather';
@@ -385,66 +385,11 @@ export default function ChatScreen({ navigation, route }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <ScreenHeader
-        align="left"
-        center={
-          <Pressable 
-            style={styles.headerLeft} 
-            onPress={handleRefreshLocation}
-            accessibilityRole="button"
-            accessibilityLabel={t('a11y.refreshLocation')}
-          >
-            <Image source={logoImage} style={styles.headerLogo} resizeMode="contain" />
-            <View style={styles.headerTextContainer}>
-              <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-                {isRefreshingLocation
-                  ? t('chat.updatingLocation')
-                  : locationDetails?.displayName ||
-                    locationDetails?.level5City ||
-                    locationDetails?.level3District ||
-                    locationDetails?.level2State ||
-                    (location?.latitude ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('chat.setLocation'))}
-              </Text>
-              {!isRefreshingLocation && locationDetails?.source === 'ip' && (
-                <Text style={[styles.accuracyNudge, { color: theme.warning }]}>
-                  {t('chat.lowAccuracy')} • {t('chat.tapToImprove')}
-                </Text>
-              )}
-            </View>
-          </Pressable>
-        }
-        right={
-          <>
-            <IconButton
-              icon="location"
-              onPress={handleRefreshLocation}
-              loading={isRefreshingLocation}
-              size={36}
-              borderRadius={10}
-              backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
-              color={theme.icon}
-              accessibilityLabel={t('a11y.refreshLocation')}
-            />
-            <IconButton
-              icon="add"
-              onPress={startNewSession}
-              size={36}
-              borderRadius={10}
-              backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
-              color={theme.icon}
-              accessibilityLabel={t('a11y.newChat')}
-            />
-            <IconButton
-              icon="menu"
-              onPress={() => navigation.navigate('Settings')}
-              size={36}
-              borderRadius={10}
-              backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
-              color={theme.icon}
-              accessibilityLabel={t('a11y.openSettings')}
-            />
-          </>
-        }
+      <ChatHeader
+        onRefreshLocation={handleRefreshLocation}
+        onNewSession={startNewSession}
+        onOpenSettings={() => navigation.navigate('Settings')}
+        isRefreshing={isRefreshingLocation}
       />
 
       {/* Messages */}
@@ -509,28 +454,11 @@ export default function ChatScreen({ navigation, route }) {
         )}
 
         {/* Scroll to bottom button */}
-        <Animated.View
-          style={[
-            styles.scrollButtonContainer,
-            {
-              opacity: scrollButtonAnim,
-              transform: [
-                { translateY: scrollButtonAnim.interpolate({ inputRange: [0, 1], outputRange: [60, 0] }) },
-                { scale: scrollButtonAnim.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) },
-              ],
-            }
-          ]}
-          pointerEvents={showScrollButton ? 'auto' : 'none'}
-        >
-          <IconButton
-            icon="chevron-down"
-            onPress={scrollToBottom}
-            size={40}
-            backgroundColor={theme.accent}
-            color="#FFFFFF"
-            accessibilityLabel={t('a11y.scrollToBottom')}
-          />
-        </Animated.View>
+        <ScrollToBottomButton
+          visible={showScrollButton}
+          animatedValue={scrollButtonAnim}
+          onPress={scrollToBottom}
+        />
       </View>
 
       {/* Input */}
@@ -550,28 +478,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerLeft: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  headerTextContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  headerLogo: {
-    width: 32,
-    height: 32,
-  },
-  headerSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  accuracyNudge: {
-    fontSize: 10,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-    marginTop: -2,
-  },
   messagesContainer: {
     flex: 1,
     position: 'relative',
@@ -581,12 +487,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     flexGrow: 1,
     justifyContent: 'flex-end', // Anchor content to bottom (appears at top in inverted mode)
-  },
-  scrollButtonContainer: {
-    position: 'absolute',
-    bottom: 16,
-    alignSelf: 'center',
-    zIndex: 100,
   },
   loadingContainer: {
     flex: 1,
