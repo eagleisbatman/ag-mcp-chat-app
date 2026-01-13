@@ -93,25 +93,8 @@ export interface Session {
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 
-export interface Theme {
-  name: ThemeMode;
-  background: string;
-  surface: string;
-  surfaceElevated: string;
-  card: string;
-  text: string;
-  textSecondary: string;
-  textMuted: string;
-  accent: string;
-  accentLight: string;
-  border: string;
-  borderLight: string;
-  icon: string;
-  success: string;
-  warning: string;
-  error: string;
-  overlay: string;
-}
+// Re-export ThemeColors from themes.ts as Theme for convenience
+export { ThemeColors as Theme } from '../constants/themes';
 
 // ============================================
 // Location Types
