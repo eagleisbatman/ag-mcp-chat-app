@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 
 // Feather icons - thin, clean aesthetic (like Claude's app)
@@ -109,3 +110,10 @@ export default function AppIcon({ name, size, color, prefer = 'mci', ...rest }) 
   // Default to Ionicons
   return <Ionicons name={name} size={size} color={color} {...rest} />;
 }
+
+AppIcon.propTypes = {
+  name: PropTypes.string.isRequired,
+  size: PropTypes.number,
+  color: PropTypes.string,
+  prefer: PropTypes.oneOf(['feather', 'mci', 'ion']),
+};

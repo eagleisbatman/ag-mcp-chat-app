@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 
 const LINE_WIDTH = 2;
 
@@ -301,3 +302,16 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
 });
+
+// PropTypes for all icons
+const iconPropTypes = {
+  size: PropTypes.number,
+  color: PropTypes.string,
+};
+
+PlusIcon.propTypes = iconPropTypes;
+ClockIcon.propTypes = iconPropTypes;
+CameraIcon.propTypes = iconPropTypes;
+ImageIcon.propTypes = iconPropTypes;
+ArrowUpIcon.propTypes = iconPropTypes;
+VoiceWaveIcon.propTypes = iconPropTypes;

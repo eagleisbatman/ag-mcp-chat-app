@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import PropTypes from 'prop-types';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../../contexts/AppContext';
@@ -165,5 +166,19 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
+
+NotificationBanner.propTypes = {
+  alerts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      type: PropTypes.string,
+      severity: PropTypes.string,
+      title: PropTypes.string,
+      description: PropTypes.string,
+    })
+  ),
+  onDismiss: PropTypes.func,
+  onPress: PropTypes.func,
+};
 
 export default NotificationBanner;

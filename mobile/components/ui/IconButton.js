@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import PropTypes from 'prop-types';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING } from '../../constants/themes';
 import AppIcon from './AppIcon';
@@ -67,3 +68,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+IconButton.propTypes = {
+  icon: PropTypes.string.isRequired,
+  onPress: PropTypes.func,
+  disabled: PropTypes.bool,
+  loading: PropTypes.bool,
+  size: PropTypes.number,
+  borderRadius: PropTypes.number,
+  backgroundColor: PropTypes.string,
+  color: PropTypes.string,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  hitSlop: PropTypes.object,
+  accessibilityLabel: PropTypes.string,
+};

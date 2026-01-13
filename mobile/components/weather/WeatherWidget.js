@@ -6,6 +6,7 @@ import {
   ScrollView,
   Animated,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
@@ -432,5 +433,37 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.medium,
   },
 });
+
+WeatherWidget.propTypes = {
+  data: PropTypes.shape({
+    current: PropTypes.shape({
+      temperature: PropTypes.number,
+      humidity: PropTypes.number,
+      windSpeed: PropTypes.number,
+      weatherIcon: PropTypes.number,
+      weatherText: PropTypes.string,
+    }),
+    forecast: PropTypes.shape({
+      daily: PropTypes.arrayOf(
+        PropTypes.shape({
+          date: PropTypes.string,
+          tempMax: PropTypes.number,
+          tempMin: PropTypes.number,
+          dayIcon: PropTypes.number,
+          precipitationProbability: PropTypes.number,
+        })
+      ),
+    }),
+  }),
+  loading: PropTypes.bool,
+  error: PropTypes.bool,
+  provider: PropTypes.string,
+};
+
+SkeletonBox.propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  style: PropTypes.object,
+};
 
 export default WeatherWidget;

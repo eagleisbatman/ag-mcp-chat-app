@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import PropTypes from 'prop-types';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
@@ -423,3 +424,30 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.medium,
   },
 });
+
+DiagnosisCard.propTypes = {
+  diagnosis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  onRetry: PropTypes.func,
+};
+
+ErrorSection.propTypes = {
+  theme: PropTypes.object.isRequired,
+  isTimeout: PropTypes.bool,
+  message: PropTypes.string,
+  onRetry: PropTypes.func,
+};
+
+RejectionSection.propTypes = {
+  theme: PropTypes.object.isRequired,
+  isScreenshot: PropTypes.bool,
+  isTextImage: PropTypes.bool,
+  isGuardrailRejection: PropTypes.bool,
+  message: PropTypes.string,
+  onRetry: PropTypes.func,
+};
+
+QualitySection.propTypes = {
+  theme: PropTypes.object.isRequired,
+  message: PropTypes.string,
+  onRetry: PropTypes.func,
+};

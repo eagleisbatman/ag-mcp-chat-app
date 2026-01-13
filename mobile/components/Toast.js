@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Pressable, Platform, PanResponder } from 'react-native';
+import PropTypes from 'prop-types';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
@@ -243,3 +244,18 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });
+
+Toast.propTypes = {
+  toastId: PropTypes.number,
+  visible: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(['success', 'error', 'warning', 'info']),
+  duration: PropTypes.number,
+  onDismiss: PropTypes.func,
+  action: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    onPress: PropTypes.func.isRequired,
+  }),
+  queueCount: PropTypes.number,
+  dismissToken: PropTypes.number,
+};

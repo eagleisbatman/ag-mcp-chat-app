@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import IconButton from './ui/IconButton';
@@ -37,3 +38,7 @@ export default function ThemeToggle({ style }) {
     />
   );
 }
+
+ThemeToggle.propTypes = {
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+};

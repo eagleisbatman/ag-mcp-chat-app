@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
+import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 
 /**
@@ -193,7 +194,7 @@ const WeatherIcon = ({ code, size = 24, color, provider, isNight = false, style 
       <Image
         source={iconSource}
         style={[{ width: size, height: size }, style]}
-        resizeMode="contain"
+        contentFit="contain"
       />
     );
   }
@@ -221,6 +222,15 @@ export const getWeatherIconName = (code) => {
 export const getWeatherIconColor = (code) => {
   const iconName = ACCUWEATHER_ICON_MAP[code] || 'cloudy';
   return WEATHER_COLOR_MAP[iconName] || '#78909C';
+};
+
+WeatherIcon.propTypes = {
+  code: PropTypes.number,
+  size: PropTypes.number,
+  color: PropTypes.string,
+  provider: PropTypes.oneOf(['accuweather', 'tomorrow-io']),
+  isNight: PropTypes.bool,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };
 
 export default WeatherIcon;

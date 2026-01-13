@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, Platform } from 'react-native';
+import PropTypes from 'prop-types';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import { withAlpha } from '../../utils/color';
@@ -92,3 +93,15 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
 });
+
+Button.propTypes = {
+  title: PropTypes.string.isRequired,
+  onPress: PropTypes.func,
+  disabled: PropTypes.bool,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tonal', 'danger']),
+  left: PropTypes.node,
+  right: PropTypes.node,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  textStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  accessibilityLabel: PropTypes.string,
+};

@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -117,3 +118,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+PulsingDot.propTypes = {
+  delay: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
+};
+
+TypingIndicator.propTypes = {
+  text: PropTypes.string.isRequired,
+};

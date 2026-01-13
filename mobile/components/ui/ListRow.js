@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
+import PropTypes from 'prop-types';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import AppIcon from './AppIcon';
@@ -118,3 +119,25 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
   },
 });
+
+ListRow.propTypes = {
+  title: PropTypes.string.isRequired,
+  subtitle: PropTypes.string,
+  hint: PropTypes.string,
+  titleColor: PropTypes.string,
+  subtitleColor: PropTypes.string,
+  hintColor: PropTypes.string,
+  left: PropTypes.node,
+  right: PropTypes.node,
+  showChevron: PropTypes.bool,
+  onPress: PropTypes.func,
+  onLongPress: PropTypes.func,
+  delayLongPress: PropTypes.number,
+  disabled: PropTypes.bool,
+  divider: PropTypes.bool,
+  paddingHorizontal: PropTypes.number,
+  paddingVertical: PropTypes.number,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  contentStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  accessibilityLabel: PropTypes.string,
+};

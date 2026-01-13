@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Pressable, Platform, Appearance } from 'react-native';
+import PropTypes from 'prop-types';
 import AppIcon from './ui/AppIcon';
 import { TYPOGRAPHY } from '../constants/themes';
 import { t } from '../constants/strings';
@@ -116,3 +117,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 });
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired,
+};
