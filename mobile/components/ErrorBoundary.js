@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AppIcon from './ui/AppIcon';
 import { TYPOGRAPHY } from '../constants/themes';
 import { t } from '../constants/strings';
+import { error as logError } from '../utils/logger';
 
 /**
  * Error Boundary - Catches JavaScript errors in child components
@@ -21,7 +22,7 @@ export default class ErrorBoundary extends Component {
 
   componentDidCatch(error, errorInfo) {
     // Log error to console (could send to analytics service)
-    console.error('ErrorBoundary caught error:', error, errorInfo);
+    logError('ErrorBoundary caught error:', error, errorInfo);
   }
 
   handleRetry = () => {

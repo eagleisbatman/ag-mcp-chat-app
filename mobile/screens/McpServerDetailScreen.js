@@ -18,6 +18,7 @@ import IconButton from '../components/ui/IconButton';
 import Card from '../components/ui/Card';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
+import { error as logError } from '../utils/logger';
 import { t } from '../constants/strings';
 
 // Tomorrow.io logos for light/dark mode
@@ -177,7 +178,7 @@ export default function McpServerDetailScreen({ navigation, route }) {
         throw new Error(response.error || t('mcp.failedToFetch'));
       }
     } catch (err) {
-      console.error('Fetch MCP server error:', err);
+      logError('Fetch MCP server error:', err);
       setError(err.message);
       showError(t('mcp.couldNotLoadDetails'));
     } finally {

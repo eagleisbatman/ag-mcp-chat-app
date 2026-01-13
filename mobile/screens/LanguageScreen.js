@@ -17,6 +17,7 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import IconButton from '../components/ui/IconButton';
 import { t } from '../constants/strings';
+import { log } from '../utils/logger';
 
 export default function LanguageScreen({ navigation }) {
   const { theme, language, setLanguage, completeOnboarding } = useApp();
@@ -37,11 +38,11 @@ export default function LanguageScreen({ navigation }) {
   };
 
   const handleContinue = async () => {
-    console.log('🌐 [LanguageScreen] User selected:', selectedLang.name, `(${selectedLang.code})`);
+    log('🌐 [LanguageScreen] User selected:', selectedLang.name, `(${selectedLang.code})`);
     await setLanguage(selectedLang);
-    console.log('🌐 [LanguageScreen] Completing onboarding...');
+    log('🌐 [LanguageScreen] Completing onboarding...');
     await completeOnboarding();
-    console.log('✅ [LanguageScreen] Onboarding complete! App will navigate to Chat');
+    log('✅ [LanguageScreen] Onboarding complete! App will navigate to Chat');
     // Navigation will auto-redirect to Chat via App.js
   };
 

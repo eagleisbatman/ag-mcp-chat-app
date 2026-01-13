@@ -18,6 +18,7 @@ import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { t } from '../constants/strings';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import { error as logError } from '../utils/logger';
 
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
@@ -67,7 +68,7 @@ export default function ContentDetailScreen({ navigation, route }) {
         // Track view
         contentService.trackView(contentId, { source: 'detail' });
       } catch (error) {
-        console.error('Error loading content:', error);
+        logError('Error loading content:', error);
         showError(t('content_load_error') || 'Could not load content');
       } finally {
         setLoading(false);
@@ -115,7 +116,7 @@ export default function ContentDetailScreen({ navigation, route }) {
       // Track share
       contentService.shareContent(contentId);
     } catch (error) {
-      console.error('Share error:', error);
+      logError('Share error:', error);
     }
   };
 

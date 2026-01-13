@@ -15,6 +15,7 @@ import NotificationBanner from '../components/notifications/NotificationBanner';
 
 import { weatherService } from '../services/weather';
 import { contentService } from '../services/content';
+import { error as logError } from '../utils/logger';
 
 const logoImage = require('../assets/logo.png');
 
@@ -69,7 +70,7 @@ export default function HomeScreen({ navigation }) {
         setContent(contentData);
       }
     } catch (error) {
-      console.error('Error loading home data:', error);
+      logError('Error loading home data:', error);
     } finally {
       setLoading(false);
     }

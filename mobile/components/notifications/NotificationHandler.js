@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { useApp } from '../../contexts/AppContext';
+import { log } from '../../utils/logger';
 
 /**
  * NotificationHandler Component
@@ -26,7 +27,7 @@ export default function NotificationHandler() {
       return;
     }
 
-    console.log('[NotificationHandler] Handling navigation for type:', data.type);
+    log('[NotificationHandler] Handling navigation for type:', data.type);
 
     switch (data.type) {
       case 'weather_alert':
@@ -89,7 +90,7 @@ export default function NotificationHandler() {
 
       default:
         // For unknown types, just open the app (Chat screen)
-        console.log('[NotificationHandler] Unknown notification type:', data.type);
+        log('[NotificationHandler] Unknown notification type:', data.type);
         navigation.navigate('Chat');
         break;
     }
@@ -106,7 +107,7 @@ export default function NotificationHandler() {
   // Log last notification for debugging
   useEffect(() => {
     if (lastNotification) {
-      console.log('[NotificationHandler] Last notification:', {
+      log('[NotificationHandler] Last notification:', {
         type: lastNotification.data?.type,
         isForground: lastNotification.isForground,
         openedAt: lastNotification.openedAt,

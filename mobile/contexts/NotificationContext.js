@@ -42,7 +42,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
         return parsed;
       }
     } catch (error) {
-      console.error('[NotificationContext] Error loading preferences:', error);
+      logError('[NotificationContext] Error loading preferences:', error);
     }
     return DEFAULT_PREFERENCES;
   }, []);
@@ -52,7 +52,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
     try {
       await AsyncStorage.setItem(NOTIFICATION_PREFS_KEY, JSON.stringify(newPrefs));
     } catch (error) {
-      console.error('[NotificationContext] Error saving preferences:', error);
+      logError('[NotificationContext] Error saving preferences:', error);
     }
   }, []);
 

@@ -19,6 +19,7 @@ import WeatherWidget from '../components/weather/WeatherWidget';
 import { weatherService } from '../services/weather';
 import { lookupLocation } from '../services/db';
 import { t } from '../constants/strings';
+import { log, error as logError } from '../utils/logger';
 
 const SERVICE_PREFS_KEY = '@service_preferences';
 
@@ -103,7 +104,7 @@ export default function ChatScreen({ navigation, route }) {
         const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
         if (stored) prefs = JSON.parse(stored);
       } catch (e) {
-        console.log('[Weather] Failed to load service prefs:', e);
+        log('[Weather] Failed to load service prefs:', e);
       }
 
       const weatherPref = prefs.weather || 'accuweather';
@@ -126,7 +127,7 @@ export default function ChatScreen({ navigation, route }) {
       setWeatherProvider(data.provider || weatherPref);
       setWeatherData(data);
     } catch (error) {
-      console.error('[Weather] Failed to fetch weather:', error);
+      logError('[Weather] Failed to fetch weather:', error);
       setWeatherError(true);
     } finally {
       setWeatherLoading(false);
@@ -185,7 +186,7 @@ export default function ChatScreen({ navigation, route }) {
     if (targetIndex === -1 || !flatListRef.current) return;
 
     // Use scrollToOffset for more reliable positioning at the top
-    console.log('📜 [Scroll] TOP-ANCHOR: Aligning to newest question:', messages[targetIndex]._id);
+    log('📜 [Scroll] TOP-ANCHOR: Aligning to newest question:', messages[targetIndex]._id);
 
     flatListRef.current.scrollToIndex({
       index: targetIndex,
@@ -202,7 +203,7 @@ export default function ChatScreen({ navigation, route }) {
   const handleScrollBeginDrag = useCallback(() => {
     isUserScrollingRef.current = true;
     isAnchorLockedRef.current = false; // RELEASE LOCK: User has taken manual control
-    console.log('📜 [Scroll] User started scrolling manually - lock released');
+    log('📜 [Scroll] User started scrolling manually - lock released');
   }, []);
 
   // Track scroll position and show/hide scroll button
@@ -481,7 +482,7 @@ export default function ChatScreen({ navigation, route }) {
 
             // Handle scroll to unmeasured items
             onScrollToIndexFailed={(info) => {
-              console.log('📜 [Scroll] scrollToIndex failed, using offset fallback');
+              log('📜 [Scroll] scrollToIndex failed, using offset fallback');
               const avgHeight = 100;
               flatListRef.current?.scrollToOffset({
                 offset: info.index * avgHeight,
