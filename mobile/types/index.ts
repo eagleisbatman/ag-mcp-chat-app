@@ -32,7 +32,7 @@ export interface ApiResponse<T = unknown> {
  */
 export interface DiagnosisData {
   crop?: string;
-  status?: 'healthy' | 'unhealthy' | 'unknown';
+  status?: 'healthy' | 'unhealthy' | 'unknown' | string;
   disease?: string;
   confidence?: number;
   issues?: DiagnosisIssue[];
@@ -43,20 +43,25 @@ export interface DiagnosisData {
   errorMessage?: string;
   // Raw data
   rawData?: unknown;
+  // Additional fields from providers
+  image_quality?: string;
 }
 
 export interface DiagnosisIssue {
   name: string;
   description?: string;
   symptoms?: string[];
-  severity?: 'low' | 'medium' | 'high';
+  severity?: 'low' | 'medium' | 'high' | string;
+  scientific_name?: string;
+  likelihood?: string;
 }
 
 export interface Treatment {
-  type?: 'chemical' | 'biological' | 'cultural' | string;
+  type?: 'chemical' | 'biological' | 'cultural' | 'organic' | string;
   name: string;
   description?: string;
   dosage?: string;
+  active_ingredient?: string;
 }
 
 /**
@@ -64,27 +69,32 @@ export interface Treatment {
  */
 export interface Message {
   _id: string;
-  text: string;
+  id?: string;
+  text: string | null;
   createdAt: Date | string;
   isBot: boolean;
   image?: string;
-  diagnosisData?: DiagnosisData;
+  diagnosisData?: DiagnosisData | string;
   ttsAudioUrl?: string;
   isStreaming?: boolean;
   sessionId?: string;
+  role?: 'user' | 'assistant' | string;
+  content?: string;
 }
 
 /**
  * Chat session
+ * Note: All fields except id are optional to match db.ts API responses
  */
 export interface Session {
   id: string;
-  deviceId: string;
+  deviceId?: string;
   title?: string;
-  status: 'active' | 'archived';
-  messageCount: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  status?: 'active' | 'archived' | string;
+  messageCount?: number;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  messages?: Message[];
 }
 
 // ============================================
@@ -106,16 +116,46 @@ export interface LocationCoords {
 }
 
 export interface LocationDetails {
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   displayName?: string;
+  formattedAddress?: string;
   level1Country?: string;
+  level1CountryCode?: string;
   level2State?: string;
   level3District?: string;
   level4SubDistrict?: string;
   level5City?: string;
   level6Village?: string;
-  source?: 'gps' | 'ip' | 'manual';
+  level6Locality?: string;
+  source?: 'gps' | 'ip' | 'manual' | string;
+}
+
+export interface LocationLookupResult {
+  success: boolean;
+  error?: string;
+  latitude?: number;
+  longitude?: number;
+  source?: string;
+  displayName?: string;
+  formattedAddress?: string;
+  level1Country?: string;
+  level2State?: string;
+  level3District?: string;
+  level5City?: string;
+  level6Locality?: string;
+}
+
+export interface LocationData {
+  latitude?: number;
+  longitude?: number;
+  displayName?: string;
+  level1Country?: string;
+  level2State?: string;
+  level3District?: string;
+  level5City?: string;
+  level6Locality?: string;
+  source?: 'gps' | 'ip' | 'manual' | string;
 }
 
 export type LocationPermissionStatus = 'granted' | 'denied' | 'undetermined';
@@ -130,6 +170,8 @@ export interface Language {
   nativeName: string;
   flag?: string;
   rtl?: boolean;
+  isRTL?: boolean;
+  region?: string;
 }
 
 // ============================================
@@ -137,9 +179,9 @@ export interface Language {
 // ============================================
 
 export interface WeatherCondition {
-  temperature: number;
-  temperatureUnit: 'C' | 'F';
-  condition: string;
+  temperature?: number;
+  temperatureUnit?: 'C' | 'F';
+  condition?: string;
   conditionCode?: number;
   humidity?: number;
   windSpeed?: number;
@@ -147,30 +189,51 @@ export interface WeatherCondition {
   uvIndex?: number;
   feelsLike?: number;
   icon?: string;
+  weatherText?: string;
+  weatherIcon?: number;
+  precipitation?: number;
 }
 
 export interface WeatherForecast {
   date: Date | string;
-  high: number;
-  low: number;
-  condition: string;
+  high?: number;
+  low?: number;
+  tempMax?: number;
+  tempMin?: number;
+  condition?: string;
+  conditions?: string;
   conditionCode?: number;
   precipProbability?: number;
+  precipitationProbability?: number;
   icon?: string;
+  dayIcon?: number;
+}
+
+export interface WeatherLocation {
+  city?: string;
+  region?: string;
+  country?: string;
+  latitude?: number;
+  longitude?: number;
+  displayName?: string;
+  name?: string;
 }
 
 export interface WeatherData {
-  current: WeatherCondition;
-  forecast?: WeatherForecast[];
+  current: WeatherCondition | null;
+  forecast?: WeatherForecast[] | { daily: WeatherForecast[] } | null;
   alerts?: WeatherAlert[];
   provider?: string;
   lastUpdated?: Date | string;
+  location?: WeatherLocation | null;
 }
 
 export interface WeatherAlert {
+  id?: string;
   title: string;
   description: string;
-  severity: 'minor' | 'moderate' | 'severe' | 'extreme';
+  severity: 'minor' | 'moderate' | 'severe' | 'extreme' | string;
+  type?: string;
   startTime?: Date | string;
   endTime?: Date | string;
 }
@@ -218,19 +281,27 @@ export interface UserPreferences {
 export interface McpServer {
   id: string;
   name: string;
-  displayName: string;
+  displayName?: string;
   description?: string;
   url: string;
-  status: 'online' | 'offline' | 'unknown';
+  status: 'online' | 'offline' | 'unknown' | string;
   category?: string;
   regions?: string[];
   tools?: McpTool[];
+  isActive?: boolean;
+  lastChecked?: Date | string;
 }
 
 export interface McpTool {
   name: string;
   description?: string;
   inputSchema?: object;
+}
+
+export interface McpServersStatusResult {
+  success: boolean;
+  servers?: McpServer[];
+  error?: string;
 }
 
 // ============================================
@@ -241,7 +312,7 @@ export interface ContentItem {
   id: string;
   title: string;
   description?: string;
-  type: 'article' | 'video' | 'tip';
+  type: 'article' | 'video' | 'tip' | 'podcast';
   thumbnailUrl?: string;
   contentUrl?: string;
   duration?: number;
@@ -264,6 +335,59 @@ export interface Notification {
   createdAt: Date | string;
 }
 
+export interface NotificationInfo {
+  type: string;
+  data?: Record<string, unknown>;
+  openedAt?: Date | string;
+}
+
+export interface LastNotification {
+  type: string;
+  data?: Record<string, unknown>;
+  openedAt: string;
+}
+
+// ============================================
+// Audio Types
+// ============================================
+
+export interface AudioData {
+  base64: string;
+  format?: string;
+  duration?: number;
+}
+
+export interface PlaybackStatus {
+  isLoaded?: boolean;
+  isPlaying?: boolean;
+  didJustFinish?: boolean;
+  positionMillis?: number;
+  durationMillis?: number;
+  isBuffering?: boolean;
+  error?: string;
+}
+
+export interface TTSLocation {
+  country?: string;
+  state?: string;
+  city?: string;
+}
+
+// ============================================
+// Plant Diagnosis Types
+// ============================================
+
+export interface PlantDiagnosisParams {
+  imageBase64: string;
+  imageType?: string;
+  question?: string;
+  sessionId?: string;
+  language?: string;
+  latitude?: number;
+  longitude?: number;
+  locationDetails?: LocationDetails;
+}
+
 // ============================================
 // Navigation Types
 // ============================================
@@ -274,12 +398,14 @@ export type RootStackParamList = {
   Location: undefined;
   Language: undefined;
   // Main
-  Chat: { sessionId?: string };
+  Chat: { sessionId?: string } | undefined;
   History: undefined;
   Settings: undefined;
   LanguageSelect: undefined;
   McpServers: undefined;
   McpServerDetail: { serverId: string };
+  Home: undefined;
+  ContentDetail: { contentId: string };
 };
 
 // ============================================

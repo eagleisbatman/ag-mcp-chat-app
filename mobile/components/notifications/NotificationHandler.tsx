@@ -20,8 +20,8 @@ interface NotificationData {
 interface LastNotification {
   data?: NotificationData;
   isForground?: boolean;
-  openedAt?: string;
-  receivedAt?: string;
+  openedAt?: Date | string;
+  receivedAt?: Date | string;
 }
 
 /**

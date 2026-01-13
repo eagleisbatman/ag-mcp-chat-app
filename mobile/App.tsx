@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AppProvider, useApp } from './contexts/AppContext';
 import { ToastProvider, useToast } from './contexts/ToastContext';
+import type { RootStackParamList } from './types';
 
 // OneSignal notifications disabled for now - uncomment when ready
 // import { NotificationProvider, useNotifications } from './contexts/NotificationContext';
@@ -33,6 +34,8 @@ import HistoryScreen from './screens/HistoryScreen';
 import McpServersScreen from './screens/McpServersScreen';
 import McpServerDetailScreen from './screens/McpServerDetailScreen';
 
+// Use untyped navigator to avoid React Navigation 7 'id' prop requirement
+// Type safety is maintained through RootStackParamList in linking config
 const Stack = createNativeStackNavigator();
 
 // Deep linking configuration for universal/app links
@@ -63,7 +66,7 @@ const linking: LinkingOptions<RootStackParamList> = {
 
 function OnboardingStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator id="onboarding" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Location" component={LocationScreen} />
       <Stack.Screen name="Language" component={LanguageScreen} />
@@ -73,7 +76,7 @@ function OnboardingStack() {
 
 function MainStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator id="main" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="History" component={HistoryScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />

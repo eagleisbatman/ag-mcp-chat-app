@@ -38,7 +38,7 @@ interface PlantixFormat {
   image_quality?: string | ImageQualityObject;
 }
 
-interface NormalizedDiagnosis {
+export interface NormalizedDiagnosis {
   _provider: 'plantix' | 'agrivision';
   health_status: string;
   health_summary?: string;
@@ -47,10 +47,12 @@ interface NormalizedDiagnosis {
   crop?: {
     name: string;
     confidence?: string | null;
+    scientific_name?: string;
   } | string | null;
   growth_stage?: string | null;
   issues?: Array<{
     name: string;
+    confidence?: string;
     scientific_name?: string;
     severity?: string | null;
     likelihood?: string;
@@ -65,6 +67,11 @@ interface NormalizedDiagnosis {
     preventive_measures?: string[];
   }>;
   _raw?: unknown;
+  // Additional fields from AgriVision
+  isNetworkError?: boolean;
+  isTimeout?: boolean;
+  overall?: string;
+  health_confidence?: string;
 }
 
 /**

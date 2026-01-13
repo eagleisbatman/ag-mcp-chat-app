@@ -13,7 +13,7 @@ interface IconButtonProps {
   borderRadius?: number;
   backgroundColor?: string;
   color?: string;
-  style?: ViewStyle | ViewStyle[];
+  style?: ViewStyle | ViewStyle[] | null;
   hitSlop?: Insets;
   accessibilityLabel?: string;
 }

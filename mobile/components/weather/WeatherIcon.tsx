@@ -203,7 +203,7 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
     return (
       <Image
         source={iconSource}
-        style={[{ width: size, height: size }, style]}
+        style={[{ width: size, height: size }, style] as unknown as import('expo-image').ImageStyle}
         contentFit="contain"
       />
     );

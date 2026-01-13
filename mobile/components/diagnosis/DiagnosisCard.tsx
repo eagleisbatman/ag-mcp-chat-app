@@ -10,7 +10,8 @@ import { Theme } from '../../types';
 import { SPACING } from '../../constants/themes';
 import AppIcon from '../ui/AppIcon';
 import { t } from '../../constants/strings';
-import { normalizeDiagnosis, DiagnosisData as NormalizedDiagnosisData } from '../../utils/diagnosisNormalizer';
+import { normalizeDiagnosis, NormalizedDiagnosis } from '../../utils/diagnosisNormalizer';
+import type { DiagnosisData } from '../../types';
 import ErrorSection from './ErrorSection';
 import RejectionSection from './RejectionSection';
 import QualitySection from './QualitySection';
@@ -20,7 +21,7 @@ import TreatmentSection from './TreatmentSection';
 import { diagnosisStyles as styles } from './styles';
 
 interface DiagnosisCardProps {
-  diagnosis?: NormalizedDiagnosisData | string | null;
+  diagnosis?: DiagnosisData | string | null;
   onRetry?: () => void;
 }
 
@@ -33,13 +34,11 @@ export default function DiagnosisCard({ diagnosis, onRetry }: DiagnosisCardProps
   if (!data || typeof data !== 'object') return null;
 
   // State detection
-  const isNetworkError = data.isNetworkError;
-  const isTimeout = data.isTimeout;
-  const healthStatus = data.health_status;
-  const status = (typeof healthStatus === 'object' && healthStatus?.overall 
-    ? healthStatus.overall 
-    : (typeof healthStatus === 'string' ? healthStatus : '')
-  ).toLowerCase();
+  const isNetworkError = data.isNetworkError ?? false;
+  const isTimeout = data.isTimeout ?? false;
+  const healthStatus = data.health_status || '';
+  const overallStatus = data.overall;
+  const status = (overallStatus || healthStatus || '').toLowerCase();
   const imageQuality = data.image_quality || '';
   const notes = data.diagnostic_notes || data.health_summary || '';
   const notesLower = notes.toLowerCase();
@@ -84,10 +83,7 @@ export default function DiagnosisCard({ diagnosis, onRetry }: DiagnosisCardProps
   }
 
   // Success state - Healthy or Diseased
-  const displayStatus = (typeof healthStatus === 'object' && healthStatus?.overall 
-    ? healthStatus.overall 
-    : (typeof healthStatus === 'string' ? healthStatus : t('diagnosis.analyzed'))
-  );
+  const displayStatus = overallStatus || healthStatus || t('diagnosis.analyzed');
   const isHealthy = displayStatus.toLowerCase().includes('healthy');
   const cropData = data.crop;
   const cropName = (typeof cropData === 'object' && cropData?.name) 
@@ -99,7 +95,7 @@ export default function DiagnosisCard({ diagnosis, onRetry }: DiagnosisCardProps
   const growthStage = data.growth_stage || null;
   const confidence = (typeof cropData === 'object' && cropData?.confidence) 
     ? cropData.confidence 
-    : data.health_confidence || null;
+    : (data.health_confidence || null);
 
   return (
     <View style={styles.container}>
