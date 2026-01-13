@@ -70,7 +70,7 @@ const InputToolbar = forwardRef(function InputToolbar(
   }: InputToolbarProps,
   ref: ForwardedRef<InputToolbarRef>
 ) {
-  const { theme } = useApp();
+  const { theme, language } = useApp();
   const { showError, showWarning, showSuccess } = useToast();
   const insets = useSafeAreaInsets();
   const [text, setText] = useState('');
@@ -80,12 +80,10 @@ const InputToolbar = forwardRef(function InputToolbar(
   const [showMediaMenu, setShowMediaMenu] = useState(false);
   const textInputRef = useRef<TextInput>(null);
 
-  // Expose methods to parent via ref
   useImperativeHandle(ref, () => ({
     openAttachSheet: () => setShowMediaMenu(true),
   }));
 
-  // Bottom padding for safe area
   const bottomPadding = Math.max(insets.bottom, SPACING.md);
 
   const handleSendText = (): void => {
@@ -128,7 +126,7 @@ const InputToolbar = forwardRef(function InputToolbar(
         Haptics.selectionAsync();
         onSendImage({
           uri: asset.uri,
-          base64: asset.base64,
+          base64: asset.base64 ?? undefined,
           text: text.trim(),
         });
         setText('');
@@ -161,7 +159,7 @@ const InputToolbar = forwardRef(function InputToolbar(
         Haptics.selectionAsync();
         onSendImage({
           uri: asset.uri,
-          base64: asset.base64,
+          base64: asset.base64 ?? undefined,
           text: text.trim(),
         });
         setText('');
@@ -214,13 +212,12 @@ const InputToolbar = forwardRef(function InputToolbar(
     setShowMediaMenu(false);
   };
 
-  // Show VoiceRecorder when in recording mode
   if (isRecordingMode) {
     return (
       <VoiceRecorder
         onTranscriptionComplete={handleTranscriptionComplete}
         onCancel={handleCancelRecording}
-        transcribeAudio={transcribeAudio}
+        transcribeAudio={(data) => transcribeAudio({ ...data, language: language.code })}
       />
     );
   }
@@ -232,7 +229,6 @@ const InputToolbar = forwardRef(function InputToolbar(
   return (
     <KeyboardStickyView offset={{ closed: 0, opened: 0 }} style={{ backgroundColor: theme.background }}>
       <View style={[styles.wrapper, { paddingBottom: bottomPadding, backgroundColor: theme.background }]}>
-      {/* Voice transcription indicator */}
         {isFromVoice && (
           <View style={[styles.voiceIndicator, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }]}>
             <AppIcon name="mic" size={14} color={theme.accent} prefer="feather" />
@@ -244,14 +240,12 @@ const InputToolbar = forwardRef(function InputToolbar(
               accessibilityLabel={t('a11y.clearVoiceTranscription')}
               onPress={handleClearVoiceText}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
             >
               <AppIcon name="x-circle" size={18} color={theme.accent} prefer="feather" />
             </Pressable>
           </View>
         )}
 
-        {/* Claude-style Attach Bottom Sheet */}
         <AttachBottomSheet
           visible={showMediaMenu}
           onClose={closeMediaMenu}
@@ -259,7 +253,6 @@ const InputToolbar = forwardRef(function InputToolbar(
           onPhotos={handlePickImage}
         />
 
-        {/* Unified Input Container - Claude-style */}
         <View style={[
           styles.inputContainer,
           {
@@ -267,7 +260,6 @@ const InputToolbar = forwardRef(function InputToolbar(
             borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
           }
         ]}>
-          {/* Text Input Area */}
           <TextInput
             ref={textInputRef}
             style={[styles.textInput, { color: theme.text }]}
@@ -281,17 +273,11 @@ const InputToolbar = forwardRef(function InputToolbar(
             accessibilityLabel={t('a11y.messageInput')}
             autoCapitalize="sentences"
             autoCorrect={true}
-            keyboardType="default"
-            returnKeyType="default"
-            blurOnSubmit={false}
             underlineColorAndroid="transparent"
           />
 
-          {/* Bottom Icons Row */}
           <View style={styles.iconsRow}>
-            {/* Left Icons */}
             <View style={styles.leftIcons}>
-              {/* Plus/Attach Button */}
               <Pressable
                 style={[
                   styles.iconButton,
@@ -300,12 +286,10 @@ const InputToolbar = forwardRef(function InputToolbar(
                 onPress={openMediaMenu}
                 disabled={disabled}
                 accessibilityLabel={t('a11y.attachMedia')}
-                android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
               >
                 <PlusIcon size={20} color={theme.icon} />
               </Pressable>
 
-              {/* History Button */}
               {onOpenHistory && (
                 <Pressable
                   style={[
@@ -315,16 +299,13 @@ const InputToolbar = forwardRef(function InputToolbar(
                   onPress={onOpenHistory}
                   disabled={disabled}
                   accessibilityLabel={t('a11y.openHistory')}
-                  android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
                 >
                   <ClockIcon size={20} color={theme.icon} />
                 </Pressable>
               )}
             </View>
 
-            {/* Right Icons */}
             <View style={styles.rightIcons}>
-              {/* Send/Voice Button */}
               <Pressable
                 style={[
                   styles.sendButton,
@@ -336,7 +317,6 @@ const InputToolbar = forwardRef(function InputToolbar(
                 onPress={hasText ? handleSendText : handleStartRecording}
                 disabled={disabled}
                 accessibilityLabel={hasText ? t('a11y.sendMessage') : t('a11y.recordVoice')}
-                android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
               >
                 {hasText ? (
                   <AppIcon name="arrow-up" size={20} color={isDark ? '#000000' : '#FFFFFF'} prefer="feather" />

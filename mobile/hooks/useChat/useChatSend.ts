@@ -14,7 +14,7 @@ import { uploadImage, uploadAudio } from '../../services/upload';
 import { parseErrorMessage, isNetworkError } from '../../utils/apiHelpers';
 import { t } from '../../constants/strings';
 import { processFailedDiagnosis, processSuccessfulDiagnosis } from './diagnosisProcessor';
-import { Message } from '../../types';
+import { Message, HistoryMessage, LocationDetails } from '../../types';
 
 interface UseChatSendOptions {
   messages: Message[];
@@ -94,13 +94,21 @@ export default function useChatSend({
     try {
       setThinkingText(t('chat.thinking'));
 
+      // Convert Message[] to HistoryMessage[]
+      const history: HistoryMessage[] = messages.slice(0, 10).map(m => ({
+        _id: m._id,
+        text: m.text || '',
+        isBot: m.isBot
+      }));
+
       await sendChatMessageStreaming({
         message: text,
-        latitude: location?.latitude,
-        longitude: location?.longitude,
+        latitude: location?.latitude ?? undefined,
+        longitude: location?.longitude ?? undefined,
         language: language?.code,
-        locationDetails,
-        history: messages.slice(0, 10),
+        locationDetails: locationDetails ?? undefined,
+        history,
+        sessionId: sessionId ?? undefined,
         onChunk: (chunk: string) => {
           setThinkingText(null);
           updateMessage(botMsgId, { text: (prev: string) => (prev || '') + chunk });
@@ -127,18 +135,15 @@ export default function useChatSend({
         onError: (error: Error) => {
           const isTimeout = error?.message?.includes('timeout');
           
-          // Auto-retry once on timeout (handles Railway cold starts)
           if (isTimeout && !isRetry && retryCountRef.current < MAX_RETRIES) {
             retryCountRef.current++;
-            log('🔄 [Chat] Timeout - auto-retrying (services warming up)...');
+            log('🔄 [Chat] Timeout - auto-retrying...');
             setThinkingText(t('chat.servicesWarmingUp') || 'Services warming up, retrying...');
-            
-            // Remove the empty bot message and retry
             handleSendText(text, true);
             return;
           }
           
-          retryCountRef.current = 0; // Reset for next message
+          retryCountRef.current = 0;
           setThinkingText(null);
           setIsTyping(false);
           updateMessage(botMsgId, { 
@@ -153,7 +158,7 @@ export default function useChatSend({
         }
       });
       
-      retryCountRef.current = 0; // Reset on success
+      retryCountRef.current = 0;
     } catch (error) {
       retryCountRef.current = 0;
       setThinkingText(null);
@@ -164,7 +169,6 @@ export default function useChatSend({
   }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
   const handleSendImage = useCallback(async (imageData: ImageData): Promise<void> => {
-    // Always use a text value - never null - to prevent API validation errors
     const userMsgText = imageData.text || '[Image for plant diagnosis]';
     const userMsg: Message = { 
       _id: Date.now().toString(), 
@@ -181,7 +185,6 @@ export default function useChatSend({
     const sessionId = await ensureSession();
 
     try {
-      // Upload image to Cloudinary
       const uploadPromise = uploadImage(imageData.base64).then(async (result: UploadResult) => {
         if (result.success && result.url) {
           await persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
@@ -192,7 +195,6 @@ export default function useChatSend({
         return result;
       });
 
-      // Ensure image has proper data URL format
       let imageBase64 = imageData.base64;
       if (!imageBase64.startsWith('data:')) {
         imageBase64 = `data:image/jpeg;base64,${imageBase64}`;
@@ -200,10 +202,10 @@ export default function useChatSend({
 
       const diagResult = await analyzePlantImage({
         imageBase64,
-        latitude: location?.latitude,
-        longitude: location?.longitude,
+        latitude: location?.latitude ?? undefined,
+        longitude: location?.longitude ?? undefined,
         language: language?.code,
-        locationDetails,
+        locationDetails: locationDetails ?? undefined,
         question: imageData.text,
       });
 
@@ -236,11 +238,9 @@ export default function useChatSend({
   const transcribeAudioForInput = useCallback(async (audioData: AudioData): Promise<TranscribeResult> => {
     try {
       const result = await transcribeAudioService(audioData.base64, audioData.language || language?.code);
-      
       if (!result.success || !result.text) {
         return { success: false, error: result.error || t('voice.couldNotTranscribeAudio') };
       }
-      
       return { success: true, transcription: result.text };
     } catch (error) {
       return { success: false, error: t('voice.transcriptionFailed') };
@@ -249,15 +249,11 @@ export default function useChatSend({
 
   const uploadAudioInBackground = useCallback(async (audioData: AudioData | null): Promise<UploadResult> => {
     if (!audioData?.base64) return { success: false };
-    
     try {
-      const format = Platform.OS === 'ios' ? 'm4a' : 'm4a';
-      const result = await uploadAudio(audioData.base64, format);
-      
+      const result = await uploadAudio(audioData.base64, 'm4a');
       if (!result.success) {
         showWarning(t('errors.audioUploadFailed'));
       }
-
       return result;
     } catch (error) {
       return { success: false, error: (error as Error).message };

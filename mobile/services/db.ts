@@ -6,6 +6,18 @@ import { fetchWithTimeout } from '../utils/apiHelpers';
 import { API_BASE_URL, API_KEY, TIMEOUTS } from '../utils/config';
 import { log, error as logError } from '../utils/logger';
 import { t } from '../constants/strings';
+import { 
+  User, 
+  LocationData, 
+  Session, 
+  Message, 
+  ApiResult, 
+  UserResult, 
+  SessionResult, 
+  MessageResult, 
+  LocationLookupResult, 
+  TitleResult 
+} from '../types';
 
 const DB_TIMEOUT_MS = TIMEOUTS.DB;
 
@@ -13,102 +25,6 @@ const headers: Record<string, string> = {
   'Content-Type': 'application/json',
   'X-API-Key': API_KEY,
 };
-
-// Type definitions
-export interface User {
-  id?: string;
-  userId?: string;
-  deviceId?: string;
-  language?: string;
-  location?: LocationData;
-}
-
-export interface LocationData {
-  latitude?: number;
-  longitude?: number;
-  displayName?: string;
-  formattedAddress?: string;
-  level1Country?: string;
-  level1CountryCode?: string;
-  level2State?: string;
-  level3District?: string;
-  level4SubDistrict?: string;
-  level5City?: string;
-  level6Locality?: string;
-  source?: 'gps' | 'ip' | 'manual' | string;
-  isPrimary?: boolean;
-}
-
-export interface Session {
-  id: string;
-  deviceId?: string;
-  title?: string;
-  status?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  messageCount?: number;
-  messages?: Message[];
-}
-
-export interface Message {
-  id?: string;
-  _id?: string;
-  text: string | null;
-  isBot: boolean;
-  createdAt?: string | Date;
-  image?: string;
-  diagnosisData?: Record<string, unknown>;
-  ttsAudioUrl?: string;
-  role?: string;
-  content?: string;
-}
-
-export interface ApiResult<T = unknown> {
-  success: boolean;
-  error?: string;
-  data?: T;
-}
-
-export interface UserResult extends ApiResult {
-  userId?: string;
-  user?: User;
-}
-
-export interface SessionResult extends ApiResult {
-  session?: Session;
-  sessions?: Session[];
-  messages?: Message[];
-}
-
-export interface MessageResult extends ApiResult {
-  message?: Message;
-  messages?: Message[];
-}
-
-export interface LocationLookupResult extends ApiResult {
-  latitude?: number;
-  longitude?: number;
-  source?: string;
-  displayName?: string;
-  formattedAddress?: string;
-  level1Country?: string;
-  level1CountryCode?: string;
-  level2State?: string;
-  level3District?: string;
-  level4SubDistrict?: string;
-  level5City?: string;
-  level6Locality?: string;
-  // Alternative field names from some API responses
-  city?: string;
-  district?: string;
-  state?: string;
-  regionName?: string;
-  country?: string;
-}
-
-export interface TitleResult extends ApiResult {
-  title?: string;
-}
 
 // ============================================
 // USER MANAGEMENT

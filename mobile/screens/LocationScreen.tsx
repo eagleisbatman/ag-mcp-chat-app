@@ -11,10 +11,10 @@ import Button from '../components/ui/Button';
 import { lookupLocation } from '../services/db';
 import { log } from '../utils/logger';
 import { t } from '../constants/strings';
-import { Theme } from '../types';
+import type { Theme, RootStackParamList } from '../types';
 
 interface LocationScreenProps {
-  navigation: NativeStackNavigationProp<any>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Location'>;
 }
 
 interface BenefitItemProps {
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes['3xl'],
-    fontWeight: TYPOGRAPHY.weights.bold as any,
+    fontWeight: TYPOGRAPHY.weights.bold,
     marginBottom: SPACING.md,
     textAlign: 'center',
     letterSpacing: -0.5,
@@ -299,6 +299,6 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     fontSize: TYPOGRAPHY.sizes.base,
-    fontWeight: TYPOGRAPHY.weights.medium as any,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
 });

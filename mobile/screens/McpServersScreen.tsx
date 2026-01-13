@@ -26,15 +26,13 @@ import { SkeletonCard } from '../components/ui/Skeleton';
 import { t } from '../constants/strings';
 import { updatePreferences } from '../services/db';
 import { error as logError } from '../utils/logger';
-import { Theme } from '../types';
+import type { Theme, RootStackParamList, McpServer } from '../types';
 
 const STORAGE_KEY = '@service_preferences';
 
-// Tomorrow.io logos for light/dark mode
 const TOMORROW_IO_LOGO_LIGHT: ImageSourcePropType = require('../assets/logos/Powered_by_Tomorrow-Black.png');
 const TOMORROW_IO_LOGO_DARK: ImageSourcePropType = require('../assets/logos/Powered_by_Tomorrow-White.png');
 
-// Internal servers that should be hidden from users
 const INTERNAL_SERVERS = [
   'content',
   'intent-classification',
@@ -44,14 +42,6 @@ const INTERNAL_SERVERS = [
   'guardrails',
   'entity-extraction',
 ];
-
-interface McpServer {
-  slug: string;
-  name?: string;
-  description?: string;
-  displayStatus?: string;
-  healthStatus?: string;
-}
 
 interface ServicePreferences {
   [category: string]: string;
@@ -63,7 +53,6 @@ interface SelectableProviderConfig {
   default: string;
 }
 
-// Categories with selectable global providers
 const SELECTABLE_PROVIDERS: { [key: string]: SelectableProviderConfig } = {
   plant_health: {
     capability: 'plant-diagnosis',
@@ -77,14 +66,15 @@ const SELECTABLE_PROVIDERS: { [key: string]: SelectableProviderConfig } = {
   },
 };
 
+type MaterialIconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+
 interface ServiceCategoryConfig {
   labelKey: string;
-  icon: string;
+  icon: MaterialIconName;
   color: string;
   servers: string[];
 }
 
-// Service category configuration
 const SERVICE_CATEGORIES: { [key: string]: ServiceCategoryConfig } = {
   plant_health: {
     labelKey: 'mcp.categories.plantHealth',
@@ -121,11 +111,10 @@ const SERVICE_CATEGORIES: { [key: string]: ServiceCategoryConfig } = {
 interface ServerInfoConfig {
   name: string;
   stringKey: string;
-  icon: string;
+  icon: MaterialIconName;
   logo: ImageSourcePropType | string | null;
 }
 
-// Server display info
 const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
   'agrivision': {
     name: 'AgriVision',
@@ -212,8 +201,8 @@ interface ServiceCardProps {
 }
 
 function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected, onSelect }: ServiceCardProps) {
-  const isActive = server.displayStatus === 'active';
-  const isComingSoon = server.displayStatus === 'coming_soon';
+  const isActive = server.status === 'active' || server.status === 'online';
+  const isComingSoon = server.status === 'coming_soon';
   const serverInfo = SERVER_INFO[server.slug];
 
   const isTomorrowIo = server.slug === 'tomorrow-io';
@@ -225,19 +214,18 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
     icon: serverInfo.icon,
     logo: isTomorrowIo ? tomorrowIoLogo : serverInfo.logo,
   } : {
-    name: server.name?.replace(' MCP', '').replace(' Server', ''),
+    name: server.name?.replace(' MCP', '').replace(' Server', '') || '',
     description: server.description || t('mcp.fallback.service'),
-    icon: 'puzzle',
-    logo: null,
+    icon: 'puzzle' as MaterialIconName,
+    logo: null as ImageSourcePropType | string | null,
   };
 
-  const canSelect = isSelectable && isActive;
   const isInUse = isSelected && isActive;
 
   return (
     <Card style={[styles.serviceCard, !isActive && styles.serviceCardInactive]}>
       <ListRow
-        title={info.name || ''}
+        title={info.name}
         subtitle={info.description}
         onPress={onPress}
         left={
@@ -257,7 +245,7 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
           ) : (
             <View style={[styles.serviceIcon, { backgroundColor: isActive ? theme.accent + '15' : theme.surfaceVariant }]}>
               <MaterialCommunityIcons
-                name={info.icon as any}
+                name={info.icon}
                 size={20}
                 color={isActive ? theme.accent : theme.textMuted}
               />
@@ -271,7 +259,7 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
                 <Text style={[styles.inUseText, { color: theme.success }]}>{t('mcp.inUse')}</Text>
               </View>
             )}
-            {canSelect && (
+            {isSelectable && isActive && (
               <TouchableOpacity
                 onPress={onSelect}
                 style={styles.radioButton}
@@ -313,11 +301,11 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
   const config = SERVICE_CATEGORIES[category];
   if (!config || servers.length === 0) return null;
 
-  const activeCount = servers.filter(s => s.displayStatus === 'active').length;
+  const activeCount = servers.filter(s => s.status === 'active' || s.status === 'online').length;
   const selectableConfig = SELECTABLE_PROVIDERS[category];
 
   const activeSelectableProviders = selectableConfig
-    ? servers.filter(s => selectableConfig.providers.includes(s.slug) && s.displayStatus === 'active')
+    ? servers.filter(s => selectableConfig.providers.includes(s.slug) && (s.status === 'active' || s.status === 'online'))
     : [];
   const hasSelectableProviders = activeSelectableProviders.length > 1;
 
@@ -325,7 +313,7 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
     <View style={styles.categorySection}>
       <View style={styles.categoryHeader}>
         <View style={[styles.categoryIcon, { backgroundColor: config.color + '20' }]}>
-          <MaterialCommunityIcons name={config.icon as any} size={18} color={config.color} />
+          <MaterialCommunityIcons name={config.icon} size={18} color={config.color} />
         </View>
         <Text style={[styles.categoryLabel, { color: theme.text }]}>{t(config.labelKey)}</Text>
         <Text style={[styles.categoryCount, { color: theme.textMuted }]}>
@@ -361,12 +349,12 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
 }
 
 interface McpServersScreenProps {
-  navigation: NativeStackNavigationProp<any>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'McpServers'>;
 }
 
 interface McpData {
   servers?: McpServer[];
-  success?: boolean;
+  success: boolean;
   error?: string;
 }
 
@@ -421,9 +409,9 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
       setError(null);
 
       const params: { lat?: number; lon?: number } = {};
-      if (location?.latitude && location?.longitude) {
-        params.lat = location.latitude;
-        params.lon = location.longitude;
+      if (location?.latitude !== null && location?.longitude !== null) {
+        params.lat = location.latitude as number;
+        params.lon = location.longitude as number;
       }
 
       const response = await api.getMcpServersLiveStatus(params);
@@ -452,8 +440,8 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
     fetchMcpServers();
   }, [fetchMcpServers]);
 
-  const handleServerPress = useCallback((slug: string) => {
-    navigation.navigate('McpServerDetail', { slug });
+  const handleServerPress = useCallback((serverId: string) => {
+    navigation.navigate('McpServerDetail', { serverId });
   }, [navigation]);
 
   const serversByCategory = React.useMemo(() => {
@@ -474,7 +462,12 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
   }, [mcpData]);
 
   const visibleServers = mcpData?.servers?.filter(s => !INTERNAL_SERVERS.includes(s.slug)) || [];
-  const activeCount = visibleServers.filter(s => s.displayStatus === 'active').length;
+  const activeCount = visibleServers.filter(s => s.status === 'active' || s.status === 'online').length;
+
+  const locationText = locationDetails?.displayName ||
+    (location?.latitude !== null && location?.longitude !== null
+      ? `${location.latitude!.toFixed(2)}, ${location.longitude!.toFixed(2)}` 
+      : t('mcp.locationNotSet'));
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -532,8 +525,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
             <View style={styles.locationRow}>
               <AppIcon name="location" size={16} color={theme.accent} />
               <Text style={[styles.locationText, { color: theme.text }]} numberOfLines={1}>
-                {locationDetails?.displayName ||
-                  (location ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` : t('mcp.locationNotSet'))}
+                {locationText}
               </Text>
             </View>
             <Text style={[styles.summaryText, { color: theme.textMuted }]}>
@@ -564,9 +556,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -574,13 +564,8 @@ const styles = StyleSheet.create({
     gap: SPACING.lg,
     paddingHorizontal: SPACING.lg,
   },
-  skeletonCard: {
-    width: '100%',
-    marginBottom: SPACING.md,
-  },
-  loadingText: {
-    fontSize: TYPOGRAPHY.sizes.base,
-  },
+  skeletonCard: { width: '100%', marginBottom: SPACING.md },
+  loadingText: { fontSize: TYPOGRAPHY.sizes.base },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -588,24 +573,15 @@ const styles = StyleSheet.create({
     padding: SPACING['2xl'],
     gap: SPACING.lg,
   },
-  errorText: {
-    fontSize: TYPOGRAPHY.sizes.base,
-    textAlign: 'center',
-  },
-  retryButton: {
-    paddingHorizontal: SPACING['2xl'],
-  },
-  scrollView: {
-    flex: 1,
-  },
+  errorText: { fontSize: TYPOGRAPHY.sizes.base, textAlign: 'center' },
+  retryButton: { paddingHorizontal: SPACING['2xl'] },
+  scrollView: { flex: 1 },
   content: {
     paddingHorizontal: SPACING.lg,
     paddingTop: SPACING.md,
     paddingBottom: SPACING['3xl'],
   },
-  summarySection: {
-    marginBottom: SPACING.xl,
-  },
+  summarySection: { marginBottom: SPACING.xl },
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -614,20 +590,16 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: TYPOGRAPHY.sizes.base,
-    fontWeight: TYPOGRAPHY.weights.medium as any,
+    fontWeight: TYPOGRAPHY.weights.medium,
     flex: 1,
   },
-  summaryText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
+  summaryText: { fontSize: TYPOGRAPHY.sizes.sm },
   descriptionText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontStyle: 'italic',
     marginBottom: SPACING.md,
   },
-  categorySection: {
-    marginBottom: SPACING.xl,
-  },
+  categorySection: { marginBottom: SPACING.xl },
   categoryHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -643,23 +615,17 @@ const styles = StyleSheet.create({
   },
   categoryLabel: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weights.semibold as any,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     flex: 1,
   },
-  categoryCount: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
+  categoryCount: { fontSize: TYPOGRAPHY.sizes.sm },
   selectionHint: {
     fontSize: TYPOGRAPHY.sizes.xs,
     marginBottom: SPACING.sm,
     marginLeft: SPACING.xs,
   },
-  serviceCard: {
-    marginBottom: SPACING.sm,
-  },
-  serviceCardInactive: {
-    opacity: 0.6,
-  },
+  serviceCard: { marginBottom: SPACING.sm },
+  serviceCardInactive: { opacity: 0.6 },
   serviceIcon: {
     width: 36,
     height: 36,
@@ -672,18 +638,9 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.1)',
     overflow: 'hidden',
   },
-  serviceLogo: {
-    width: 24,
-    height: 24,
-  },
-  wideLogoContainer: {
-    width: 80,
-    borderWidth: 0,
-  },
-  wideLogo: {
-    width: 72,
-    height: 28,
-  },
+  serviceLogo: { width: 24, height: 24 },
+  wideLogoContainer: { width: 80, borderWidth: 0 },
+  wideLogo: { width: 72, height: 28 },
   inUseBadge: {
     paddingHorizontal: SPACING.sm,
     paddingVertical: 2,
@@ -691,16 +648,14 @@ const styles = StyleSheet.create({
   },
   inUseText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weights.semibold as any,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
   rightContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.sm,
   },
-  radioButton: {
-    padding: 2,
-  },
+  radioButton: { padding: 2 },
   comingSoonBadge: {
     paddingHorizontal: SPACING.sm,
     paddingVertical: 2,
@@ -708,13 +663,9 @@ const styles = StyleSheet.create({
   },
   comingSoonText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weights.medium as any,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
+  statusDot: { width: 8, height: 8, borderRadius: 4 },
   footerText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     textAlign: 'center',

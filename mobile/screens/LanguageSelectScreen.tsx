@@ -19,6 +19,7 @@ import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import AppIcon from '../components/ui/AppIcon';
 import { t } from '../constants/strings';
+import type { RootStackParamList } from '../types';
 
 interface Language {
   code: string;
@@ -34,7 +35,7 @@ interface LanguageSection {
 }
 
 interface LanguageSelectScreenProps {
-  navigation: NativeStackNavigationProp<any>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'LanguageSelect'>;
 }
 
 export default function LanguageSelectScreen({ navigation }: LanguageSelectScreenProps) {
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold as any,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -213,11 +214,11 @@ const styles = StyleSheet.create({
   },
   languageName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weights.semibold as any,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     marginBottom: 2,
   },
   languageNameSelected: {
-    fontWeight: TYPOGRAPHY.weights.bold as any,
+    fontWeight: TYPOGRAPHY.weights.bold,
   },
   nativeName: {
     fontSize: TYPOGRAPHY.sizes.base,

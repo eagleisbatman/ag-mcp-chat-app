@@ -21,18 +21,11 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { SkeletonSessionItem } from '../components/ui/Skeleton';
 import { t } from '../constants/strings';
-import { log, error as logError } from '../utils/logger';
-
-interface Session {
-  id: string;
-  title?: string;
-  messageCount?: number;
-  lastMessageAt?: string;
-  createdAt?: string;
-}
+import { log } from '../utils/logger';
+import type { RootStackParamList, Session } from '../types';
 
 interface HistoryScreenProps {
-  navigation: NativeStackNavigationProp<any>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'History'>;
 }
 
 export default function HistoryScreen({ navigation }: HistoryScreenProps) {
@@ -57,7 +50,7 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
         log('Failed to load sessions:', result.error);
       }
     } catch (error) {
-      logError('Load sessions error:', error);
+      log('Load sessions error:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -75,7 +68,7 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
 
   const handleSelectSession = (session: Session) => {
     setCurrentSessionId(session.id);
-    navigation.navigate('Chat', { sessionId: session.id, sessionTitle: session.title });
+    navigation.navigate('Chat', { sessionId: session.id });
   };
 
   const handleNewChat = () => {
@@ -110,23 +103,19 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
     );
   };
 
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
+  const formatDate = (dateValue: string | Date | undefined): string => {
+    if (!dateValue) return '';
+    const date = new Date(dateValue);
     const now = new Date();
     const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) {
-      // Today: show 24-hour time (universal format)
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
     } else if (diffDays === 1) {
       return t('history.yesterday');
-    } else if (diffDays < 7) {
-      // Use numeric day format (universal)
-      return `${date.getDate()}/${date.getMonth() + 1}`;
     } else {
-      // Use numeric date format (universal)
       return `${date.getDate()}/${date.getMonth() + 1}`;
     }
   };
@@ -135,7 +124,7 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
     <Card style={styles.sessionCard}>
       <ListRow
         title={item.title || t('history.newConversation')}
-        subtitle={`${item.messageCount === 1 ? t('history.messageCountSingular') : t('history.messageCount', { count: item.messageCount || 0 })} • ${formatDate(item.lastMessageAt || item.createdAt)}`}
+        subtitle={`${item.messageCount === 1 ? t('history.messageCountSingular') : t('history.messageCount', { count: item.messageCount || 0 })} • ${formatDate(item.updatedAt || item.createdAt)}`}
         left={
           <View style={styles.sessionIcon}>
             <AppIcon name="chatbubbles-outline" size={20} color={theme.accent} />
@@ -171,7 +160,6 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Header */}
       <ScreenHeader
         title={t('history.title')}
         left={
@@ -194,10 +182,8 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
         }
       />
 
-      {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          {/* Skeleton loading state */}
           <SkeletonSessionItem />
           <SkeletonSessionItem />
           <SkeletonSessionItem />
@@ -239,23 +225,11 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  listContent: {
-    padding: 16,
-  },
-  emptyListContent: {
-    flex: 1,
-  },
-  sessionCard: {
-    marginBottom: SPACING.sm,
-  },
+  container: { flex: 1 },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  listContent: { padding: 16 },
+  emptyListContent: { flex: 1 },
+  sessionCard: { marginBottom: SPACING.sm },
   sessionIcon: {
     width: 40,
     height: 40,
@@ -272,14 +246,12 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: TYPOGRAPHY.weights.semibold as any,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     marginTop: SPACING.sm,
   },
   emptyText: {
     fontSize: TYPOGRAPHY.sizes.base,
     textAlign: 'center',
   },
-  newChatButton: {
-    marginTop: SPACING.lg,
-  },
+  newChatButton: { marginTop: SPACING.lg },
 });

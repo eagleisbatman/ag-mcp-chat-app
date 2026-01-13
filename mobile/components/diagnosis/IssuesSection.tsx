@@ -12,7 +12,7 @@ import { Theme } from '../../types';
 interface Issue {
   name?: string;
   scientific_name?: string;
-  severity?: string;
+  severity?: string | null;
   symptoms?: string[];
 }
 

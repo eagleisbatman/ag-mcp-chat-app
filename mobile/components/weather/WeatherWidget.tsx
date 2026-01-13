@@ -13,6 +13,7 @@ import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import { t } from '../../constants/strings';
 import WeatherIcon from './WeatherIcon';
+import { WeatherData, WeatherForecast } from '../../types';
 
 interface SkeletonBoxProps {
   width: number;
@@ -20,9 +21,6 @@ interface SkeletonBoxProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/**
- * Skeleton placeholder with pulse animation
- */
 const SkeletonBox: React.FC<SkeletonBoxProps> = ({ width, height, style }) => {
   const { theme } = useApp();
   const pulseAnim = useRef(new Animated.Value(0.3)).current;
@@ -62,31 +60,6 @@ const SkeletonBox: React.FC<SkeletonBoxProps> = ({ width, height, style }) => {
   );
 };
 
-interface CurrentWeather {
-  temperature?: number | null;
-  humidity?: number | null;
-  windSpeed?: number | null;
-  weatherIcon?: number;
-  weatherText?: string;
-}
-
-interface DailyForecast {
-  date?: string;
-  tempMax?: number | null;
-  tempMin?: number | null;
-  dayIcon?: number;
-  precipitationProbability?: number;
-}
-
-interface ForecastData {
-  daily?: DailyForecast[];
-}
-
-interface WeatherData {
-  current?: CurrentWeather | null;
-  forecast?: ForecastData;
-}
-
 interface WeatherWidgetProps {
   data?: WeatherData | null;
   loading?: boolean;
@@ -94,7 +67,6 @@ interface WeatherWidgetProps {
   provider?: string;
 }
 
-// Provider display names
 const PROVIDER_NAMES: Record<string, string> = {
   'accuweather': 'AccuWeather',
   'tomorrow-io': 'Tomorrow.io',
@@ -102,24 +74,15 @@ const PROVIDER_NAMES: Record<string, string> = {
   'weatherapi': 'WeatherAPI',
 };
 
-/**
- * WeatherWidget - Compact weather card with current conditions and forecast strip
- * Location is shown in header, so not duplicated here
- */
 const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, provider }) => {
   const { theme } = useApp();
   const providerName = provider ? PROVIDER_NAMES[provider] || provider : '';
 
-  // Don't render if there's an error - let welcome message show instead
-  if (error) {
-    return null;
-  }
+  if (error) return null;
 
-  // Skeleton loading state
   if (loading) {
     return (
       <View style={[styles.container, { backgroundColor: theme.surface }]}>
-        {/* Skeleton for current weather */}
         <View style={styles.currentRow}>
           <View style={styles.tempSection}>
             <SkeletonBox width={48} height={48} style={{ borderRadius: 24 }} />
@@ -133,7 +96,6 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
             </View>
           </View>
         </View>
-        {/* Skeleton for forecast */}
         <View style={[styles.forecastStrip, { borderTopColor: theme.surfaceVariant }]}>
           <View style={styles.forecastContent}>
             {[1, 2, 3, 4, 5].map((i) => (
@@ -149,39 +111,31 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
     );
   }
 
-  // No data state - don't render
-  if (!data || !data.current) {
-    return null;
-  }
+  if (!data || !data.current) return null;
 
   const { current, forecast } = data;
+  if (current.temperature === null || current.temperature === undefined) return null;
 
-  // Check if we have valid temperature
-  const hasTemperature = current?.temperature !== null && current?.temperature !== undefined;
-  if (!hasTemperature) {
-    return null; // Don't show widget if no temperature data
-  }
-
-  // Check which stats are available
-  const hasHumidity = current?.humidity !== null && current?.humidity !== undefined && current?.humidity > 0;
-  const hasWind = current?.windSpeed !== null && current?.windSpeed !== undefined && current?.windSpeed > 0;
+  const hasHumidity = current.humidity !== null && current.humidity !== undefined && current.humidity > 0;
+  const hasWind = current.windSpeed !== null && current.windSpeed !== undefined && current.windSpeed > 0;
   const hasAnyStats = hasHumidity || hasWind;
+
+  const dailyForecasts: WeatherForecast[] = Array.isArray(forecast) 
+    ? forecast 
+    : (forecast && 'daily' in forecast ? forecast.daily : []);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.surface }]}>
-      {/* Current Weather Row */}
       <View style={styles.currentRow}>
-        {/* Left: Icon + Temperature */}
         <View style={styles.tempSection}>
-          <WeatherIcon code={current?.weatherIcon} size={48} provider={provider as 'accuweather' | 'tomorrow-io' | undefined} />
+          <WeatherIcon code={current.weatherIcon} size={48} provider={provider as any} />
           <Text style={[styles.temperature, { color: theme.text }]}>
-            {Math.round(current.temperature!)}°
+            {Math.round(current.temperature)}°
           </Text>
         </View>
 
-        {/* Right: Conditions + Stats stacked */}
         <View style={styles.infoSection}>
-          {current?.weatherText && (
+          {current.weatherText && (
             <Text style={[styles.conditions, { color: theme.text }]} numberOfLines={1}>
               {getTranslatedWeatherText(current.weatherText)}
             </Text>
@@ -201,7 +155,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
                 <View style={[styles.statBadge, { backgroundColor: theme.accent + '20' }]}>
                   <Ionicons name="flag-outline" size={14} color={theme.accent} />
                   <Text style={[styles.statText, { color: theme.accent }]}>
-                    {Math.round(current.windSpeed!)} {t('weather.windUnit') || 'km/h'}
+                    {Math.round(current.windSpeed!)} {t('weather.windUnit')}
                   </Text>
                 </View>
               )}
@@ -210,38 +164,33 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
         </View>
       </View>
 
-      {/* Forecast Strip - only show if we have forecast data */}
-      {forecast?.daily && forecast.daily.length > 0 && (
+      {dailyForecasts.length > 0 && (
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           style={[styles.forecastStrip, { borderTopColor: theme.surfaceVariant }]}
           contentContainerStyle={styles.forecastContent}
         >
-          {forecast.daily.slice(0, 5).map((day, index) => {
-            // Skip days without valid temperature
-            if (day.tempMax === null || day.tempMax === undefined) {
-              return null;
-            }
+          {dailyForecasts.slice(0, 5).map((day, index) => {
+            const tempMax = day.high ?? day.tempMax;
+            if (tempMax === null || tempMax === undefined) return null;
 
-            const hasRain = (day.precipitationProbability || 0) > 0;
+            const hasRain = (day.precipProbability ?? day.precipitationProbability ?? 0) > 0;
 
             return (
               <View key={index} style={styles.forecastDay}>
                 <Text style={[styles.forecastDayName, { color: theme.textMuted }]}>
-                  {index === 0
-                    ? (t('weather.today') || 'Today')
-                    : getDayName(day.date || '')}
+                  {index === 0 ? t('weather.today') : getDayName(day.date.toString())}
                 </Text>
-                <WeatherIcon code={day.dayIcon} size={32} provider={provider as 'accuweather' | 'tomorrow-io' | undefined} />
+                <WeatherIcon code={day.dayIcon} size={32} provider={provider as any} />
                 <Text style={[styles.forecastTemp, { color: theme.text }]}>
-                  {Math.round(day.tempMax)}°
+                  {Math.round(tempMax)}°
                 </Text>
                 {hasRain && (
                   <View style={styles.rainChance}>
                     <Ionicons name="rainy-outline" size={11} color={theme.info} />
                     <Text style={[styles.rainText, { color: theme.info }]}>
-                      {day.precipitationProbability}%
+                      {day.precipProbability ?? day.precipitationProbability}%
                     </Text>
                   </View>
                 )}
@@ -251,11 +200,10 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
         </ScrollView>
       )}
 
-      {/* Provider attribution */}
       {providerName && (
         <View style={[styles.providerRow, { borderTopColor: theme.surfaceVariant }]}>
           <Text style={[styles.providerText, { color: theme.textMuted }]}>
-            {t('weather.dataFrom') || 'Data from'} {providerName}
+            {t('weather.dataFrom')} {providerName}
           </Text>
         </View>
       )}
@@ -263,9 +211,6 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
   );
 };
 
-/**
- * Day name translation keys mapped to day index (0 = Sunday)
- */
 const DAY_KEYS = [
   'weather.daySun',
   'weather.dayMon',
@@ -276,9 +221,6 @@ const DAY_KEYS = [
   'weather.daySat',
 ];
 
-/**
- * Map API weather text to translation key
- */
 const WEATHER_TEXT_MAP: Record<string, string> = {
   'clear': 'clear',
   'sunny': 'clear',
@@ -324,28 +266,17 @@ const WEATHER_TEXT_MAP: Record<string, string> = {
   'thunder': 'thunderstorm',
 };
 
-/**
- * Get translated weather condition text
- */
 const getTranslatedWeatherText = (weatherText: string): string => {
   if (!weatherText) return '';
-
   const normalizedText = weatherText.toLowerCase().trim();
   const translationKey = WEATHER_TEXT_MAP[normalizedText];
-
   if (translationKey) {
     const translated = t(`weather.conditions.${translationKey}`);
-    if (translated && !translated.startsWith('weather.conditions.')) {
-      return translated;
-    }
+    if (translated && !translated.startsWith('weather.conditions.')) return translated;
   }
-
   return weatherText;
 };
 
-/**
- * Get translated day name from date string
- */
 const getDayName = (dateString: string): string => {
   try {
     const date = new Date(dateString);

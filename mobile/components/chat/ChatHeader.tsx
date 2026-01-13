@@ -33,8 +33,8 @@ function ChatHeader({
       locationDetails?.level5City ||
       locationDetails?.level3District ||
       locationDetails?.level2State ||
-      (location?.latitude 
-        ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}` 
+      (location?.latitude !== null && location?.longitude !== null
+        ? `${location.latitude!.toFixed(2)}, ${location.longitude!.toFixed(2)}` 
         : t('chat.setLocation'));
 
   return (

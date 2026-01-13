@@ -7,12 +7,12 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { t } from '../constants/strings';
-import { Theme } from '../types';
+import type { Theme, RootStackParamList } from '../types';
 
 const logoImage: ImageSourcePropType = require('../assets/logo.png');
 
 interface WelcomeScreenProps {
-  navigation: NativeStackNavigationProp<any>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
 }
 
 interface FeatureItemProps {
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes['3xl'],
-    fontWeight: TYPOGRAPHY.weights.bold as any,
+    fontWeight: TYPOGRAPHY.weights.bold,
     marginBottom: 8,
     letterSpacing: -0.5,
   },
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   featureTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weights.semibold as any,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     marginBottom: 2,
   },
   featureDescription: {

@@ -23,16 +23,18 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { error as logError } from '../utils/logger';
 import { t } from '../constants/strings';
-import { Theme } from '../types';
+import type { Theme, RootStackParamList } from '../types';
 
 // Tomorrow.io logos for light/dark mode
 const TOMORROW_IO_LOGO_LIGHT: ImageSourcePropType = require('../assets/logos/Powered_by_Tomorrow-Black.png');
 const TOMORROW_IO_LOGO_DARK: ImageSourcePropType = require('../assets/logos/Powered_by_Tomorrow-White.png');
 
+type MaterialIconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+
 interface ServerInfoConfig {
   name: string;
   stringKey: string;
-  icon: string;
+  icon: MaterialIconName;
   logo: ImageSourcePropType | string | null;
   color: string;
   featureKeys?: string[];
@@ -178,8 +180,8 @@ function FeatureItem({ featureKey, theme, color }: FeatureItemProps) {
 }
 
 interface McpServerDetailScreenProps {
-  navigation: NativeStackNavigationProp<any>;
-  route: RouteProp<{ params: { slug: string } }, 'params'>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'McpServerDetail'>;
+  route: RouteProp<RootStackParamList, 'McpServerDetail'>;
 }
 
 interface ServerData {
@@ -190,7 +192,7 @@ interface ServerData {
 }
 
 export default function McpServerDetailScreen({ navigation, route }: McpServerDetailScreenProps) {
-  const { slug } = route.params;
+  const { serverId } = route.params;
   const { theme, isDark } = useApp();
   const { showError } = useToast();
 
@@ -202,22 +204,23 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
   const fetchServerDetails = useCallback(async () => {
     try {
       setError(null);
-      const response = await api.getMcpServer(slug);
+      const response = await api.getMcpServer(serverId);
 
       if (response.success) {
         setServer(response.server);
       } else {
         throw new Error(response.error || t('mcp.failedToFetch'));
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       logError('Fetch MCP server error:', err);
-      setError(err.message);
+      setError(errorMessage);
       showError(t('mcp.couldNotLoadDetails'));
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [slug, showError]);
+  }, [serverId, showError]);
 
   useEffect(() => {
     fetchServerDetails();
@@ -228,8 +231,8 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
     fetchServerDetails();
   }, [fetchServerDetails]);
 
-  const serverConfig = SERVER_INFO[slug];
-  const isTomorrowIo = slug === 'tomorrow-io';
+  const serverConfig = SERVER_INFO[serverId];
+  const isTomorrowIo = serverId === 'tomorrow-io';
   const tomorrowIoLogo = isDark ? TOMORROW_IO_LOGO_DARK : TOMORROW_IO_LOGO_LIGHT;
   
   const info = serverConfig ? {
@@ -243,15 +246,15 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
     coverage: (serverConfig.coverageKeys || []).map(key => t(`mcp.regions.${key}`)),
     crops: (serverConfig.cropKeys || []).map(key => t(`mcp.crops.${key}`)),
   } : {
-    name: server?.name?.replace(' MCP', '').replace(' Server', '') || slug,
+    name: server?.name?.replace(' MCP', '').replace(' Server', '') || serverId,
     tagline: server?.description || t('mcp.fallback.service'),
     description: server?.longDescription || t('mcp.fallback.description'),
-    icon: 'puzzle',
+    icon: 'puzzle' as MaterialIconName,
     logo: null,
     color: theme.accent,
-    featureKeys: [],
-    coverage: [],
-    crops: [],
+    featureKeys: [] as string[],
+    coverage: [] as string[],
+    crops: [] as string[],
   };
 
   const isActive = server?.healthStatus === 'healthy';
@@ -314,7 +317,7 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
               </View>
             ) : (
               <View style={[styles.iconContainer, { backgroundColor: displayColor + '15' }]}>
-                <MaterialCommunityIcons name={info.icon as any} size={40} color={displayColor} />
+                <MaterialCommunityIcons name={info.icon} size={40} color={displayColor} />
               </View>
             )}
             <Text style={[styles.title, { color: theme.text }]}>{info.name}</Text>
@@ -449,7 +452,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes['2xl'],
-    fontWeight: TYPOGRAPHY.weights.bold as any,
+    fontWeight: TYPOGRAPHY.weights.bold,
     textAlign: 'center',
     marginBottom: SPACING.xs,
   },
@@ -473,7 +476,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium as any,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
   section: {
     marginTop: SPACING.md,
@@ -482,7 +485,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weights.semibold as any,
+    fontWeight: TYPOGRAPHY.weights.semibold,
     marginBottom: SPACING.md,
   },
   descriptionText: {
@@ -508,7 +511,7 @@ const styles = StyleSheet.create({
   },
   featureTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium as any,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
   tagsList: {
     flexDirection: 'row',
@@ -525,6 +528,6 @@ const styles = StyleSheet.create({
   },
   tagText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium as any,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
 });

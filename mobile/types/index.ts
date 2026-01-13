@@ -23,6 +23,12 @@ export interface ApiResponse<T = unknown> {
   message?: string;
 }
 
+export interface ApiResult<T = unknown> {
+  success: boolean;
+  error?: string;
+  data?: T;
+}
+
 // ============================================
 // Message Types
 // ============================================
@@ -74,7 +80,7 @@ export interface Message {
   createdAt: Date | string;
   isBot: boolean;
   image?: string;
-  diagnosisData?: DiagnosisData | string;
+  diagnosisData?: DiagnosisData | string | Record<string, unknown>;
   ttsAudioUrl?: string;
   isStreaming?: boolean;
   sessionId?: string;
@@ -97,6 +103,20 @@ export interface Session {
   messages?: Message[];
 }
 
+export interface HistoryMessage {
+  _id?: string;
+  text: string;
+  isBot: boolean;
+}
+
+export interface ChatMetadata {
+  intentsDetected?: string[];
+  mcpToolsUsed?: string[];
+  extractedEntities?: Record<string, unknown> | null;
+  intentSource?: string;
+  [key: string]: unknown;
+}
+
 // ============================================
 // Theme Types
 // ============================================
@@ -111,8 +131,8 @@ export { ThemeColors as Theme } from '../constants/themes';
 // ============================================
 
 export interface LocationCoords {
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface LocationDetails {
@@ -129,33 +149,58 @@ export interface LocationDetails {
   level6Village?: string;
   level6Locality?: string;
   source?: 'gps' | 'ip' | 'manual' | string;
+  isPrimary?: boolean;
+  // Added fields for consistency with db.ts
+  city?: string;
+  district?: string;
+  state?: string;
+  regionName?: string;
+  country?: string;
 }
 
-export interface LocationLookupResult {
-  success: boolean;
-  error?: string;
+export interface LocationContext {
+  country?: string;
+  state?: string;
+  district?: string;
+  city?: string;
+  locality?: string;
+  displayName?: string;
+}
+
+export interface LocationLookupResult extends ApiResult {
   latitude?: number;
   longitude?: number;
   source?: string;
   displayName?: string;
   formattedAddress?: string;
   level1Country?: string;
+  level1CountryCode?: string;
   level2State?: string;
   level3District?: string;
+  level4SubDistrict?: string;
   level5City?: string;
   level6Locality?: string;
+  city?: string;
+  district?: string;
+  state?: string;
+  regionName?: string;
+  country?: string;
 }
 
 export interface LocationData {
   latitude?: number;
   longitude?: number;
   displayName?: string;
+  formattedAddress?: string;
   level1Country?: string;
+  level1CountryCode?: string;
   level2State?: string;
   level3District?: string;
+  level4SubDistrict?: string;
   level5City?: string;
   level6Locality?: string;
   source?: 'gps' | 'ip' | 'manual' | string;
+  isPrimary?: boolean;
 }
 
 export type LocationPermissionStatus = 'granted' | 'denied' | 'undetermined';
@@ -171,7 +216,7 @@ export interface Language {
   flag?: string;
   rtl?: boolean;
   isRTL?: boolean;
-  region?: string;
+  region: string; // Made required to match constants/languages.ts
 }
 
 // ============================================
@@ -259,13 +304,15 @@ export interface DeviceInfo {
 // ============================================
 
 export interface User {
-  id: string;
-  deviceId: string;
+  id?: string;
+  userId?: string;
+  deviceId?: string;
   preferredLanguage?: string;
-  location?: LocationDetails;
+  language?: string;
+  location?: LocationData | LocationDetails;
   themeMode?: ThemeMode;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }
 
 export interface UserPreferences {
@@ -274,17 +321,25 @@ export interface UserPreferences {
   notificationsEnabled?: boolean;
 }
 
+export interface UserResult extends ApiResult {
+  userId?: string;
+  user?: User;
+}
+
 // ============================================
 // MCP Server Types
 // ============================================
 
 export interface McpServer {
   id: string;
+  slug: string;
   name: string;
   displayName?: string;
   description?: string;
-  url: string;
-  status: 'online' | 'offline' | 'unknown' | string;
+  url?: string;
+  status?: 'online' | 'offline' | 'unknown' | string;
+  healthStatus?: string;
+  tagline?: string;
   category?: string;
   regions?: string[];
   tools?: McpTool[];
@@ -298,9 +353,37 @@ export interface McpTool {
   inputSchema?: object;
 }
 
+export interface McpServersResult {
+  success: boolean;
+  global?: McpServer[];
+  regional?: McpServer[];
+  detectedRegions?: string[];
+  totalActive?: number;
+  error?: string;
+}
+
 export interface McpServersStatusResult {
   success: boolean;
   servers?: McpServer[];
+  grouped?: {
+    active: McpServer[];
+    degraded: McpServer[];
+    inactive: McpServer[];
+    comingSoon: McpServer[];
+  };
+  counts?: {
+    total: number;
+    active: number;
+    degraded: number;
+    inactive: number;
+    comingSoon: number;
+  };
+  error?: string;
+}
+
+export interface McpServerResult {
+  success: boolean;
+  server?: McpServer | null;
   error?: string;
 }
 
@@ -374,8 +457,52 @@ export interface TTSLocation {
 }
 
 // ============================================
-// Plant Diagnosis Types
+// Chat API Types
 // ============================================
+
+export interface ClientDateTime {
+  isoDateTime: string;
+  localDateTime: string;
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  timezone: string;
+  utcOffset: string;
+}
+
+export interface StreamingChatParams {
+  message: string;
+  latitude?: number;
+  longitude?: number;
+  language?: string;
+  locationDetails?: LocationDetails;
+  history?: HistoryMessage[];
+  sessionId?: string;
+  onChunk?: (text: string) => void;
+  onThinking?: (thinking: string) => void;
+  onComplete?: (fullResponse: string, metadata: ChatMetadata) => void;
+  onError?: (error: Error) => void;
+}
+
+export interface ChatParams {
+  message: string;
+  latitude?: number;
+  longitude?: number;
+  language?: string;
+  locationDetails?: LocationDetails;
+  history?: HistoryMessage[];
+  sessionId?: string;
+}
+
+export interface ChatResult {
+  success: boolean;
+  response?: string;
+  region?: string;
+  language?: string;
+  error?: string;
+}
 
 export interface PlantDiagnosisParams {
   imageBase64: string;
@@ -388,6 +515,35 @@ export interface PlantDiagnosisParams {
   locationDetails?: LocationDetails;
 }
 
+export interface PlantDiagnosisResult {
+  success: boolean;
+  response?: string;
+  diagnosis?: Record<string, unknown>;
+  metadata?: ChatMetadata;
+  error?: string;
+}
+
+export interface RegionsResult {
+  success: boolean;
+  regions?: string[];
+  error?: string;
+}
+
+export interface SessionResult extends ApiResult {
+  session?: Session;
+  sessions?: Session[];
+  messages?: Message[];
+}
+
+export interface MessageResult extends ApiResult {
+  message?: Message;
+  messages?: Message[];
+}
+
+export interface TitleResult extends ApiResult {
+  title?: string;
+}
+
 // ============================================
 // Navigation Types
 // ============================================
@@ -398,7 +554,7 @@ export type RootStackParamList = {
   Location: undefined;
   Language: undefined;
   // Main
-  Chat: { sessionId?: string } | undefined;
+  Chat: { sessionId?: string; newSession?: boolean; openCamera?: boolean } | undefined;
   History: undefined;
   Settings: undefined;
   LanguageSelect: undefined;
