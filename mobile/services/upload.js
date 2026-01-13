@@ -1,9 +1,9 @@
 // File upload service - uploads images/audio to Cloudinary via API Gateway
 import { fetchWithTimeout } from '../utils/apiHelpers';
+import { API_BASE_URL, API_KEY, TIMEOUTS } from '../utils/config';
+import { log, error as logError } from '../utils/logger';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
-const UPLOAD_TIMEOUT_MS = 60000; // 60s for file uploads
+const UPLOAD_TIMEOUT_MS = TIMEOUTS.CHAT; // Use same timeout as chat for file uploads
 
 /**
  * Upload image to Cloudinary
@@ -48,7 +48,7 @@ export const uploadImage = async (base64Image, folder = 'ag-mcp/images') => {
       };
     }
   } catch (error) {
-    console.error('Image upload error:', error);
+    logError('Image upload error:', error);
     return {
       success: false,
       error: error.message || 'Failed to upload image',
@@ -65,7 +65,7 @@ export const uploadImage = async (base64Image, folder = 'ag-mcp/images') => {
  */
 export const uploadAudio = async (base64Audio, format = 'm4a', folder = 'ag-mcp/voice') => {
   try {
-    console.log('📤 [Upload] Uploading audio:', { format, folder, length: base64Audio?.length });
+    log('📤 [Upload] Uploading audio:', { format, folder, length: base64Audio?.length });
     
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/upload/audio`, {
       method: 'POST',
@@ -82,14 +82,14 @@ export const uploadAudio = async (base64Audio, format = 'm4a', folder = 'ag-mcp/
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Audio upload HTTP error:', response.status, errorText);
+      logError('Audio upload HTTP error:', response.status, errorText);
       throw new Error(`Upload error: ${response.status}`);
     }
 
     const data = await response.json();
     
     if (data.success) {
-      console.log('✅ [Upload] Audio uploaded successfully:', data.url);
+      log('✅ [Upload] Audio uploaded successfully:', data.url);
       return {
         success: true,
         url: data.url,
@@ -97,14 +97,14 @@ export const uploadAudio = async (base64Audio, format = 'm4a', folder = 'ag-mcp/
         duration: data.duration,
       };
     } else {
-      console.error('Audio upload failed:', data.error);
+      logError('Audio upload failed:', data.error);
       return {
         success: false,
         error: data.error || 'Upload failed',
       };
     }
   } catch (error) {
-    console.error('Audio upload error:', error);
+    logError('Audio upload error:', error);
     return {
       success: false,
       error: error.message || 'Failed to upload audio',

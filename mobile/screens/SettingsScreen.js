@@ -19,6 +19,8 @@ import IconButton from '../components/ui/IconButton';
 import Card from '../components/ui/Card';
 import ListRow from '../components/ui/ListRow';
 import AppIcon from '../components/ui/AppIcon';
+import { lookupLocation } from '../services/db';
+import { log } from '../utils/logger';
 import { t } from '../constants/strings';
 
 export default function SettingsScreen({ navigation }) {
@@ -114,21 +116,20 @@ export default function SettingsScreen({ navigation }) {
   // Fetch location based on IP address
   const fetchIPLocation = async () => {
     try {
-      console.log('🌐 [Settings] Fetching IP-based location...');
-      const { lookupLocation } = require('../services/db');
+      log('🌐 [Settings] Fetching IP-based location...');
 
       // Call API with ipAddress='auto' to trigger IP-based lookup
       const result = await lookupLocation(null, null, 'auto');
 
       if (result.success && result.latitude && result.longitude) {
-        console.log('🌐 [Settings] IP location result:', result.displayName);
+        log('🌐 [Settings] IP location result:', result.displayName);
         await setLocation(
           { latitude: result.latitude, longitude: result.longitude },
           'granted'
         );
         showSuccess(t('settings.ipLocationUpdated', { location: result.displayName || 'your region' }));
       } else {
-        console.log('❌ [Settings] IP location also failed:', result.error);
+        log('❌ [Settings] IP location also failed:', result.error);
         showError(t('settings.locationUpdateFailed'));
       }
     } catch (error) {

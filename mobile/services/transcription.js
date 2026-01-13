@@ -1,9 +1,10 @@
 // Transcription Service - Voice to text via Gemini 2.5 Flash (AI Services)
 import { fetchWithTimeout } from '../utils/apiHelpers';
+import { API_BASE_URL, API_KEY, TIMEOUTS } from '../utils/config';
+import { error as logError } from '../utils/logger';
 
-const WHISPER_URL = process.env.EXPO_PUBLIC_WHISPER_URL || 'https://ag-mcp-api-gateway.up.railway.app/api/transcribe';
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
-const TRANSCRIPTION_TIMEOUT_MS = 30000; // 30s for transcription
+const WHISPER_URL = `${API_BASE_URL}/api/transcribe`;
+const TRANSCRIPTION_TIMEOUT_MS = TIMEOUTS.DEFAULT;
 
 /**
  * Transcribe audio to text using Gemini 2.5 Flash via AI Services
@@ -55,7 +56,7 @@ export const transcribeAudio = async (audioBase64, language = null) => {
       language: data.detectedLanguage || data.detected_language || language,
     };
   } catch (error) {
-    console.error('Whisper transcription error:', error);
+    logError('Whisper transcription error:', error);
     return {
       success: false,
       error: error.message || 'Failed to transcribe audio',

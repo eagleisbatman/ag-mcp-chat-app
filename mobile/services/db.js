@@ -3,11 +3,11 @@
 
 import { getDeviceId, getDeviceInfo } from '../utils/deviceInfo';
 import { fetchWithTimeout } from '../utils/apiHelpers';
+import { API_BASE_URL, API_KEY, TIMEOUTS } from '../utils/config';
+import { log, error as logError } from '../utils/logger';
 import { t } from '../constants/strings';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
-const DB_TIMEOUT_MS = 30000; // 30s for database operations
+const DB_TIMEOUT_MS = TIMEOUTS.DB;
 
 const headers = {
   'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export async function registerUser() {
     
     if (!response.ok) {
       const errorText = await response.text();
-      console.log('🔌 [DB] Sync error response:', errorText);
+      log('🔌 [DB] Sync error response:', errorText);
       throw new Error(`HTTP ${response.status}: Sync failed`);
     }
     
@@ -44,7 +44,7 @@ export async function registerUser() {
     
     return { success: true, userId: data.id || data.userId, ...data };
   } catch (error) {
-    console.error('❌ [DB] User sync error:', error.message);
+    logError('❌ [DB] User sync error:', error.message);
     return { success: false, error: error.message };
   }
 }
@@ -64,7 +64,7 @@ export async function getCurrentUser() {
     const data = await response.json();
     return data.success ? data.user : null;
   } catch (error) {
-    console.error('Get user error:', error);
+    logError('Get user error:', error);
     return null;
   }
 }
@@ -87,7 +87,7 @@ export async function updatePreferences(preferences) {
     
     return await response.json();
   } catch (error) {
-    console.error('Update preferences error:', error);
+    logError('Update preferences error:', error);
     return { success: false, error: error.message };
   }
 }
@@ -110,7 +110,7 @@ export async function saveLocation(locationData) {
     
     return await response.json();
   } catch (error) {
-    console.error('Save location error:', error);
+    logError('Save location error:', error);
     return { success: false, error: error.message };
   }
 }
@@ -134,7 +134,7 @@ export async function listSessions(options = {}) {
     
     return await response.json();
   } catch (error) {
-    console.error('List sessions error:', error);
+    logError('List sessions error:', error);
     return { success: false, sessions: [], error: error.message };
   }
 }
@@ -157,7 +157,7 @@ export async function createSession(options = {}) {
     
     return await response.json();
   } catch (error) {
-    console.error('Create session error:', error);
+    logError('Create session error:', error);
     return { success: false, error: error.message };
   }
 }
@@ -180,7 +180,7 @@ export async function getSession(sessionId, messageLimit = 50) {
     
     return await response.json();
   } catch (error) {
-    console.error('Get session error:', error);
+    logError('Get session error:', error);
     return { success: false, error: error.message };
   }
 }
@@ -203,7 +203,7 @@ export async function updateSession(sessionId, updates) {
     
     return await response.json();
   } catch (error) {
-    console.error('Update session error:', error);
+    logError('Update session error:', error);
     return { success: false, error: error.message };
   }
 }
@@ -226,7 +226,7 @@ export async function deleteSession(sessionId) {
     
     return await response.json();
   } catch (error) {
-    console.error('Delete session error:', error);
+    logError('Delete session error:', error);
     return { success: false, error: error.message };
   }
 }
@@ -253,7 +253,7 @@ export async function saveMessage(messageData) {
     
     return await response.json();
   } catch (error) {
-    console.error('Save message error:', error);
+    logError('Save message error:', error);
     return { success: false, error: error.message };
   }
 }
@@ -273,7 +273,7 @@ export async function getMessages(sessionId, options = {}) {
     
     return await response.json();
   } catch (error) {
-    console.error('Get messages error:', error);
+    logError('Get messages error:', error);
     return { success: false, messages: [], error: error.message };
   }
 }
@@ -296,7 +296,7 @@ export async function updateMessage(messageId, updates) {
     
     return await response.json();
   } catch (error) {
-    console.error('Update message error:', error);
+    logError('Update message error:', error);
     return { success: false, error: error.message };
   }
 }
@@ -310,7 +310,7 @@ export async function updateMessage(messageId, updates) {
  */
 export async function lookupLocation(latitude, longitude, ipAddress = null) {
   try {
-    console.log('🔌 [DB] Looking up location:', { latitude, longitude, ipAddress });
+    log('🔌 [DB] Looking up location:', { latitude, longitude, ipAddress });
     
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/location-lookup`, {
       method: 'POST',
@@ -318,16 +318,16 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
       body: JSON.stringify({ latitude, longitude, ipAddress }),
     }, DB_TIMEOUT_MS);
     
-    console.log('🔌 [DB] Location lookup response status:', response.status);
+    log('🔌 [DB] Location lookup response status:', response.status);
     
     if (!response.ok) {
       const errorText = await response.text();
-      console.log('🔌 [DB] Location lookup error:', errorText);
+      log('🔌 [DB] Location lookup error:', errorText);
       return { success: false, error: `HTTP ${response.status}` };
     }
     
     const data = await response.json();
-    console.log('🔌 [DB] Location lookup result:', {
+    log('🔌 [DB] Location lookup result:', {
       success: data.success,
       source: data.source,
       country: data.level1Country,
@@ -335,7 +335,7 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
     
     return data;
   } catch (error) {
-    console.error('❌ [DB] Location lookup error:', error.message);
+    logError('❌ [DB] Location lookup error:', error.message);
     return { success: false, error: error.message };
   }
 }
@@ -349,7 +349,7 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
  */
 export async function generateTitle(messages, language = 'en') {
   try {
-    console.log('🔌 [DB] Generating title with', messages.length, 'messages, language:', language);
+    log('🔌 [DB] Generating title with', messages.length, 'messages, language:', language);
     
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/generate-title`, {
       method: 'POST',
@@ -357,19 +357,19 @@ export async function generateTitle(messages, language = 'en') {
       body: JSON.stringify({ messages, language }),
     }, DB_TIMEOUT_MS);
     
-    console.log('🔌 [DB] Title generation response status:', response.status);
+    log('🔌 [DB] Title generation response status:', response.status);
     
     if (!response.ok) {
       const errorText = await response.text();
-      console.log('🔌 [DB] Title generation error response:', errorText);
+      log('🔌 [DB] Title generation error response:', errorText);
       return { success: false, title: t('history.newConversation'), error: `HTTP ${response.status}` };
     }
     
     const data = await response.json();
-    console.log('🔌 [DB] Title generation result:', data);
+    log('🔌 [DB] Title generation result:', data);
     return data;
   } catch (error) {
-    console.log('❌ [DB] Title generation exception:', error.message);
+    log('❌ [DB] Title generation exception:', error.message);
     return { success: false, title: t('history.newConversation'), error: error.message };
   }
 }
@@ -391,7 +391,7 @@ export async function logEvent(eventName, eventData = {}, sessionId = null) {
     }, DB_TIMEOUT_MS);
   } catch (error) {
     // Silent fail for analytics
-    console.debug('Analytics error:', error);
+    log('Analytics error:', error);
   }
 }
 

@@ -7,6 +7,8 @@ import { useToast } from '../contexts/ToastContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
+import { lookupLocation } from '../services/db';
+import { log } from '../utils/logger';
 import { t } from '../constants/strings';
 
 export default function LocationScreen({ navigation }) {
@@ -19,42 +21,42 @@ export default function LocationScreen({ navigation }) {
   const [error, setError] = useState(null);
 
   const requestLocation = async () => {
-    console.log('📍 [LocationScreen] User tapped "Enable Location"');
+    log('📍 [LocationScreen] User tapped "Enable Location"');
     setIsLoading(true);
     setError(null);
 
     try {
-      console.log('📍 [LocationScreen] Requesting location permission...');
+      log('📍 [LocationScreen] Requesting location permission...');
       const { status } = await Location.requestForegroundPermissionsAsync();
-      console.log('📍 [LocationScreen] Permission status:', status);
+      log('📍 [LocationScreen] Permission status:', status);
 
       if (status !== 'granted') {
         // Permission denied - fall back to IP location
-        console.log('📍 [LocationScreen] Permission denied, using IP location...');
+        log('📍 [LocationScreen] Permission denied, using IP location...');
         showWarning(t('onboarding.usingIpLocation'));
         await fetchIPLocationAndContinue();
         return;
       }
 
-      console.log('📍 [LocationScreen] Getting current position...');
+      log('📍 [LocationScreen] Getting current position...');
       try {
         // First try getLastKnownPositionAsync (instant, from cache)
         let loc = await Location.getLastKnownPositionAsync();
-        console.log('📍 [LocationScreen] Last known position:', loc?.coords);
+        log('📍 [LocationScreen] Last known position:', loc?.coords);
 
         // If no cached location, use getCurrentPositionAsync (active GPS request)
         if (!loc?.coords) {
-          console.log('📍 [LocationScreen] No cached location, requesting fresh GPS fix...');
+          log('📍 [LocationScreen] No cached location, requesting fresh GPS fix...');
           loc = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.Balanced,
             timeout: 15000,
           });
-          console.log('📍 [LocationScreen] getCurrentPositionAsync result:', loc?.coords);
+          log('📍 [LocationScreen] getCurrentPositionAsync result:', loc?.coords);
         }
 
         // Final fallback: try with lower accuracy if high accuracy fails
         if (!loc?.coords) {
-          console.log('📍 [LocationScreen] Balanced accuracy failed, trying low accuracy...');
+          log('📍 [LocationScreen] Balanced accuracy failed, trying low accuracy...');
           loc = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.Low,
             timeout: 10000,
@@ -62,7 +64,7 @@ export default function LocationScreen({ navigation }) {
         }
 
         if (loc?.coords) {
-          console.log('📍 [LocationScreen] Got GPS position:', {
+          log('📍 [LocationScreen] Got GPS position:', {
             lat: loc.coords.latitude,
             lon: loc.coords.longitude,
           });
@@ -74,20 +76,20 @@ export default function LocationScreen({ navigation }) {
           navigation.navigate('Language');
         } else {
           // No location from GPS - fall back to IP
-          console.log('📍 [LocationScreen] GPS returned no coords, using IP location...');
+          log('📍 [LocationScreen] GPS returned no coords, using IP location...');
           showWarning(t('onboarding.gpsFailed'));
           await fetchIPLocationAndContinue();
         }
       } catch (gpsError) {
         // GPS failed - fall back to IP location
-        console.log('📍 [LocationScreen] GPS failed, using IP location...', gpsError.message);
+        log('📍 [LocationScreen] GPS failed, using IP location...', gpsError.message);
         showWarning(t('onboarding.gpsFailed'));
         await fetchIPLocationAndContinue();
       }
     } catch (err) {
       setError(t('onboarding.locationError'));
       showError(t('onboarding.locationError'));
-      console.log('❌ [LocationScreen] Location error:', err);
+      log('❌ [LocationScreen] Location error:', err);
       setIsLoading(false);
     }
   };
@@ -95,13 +97,12 @@ export default function LocationScreen({ navigation }) {
   // Fetch location from IP and continue to next screen
   const fetchIPLocationAndContinue = async () => {
     try {
-      console.log('🌐 [LocationScreen] Fetching IP-based location...');
-      const { lookupLocation } = require('../services/db');
+      log('🌐 [LocationScreen] Fetching IP-based location...');
 
       const result = await lookupLocation(null, null, 'auto');
 
       if (result.success) {
-        console.log('🌐 [LocationScreen] IP location lookup complete:', result.displayName);
+        log('🌐 [LocationScreen] IP location lookup complete:', result.displayName);
         
         // Show informative message if using IP (unless it's the "none" fallback)
         if (result.source === 'ip') {
@@ -116,12 +117,12 @@ export default function LocationScreen({ navigation }) {
       } else {
         // This case is now handled by the gateway returning a success:true fallback,
         // but we keep this for extra safety.
-        console.log('⚠️ [LocationScreen] IP location returned failure, using default fallback');
+        log('⚠️ [LocationScreen] IP location returned failure, using default fallback');
         await setLocation({ latitude: 0, longitude: 0 }, 'denied');
         navigation.navigate('Language');
       }
     } catch (error) {
-      console.log('❌ [LocationScreen] IP location error, using default fallback:', error.message);
+      log('❌ [LocationScreen] IP location error, using default fallback:', error.message);
       // Don't block the user, just use a default location
       await setLocation({ latitude: 0, longitude: 0 }, 'denied');
       navigation.navigate('Language');
@@ -130,7 +131,7 @@ export default function LocationScreen({ navigation }) {
 
   const skipLocation = async () => {
     // Skip button also uses IP-based location
-    console.log('📍 [LocationScreen] User tapped Skip, using IP location...');
+    log('📍 [LocationScreen] User tapped Skip, using IP location...');
     setIsLoading(true);
     await fetchIPLocationAndContinue();
   };
