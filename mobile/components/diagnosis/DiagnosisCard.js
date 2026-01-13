@@ -7,13 +7,16 @@ import React, { useMemo } from 'react';
 import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import { useApp } from '../../contexts/AppContext';
-import { SPACING, TYPOGRAPHY } from '../../constants/themes';
+import { SPACING } from '../../constants/themes';
 import AppIcon from '../ui/AppIcon';
 import { t } from '../../constants/strings';
 import { normalizeDiagnosis } from '../../utils/diagnosisNormalizer';
 import ErrorSection from './ErrorSection';
 import RejectionSection from './RejectionSection';
 import QualitySection from './QualitySection';
+import HealthySection from './HealthySection';
+import IssuesSection from './IssuesSection';
+import TreatmentSection from './TreatmentSection';
 import { diagnosisStyles as styles } from './styles';
 
 export default function DiagnosisCard({ diagnosis, onRetry }) {
@@ -126,80 +129,17 @@ export default function DiagnosisCard({ diagnosis, onRetry }) {
 
       {/* Healthy plant message */}
       {isHealthy && (!data.issues || data.issues.length === 0) && (
-        <View style={styles.section}>
-          <View style={styles.headerRow}>
-            <AppIcon name="checkmark-circle" size={18} color={theme.success} />
-            <Text style={[styles.headerText, { color: theme.success }]}>{t('diagnosis.healthyTitle')}</Text>
-          </View>
-          <Text style={[styles.text, { color: theme.textSecondary, marginTop: SPACING.xs }]}>
-            {t('diagnosis.healthyMessage')}
-          </Text>
-          <Text style={[styles.text, { color: theme.textMuted, marginTop: SPACING.md }]}>
-            {t('diagnosis.healthyTips')}
-          </Text>
-          <Text style={[styles.text, { color: theme.text }]}>• {t('diagnosis.healthyTipMonitor')}</Text>
-          <Text style={[styles.text, { color: theme.text }]}>• {t('diagnosis.healthyTipWater')}</Text>
-          <Text style={[styles.text, { color: theme.text }]}>• {t('diagnosis.healthyTipNutrition')}</Text>
-        </View>
+        <HealthySection theme={theme} />
       )}
 
       {/* Issues section */}
       {data.issues?.length > 0 && (
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('diagnosis.issueDetected')}</Text>
-          {data.issues.map((issue, i) => (
-            <View key={i} style={styles.issueItem}>
-              <Text style={[styles.text, { color: theme.text, fontWeight: TYPOGRAPHY.weights.semibold }]}>
-                {issue.name || issue}
-                {issue.scientific_name ? ` (${issue.scientific_name})` : ''}
-              </Text>
-              {issue.severity && (
-                <Text style={[styles.text, { color: theme.error }]}>
-                  {t('diagnosis.severity')}: {issue.severity}
-                </Text>
-              )}
-              {issue.symptoms?.length > 0 && (
-                <Text style={[styles.text, { color: theme.textSecondary }]}>
-                  {t('diagnosis.symptoms')}: {issue.symptoms.join(', ')}
-                </Text>
-              )}
-            </View>
-          ))}
-        </View>
+        <IssuesSection theme={theme} issues={data.issues} />
       )}
 
       {/* Treatment Recommendations */}
       {data.treatment_recommendations?.length > 0 && (
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('diagnosis.treatment')}</Text>
-          {data.treatment_recommendations.map((treatment, i) => (
-            <View key={i} style={styles.treatmentBlock}>
-              {treatment.issue_name && data.treatment_recommendations.length > 1 && (
-                <Text style={[styles.text, { color: theme.text, fontWeight: TYPOGRAPHY.weights.semibold, marginBottom: SPACING.xs }]}>
-                  {treatment.issue_name}:
-                </Text>
-              )}
-              {treatment.organic_options?.length > 0 && (
-                <View style={styles.treatmentRow}>
-                  <AppIcon name="leaf" size={16} color={theme.success} />
-                  <Text style={[styles.text, { color: theme.text, flex: 1 }]}>
-                    <Text style={{ color: theme.success, fontWeight: TYPOGRAPHY.weights.semibold }}>{t('diagnosis.organic')}: </Text>
-                    {treatment.organic_options.map(o => o.name || o).join(', ')}
-                  </Text>
-                </View>
-              )}
-              {treatment.chemical_options?.length > 0 && (
-                <View style={styles.treatmentRow}>
-                  <AppIcon name="flask" size={16} color={theme.accent} />
-                  <Text style={[styles.text, { color: theme.text, flex: 1 }]}>
-                    <Text style={{ color: theme.accent, fontWeight: TYPOGRAPHY.weights.semibold }}>{t('diagnosis.chemical')}: </Text>
-                    {treatment.chemical_options.map(o => o.active_ingredient || o.name || o).join(', ')}
-                  </Text>
-                </View>
-              )}
-            </View>
-          ))}
-        </View>
+        <TreatmentSection theme={theme} treatments={data.treatment_recommendations} />
       )}
 
       {/* Diagnostic notes */}
