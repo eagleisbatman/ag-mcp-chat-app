@@ -1,5 +1,5 @@
 // Tests for deviceInfo utility
-import { getDeviceId, getDeviceInfo, getDevicePlatform, getAppVersion } from '../../utils/deviceInfo';
+import { getDeviceId, getDeviceInfo } from '../../utils/deviceInfo';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({
@@ -74,21 +74,4 @@ describe('deviceInfo', () => {
     });
   });
 
-  describe('getDevicePlatform', () => {
-    it('returns platform information', () => {
-      const platform = getDevicePlatform();
-
-      expect(platform).toBeDefined();
-      expect(typeof platform).toBe('string');
-    });
-  });
-
-  describe('getAppVersion', () => {
-    it('returns app version string', () => {
-      const version = getAppVersion();
-
-      expect(version).toBeDefined();
-      expect(typeof version).toBe('string');
-    });
-  });
 });

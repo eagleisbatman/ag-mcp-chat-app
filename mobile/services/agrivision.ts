@@ -295,17 +295,21 @@ export const diagnosePlantHealth = async (
  * @param diagnosis - Raw diagnosis from AgriVision
  * @returns Formatted markdown
  */
-export const formatDiagnosis = (diagnosis: DiagnosisData | string | null | undefined): string => {
-  if (typeof diagnosis === 'string') {
+export const formatDiagnosis = (diagnosisInput: DiagnosisData | string | null | undefined): string => {
+  let diagnosis: DiagnosisData | null = null;
+  
+  if (typeof diagnosisInput === 'string') {
     try {
-      diagnosis = JSON.parse(diagnosis) as DiagnosisData;
+      diagnosis = JSON.parse(diagnosisInput) as DiagnosisData;
     } catch (e) {
-      return diagnosis;
+      return diagnosisInput; // Return the original string if parsing fails
     }
+  } else if (diagnosisInput && typeof diagnosisInput === 'object') {
+    diagnosis = diagnosisInput;
   }
 
-  if (!diagnosis || typeof diagnosis !== 'object') {
-    return String(diagnosis || 'Unable to analyze image');
+  if (!diagnosis) {
+    return String(diagnosisInput || 'Unable to analyze image');
   }
 
   // Handle specialized error states (Network/Timeout)

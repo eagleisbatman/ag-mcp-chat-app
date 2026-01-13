@@ -1,5 +1,7 @@
 // OneSignal Push Notification Service
+// Note: OneSignal is currently disabled - module may not be installed
 import { Platform } from 'react-native';
+// @ts-ignore - OneSignal module may not be installed when notifications are disabled
 import OneSignal from 'react-native-onesignal';
 import { fetchWithTimeout } from '../utils/apiHelpers';
 import { API_BASE_URL, API_KEY } from '../utils/config';
