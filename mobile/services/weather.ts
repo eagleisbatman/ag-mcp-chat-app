@@ -5,6 +5,75 @@ import { log, error as logError } from '../utils/logger';
 
 const DEFAULT_TIMEOUT_MS = TIMEOUTS.WEATHER;
 
+// Type definitions
+export interface WeatherLocation {
+  city?: string;
+  region?: string;
+  country?: string;
+  latitude?: number;
+  longitude?: number;
+  displayName?: string;
+  name?: string;
+}
+
+export interface CurrentWeatherData {
+  temperature?: number;
+  weatherText?: string;
+  weatherIcon?: number;
+  humidity?: number;
+  windSpeed?: number;
+  precipitation?: number;
+}
+
+export interface ForecastDay {
+  date: string;
+  tempMax?: number;
+  tempMin?: number;
+  dayIcon?: number;
+  precipitationProbability?: number;
+  conditions?: string;
+}
+
+export interface ForecastData {
+  daily: ForecastDay[];
+}
+
+export interface WeatherAlert {
+  id: string;
+  type: string;
+  severity: string;
+  title: string;
+  description: string;
+}
+
+export interface CurrentWeatherResult {
+  success: boolean;
+  data: CurrentWeatherData | null;
+  location: WeatherLocation | null;
+  provider?: string;
+  error?: string;
+}
+
+export interface ForecastResult {
+  success: boolean;
+  data: ForecastData | null;
+  location?: WeatherLocation;
+  error?: string;
+}
+
+export interface CombinedWeatherResult {
+  current: CurrentWeatherData | null;
+  forecast: ForecastData | null;
+  location: WeatherLocation | null;
+  provider: string;
+}
+
+export interface HourlyForecastResult {
+  success: boolean;
+  data: Array<Record<string, unknown>>;
+  error?: string;
+}
+
 /**
  * Weather Service
  * Provides weather data from AccuWeather via the API Gateway
@@ -12,13 +81,13 @@ const DEFAULT_TIMEOUT_MS = TIMEOUTS.WEATHER;
 export const weatherService = {
   /**
    * Get current conditions and forecast in a single call
-   * @param {number} latitude - User's latitude
-   * @param {number} longitude - User's longitude
-   * @param {string} language - Language code (e.g., 'en', 'hi')
-   * @param {string} provider - Preferred weather provider (e.g., 'accuweather', 'tomorrow-io')
-   * @returns {Promise<{current: object, forecast: object, location: object, provider: string}>}
    */
-  async getCurrentAndForecast(latitude, longitude, language = 'en', provider = 'accuweather') {
+  async getCurrentAndForecast(
+    latitude: number,
+    longitude: number,
+    language: string = 'en',
+    provider: string = 'accuweather'
+  ): Promise<CombinedWeatherResult> {
     try {
       // Different providers support different forecast days
       // AccuWeather: 5 days, Tomorrow.io: 7 days
@@ -48,13 +117,13 @@ export const weatherService = {
 
   /**
    * Get current weather conditions
-   * @param {number} latitude - User's latitude
-   * @param {number} longitude - User's longitude
-   * @param {string} language - Language code
-   * @param {string} provider - Preferred weather provider
-   * @returns {Promise<{success: boolean, data: object, location: object, provider: string}>}
    */
-  async getCurrent(latitude, longitude, language = 'en', provider = 'accuweather') {
+  async getCurrent(
+    latitude: number,
+    longitude: number,
+    language: string = 'en',
+    provider: string = 'accuweather'
+  ): Promise<CurrentWeatherResult> {
     try {
       const url = `${API_BASE_URL}/api/weather/current`;
 
@@ -123,13 +192,14 @@ export const weatherService = {
 
   /**
    * Get weather forecast
-   * @param {number} latitude - User's latitude
-   * @param {number} longitude - User's longitude
-   * @param {number} days - Number of forecast days (default: 5)
-   * @param {string} language - Language code
-   * @returns {Promise<{success: boolean, data: object}>}
    */
-  async getForecast(latitude, longitude, days = 5, language = 'en', provider = 'accuweather') {
+  async getForecast(
+    latitude: number,
+    longitude: number,
+    days: number = 5,
+    language: string = 'en',
+    provider: string = 'accuweather'
+  ): Promise<ForecastResult> {
     try {
       const url = `${API_BASE_URL}/api/weather/forecast`;
 
@@ -157,13 +227,13 @@ export const weatherService = {
       // Map API response to widget-expected format
       // Handle both normalized (Tomorrow.io) and raw (AccuWeather) field names
       const forecastArray = result.data?.forecast || [];
-      const daily = forecastArray.map(day => ({
-        date: day.date,
-        tempMax: day.max_temp ?? day.max_temp_c,
-        tempMin: day.min_temp ?? day.min_temp_c,
-        dayIcon: day.weather_icon || 1, // Weather code from API (AccuWeather/Tomorrow.io)
-        precipitationProbability: day.day_precipitation_probability ?? day.day_precipitation_probability_percent ?? 0,
-        conditions: day.day_conditions,
+      const daily: ForecastDay[] = forecastArray.map((day: Record<string, unknown>) => ({
+        date: day.date as string,
+        tempMax: (day.max_temp ?? day.max_temp_c) as number | undefined,
+        tempMin: (day.min_temp ?? day.min_temp_c) as number | undefined,
+        dayIcon: (day.weather_icon || 1) as number, // Weather code from API
+        precipitationProbability: (day.day_precipitation_probability ?? day.day_precipitation_probability_percent ?? 0) as number,
+        conditions: day.day_conditions as string | undefined,
       }));
 
       // Get location from forecast response
@@ -195,11 +265,8 @@ export const weatherService = {
 
   /**
    * Get active weather alerts for a region
-   * @param {number} latitude - User's latitude
-   * @param {number} longitude - User's longitude
-   * @returns {Promise<Array<{id: string, type: string, severity: string, title: string, description: string}>>}
    */
-  async getAlerts(latitude, longitude) {
+  async getAlerts(latitude: number, longitude: number): Promise<WeatherAlert[]> {
     try {
       const url = `${API_BASE_URL}/api/weather/alerts?latitude=${latitude}&longitude=${longitude}`;
 
@@ -233,12 +300,12 @@ export const weatherService = {
 
   /**
    * Get hourly forecast (next 12 hours)
-   * @param {number} latitude - User's latitude
-   * @param {number} longitude - User's longitude
-   * @param {string} language - Language code
-   * @returns {Promise<{success: boolean, data: Array}>}
    */
-  async getHourlyForecast(latitude, longitude, language = 'en') {
+  async getHourlyForecast(
+    latitude: number,
+    longitude: number,
+    language: string = 'en'
+  ): Promise<HourlyForecastResult> {
     try {
       const url = `${API_BASE_URL}/api/weather/hourly`;
 

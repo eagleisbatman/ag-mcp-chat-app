@@ -1,10 +1,40 @@
 // Content API service - fetches articles, podcasts, and videos
-import { fetchWithTimeout, parseErrorMessage } from '../utils/apiHelpers';
+import { fetchWithTimeout } from '../utils/apiHelpers';
+import { API_BASE_URL, API_KEY, TIMEOUTS } from '../utils/config';
+import { log, error as logError, warn } from '../utils/logger';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
+const DEFAULT_TIMEOUT_MS = TIMEOUTS.DEFAULT; // 30s for content endpoints
 
-const DEFAULT_TIMEOUT_MS = 30000; // 30s for content endpoints
+// Type definitions
+export interface ContentItem {
+  id: string;
+  type: 'article' | 'podcast' | 'video';
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  duration?: number;
+  createdAt?: string;
+  language?: string;
+  tags?: string[];
+}
+
+export interface ContentFeedOptions {
+  limit?: number;
+  offset?: number;
+  types?: string[];
+}
+
+export interface ContentSearchOptions {
+  language?: string;
+  types?: string[];
+  limit?: number;
+}
+
+export interface ContentViewData {
+  duration?: number;
+  completionPercent?: number;
+  source?: string;
+}
 
 /**
  * Content Service
@@ -13,16 +43,13 @@ const DEFAULT_TIMEOUT_MS = 30000; // 30s for content endpoints
 export const contentService = {
   /**
    * Get personalized content feed for user's location
-   * @param {number} latitude - User's latitude
-   * @param {number} longitude - User's longitude
-   * @param {string} language - Language code (e.g., 'en', 'hi')
-   * @param {object} options - Additional options
-   * @param {number} options.limit - Number of items to fetch (default: 10)
-   * @param {number} options.offset - Offset for pagination (default: 0)
-   * @param {Array<string>} options.types - Content types to filter (e.g., ['article', 'podcast'])
-   * @returns {Promise<Array<object>>}
    */
-  async getFeed(latitude, longitude, language = 'en', options = {}) {
+  async getFeed(
+    latitude: number | null,
+    longitude: number | null,
+    language: string = 'en',
+    options: ContentFeedOptions = {}
+  ): Promise<ContentItem[]> {
     try {
       const { limit = 10, offset = 0, types } = options;
 
@@ -53,14 +80,14 @@ export const contentService = {
       }
 
       const result = await response.json();
-      console.log('[Content] Feed fetched:', {
+      log('[Content] Feed fetched:', {
         count: result.data?.length || 0,
         language,
       });
 
       return result.data || [];
     } catch (error) {
-      console.error('Content feed error:', error);
+      logError('Content feed error:', error);
       // Return empty array on error to prevent UI crash
       return [];
     }
@@ -68,10 +95,8 @@ export const contentService = {
 
   /**
    * Get a single content item by ID
-   * @param {string} contentId - Content ID
-   * @returns {Promise<object|null>}
    */
-  async getContent(contentId) {
+  async getContent(contentId: string): Promise<ContentItem | null> {
     try {
       const url = `${API_BASE_URL}/api/content/${contentId}`;
 
@@ -88,27 +113,22 @@ export const contentService = {
       }
 
       const result = await response.json();
-      console.log('[Content] Item fetched:', {
+      log('[Content] Item fetched:', {
         id: contentId,
         type: result.data?.type,
       });
 
       return result.data;
     } catch (error) {
-      console.error('Get content error:', error);
+      logError('Get content error:', error);
       return null;
     }
   },
 
   /**
    * Track content view (for analytics and recommendations)
-   * @param {string} contentId - Content ID
-   * @param {object} data - View data
-   * @param {number} data.duration - Time spent viewing (seconds)
-   * @param {number} data.completionPercent - How much was read/watched (0-100)
-   * @param {string} data.source - Where user found the content (e.g., 'feed', 'search')
    */
-  async trackView(contentId, data = {}) {
+  async trackView(contentId: string, data: ContentViewData = {}): Promise<void> {
     try {
       const url = `${API_BASE_URL}/api/content/${contentId}/view`;
 
@@ -125,18 +145,17 @@ export const contentService = {
         }),
       }, DEFAULT_TIMEOUT_MS);
 
-      console.log('[Content] View tracked:', contentId);
+      log('[Content] View tracked:', contentId);
     } catch (error) {
       // Don't throw on tracking errors - they shouldn't block the user
-      console.warn('Failed to track content view:', error);
+      warn('Failed to track content view:', error);
     }
   },
 
   /**
    * Like/favorite a content item
-   * @param {string} contentId - Content ID
    */
-  async likeContent(contentId) {
+  async likeContent(contentId: string): Promise<void> {
     try {
       const url = `${API_BASE_URL}/api/content/${contentId}/like`;
 
@@ -148,17 +167,16 @@ export const contentService = {
         },
       }, DEFAULT_TIMEOUT_MS);
 
-      console.log('[Content] Liked:', contentId);
+      log('[Content] Liked:', contentId);
     } catch (error) {
-      console.warn('Failed to like content:', error);
+      warn('Failed to like content:', error);
     }
   },
 
   /**
    * Unlike a content item
-   * @param {string} contentId - Content ID
    */
-  async unlikeContent(contentId) {
+  async unlikeContent(contentId: string): Promise<void> {
     try {
       const url = `${API_BASE_URL}/api/content/${contentId}/unlike`;
 
@@ -170,17 +188,16 @@ export const contentService = {
         },
       }, DEFAULT_TIMEOUT_MS);
 
-      console.log('[Content] Unliked:', contentId);
+      log('[Content] Unliked:', contentId);
     } catch (error) {
-      console.warn('Failed to unlike content:', error);
+      warn('Failed to unlike content:', error);
     }
   },
 
   /**
    * Track content share (for analytics)
-   * @param {string} contentId - Content ID
    */
-  async shareContent(contentId) {
+  async shareContent(contentId: string): Promise<void> {
     try {
       const url = `${API_BASE_URL}/api/content/${contentId}/share`;
 
@@ -192,22 +209,16 @@ export const contentService = {
         },
       }, DEFAULT_TIMEOUT_MS);
 
-      console.log('[Content] Shared:', contentId);
+      log('[Content] Shared:', contentId);
     } catch (error) {
-      console.warn('Failed to track content share:', error);
+      warn('Failed to track content share:', error);
     }
   },
 
   /**
    * Search content
-   * @param {string} query - Search query
-   * @param {object} options - Search options
-   * @param {string} options.language - Language code
-   * @param {Array<string>} options.types - Content types to filter
-   * @param {number} options.limit - Max results
-   * @returns {Promise<Array<object>>}
    */
-  async searchContent(query, options = {}) {
+  async searchContent(query: string, options: ContentSearchOptions = {}): Promise<ContentItem[]> {
     try {
       const { language = 'en', types, limit = 20 } = options;
 
@@ -236,25 +247,22 @@ export const contentService = {
       }
 
       const result = await response.json();
-      console.log('[Content] Search results:', {
+      log('[Content] Search results:', {
         query,
         count: result.data?.length || 0,
       });
 
       return result.data || [];
     } catch (error) {
-      console.error('Content search error:', error);
+      logError('Content search error:', error);
       return [];
     }
   },
 
   /**
    * Get related content for a given content item
-   * @param {string} contentId - Content ID
-   * @param {number} limit - Max results
-   * @returns {Promise<Array<object>>}
    */
-  async getRelatedContent(contentId, limit = 5) {
+  async getRelatedContent(contentId: string, limit: number = 5): Promise<ContentItem[]> {
     try {
       const url = `${API_BASE_URL}/api/content/${contentId}/related?limit=${limit}`;
 
@@ -273,7 +281,7 @@ export const contentService = {
       const result = await response.json();
       return result.data || [];
     } catch (error) {
-      console.error('Related content error:', error);
+      logError('Related content error:', error);
       return [];
     }
   },

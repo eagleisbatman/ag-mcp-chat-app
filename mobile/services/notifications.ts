@@ -1,26 +1,45 @@
 // OneSignal Push Notification Service
 import { Platform } from 'react-native';
 import OneSignal from 'react-native-onesignal';
-import { fetchWithTimeout, parseErrorMessage } from '../utils/apiHelpers';
+import { fetchWithTimeout } from '../utils/apiHelpers';
+import { API_BASE_URL, API_KEY } from '../utils/config';
+import { log, error as logError, warn } from '../utils/logger';
 
 const ONESIGNAL_APP_ID = process.env.EXPO_PUBLIC_ONESIGNAL_APP_ID;
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ag-mcp-api-gateway.up.railway.app';
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY || 'dev-key';
+
+// Type definitions
+export interface NotificationData {
+  [key: string]: unknown;
+}
+
+export interface NotificationOptions {
+  onNotificationOpened?: (data: NotificationData, notification: unknown) => void;
+  onNotificationReceived?: (notification: unknown) => boolean | void;
+}
+
+export interface NotificationPreferences {
+  weatherAlerts?: boolean;
+  contentUpdates?: boolean;
+  tipsAndReminders?: boolean;
+}
+
+export interface DeviceState {
+  userId?: string;
+  pushToken?: string;
+  hasNotificationPermission?: boolean;
+}
 
 export const notificationService = {
   /**
    * Initialize OneSignal with optional handlers
-   * @param {object} options - Configuration options
-   * @param {function} options.onNotificationOpened - Handler for when notification is tapped
-   * @param {function} options.onNotificationReceived - Handler for foreground notifications
    */
-  initialize(options = {}) {
+  initialize(options: NotificationOptions = {}): void {
     if (!ONESIGNAL_APP_ID) {
-      console.warn('[Notifications] OneSignal App ID not configured');
+      warn('[Notifications] OneSignal App ID not configured');
       return;
     }
 
-    console.log('[Notifications] Initializing OneSignal...');
+    log('[Notifications] Initializing OneSignal...');
 
     // Set app ID
     OneSignal.setAppId(ONESIGNAL_APP_ID);
@@ -31,10 +50,10 @@ export const notificationService = {
     }
 
     // Handle notification opened (user tapped notification)
-    OneSignal.setNotificationOpenedHandler((openedEvent) => {
-      console.log('[Notifications] Notification opened:', openedEvent);
+    OneSignal.setNotificationOpenedHandler((openedEvent: { notification: { additionalData?: NotificationData } }) => {
+      log('[Notifications] Notification opened:', openedEvent);
       const { notification } = openedEvent;
-      const data = notification.additionalData;
+      const data = notification.additionalData || {};
 
       if (options.onNotificationOpened) {
         options.onNotificationOpened(data, notification);
@@ -42,8 +61,8 @@ export const notificationService = {
     });
 
     // Handle notification received in foreground
-    OneSignal.setNotificationWillShowInForegroundHandler((event) => {
-      console.log('[Notifications] Notification received in foreground');
+    OneSignal.setNotificationWillShowInForegroundHandler((event: { getNotification: () => unknown; complete: (n?: unknown) => void }) => {
+      log('[Notifications] Notification received in foreground');
       const notification = event.getNotification();
 
       if (options.onNotificationReceived) {
@@ -60,23 +79,22 @@ export const notificationService = {
       event.complete(notification);
     });
 
-    console.log('[Notifications] OneSignal initialized successfully');
+    log('[Notifications] OneSignal initialized successfully');
   },
 
   /**
    * Register push token with backend
-   * @returns {Promise<string|null>} Player ID if successful, null otherwise
    */
-  async registerToken() {
+  async registerToken(): Promise<string | null> {
     try {
-      const deviceState = await OneSignal.getDeviceState();
+      const deviceState: DeviceState | null = await OneSignal.getDeviceState();
 
       if (!deviceState?.userId) {
-        console.warn('[Notifications] No OneSignal player ID available');
+        warn('[Notifications] No OneSignal player ID available');
         return null;
       }
 
-      console.log('[Notifications] Registering push token:', deviceState.userId.substring(0, 20) + '...');
+      log('[Notifications] Registering push token:', deviceState.userId.substring(0, 20) + '...');
 
       const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/push-token`, {
         method: 'POST',
@@ -95,54 +113,47 @@ export const notificationService = {
         throw new Error(`API error: ${response.status}`);
       }
 
-      console.log('[Notifications] Push token registered successfully');
+      log('[Notifications] Push token registered successfully');
       return deviceState.userId;
     } catch (error) {
-      console.error('[Notifications] Failed to register push token:', error);
+      logError('[Notifications] Failed to register push token:', error);
       return null;
     }
   },
 
   /**
    * Set user tags for targeting
-   * @param {object} tags - Key-value pairs of tags
    */
-  async setTags(tags) {
+  async setTags(tags: Record<string, string>): Promise<void> {
     try {
-      console.log('[Notifications] Setting tags:', tags);
+      log('[Notifications] Setting tags:', tags);
       OneSignal.sendTags(tags);
     } catch (error) {
-      console.error('[Notifications] Failed to set tags:', error);
+      logError('[Notifications] Failed to set tags:', error);
     }
   },
 
   /**
    * Set user region tag for regional notifications
-   * @param {string} regionCode - Region code (e.g., 'ETH', 'KEN', 'VNM')
    */
-  async setRegion(regionCode) {
+  async setRegion(regionCode: string | null): Promise<void> {
     if (!regionCode) return;
     await this.setTags({ region: regionCode });
   },
 
   /**
    * Set user language tag
-   * @param {string} languageCode - Language code (e.g., 'en', 'hi', 'am')
    */
-  async setLanguage(languageCode) {
+  async setLanguage(languageCode: string | null): Promise<void> {
     if (!languageCode) return;
     await this.setTags({ language: languageCode });
   },
 
   /**
    * Set notification preferences (both in OneSignal tags and backend)
-   * @param {object} preferences - Notification preferences
-   * @param {boolean} preferences.weatherAlerts - Receive weather alerts
-   * @param {boolean} preferences.contentUpdates - Receive content updates
-   * @param {boolean} preferences.tipsAndReminders - Receive tips and engagement reminders
    */
-  async setPreferences(preferences) {
-    const tags = {};
+  async setPreferences(preferences: NotificationPreferences): Promise<void> {
+    const tags: Record<string, string> = {};
 
     if (preferences.weatherAlerts !== undefined) {
       tags.weather_alerts = preferences.weatherAlerts ? 'true' : 'false';
@@ -169,103 +180,99 @@ export const notificationService = {
       }, 10000);
 
       if (!response.ok) {
-        console.warn('[Notifications] Failed to sync preferences to backend');
+        warn('[Notifications] Failed to sync preferences to backend');
       }
     } catch (error) {
-      console.error('[Notifications] Error syncing preferences:', error);
+      logError('[Notifications] Error syncing preferences:', error);
     }
   },
 
   /**
    * Request notification permissions from user
-   * @returns {Promise<boolean>} Whether permission was granted
    */
-  async requestPermission() {
+  async requestPermission(): Promise<boolean> {
     try {
-      console.log('[Notifications] Requesting notification permission...');
+      log('[Notifications] Requesting notification permission...');
       const granted = await OneSignal.promptForPushNotificationsWithUserResponse();
-      console.log('[Notifications] Permission granted:', granted);
+      log('[Notifications] Permission granted:', granted);
       return granted;
     } catch (error) {
-      console.error('[Notifications] Error requesting permission:', error);
+      logError('[Notifications] Error requesting permission:', error);
       return false;
     }
   },
 
   /**
    * Check if notifications are currently enabled
-   * @returns {Promise<boolean>} Whether notifications are enabled
    */
-  async areNotificationsEnabled() {
+  async areNotificationsEnabled(): Promise<boolean> {
     try {
-      const deviceState = await OneSignal.getDeviceState();
+      const deviceState: DeviceState | null = await OneSignal.getDeviceState();
       return deviceState?.hasNotificationPermission ?? false;
     } catch (error) {
-      console.error('[Notifications] Error checking notification status:', error);
+      logError('[Notifications] Error checking notification status:', error);
       return false;
     }
   },
 
   /**
    * Get the current player ID (OneSignal user ID)
-   * @returns {Promise<string|null>} Player ID if available
    */
-  async getPlayerId() {
+  async getPlayerId(): Promise<string | null> {
     try {
-      const deviceState = await OneSignal.getDeviceState();
+      const deviceState: DeviceState | null = await OneSignal.getDeviceState();
       return deviceState?.userId ?? null;
     } catch (error) {
-      console.error('[Notifications] Error getting player ID:', error);
+      logError('[Notifications] Error getting player ID:', error);
       return null;
     }
   },
 
   /**
    * Set external user ID for cross-device targeting
-   * @param {string} userId - Your backend user ID
    */
-  async setExternalUserId(userId) {
+  async setExternalUserId(userId: string | null): Promise<void> {
     if (!userId) return;
     try {
-      console.log('[Notifications] Setting external user ID:', userId);
+      log('[Notifications] Setting external user ID:', userId);
       OneSignal.setExternalUserId(userId);
     } catch (error) {
-      console.error('[Notifications] Error setting external user ID:', error);
+      logError('[Notifications] Error setting external user ID:', error);
     }
   },
 
   /**
    * Remove external user ID (e.g., on logout)
    */
-  async removeExternalUserId() {
+  async removeExternalUserId(): Promise<void> {
     try {
       OneSignal.removeExternalUserId();
     } catch (error) {
-      console.error('[Notifications] Error removing external user ID:', error);
+      logError('[Notifications] Error removing external user ID:', error);
     }
   },
 
   /**
    * Disable push notifications
    */
-  disablePush() {
+  disablePush(): void {
     try {
       OneSignal.disablePush(true);
-      console.log('[Notifications] Push notifications disabled');
+      log('[Notifications] Push notifications disabled');
     } catch (error) {
-      console.error('[Notifications] Error disabling push:', error);
+      logError('[Notifications] Error disabling push:', error);
     }
   },
 
   /**
    * Enable push notifications
    */
-  enablePush() {
+  enablePush(): void {
     try {
       OneSignal.disablePush(false);
-      console.log('[Notifications] Push notifications enabled');
+      log('[Notifications] Push notifications enabled');
     } catch (error) {
-      console.error('[Notifications] Error enabling push:', error);
+      logError('[Notifications] Error enabling push:', error);
     }
   },
 };

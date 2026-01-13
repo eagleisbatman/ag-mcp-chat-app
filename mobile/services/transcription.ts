@@ -6,13 +6,27 @@ import { error as logError } from '../utils/logger';
 const WHISPER_URL = `${API_BASE_URL}/api/transcribe`;
 const TRANSCRIPTION_TIMEOUT_MS = TIMEOUTS.DEFAULT;
 
+export interface TranscriptionResult {
+  success: boolean;
+  text?: string;
+  language?: string;
+  error?: string;
+  errorCode?: string | null;
+  errorDetails?: string | null;
+  requestedLanguage?: string | null;
+  detectedLanguage?: string | null;
+}
+
 /**
  * Transcribe audio to text using Gemini 2.5 Flash via AI Services
- * @param {string} audioBase64 - Base64 encoded audio file
- * @param {string} language - Optional language hint (ISO code, e.g., 'en', 'hi')
- * @returns {Promise<{success: boolean, text?: string, language?: string, error?: string}>}
+ * @param audioBase64 - Base64 encoded audio file
+ * @param language - Optional language hint (ISO code, e.g., 'en', 'hi')
+ * @returns Promise with transcription text or error
  */
-export const transcribeAudio = async (audioBase64, language = null) => {
+export const transcribeAudio = async (
+  audioBase64: string,
+  language: string | null = null
+): Promise<TranscriptionResult> => {
   try {
     // Ensure proper data URL format
     let audioData = audioBase64;
@@ -53,16 +67,16 @@ export const transcribeAudio = async (audioBase64, language = null) => {
     return {
       success: true,
       text: data.text || data.transcription || '',
-      language: data.detectedLanguage || data.detected_language || language,
+      language: data.detectedLanguage || data.detected_language || language || undefined,
     };
   } catch (error) {
-    logError('Whisper transcription error:', error);
+    const err = error as Error;
+    logError('Whisper transcription error:', err);
     return {
       success: false,
-      error: error.message || 'Failed to transcribe audio',
+      error: err.message || 'Failed to transcribe audio',
     };
   }
 };
 
 export default { transcribeAudio };
-

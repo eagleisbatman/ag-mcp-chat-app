@@ -5,13 +5,35 @@ import { log, error as logError } from '../utils/logger';
 
 const UPLOAD_TIMEOUT_MS = TIMEOUTS.CHAT; // Use same timeout as chat for file uploads
 
+export interface ImageUploadResult {
+  success: boolean;
+  url?: string;
+  thumbnailUrl?: string;
+  mediumUrl?: string;
+  publicId?: string;
+  width?: number;
+  height?: number;
+  error?: string;
+}
+
+export interface AudioUploadResult {
+  success: boolean;
+  url?: string;
+  publicId?: string;
+  duration?: number;
+  error?: string;
+}
+
 /**
  * Upload image to Cloudinary
- * @param {string} base64Image - Base64 encoded image (without data: prefix)
- * @param {string} folder - Cloudinary folder (optional)
- * @returns {Promise<{success: boolean, url?: string, thumbnailUrl?: string, error?: string}>}
+ * @param base64Image - Base64 encoded image (without data: prefix)
+ * @param folder - Cloudinary folder (optional)
+ * @returns Promise with upload result
  */
-export const uploadImage = async (base64Image, folder = 'ag-mcp/images') => {
+export const uploadImage = async (
+  base64Image: string,
+  folder: string = 'ag-mcp/images'
+): Promise<ImageUploadResult> => {
   try {
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/upload/image`, {
       method: 'POST',
@@ -48,22 +70,27 @@ export const uploadImage = async (base64Image, folder = 'ag-mcp/images') => {
       };
     }
   } catch (error) {
-    logError('Image upload error:', error);
+    const err = error as Error;
+    logError('Image upload error:', err);
     return {
       success: false,
-      error: error.message || 'Failed to upload image',
+      error: err.message || 'Failed to upload image',
     };
   }
 };
 
 /**
  * Upload audio to Cloudinary
- * @param {string} base64Audio - Base64 encoded audio (without data: prefix)
- * @param {string} format - Audio format (m4a, wav, mp3, etc.) - defaults to m4a for mobile recordings
- * @param {string} folder - Cloudinary folder (optional)
- * @returns {Promise<{success: boolean, url?: string, duration?: number, error?: string}>}
+ * @param base64Audio - Base64 encoded audio (without data: prefix)
+ * @param format - Audio format (m4a, wav, mp3, etc.) - defaults to m4a for mobile recordings
+ * @param folder - Cloudinary folder (optional)
+ * @returns Promise with upload result
  */
-export const uploadAudio = async (base64Audio, format = 'm4a', folder = 'ag-mcp/voice') => {
+export const uploadAudio = async (
+  base64Audio: string,
+  format: string = 'm4a',
+  folder: string = 'ag-mcp/voice'
+): Promise<AudioUploadResult> => {
   try {
     log('📤 [Upload] Uploading audio:', { format, folder, length: base64Audio?.length });
     
@@ -104,13 +131,13 @@ export const uploadAudio = async (base64Audio, format = 'm4a', folder = 'ag-mcp/
       };
     }
   } catch (error) {
-    logError('Audio upload error:', error);
+    const err = error as Error;
+    logError('Audio upload error:', err);
     return {
       success: false,
-      error: error.message || 'Failed to upload audio',
+      error: err.message || 'Failed to upload audio',
     };
   }
 };
 
 export default { uploadImage, uploadAudio };
-

@@ -88,3 +88,10 @@ export default function TypewriterText({
   );
 }
 
+TypewriterText.propTypes = {
+  text: PropTypes.string.isRequired,
+  speed: PropTypes.number,
+  onComplete: PropTypes.func,
+  animate: PropTypes.bool,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+};

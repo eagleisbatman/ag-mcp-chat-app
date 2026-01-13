@@ -9,10 +9,86 @@ import { t } from '../constants/strings';
 
 const DB_TIMEOUT_MS = TIMEOUTS.DB;
 
-const headers = {
+const headers: Record<string, string> = {
   'Content-Type': 'application/json',
   'X-API-Key': API_KEY,
 };
+
+// Type definitions
+export interface User {
+  id?: string;
+  userId?: string;
+  deviceId?: string;
+  language?: string;
+  location?: LocationData;
+}
+
+export interface LocationData {
+  latitude?: number;
+  longitude?: number;
+  displayName?: string;
+  level1Country?: string;
+  level2State?: string;
+  level3District?: string;
+  level5City?: string;
+  level6Locality?: string;
+}
+
+export interface Session {
+  id: string;
+  title?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  messageCount?: number;
+}
+
+export interface Message {
+  id?: string;
+  _id?: string;
+  text: string;
+  isBot: boolean;
+  createdAt?: string | Date;
+  image?: string;
+  diagnosisData?: Record<string, unknown>;
+  ttsAudioUrl?: string;
+}
+
+export interface ApiResult<T = unknown> {
+  success: boolean;
+  error?: string;
+  data?: T;
+}
+
+export interface UserResult extends ApiResult {
+  userId?: string;
+  user?: User;
+}
+
+export interface SessionResult extends ApiResult {
+  session?: Session;
+  sessions?: Session[];
+  messages?: Message[];
+}
+
+export interface MessageResult extends ApiResult {
+  message?: Message;
+  messages?: Message[];
+}
+
+export interface LocationLookupResult extends ApiResult {
+  source?: string;
+  displayName?: string;
+  level1Country?: string;
+  level2State?: string;
+  level3District?: string;
+  level5City?: string;
+  level6Locality?: string;
+}
+
+export interface TitleResult extends ApiResult {
+  title?: string;
+}
 
 // ============================================
 // USER MANAGEMENT
@@ -20,9 +96,8 @@ const headers = {
 
 /**
  * Register device with the backend
- * @returns {Promise<object>} User object with userId
  */
-export async function registerUser() {
+export async function registerUser(): Promise<UserResult> {
   try {
     const deviceInfo = await getDeviceInfo();
     
@@ -44,15 +119,16 @@ export async function registerUser() {
     
     return { success: true, userId: data.id || data.userId, ...data };
   } catch (error) {
-    logError('❌ [DB] User sync error:', error.message);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('❌ [DB] User sync error:', err.message);
+    return { success: false, error: err.message };
   }
 }
 
 /**
  * Get current user
  */
-export async function getCurrentUser() {
+export async function getCurrentUser(): Promise<User | null> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/me?deviceId=${deviceId}`, { headers }, DB_TIMEOUT_MS);
@@ -72,7 +148,7 @@ export async function getCurrentUser() {
 /**
  * Update user preferences
  */
-export async function updatePreferences(preferences) {
+export async function updatePreferences(preferences: Record<string, unknown>): Promise<ApiResult> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/preferences`, {
@@ -87,15 +163,16 @@ export async function updatePreferences(preferences) {
     
     return await response.json();
   } catch (error) {
-    logError('Update preferences error:', error);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('Update preferences error:', err);
+    return { success: false, error: err.message };
   }
 }
 
 /**
  * Save user location
  */
-export async function saveLocation(locationData) {
+export async function saveLocation(locationData: LocationData): Promise<ApiResult> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/location`, {
@@ -110,8 +187,9 @@ export async function saveLocation(locationData) {
     
     return await response.json();
   } catch (error) {
-    logError('Save location error:', error);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('Save location error:', err);
+    return { success: false, error: err.message };
   }
 }
 
@@ -122,10 +200,10 @@ export async function saveLocation(locationData) {
 /**
  * List chat sessions
  */
-export async function listSessions(options = {}) {
+export async function listSessions(options: Record<string, unknown> = {}): Promise<SessionResult> {
   try {
     const deviceId = await getDeviceId();
-    const params = new URLSearchParams({ deviceId, ...options });
+    const params = new URLSearchParams({ deviceId, ...options } as Record<string, string>);
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions?${params}`, { headers }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
@@ -134,15 +212,16 @@ export async function listSessions(options = {}) {
     
     return await response.json();
   } catch (error) {
-    logError('List sessions error:', error);
-    return { success: false, sessions: [], error: error.message };
+    const err = error as Error;
+    logError('List sessions error:', err);
+    return { success: false, sessions: [], error: err.message };
   }
 }
 
 /**
  * Create a new chat session
  */
-export async function createSession(options = {}) {
+export async function createSession(options: Record<string, unknown> = {}): Promise<SessionResult> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions`, {
@@ -157,15 +236,16 @@ export async function createSession(options = {}) {
     
     return await response.json();
   } catch (error) {
-    logError('Create session error:', error);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('Create session error:', err);
+    return { success: false, error: err.message };
   }
 }
 
 /**
  * Get session with messages
  */
-export async function getSession(sessionId, messageLimit = 50) {
+export async function getSession(sessionId: string, messageLimit: number = 50): Promise<SessionResult> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
@@ -180,15 +260,16 @@ export async function getSession(sessionId, messageLimit = 50) {
     
     return await response.json();
   } catch (error) {
-    logError('Get session error:', error);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('Get session error:', err);
+    return { success: false, error: err.message };
   }
 }
 
 /**
  * Update session (title, status, etc.)
  */
-export async function updateSession(sessionId, updates) {
+export async function updateSession(sessionId: string, updates: Record<string, unknown>): Promise<SessionResult> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions/${sessionId}`, {
@@ -203,15 +284,16 @@ export async function updateSession(sessionId, updates) {
     
     return await response.json();
   } catch (error) {
-    logError('Update session error:', error);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('Update session error:', err);
+    return { success: false, error: err.message };
   }
 }
 
 /**
  * Archive/delete a session
  */
-export async function deleteSession(sessionId) {
+export async function deleteSession(sessionId: string): Promise<ApiResult> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
@@ -226,8 +308,9 @@ export async function deleteSession(sessionId) {
     
     return await response.json();
   } catch (error) {
-    logError('Delete session error:', error);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('Delete session error:', err);
+    return { success: false, error: err.message };
   }
 }
 
@@ -238,7 +321,7 @@ export async function deleteSession(sessionId) {
 /**
  * Save a message to the database
  */
-export async function saveMessage(messageData) {
+export async function saveMessage(messageData: Record<string, unknown>): Promise<MessageResult> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages`, {
@@ -253,18 +336,19 @@ export async function saveMessage(messageData) {
     
     return await response.json();
   } catch (error) {
-    logError('Save message error:', error);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('Save message error:', err);
+    return { success: false, error: err.message };
   }
 }
 
 /**
  * Get messages for a session
  */
-export async function getMessages(sessionId, options = {}) {
+export async function getMessages(sessionId: string, options: Record<string, unknown> = {}): Promise<MessageResult> {
   try {
     const deviceId = await getDeviceId();
-    const params = new URLSearchParams({ deviceId, ...options });
+    const params = new URLSearchParams({ deviceId, ...options } as Record<string, string>);
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages/${sessionId}?${params}`, { headers }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
@@ -273,15 +357,16 @@ export async function getMessages(sessionId, options = {}) {
     
     return await response.json();
   } catch (error) {
-    logError('Get messages error:', error);
-    return { success: false, messages: [], error: error.message };
+    const err = error as Error;
+    logError('Get messages error:', err);
+    return { success: false, messages: [], error: err.message };
   }
 }
 
 /**
  * Update message (feedback, TTS played, etc.)
  */
-export async function updateMessage(messageId, updates) {
+export async function updateMessage(messageId: string, updates: Record<string, unknown>): Promise<MessageResult> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages/${messageId}`, {
@@ -296,8 +381,9 @@ export async function updateMessage(messageId, updates) {
     
     return await response.json();
   } catch (error) {
-    logError('Update message error:', error);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('Update message error:', err);
+    return { success: false, error: err.message };
   }
 }
 
@@ -308,7 +394,11 @@ export async function updateMessage(messageId, updates) {
 /**
  * Lookup location from GPS or IP via API Gateway (Nominatim/IP-API)
  */
-export async function lookupLocation(latitude, longitude, ipAddress = null) {
+export async function lookupLocation(
+  latitude: number | null,
+  longitude: number | null,
+  ipAddress: string | null = null
+): Promise<LocationLookupResult> {
   try {
     log('🔌 [DB] Looking up location:', { latitude, longitude, ipAddress });
     
@@ -335,8 +425,9 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
     
     return data;
   } catch (error) {
-    logError('❌ [DB] Location lookup error:', error.message);
-    return { success: false, error: error.message };
+    const err = error as Error;
+    logError('❌ [DB] Location lookup error:', err.message);
+    return { success: false, error: err.message };
   }
 }
 
@@ -347,7 +438,7 @@ export async function lookupLocation(latitude, longitude, ipAddress = null) {
 /**
  * Generate session title via AI Services
  */
-export async function generateTitle(messages, language = 'en') {
+export async function generateTitle(messages: Message[], language: string = 'en'): Promise<TitleResult> {
   try {
     log('🔌 [DB] Generating title with', messages.length, 'messages, language:', language);
     
@@ -369,8 +460,9 @@ export async function generateTitle(messages, language = 'en') {
     log('🔌 [DB] Title generation result:', data);
     return data;
   } catch (error) {
-    log('❌ [DB] Title generation exception:', error.message);
-    return { success: false, title: t('history.newConversation'), error: error.message };
+    const err = error as Error;
+    log('❌ [DB] Title generation exception:', err.message);
+    return { success: false, title: t('history.newConversation'), error: err.message };
   }
 }
 
@@ -381,7 +473,11 @@ export async function generateTitle(messages, language = 'en') {
 /**
  * Log an analytics event
  */
-export async function logEvent(eventName, eventData = {}, sessionId = null) {
+export async function logEvent(
+  eventName: string,
+  eventData: Record<string, unknown> = {},
+  sessionId: string | null = null
+): Promise<void> {
   try {
     const deviceId = await getDeviceId();
     await fetchWithTimeout(`${API_BASE_URL}/api/analytics/event`, {
@@ -394,4 +490,3 @@ export async function logEvent(eventName, eventData = {}, sessionId = null) {
     log('Analytics error:', error);
   }
 }
-
