@@ -1,8 +1,10 @@
 // AgriVision MCP Service - Plant disease diagnosis via image analysis
 import { log, error as logError } from '../utils/logger';
+import { getOptionalEnv } from '../utils/config';
 
-// AgriVision URL - should match database seed (agrivision.up.railway.app)
-const AGRIVISION_URL = process.env.EXPO_PUBLIC_AGRIVISION_URL || 'https://agrivision.up.railway.app/mcp';
+// AgriVision URL - uses config with proper environment variable handling
+// Default to production URL if not set (AgriVision is a stable public service)
+const AGRIVISION_URL = getOptionalEnv('EXPO_PUBLIC_AGRIVISION_URL', 'https://agrivision.up.railway.app/mcp');
 const AGRIVISION_TIMEOUT_MS = 45000; // 45s for image analysis
 
 // Type definitions
