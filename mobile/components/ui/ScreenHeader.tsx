@@ -1,9 +1,23 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
+
+type HeaderAlign = 'center' | 'left';
+
+interface ScreenHeaderProps {
+  title?: string;
+  subtitle?: string;
+  center?: ReactNode;
+  left?: ReactNode;
+  right?: ReactNode;
+  backgroundColor?: string;
+  borderColor?: string;
+  borderBottom?: boolean;
+  align?: HeaderAlign;
+  style?: ViewStyle | ViewStyle[];
+}
 
 export default function ScreenHeader({
   title,
@@ -14,9 +28,9 @@ export default function ScreenHeader({
   backgroundColor,
   borderColor,
   borderBottom = false,
-  align = 'center', // 'center' | 'left'
+  align = 'center',
   style,
-}) {
+}: ScreenHeaderProps): JSX.Element {
   const { theme } = useApp();
   const resolvedBackground = backgroundColor ?? theme.background;
   const resolvedBorderColor = borderColor ?? theme.border;
@@ -120,16 +134,3 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
 });
-
-ScreenHeader.propTypes = {
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  center: PropTypes.node,
-  left: PropTypes.node,
-  right: PropTypes.node,
-  backgroundColor: PropTypes.string,
-  borderColor: PropTypes.string,
-  borderBottom: PropTypes.bool,
-  align: PropTypes.oneOf(['center', 'left']),
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-};

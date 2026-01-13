@@ -1,11 +1,24 @@
-import React from 'react';
-import { Pressable, StyleSheet, Text, View, Platform } from 'react-native';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
+import { Pressable, StyleSheet, Text, View, Platform, ViewStyle, TextStyle, PressableAndroidRippleConfig } from 'react-native';
 import { useApp } from '../../contexts/AppContext';
-import { SPACING, TYPOGRAPHY } from '../../constants/themes';
+import { SPACING, TYPOGRAPHY, ThemeColors } from '../../constants/themes';
 import { withAlpha } from '../../utils/color';
 
-function getRipple({ theme, backgroundColor }) {
+type ButtonVariant = 'primary' | 'secondary' | 'tonal' | 'danger';
+
+interface ButtonProps {
+  title: string;
+  onPress?: () => void;
+  disabled?: boolean;
+  variant?: ButtonVariant;
+  left?: ReactNode;
+  right?: ReactNode;
+  style?: ViewStyle | ViewStyle[];
+  textStyle?: TextStyle | TextStyle[];
+  accessibilityLabel?: string;
+}
+
+function getRipple({ theme }: { theme: ThemeColors }): PressableAndroidRippleConfig | undefined {
   if (Platform.OS !== 'android') return undefined;
   const isDark = theme.name === 'dark';
   const base = isDark ? '#FFFFFF' : '#000000';
@@ -17,13 +30,13 @@ export default function Button({
   title,
   onPress,
   disabled = false,
-  variant = 'primary', // 'primary' | 'secondary' | 'tonal' | 'danger'
+  variant = 'primary',
   left,
   right,
   style,
   textStyle,
   accessibilityLabel,
-}) {
+}: ButtonProps): JSX.Element {
   const { theme } = useApp();
 
   const resolved = (() => {
@@ -46,17 +59,17 @@ export default function Button({
       accessibilityLabel={accessibilityLabel ?? title}
       onPress={onPress}
       disabled={disabled}
-      android_ripple={getRipple({ theme, backgroundColor: resolved.backgroundColor })}
+      android_ripple={getRipple({ theme })}
       style={({ pressed }) => [
         styles.base,
         { backgroundColor: resolved.backgroundColor, opacity: disabled ? 0.6 : 1 },
         Platform.OS === 'ios' && pressed && !disabled ? styles.pressedIOS : null,
-        style,
+        style as ViewStyle,
       ]}
     >
       <View style={styles.content}>
         {left ? <View style={styles.side}>{left}</View> : null}
-        <Text style={[styles.text, { color: resolved.textColor }, textStyle]} numberOfLines={1}>
+        <Text style={[styles.text, { color: resolved.textColor }, textStyle as TextStyle]} numberOfLines={1}>
           {title}
         </Text>
         {right ? <View style={styles.side}>{right}</View> : null}
@@ -93,15 +106,3 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
 });
-
-Button.propTypes = {
-  title: PropTypes.string.isRequired,
-  onPress: PropTypes.func,
-  disabled: PropTypes.bool,
-  variant: PropTypes.oneOf(['primary', 'secondary', 'tonal', 'danger']),
-  left: PropTypes.node,
-  right: PropTypes.node,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  textStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  accessibilityLabel: PropTypes.string,
-};

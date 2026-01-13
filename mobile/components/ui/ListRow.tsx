@@ -1,9 +1,30 @@
-import React from 'react';
-import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
+import { View, Text, Pressable, StyleSheet, Platform, ViewStyle } from 'react-native';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import AppIcon from './AppIcon';
+
+interface ListRowProps {
+  title: string;
+  subtitle?: string;
+  hint?: string;
+  titleColor?: string;
+  subtitleColor?: string;
+  hintColor?: string;
+  left?: ReactNode;
+  right?: ReactNode;
+  showChevron?: boolean;
+  onPress?: () => void;
+  onLongPress?: () => void;
+  delayLongPress?: number;
+  disabled?: boolean;
+  divider?: boolean;
+  paddingHorizontal?: number;
+  paddingVertical?: number;
+  style?: ViewStyle | ViewStyle[];
+  contentStyle?: ViewStyle | ViewStyle[];
+  accessibilityLabel?: string;
+}
 
 export default function ListRow({
   title,
@@ -25,7 +46,7 @@ export default function ListRow({
   style,
   contentStyle,
   accessibilityLabel,
-}) {
+}: ListRowProps): JSX.Element {
   const { theme } = useApp();
   const resolvedShowChevron = showChevron ?? Boolean(onPress);
   const resolvedTitleColor = titleColor ?? theme.text;
@@ -119,25 +140,3 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
   },
 });
-
-ListRow.propTypes = {
-  title: PropTypes.string.isRequired,
-  subtitle: PropTypes.string,
-  hint: PropTypes.string,
-  titleColor: PropTypes.string,
-  subtitleColor: PropTypes.string,
-  hintColor: PropTypes.string,
-  left: PropTypes.node,
-  right: PropTypes.node,
-  showChevron: PropTypes.bool,
-  onPress: PropTypes.func,
-  onLongPress: PropTypes.func,
-  delayLongPress: PropTypes.number,
-  disabled: PropTypes.bool,
-  divider: PropTypes.bool,
-  paddingHorizontal: PropTypes.number,
-  paddingVertical: PropTypes.number,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  contentStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  accessibilityLabel: PropTypes.string,
-};

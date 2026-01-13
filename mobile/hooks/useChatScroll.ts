@@ -3,19 +3,45 @@
  * Manages scroll position, auto-scroll, and user message anchoring
  */
 
-import { useCallback, useRef, useEffect, useState } from 'react';
-import { Animated } from 'react-native';
+import { useCallback, useRef, useEffect, useState, RefObject, MutableRefObject } from 'react';
+import { Animated, FlatList, NativeScrollEvent, NativeSyntheticEvent, LayoutChangeEvent } from 'react-native';
 import { log } from '../utils/logger';
+import { Message } from '../types';
+
+interface UseChatScrollOptions {
+  messages: Message[];
+  isTyping: boolean;
+  flatListRef: RefObject<FlatList<Message>>;
+}
+
+interface UseChatScrollReturn {
+  // State
+  showScrollButton: boolean;
+  scrollButtonAnim: Animated.Value;
+  
+  // Methods
+  scrollToBottom: () => void;
+  scrollToUserMessage: () => void;
+  resetScrollState: () => void;
+  onMessageLayout: (messageId: string, height: number) => void;
+  calculateScrollOffset: (messageId: string) => number;
+  
+  // Event handlers
+  handleScrollBeginDrag: () => void;
+  handleScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  handleLayout: (event: LayoutChangeEvent) => void;
+  handleContentSizeChange: (width: number, height: number) => void;
+  handleScrollToIndexFailed: (info: { index: number; averageItemLength: number }) => void;
+  
+  // Refs (exposed for advanced use cases)
+  isUserScrollingRef: MutableRefObject<boolean>;
+  isAnchorLockedRef: MutableRefObject<boolean>;
+}
 
 /**
  * Hook for managing chat list scroll behavior
- * @param {object} options
- * @param {Array} options.messages - Chat messages array
- * @param {boolean} options.isTyping - Whether bot is typing
- * @param {object} options.flatListRef - Ref to FlatList
- * @returns {object} Scroll state and handlers
  */
-export default function useChatScroll({ messages, isTyping, flatListRef }) {
+export default function useChatScroll({ messages, isTyping, flatListRef }: UseChatScrollOptions): UseChatScrollReturn {
   // State
   const [showScrollButton, setShowScrollButton] = useState(false);
   const scrollButtonAnim = useRef(new Animated.Value(0)).current;
@@ -25,8 +51,8 @@ export default function useChatScroll({ messages, isTyping, flatListRef }) {
   const contentHeightRef = useRef(0);
   const viewportHeightRef = useRef(0);
   const currentScrollYRef = useRef(0);
-  const messageHeightsRef = useRef({});
-  const lastUserMessageIdRef = useRef(null);
+  const messageHeightsRef = useRef<Record<string, number>>({});
+  const lastUserMessageIdRef = useRef<string | null>(null);
   const shouldScrollToUserRef = useRef(false);
   const blockAutoScrollRef = useRef(false);
   const isAnchorLockedRef = useRef(false);
@@ -36,14 +62,14 @@ export default function useChatScroll({ messages, isTyping, flatListRef }) {
   /**
    * Track message height when it renders
    */
-  const onMessageLayout = useCallback((messageId, height) => {
+  const onMessageLayout = useCallback((messageId: string, height: number) => {
     messageHeightsRef.current[messageId] = height;
   }, []);
 
   /**
    * Calculate scroll offset to position a message at top of viewport
    */
-  const calculateScrollOffset = useCallback((messageId) => {
+  const calculateScrollOffset = useCallback((messageId: string): number => {
     const reversedMessages = [...messages].reverse();
     let offset = 0;
 
@@ -109,22 +135,22 @@ export default function useChatScroll({ messages, isTyping, flatListRef }) {
     log('📜 [Scroll] User started scrolling manually - lock released');
   }, []);
 
-  const handleScroll = useCallback((event) => {
+  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset } = event.nativeEvent;
     currentScrollYRef.current = contentOffset.y;
     setShowScrollButton(contentOffset.y > 200);
   }, []);
 
-  const handleLayout = useCallback((event) => {
+  const handleLayout = useCallback((event: LayoutChangeEvent) => {
     viewportHeightRef.current = event.nativeEvent.layout.height;
   }, []);
 
-  const handleContentSizeChange = useCallback((width, height) => {
+  const handleContentSizeChange = useCallback((width: number, height: number) => {
     contentHeightRef.current = height;
   }, []);
 
   // Handle scroll failed (fallback)
-  const handleScrollToIndexFailed = useCallback((info) => {
+  const handleScrollToIndexFailed = useCallback((info: { index: number; averageItemLength: number }) => {
     log('📜 [Scroll] scrollToIndex failed, using fallback offset scroll');
     const offset = info.averageItemLength * info.index;
     flatListRef.current?.scrollToOffset({ offset, animated: true });

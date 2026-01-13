@@ -4,8 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
+import { View, Text, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -18,13 +17,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../../contexts/AppContext';
 import { TYPOGRAPHY } from '../../constants/themes';
 
+interface ShimmerTextProps {
+  text: string;
+  style?: TextStyle | TextStyle[];
+  fontSize?: number;
+}
+
 /**
  * ShimmerText component
- * @param {string} text - The text to display
- * @param {object} style - Additional text styles
- * @param {number} fontSize - Font size (default: TYPOGRAPHY.sizes.sm)
  */
-export default function ShimmerText({ text, style, fontSize = TYPOGRAPHY.sizes.sm }) {
+export default function ShimmerText({ text, style, fontSize = TYPOGRAPHY.sizes.sm }: ShimmerTextProps): JSX.Element {
   const { theme, isDark } = useApp();
   const shimmerProgress = useSharedValue(0);
 
@@ -55,10 +57,19 @@ export default function ShimmerText({ text, style, fontSize = TYPOGRAPHY.sizes.s
 
   // Colors for shimmer based on theme
   const shimmerColors = isDark
-    ? ['transparent', 'rgba(48, 209, 88, 0.3)', 'transparent'] // Green glow for dark
-    : ['transparent', 'rgba(27, 138, 46, 0.25)', 'transparent']; // Green tint for light
+    ? ['transparent', 'rgba(48, 209, 88, 0.3)', 'transparent'] as const // Green glow for dark
+    : ['transparent', 'rgba(27, 138, 46, 0.25)', 'transparent'] as const; // Green tint for light
 
   const baseColor = isDark ? theme.textSecondary : theme.textMuted;
+
+  // Overlay text animated style - defined outside JSX
+  const overlayAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      shimmerProgress.value,
+      [0, 0.3, 0.7, 1],
+      [0.3, 0.6, 0.6, 0.3]
+    ),
+  }));
 
   return (
     <View style={styles.container}>
@@ -90,16 +101,10 @@ export default function ShimmerText({ text, style, fontSize = TYPOGRAPHY.sizes.s
       <Animated.Text
         style={[
           styles.text,
-          styles.overlayText,
+          styles.overlayText as TextStyle,
           { color: isDark ? theme.accent : theme.accentDark, fontSize },
           style,
-          useAnimatedStyle(() => ({
-            opacity: interpolate(
-              shimmerProgress.value,
-              [0, 0.3, 0.7, 1],
-              [0.3, 0.6, 0.6, 0.3]
-            ),
-          })),
+          overlayAnimatedStyle,
         ]}
         numberOfLines={2}
       >
@@ -133,9 +138,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-ShimmerText.propTypes = {
-  text: PropTypes.string.isRequired,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  fontSize: PropTypes.number,
-};

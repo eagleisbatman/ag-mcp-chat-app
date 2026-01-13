@@ -1,9 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 
-// Feather icons - thin, clean aesthetic (like Claude's app)
-const FEATHER_ICONS = {
+type IconPreference = 'feather' | 'mci' | 'ion';
+
+interface AppIconProps {
+  name: string;
+  size?: number;
+  color?: string;
+  prefer?: IconPreference;
+  [key: string]: unknown;
+}
+
+// Feather icons - thin, clean aesthetic
+const FEATHER_ICONS: Record<string, string> = {
   'plus': 'plus',
   'x': 'x',
   'mic': 'mic',
@@ -24,7 +33,6 @@ const FEATHER_ICONS = {
   'x-circle': 'x-circle',
   'alert-circle': 'alert-circle',
   'info': 'info',
-  // 'menu': 'menu', // Removed - use MCI version which renders more reliably
   'chevron-down': 'chevron-down',
   'chevron-right': 'chevron-right',
   'volume-2': 'volume-2',
@@ -36,7 +44,7 @@ const FEATHER_ICONS = {
   'file-text': 'file-text',
 };
 
-const ION_TO_MCI = {
+const ION_TO_MCI: Record<string, string> = {
   'arrow-back': 'arrow-left',
   'arrow-forward': 'arrow-right',
   'chevron-forward': 'chevron-right',
@@ -71,7 +79,6 @@ const ION_TO_MCI = {
   'stop-circle': 'stop-circle',
   leaf: 'sprout',
   'leaf-outline': 'sprout-outline',
-  // Diagnosis card icons
   sprout: 'sprout',
   target: 'target',
   flask: 'flask',
@@ -87,33 +94,22 @@ const ION_TO_MCI = {
 
 /**
  * Unified icon component supporting multiple icon sets
- * @param {string} name - Icon name
- * @param {number} size - Icon size
- * @param {string} color - Icon color
- * @param {string} prefer - Preferred icon set: 'feather' | 'mci' | 'ion'
  */
-export default function AppIcon({ name, size, color, prefer = 'mci', ...rest }) {
+export default function AppIcon({ name, size = 24, color, prefer = 'mci', ...rest }: AppIconProps): JSX.Element {
   // Check Feather first if preferred or if icon exists in Feather set
   if (prefer === 'feather' || FEATHER_ICONS[name]) {
     const featherName = FEATHER_ICONS[name];
     if (featherName) {
-      return <Feather name={featherName} size={size} color={color} {...rest} />;
+      return <Feather name={featherName as keyof typeof Feather.glyphMap} size={size} color={color} {...rest} />;
     }
   }
 
   // Fall back to MCI mapping
   const mapped = ION_TO_MCI[name];
   if (prefer === 'mci' && mapped) {
-    return <MaterialCommunityIcons name={mapped} size={size} color={color} {...rest} />;
+    return <MaterialCommunityIcons name={mapped as keyof typeof MaterialCommunityIcons.glyphMap} size={size} color={color} {...rest} />;
   }
 
   // Default to Ionicons
-  return <Ionicons name={name} size={size} color={color} {...rest} />;
+  return <Ionicons name={name as keyof typeof Ionicons.glyphMap} size={size} color={color} {...rest} />;
 }
-
-AppIcon.propTypes = {
-  name: PropTypes.string.isRequired,
-  size: PropTypes.number,
-  color: PropTypes.string,
-  prefer: PropTypes.oneOf(['feather', 'mci', 'ion']),
-};

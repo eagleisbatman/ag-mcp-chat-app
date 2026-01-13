@@ -4,8 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
+import { View, StyleSheet, TextStyle } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -19,10 +18,15 @@ import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import ShimmerText from './ShimmerText';
 
+interface PulsingDotProps {
+  delay: number;
+  color: string;
+}
+
 /**
  * Single animated dot component
  */
-function PulsingDot({ delay, color }) {
+function PulsingDot({ delay, color }: PulsingDotProps): JSX.Element {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(0.4);
 
@@ -69,11 +73,14 @@ function PulsingDot({ delay, color }) {
   );
 }
 
+interface TypingIndicatorProps {
+  text: string;
+}
+
 /**
  * TypingIndicator component
- * @param {string} text - The thinking/status text to display
  */
-export default function TypingIndicator({ text }) {
+export default function TypingIndicator({ text }: TypingIndicatorProps): JSX.Element {
   const { theme } = useApp();
 
   return (
@@ -88,7 +95,7 @@ export default function TypingIndicator({ text }) {
       {/* Shimmer text */}
       <ShimmerText
         text={text}
-        style={styles.text}
+        style={styles.text as TextStyle}
         fontSize={TYPOGRAPHY.sizes.sm}
       />
     </View>
@@ -118,12 +125,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-PulsingDot.propTypes = {
-  delay: PropTypes.number.isRequired,
-  color: PropTypes.string.isRequired,
-};
-
-TypingIndicator.propTypes = {
-  text: PropTypes.string.isRequired,
-};

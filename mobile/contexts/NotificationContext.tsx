@@ -1,28 +1,78 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notificationService from '../services/notifications';
 import { log, error as logError } from '../utils/logger';
 
-const NotificationContext = createContext(null);
-
 // Storage key for notification preferences
 const NOTIFICATION_PREFS_KEY = 'notificationPreferences';
 
+// Types
+interface NotificationPreferences {
+  weatherAlerts: boolean;
+  contentUpdates: boolean;
+  tipsAndReminders: boolean;
+}
+
+interface NotificationData {
+  type?: string;
+  [key: string]: unknown;
+}
+
+interface NotificationInfo {
+  data?: NotificationData;
+  notification?: unknown;
+  receivedAt?: Date;
+  openedAt?: Date;
+  isForground?: boolean;
+}
+
+interface NavigationData {
+  type: string;
+  [key: string]: unknown;
+}
+
+interface NotificationContextValue {
+  // State
+  isInitialized: boolean;
+  isPermissionGranted: boolean;
+  playerId: string | null;
+  preferences: NotificationPreferences;
+  lastNotification: NotificationInfo | null;
+  pendingNavigation: NavigationData | null;
+
+  // Methods
+  initialize: () => Promise<void>;
+  requestPermission: () => Promise<boolean>;
+  registerToken: () => Promise<string | null>;
+  updatePreferences: (newPrefs: Partial<NotificationPreferences>) => Promise<NotificationPreferences>;
+  setRegion: (regionCode: string) => Promise<void>;
+  setLanguage: (languageCode: string) => Promise<void>;
+  setExternalUserId: (userId: string) => Promise<void>;
+  clearPendingNavigation: () => void;
+}
+
+interface NotificationProviderProps {
+  children: ReactNode;
+  onNotificationOpened?: (data: NavigationData) => void;
+}
+
 // Default preferences
-const DEFAULT_PREFERENCES = {
+const DEFAULT_PREFERENCES: NotificationPreferences = {
   weatherAlerts: true,
   contentUpdates: true,
   tipsAndReminders: true,
 };
 
-export const NotificationProvider = ({ children, onNotificationOpened }) => {
+const NotificationContext = createContext<NotificationContextValue | null>(null);
+
+export const NotificationProvider = ({ children, onNotificationOpened }: NotificationProviderProps): JSX.Element => {
   // State
   const [isInitialized, setIsInitialized] = useState(false);
   const [isPermissionGranted, setIsPermissionGranted] = useState(false);
-  const [playerId, setPlayerId] = useState(null);
-  const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
-  const [lastNotification, setLastNotification] = useState(null);
-  const [pendingNavigation, setPendingNavigation] = useState(null);
+  const [playerId, setPlayerId] = useState<string | null>(null);
+  const [preferences, setPreferences] = useState<NotificationPreferences>(DEFAULT_PREFERENCES);
+  const [lastNotification, setLastNotification] = useState<NotificationInfo | null>(null);
+  const [pendingNavigation, setPendingNavigation] = useState<NavigationData | null>(null);
 
   // Ref to hold navigation callback
   const navigationCallbackRef = useRef(onNotificationOpened);
@@ -33,7 +83,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
   }, [onNotificationOpened]);
 
   // Load saved preferences
-  const loadPreferences = useCallback(async () => {
+  const loadPreferences = useCallback(async (): Promise<NotificationPreferences> => {
     try {
       const saved = await AsyncStorage.getItem(NOTIFICATION_PREFS_KEY);
       if (saved) {
@@ -48,7 +98,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
   }, []);
 
   // Save preferences
-  const savePreferences = useCallback(async (newPrefs) => {
+  const savePreferences = useCallback(async (newPrefs: NotificationPreferences): Promise<void> => {
     try {
       await AsyncStorage.setItem(NOTIFICATION_PREFS_KEY, JSON.stringify(newPrefs));
     } catch (error) {
@@ -57,7 +107,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
   }, []);
 
   // Initialize OneSignal
-  const initialize = useCallback(async () => {
+  const initialize = useCallback(async (): Promise<void> => {
     log('[NotificationContext] Initializing...');
 
     // Load saved preferences first
@@ -65,13 +115,13 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
 
     // Initialize OneSignal with handlers
     notificationService.initialize({
-      onNotificationOpened: (data, notification) => {
+      onNotificationOpened: (data: NotificationData, notification: unknown) => {
         log('[NotificationContext] Notification opened with data:', data);
         setLastNotification({ data, notification, openedAt: new Date() });
 
         // Handle navigation based on notification type
         if (data?.type) {
-          const navigationData = {
+          const navigationData: NavigationData = {
             type: data.type,
             ...data,
           };
@@ -85,7 +135,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
           }
         }
       },
-      onNotificationReceived: (notification) => {
+      onNotificationReceived: (notification: unknown) => {
         log('[NotificationContext] Notification received in foreground');
         setLastNotification({
           notification,
@@ -115,7 +165,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
   }, [loadPreferences]);
 
   // Request permission and register token
-  const requestPermission = useCallback(async () => {
+  const requestPermission = useCallback(async (): Promise<boolean> => {
     log('[NotificationContext] Requesting permission...');
     const granted = await notificationService.requestPermission();
     setIsPermissionGranted(granted);
@@ -133,15 +183,15 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
   }, [preferences]);
 
   // Register token (after onboarding or when ready)
-  const registerToken = useCallback(async () => {
+  const registerToken = useCallback(async (): Promise<string | null> => {
     const id = await notificationService.registerToken();
     setPlayerId(id);
     return id;
   }, []);
 
   // Update preferences
-  const updatePreferences = useCallback(async (newPrefs) => {
-    const updated = { ...preferences, ...newPrefs };
+  const updatePreferences = useCallback(async (newPrefs: Partial<NotificationPreferences>): Promise<NotificationPreferences> => {
+    const updated: NotificationPreferences = { ...preferences, ...newPrefs };
     setPreferences(updated);
     await savePreferences(updated);
     await notificationService.setPreferences(updated);
@@ -149,22 +199,22 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
   }, [preferences, savePreferences]);
 
   // Set region for targeted notifications
-  const setRegion = useCallback(async (regionCode) => {
+  const setRegion = useCallback(async (regionCode: string): Promise<void> => {
     await notificationService.setRegion(regionCode);
   }, []);
 
   // Set language for localized notifications
-  const setLanguage = useCallback(async (languageCode) => {
+  const setLanguage = useCallback(async (languageCode: string): Promise<void> => {
     await notificationService.setLanguage(languageCode);
   }, []);
 
   // Set external user ID (link to backend user)
-  const setExternalUserId = useCallback(async (userId) => {
+  const setExternalUserId = useCallback(async (userId: string): Promise<void> => {
     await notificationService.setExternalUserId(userId);
   }, []);
 
   // Clear pending navigation (call after handling)
-  const clearPendingNavigation = useCallback(() => {
+  const clearPendingNavigation = useCallback((): void => {
     setPendingNavigation(null);
   }, []);
 
@@ -181,7 +231,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
     }
   }, [pendingNavigation]);
 
-  const value = {
+  const value: NotificationContextValue = {
     // State
     isInitialized,
     isPermissionGranted,
@@ -208,7 +258,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
   );
 };
 
-export const useNotifications = () => {
+export const useNotifications = (): NotificationContextValue => {
   const context = useContext(NotificationContext);
   if (!context) {
     throw new Error('useNotifications must be used within NotificationProvider');
