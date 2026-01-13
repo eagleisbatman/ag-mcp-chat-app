@@ -12,21 +12,7 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
 import { t } from '../constants/strings';
-
-interface DiagnosisData {
-  [key: string]: unknown;
-}
-
-interface Message {
-  _id: string;
-  text?: string | null;
-  createdAt: Date | string | number;
-  isBot?: boolean;
-  image?: string;
-  diagnosisData?: DiagnosisData;
-  ttsAudioUrl?: string;
-  isStreaming?: boolean;
-}
+import { Message } from '../types';
 
 interface MessageItemProps {
   message: Message;
@@ -93,7 +79,6 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
   
   // Animation state
   const [fadeAnim] = useState(() => new Animated.Value(isNewMessage ? 0 : 1));
-  const [isAnimating, setIsAnimating] = useState(isNewMessage);
   
   useEffect(() => {
     if (isNewMessage && isBot) {
@@ -101,13 +86,11 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
         toValue: 1,
         duration: 300,
         useNativeDriver: true,
-      }).start(() => {
-        setIsAnimating(false);
-      });
+      }).start();
     }
   }, [isNewMessage, isBot, fadeAnim]);
 
-  const formatTime = (date: Date | string | number): string => {
+  const formatTime = (date: Date | string): string => {
     const d = new Date(date);
     const hours = d.getHours().toString().padStart(2, '0');
     const minutes = d.getMinutes().toString().padStart(2, '0');
@@ -257,12 +240,11 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
         textToSpeak = generateDiagnosisTTSText(message.diagnosisData);
       }
       
-      // Convert LocationDetails to TTSLocation format
       const ttsLocation = locationDetails ? {
         country: locationDetails.level1Country,
         state: locationDetails.level2State,
         city: locationDetails.level5City || locationDetails.displayName,
-      } : null;
+      } : undefined;
       
       const result = await textToSpeech(textToSpeak || '', language?.code || 'en', ttsLocation);
       
@@ -319,7 +301,6 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
       ]}
       onLayout={handleLayout}
     >
-      {/* Sender Name */}
       <View style={styles.header}>
         <Text style={[styles.senderName, { color: isBot ? theme.accent : theme.textSecondary }]}>
           {isBot ? t('chat.senderAssistant') : t('chat.senderYou')}
@@ -332,7 +313,6 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
               disabled={isLoading}
               accessibilityRole="button"
               accessibilityLabel={isSpeaking ? t('a11y.stopVoicePlayback') : t('a11y.playVoice')}
-              android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: false } : undefined}
             >
               {isLoading ? (
                 <ActivityIndicator size="small" color={theme.icon} />
@@ -351,7 +331,6 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
         </View>
       </View>
 
-      {/* Message Content */}
       {message.image && (
         <Image 
           source={{ uri: message.image }} 
@@ -450,7 +429,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// Memoize to prevent unnecessary re-renders
 export default React.memo(MessageItem, (prevProps, nextProps) => {
   return (
     prevProps.message._id === nextProps.message._id &&

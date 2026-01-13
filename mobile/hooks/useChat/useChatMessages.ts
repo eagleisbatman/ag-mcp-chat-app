@@ -52,10 +52,10 @@ export default function useChatMessages(
     setMessages(prev => prev.map(m => {
       if (m._id !== messageId) return m;
       
-      const resolvedUpdates = { ...updates };
+      const resolvedUpdates: any = { ...updates };
       // Handle function-style updates for specific fields
       if (typeof updates.text === 'function') {
-        resolvedUpdates.text = updates.text(m.text);
+        resolvedUpdates.text = updates.text(m.text || '');
       }
       
       return { ...m, ...resolvedUpdates } as Message;
@@ -80,7 +80,7 @@ export default function useChatMessages(
         imageCloudinaryUrl: message.cloudinaryUrl,
         ...extra,
       });
-      return result.success ? result.message?.id : null;
+      return result.success ? (result.message?.id ?? null) : null;
     } catch (e) {
       return null;
     }

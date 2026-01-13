@@ -218,12 +218,12 @@ export const TYPOGRAPHY: TypographySystem = {
     relaxed: 1.5,
     loose: 1.6,
   },
-  // Font weights
+  // Font weights (using const assertions for proper typing)
   weights: {
-    regular: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700',
+    regular: '400' as const,
+    medium: '500' as const,
+    semibold: '600' as const,
+    bold: '700' as const,
   },
 };
 

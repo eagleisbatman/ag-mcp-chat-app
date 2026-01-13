@@ -10,40 +10,28 @@ import { AppProvider, useApp } from './contexts/AppContext';
 import { ToastProvider, useToast } from './contexts/ToastContext';
 import type { RootStackParamList } from './types';
 
-// OneSignal notifications disabled for now - uncomment when ready
-// import { NotificationProvider, useNotifications } from './contexts/NotificationContext';
 import OfflineIndicator from './components/OfflineIndicator';
 import ErrorBoundary from './components/ErrorBoundary';
-
-// import NotificationHandler from './components/notifications/NotificationHandler';
 
 // Screens
 import WelcomeScreen from './screens/WelcomeScreen';
 import LocationScreen from './screens/LocationScreen';
 import LanguageScreen from './screens/LanguageScreen';
-
-// HomeScreen disabled - uses content API that's not deployed yet
-// import HomeScreen from './screens/HomeScreen';
 import ChatScreen from './screens/ChatScreen';
-
-// ContentDetailScreen disabled - uses content API that's not deployed yet
-// import ContentDetailScreen from './screens/ContentDetailScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import LanguageSelectScreen from './screens/LanguageSelectScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import McpServersScreen from './screens/McpServersScreen';
 import McpServerDetailScreen from './screens/McpServerDetailScreen';
 
-// Use untyped navigator to avoid React Navigation 7 'id' prop requirement
-// Type safety is maintained through RootStackParamList in linking config
-const Stack = createNativeStackNavigator();
+// Type safe navigator
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-// Deep linking configuration for universal/app links
+// Deep linking configuration
 const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ['farmerchat://', 'https://farmerchat.digitalgreen.org'],
   config: {
     screens: {
-      // Main app screens
       Chat: {
         path: 'chat/:sessionId?',
         parse: {
@@ -66,7 +54,7 @@ const linking: LinkingOptions<RootStackParamList> = {
 
 function OnboardingStack() {
   return (
-    <Stack.Navigator id="onboarding" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Location" component={LocationScreen} />
       <Stack.Screen name="Language" component={LanguageScreen} />
@@ -76,7 +64,7 @@ function OnboardingStack() {
 
 function MainStack() {
   return (
-    <Stack.Navigator id="main" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="History" component={HistoryScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
@@ -87,7 +75,6 @@ function MainStack() {
   );
 }
 
-// Watch for sync errors and display toast notifications
 function SyncErrorWatcher() {
   const { lastSyncError, clearSyncError } = useApp();
   const { showWarning } = useToast();
@@ -101,9 +88,6 @@ function SyncErrorWatcher() {
 
   return null;
 }
-
-// OneSignal notifications disabled for now - uncomment when ready
-// function NotificationRegistration() { ... }
 
 function AppNavigator() {
   const { isLoading, onboardingComplete, theme, isDark } = useApp();
@@ -129,16 +113,11 @@ function AppNavigator() {
 
   return (
     <Animated.View style={{ flex: 1, backgroundColor: theme.background, opacity: fadeAnim }}>
-      {/* SystemBars handles both status bar and navigation bar for edge-to-edge */}
       <SystemBars style={isDark ? 'light' : 'dark'} />
       <OfflineIndicator />
       <SyncErrorWatcher />
-      {/* OneSignal notifications disabled for now */}
-      {/* <NotificationRegistration /> */}
       <NavigationContainer linking={linking}>
         {onboardingComplete ? <MainStack /> : <OnboardingStack />}
-        {/* NotificationHandler disabled for now */}
-        {/* {onboardingComplete && <NotificationHandler />} */}
       </NavigationContainer>
     </Animated.View>
   );
@@ -150,12 +129,9 @@ export default function App() {
       <KeyboardProvider>
         <SafeAreaProvider>
           <AppProvider>
-            {/* NotificationProvider disabled for now - uncomment when OneSignal is set up */}
-            {/* <NotificationProvider> */}
-              <ToastProvider>
-                <AppNavigator />
-              </ToastProvider>
-            {/* </NotificationProvider> */}
+            <ToastProvider>
+              <AppNavigator />
+            </ToastProvider>
           </AppProvider>
         </SafeAreaProvider>
       </KeyboardProvider>

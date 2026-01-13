@@ -17,16 +17,12 @@ import NotificationBanner from '../components/notifications/NotificationBanner';
 import { weatherService } from '../services/weather';
 import { contentService } from '../services/content';
 import { error as logError } from '../utils/logger';
+import type { RootStackParamList, WeatherData } from '../types';
 
 const logoImage: ImageSourcePropType = require('../assets/logo.png');
 
 interface HomeScreenProps {
-  navigation: NativeStackNavigationProp<any>;
-}
-
-interface WeatherData {
-  current?: any;
-  forecast?: any;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 }
 
 interface ContentItem {
@@ -41,54 +37,34 @@ interface Alert {
   [key: string]: any;
 }
 
-/**
- * HomeScreen - Main home screen with weather widget, quick actions, and content carousel
- */
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { location, locationDetails, language, theme, isDark } = useApp();
   const insets = useSafeAreaInsets();
 
-  // State
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [content, setContent] = useState<ContentItem[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Load all home screen data
-   */
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
 
-      // Only load weather if we have location
-      if (location?.latitude && location?.longitude) {
-        // Load weather and content in parallel
+      if (location?.latitude !== null && location?.longitude !== null) {
+        const lat = location.latitude as number;
+        const lon = location.longitude as number;
         const [weatherData, contentData, alertsData] = await Promise.all([
-          weatherService.getCurrentAndForecast(
-            location.latitude,
-            location.longitude,
-            language?.code || 'en'
-          ),
-          contentService.getFeed(
-            location.latitude,
-            location.longitude,
-            language?.code || 'en'
-          ),
-          weatherService.getAlerts(location.latitude, location.longitude),
+          weatherService.getCurrentAndForecast(lat, lon, language?.code || 'en') as Promise<WeatherData>,
+          contentService.getFeed(lat, lon, language?.code || 'en'),
+          weatherService.getAlerts(lat, lon),
         ]);
 
         setWeather(weatherData);
         setContent(contentData);
         setAlerts(alertsData);
       } else {
-        // No location - just load content
-        const contentData = await contentService.getFeed(
-          null,
-          null,
-          language?.code || 'en'
-        );
+        const contentData = await contentService.getFeed(null, null, language?.code || 'en');
         setContent(contentData);
       }
     } catch (error) {
@@ -98,58 +74,48 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     }
   }, [location, language]);
 
-  // Load data on mount and when location/language changes
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  /**
-   * Handle pull-to-refresh
-   */
   const onRefresh = async () => {
     setRefreshing(true);
     await loadData();
     setRefreshing(false);
   };
 
-  /**
-   * Handle content item press
-   */
   const handleContentPress = (item: ContentItem) => {
-    navigation.navigate('ContentDetail', { contentId: item.id || item._id });
+    const id = item.id || item._id;
+    if (id) {
+      navigation.navigate('ContentDetail', { contentId: id });
+    }
   };
 
-  /**
-   * Handle "Ask Question" quick action - navigate to chat
-   */
   const handleStartChat = () => {
     navigation.navigate('Chat');
   };
 
-  /**
-   * Handle "Diagnose Plant" quick action - navigate to chat with camera intent
-   */
   const handleTakePhoto = () => {
     navigation.navigate('Chat', { openCamera: true });
   };
 
-  /**
-   * Handle "View History" quick action
-   */
   const handleViewHistory = () => {
     navigation.navigate('History');
   };
 
-  /**
-   * Dismiss a weather alert
-   */
-  const handleAlertDismiss = (alertId: string) => {
+  const handleAlertDismiss = (alertId: string | number) => {
     setAlerts((prev) => prev.filter((a) => a.id !== alertId));
   };
 
+  const locationText = locationDetails?.displayName ||
+    locationDetails?.level5City ||
+    locationDetails?.level3District ||
+    (location?.latitude !== null && location?.longitude !== null
+      ? `${location.latitude!.toFixed(2)}, ${location.longitude!.toFixed(2)}`
+      : t('chat.setLocation'));
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Header */}
       <ScreenHeader
         align="left"
         center={
@@ -157,15 +123,10 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
             <Image source={logoImage} style={styles.headerLogo} resizeMode="contain" />
             <View style={styles.headerTextContainer}>
               <Text style={[styles.headerTitle, { color: theme.text }]}>
-                {t('onboarding.appName') || 'FarmerChat'}
+                {t('onboarding.appName')}
               </Text>
               <Text style={[styles.headerSubtitle, { color: theme.textMuted }]} numberOfLines={1}>
-                {locationDetails?.displayName ||
-                  locationDetails?.level5City ||
-                  locationDetails?.level3District ||
-                  (location?.latitude
-                    ? `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}`
-                    : t('chat.setLocation') || 'Set your location')}
+                {locationText}
               </Text>
             </View>
           </Pressable>
@@ -179,7 +140,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
               borderRadius={10}
               backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
               color={theme.icon}
-              accessibilityLabel={t('a11y.startNewChat') || 'Start a new chat'}
+              accessibilityLabel={t('a11y.startNewChat')}
             />
             <IconButton
               icon="settings-outline"
@@ -188,7 +149,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
               borderRadius={10}
               backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
               color={theme.icon}
-              accessibilityLabel={t('a11y.openSettings') || 'Open settings'}
+              accessibilityLabel={t('a11y.openSettings')}
             />
           </>
         }
@@ -206,7 +167,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         }
         showsVerticalScrollIndicator={false}
       >
-        {/* Persistent Weather Alert Banner */}
         {alerts.length > 0 && (
           <NotificationBanner
             alerts={alerts}
@@ -214,25 +174,22 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           />
         )}
 
-        {/* Weather Widget */}
         <WeatherWidget
           data={weather}
-          loading={loading && location?.latitude != null}
+          loading={loading && location?.latitude !== null}
         />
 
-        {/* Quick Actions */}
         <QuickActions
           onAskQuestion={handleStartChat}
           onTakePhoto={handleTakePhoto}
           onViewHistory={handleViewHistory}
         />
 
-        {/* Content Feed */}
         <ContentCarousel
-          title={t('content_for_you') || 'For You'}
+          title={t('content.forYou')}
           items={content}
           onItemPress={handleContentPress}
-          onSeeAll={() => navigation.navigate('ContentFeed')}
+          onSeeAll={() => {}}
           loading={loading}
         />
       </ScrollView>
@@ -241,34 +198,23 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   headerLeft: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.sm,
   },
-  headerLogo: {
-    width: 32,
-    height: 32,
-  },
+  headerLogo: { width: 32, height: 32 },
   headerTextContainer: {
     flex: 1,
     justifyContent: 'center',
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weights.semibold as any,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
-  headerSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
+  headerSubtitle: { fontSize: TYPOGRAPHY.sizes.xs },
+  scrollView: { flex: 1 },
+  scrollContent: { flexGrow: 1 },
 });

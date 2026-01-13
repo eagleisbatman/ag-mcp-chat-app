@@ -12,7 +12,7 @@ import {
   generateTitle 
 } from '../../services/db';
 import { t } from '../../constants/strings';
-import { Message } from '../../types';
+import { Message, SessionResult } from '../../types';
 
 interface DbMessage {
   id: string;
@@ -72,14 +72,14 @@ export default function useChatSession(sessionIdParam: string | null = null): Us
   const loadSession = useCallback(async (sessionId: string) => {
     setIsLoadingSession(true);
     try {
-      const result = await getSession(sessionId, 50);
+      const result: SessionResult = await getSession(sessionId, 50);
       if (result.success && result.session?.messages) {
-        const loadedMessages: Message[] = (result.session.messages as DbMessage[]).map(m => {
+        const loadedMessages: Message[] = (result.session.messages as any[]).map(m => {
           // Reconstruct diagnosis from metadata for native card
-          let diagnosisData = null;
+          let diagnosisData: any = undefined;
           try {
             const metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
-            diagnosisData = (metadata as Record<string, unknown>)?.diagnosis || null;
+            diagnosisData = metadata?.diagnosis ?? undefined;
           } catch (e) {
             // Ignore parse errors
           }

@@ -169,7 +169,9 @@ export default function VoiceRecorder({
     if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
     if (waveAnimationRef.current) waveAnimationRef.current.stop();
     if (recordingRef.current) {
-      recordingRef.current.stopAndUnloadAsync().catch(() => {});
+      recordingRef.current.stopAndUnloadAsync().catch((err) => {
+        logError('Recording cleanup error:', err);
+      });
     }
   };
 

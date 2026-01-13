@@ -1,9 +1,9 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": false,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
     "allowJs": true,
     "jsx": "react-native",
     "noEmit": true,
