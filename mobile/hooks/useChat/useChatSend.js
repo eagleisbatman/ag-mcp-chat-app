@@ -95,12 +95,11 @@ export default function useChatSend({
   }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
 
   const handleSendImage = useCallback(async (imageData) => {
-    const userMsgText = imageData.text || null;
-    const userMsgTextForDb = imageData.text || '[Image for plant diagnosis]';
+    // Always use a text value - never null - to prevent API validation errors
+    const userMsgText = imageData.text || '[Image for plant diagnosis]';
     const userMsg = { 
       _id: Date.now().toString(), 
       text: userMsgText, 
-      textForDb: userMsgTextForDb, 
       image: imageData.uri, 
       createdAt: new Date(), 
       isBot: false 
@@ -116,9 +115,9 @@ export default function useChatSend({
       // Upload image to Cloudinary
       const uploadPromise = uploadImage(imageData.base64).then(async result => {
         if (result.success) {
-          await persistMessage({ ...userMsg, text: userMsgTextForDb, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
+          await persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
         } else {
-          await persistMessage({ ...userMsg, text: userMsgTextForDb }, sessionId, { inputMethod: 'image' });
+          await persistMessage(userMsg, sessionId, { inputMethod: 'image' });
           showWarning(t('errors.imageUploadFailed'));
         }
         return result;

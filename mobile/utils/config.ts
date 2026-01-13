@@ -40,7 +40,7 @@ export const API_KEY = getRequiredEnv('EXPO_PUBLIC_API_KEY');
 
 // Timeout configurations (in milliseconds)
 export const TIMEOUTS = {
-  CHAT: 60000,      // 60s for chat (includes MCP calls)
+  CHAT: 90000,      // 90s for chat (includes MCP cold starts)
   DEFAULT: 30000,   // 30s for other endpoints
   DB: 30000,        // 30s for database operations
   WEATHER: 30000,   // 30s for weather endpoints
