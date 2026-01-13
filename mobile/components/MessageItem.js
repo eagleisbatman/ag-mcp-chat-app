@@ -6,6 +6,7 @@ import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { textToSpeech } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
+import { generateDiagnosisTTSText } from '../utils/diagnosisNormalizer';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
@@ -241,16 +242,11 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
       // Get the text to speak
       let textToSpeak = message.text;
 
-      // For diagnosis messages, generate speakable text from diagnosisData
+      // For diagnosis messages, generate comprehensive speakable text
+      // Includes: crop, status, issues, symptoms, treatments, prevention
+      // Uses shared normalizer that handles both Plantix and AgriVision formats
       if (!textToSpeak && message.diagnosisData) {
-        const d = message.diagnosisData;
-        const crop = d.crop?.name || d.crop || 'Plant';
-        const status = d.health_status?.overall || d.health_status || 'analyzed';
-        const stage = d.growth_stage ? `, growth stage ${d.growth_stage}` : '';
-        const issues = d.issues?.length > 0
-          ? `. Issues found: ${d.issues.map(i => i.name || i).join(', ')}`
-          : '';
-        textToSpeak = `${crop}${stage}. Status: ${status}${issues}`;
+        textToSpeak = generateDiagnosisTTSText(message.diagnosisData);
       }
       
       // Call TTS service (pass language code, location)

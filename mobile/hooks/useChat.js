@@ -379,15 +379,37 @@ export default function useChat(sessionIdParam = null) {
         const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' ? diagResult.diagnosis : {};
 
         // Extract crop info for persistence and summary
+        // Support BOTH AgriVision format (crop, health_status, issues) 
+        // AND Plantix format (identified_crops, health_assessment, diagnoses)
         const cropName = typeof diagnosisData?.crop === 'object'
           ? diagnosisData.crop.name
-          : diagnosisData?.crop;
-        const healthStatus = diagnosisData?.health_status?.overall || diagnosisData?.health_status || 'analyzed';
-        const issues = diagnosisData?.issues?.map(i => i.name || i).join(', ');
+          : diagnosisData?.crop
+          || diagnosisData?.identified_crops?.[0]?.name  // Plantix format
+          || null;
+        
+        const healthStatus = diagnosisData?.health_status?.overall 
+          || diagnosisData?.health_status 
+          || diagnosisData?.health_assessment?.status  // Plantix format
+          || 'analyzed';
+        
+        // Get issues from AgriVision format OR diagnoses from Plantix format
+        // Filter out "Healthy" as it's not an actual issue
+        const issuesList = diagnosisData?.issues?.map(i => i.name || i)
+          || diagnosisData?.diagnoses
+              ?.filter(d => (d.disease_name || d.name || '').toLowerCase() !== 'healthy')
+              ?.map(d => d.disease_name || d.name)
+          || [];
+        const issues = issuesList.join(', ');
+        
+        // Get health summary for better context (Plantix provides this)
+        const healthSummary = diagnosisData?.health_assessment?.summary 
+          || diagnosisData?.diagnostic_notes 
+          || '';
 
         // Generate text summary for database storage (required by backend)
         // This text is NOT shown in UI - DiagnosisCard handles display
-        const diagnosisSummary = `[Plant Diagnosis] ${cropName || 'Plant'}: ${healthStatus}${issues ? `. Issues: ${issues}` : ''}`;
+        // Include health summary for better AI context in follow-up queries
+        const diagnosisSummary = `[Plant Diagnosis] ${cropName || 'Plant'}: ${healthStatus}${issues ? `. Issues: ${issues}` : ''}${healthSummary ? `. ${healthSummary}` : ''}`;
 
         // Bot message shows ONLY the DiagnosisCard (no duplicate text in UI)
         // The card handles all display: healthy, diseased, rejection, etc.
@@ -401,10 +423,11 @@ export default function useChat(sessionIdParam = null) {
         addMessage(botMsg);
 
         // Save full technical data in metadata for perfect history reconstruction
+        // Store normalized values that work for both AgriVision and Plantix formats
         persistMessage(botMsg, sessionId, {
           diagnosisCrop: cropName,
-          diagnosisHealthStatus: diagnosisData?.health_status,
-          diagnosisIssues: diagnosisData?.issues,
+          diagnosisHealthStatus: healthStatus,  // Use normalized value
+          diagnosisIssues: issuesList.length > 0 ? issuesList : null,  // Use normalized array
           metadata: {
             ...(diagResult.metadata || {}),
             diagnosis: diagnosisData,
