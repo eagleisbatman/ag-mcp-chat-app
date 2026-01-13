@@ -2,12 +2,13 @@
  * Chat send functionality hook
  * Handles sending text, images, and audio
  */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../../contexts/AppContext';
 import { useToast } from '../../contexts/ToastContext';
 import { sendChatMessageStreaming, analyzePlantImage } from '../../services/api';
+import { log } from '../../utils/logger';
 import { transcribeAudio as transcribeAudioService } from '../../services/transcription';
 import { uploadImage, uploadAudio } from '../../services/upload';
 import { parseErrorMessage, isNetworkError } from '../../utils/apiHelpers';
@@ -27,8 +28,10 @@ export default function useChatSend({
   
   const [isTyping, setIsTyping] = useState(false);
   const [thinkingText, setThinkingText] = useState(null);
+  const retryCountRef = useRef(0);
+  const MAX_RETRIES = 1; // Retry once on timeout (handles cold starts)
 
-  const handleSendText = useCallback(async (text) => {
+  const handleSendText = useCallback(async (text, isRetry = false) => {
     const userMessage = { _id: Date.now().toString(), text, createdAt: new Date(), isBot: false };
     addMessage(userMessage);
     setIsTyping(true);
@@ -73,6 +76,21 @@ export default function useChatSend({
           maybeGenerateTitle(sessionId, [{ ...botMsg, text: fullText }, userMessage, ...messages]);
         },
         onError: (error) => {
+          const isTimeout = error?.message?.includes('timeout');
+          
+          // Auto-retry once on timeout (handles Railway cold starts)
+          if (isTimeout && !isRetry && retryCountRef.current < MAX_RETRIES) {
+            retryCountRef.current++;
+            log('🔄 [Chat] Timeout - auto-retrying (services warming up)...');
+            setThinkingText(t('chat.servicesWarmingUp') || 'Services warming up, retrying...');
+            
+            // Remove the empty bot message and retry
+            // The retry will create a new bot message
+            handleSendText(text, true);
+            return;
+          }
+          
+          retryCountRef.current = 0; // Reset for next message
           setThinkingText(null);
           setIsTyping(false);
           updateMessage(botMsgId, { 
@@ -86,7 +104,10 @@ export default function useChatSend({
           }
         }
       });
+      
+      retryCountRef.current = 0; // Reset on success
     } catch (error) {
+      retryCountRef.current = 0;
       setThinkingText(null);
       setIsTyping(false);
       updateMessage(botMsgId, { text: t('chat.connectionErrorBot') });

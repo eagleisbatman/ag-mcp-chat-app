@@ -222,6 +222,7 @@ function buildLocationContext(locationDetails: LocationDetails | undefined): Loc
 /**
  * Send chat message with STREAMING support
  * Real-time text chunks are passed to onChunk callback
+ * Includes auto-retry on timeout (handles Railway cold starts)
  */
 export const sendChatMessageStreaming = async ({
   message,
@@ -238,6 +239,13 @@ export const sendChatMessageStreaming = async ({
 }: StreamingChatParams): Promise<{ success: boolean; error?: string }> => {
   // Get device ID for server-side persistence
   const deviceId = await ensureDeviceId();
+  
+  // Inner function for the actual request (allows retry)
+  const attemptRequest = async (isRetry: boolean): Promise<{ success: boolean; error?: string }> => {
+    if (isRetry) {
+      log('🔄 [API] Retrying request (services warming up)...');
+      onThinking?.('Services warming up, retrying...');
+    }
 
   // Format history for AI Services
   // History is newest-first in the hook, but Gemini wants oldest-first
