@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
-  ActivityIndicator,
   TouchableOpacity,
   Image,
 } from 'react-native';
@@ -21,8 +20,10 @@ import Card from '../components/ui/Card';
 import ListRow from '../components/ui/ListRow';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
+import { SkeletonCard } from '../components/ui/Skeleton';
 import { t } from '../constants/strings';
 import { updatePreferences } from '../services/db';
+import { error as logError } from '../utils/logger';
 
 const STORAGE_KEY = '@service_preferences';
 
@@ -341,7 +342,7 @@ export default function McpServersScreen({ navigation }) {
         setPreferences(defaults);
       }
     } catch (error) {
-      console.error('Failed to load service preferences:', error);
+      logError('Failed to load service preferences:', error);
     }
   };
 
@@ -359,7 +360,7 @@ export default function McpServersScreen({ navigation }) {
         showSuccess(t('mcp.preferencesSaved'));
       }
     } catch (error) {
-      console.error('Failed to save preference:', error);
+      logError('Failed to save preference:', error);
     }
   }, [preferences, showSuccess]);
 
@@ -381,7 +382,7 @@ export default function McpServersScreen({ navigation }) {
         throw new Error(response.error || t('mcp.failedToFetch'));
       }
     } catch (err) {
-      console.error('Fetch MCP servers error:', err);
+      logError('Fetch MCP servers error:', err);
       setError(err.message);
       showError(t('mcp.couldNotLoad'));
     } finally {
@@ -445,7 +446,10 @@ export default function McpServersScreen({ navigation }) {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={theme.accent} />
+          {/* Skeleton loading for MCP server cards */}
+          <SkeletonCard style={styles.skeletonCard} />
+          <SkeletonCard style={styles.skeletonCard} />
+          <SkeletonCard style={styles.skeletonCard} />
           <Text style={[styles.loadingText, { color: theme.textMuted }]}>
             {t('mcp.loading')}
           </Text>
@@ -525,6 +529,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+  },
+  skeletonCard: {
+    width: '100%',
+    marginBottom: SPACING.md,
   },
   loadingText: {
     fontSize: TYPOGRAPHY.sizes.base,

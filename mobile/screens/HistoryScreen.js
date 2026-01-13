@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  ActivityIndicator,
   RefreshControl,
   Alert,
 } from 'react-native';
@@ -18,7 +17,9 @@ import Card from '../components/ui/Card';
 import ListRow from '../components/ui/ListRow';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
+import { SkeletonSessionItem } from '../components/ui/Skeleton';
 import { t } from '../constants/strings';
+import { log, error as logError } from '../utils/logger';
 
 export default function HistoryScreen({ navigation }) {
   const { theme, setCurrentSessionId, isDbSynced } = useApp();
@@ -39,10 +40,10 @@ export default function HistoryScreen({ navigation }) {
       if (result.success) {
         setSessions(result.sessions || []);
       } else {
-        console.log('Failed to load sessions:', result.error);
+        log('Failed to load sessions:', result.error);
       }
     } catch (error) {
-      console.error('Load sessions error:', error);
+      logError('Load sessions error:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -182,7 +183,12 @@ export default function HistoryScreen({ navigation }) {
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={theme.accent} />
+          {/* Skeleton loading state */}
+          <SkeletonSessionItem />
+          <SkeletonSessionItem />
+          <SkeletonSessionItem />
+          <SkeletonSessionItem />
+          <SkeletonSessionItem />
         </View>
       ) : !isDbSynced ? (
         <View style={styles.emptyState}>

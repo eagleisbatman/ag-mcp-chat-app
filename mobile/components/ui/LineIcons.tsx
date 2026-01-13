@@ -1,15 +1,22 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 
 const LINE_WIDTH = 2;
+
+/**
+ * Props for all line-style icons
+ */
+interface IconProps {
+  size?: number;
+  color?: string;
+}
 
 /**
  * Sharp line-style icons matching the waveform aesthetic
  * Uses thin 2px lines for a minimal, clean look
  */
 
-export function PlusIcon({ size = 22, color = '#000' }) {
+export function PlusIcon({ size = 22, color = '#000' }: IconProps): React.JSX.Element {
   const lineLength = size * 0.6;
   return (
     <View style={[styles.iconContainer, { width: size, height: size }]}>
@@ -41,7 +48,7 @@ export function PlusIcon({ size = 22, color = '#000' }) {
   );
 }
 
-export function ClockIcon({ size = 22, color = '#000' }) {
+export function ClockIcon({ size = 22, color = '#000' }: IconProps): React.JSX.Element {
   const circleSize = size * 0.85;
   const handLength = size * 0.25;
   const hourHandLength = size * 0.18;
@@ -88,7 +95,7 @@ export function ClockIcon({ size = 22, color = '#000' }) {
   );
 }
 
-export function CameraIcon({ size = 24, color = '#000' }) {
+export function CameraIcon({ size = 24, color = '#000' }: IconProps): React.JSX.Element {
   const bodyWidth = size * 0.8;
   const bodyHeight = size * 0.55;
   const lensSize = size * 0.28;
@@ -138,7 +145,7 @@ export function CameraIcon({ size = 24, color = '#000' }) {
   );
 }
 
-export function ImageIcon({ size = 24, color = '#000' }) {
+export function ImageIcon({ size = 24, color = '#000' }: IconProps): React.JSX.Element {
   const frameWidth = size * 0.8;
   const frameHeight = size * 0.65;
   const sunSize = size * 0.15;
@@ -230,7 +237,7 @@ export function ImageIcon({ size = 24, color = '#000' }) {
   );
 }
 
-export function ArrowUpIcon({ size = 20, color = '#FFF' }) {
+export function ArrowUpIcon({ size = 20, color = '#FFF' }: IconProps): React.JSX.Element {
   const stemHeight = size * 0.5;
   const chevronSize = size * 0.35;
   return (
@@ -271,7 +278,7 @@ export function ArrowUpIcon({ size = 20, color = '#FFF' }) {
   );
 }
 
-export function VoiceWaveIcon({ size = 20, color = '#000' }) {
+export function VoiceWaveIcon({ size = 20, color = '#000' }: IconProps): React.JSX.Element {
   return (
     <View style={[styles.waveContainer, { width: size, height: size }]}>
       <View style={[styles.waveLine, { height: size * 0.4, backgroundColor: color }]} />
@@ -303,15 +310,11 @@ const styles = StyleSheet.create({
   },
 });
 
-// PropTypes for all icons
-const iconPropTypes = {
-  size: PropTypes.number,
-  color: PropTypes.string,
+export default {
+  PlusIcon,
+  ClockIcon,
+  CameraIcon,
+  ImageIcon,
+  ArrowUpIcon,
+  VoiceWaveIcon,
 };
-
-PlusIcon.propTypes = iconPropTypes;
-ClockIcon.propTypes = iconPropTypes;
-CameraIcon.propTypes = iconPropTypes;
-ImageIcon.propTypes = iconPropTypes;
-ArrowUpIcon.propTypes = iconPropTypes;
-VoiceWaveIcon.propTypes = iconPropTypes;

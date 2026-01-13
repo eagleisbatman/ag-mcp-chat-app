@@ -6,6 +6,7 @@ import { registerUser, updatePreferences, saveLocation as saveLocationToDB, look
 import { THEMES } from '../constants/themes';
 import { setLocale, loadTranslations, t } from '../constants/strings';
 import { isRTLLanguage } from '../constants/languages';
+import { log, error as logError, warn } from '../utils/logger';
 
 // Re-export THEMES for backward compatibility
 export { THEMES };
@@ -39,7 +40,7 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   const loadPreferences = async () => {
-    console.log('📱 [AppContext] Loading preferences from AsyncStorage...');
+    log('📱 [AppContext] Loading preferences from AsyncStorage...');
     try {
       const [savedTheme, savedLanguage, savedOnboarding, savedLocation, savedLocationDetails] = await Promise.all([
         AsyncStorage.getItem('themeMode'),
@@ -49,7 +50,7 @@ export const AppProvider = ({ children }) => {
         AsyncStorage.getItem('locationDetails'),
       ]);
 
-      console.log('📱 [AppContext] Loaded from AsyncStorage:', {
+      log('📱 [AppContext] Loaded from AsyncStorage:', {
         themeMode: savedTheme,
         language: savedLanguage ? 'set' : 'not set',
         onboardingComplete: savedOnboarding,
@@ -68,7 +69,7 @@ export const AppProvider = ({ children }) => {
         // Ensure RTL setting is correct for saved language
         const needsRTL = isRTLLanguage(lang.code);
         if (I18nManager.isRTL !== needsRTL) {
-          console.log(`🔄 [AppContext] Correcting RTL setting on startup: ${I18nManager.isRTL} → ${needsRTL}`);
+          log(`🔄 [AppContext] Correcting RTL setting on startup: ${I18nManager.isRTL} → ${needsRTL}`);
           I18nManager.allowRTL(needsRTL);
           I18nManager.forceRTL(needsRTL);
         }
@@ -83,10 +84,10 @@ export const AppProvider = ({ children }) => {
         const parsedDetails = savedLocationDetails ? JSON.parse(savedLocationDetails) : null;
         if (parsedDetails && parsedDetails.displayName) {
           setLocationDetails(parsedDetails);
-          console.log('📱 [AppContext] Loaded cached location details:', parsedDetails.displayName);
+          log('📱 [AppContext] Loaded cached location details:', parsedDetails.displayName);
         } else if (loc.latitude && loc.longitude) {
           // No valid cached details, trigger a fresh lookup
-          console.log('📱 [AppContext] No cached location details, triggering lookup...');
+          log('📱 [AppContext] No cached location details, triggering lookup...');
           lookupLocationDetails(loc.latitude, loc.longitude);
         }
       } else if (savedLocationDetails) {
@@ -97,7 +98,7 @@ export const AppProvider = ({ children }) => {
       // Register user with backend (non-blocking)
       registerUserInBackground();
     } catch (error) {
-      console.log('❌ [AppContext] Error loading preferences:', error);
+      log('❌ [AppContext] Error loading preferences:', error);
     } finally {
       setIsLoading(false);
     }
@@ -105,21 +106,21 @@ export const AppProvider = ({ children }) => {
 
   // Sync user with backend (runs in background)
   const registerUserInBackground = async () => {
-    console.log('📱 [AppContext] Syncing user with backend...');
+    log('📱 [AppContext] Syncing user with backend...');
     try {
       const result = await registerUser();
       if (result.success && result.userId) {
         setUserId(result.userId);
         setIsDbSynced(true);
-        console.log('✅ [AppContext] User synced, userId:', result.userId);
+        log('✅ [AppContext] User synced, userId:', result.userId);
         
         // Check for pending location sync
         await syncPendingLocation();
       } else {
-        console.log('⚠️ [AppContext] Sync returned but no userId:', result);
+        log('⚠️ [AppContext] Sync returned but no userId:', result);
       }
     } catch (error) {
-      console.log('❌ [AppContext] Background user sync failed:', error.message);
+      log('❌ [AppContext] Background user sync failed:', error.message);
       setLastSyncError('Could not connect to server. Some features may be limited.');
       // App continues to work offline
     }
@@ -136,16 +137,16 @@ export const AppProvider = ({ children }) => {
       
       // Only sync if less than 5 minutes old
       if (ageMs < 5 * 60 * 1000) {
-        console.log('🔄 [AppContext] Found pending location sync, processing...');
+        log('🔄 [AppContext] Found pending location sync, processing...');
         await syncLocationToDb(pending.locationResult, pending.latitude, pending.longitude);
         await AsyncStorage.removeItem('pendingLocationSync');
-        console.log('✅ [AppContext] Pending location synced and cleared');
+        log('✅ [AppContext] Pending location synced and cleared');
       } else {
-        console.log('⏰ [AppContext] Pending location too old, discarding');
+        log('⏰ [AppContext] Pending location too old, discarding');
         await AsyncStorage.removeItem('pendingLocationSync');
       }
     } catch (error) {
-      console.log('❌ [AppContext] Error processing pending location:', error);
+      log('❌ [AppContext] Error processing pending location:', error);
     }
   };
 
@@ -154,33 +155,33 @@ export const AppProvider = ({ children }) => {
     try {
       await AsyncStorage.setItem('themeMode', mode);
     } catch (e) {
-      console.log('AsyncStorage write error (theme):', e);
+      log('AsyncStorage write error (theme):', e);
     }
     
     // Sync to DB (non-blocking)
     if (isDbSynced) {
-      updatePreferences({ themeMode: mode }).catch(e => console.log('DB sync error:', e));
+      updatePreferences({ themeMode: mode }).catch(e => log('DB sync error:', e));
     }
   };
 
   const saveLanguage = async (lang) => {
-    console.log('🌐 [AppContext] Saving language:', lang.name, `(${lang.code})`);
+    log('🌐 [AppContext] Saving language:', lang.name, `(${lang.code})`);
     setLanguage(lang);
 
     // Load translations for the selected language
     try {
       setLocale(lang.code);
       await loadTranslations(lang.code);
-      console.log('✅ [AppContext] Translations loaded for:', lang.code);
+      log('✅ [AppContext] Translations loaded for:', lang.code);
     } catch (e) {
-      console.log('⚠️ [AppContext] Could not load translations for:', lang.code, e);
+      log('⚠️ [AppContext] Could not load translations for:', lang.code, e);
     }
 
     try {
       await AsyncStorage.setItem('language', JSON.stringify(lang));
-      console.log('✅ [AppContext] Language saved to AsyncStorage');
+      log('✅ [AppContext] Language saved to AsyncStorage');
     } catch (e) {
-      console.log('❌ [AppContext] AsyncStorage write error (language):', e);
+      log('❌ [AppContext] AsyncStorage write error (language):', e);
     }
 
     // Handle RTL layout changes
@@ -188,7 +189,7 @@ export const AppProvider = ({ children }) => {
     const currentlyRTL = I18nManager.isRTL;
 
     if (needsRTL !== currentlyRTL) {
-      console.log(`🔄 [AppContext] RTL change needed: ${currentlyRTL} → ${needsRTL}`);
+      log(`🔄 [AppContext] RTL change needed: ${currentlyRTL} → ${needsRTL}`);
 
       // Apply RTL setting
       I18nManager.allowRTL(needsRTL);
@@ -198,7 +199,7 @@ export const AppProvider = ({ children }) => {
       try {
         await AsyncStorage.setItem('isRTL', JSON.stringify(needsRTL));
       } catch (e) {
-        console.log('❌ [AppContext] Could not save RTL preference:', e);
+        log('❌ [AppContext] Could not save RTL preference:', e);
       }
 
       // App needs to reload for RTL changes to take effect
@@ -213,7 +214,7 @@ export const AppProvider = ({ children }) => {
               try {
                 await Updates.reloadAsync();
               } catch (e) {
-                console.log('⚠️ [AppContext] Could not reload app:', e);
+                log('⚠️ [AppContext] Could not reload app:', e);
                 // Fallback message if reload fails (dev mode)
                 Alert.alert(t('system.pleaseRestart'), t('system.pleaseRestartMessage'));
               }
@@ -234,61 +235,61 @@ export const AppProvider = ({ children }) => {
     const retryDelay = 2000;
     
     if (!userId && retryCount < maxRetries) {
-      console.log(`⏳ [AppContext] Waiting for user registration for language sync... (attempt ${retryCount + 1}/${maxRetries})`);
+      log(`⏳ [AppContext] Waiting for user registration for language sync... (attempt ${retryCount + 1}/${maxRetries})`);
       await new Promise(resolve => setTimeout(resolve, retryDelay));
       return syncLanguageToDb(lang, retryCount + 1);
     }
     
     if (!userId) {
-      console.log('⚠️ [AppContext] Could not sync language - user not registered');
+      log('⚠️ [AppContext] Could not sync language - user not registered');
       return;
     }
     
-    console.log('💾 [AppContext] Syncing language to database...');
+    log('💾 [AppContext] Syncing language to database...');
     try {
       const result = await updatePreferences({
         languageCode: lang.code,
         languageName: lang.name,
         languageNativeName: lang.nativeName,
       });
-      console.log('💾 [AppContext] Language DB sync:', result.success ? 'Success' : result.error);
+      log('💾 [AppContext] Language DB sync:', result.success ? 'Success' : result.error);
     } catch (e) {
-      console.log('❌ [AppContext] Language DB sync error:', e);
+      log('❌ [AppContext] Language DB sync error:', e);
     }
   };
 
   const saveLocation = async (loc, status) => {
-    console.log('📍 [AppContext] Saving location:', { loc, status });
+    log('📍 [AppContext] Saving location:', { loc, status });
     setLocation(loc);
     setLocationStatus(status);
     if (status === 'granted' && loc?.latitude && loc?.longitude) {
       try {
         await AsyncStorage.setItem('location', JSON.stringify(loc));
-        console.log('✅ [AppContext] Location saved to AsyncStorage');
+        log('✅ [AppContext] Location saved to AsyncStorage');
       } catch (e) {
-        console.log('❌ [AppContext] AsyncStorage write error (location):', e);
+        log('❌ [AppContext] AsyncStorage write error (location):', e);
       }
       
       // Lookup detailed location in background
-      console.log('🔍 [AppContext] Starting location lookup...');
+      log('🔍 [AppContext] Starting location lookup...');
       lookupLocationDetails(loc.latitude, loc.longitude);
     }
   };
 
   // Fetch L1-L6 location details from API Gateway (Nominatim/IP-API)
   const lookupLocationDetails = async (latitude, longitude) => {
-    console.log('🌍 [AppContext] Looking up location details for:', { latitude, longitude });
+    log('🌍 [AppContext] Looking up location details for:', { latitude, longitude });
 
     // Validate coordinates
     if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-      console.log('❌ [AppContext] Invalid coordinates, skipping lookup');
+      log('❌ [AppContext] Invalid coordinates, skipping lookup');
       return;
     }
 
     try {
-      console.log('🌍 [AppContext] Calling lookupLocation API...');
+      log('🌍 [AppContext] Calling lookupLocation API...');
       const result = await lookupLocation(latitude, longitude);
-      console.log('🌍 [AppContext] Location lookup result:', {
+      log('🌍 [AppContext] Location lookup result:', {
         success: result.success,
         displayName: result.displayName,
         country: result.level1Country,
@@ -307,16 +308,16 @@ export const AppProvider = ({ children }) => {
           level1Country: result.level1Country || result.country || null,
         };
 
-        console.log('✅ [AppContext] Location found via', result.source, ':', normalizedResult.displayName);
+        log('✅ [AppContext] Location found via', result.source, ':', normalizedResult.displayName);
         setLocationDetails(normalizedResult);
         await AsyncStorage.setItem('locationDetails', JSON.stringify(normalizedResult));
-        console.log('✅ [AppContext] Location details saved to storage');
+        log('✅ [AppContext] Location details saved to storage');
 
         // Sync to DB - with retry if not yet synced
         await syncLocationToDb(normalizedResult, latitude, longitude);
       } else {
         // Lookup returned but no useful data
-        console.log('⚠️ [AppContext] Location lookup returned no useful data:', result.error || 'no displayName');
+        log('⚠️ [AppContext] Location lookup returned no useful data:', result.error || 'no displayName');
         const basicLocation = {
           success: true,
           source: 'gps',
@@ -332,7 +333,7 @@ export const AppProvider = ({ children }) => {
         await AsyncStorage.setItem('locationDetails', JSON.stringify(basicLocation));
       }
     } catch (error) {
-      console.log('❌ [AppContext] Location lookup exception:', error.message);
+      log('❌ [AppContext] Location lookup exception:', error.message);
       // Still set basic coords on error so UI has something to show
       const basicLocation = {
         success: true,
@@ -355,27 +356,27 @@ export const AppProvider = ({ children }) => {
     const currentUserId = userId;
     
     if (!currentUserId && retryCount < maxRetries) {
-      console.log(`⏳ [AppContext] Waiting for user registration... (attempt ${retryCount + 1}/${maxRetries})`);
+      log(`⏳ [AppContext] Waiting for user registration... (attempt ${retryCount + 1}/${maxRetries})`);
       await new Promise(resolve => setTimeout(resolve, retryDelay));
       // Retry with incremented count - will pick up userId from state
       return syncLocationToDb(locationResult, latitude, longitude, retryCount + 1);
     }
     
     if (!currentUserId) {
-      console.log('⚠️ [AppContext] Could not sync location - user not registered after retries');
+      log('⚠️ [AppContext] Could not sync location - user not registered after retries');
       // Store pending location for later sync
       try {
         await AsyncStorage.setItem('pendingLocationSync', JSON.stringify({ 
           locationResult, latitude, longitude, timestamp: Date.now() 
         }));
-        console.log('💾 [AppContext] Saved pending location for later sync');
+        log('💾 [AppContext] Saved pending location for later sync');
       } catch (e) {
-        console.log('❌ [AppContext] Failed to save pending location:', e);
+        log('❌ [AppContext] Failed to save pending location:', e);
       }
       return;
     }
     
-    console.log('💾 [AppContext] Syncing location to database...');
+    log('💾 [AppContext] Syncing location to database...');
     try {
       const dbResult = await saveLocationToDB({
         source: locationResult.source,
@@ -391,20 +392,20 @@ export const AppProvider = ({ children }) => {
         formattedAddress: locationResult.formattedAddress,
         isPrimary: true,
       });
-      console.log('💾 [AppContext] DB sync result:', dbResult.success ? 'Success' : dbResult.error);
+      log('💾 [AppContext] DB sync result:', dbResult.success ? 'Success' : dbResult.error);
     } catch (error) {
-      console.log('❌ [AppContext] DB location sync error:', error.message);
+      log('❌ [AppContext] DB location sync error:', error.message);
     }
   };
 
   const completeOnboarding = async () => {
-    console.log('🎉 [AppContext] Completing onboarding...');
+    log('🎉 [AppContext] Completing onboarding...');
     setOnboardingComplete(true);
     try {
       await AsyncStorage.setItem('onboardingComplete', 'true');
-      console.log('✅ [AppContext] Onboarding status saved');
+      log('✅ [AppContext] Onboarding status saved');
     } catch (e) {
-      console.log('❌ [AppContext] AsyncStorage write error (onboarding):', e);
+      log('❌ [AppContext] AsyncStorage write error (onboarding):', e);
     }
   };
 
@@ -413,7 +414,7 @@ export const AppProvider = ({ children }) => {
     try {
       await AsyncStorage.removeItem('onboardingComplete');
     } catch (e) {
-      console.log('AsyncStorage remove error (onboarding):', e);
+      log('AsyncStorage remove error (onboarding):', e);
     }
   };
 

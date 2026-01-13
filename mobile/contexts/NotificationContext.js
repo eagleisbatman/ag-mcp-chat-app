@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notificationService from '../services/notifications';
+import { log, error as logError } from '../utils/logger';
 
 const NotificationContext = createContext(null);
 
@@ -57,7 +58,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
 
   // Initialize OneSignal
   const initialize = useCallback(async () => {
-    console.log('[NotificationContext] Initializing...');
+    log('[NotificationContext] Initializing...');
 
     // Load saved preferences first
     const savedPrefs = await loadPreferences();
@@ -65,7 +66,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
     // Initialize OneSignal with handlers
     notificationService.initialize({
       onNotificationOpened: (data, notification) => {
-        console.log('[NotificationContext] Notification opened with data:', data);
+        log('[NotificationContext] Notification opened with data:', data);
         setLastNotification({ data, notification, openedAt: new Date() });
 
         // Handle navigation based on notification type
@@ -85,7 +86,7 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
         }
       },
       onNotificationReceived: (notification) => {
-        console.log('[NotificationContext] Notification received in foreground');
+        log('[NotificationContext] Notification received in foreground');
         setLastNotification({
           notification,
           receivedAt: new Date(),
@@ -110,12 +111,12 @@ export const NotificationProvider = ({ children, onNotificationOpened }) => {
     }
 
     setIsInitialized(true);
-    console.log('[NotificationContext] Initialization complete');
+    log('[NotificationContext] Initialization complete');
   }, [loadPreferences]);
 
   // Request permission and register token
   const requestPermission = useCallback(async () => {
-    console.log('[NotificationContext] Requesting permission...');
+    log('[NotificationContext] Requesting permission...');
     const granted = await notificationService.requestPermission();
     setIsPermissionGranted(granted);
 
