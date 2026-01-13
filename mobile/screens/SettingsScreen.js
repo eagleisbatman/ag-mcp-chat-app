@@ -56,34 +56,34 @@ export default function SettingsScreen({ navigation }) {
   const handleUpdateLocation = async () => {
     setIsUpdatingLocation(true);
     try {
-      console.log('📍 [Settings] Requesting location permission...');
+      log('📍 [Settings] Requesting location permission...');
       const { status } = await Location.requestForegroundPermissionsAsync();
-      console.log('📍 [Settings] Permission status:', status);
+      log('📍 [Settings] Permission status:', status);
 
       if (status !== 'granted') {
         showWarning(t('settings.locationPermissionDenied'));
         return;
       }
 
-      console.log('📍 [Settings] Getting current position...');
+      log('📍 [Settings] Getting current position...');
 
       // First try getLastKnownPositionAsync (instant, from cache)
       let loc = await Location.getLastKnownPositionAsync();
-      console.log('📍 [Settings] Last known position:', loc?.coords);
+      log('📍 [Settings] Last known position:', loc?.coords);
 
       // If no cached location, use getCurrentPositionAsync (active GPS request)
       if (!loc?.coords) {
-        console.log('📍 [Settings] No cached location, requesting fresh GPS fix...');
+        log('📍 [Settings] No cached location, requesting fresh GPS fix...');
         loc = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
           timeout: 15000,
         });
-        console.log('📍 [Settings] getCurrentPositionAsync result:', loc?.coords);
+        log('📍 [Settings] getCurrentPositionAsync result:', loc?.coords);
       }
 
       // Final fallback: try with lower accuracy if high accuracy fails
       if (!loc?.coords) {
-        console.log('📍 [Settings] Balanced accuracy failed, trying low accuracy...');
+        log('📍 [Settings] Balanced accuracy failed, trying low accuracy...');
         loc = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Low,
           timeout: 10000,
@@ -91,7 +91,7 @@ export default function SettingsScreen({ navigation }) {
       }
 
       if (loc?.coords) {
-        console.log('📍 [Settings] Got position:', loc.coords);
+        log('📍 [Settings] Got position:', loc.coords);
         showSuccess(t('settings.gpsLocationUpdated'));
         await setLocation(
           { latitude: loc.coords.latitude, longitude: loc.coords.longitude },
@@ -99,12 +99,12 @@ export default function SettingsScreen({ navigation }) {
         );
       } else {
         // GPS failed, fall back to IP-based location
-        console.log('📍 [Settings] GPS unavailable, falling back to IP location...');
+        log('📍 [Settings] GPS unavailable, falling back to IP location...');
         showWarning(t('settings.gpsFailed'));
         await fetchIPLocation();
       }
     } catch (error) {
-      console.log('❌ [Settings] GPS error:', error.message);
+      log('❌ [Settings] GPS error:', error.message);
       // Fall back to IP-based location
       showWarning(t('settings.gpsFailed'));
       await fetchIPLocation();
@@ -133,7 +133,7 @@ export default function SettingsScreen({ navigation }) {
         showError(t('settings.locationUpdateFailed'));
       }
     } catch (error) {
-      console.log('❌ [Settings] IP location error:', error.message);
+      log('❌ [Settings] IP location error:', error.message);
       showError(t('settings.locationUpdateFailed'));
     }
   };

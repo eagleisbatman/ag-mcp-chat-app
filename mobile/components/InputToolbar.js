@@ -20,6 +20,7 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import { PlusIcon, ClockIcon, VoiceWaveIcon } from './ui/LineIcons';
 import { t } from '../constants/strings';
+import { log, error as logError } from '../utils/logger';
 
 const InputToolbar = forwardRef(function InputToolbar({
   onSendText,
@@ -55,7 +56,7 @@ const InputToolbar = forwardRef(function InputToolbar({
 
     if (isFromVoice && pendingAudioData && uploadAudioInBackground) {
       uploadAudioInBackground(pendingAudioData).catch(err => {
-        console.log('Background audio upload failed:', err);
+        log('Background audio upload failed:', err);
       });
     }
 
@@ -94,7 +95,7 @@ const InputToolbar = forwardRef(function InputToolbar({
         setText(''); // Clear text after sending with image
       }
     } catch (error) {
-      console.error('Image picker error:', error);
+      logError('Image picker error:', error);
       showError(t('media.pickImageFailed'));
     }
   };
@@ -127,7 +128,7 @@ const InputToolbar = forwardRef(function InputToolbar({
         setText(''); // Clear text after sending with image
       }
     } catch (error) {
-      console.error('Camera error:', error);
+      logError('Camera error:', error);
       showError(t('media.cameraFailed'));
     }
   };

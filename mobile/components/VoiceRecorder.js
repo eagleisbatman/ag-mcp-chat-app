@@ -21,6 +21,7 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import { ELEVATION } from '../constants/elevation';
 import AppIcon from './ui/AppIcon';
 import { t } from '../constants/strings';
+import { error as logError } from '../utils/logger';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MAX_RECORDING_DURATION = 120; // 2 minutes max
@@ -203,7 +204,7 @@ export default function VoiceRecorder({
       }, 1000);
 
     } catch (error) {
-      console.error('Recording start error:', error);
+      logError('Recording start error:', error);
       showError(t('voice.startRecordingFailed'));
       onCancel();
     }
@@ -312,7 +313,7 @@ export default function VoiceRecorder({
       }
 
     } catch (error) {
-      console.error('Transcription error:', error);
+      logError('Transcription error:', error);
       showError(t('voice.transcriptionFailed'));
       onCancel();
     }
