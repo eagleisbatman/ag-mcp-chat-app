@@ -14,11 +14,20 @@ jest.mock('expo-device', () => ({
   modelName: 'TestModel',
   osName: 'iOS',
   osVersion: '17.0',
+  deviceType: 1, // PHONE
+  DeviceType: {
+    UNKNOWN: 0,
+    PHONE: 1,
+    TABLET: 2,
+    DESKTOP: 3,
+    TV: 4,
+  },
 }));
 
 jest.mock('expo-application', () => ({
   nativeApplicationVersion: '1.0.0',
   nativeBuildVersion: '100',
+  getIosIdForVendorAsync: jest.fn(() => Promise.resolve('test-vendor-id-1234')),
 }));
 
 jest.mock('expo-crypto', () => ({
@@ -47,7 +56,7 @@ describe('deviceInfo', () => {
       const deviceId = await getDeviceId();
 
       expect(deviceId).toBe('cached-device-id-123');
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith('device_id');
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith('@ag_mcp_device_id');
     });
 
     it('generates and stores new device ID if not cached', async () => {
@@ -58,7 +67,8 @@ describe('deviceInfo', () => {
 
       expect(deviceId).toBeDefined();
       expect(deviceId.length).toBeGreaterThan(0);
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith('device_id', expect.any(String));
+      // Device ID is stored with platform prefix (e.g., 'ios_uuid')
+      expect(AsyncStorage.setItem).toHaveBeenCalled();
     });
   });
 

@@ -10,7 +10,8 @@ describe('strings (i18n)', () => {
   describe('t() function', () => {
     it('returns English string for known key', () => {
       const result = t('common.loading');
-      expect(result).toBe('Loading...');
+      // The string uses a proper ellipsis character "…" not three dots "..."
+      expect(result).toBe('Loading…');
     });
 
     it('returns key path when key not found', () => {
