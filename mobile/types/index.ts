@@ -196,6 +196,8 @@ export interface WeatherAlert {
 // Device Types
 // ============================================
 
+export type DeviceType = 'phone' | 'tablet' | 'desktop' | 'tv' | 'unknown';
+
 export interface DeviceInfo {
   deviceId: string;
   platform: 'ios' | 'android' | 'web';
@@ -203,7 +205,7 @@ export interface DeviceInfo {
   appVersion?: string;
   modelName?: string;
   brand?: string;
-  deviceType?: 'phone' | 'tablet';
+  deviceType?: DeviceType;
 }
 
 // ============================================
