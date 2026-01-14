@@ -24,6 +24,7 @@ interface ListRowProps {
   style?: ViewStyle | ViewStyle[];
   contentStyle?: ViewStyle | ViewStyle[];
   accessibilityLabel?: string;
+  subtitleNumberOfLines?: number; // New prop to control subtitle truncation
 }
 
 export default function ListRow({
@@ -46,6 +47,7 @@ export default function ListRow({
   style,
   contentStyle,
   accessibilityLabel,
+  subtitleNumberOfLines = 2, // Default to 2
 }: ListRowProps): JSX.Element {
   const { theme } = useApp();
   const resolvedShowChevron = showChevron ?? Boolean(onPress);
@@ -82,7 +84,10 @@ export default function ListRow({
             {title}
           </Text>
           {subtitle ? (
-            <Text style={[styles.subtitle, { color: resolvedSubtitleColor }]} numberOfLines={2}>
+            <Text 
+              style={[styles.subtitle, { color: resolvedSubtitleColor }]} 
+              numberOfLines={subtitleNumberOfLines}
+            >
               {subtitle}
             </Text>
           ) : null}

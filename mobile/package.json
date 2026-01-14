@@ -22,6 +22,7 @@
     "expo": "~54.0.31",
     "expo-application": "~7.0.8",
     "expo-av": "~16.0.8",
+    "expo-constants": "~18.0.13",
     "expo-crypto": "^15.0.8",
     "expo-device": "~8.0.10",
     "expo-file-system": "~19.0.21",
@@ -31,6 +32,7 @@
     "expo-image-picker": "~17.0.10",
     "expo-linear-gradient": "^15.0.8",
     "expo-location": "~19.0.8",
+    "expo-modules-core": "~3.0.29",
     "expo-navigation-bar": "^5.0.10",
     "expo-speech-recognition": "^3.0.1",
     "expo-splash-screen": "^31.0.13",
@@ -57,10 +59,17 @@
     "@types/react": "~19.1.10",
     "babel-preset-expo": "~54.0.0",
     "esbuild": "^0.27.2",
+    "expo-modules-autolinking": "~3.0.0",
     "jest": "^29.7.0",
     "jest-expo": "~54.0.0",
     "sharp": "^0.34.5",
     "typescript": "~5.9.2"
+  },
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "expo-modules-core": "~3.0.29",
+    "expo-updates": "~29.0.16"
   },
   "private": true
 }

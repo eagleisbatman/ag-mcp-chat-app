@@ -201,7 +201,8 @@ interface ServiceCardProps {
 }
 
 function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected, onSelect }: ServiceCardProps) {
-  const isActive = server.status === 'active' || server.status === 'online';
+  // Check both status and isActive from API response
+  const isActive = server.isActive === true || server.status === 'active' || server.status === 'online';
   const isComingSoon = server.status === 'coming_soon';
   const serverInfo = SERVER_INFO[server.slug];
 
@@ -227,6 +228,7 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
       <ListRow
         title={info.name}
         subtitle={info.description}
+        subtitleNumberOfLines={0} // Allow as many lines as needed
         onPress={onPress}
         left={
           info.logo ? (
@@ -301,11 +303,11 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
   const config = SERVICE_CATEGORIES[category];
   if (!config || servers.length === 0) return null;
 
-  const activeCount = servers.filter(s => s.status === 'active' || s.status === 'online').length;
+  const activeCount = servers.filter(s => s.isActive === true || s.status === 'active' || s.status === 'online').length;
   const selectableConfig = SELECTABLE_PROVIDERS[category];
 
   const activeSelectableProviders = selectableConfig
-    ? servers.filter(s => selectableConfig.providers.includes(s.slug) && (s.status === 'active' || s.status === 'online'))
+    ? servers.filter(s => selectableConfig.providers.includes(s.slug) && (s.isActive === true || s.status === 'active' || s.status === 'online'))
     : [];
   const hasSelectableProviders = activeSelectableProviders.length > 1;
 
@@ -356,6 +358,13 @@ interface McpData {
   servers?: McpServer[];
   success: boolean;
   error?: string;
+  counts?: {
+    total: number;
+    active: number;
+    degraded: number;
+    inactive: number;
+    comingSoon: number;
+  };
 }
 
 export default function McpServersScreen({ navigation }: McpServersScreenProps) {
@@ -462,7 +471,10 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
   }, [mcpData]);
 
   const visibleServers = mcpData?.servers?.filter(s => !INTERNAL_SERVERS.includes(s.slug)) || [];
-  const activeCount = visibleServers.filter(s => s.status === 'active' || s.status === 'online').length;
+  
+  // Use counts from API if available, otherwise calculate manually
+  const activeCount = mcpData?.counts?.active ?? visibleServers.filter(s => s.isActive === true || s.status === 'active' || s.status === 'online').length;
+  const totalCount = mcpData?.counts?.total ?? visibleServers.length;
 
   const locationText = locationDetails?.displayName ||
     (location?.latitude !== null && location?.longitude !== null
@@ -529,7 +541,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
               </Text>
             </View>
             <Text style={[styles.summaryText, { color: theme.textMuted }]}>
-              {t('mcp.servicesAvailable', { active: activeCount, total: visibleServers.length })}
+              {t('mcp.servicesAvailable', { active: activeCount, total: totalCount })}
             </Text>
           </View>
 
