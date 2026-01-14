@@ -343,7 +343,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
       
       {isBot ? (
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
-          {message.text && !message.diagnosisData ? (
+          {message.text ? (
             <Markdown style={markdownStyles}>
               {isStreaming
                 ? sanitizeStreamingMarkdown(message.text) + ' ▋'
