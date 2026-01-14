@@ -12,6 +12,7 @@ interface DiagnosisResult {
   status?: number;
   diagnosis?: DiagnosisData;
   metadata?: Record<string, unknown>;
+  response?: string; // Natural language response from LLM
 }
 
 interface FailedDiagnosisResult {
@@ -129,11 +130,13 @@ export function processSuccessfulDiagnosis(diagResult: DiagnosisResult): Success
     : {};
 
   const { cropName, healthStatus, issuesList, healthSummary } = extractDiagnosisFields(diagnosisData as Record<string, unknown>);
-  const diagnosisSummary = generateDiagnosisSummary(cropName, healthStatus, issuesList, healthSummary);
+  
+  // CRITICAL FIX: Use the full LLM response if available, only fallback to generated summary
+  const displayText = diagResult.response || generateDiagnosisSummary(cropName, healthStatus, issuesList, healthSummary);
 
   const botMsg: Message = {
     _id: (Date.now() + 1).toString(),
-    text: diagnosisSummary,
+    text: displayText,
     diagnosisData: diagnosisData,
     createdAt: new Date(),
     isBot: true

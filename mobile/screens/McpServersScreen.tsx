@@ -190,6 +190,20 @@ const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
   },
 };
 
+/**
+ * Helper to determine if a server is active based on multiple potential API property names
+ */
+function isServerActive(server: McpServer): boolean {
+  return (
+    server.isActive === true || 
+    server.isActiveForRegion === true || 
+    server.status === 'active' || 
+    server.status === 'online' || 
+    server.displayStatus === 'active' ||
+    server.healthStatus === 'healthy'
+  );
+}
+
 interface ServiceCardProps {
   server: McpServer;
   theme: Theme;
@@ -201,9 +215,8 @@ interface ServiceCardProps {
 }
 
 function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected, onSelect }: ServiceCardProps) {
-  // Check both status and isActive from API response
-  const isActive = server.isActive === true || server.status === 'active' || server.status === 'online';
-  const isComingSoon = server.status === 'coming_soon';
+  const isActive = isServerActive(server);
+  const isComingSoon = server.status === 'coming_soon' || server.displayStatus === 'coming_soon';
   const serverInfo = SERVER_INFO[server.slug];
 
   const isTomorrowIo = server.slug === 'tomorrow-io';
@@ -303,11 +316,11 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
   const config = SERVICE_CATEGORIES[category];
   if (!config || servers.length === 0) return null;
 
-  const activeCount = servers.filter(s => s.isActive === true || s.status === 'active' || s.status === 'online').length;
+  const activeCount = servers.filter(isServerActive).length;
   const selectableConfig = SELECTABLE_PROVIDERS[category];
 
   const activeSelectableProviders = selectableConfig
-    ? servers.filter(s => selectableConfig.providers.includes(s.slug) && (s.isActive === true || s.status === 'active' || s.status === 'online'))
+    ? servers.filter(s => selectableConfig.providers.includes(s.slug) && isServerActive(s))
     : [];
   const hasSelectableProviders = activeSelectableProviders.length > 1;
 
@@ -473,7 +486,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
   const visibleServers = mcpData?.servers?.filter(s => !INTERNAL_SERVERS.includes(s.slug)) || [];
   
   // Use counts from API if available, otherwise calculate manually
-  const activeCount = mcpData?.counts?.active ?? visibleServers.filter(s => s.isActive === true || s.status === 'active' || s.status === 'online').length;
+  const activeCount = mcpData?.counts?.active ?? visibleServers.filter(isServerActive).length;
   const totalCount = mcpData?.counts?.total ?? visibleServers.length;
 
   const locationText = locationDetails?.displayName ||

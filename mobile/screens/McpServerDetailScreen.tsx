@@ -23,7 +23,7 @@ import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
 import { error as logError } from '../utils/logger';
 import { t } from '../constants/strings';
-import type { Theme, RootStackParamList } from '../types';
+import type { Theme, RootStackParamList, McpServer } from '../types';
 
 // Tomorrow.io logos for light/dark mode
 const TOMORROW_IO_LOGO_LIGHT: ImageSourcePropType = require('../assets/logos/Powered_by_Tomorrow-Black.png');
@@ -184,13 +184,6 @@ interface McpServerDetailScreenProps {
   route: RouteProp<RootStackParamList, 'McpServerDetail'>;
 }
 
-interface ServerData {
-  name?: string;
-  description?: string;
-  longDescription?: string;
-  healthStatus?: string;
-}
-
 export default function McpServerDetailScreen({ navigation, route }: McpServerDetailScreenProps) {
   const { serverId } = route.params;
   const { theme, isDark } = useApp();
@@ -198,7 +191,7 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [server, setServer] = useState<ServerData | null>(null);
+  const [server, setServer] = useState<McpServer | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fetchServerDetails = useCallback(async () => {
@@ -206,7 +199,7 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
       setError(null);
       const response = await api.getMcpServer(serverId);
 
-      if (response.success) {
+      if (response.success && response.server) {
         setServer(response.server);
       } else {
         throw new Error(response.error || t('mcp.failedToFetch'));
@@ -248,7 +241,7 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
   } : {
     name: server?.name?.replace(' MCP', '').replace(' Server', '') || serverId,
     tagline: server?.description || t('mcp.fallback.service'),
-    description: server?.longDescription || t('mcp.fallback.description'),
+    description: server?.description || t('mcp.fallback.description'),
     icon: 'puzzle' as MaterialIconName,
     logo: null,
     color: theme.accent,
@@ -257,7 +250,7 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
     crops: [] as string[],
   };
 
-  const isActive = server?.healthStatus === 'healthy';
+  const isActive = server?.isActive === true || server?.isActiveForRegion === true || server?.status === 'active' || server?.displayStatus === 'active' || server?.healthStatus === 'healthy';
   const displayColor = info.color || theme.accent;
 
   return (
