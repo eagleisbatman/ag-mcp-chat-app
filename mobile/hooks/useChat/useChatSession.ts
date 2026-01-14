@@ -76,10 +76,18 @@ export default function useChatSession(sessionIdParam: string | null = null): Us
       if (result.success && result.session?.messages) {
         const loadedMessages: Message[] = (result.session.messages as any[]).map(m => {
           // Reconstruct diagnosis from metadata for native card
+          // Check multiple possible paths for backwards compatibility
           let diagnosisData: any = undefined;
           try {
             const metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
-            diagnosisData = metadata?.diagnosis ?? undefined;
+            // Check primary path first, then fallbacks
+            diagnosisData = metadata?.diagnosis 
+              ?? metadata?.diagnosisData 
+              ?? (metadata?.diagnosisCrop ? {
+                  crop: { name: metadata.diagnosisCrop },
+                  health_status: metadata.diagnosisHealthStatus,
+                  issues: metadata.diagnosisIssues || []
+                } : undefined);
           } catch (e) {
             // Ignore parse errors
           }

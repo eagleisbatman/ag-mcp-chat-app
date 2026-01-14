@@ -14,6 +14,7 @@ import { uploadImage, uploadAudio } from '../../services/upload';
 import { parseErrorMessage, isNetworkError } from '../../utils/apiHelpers';
 import { t } from '../../constants/strings';
 import { processFailedDiagnosis, processSuccessfulDiagnosis } from './diagnosisProcessor';
+import { generateDiagnosisTTSBrief } from '../../utils/diagnosisNormalizer';
 import { Message, HistoryMessage, LocationDetails } from '../../types';
 
 interface UseChatSendOptions {
@@ -94,12 +95,18 @@ export default function useChatSend({
     try {
       setThinkingText(t('chat.thinking'));
 
-      // Convert Message[] to HistoryMessage[]
-      const history: HistoryMessage[] = messages.slice(0, 10).map(m => ({
-        _id: m._id,
-        text: m.text || '',
-        isBot: m.isBot
-      }));
+      // Convert Message[] to HistoryMessage[], including diagnosis context for image messages
+      const history: HistoryMessage[] = messages.slice(0, 10).map(m => {
+        let text = m.text || '';
+        
+        // For diagnosis messages, include a summary in history so AI has context
+        if (m.diagnosisData && (!text || text.startsWith('[Image'))) {
+          const summary = generateDiagnosisTTSBrief(m.diagnosisData);
+          text = summary || text || '[Plant image analyzed]';
+        }
+        
+        return { _id: m._id, text, isBot: m.isBot };
+      });
 
       await sendChatMessageStreaming({
         message: text,
@@ -130,7 +137,10 @@ export default function useChatSend({
             diagnosisIssues: diagnosisMetadata?.issues,
           } as Record<string, unknown>);
 
-          maybeGenerateTitle(sessionId, [{ ...botMsg, text: fullText }, userMessage, ...messages]);
+          // Fire-and-forget title generation with error handling
+          maybeGenerateTitle(sessionId, [{ ...botMsg, text: fullText }, userMessage, ...messages]).catch((err) => {
+            log('[Chat] Title generation failed (non-critical):', err);
+          });
         },
         onError: (error: Error) => {
           const isTimeout = error?.message?.includes('timeout');
@@ -214,12 +224,20 @@ export default function useChatSend({
       if (!diagResult.success) {
         const { errorBotMsg, warningMessage } = processFailedDiagnosis(diagResult);
         addMessage(errorBotMsg);
+        // Persist error messages so they survive app restart/navigation
+        persistMessage(errorBotMsg, sessionId, { 
+          errorType: diagResult.error || 'diagnosis_failed',
+          metadata: { error: diagResult.error }
+        });
         showWarning(warningMessage);
       } else {
         const { botMsg, persistData } = processSuccessfulDiagnosis(diagResult);
         addMessage(botMsg);
         persistMessage(botMsg, sessionId, persistData);
-        maybeGenerateTitle(sessionId, [botMsg, userMsg, ...messages]);
+        // Fire-and-forget title generation with error handling
+        maybeGenerateTitle(sessionId, [botMsg, userMsg, ...messages]).catch((err) => {
+          log('[Chat] Title generation failed (non-critical):', err);
+        });
       }
     } catch (error) {
       showError(parseErrorMessage(error));

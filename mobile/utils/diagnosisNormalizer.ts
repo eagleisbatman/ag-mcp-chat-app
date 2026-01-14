@@ -121,9 +121,27 @@ export function normalizeDiagnosis(data: DiagnosisData | string | null | undefin
     }
   }
 
-  // Detect provider format
+  // Handle gateway error objects (e.g., { error: 'timeout', message: '...' })
+  const parsedAny = parsed as Record<string, unknown>;
+  if (parsedAny.error) {
+    return {
+      _provider: 'agrivision',
+      health_status: 'Error',
+      health_summary: (parsedAny.message as string) || 'Unable to analyze image',
+      image_quality: '',
+      diagnostic_notes: (parsedAny.message as string) || 'Service temporarily unavailable',
+      isNetworkError: parsedAny.error === 'connection_error' || parsedAny.error === 'http_error',
+      isTimeout: parsedAny.error === 'timeout',
+      issues: [],
+      treatment_recommendations: [],
+    } as NormalizedDiagnosis;
+  }
+
+  // Detect provider - prefer explicit _provider field from gateway, fallback to format heuristics
+  const explicitProvider = parsedAny._provider as string | undefined;
   const plantixData = parsed as PlantixFormat;
-  const isPlantix = !!(plantixData.health_assessment || plantixData.diagnoses);
+  const isPlantix = explicitProvider === 'plantix' 
+    || (!explicitProvider && !!(plantixData.health_assessment || plantixData.diagnoses));
 
   if (isPlantix) {
     const allDiagnoses = plantixData.diagnoses || [];

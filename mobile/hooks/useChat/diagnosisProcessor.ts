@@ -125,14 +125,24 @@ export function generateDiagnosisSummary(
  * Process successful diagnosis into a bot message
  */
 export function processSuccessfulDiagnosis(diagResult: DiagnosisResult): SuccessfulDiagnosisResult {
-  const diagnosisData = diagResult.diagnosis && typeof diagResult.diagnosis === 'object' 
-    ? diagResult.diagnosis 
-    : {};
+  // Handle both object and string diagnosis data (don't discard string data)
+  let diagnosisData: DiagnosisData | Record<string, unknown>;
+  if (diagResult.diagnosis && typeof diagResult.diagnosis === 'object') {
+    diagnosisData = diagResult.diagnosis;
+  } else if (typeof diagResult.diagnosis === 'string') {
+    // Preserve string diagnosis as rawText so it can be displayed
+    diagnosisData = { rawText: diagResult.diagnosis };
+  } else {
+    diagnosisData = {};
+  }
 
   const { cropName, healthStatus, issuesList, healthSummary } = extractDiagnosisFields(diagnosisData as Record<string, unknown>);
   
-  // CRITICAL FIX: Use the full LLM response if available, only fallback to generated summary
-  const displayText = diagResult.response || generateDiagnosisSummary(cropName, healthStatus, issuesList, healthSummary);
+  // Ensure displayText is never empty - use response, then summary, then fallback
+  const generatedSummary = generateDiagnosisSummary(cropName, healthStatus, issuesList, healthSummary);
+  const displayText = diagResult.response 
+    || (generatedSummary && generatedSummary !== '[Plant Diagnosis] Plant: analyzed' ? generatedSummary : null)
+    || t('diagnosis.analysisComplete');
 
   const botMsg: Message = {
     _id: (Date.now() + 1).toString(),
