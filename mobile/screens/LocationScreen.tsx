@@ -120,7 +120,7 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
         }
 
         await setLocation(
-          { latitude: result.latitude, longitude: result.longitude },
+          { latitude: result.latitude ?? null, longitude: result.longitude ?? null },
           'granted'
         );
         navigation.navigate('Language');

@@ -139,7 +139,10 @@ export default function ContentDetailScreen({ navigation, route }: ContentDetail
   };
 
   const handleRelatedPress = (item: RelatedContentItem) => {
-    navigation.push('ContentDetail', { contentId: item.id || item._id });
+    const contentId = item.id || item._id;
+    if (contentId) {
+      navigation.push('ContentDetail', { contentId });
+    }
   };
 
   const formatDuration = (seconds?: number): string => {
