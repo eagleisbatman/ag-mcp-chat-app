@@ -237,7 +237,7 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
   const isInUse = isSelected && isActive;
 
   return (
-    <Card style={[styles.serviceCard, !isActive && styles.serviceCardInactive]}>
+    <Card style={[styles.serviceCard, !isActive && styles.serviceCardInactive] as const}>
       <ListRow
         title={info.name}
         subtitle={info.description}

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, StyleSheet, ViewStyle, StyleProp } from 'react-native';
 import { useApp } from '../../contexts/AppContext';
 import { ELEVATION, ElevationStyle } from '../../constants/elevation';
 
@@ -7,7 +7,7 @@ type ElevationLevel = 'sm' | 'md' | 'lg';
 
 interface CardProps {
   children?: ReactNode;
-  style?: ViewStyle | ViewStyle[];
+  style?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   borderColor?: string;
   borderWidth?: number;
