@@ -337,13 +337,15 @@ export interface McpServer {
   displayName?: string;
   description?: string;
   url?: string;
-  status?: 'online' | 'offline' | 'unknown' | string;
-  healthStatus?: string;
+  status?: 'active' | 'degraded' | 'inactive' | 'coming_soon' | 'online' | 'offline' | 'unknown' | string;
+  displayStatus?: 'active' | 'degraded' | 'inactive' | 'coming_soon' | string;
+  healthStatus?: 'healthy' | 'unhealthy' | 'unknown' | 'not_deployed' | string;
   tagline?: string;
   category?: string;
   regions?: string[];
   tools?: McpTool[];
   isActive?: boolean;
+  isActiveForRegion?: boolean;
   lastChecked?: Date | string;
 }
 
