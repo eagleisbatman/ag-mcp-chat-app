@@ -3,60 +3,11 @@
  * Handles sending text, images, and audio
  */
 import { useState, useCallback, useRef } from 'react';
-import { Platform } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { useApp } from '../../contexts/AppContext';
 import { useToast } from '../../contexts/ToastContext';
-import { sendChatMessageStreaming, analyzePlantImage } from '../../services/api';
-import { log } from '../../utils/logger';
-import { transcribeAudio as transcribeAudioService } from '../../services/transcription';
-import { uploadImage, uploadAudio } from '../../services/upload';
-import { parseErrorMessage, isNetworkError } from '../../utils/apiHelpers';
 import { t } from '../../constants/strings';
-import { processFailedDiagnosis, processSuccessfulDiagnosis } from './diagnosisProcessor';
-import { generateDiagnosisTTSBrief } from '../../utils/diagnosisNormalizer';
-import { Message, HistoryMessage, LocationDetails } from '../../types';
-
-interface UseChatSendOptions {
-  messages: Message[];
-  addMessage: (message: Message) => void;
-  updateMessage: (messageId: string, updates: Record<string, unknown>) => void;
-  ensureSession: () => Promise<string | null>;
-  persistMessage: (message: Message & { cloudinaryUrl?: string }, sessionId: string | null, extra?: Record<string, unknown>) => Promise<string | null>;
-  maybeGenerateTitle: (sessionId: string | null, allMessages: Message[]) => Promise<void>;
-}
-
-interface ImageData {
-  uri: string;
-  base64: string;
-  text?: string;
-}
-
-interface AudioData {
-  base64: string;
-  language?: string;
-}
-
-interface TranscribeResult {
-  success: boolean;
-  transcription?: string;
-  error?: string;
-}
-
-interface UploadResult {
-  success: boolean;
-  url?: string;
-  error?: string;
-}
-
-interface UseChatSendReturn {
-  isTyping: boolean;
-  thinkingText: string | null;
-  handleSendText: (text: string, isRetry?: boolean) => Promise<void>;
-  handleSendImage: (imageData: ImageData) => Promise<void>;
-  transcribeAudioForInput: (audioData: AudioData) => Promise<TranscribeResult>;
-  uploadAudioInBackground: (audioData: AudioData | null) => Promise<UploadResult>;
-}
+import { createSendImageHandler, createSendTextHandler, transcribeAudioForInput, uploadAudioInBackground } from './send/handlers';
+import type { AudioData, ImageData, UseChatSendOptions, UseChatSendReturn } from './send/types';
 
 export default function useChatSend({
   messages,
@@ -68,222 +19,96 @@ export default function useChatSend({
 }: UseChatSendOptions): UseChatSendReturn {
   const { language, location, locationDetails } = useApp();
   const { showError, showWarning } = useToast();
-  
+
   const [isTyping, setIsTyping] = useState(false);
   const [thinkingText, setThinkingText] = useState<string | null>(null);
   const retryCountRef = useRef(0);
-  const MAX_RETRIES = 1; // Retry once on timeout (handles cold starts)
+  const MAX_RETRIES = 1;
 
-  const handleSendText = useCallback(async (text: string, isRetry = false): Promise<void> => {
-    const userMessage: Message = { 
-      _id: Date.now().toString(), 
-      text, 
-      createdAt: new Date(), 
-      isBot: false 
-    };
-    addMessage(userMessage);
-    setIsTyping(true);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  const locationContext = {
+    location,
+    locationDetails,
+    languageCode: language?.code,
+  };
 
-    const sessionId = await ensureSession();
-    persistMessage(userMessage, sessionId, { inputMethod: 'keyboard' });
+  const handleSendText = useCallback(
+    (text: string, isRetry = false) =>
+      createSendTextHandler({
+        messages,
+        addMessage,
+        updateMessage,
+        ensureSession,
+        persistMessage,
+        maybeGenerateTitle,
+        showError,
+        showWarning,
+        locationContext,
+        setIsTyping,
+        setThinkingText,
+        retryCountRef,
+        maxRetries: MAX_RETRIES,
+      })(text, isRetry),
+    [
+      messages,
+      addMessage,
+      updateMessage,
+      ensureSession,
+      persistMessage,
+      maybeGenerateTitle,
+      showError,
+      showWarning,
+      locationContext,
+    ]
+  );
 
-    const botMsgId = (Date.now() + 1).toString();
-    const botMsg: Message = { _id: botMsgId, text: '', createdAt: new Date(), isBot: true };
-    addMessage(botMsg);
+  const handleSendImage = useCallback(
+    (imageData: ImageData) =>
+      createSendImageHandler({
+        messages,
+        addMessage,
+        persistMessage,
+        ensureSession,
+        maybeGenerateTitle,
+        showError,
+        showWarning,
+        locationContext,
+        setIsTyping,
+        setThinkingText,
+      })(imageData),
+    [
+      messages,
+      addMessage,
+      persistMessage,
+      ensureSession,
+      maybeGenerateTitle,
+      showError,
+      showWarning,
+      locationContext,
+    ]
+  );
 
-    try {
-      setThinkingText(t('chat.thinking'));
+  const transcribeAudioForInputHandler = useCallback(
+    (audioData: AudioData) => transcribeAudioForInput(audioData, language?.code),
+    [language]
+  );
 
-      // Convert Message[] to HistoryMessage[], including diagnosis context for image messages
-      const history: HistoryMessage[] = messages.slice(0, 10).map(m => {
-        let text = m.text || '';
-        
-        // For diagnosis messages, include a summary in history so AI has context
-        if (m.diagnosisData && (!text || text.startsWith('[Image'))) {
-          const summary = generateDiagnosisTTSBrief(m.diagnosisData);
-          text = summary || text || '[Plant image analyzed]';
-        }
-        
-        return { _id: m._id, text, isBot: m.isBot };
-      });
-
-      await sendChatMessageStreaming({
-        message: text,
-        latitude: location?.latitude ?? undefined,
-        longitude: location?.longitude ?? undefined,
-        language: language?.code,
-        locationDetails: locationDetails ?? undefined,
-        history,
-        sessionId: sessionId ?? undefined,
-        onChunk: (chunk: string) => {
-          setThinkingText(null);
-          updateMessage(botMsgId, { text: (prev: string) => (prev || '') + chunk });
-        },
-        onThinking: (thinking: string) => setThinkingText(thinking),
-        onComplete: (fullText: string, metadata?: Record<string, unknown>) => {
-          setThinkingText(null);
-          setIsTyping(false);
-          updateMessage(botMsgId, { text: fullText });
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
-          const diagnosisMetadata = metadata?.diagnosis as Record<string, unknown> | undefined;
-          const diagnosisCrop = diagnosisMetadata?.crop as { name?: string } | string | undefined;
-          persistMessage({ ...botMsg, text: fullText }, sessionId, {
-            responseLanguageCode: language?.code,
-            metadata: metadata || null,
-            diagnosisCrop: typeof diagnosisCrop === 'object' ? diagnosisCrop?.name : diagnosisCrop,
-            diagnosisHealthStatus: diagnosisMetadata?.health_status,
-            diagnosisIssues: diagnosisMetadata?.issues,
-          } as Record<string, unknown>);
-
-          // Fire-and-forget title generation with error handling
-          maybeGenerateTitle(sessionId, [{ ...botMsg, text: fullText }, userMessage, ...messages]).catch((err) => {
-            log('[Chat] Title generation failed (non-critical):', err);
-          });
-        },
-        onError: (error: Error) => {
-          const isTimeout = error?.message?.includes('timeout');
-          
-          if (isTimeout && !isRetry && retryCountRef.current < MAX_RETRIES) {
-            retryCountRef.current++;
-            log('🔄 [Chat] Timeout - auto-retrying...');
-            setThinkingText(t('chat.servicesWarmingUp') || 'Services warming up, retrying...');
-            handleSendText(text, true);
-            return;
-          }
-          
-          retryCountRef.current = 0;
-          setThinkingText(null);
-          setIsTyping(false);
-          updateMessage(botMsgId, { 
-            text: (prev: string) => prev && prev.length > 10 ? prev : t('chat.connectionErrorBot') 
-          });
-
-          if (isNetworkError(error)) {
-            showWarning(t('chat.noInternet'));
-          } else {
-            showError(parseErrorMessage(error));
-          }
-        }
-      });
-      
-      retryCountRef.current = 0;
-    } catch (error) {
-      retryCountRef.current = 0;
-      setThinkingText(null);
-      setIsTyping(false);
-      updateMessage(botMsgId, { text: t('chat.connectionErrorBot') });
-      showError(parseErrorMessage(error));
-    }
-  }, [location, language, locationDetails, messages, addMessage, updateMessage, ensureSession, persistMessage, maybeGenerateTitle, showError, showWarning]);
-
-  const handleSendImage = useCallback(async (imageData: ImageData): Promise<void> => {
-    const userMsgText = imageData.text || '[Image for plant diagnosis]';
-    const userMsg: Message = { 
-      _id: Date.now().toString(), 
-      text: userMsgText, 
-      image: imageData.uri, 
-      createdAt: new Date(), 
-      isBot: false 
-    };
-    addMessage(userMsg);
-    setIsTyping(true);
-    setThinkingText(t('chat.analyzingImage'));
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    const sessionId = await ensureSession();
-
-    try {
-      const uploadPromise = uploadImage(imageData.base64).then(async (result: UploadResult) => {
-        if (result.success && result.url) {
-          await persistMessage({ ...userMsg, cloudinaryUrl: result.url }, sessionId, { inputMethod: 'image', imageCloudinaryUrl: result.url });
-        } else {
-          await persistMessage(userMsg, sessionId, { inputMethod: 'image' });
-          showWarning(t('errors.imageUploadFailed'));
-        }
-        return result;
-      });
-
-      let imageBase64 = imageData.base64;
-      if (!imageBase64.startsWith('data:')) {
-        imageBase64 = `data:image/jpeg;base64,${imageBase64}`;
-      }
-
-      const diagResult = await analyzePlantImage({
-        imageBase64,
-        latitude: location?.latitude ?? undefined,
-        longitude: location?.longitude ?? undefined,
-        language: language?.code,
-        locationDetails: locationDetails ?? undefined,
-        question: imageData.text,
-      });
-
-      await uploadPromise;
-
-      if (!diagResult.success) {
-        const { errorBotMsg, warningMessage } = processFailedDiagnosis(diagResult);
-        addMessage(errorBotMsg);
-        // Persist error messages so they survive app restart/navigation
-        persistMessage(errorBotMsg, sessionId, { 
-          errorType: diagResult.error || 'diagnosis_failed',
-          metadata: { error: diagResult.error }
-        });
-        showWarning(warningMessage);
-      } else {
-        const { botMsg, persistData } = processSuccessfulDiagnosis(diagResult);
-        addMessage(botMsg);
-        persistMessage(botMsg, sessionId, persistData);
-        // Fire-and-forget title generation with error handling
-        maybeGenerateTitle(sessionId, [botMsg, userMsg, ...messages]).catch((err) => {
-          log('[Chat] Title generation failed (non-critical):', err);
-        });
-      }
-    } catch (error) {
-      showError(parseErrorMessage(error));
-      addMessage({ 
-        _id: (Date.now() + 1).toString(), 
-        text: t('chat.imageAnalysisFailedBot'), 
-        createdAt: new Date(), 
-        isBot: true 
-      });
-    } finally {
-      setIsTyping(false);
-      setThinkingText(null);
-    }
-  }, [location, language, locationDetails, messages, addMessage, persistMessage, ensureSession, maybeGenerateTitle, showError, showWarning]);
-
-  const transcribeAudioForInput = useCallback(async (audioData: AudioData): Promise<TranscribeResult> => {
-    try {
-      const result = await transcribeAudioService(audioData.base64, audioData.language || language?.code);
-      if (!result.success || !result.text) {
-        return { success: false, error: result.error || t('voice.couldNotTranscribeAudio') };
-      }
-      return { success: true, transcription: result.text };
-    } catch (error) {
-      return { success: false, error: t('voice.transcriptionFailed') };
-    }
-  }, [language]);
-
-  const uploadAudioInBackground = useCallback(async (audioData: AudioData | null): Promise<UploadResult> => {
-    if (!audioData?.base64) return { success: false };
-    try {
-      const result = await uploadAudio(audioData.base64, 'm4a');
+  const uploadAudioInBackgroundHandler = useCallback(
+    async (audioData: AudioData | null) => {
+      const result = await uploadAudioInBackground(audioData);
       if (!result.success) {
         showWarning(t('errors.audioUploadFailed'));
       }
       return result;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  }, [showWarning]);
+    },
+    [showWarning]
+  );
 
   return {
     isTyping,
     thinkingText,
     handleSendText,
     handleSendImage,
-    transcribeAudioForInput,
-    uploadAudioInBackground,
+    transcribeAudioForInput: transcribeAudioForInputHandler,
+    uploadAudioInBackground: uploadAudioInBackgroundHandler,
   };
 }

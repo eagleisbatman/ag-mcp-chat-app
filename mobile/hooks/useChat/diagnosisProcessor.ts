@@ -117,8 +117,21 @@ export function generateDiagnosisSummary(
   issuesList: string[], 
   healthSummary: string
 ): string {
-  const issues = issuesList.join(', ');
-  return `[Plant Diagnosis] ${cropName || 'Plant'}: ${healthStatus}${issues ? `. Issues: ${issues}` : ''}${healthSummary ? `. ${healthSummary}` : ''}`;
+  const parts: string[] = [];
+  const safeCrop = cropName || t('diagnosis.plant');
+  const safeStatus = healthStatus || t('diagnosis.analyzed');
+
+  parts.push(`${t('diagnosis.crop')}: ${safeCrop}`);
+  parts.push(`${t('diagnosis.status')}: ${safeStatus}`);
+
+  if (issuesList.length > 0) {
+    parts.push(`${t('diagnosis.issueDetected')}: ${issuesList.join(', ')}`);
+  }
+  if (healthSummary) {
+    parts.push(healthSummary);
+  }
+
+  return parts.join('. ') + '.';
 }
 
 /**

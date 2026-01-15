@@ -17,6 +17,7 @@ import Animated, {
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 import ShimmerText from './ShimmerText';
+import { t } from '../../constants/strings';
 
 interface PulsingDotProps {
   delay: number;
@@ -81,7 +82,44 @@ interface TypingIndicatorProps {
  * TypingIndicator component
  */
 export default function TypingIndicator({ text }: TypingIndicatorProps): JSX.Element {
-  const { theme } = useApp();
+  const { theme, language } = useApp();
+  const fallbackText = t('chat.thinking');
+  const lowerText = text?.toLowerCase() || '';
+  const localizedMessages = new Set([
+    t('chat.thinking'),
+    t('chat.analyzingImage'),
+    t('chat.servicesWarmingUp'),
+  ]);
+
+  const looksEnglishThinking = (): boolean => {
+    if (!text || !lowerText) return false;
+    if ((language?.code || 'en') === 'en') return false;
+    if (localizedMessages.has(text)) return false;
+
+    const englishIndicators = [
+      'thinking',
+      'checking',
+      'looking',
+      'getting',
+      'fetching',
+      'finding',
+      'analyzing',
+      'analysis',
+      'weather',
+      'forecast',
+      'location',
+      'stations',
+      'soil',
+      'market',
+      'tool',
+    ];
+
+    return englishIndicators.some((indicator) => lowerText.includes(indicator));
+  };
+
+  const displayText = text?.trim()
+    ? (looksEnglishThinking() ? fallbackText : text)
+    : fallbackText;
 
   return (
     <View style={styles.container}>
@@ -94,7 +132,7 @@ export default function TypingIndicator({ text }: TypingIndicatorProps): JSX.Ele
 
       {/* Shimmer text */}
       <ShimmerText
-        text={text}
+        text={displayText}
         style={styles.text as TextStyle}
         fontSize={TYPOGRAPHY.sizes.sm}
       />

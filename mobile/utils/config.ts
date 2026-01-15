@@ -37,6 +37,7 @@ export const getOptionalEnv = (key: string, defaultValue: string): string => {
 // API Configuration
 export const API_BASE_URL = getRequiredEnv('EXPO_PUBLIC_API_BASE_URL');
 export const API_KEY = getRequiredEnv('EXPO_PUBLIC_API_KEY');
+export const AI_SERVICES_URL = getOptionalEnv('EXPO_PUBLIC_AI_SERVICES_URL', API_BASE_URL);
 
 // Timeout configurations (in milliseconds)
 export const TIMEOUTS = {
@@ -51,6 +52,7 @@ export type TimeoutKey = keyof typeof TIMEOUTS;
 export default {
   API_BASE_URL,
   API_KEY,
+  AI_SERVICES_URL,
   TIMEOUTS,
   getRequiredEnv,
   getOptionalEnv,

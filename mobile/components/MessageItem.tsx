@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator, Platform, Animated, useWindowDimensions, LayoutChangeEvent } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator, Animated, useWindowDimensions, LayoutChangeEvent } from 'react-native';
 import { Image } from 'expo-image';
 import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
-import { textToSpeech } from '../services/tts';
-import { playAudio, stopAudio } from '../utils/audioPlayer';
-import { generateDiagnosisTTSText } from '../utils/diagnosisNormalizer';
-import { log } from '../utils/logger';
-import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import { SPACING } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
 import { t } from '../constants/strings';
 import { Message } from '../types';
+import { useMessageTts } from './message/useMessageTts';
+import { createMarkdownStyles } from './message/markdownStyles';
+import { styles } from './message/messageItemStyles';
 
 interface MessageItemProps {
   message: Message;
@@ -63,7 +62,6 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
   const isStreaming = message.isStreaming || false;
-  const rippleColor = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
   // Don't render empty streaming messages
   if (isBot && isStreaming && !message.text) {
@@ -72,10 +70,12 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
   
   const contentMaxWidth = screenWidth - (SPACING.lg * 2);
   
-  // TTS state
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [localTtsUrl, setLocalTtsUrl] = useState(message.ttsAudioUrl);
+  const { isSpeaking, isLoading, handleSpeak } = useMessageTts({
+    message,
+    languageCode: language?.code || 'en',
+    locationDetails,
+    onError: showError,
+  });
   
   // Animation state
   const [fadeAnim] = useState(() => new Animated.Value(isNewMessage ? 0 : 1));
@@ -99,193 +99,9 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
 
   const textColor = theme.text;
 
-  const markdownStyles = useMemo(() => ({
-    body: {
-      color: textColor,
-      fontSize: TYPOGRAPHY.sizes.base,
-      lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
-    },
-    heading1: {
-      color: textColor,
-      fontSize: TYPOGRAPHY.sizes.xl,
-      fontWeight: TYPOGRAPHY.weights.bold as '700',
-      marginBottom: SPACING.sm,
-      marginTop: SPACING.md,
-    },
-    heading2: {
-      color: textColor,
-      fontSize: TYPOGRAPHY.sizes.lg,
-      fontWeight: TYPOGRAPHY.weights.semibold as '600',
-      marginBottom: SPACING.sm,
-      marginTop: SPACING.md,
-    },
-    heading3: {
-      color: textColor,
-      fontSize: TYPOGRAPHY.sizes.md,
-      fontWeight: TYPOGRAPHY.weights.semibold as '600',
-      marginBottom: SPACING.xs,
-      marginTop: SPACING.sm,
-    },
-    strong: {
-      fontWeight: TYPOGRAPHY.weights.bold as '700',
-      color: textColor,
-    },
-    em: {
-      fontStyle: 'italic' as const,
-    },
-    bullet_list: {
-      marginTop: 6,
-      marginBottom: 6,
-    },
-    ordered_list: {
-      marginTop: 6,
-      marginBottom: 6,
-    },
-    list_item: {
-      flexDirection: 'row' as const,
-      alignItems: 'flex-start' as const,
-      marginTop: 3,
-      marginBottom: 3,
-    },
-    bullet_list_icon: {
-      color: theme.accent,
-      fontSize: TYPOGRAPHY.sizes.xs,
-      lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
-      marginRight: SPACING.sm,
-      marginTop: SPACING.sm,
-    },
-    bullet_list_content: {
-      flex: 1,
-      flexShrink: 1,
-    },
-    ordered_list_icon: {
-      color: theme.accent,
-      fontSize: TYPOGRAPHY.sizes.sm,
-      fontWeight: TYPOGRAPHY.weights.semibold as '600',
-      marginRight: SPACING.sm,
-      lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
-    },
-    ordered_list_content: {
-      flex: 1,
-      flexShrink: 1,
-    },
-    code_inline: {
-      backgroundColor: 'transparent',
-      color: theme.accent,
-      paddingHorizontal: 4,
-      paddingVertical: 1,
-      borderRadius: 0,
-      fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-      fontSize: TYPOGRAPHY.sizes.sm,
-    },
-    code_block: {
-      backgroundColor: 'transparent',
-      padding: SPACING.md,
-      borderRadius: 0,
-      marginVertical: SPACING.sm,
-    },
-    fence: {
-      backgroundColor: 'transparent',
-      padding: SPACING.md,
-      borderRadius: 0,
-      marginVertical: SPACING.sm,
-    },
-    link: {
-      color: theme.accent,
-      textDecorationLine: 'underline' as const,
-    },
-    paragraph: {
-      marginTop: SPACING.sm,
-      marginBottom: SPACING.sm,
-    },
-    hr: {
-      backgroundColor: theme.border,
-      height: 1,
-      marginVertical: SPACING.md,
-    },
-    textgroup: {
-      flexDirection: 'row' as const,
-      flexWrap: 'wrap' as const,
-      alignItems: 'flex-start' as const,
-    },
-    text: {
-      color: textColor,
-    },
-  }), [theme, textColor]);
+  const markdownStyles = useMemo(() => createMarkdownStyles(theme, textColor), [theme, textColor]);
 
-  const handleSpeak = async (): Promise<void> => {
-    if (isSpeaking) {
-      await stopAudio();
-      setIsSpeaking(false);
-      return;
-    }
-
-    const cachedUrl = localTtsUrl || message.ttsAudioUrl;
-    if (cachedUrl) {
-      log('🔊 [MessageItem] Playing from cache:', cachedUrl);
-      setIsSpeaking(true);
-      const success = await playAudio(cachedUrl, (status) => {
-        if (status.isLoaded && status.didJustFinish) setIsSpeaking(false);
-      });
-      if (!success) setIsSpeaking(false);
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      let textToSpeak = message.text;
-
-      if (!textToSpeak && message.diagnosisData) {
-        textToSpeak = generateDiagnosisTTSText(message.diagnosisData);
-      }
-      
-      const ttsLocation = locationDetails ? {
-        country: locationDetails.level1Country,
-        state: locationDetails.level2State,
-        city: locationDetails.level5City || locationDetails.displayName,
-      } : undefined;
-      
-      const result = await textToSpeech(textToSpeak || '', language?.code || 'en', ttsLocation);
-      
-      const audioSource = result.audioUrl || result.audioBase64;
-      
-      if (result.success && audioSource) {
-        setIsSpeaking(true);
-        
-        if (result.audioUrl) {
-          setLocalTtsUrl(result.audioUrl);
-        }
-        
-        const playSuccess = await playAudio(audioSource, (status) => {
-          if (status.isLoaded && status.didJustFinish) {
-            setIsSpeaking(false);
-          }
-        });
-        
-        if (!playSuccess) {
-          setIsSpeaking(false);
-          showError(t('voice.audioPlaybackFailed'));
-        }
-      } else {
-        log('TTS service error:', result.error);
-        showError(t('voice.voiceUnavailableLater'));
-      }
-    } catch (error) {
-      log('TTS exception:', (error as Error).message);
-      showError(t('voice.voiceUnavailable'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (isSpeaking) {
-        stopAudio();
-      }
-    };
-  }, [isSpeaking]);
+  
 
   const handleLayout = (event: LayoutChangeEvent): void => {
     if (onLayout) {
@@ -368,66 +184,6 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.md,
-    borderTopWidth: 0,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.sm,
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  senderName: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.semibold,
-    letterSpacing: 0.2,
-  },
-  timestamp: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  speakButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  markdownContainer: {
-    flex: 1,
-    width: '100%',
-  },
-  messageText: {
-    fontSize: TYPOGRAPHY.sizes.base,
-    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    borderRadius: 12,
-    marginBottom: SPACING.sm,
-  },
-  diagnosisBox: {
-    marginTop: SPACING.sm,
-    padding: SPACING.md,
-    borderRadius: 16,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-  },
-  diagnosisText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
-  },
-});
 
 export default React.memo(MessageItem, (prevProps, nextProps) => {
   return (

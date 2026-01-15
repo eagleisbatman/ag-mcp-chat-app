@@ -7,31 +7,32 @@ import {
   isNetworkError,
   isServerError,
 } from '../../utils/apiHelpers';
+import { t } from '../../constants/strings';
 
 describe('parseErrorMessage', () => {
   describe('HTTP status codes', () => {
     it('returns user-friendly message for 500 status', () => {
-      expect(parseErrorMessage({ status: 500 })).toBe('Our servers are busy. Please try again.');
+      expect(parseErrorMessage({ status: 500 })).toBe(t('errors.serverError'));
     });
 
     it('returns user-friendly message for 401 status', () => {
-      expect(parseErrorMessage({ status: 401 })).toBe('Please restart the app to reconnect.');
+      expect(parseErrorMessage({ status: 401 })).toBe(t('system.errorFallback'));
     });
 
     it('returns user-friendly message for 403 status', () => {
-      expect(parseErrorMessage({ status: 403 })).toBe('Access denied. Please try again later.');
+      expect(parseErrorMessage({ status: 403 })).toBe(t('system.errorFallback'));
     });
 
     it('returns user-friendly message for 404 status', () => {
-      expect(parseErrorMessage({ status: 404 })).toBe('Service not available. Please try again.');
+      expect(parseErrorMessage({ status: 404 })).toBe(t('system.errorFallback'));
     });
 
     it('returns user-friendly message for 429 status', () => {
-      expect(parseErrorMessage({ status: 429 })).toBe('Too many requests. Please wait a moment.');
+      expect(parseErrorMessage({ status: 429 })).toBe(t('system.errorFallback'));
     });
 
     it('returns generic message for unknown status codes', () => {
-      expect(parseErrorMessage({ status: 418 })).toBe('Something went wrong. Please try again.');
+      expect(parseErrorMessage({ status: 418 })).toBe(t('system.errorFallback'));
     });
   });
 
@@ -39,38 +40,38 @@ describe('parseErrorMessage', () => {
     it('handles AbortError', () => {
       const error = new Error('Request aborted');
       error.name = 'AbortError';
-      expect(parseErrorMessage(error)).toBe('Request was cancelled.');
+      expect(parseErrorMessage(error)).toBe(t('errors.requestTimeout'));
     });
 
     it('handles TimeoutError', () => {
       const error = new Error('Request timed out');
       error.name = 'TimeoutError';
-      expect(parseErrorMessage(error)).toBe('Request timed out.');
+      expect(parseErrorMessage(error)).toBe(t('errors.requestTimeout'));
     });
 
     it('handles network-related TypeError', () => {
       const error = new TypeError('Network request failed');
-      expect(parseErrorMessage(error)).toBe('Network error. Check your internet connection.');
+      expect(parseErrorMessage(error)).toBe(t('chat.noInternet'));
     });
 
     it('handles fetch-related TypeError', () => {
       const error = new TypeError('Failed to fetch');
-      expect(parseErrorMessage(error)).toBe('Network error. Check your internet connection.');
+      expect(parseErrorMessage(error)).toBe(t('chat.noInternet'));
     });
 
     it('returns generic message for non-network TypeError', () => {
       const error = new TypeError("Cannot read property 'x' of undefined");
-      expect(parseErrorMessage(error)).toBe('Something went wrong. Please try again.');
+      expect(parseErrorMessage(error)).toBe(t('system.errorFallback'));
     });
 
     it('handles timeout in message', () => {
       const error = new Error('Request timeout');
-      expect(parseErrorMessage(error)).toBe('Request took too long. Check your connection.');
+      expect(parseErrorMessage(error)).toBe(t('errors.requestTimeout'));
     });
 
     it('handles API error format', () => {
       const error = new Error('API error: 500');
-      expect(parseErrorMessage(error)).toBe('Our servers are busy. Please try again.');
+      expect(parseErrorMessage(error)).toBe(t('errors.serverError'));
     });
   });
 
@@ -81,28 +82,28 @@ describe('parseErrorMessage', () => {
 
     it('sanitizes validation errors', () => {
       expect(parseErrorMessage({ error: 'Validation failed: email required' })).toBe(
-        'Something went wrong. Please try again.'
+        t('system.errorFallback')
       );
     });
 
     it('sanitizes API errors', () => {
       expect(parseErrorMessage({ error: 'API key invalid' })).toBe(
-        'Something went wrong. Please try again.'
+        t('system.errorFallback')
       );
     });
   });
 
   describe('Edge cases', () => {
     it('handles null input', () => {
-      expect(parseErrorMessage(null)).toBe('Something went wrong. Please try again.');
+      expect(parseErrorMessage(null)).toBe(t('system.errorFallback'));
     });
 
     it('handles undefined input', () => {
-      expect(parseErrorMessage(undefined)).toBe('Something went wrong. Please try again.');
+      expect(parseErrorMessage(undefined)).toBe(t('system.errorFallback'));
     });
 
     it('handles empty object', () => {
-      expect(parseErrorMessage({})).toBe('Something went wrong. Please try again.');
+      expect(parseErrorMessage({})).toBe(t('system.errorFallback'));
     });
   });
 });

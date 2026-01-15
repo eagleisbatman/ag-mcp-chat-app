@@ -1,0 +1,2 @@
+export const MAX_RECORDING_DURATION = 120;
+export const SILENCE_THRESHOLD_DB = -45;
