@@ -18,7 +18,7 @@ export function buildRecordingConfig(
   onAudioAnalysis: (event: AudioAnalysisEvent) => void
 ): RecordingConfig {
   return {
-    interval: 200,
+    interval: 120,
     enableProcessing: true,
     sampleRate: 16000,
     channels: 1,
@@ -44,8 +44,10 @@ export function extractAudioLevel(
     || {};
 
   const rms = point.rms ?? point.features?.rms ?? point.energy ?? 0;
-  const level = Math.max(0, Math.min(1, rms * 4));
-  const smoothed = lastLevel * 0.7 + level * 0.3;
+  const db = typeof point.dB === 'number' ? point.dB : null;
+  const levelFromDb = db == null ? null : Math.max(0, Math.min(1, (db + 60) / 60));
+  const level = levelFromDb ?? Math.max(0, Math.min(1, rms * 4));
+  const smoothed = lastLevel * 0.65 + level * 0.35;
   const isSilent = point.silent === true;
   const isSpeaking = !isSilent && (point.dB ? point.dB > SILENCE_THRESHOLD_DB : smoothed > 0.02);
 

@@ -17,6 +17,7 @@ interface UseVoiceRecordingOptions {
   transcribeAudio: (data: { uri: string; base64: string; duration: number; language: string }) => Promise<TranscriptionResult>;
   showError: (message: string) => void;
   onAudioChunk?: (base64: string) => void;
+  liveTranscript?: string;
 }
 
 export function useVoiceRecording({
@@ -27,6 +28,7 @@ export function useVoiceRecording({
   transcribeAudio,
   showError,
   onAudioChunk,
+  liveTranscript,
 }: UseVoiceRecordingOptions) {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -140,6 +142,7 @@ export function useVoiceRecording({
         languageCode,
         languageName,
         transcribeAudio,
+        liveTranscript,
       });
 
       if (result.success) {
@@ -160,6 +163,7 @@ export function useVoiceRecording({
     recordingDuration,
     languageCode,
     languageName,
+    liveTranscript,
     onCancel,
     onTranscriptionComplete,
     showError,

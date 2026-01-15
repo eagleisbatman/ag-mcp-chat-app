@@ -7,8 +7,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { SPACING } from '../../constants/themes';
 import AppIcon from '../ui/AppIcon';
 import { t } from '../../constants/strings';
-import WaveformBars from './WaveformBars';
-import { useLiveSpeechRecognition } from './useLiveSpeechRecognition';
+import WaveformWave from './WaveformWave';
 import { useGeminiLiveTranscription } from './useGeminiLiveTranscription';
 import { useVoiceRecording } from './useVoiceRecording';
 import { styles } from './voiceRecorderStyles';
@@ -37,6 +36,8 @@ export default function VoiceRecorder({
     sendAudioChunk,
   } = useGeminiLiveTranscription();
 
+  const combinedLiveTranscript = (geminiTranscript || '').trim();
+
   const {
     audioLevel,
     handleCancel,
@@ -55,27 +56,15 @@ export default function VoiceRecorder({
     transcribeAudio,
     showError,
     onAudioChunk: (chunk) => sendAudioChunk(chunk),
-  });
-
-  const {
-    transcript: liveTranscript,
-    startRecognition,
-    stopRecognition,
-    resetTranscript,
-  } = useLiveSpeechRecognition({
-    languageCode: language?.code || 'en',
-    onError: (message) => showError(message),
+    liveTranscript: combinedLiveTranscript,
   });
 
   useEffect(() => {
-    resetTranscript();
-    startRecognition();
     connectGemini(language?.code || 'en');
     return () => {
-      stopRecognition();
       disconnectGemini();
     };
-  }, [connectGemini, disconnectGemini, language?.code, resetTranscript, startRecognition, stopRecognition]);
+  }, [connectGemini, disconnectGemini, language?.code]);
 
   const bottomPadding = Math.max(insets.bottom, SPACING.md);
   const rippleColor = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
@@ -128,7 +117,7 @@ export default function VoiceRecorder({
             </View>
 
             <View style={styles.waveformContainer}>
-              <WaveformBars
+              <WaveformWave
                 level={audioLevel}
                 isSpeaking={isSpeaking}
                 accentColor={theme.accent}
@@ -139,13 +128,13 @@ export default function VoiceRecorder({
               </Animated.Text>
             </View>
 
-            {geminiTranscript || liveTranscript ? (
+            {combinedLiveTranscript ? (
               <View style={styles.liveTranscript}>
                 <Text style={[styles.liveTranscriptLabel, { color: theme.textMuted }]}>
                   {t('voice.liveTranscription')}
                 </Text>
                 <Text style={[styles.liveTranscriptText, { color: theme.text }]}>
-                  {geminiTranscript || liveTranscript}
+                  {combinedLiveTranscript}
                 </Text>
               </View>
             ) : null}
@@ -158,7 +147,6 @@ export default function VoiceRecorder({
                 ]}
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  stopRecognition();
                   disconnectGemini();
                   handleCancel();
                 }}
@@ -173,7 +161,6 @@ export default function VoiceRecorder({
               <Pressable
                 style={[styles.doneButton, { backgroundColor: theme.accent }]}
                 onPress={() => {
-                  stopRecognition();
                   disconnectGemini();
                   handleDone();
                 }}

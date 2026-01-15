@@ -1,2 +1,4 @@
 export const MAX_RECORDING_DURATION = 120;
 export const SILENCE_THRESHOLD_DB = -45;
+export const TRANSCRIPTION_TIMEOUT_MS = 400;
+export const LIVE_TRANSCRIPT_MIN_CHARS = 6;
