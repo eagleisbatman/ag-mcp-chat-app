@@ -8,26 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		25D30D120A76365A1082DCB8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F31E9FDA1A50734DBF2E7F /* ExpoModulesProvider.swift */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		53F4CDBAC3EE1444617C4D0E /* libPods-FarmerChat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 329ACFBCFECE1D52E65C59D9 /* libPods-FarmerChat.a */; };
+		7ACEF368E875B4569B6BF762 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E6D633EC3A58CAF337B86166 /* PrivacyInfo.xcprivacy */; };
+		949F1C89B9DDF353DC8460E5 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228DC87BFA4F3F3E6295D2BE /* ExpoModulesProvider.swift */; };
+		A8FB3EB16C6A3DF48001CC65 /* libPods-FarmerChat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2543E0E76E2DC3DA95DA6AF1 /* libPods-FarmerChat.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		FDF5EB18F3F507DF482B75B2 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EEF07DE01BD829BD335EF130 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* FarmerChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FarmerChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FarmerChat/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FarmerChat/Info.plist; sourceTree = "<group>"; };
-		17F31E9FDA1A50734DBF2E7F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-FarmerChat/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		2C8B12DDDA1CC39CDC057507 /* Pods-FarmerChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarmerChat.debug.xcconfig"; path = "Target Support Files/Pods-FarmerChat/Pods-FarmerChat.debug.xcconfig"; sourceTree = "<group>"; };
-		329ACFBCFECE1D52E65C59D9 /* libPods-FarmerChat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FarmerChat.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		228DC87BFA4F3F3E6295D2BE /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-FarmerChat/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		2543E0E76E2DC3DA95DA6AF1 /* libPods-FarmerChat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FarmerChat.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A73E30792CAEA9854EA460E0 /* Pods-FarmerChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarmerChat.debug.xcconfig"; path = "Target Support Files/Pods-FarmerChat/Pods-FarmerChat.debug.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = FarmerChat/SplashScreen.storyboard; sourceTree = "<group>"; };
-		AB97AB5AFDC50407F9D333D9 /* Pods-FarmerChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarmerChat.release.xcconfig"; path = "Target Support Files/Pods-FarmerChat/Pods-FarmerChat.release.xcconfig"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		D12F8BF52BD41E4D66F6BF48 /* Pods-FarmerChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarmerChat.release.xcconfig"; path = "Target Support Files/Pods-FarmerChat/Pods-FarmerChat.release.xcconfig"; sourceTree = "<group>"; };
+		E6D633EC3A58CAF337B86166 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = FarmerChat/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		EEF07DE01BD829BD335EF130 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = FarmerChat/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = FarmerChat/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* FarmerChat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "FarmerChat-Bridging-Header.h"; path = "FarmerChat/FarmerChat-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53F4CDBAC3EE1444617C4D0E /* libPods-FarmerChat.a in Frameworks */,
+				A8FB3EB16C6A3DF48001CC65 /* libPods-FarmerChat.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +53,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				EEF07DE01BD829BD335EF130 /* PrivacyInfo.xcprivacy */,
+				E6D633EC3A58CAF337B86166 /* PrivacyInfo.xcprivacy */,
 			);
 			name = FarmerChat;
 			sourceTree = "<group>";
@@ -62,17 +62,9 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				329ACFBCFECE1D52E65C59D9 /* libPods-FarmerChat.a */,
+				2543E0E76E2DC3DA95DA6AF1 /* libPods-FarmerChat.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		82A5BB2915E5F7328CAF7178 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				8655C92439B342A0F2CAF8A2 /* FarmerChat */,
-			);
-			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -89,8 +81,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				F366C6625B3C510F634E030B /* Pods */,
-				82A5BB2915E5F7328CAF7178 /* ExpoModulesProviders */,
+				DC185D1967DB79D1EBB635BD /* Pods */,
+				B5518672EB96680CF6B0095D /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -105,12 +97,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8655C92439B342A0F2CAF8A2 /* FarmerChat */ = {
+		B5518672EB96680CF6B0095D /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				17F31E9FDA1A50734DBF2E7F /* ExpoModulesProvider.swift */,
+				CD12F158953F52FE0EC047FC /* FarmerChat */,
 			);
-			name = FarmerChat;
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -122,11 +114,19 @@
 			path = FarmerChat/Supporting;
 			sourceTree = "<group>";
 		};
-		F366C6625B3C510F634E030B /* Pods */ = {
+		CD12F158953F52FE0EC047FC /* FarmerChat */ = {
 			isa = PBXGroup;
 			children = (
-				2C8B12DDDA1CC39CDC057507 /* Pods-FarmerChat.debug.xcconfig */,
-				AB97AB5AFDC50407F9D333D9 /* Pods-FarmerChat.release.xcconfig */,
+				228DC87BFA4F3F3E6295D2BE /* ExpoModulesProvider.swift */,
+			);
+			name = FarmerChat;
+			sourceTree = "<group>";
+		};
+		DC185D1967DB79D1EBB635BD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A73E30792CAEA9854EA460E0 /* Pods-FarmerChat.debug.xcconfig */,
+				D12F8BF52BD41E4D66F6BF48 /* Pods-FarmerChat.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "FarmerChat" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				EF24BCCB99767DBD0006C91F /* [Expo] Configure project */,
+				CCEE073FF1F21BE40C2995BA /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				4B7C9792DA0D86AB374ECA01 /* [CP] Embed Pods Frameworks */,
+				742C031B74DA80549BEB4311 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				FDF5EB18F3F507DF482B75B2 /* PrivacyInfo.xcprivacy in Resources */,
+				7ACEF368E875B4569B6BF762 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,7 +242,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4B7C9792DA0D86AB374ECA01 /* [CP] Embed Pods Frameworks */ = {
+		742C031B74DA80549BEB4311 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -302,7 +302,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FarmerChat/Pods-FarmerChat-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EF24BCCB99767DBD0006C91F /* [Expo] Configure project */ = {
+		CCEE073FF1F21BE40C2995BA /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -334,7 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				25D30D120A76365A1082DCB8 /* ExpoModulesProvider.swift in Sources */,
+				949F1C89B9DDF353DC8460E5 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,7 +343,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2C8B12DDDA1CC39CDC057507 /* Pods-FarmerChat.debug.xcconfig */;
+			baseConfigurationReference = A73E30792CAEA9854EA460E0 /* Pods-FarmerChat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -379,7 +379,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB97AB5AFDC50407F9D333D9 /* Pods-FarmerChat.release.xcconfig */;
+			baseConfigurationReference = D12F8BF52BD41E4D66F6BF48 /* Pods-FarmerChat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
