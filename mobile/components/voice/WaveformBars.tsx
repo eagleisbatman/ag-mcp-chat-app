@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SPACING } from '../../constants/themes';
 
@@ -15,8 +15,17 @@ export default function WaveformBars({
   isSpeaking,
   accentColor,
   mutedColor,
-  barCount = 24,
+  barCount = 28,
 }: WaveformBarsProps): JSX.Element {
+  const [tick, setTick] = useState(0);
+  const smoothLevelRef = useRef(0);
+
+  useEffect(() => {
+    if (!isSpeaking) return;
+    const interval = setInterval(() => setTick(prev => prev + 1), 80);
+    return () => clearInterval(interval);
+  }, [isSpeaking]);
+
   const weights = useMemo(() => {
     return Array.from({ length: barCount }, (_, index) => {
       const phase = index / Math.max(1, barCount - 1);
@@ -24,19 +33,23 @@ export default function WaveformBars({
     });
   }, [barCount]);
 
-  const clampedLevel = Math.max(0, Math.min(1, isSpeaking ? level : 0));
+  const targetLevel = Math.max(0, Math.min(1, isSpeaking ? level : 0));
+  smoothLevelRef.current = smoothLevelRef.current * 0.6 + targetLevel * 0.4;
+  const clampedLevel = smoothLevelRef.current;
   const barColor = isSpeaking ? accentColor : mutedColor;
 
   return (
     <View style={styles.container}>
       {weights.map((weight, index) => {
-        const height = 4 + clampedLevel * 38 * weight;
+        const phase = (index / Math.max(1, barCount - 1)) * Math.PI * 2;
+        const wiggle = 0.75 + 0.25 * Math.sin(tick * 0.35 + phase);
+        const height = 6 + clampedLevel * 44 * weight * wiggle;
         return (
           <View
             key={`wave-bar-${index}`}
             style={[
               styles.bar,
-              { height, backgroundColor: barColor, opacity: isSpeaking ? 0.9 : 0.2 },
+              { height, backgroundColor: barColor, opacity: isSpeaking ? 0.9 : 0.15 },
             ]}
           />
         );
@@ -50,11 +63,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: SPACING.xs,
-    height: 60,
+    gap: 4,
+    height: 70,
   },
   bar: {
-    width: 3,
-    borderRadius: 2,
+    width: 4,
+    borderRadius: 3,
   },
 });

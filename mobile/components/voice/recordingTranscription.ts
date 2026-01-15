@@ -1,5 +1,6 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import { t } from '../../constants/strings';
+import { LIVE_TRANSCRIPT_MIN_CHARS, TRANSCRIPTION_TIMEOUT_MS } from './recordingOptions';
 
 export interface TranscriptionResult {
   success: boolean;
@@ -25,6 +26,8 @@ interface FinishRecordingParams {
   languageCode: string;
   languageName?: string;
   transcribeAudio: (data: { uri: string; base64: string; duration: number; language: string }) => Promise<TranscriptionResult>;
+  liveTranscript?: string;
+  transcriptionTimeoutMs?: number;
 }
 
 export async function finishRecording({
@@ -34,6 +37,8 @@ export async function finishRecording({
   languageCode,
   languageName,
   transcribeAudio,
+  liveTranscript,
+  transcriptionTimeoutMs = TRANSCRIPTION_TIMEOUT_MS,
 }: FinishRecordingParams): Promise<
   | { success: true; transcription: string; audio: AudioData }
   | { success: false; errorMessage: string }
@@ -45,14 +50,22 @@ export async function finishRecording({
   }
 
   const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
-  const transcriptResult = await transcribeAudio({
+  const trimmedLive = (liveTranscript || '').trim();
+  const canUseLive = trimmedLive.length >= LIVE_TRANSCRIPT_MIN_CHARS;
+  const transcriptionPromise = transcribeAudio({
     uri,
     base64,
     duration: recordingDuration,
     language: languageCode || 'en',
   });
+  const timeoutPromise = new Promise<null>((resolve) => {
+    setTimeout(() => resolve(null), transcriptionTimeoutMs);
+  });
+  const transcriptResult = canUseLive
+    ? await Promise.race([transcriptionPromise, timeoutPromise])
+    : await transcriptionPromise;
 
-  if (transcriptResult.success && transcriptResult.transcription) {
+  if (transcriptResult && transcriptResult.success && transcriptResult.transcription) {
     return {
       success: true,
       transcription: transcriptResult.transcription,
@@ -60,8 +73,24 @@ export async function finishRecording({
     };
   }
 
+  if (!transcriptResult && canUseLive) {
+    return {
+      success: true,
+      transcription: trimmedLive,
+      audio: { uri, base64, duration: recordingDuration },
+    };
+  }
+
+  if (transcriptResult && !transcriptResult.success && canUseLive) {
+    return {
+      success: true,
+      transcription: trimmedLive,
+      audio: { uri, base64, duration: recordingDuration },
+    };
+  }
+
   let errorMessage: string;
-  switch (transcriptResult.errorCode) {
+  switch (transcriptResult?.errorCode) {
     case 'LANGUAGE_MISMATCH':
       errorMessage = t('voice.languageMismatch', {
         expected: transcriptResult.errorDetails?.expected || languageName || 'selected language',
