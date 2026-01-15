@@ -1,7 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RouteProp } from '@react-navigation/native';
+import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 
@@ -18,19 +16,11 @@ import ScrollToBottomButton from '../components/chat/ScrollToBottomButton';
 import TypingIndicator from '../components/ui/TypingIndicator';
 import WeatherWidget from '../components/weather/WeatherWidget';
 
-import { SPACING, TYPOGRAPHY } from '../constants/themes';
+import { styles } from './chat/styles';
 import { lookupLocation } from '../services/db';
 import { t } from '../constants/strings';
-import type { RootStackParamList, Message } from '../types';
-
-interface ChatScreenProps {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Chat'>;
-  route: RouteProp<RootStackParamList, 'Chat'>;
-}
-
-interface InputToolbarHandle {
-  openAttachSheet: () => void;
-}
+import type { Message } from '../types';
+import type { ChatScreenProps, InputToolbarHandle } from './chat/types';
 
 export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const { theme, language, location, locationDetails, setLocation } = useApp();
@@ -174,7 +164,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             scrollEventThrottle={16}
             keyboardShouldPersistTaps="handled"
             onScrollToIndexFailed={handleScrollToIndexFailed}
-            ListHeaderComponent={isTyping ? <TypingIndicator text={thinkingText || t('chat.thinking')} /> : null}
+            ListHeaderComponent={isTyping && thinkingText ? <TypingIndicator text={thinkingText} /> : null}
             ListFooterComponent={
               <WeatherWidget
                 data={weatherData}
@@ -205,20 +195,3 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  messagesContainer: { flex: 1, position: 'relative' },
-  messagesList: {
-    paddingTop: SPACING.sm,
-    paddingHorizontal: 0,
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: SPACING.lg,
-  },
-  loadingText: { fontSize: TYPOGRAPHY.sizes.base },
-});

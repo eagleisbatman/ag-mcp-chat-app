@@ -7,7 +7,8 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { AVPlaybackStatus } from 'expo-av';
 import { textToSpeech, TTSLocation } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
-import { generateDiagnosisTTSText } from '../utils/diagnosisNormalizer';
+import { generateDiagnosisTTSBrief, generateDiagnosisTTSText } from '../utils/diagnosisNormalizer';
+import { getDiagnosisTtsSummary } from '../services/diagnosisSummary';
 import { log } from '../utils/logger';
 import { t } from '../constants/strings';
 import { Message, LocationDetails } from '../types';
@@ -52,7 +53,8 @@ export default function useTTS({ message, language, locationDetails, onError }: 
     
     // For diagnosis messages, generate comprehensive speakable text
     if (message?.diagnosisData) {
-      return generateDiagnosisTTSText(message.diagnosisData);
+      return generateDiagnosisTTSBrief(message.diagnosisData)
+        || generateDiagnosisTTSText(message.diagnosisData);
     }
     
     return '';
@@ -85,10 +87,15 @@ export default function useTTS({ message, language, locationDetails, onError }: 
     setIsLoading(true);
 
     try {
-      const textToSpeak = getTextToSpeak();
+      let textToSpeak = getTextToSpeak();
       if (!textToSpeak) {
-        onError?.(t('voice.voiceUnavailable'));
-        return;
+        if (message?.diagnosisData) {
+          textToSpeak = await getDiagnosisTtsSummary(message.diagnosisData, language || 'en');
+        }
+        if (!textToSpeak) {
+          onError?.(t('voice.voiceUnavailable'));
+          return;
+        }
       }
 
       const result = await textToSpeech(textToSpeak, language || 'en', ttsLocation);
