@@ -189,11 +189,12 @@ export function normalizeDiagnosis(data: DiagnosisData | string | null | undefin
     };
   }
 
-  const agrivisionData = parsed as DiagnosisData & { image_quality?: string };
+  const agrivisionData = parsed as DiagnosisData & { image_quality?: string; health_status?: string };
   return {
     ...agrivisionData,
     _provider: 'agrivision',
-    health_status: agrivisionData.status || 'unknown',
+    // AgriVision uses 'health_status', fallback to 'status' for legacy, then 'unknown'
+    health_status: agrivisionData.health_status || agrivisionData.status || 'unknown',
     image_quality: normalizeImageQuality(agrivisionData.image_quality),
   } as NormalizedDiagnosis;
 }

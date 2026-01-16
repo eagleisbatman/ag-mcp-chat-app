@@ -95,6 +95,8 @@ PODS:
     - ExpoModulesCore
   - ExpoSplashScreen (31.0.13):
     - ExpoModulesCore
+  - ExpoSystemUI (6.0.9):
+    - ExpoModulesCore
   - EXStructuredHeaders (5.0.0)
   - EXUpdates (29.0.16):
     - EASClient
@@ -2189,6 +2191,7 @@ DEPENDENCIES:
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSpeechRecognition (from `../node_modules/expo-speech-recognition/ios`)
   - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
+  - ExpoSystemUI (from `../node_modules/expo-system-ui/ios`)
   - EXStructuredHeaders (from `../node_modules/expo-structured-headers/ios`)
   - EXUpdates (from `../node_modules/expo-updates/ios`)
   - EXUpdatesInterface (from `../node_modules/expo-updates-interface/ios`)
@@ -2327,6 +2330,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-speech-recognition/ios"
   ExpoSplashScreen:
     :path: "../node_modules/expo-splash-screen/ios"
+  ExpoSystemUI:
+    :path: "../node_modules/expo-system-ui/ios"
   EXStructuredHeaders:
     :path: "../node_modules/expo-structured-headers/ios"
   EXUpdates:
@@ -2509,6 +2514,7 @@ SPEC CHECKSUMS:
   ExpoModulesCore: f3da4f1ab5a8375d0beafab763739dbee8446583
   ExpoSpeechRecognition: ba4748362e203efcfbe428ad13007ed3cd6bce3a
   ExpoSplashScreen: bc3cffefca2716e5f22350ca109badd7e50ec14d
+  ExpoSystemUI: 2ad325f361a2fcd96a464e8574e19935c461c9cc
   EXStructuredHeaders: c951e77f2d936f88637421e9588c976da5827368
   EXUpdates: fd3ce349c439b18fd8ff05080499789cebbcab76
   EXUpdatesInterface: 5adf50cb41e079c861da6d9b4b954c3db9a50734
