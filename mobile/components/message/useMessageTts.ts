@@ -107,15 +107,25 @@ export function useMessageTts({
       setIsLoading(true);
       const playbackId = (playbackIdRef.current += 1);
 
-      // Background full TTS for caching
+      // Background full TTS for caching - track with ref to prevent memory leaks
+      const cachePlaybackId = playbackId;
       textToSpeech(textToSpeak, languageCode || 'en', ttsLocation)
         .then((full) => {
-          const audioSource = full.audioUrl || full.audioBase64;
-          if (full.success && audioSource) {
-            setLocalTtsUrl(audioSource);
+          // Only update cache if this playback session is still active
+          if (playbackIdRef.current === cachePlaybackId) {
+            const audioSource = full.audioUrl || full.audioBase64;
+            if (full.success && audioSource) {
+              setLocalTtsUrl(audioSource);
+              log('TTS cached successfully for future playback');
+            }
           }
         })
-        .catch((err) => log('TTS cache error:', (err as Error).message));
+        .catch((err) => {
+          // Only log if this playback session is still active
+          if (playbackIdRef.current === cachePlaybackId) {
+            log('TTS cache error:', (err as Error).message);
+          }
+        });
 
       const segments = splitTextIntoSegments(textToSpeak);
       let nextPromise = textToSpeech(segments[0], languageCode || 'en', ttsLocation);

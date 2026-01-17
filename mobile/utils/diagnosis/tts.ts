@@ -16,7 +16,9 @@ export function generateDiagnosisTTSText(diagnosisData: DiagnosisData | string |
   const data = normalizeDiagnosis(diagnosisData);
   if (!data) return '';
 
-  const rawText = (data as { rawText?: string }).rawText;
+  // Check for rawText property that may exist on normalized data
+  // This handles cases where raw text was preserved during normalization
+  const rawText = 'rawText' in data && typeof data.rawText === 'string' ? data.rawText : undefined;
   if (rawText && !data.issues?.length && !data.health_status && !data.treatment_recommendations?.length) {
     return rawText;
   }

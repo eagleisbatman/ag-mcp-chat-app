@@ -107,7 +107,7 @@ export async function finishRecording({
       errorMessage = t('voice.audioQualityPoor');
       break;
     default:
-      errorMessage = transcriptResult.error || t('voice.couldNotTranscribeAudio');
+      errorMessage = transcriptResult?.error || t('voice.couldNotTranscribeAudio');
   }
 
   return { success: false, errorMessage };

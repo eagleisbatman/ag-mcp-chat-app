@@ -50,16 +50,16 @@ export function useVoiceRecording({
     [durationMs]
   );
 
-  const safeStopRecording = useCallback(async () => {
-    if (isStoppingRef.current) return null;
-    if (!isRecordingRef.current && !isAudioRecording) return null;
+  const safeStopRecording = useCallback(async (): Promise<{ fileUri?: string } | undefined> => {
+    if (isStoppingRef.current) return undefined;
+    if (!isRecordingRef.current && !isAudioRecording) return undefined;
     isStoppingRef.current = true;
     try {
       const result = await stopRecording();
-      return result;
+      return result ? { fileUri: result.fileUri } : undefined;
     } catch (err) {
       logError('Recording cleanup error:', err);
-      return null;
+      return undefined;
     } finally {
       isStoppingRef.current = false;
       isRecordingRef.current = false;
@@ -80,6 +80,9 @@ export function useVoiceRecording({
     () => createAudioStreamHandler({ onAudioChunk }),
     [onAudioChunk]
   );
+
+  // Declare animations early so they can be used in callbacks below
+  const slideAnimRef = useRef<Animated.Value | null>(null);
 
   const startRecordingSession = useCallback(async (): Promise<void> => {
     if (isStartingRef.current || isRecordingRef.current || isAudioRecording) return;
@@ -116,15 +119,21 @@ export function useVoiceRecording({
 
   const handleCancel = useCallback(async (): Promise<void> => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => {
+    const anim = slideAnimRef.current;
+    if (anim) {
+      Animated.timing(anim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(() => {
+        cleanup();
+        onCancel();
+      });
+    } else {
       cleanup();
       onCancel();
-    });
-  }, [cleanup, onCancel, slideAnim]);
+    }
+  }, [cleanup, onCancel]);
 
   const handleDone = useCallback(async (): Promise<void> => {
     if ((!isAudioRecording && !isRecordingRef.current) || isTranscribing) return;
@@ -176,6 +185,9 @@ export function useVoiceRecording({
     onStart: startRecordingSession,
     onCleanup: cleanup,
   });
+
+  // Store slideAnim in ref for use in callbacks
+  slideAnimRef.current = slideAnim;
 
   useEffect(() => {
     if (!isAudioRecording) return;
