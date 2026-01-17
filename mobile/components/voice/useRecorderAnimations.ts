@@ -50,7 +50,14 @@ export function useRecorderAnimations({
   }, [onCleanup, onStart, slideAnim, textOpacity]);
 
   useEffect(() => {
-    if (!isRecording) return;
+    if (!isRecording) {
+      // Stop any existing pulse animation when not recording
+      if (pulseLoopRef.current) {
+        pulseLoopRef.current.stop();
+        pulseLoopRef.current = null;
+      }
+      return;
+    }
     pulseLoopRef.current = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, { toValue: 1.3, duration: 600, useNativeDriver: true }),
@@ -58,6 +65,14 @@ export function useRecorderAnimations({
       ])
     );
     pulseLoopRef.current.start();
+
+    // Cleanup: stop pulse animation when recording stops or component unmounts
+    return () => {
+      if (pulseLoopRef.current) {
+        pulseLoopRef.current.stop();
+        pulseLoopRef.current = null;
+      }
+    };
   }, [isRecording, pulseAnim]);
 
   return { slideAnim, pulseAnim, textOpacity };

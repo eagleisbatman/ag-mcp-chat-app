@@ -87,7 +87,7 @@ export default function useTTS({ message, language, locationDetails, onError }: 
     setIsLoading(true);
 
     try {
-      let textToSpeak = getTextToSpeak();
+      let textToSpeak: string | null = getTextToSpeak();
       if (!textToSpeak) {
         if (message?.diagnosisData) {
           textToSpeak = await getDiagnosisTtsSummary(message.diagnosisData, language || 'en');
@@ -131,19 +131,11 @@ export default function useTTS({ message, language, locationDetails, onError }: 
     }
   }, [isSpeaking, localTtsUrl, message, language, ttsLocation, getTextToSpeak, onError]);
 
-  /**
-   * Stop audio on cleanup
-   */
-  const cleanup = useCallback(async () => {
-    if (isSpeaking) {
-      await stopAudio();
-    }
-  }, [isSpeaking]);
-
-  // Cleanup on unmount
+  // Cleanup on unmount - always stop audio to prevent memory leaks
+  // Note: stopAudio() is safe to call even when not speaking
   useEffect(() => {
     return () => {
-      cleanup();
+      stopAudio();
     };
   }, []);
 

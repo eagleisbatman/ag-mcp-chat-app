@@ -7,7 +7,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { SPACING } from '../../constants/themes';
 import AppIcon from '../ui/AppIcon';
 import { t } from '../../constants/strings';
-import WaveformWave from './WaveformWave';
+import WaveformTravelingBars from './WaveformTravelingBars';
 import { useGeminiLiveTranscription } from './useGeminiLiveTranscription';
 import { useVoiceRecording } from './useVoiceRecording';
 import { styles } from './voiceRecorderStyles';
@@ -31,6 +31,7 @@ export default function VoiceRecorder({
 
   const {
     transcript: geminiTranscript,
+    connectionState,
     connect: connectGemini,
     disconnect: disconnectGemini,
     sendAudioChunk,
@@ -75,6 +76,20 @@ export default function VoiceRecorder({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   }, [recordingDuration]);
 
+  // Connection status helper
+  const connectionStatusInfo = useMemo(() => {
+    switch (connectionState) {
+      case 'reconnecting':
+        return { color: '#FFA726', text: t('voice.reconnecting') || 'Reconnecting...' };
+      case 'error':
+        return { color: theme.error, text: t('voice.connectionError') || 'Connection error' };
+      case 'connecting':
+        return { color: '#42A5F5', text: t('voice.connecting') || 'Connecting...' };
+      default:
+        return null;
+    }
+  }, [connectionState, theme.error]);
+
   return (
     <View style={[styles.wrapper, { paddingBottom: bottomPadding }]}>
       <Animated.View
@@ -116,12 +131,25 @@ export default function VoiceRecorder({
               <Text style={[styles.duration, { color: theme.text }]}>{formattedDuration}</Text>
             </View>
 
+            {connectionStatusInfo && (
+              <View style={[
+                styles.connectionStatus,
+                { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)' }
+              ]}>
+                <View style={[styles.connectionStatusDot, { backgroundColor: connectionStatusInfo.color }]} />
+                <Text style={[styles.connectionStatusText, { color: connectionStatusInfo.color }]}>
+                  {connectionStatusInfo.text}
+                </Text>
+              </View>
+            )}
+
             <View style={styles.waveformContainer}>
-              <WaveformWave
+              <WaveformTravelingBars
                 level={audioLevel}
                 isSpeaking={isSpeaking}
                 accentColor={theme.accent}
                 mutedColor={theme.textMuted}
+                barCount={36}
               />
               <Animated.Text style={[styles.speakingHint, { color: theme.textMuted, opacity: textOpacity }]}>
                 {isSpeaking ? t('voice.listening') : t('voice.waitingForSpeech')}

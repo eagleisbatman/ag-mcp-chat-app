@@ -14,6 +14,9 @@ import {
 import { t } from '../../constants/strings';
 import { Message, SessionResult } from '../../types';
 
+/**
+ * Database message structure from API response
+ */
 interface DbMessage {
   id: string;
   content: string;
@@ -21,7 +24,30 @@ interface DbMessage {
   createdAt: string;
   imageCloudinaryUrl?: string;
   ttsAudioUrl?: string;
-  metadata?: string | Record<string, unknown>;
+  metadata?: string | DbMessageMetadata;
+}
+
+/**
+ * Metadata structure stored with messages
+ */
+interface DbMessageMetadata {
+  diagnosis?: DiagnosisData;
+  diagnosisData?: DiagnosisData;
+  diagnosisCrop?: string;
+  diagnosisHealthStatus?: string;
+  diagnosisIssues?: Array<{ name: string; confidence?: number }>;
+  [key: string]: unknown; // Allow other metadata fields
+}
+
+/**
+ * Diagnosis data structure for native card display
+ * Compatible with Message.diagnosisData which accepts Record<string, unknown>
+ */
+interface DiagnosisData {
+  crop?: { name: string };
+  health_status?: string;
+  issues?: Array<{ name: string; confidence?: number }>;
+  [key: string]: unknown; // Index signature for Record<string, unknown> compatibility
 }
 
 interface UseChatSessionReturn {
@@ -74,22 +100,24 @@ export default function useChatSession(sessionIdParam: string | null = null): Us
     try {
       const result: SessionResult = await getSession(sessionId, 50);
       if (result.success && result.session?.messages) {
-        const loadedMessages: Message[] = (result.session.messages as any[]).map(m => {
+        const dbMessages = result.session.messages as DbMessage[];
+        const loadedMessages: Message[] = dbMessages.map((m: DbMessage) => {
           // Reconstruct diagnosis from metadata for native card
           // Check multiple possible paths for backwards compatibility
-          let diagnosisData: any = undefined;
+          let diagnosisData: DiagnosisData | undefined = undefined;
           try {
-            const metadata = typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
+            const metadata: DbMessageMetadata | undefined =
+              typeof m.metadata === 'string' ? JSON.parse(m.metadata) : m.metadata;
             // Check primary path first, then fallbacks
-            diagnosisData = metadata?.diagnosis 
-              ?? metadata?.diagnosisData 
+            diagnosisData = metadata?.diagnosis
+              ?? metadata?.diagnosisData
               ?? (metadata?.diagnosisCrop ? {
                   crop: { name: metadata.diagnosisCrop },
                   health_status: metadata.diagnosisHealthStatus,
                   issues: metadata.diagnosisIssues || []
                 } : undefined);
-          } catch (e) {
-            // Ignore parse errors
+          } catch {
+            // Ignore parse errors - metadata may be malformed
           }
 
           return {
@@ -102,12 +130,12 @@ export default function useChatSession(sessionIdParam: string | null = null): Us
             ttsAudioUrl: m.ttsAudioUrl,
           };
         }).reverse();
-        
+
         setMessages([...loadedMessages, createWelcomeMessage()]);
         setCurrentSessionId(sessionId);
         titleGeneratedRef.current = true;
       }
-    } catch (error) {
+    } catch {
       showError(t('chat.couldNotLoadConversation'));
     } finally {
       setIsLoadingSession(false);

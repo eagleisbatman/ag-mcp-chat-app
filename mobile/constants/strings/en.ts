@@ -123,6 +123,9 @@ export const en = {
     noSpeechDetected: 'No speech detected. Please speak clearly and try again.',
     audioTooShort: 'Recording too short. Please speak for at least 1 second.',
     audioQualityPoor: 'Audio quality too low. Try again in a quieter environment.',
+    connecting: 'Connecting...',
+    reconnecting: 'Reconnecting...',
+    connectionError: 'Connection error',
   },
   history: {
     title: 'Conversations',

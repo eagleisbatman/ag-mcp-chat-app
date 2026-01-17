@@ -56,30 +56,26 @@ function sanitizeStreamingMarkdown(text: string): string {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, onRetry }: MessageItemProps): JSX.Element | null {
-  const { theme, language, isDark, locationDetails } = useApp();
+function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosisTitle, onLayout, onRetry }: MessageItemProps): JSX.Element | null {
+  const { theme, language, locationDetails } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
   const isStreaming = message.isStreaming || false;
 
-  // Don't render empty streaming messages
-  if (isBot && isStreaming && !message.text) {
-    return null;
-  }
-  
   const contentMaxWidth = screenWidth - (SPACING.lg * 2);
-  
+
+  // All hooks must be called unconditionally before any early returns
   const { isSpeaking, isLoading, handleSpeak } = useMessageTts({
     message,
     languageCode: language?.code || 'en',
     locationDetails,
     onError: showError,
   });
-  
+
   // Animation state
   const [fadeAnim] = useState(() => new Animated.Value(isNewMessage ? 0 : 1));
-  
+
   useEffect(() => {
     if (isNewMessage && isBot) {
       Animated.timing(fadeAnim, {
@@ -90,16 +86,21 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
     }
   }, [isNewMessage, isBot, fadeAnim]);
 
+  const textColor = theme.text;
+
+  const markdownStyles = useMemo(() => createMarkdownStyles(theme, textColor), [theme, textColor]);
+
+  // Don't render empty streaming messages (after all hooks)
+  if (isBot && isStreaming && !message.text) {
+    return null;
+  }
+
   const formatTime = (date: Date | string): string => {
     const d = new Date(date);
     const hours = d.getHours().toString().padStart(2, '0');
     const minutes = d.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
   };
-
-  const textColor = theme.text;
-
-  const markdownStyles = useMemo(() => createMarkdownStyles(theme, textColor), [theme, textColor]);
 
   
 
@@ -185,12 +186,39 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle, onLayout, 
   );
 }
 
+/**
+ * Deep comparison for diagnosisData to handle object references properly
+ */
+function areDiagnosisDataEqual(
+  prev: Message['diagnosisData'],
+  next: Message['diagnosisData']
+): boolean {
+  // Same reference or both falsy
+  if (prev === next) return true;
+  if (!prev || !next) return false;
+
+  // If both are strings, compare directly
+  if (typeof prev === 'string' && typeof next === 'string') {
+    return prev === next;
+  }
+
+  // If types differ, not equal
+  if (typeof prev !== typeof next) return false;
+
+  // For objects, compare JSON representation (stable for diagnosis data)
+  try {
+    return JSON.stringify(prev) === JSON.stringify(next);
+  } catch {
+    return false;
+  }
+}
+
 export default React.memo(MessageItem, (prevProps, nextProps) => {
   return (
     prevProps.message._id === nextProps.message._id &&
     prevProps.message.text === nextProps.message.text &&
     prevProps.message.image === nextProps.message.image &&
-    prevProps.message.diagnosisData === nextProps.message.diagnosisData &&
+    areDiagnosisDataEqual(prevProps.message.diagnosisData, nextProps.message.diagnosisData) &&
     prevProps.message.isStreaming === nextProps.message.isStreaming &&
     prevProps.isNewMessage === nextProps.isNewMessage
   );

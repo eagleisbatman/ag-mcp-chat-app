@@ -1,15 +1,24 @@
 import type { RecordingConfig } from '@siteed/expo-audio-studio';
 import { SILENCE_THRESHOLD_DB } from './recordingOptions';
 
-type AudioAnalysisEvent = {
-  dataPoint?: { rms?: number; energy?: number; silent?: boolean; dB?: number; features?: { rms?: number } };
-  dataPoints?: Array<{ rms?: number; energy?: number; silent?: boolean; dB?: number; features?: { rms?: number } }>;
+// Extended audio analysis data point with optional properties
+type AudioDataPoint = {
+  rms?: number;
+  energy?: number;
+  silent?: boolean;
+  dB?: number;
+  features?: { rms?: number };
+};
+
+export type AudioAnalysisEvent = {
+  dataPoint?: AudioDataPoint;
+  dataPoints?: AudioDataPoint[];
   analysisData?: { rms?: number; energy?: number; silent?: boolean };
   data?: { rms?: number; energy?: number; silent?: boolean };
 };
 
-type AudioStreamEvent = {
-  data?: string;
+export type AudioStreamEvent = {
+  data?: string | Float32Array;
   compression?: { data?: string };
 };
 
@@ -27,8 +36,9 @@ export function buildRecordingConfig(
       primary: { enabled: true },
       compressed: { enabled: false },
     },
-    onAudioStream,
-    onAudioAnalysis,
+    // Cast through unknown to handle library type mismatches
+    onAudioStream: onAudioStream as unknown as RecordingConfig['onAudioStream'],
+    onAudioAnalysis: onAudioAnalysis as unknown as RecordingConfig['onAudioAnalysis'],
   };
 }
 
@@ -36,7 +46,8 @@ export function extractAudioLevel(
   event: AudioAnalysisEvent | undefined,
   lastLevel: number
 ): { level: number; isSpeaking: boolean } {
-  const point =
+  // Get data point from various possible event structures
+  const point: AudioDataPoint =
     event?.dataPoint
     || event?.dataPoints?.[0]
     || event?.analysisData
@@ -49,7 +60,7 @@ export function extractAudioLevel(
   const level = levelFromDb ?? Math.max(0, Math.min(1, rms * 4));
   const smoothed = lastLevel * 0.65 + level * 0.35;
   const isSilent = point.silent === true;
-  const isSpeaking = !isSilent && (point.dB ? point.dB > SILENCE_THRESHOLD_DB : smoothed > 0.02);
+  const isSpeaking = !isSilent && (db != null ? db > SILENCE_THRESHOLD_DB : smoothed > 0.02);
 
   return { level: smoothed, isSpeaking };
 }

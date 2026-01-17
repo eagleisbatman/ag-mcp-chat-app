@@ -1,8 +1,7 @@
 // Elevation system - intentionally flat design (no shadows)
 
-export interface ElevationStyle {
-  // Empty - intentionally flat
-}
+// Intentionally empty style for flat design - allows extension in future
+export type ElevationStyle = Record<string, never>;
 
 export interface ElevationSystem {
   sm: ElevationStyle;

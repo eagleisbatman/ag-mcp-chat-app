@@ -110,4 +110,23 @@ export const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
+  connectionStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: 8,
+    marginBottom: SPACING.sm,
+    alignSelf: 'center',
+  },
+  connectionStatusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  connectionStatusText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.medium,
+  },
 });
