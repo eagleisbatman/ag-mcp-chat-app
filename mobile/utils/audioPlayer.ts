@@ -1,19 +1,116 @@
 /**
- * Audio Player utility for TTS playback using expo-av
+ * Audio Player utility for TTS playback
+ * - Native: uses expo-av with file system
+ * - Web: uses HTML5 Audio API with blob URLs
  */
 
 import { Audio, AVPlaybackStatus } from 'expo-av';
 import * as FileSystem from 'expo-file-system/legacy';
-import { error as logError } from './logger';
+import { Platform } from 'react-native';
+import { error as logError, log } from './logger';
 
-// Global sound object for managing playback
+// Global sound object for managing playback (native)
 let currentSound: Audio.Sound | null = null;
+// Global audio element for web playback
+let currentWebAudio: HTMLAudioElement | null = null;
+let currentWebBlobUrl: string | null = null;
 let isPlaying = false;
 
 type PlaybackStatusCallback = (status: AVPlaybackStatus) => void;
 
 /**
- * Clean up sound and temporary file
+ * Clean up web audio and blob URL
+ */
+const cleanupWebAudio = (): void => {
+  if (currentWebAudio) {
+    currentWebAudio.pause();
+    currentWebAudio.src = '';
+    currentWebAudio = null;
+  }
+  if (currentWebBlobUrl) {
+    URL.revokeObjectURL(currentWebBlobUrl);
+    currentWebBlobUrl = null;
+  }
+  isPlaying = false;
+};
+
+/**
+ * Play audio on web using HTML5 Audio API
+ */
+const playAudioWeb = async (
+  source: string,
+  onPlaybackStatusUpdate: PlaybackStatusCallback | null = null
+): Promise<boolean> => {
+  try {
+    // Stop any currently playing audio
+    cleanupWebAudio();
+
+    let audioUrl: string;
+
+    if (source.startsWith('http://') || source.startsWith('https://')) {
+      // Direct URL playback
+      audioUrl = source;
+    } else {
+      // Base64 - convert to blob URL
+      // Handle both raw base64 and data URL format
+      let base64Data = source;
+      let mimeType = 'audio/wav';
+
+      const dataUrlMatch = source.match(/^data:([^;]+);base64,(.+)$/);
+      if (dataUrlMatch) {
+        mimeType = dataUrlMatch[1];
+        base64Data = dataUrlMatch[2];
+      }
+
+      // Convert base64 to blob
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: mimeType });
+
+      audioUrl = URL.createObjectURL(blob);
+      currentWebBlobUrl = audioUrl;
+      log('[AudioPlayer] Created blob URL for web playback');
+    }
+
+    // Create and play audio
+    const audio = new window.Audio(audioUrl);
+    currentWebAudio = audio;
+
+    // Set up event listeners
+    audio.onplay = () => {
+      isPlaying = true;
+      onPlaybackStatusUpdate?.({ isLoaded: true, isPlaying: true } as AVPlaybackStatus);
+    };
+
+    audio.onended = () => {
+      isPlaying = false;
+      onPlaybackStatusUpdate?.({ isLoaded: true, isPlaying: false, didJustFinish: true } as AVPlaybackStatus);
+      cleanupWebAudio();
+    };
+
+    audio.onerror = (e) => {
+      logError('[AudioPlayer] Web audio error:', e);
+      isPlaying = false;
+      onPlaybackStatusUpdate?.({ isLoaded: false, error: 'Playback failed' } as AVPlaybackStatus);
+      cleanupWebAudio();
+    };
+
+    // Start playback
+    await audio.play();
+    return true;
+  } catch (err) {
+    logError('[AudioPlayer] Web playback error:', err);
+    cleanupWebAudio();
+    return false;
+  }
+};
+
+/**
+ * Clean up sound and temporary file (native)
  * @param sound - Sound object to cleanup
  * @param fileUri - File URI to delete (optional)
  */
@@ -43,6 +140,12 @@ export const playAudio = async (
   source: string,
   onPlaybackStatusUpdate: PlaybackStatusCallback | null = null
 ): Promise<boolean> => {
+  // Use web-specific playback on web platform
+  if (Platform.OS === 'web') {
+    return playAudioWeb(source, onPlaybackStatusUpdate);
+  }
+
+  // Native playback using expo-av
   try {
     // Stop any currently playing audio
     await stopAudio();
@@ -129,6 +232,13 @@ export const playAudioFromBase64 = async (
  * Stop currently playing audio
  */
 export const stopAudio = async (): Promise<void> => {
+  // Clean up web audio if on web
+  if (Platform.OS === 'web') {
+    cleanupWebAudio();
+    return;
+  }
+
+  // Clean up native audio
   if (currentSound) {
     try {
       await currentSound.stopAsync();
