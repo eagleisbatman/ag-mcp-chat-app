@@ -42,6 +42,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const insets = useSafeAreaInsets();
 
   const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [weatherProvider, setWeatherProvider] = useState<string | null>(null);
   const [content, setContent] = useState<ContentItem[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -61,6 +62,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         ]);
 
         setWeather(weatherData);
+        setWeatherProvider((weatherData as any).provider || 'google-weather');
         setContent(contentData);
         setAlerts(alertsData);
       } else {
@@ -177,6 +179,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         <WeatherWidget
           data={weather}
           loading={loading && location?.latitude !== null}
+          provider={weatherProvider || undefined}
         />
 
         <QuickActions
