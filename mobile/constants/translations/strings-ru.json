@@ -80,7 +80,8 @@
     "tapToAskNext": "Нажмите, чтобы спросить далее:",
     "analysisComplete": "Анализ завершен",
     "lowAccuracy": "Низкая точность",
-    "tapToImprove": "Нажмите, чтобы улучшить"
+    "tapToImprove": "Нажмите, чтобы улучшить",
+    "servicesWarmingUp": "Загрузка сервисов, повтор..."
   },
   "media": {
     "photoLibraryPermission": "Для выбора фото нужен доступ к галерее. Включите в Настройках.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Говорите на {expected}. Ваша речь распознана как {detected}.",
     "noSpeechDetected": "Речь не распознана. Говорите четко и попробуйте снова.",
     "audioTooShort": "Запись слишком короткая. Говорите не менее 1 секунды.",
-    "audioQualityPoor": "Качество звука слишком низкое. Попробуйте снова в более тихом месте."
+    "audioQualityPoor": "Качество звука слишком низкое. Попробуйте снова в более тихом месте.",
+    "liveTranscription": "Прямая расшифровка",
+    "connecting": "Подключение...",
+    "reconnecting": "Переподключение...",
+    "connectionError": "Ошибка подключения"
   },
   "history": {
     "title": "Беседы",
@@ -263,6 +268,16 @@
         "name": "GAP Сельское хозяйство",
         "tagline": "Агрономические консультационные услуги",
         "description": "Общие агрономические консультационные услуги по управлению культурами и скотом."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Диагностика болезней растений с поддержкой 21 языка",
+        "description": "Определяйте болезни растений по фото с помощью ИИ Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Погода по всему миру с расширенными прогнозами и историей",
+        "description": "Подробные данные о погоде от Google с прогнозом на 10 дней, почасовым прогнозом на 240 часов и историей погоды за последние 24 часа."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Советы по культурам",
       "bestPractices": "Лучшие практики",
       "seasonalTips": "Сезонные советы",
-      "localKnowledge": "Местные знания"
+      "localKnowledge": "Местные знания",
+      "cropIdentification": "Определение культур",
+      "hourlyForecast": "Почасовой прогноз"
     },
     "fallback": {
       "service": "Сельскохозяйственная услуга",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Для вас",
+    "seeAll": "Показать все",
+    "readMore": "Читать далее",
+    "listen": "Слушать",
+    "watch": "Смотреть",
+    "minutesRead": "{minutes} мин чтения",
+    "related": "Похожее",
+    "share": "Поделиться",
+    "like": "Нравится",
+    "noContent": "Нет контента",
+    "loadError": "Не удалось загрузить контент",
+    "notFound": "Контент не найден"
+  },
+  "home": {
+    "quickActions": "Быстрые действия",
+    "askQuestion": "Задать вопрос",
+    "takePhoto": "Диагностика растений",
+    "viewHistory": "История чата",
+    "refresh": "Потяните для обновления"
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "settings": "Настройки уведомлений",
+    "weatherAlerts": "Оповещения о погоде",
+    "contentUpdates": "Обновления контента",
+    "engagement": "Советы и напоминания",
+    "enable": "Включить уведомления",
+    "disabled": "Уведомления отключены"
   }
 }

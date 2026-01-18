@@ -80,7 +80,8 @@
     "tapToAskNext": "తదుపరి అడగడానికి నొక్కండి:",
     "analysisComplete": "విశ్లేషణ పూర్తయింది",
     "lowAccuracy": "తక్కువ ఖచ్చితత్వం",
-    "tapToImprove": "మెరుగుపరచడానికి నొక్కండి"
+    "tapToImprove": "మెరుగుపరచడానికి నొక్కండి",
+    "servicesWarmingUp": "సేవలు సిద్ధమవుతున్నాయి, మళ్ళీ ప్రయత్నిస్తోంది..."
   },
   "media": {
     "photoLibraryPermission": "ఫోటోలు ఎంపిక చేసుకోవడానికి గ్యాలరీ అనుమతి అవసరం. సెట్టింగ్స్‌లో ఆన్ చేయండి.",
@@ -112,7 +113,11 @@
     "languageMismatch": "దయచేసి {expected} భాషలో మాట్లాడండి. మీరు మాట్లాడింది {detected} గా గుర్తించబడింది.",
     "noSpeechDetected": "మాట గుర్తించబడలేదు. దయచేసి స్పష్టంగా మాట్లాడి మళ్ళీ ప్రయత్నించండి.",
     "audioTooShort": "రికార్డింగ్ చాలా తక్కువ. కనీసం 1 సెకను మాట్లాడండి.",
-    "audioQualityPoor": "ఆడియో నాణ్యత చాలా తక్కువ. నిశ్శబ్ద వాతావరణంలో మళ్ళీ ప్రయత్నించండి."
+    "audioQualityPoor": "ఆడియో నాణ్యత చాలా తక్కువ. నిశ్శబ్ద వాతావరణంలో మళ్ళీ ప్రయత్నించండి.",
+    "liveTranscription": "వాయిస్ రాతగా",
+    "connecting": "కనెక్ట్ అవుతోంది...",
+    "reconnecting": "మళ్ళీ కనెక్ట్ అవుతోంది...",
+    "connectionError": "కనెక్షన్ లోపం"
   },
   "history": {
     "title": "సంభాషణలు",
@@ -263,6 +268,16 @@
         "name": "గ్యాప్ అగ్రికల్చర్",
         "tagline": "వ్యవసాయ సలహా సేవలు",
         "description": "పంట మరియు పశువుల నిర్వహణ కోసం సాధారణ వ్యవసాయ సలహా సేవలు."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "21 భాషల్లో మొక్కల తెగుళ్ళ నిర్ధారణ",
+        "description": "Plantix AI తో ఫోటోల నుండి మొక్కల తెగుళ్ళను గుర్తించండి."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "ప్రపంచ వాతావరణం, దీర్ఘకాల అంచనాలు, చరిత్ర",
+        "description": "గూగుల్ నుండి వాతావరణ సమాచారం: 10 రోజుల, 240 గంటల వారీ అంచనాలు, గత 24 గంటల చరిత్ర."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "పంట సలహా",
       "bestPractices": "ఉత్తమ పద్ధతులు",
       "seasonalTips": "కాలానుగుణ చిట్కాలు",
-      "localKnowledge": "స్థానిక జ్ఞానం"
+      "localKnowledge": "స్థానిక జ్ఞానం",
+      "cropIdentification": "పంటల గుర్తింపు",
+      "hourlyForecast": "గంటవారీ అంచనా"
     },
     "fallback": {
       "service": "వ్యవసాయ సేవ",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "ప్రభుత్వ పథకాలు",
-    "eligibility": "పథకం అర్హత",
-    "checkEligibility": "అర్హతను తనిఖీ చేయండి",
-    "screeningQuestions": "స్క్రీనింగ్ ప్రశ్నలు",
-    "answerQuestions": "మీ అర్హతను తనిఖీ చేయడానికి ప్రశ్నలకు సమాధానం ఇవ్వండి",
-    "eligibleSchemes": "అర్హత కలిగిన పథకాలు",
-    "noSchemesFound": "మీ ప్రొఫైల్‌కు సరిపోయే పథకాలు కనుగొనబడలేదు",
-    "journeyUrl": "అప్లికేషన్ లింక్",
-    "startApplication": "అప్లికేషన్ ప్రారంభించండి",
-    "schemeName": "పథకం పేరు",
-    "schemeDescription": "వివరణ",
-    "benefits": "ప్రయోజనాలు",
-    "eligibilityCriteria": "అర్హత ప్రమాణాలు",
-    "requiredDocuments": "అవసరమైన పత్రాలు",
-    "nextSteps": "తదుపరి చర్యలు",
-    "totalSchemes": "మొత్తం పథకాలు",
-    "provider": "ప్రొవైడర్",
-    "haqdarshak": "హక్‌దర్శక్",
-    "knowYourSchemes": "మీ పథకాలను తెలుసుకోండి",
-    "indiaOnly": "భారతదేశంలో మాత్రమే అందుబాటులో ఉంది",
-    "questions": {
-      "gender": "లింగం",
-      "age": "వయస్సు",
-      "maritalStatus": "వైవాహిక స్థితి",
-      "monthlyIncome": "నెలవారీ గృహ ఆదాయం",
-      "landOwnership": "భూమి యాజమాన్యం",
-      "rationCardType": "రేషన్ కార్డ్ రకం",
-      "religion": "మతం",
-      "casteCategory": "కుల వర్గం",
-      "occupationalStatus": "వృత్తిపరమైన స్థితి",
-      "natureOfJob": "ఉద్యోగం యొక్క స్వభావం",
-      "personalIncome": "వ్యక్తిగత నెలవారీ ఆదాయం"
-    },
-    "answers": {
-      "male": "మగ",
-      "female": "ఆడ",
-      "other": "ఇతర",
-      "married": "వివాహం అయింది",
-      "unmarried": "అవివాహితుడు",
-      "widowed": "విధవరాలు",
-      "divorced": "విడాకులు తీసుకున్నారు",
-      "separated": "విడిపోయారు",
-      "farmer": "రైతు",
-      "farmLaborer": "వ్యవసాయ కూలీ",
-      "fisherman": "చేపల వేటగాడు",
-      "animalHusbandry": "పశుసంవర్ధక",
-      "dairyFarmer": "పాడి రైతు",
-      "poultryFarmer": "కోళ్ల పెంపకం దారుడు",
-      "landOwner": "భూ యజమాని",
-      "landless": "భూమి లేని",
-      "sharecropper": "కౌలు రైతు"
-    },
-    "documents": {
-      "aadhaarCard": "ఆధార్ కార్డు",
-      "bankPassbook": "బ్యాంక్ పాస్‌బుక్",
-      "landRecords": "భూ రికార్డులు",
-      "rationCard": "రేషన్ కార్డు",
-      "casteCertificate": "కుల ధృవీకరణ పత్రం",
-      "incomeCertificate": "ఆదాయ ధృవీకరణ పత్రం",
-      "voterID": "ఓటరు ID",
-      "passport": "పాస్‌పోర్ట్ ఫోటో"
-    },
-    "dataSource": "హక్‌దర్శక్ నుండి పథకం డేటా"
+  "content": {
+    "forYou": "మీ కోసం",
+    "seeAll": "అన్నీ చూడండి",
+    "readMore": "మరింత చదవండి",
+    "listen": "వినండి",
+    "watch": "చూడండి",
+    "minutesRead": "{minutes} నిమిషాల చదువు",
+    "related": "సంబంధిత",
+    "share": "పంచుకోండి",
+    "like": "లైక్",
+    "noContent": "కంటెంట్ అందుబాటులో లేదు",
+    "loadError": "కంటెంట్‌ను లోడ్ చేయలేకపోయింది",
+    "notFound": "కంటెంట్ దొరకలేదు"
+  },
+  "home": {
+    "quickActions": "త్వరిత చర్యలు",
+    "askQuestion": "ప్రశ్న అడగండి",
+    "takePhoto": "మొక్క నిర్ధారణ",
+    "viewHistory": "చాట్ చరిత్ర",
+    "refresh": "రిఫ్రెష్ చేయడానికి లాగండి"
+  },
+  "notifications": {
+    "title": "నోటిఫికేషన్‌లు",
+    "settings": "నోటిఫికేషన్ సెట్టింగ్‌లు",
+    "weatherAlerts": "వాతావరణ హెచ్చరికలు",
+    "contentUpdates": "కంటెంట్ అప్‌డేట్‌లు",
+    "engagement": "చిట్కాలు & రిమైండర్‌లు",
+    "enable": "నోటిఫికేషన్‌లను ప్రారంభించండి",
+    "disabled": "నోటిఫికేషన్‌లు నిలిపివేయబడ్డాయి"
   }
 }

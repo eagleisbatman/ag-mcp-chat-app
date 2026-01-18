@@ -80,7 +80,8 @@
     "tapToAskNext": "Sormak için dokunun:",
     "analysisComplete": "Analiz tamamlandı",
     "lowAccuracy": "Düşük Doğruluk",
-    "tapToImprove": "İyileştirmek için dokun"
+    "tapToImprove": "İyileştirmek için dokun",
+    "servicesWarmingUp": "Hizmetler hazırlanıyor, tekrar deneniyor..."
   },
   "media": {
     "photoLibraryPermission": "Görsel seçmek için fotoğraf galerisine erişim gerekli. Ayarlardan açın.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Lütfen {expected} dilinde konuşun. Konuşmanız {detected} olarak algılandı.",
     "noSpeechDetected": "Konuşma algılanmadı. Lütfen net konuşun ve tekrar deneyin.",
     "audioTooShort": "Kayıt çok kısa. Lütfen en az 1 saniye konuşun.",
-    "audioQualityPoor": "Ses kalitesi çok düşük. Daha sessiz bir ortamda tekrar deneyin."
+    "audioQualityPoor": "Ses kalitesi çok düşük. Daha sessiz bir ortamda tekrar deneyin.",
+    "liveTranscription": "Canlı yazıya dökme",
+    "connecting": "Bağlanıyor...",
+    "reconnecting": "Yeniden bağlanılıyor...",
+    "connectionError": "Bağlantı hatası"
   },
   "history": {
     "title": "Konuşmalar",
@@ -263,6 +268,16 @@
         "name": "GAP Tarım",
         "tagline": "Tarımsal danışmanlık hizmetleri",
         "description": "Ürün ve hayvan yönetimi için genel tarımsal danışmanlık hizmetleri."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "21 dilde bitki hastalığı teşhisi",
+        "description": "Fotoğraflardan Plantix yapay zekası ile bitki hastalıklarını tespit edin."
+      },
+      "googleWeather": {
+        "name": "Google Hava Durumu",
+        "tagline": "Küresel hava durumu, detaylı tahminler ve geçmiş verilerle",
+        "description": "Google'dan kapsamlı hava durumu verileri: 10 günlük tahmin, 240 saatlik tahmin ve son 24 saatlik geçmiş hava durumu."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Ürün Danışmanlığı",
       "bestPractices": "En İyi Uygulamalar",
       "seasonalTips": "Mevsimsel İpuçları",
-      "localKnowledge": "Yerel Bilgi"
+      "localKnowledge": "Yerel Bilgi",
+      "cropIdentification": "Mahsul Tanımlama",
+      "hourlyForecast": "Saatlik Tahmin"
     },
     "fallback": {
       "service": "Tarım hizmeti",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Sizin İçin",
+    "seeAll": "Tümünü Gör",
+    "readMore": "Devamını Oku",
+    "listen": "Dinle",
+    "watch": "İzle",
+    "minutesRead": "{minutes} dk. okuma",
+    "related": "İlgili",
+    "share": "Paylaş",
+    "like": "Beğen",
+    "noContent": "İçerik yok",
+    "loadError": "İçerik yüklenemedi",
+    "notFound": "İçerik bulunamadı"
+  },
+  "home": {
+    "quickActions": "Hızlı İşlemler",
+    "askQuestion": "Soru Sor",
+    "takePhoto": "Bitki Teşhis Et",
+    "viewHistory": "Sohbet Geçmişi",
+    "refresh": "Yenilemek için çekin"
+  },
+  "notifications": {
+    "title": "Bildirimler",
+    "settings": "Bildirim Ayarları",
+    "weatherAlerts": "Hava Durumu Uyarıları",
+    "contentUpdates": "İçerik Güncellemeleri",
+    "engagement": "İpuçları ve Hatırlatmalar",
+    "enable": "Bildirimleri Aç",
+    "disabled": "Bildirimler kapalı"
   }
 }

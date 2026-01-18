@@ -80,7 +80,8 @@
     "tapToAskNext": "轻触提问：",
     "analysisComplete": "分析完成",
     "lowAccuracy": "准确度低",
-    "tapToImprove": "轻触改进"
+    "tapToImprove": "轻触改进",
+    "servicesWarmingUp": "服务启动中，正在重试..."
   },
   "media": {
     "photoLibraryPermission": "访问相册才能选择图片。请在设置中启用。",
@@ -112,7 +113,11 @@
     "languageMismatch": "请讲{expected}。检测到是{detected}。",
     "noSpeechDetected": "未检测到语音。请清楚说话，再试一次。",
     "audioTooShort": "录音太短。请至少说1秒。",
-    "audioQualityPoor": "语音质量太低。请在安静环境下重试。"
+    "audioQualityPoor": "语音质量太低。请在安静环境下重试。",
+    "liveTranscription": "语音转文字",
+    "connecting": "连接中...",
+    "reconnecting": "重新连接中...",
+    "connectionError": "连接错误"
   },
   "history": {
     "title": "对话",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "农业咨询服务",
         "description": "提供作物和牲畜管理的一般农业咨询服务。"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "支持21种语言的植物病害诊断",
+        "description": "使用Plantix AI，通过照片识别植物病害。"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "全球天气，包含长期预报和历史数据",
+        "description": "Google提供的全面天气数据，包括10天预报、240小时逐时预报和过去24小时天气记录。"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "作物建议",
       "bestPractices": "最佳实践",
       "seasonalTips": "季节性建议",
-      "localKnowledge": "当地知识"
+      "localKnowledge": "当地知识",
+      "cropIdentification": "作物识别",
+      "hourlyForecast": "逐小时预报"
     },
     "fallback": {
       "service": "农业服务",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "为你",
+    "seeAll": "查看全部",
+    "readMore": "阅读更多",
+    "listen": "收听",
+    "watch": "观看",
+    "minutesRead": "{minutes} 分钟阅读",
+    "related": "相关",
+    "share": "分享",
+    "like": "点赞",
+    "noContent": "暂无内容",
+    "loadError": "内容加载失败",
+    "notFound": "未找到内容"
+  },
+  "home": {
+    "quickActions": "快捷操作",
+    "askQuestion": "提问",
+    "takePhoto": "诊断植物",
+    "viewHistory": "聊天记录",
+    "refresh": "下拉刷新"
+  },
+  "notifications": {
+    "title": "通知",
+    "settings": "通知设置",
+    "weatherAlerts": "天气提醒",
+    "contentUpdates": "内容更新",
+    "engagement": "小贴士与提醒",
+    "enable": "开启通知",
+    "disabled": "通知已关闭"
   }
 }

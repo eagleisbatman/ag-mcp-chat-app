@@ -80,7 +80,8 @@
     "tapToAskNext": "Atinge pentru a întreba mai departe:",
     "analysisComplete": "Analiză completă",
     "lowAccuracy": "Acuratețe scăzută",
-    "tapToImprove": "Atinge pentru a îmbunătăți"
+    "tapToImprove": "Atinge pentru a îmbunătăți",
+    "servicesWarmingUp": "Se încarcă serviciile, se reîncearcă..."
   },
   "media": {
     "photoLibraryPermission": "Este necesar accesul la galerie foto pentru a selecta imagini. Activează din Setări.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Vă rugăm să vorbiți în {expected}. Limba detectată este {detected}.",
     "noSpeechDetected": "Nicio vorbire detectată. Vă rugăm să vorbiți clar și să încercați din nou.",
     "audioTooShort": "Înregistrare prea scurtă. Vă rugăm să vorbiți cel puțin 1 secundă.",
-    "audioQualityPoor": "Calitate audio prea scăzută. Încercați din nou într-un mediu mai liniștit."
+    "audioQualityPoor": "Calitate audio prea scăzută. Încercați din nou într-un mediu mai liniștit.",
+    "liveTranscription": "Transcrierea în direct",
+    "connecting": "Se conectează...",
+    "reconnecting": "Se reconectează...",
+    "connectionError": "Eroare de conexiune"
   },
   "history": {
     "title": "Discuții",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "Consultanță agricolă",
         "description": "Consultanță agricolă generală pentru gestionarea culturilor și a animalelor."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Diagnostic boli plante în 21 de limbi",
+        "description": "Identifică bolile plantelor din fotografii folosind inteligența artificială Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Meteo global cu prognoze extinse și istoric",
+        "description": "Date meteo complete de la Google cu prognoze pe 10 zile, prognoze orare pe 240 de ore și istoricul meteo din ultimele 24 de ore."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Sfaturi Culturi",
       "bestPractices": "Bune Practici",
       "seasonalTips": "Sfaturi Sezoniere",
-      "localKnowledge": "Cunoștințe Locale"
+      "localKnowledge": "Cunoștințe Locale",
+      "cropIdentification": "Identificare culturi",
+      "hourlyForecast": "Prognoză orară"
     },
     "fallback": {
       "service": "Serviciu agricol",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Pentru tine",
+    "seeAll": "Vezi tot",
+    "readMore": "Citește mai mult",
+    "listen": "Ascultă",
+    "watch": "Vizionează",
+    "minutesRead": "{minutes} min. de citit",
+    "related": "Conexe",
+    "share": "Distribuie",
+    "like": "Apreciază",
+    "noContent": "Niciun conținut disponibil",
+    "loadError": "Nu s-a putut încărca conținutul",
+    "notFound": "Conținutul nu a fost găsit"
+  },
+  "home": {
+    "quickActions": "Acțiuni rapide",
+    "askQuestion": "Pune o întrebare",
+    "takePhoto": "Diagnostichează planta",
+    "viewHistory": "Istoric chat",
+    "refresh": "Trage pentru a reîmprospăta"
+  },
+  "notifications": {
+    "title": "Notificări",
+    "settings": "Setări notificări",
+    "weatherAlerts": "Alerte meteo",
+    "contentUpdates": "Actualizări conținut",
+    "engagement": "Sfaturi și Memento-uri",
+    "enable": "Activează notificările",
+    "disabled": "Notificările sunt dezactivate"
   }
 }

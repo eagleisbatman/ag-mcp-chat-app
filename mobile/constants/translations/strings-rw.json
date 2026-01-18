@@ -80,7 +80,8 @@
     "tapToAskNext": "Kanda ubaze ikindi:",
     "analysisComplete": "Isuzuma ryarangiye.",
     "lowAccuracy": "Ubwuzukana buke.",
-    "tapToImprove": "Kanda unoze."
+    "tapToImprove": "Kanda unoze.",
+    "servicesWarmingUp": "Serivisi zirimo gutangira, turongera kugerageza..."
   },
   "media": {
     "photoLibraryPermission": "Bisaba uburenganzira kuri galeri kugira ngo utoranye amafoto. Bihindure mu Igenamiterere.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Nyamuneka vugira mu rurimi rw' {expected}. Ijwi ryawe ryagaragaye ko ari mu rurimi rw' {detected}.",
     "noSpeechDetected": "Nta jwi ryumvikanye. Nyamuneka vuga neza kandi ugerageze bundi.",
     "audioTooShort": "Amajwi make cyane. Nyamuneka vuga byibuze isegonda 1.",
-    "audioQualityPoor": "Ubwiza bw'amajwi buri hasi. Ongera ugerageze ahantu hatuje."
+    "audioQualityPoor": "Ubwiza bw'amajwi buri hasi. Ongera ugerageze ahantu hatuje.",
+    "liveTranscription": "Kwandika ijwi ako kanya",
+    "connecting": "Iriguhuzwa...",
+    "reconnecting": "Irongera guhuzwa...",
+    "connectionError": "Ikibazo cy'ihuzwa"
   },
   "history": {
     "title": "Ibiganiro",
@@ -263,6 +268,16 @@
         "name": "GAP Ubuhinzi",
         "tagline": "Serivisi z'inama z'ubuhinzi",
         "description": "Serivisi rusange z'inama z'ubuhinzi zo gucunga ibihingwa n'amatungo."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Gusuzuma indwara z'ibihingwa, ifite indimi 21",
+        "description": "Menya indwara z'ibihingwa ukoresheje amafoto n'ubumenyi bwa Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Ikirere cyo ku isi, ibiteganyijwe birambuye n'amateka yacyo",
+        "description": "Amakuru y'ikirere atangwa na Google, ibiteganyijwe by'iminsi 10, amasaha 240 n'amateka y'amasaha 24."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Inama z'ubuhinzi",
       "bestPractices": "Imyitozo myiza",
       "seasonalTips": "Inama z'igihembwe",
-      "localKnowledge": "Ubumenyi bw'iwaho"
+      "localKnowledge": "Ubumenyi bw'iwaho",
+      "cropIdentification": "Kumenya Igihingwa",
+      "hourlyForecast": "Iteganyagihe ryo ku isaha"
     },
     "fallback": {
       "service": "Serivisi y'ubuhinzi",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Ku bwawe",
+    "seeAll": "Reba byose",
+    "readMore": "Soma byinshi",
+    "listen": "Umva",
+    "watch": "Reba",
+    "minutesRead": "Iminota {minutes} yo gusoma",
+    "related": "Bijyanye",
+    "share": "Sangira",
+    "like": "Kunda",
+    "noContent": "Nta bikubiyeho bihari",
+    "loadError": "Ntibyashobotse kugaragaza ibikubiyeho",
+    "notFound": "Ibikubiyeho ntibyabonetse"
+  },
+  "home": {
+    "quickActions": "Ibikorwa byihuse",
+    "askQuestion": "Baza ikibazo",
+    "takePhoto": "Suzuma Igihingwa",
+    "viewHistory": "Amateka y'ibiganiro",
+    "refresh": "Kurura wongere ushake"
+  },
+  "notifications": {
+    "title": "Amatangazo",
+    "settings": "Igenamiterere ry'amatangazo",
+    "weatherAlerts": "Amatangazo y'ikirere",
+    "contentUpdates": "Amakuru mashya",
+    "engagement": "Inama n'ibyibutsa",
+    "enable": "Fungura Amatangazo",
+    "disabled": "Amatangazo yafunzwe"
   }
 }

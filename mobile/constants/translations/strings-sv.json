@@ -80,7 +80,8 @@
     "tapToAskNext": "Tryck för att fråga nästa:",
     "analysisComplete": "Analys klar",
     "lowAccuracy": "Låg noggrannhet",
-    "tapToImprove": "Tryck för att förbättra"
+    "tapToImprove": "Tryck för att förbättra",
+    "servicesWarmingUp": "Laddar tjänster, försöker igen..."
   },
   "media": {
     "photoLibraryPermission": "Åtkomst till galleriet behövs för att välja bilder. Aktivera i Inställningar.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Tala på {expected}. Ditt tal upptäcktes som {detected}.",
     "noSpeechDetected": "Inget tal upptäcktes. Tala tydligt och försök igen.",
     "audioTooShort": "Inspelningen är för kort. Tala i minst 1 sekund.",
-    "audioQualityPoor": "Ljudkvaliteten är för låg. Försök igen i en tystare miljö."
+    "audioQualityPoor": "Ljudkvaliteten är för låg. Försök igen i en tystare miljö.",
+    "liveTranscription": "Live-transkribering",
+    "connecting": "Ansluter...",
+    "reconnecting": "Återansluter...",
+    "connectionError": "Anslutningsfel"
   },
   "history": {
     "title": "Samtal",
@@ -263,6 +268,16 @@
         "name": "GAP Jordbruk",
         "tagline": "Jordbruksrådgivning",
         "description": "Allmänna jordbruksrådgivningstjänster för växt- och boskapshantering."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Diagnos av växtsjukdomar på 21 språk",
+        "description": "Identifiera växtsjukdomar från foton med Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Globalt väder med längre prognoser och historik",
+        "description": "Omfattande väderdata från Google med 10-dagarsprognoser, timprognoser för 240 timmar och väderhistorik för de senaste 24 timmarna."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Grödråd",
       "bestPractices": "Bästa metoder",
       "seasonalTips": "Säsongstips",
-      "localKnowledge": "Lokal kunskap"
+      "localKnowledge": "Lokal kunskap",
+      "cropIdentification": "Grödidendifering",
+      "hourlyForecast": "Timprognos"
     },
     "fallback": {
       "service": "Lantbrukstjänst",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "För dig",
+    "seeAll": "Se alla",
+    "readMore": "Läs mer",
+    "listen": "Lyssna",
+    "watch": "Titta",
+    "minutesRead": "{minutes} min läsning",
+    "related": "Relaterat",
+    "share": "Dela",
+    "like": "Gilla",
+    "noContent": "Inget innehåll tillgängligt",
+    "loadError": "Kunde inte ladda innehåll",
+    "notFound": "Innehåll hittades inte"
+  },
+  "home": {
+    "quickActions": "Snabbåtgärder",
+    "askQuestion": "Ställ en fråga",
+    "takePhoto": "Diagnostisera växt",
+    "viewHistory": "Chatthistorik",
+    "refresh": "Dra för att uppdatera"
+  },
+  "notifications": {
+    "title": "Notiser",
+    "settings": "Notisinställningar",
+    "weatherAlerts": "Vädervarningar",
+    "contentUpdates": "Innehållsuppdateringar",
+    "engagement": "Tips och påminnelser",
+    "enable": "Aktivera notiser",
+    "disabled": "Notiser är inaktiverade"
   }
 }

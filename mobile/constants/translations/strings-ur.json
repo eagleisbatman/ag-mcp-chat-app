@@ -80,7 +80,8 @@
     "tapToAskNext": "اگلا پوچھنے کے لیے ٹیپ کریں:",
     "analysisComplete": "تجزیہ مکمل ہو گیا",
     "lowAccuracy": "کم درستگی",
-    "tapToImprove": "بہتر بنانے کے لیے ٹیپ کریں"
+    "tapToImprove": "بہتر بنانے کے لیے ٹیپ کریں",
+    "servicesWarmingUp": "سروسز تیار ہو رہی ہیں، دوبارہ کوشش..."
   },
   "media": {
     "photoLibraryPermission": "تصاویر منتخب کرنے کے لیے فوٹو لائبریری تک رسائی ضروری ہے۔ سیٹنگز میں فعال کریں۔",
@@ -112,7 +113,11 @@
     "languageMismatch": "براہ کرم {expected} میں بولیں۔ آپ کی آواز کو {detected} سمجھا گیا۔",
     "noSpeechDetected": "کوئی آواز نہیں ملی۔ براہ کرم صاف بولیں اور دوبارہ کوشش کریں۔",
     "audioTooShort": "ریکارڈنگ بہت مختصر ہے۔ براہ کرم کم از کم 1 سیکنڈ تک بولیں۔",
-    "audioQualityPoor": "آواز کا معیار بہت کم ہے۔ کسی پرسکون جگہ پر دوبارہ کوشش کریں۔"
+    "audioQualityPoor": "آواز کا معیار بہت کم ہے۔ کسی پرسکون جگہ پر دوبارہ کوشش کریں۔",
+    "liveTranscription": "براہ راست تحریر",
+    "connecting": "منسلک ہو رہا ہے...",
+    "reconnecting": "دوبارہ منسلک ہو رہا ہے...",
+    "connectionError": "کنکشن میں خرابی"
   },
   "history": {
     "title": "بات چیت",
@@ -263,6 +268,16 @@
         "name": "جی اے پی ایگریکلچر",
         "tagline": "زرعی مشاورتی خدمات",
         "description": "فصلوں اور مویشیوں کے انتظام کے لیے عمومی زرعی مشاورتی خدمات۔"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "پودوں کی بیماری کی تشخیص، 21 زبانوں میں مدد",
+        "description": "Plantix AI کا استعمال کرتے ہوئے تصاویر سے پودوں کی بیماریوں کی شناخت کریں۔"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "عالمی موسم، طویل پیشن گوئیوں اور گزشتہ تاریخ کے ساتھ",
+        "description": "گوگل سے جامع موسم کا ڈیٹا جس میں 10 دن کی، 240 گھنٹے کی گھنٹہ وار اور گزشتہ 24 گھنٹوں کی موسمی تاریخ شامل ہے۔"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "فصل کا مشورہ",
       "bestPractices": "بہترین طریقے",
       "seasonalTips": "موسمی تجاویز",
-      "localKnowledge": "مقامی معلومات"
+      "localKnowledge": "مقامی معلومات",
+      "cropIdentification": "فصل کی شناخت",
+      "hourlyForecast": "گھنٹہ وار پیشن گوئی"
     },
     "fallback": {
       "service": "زرعی خدمت",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "حکومتی اسکیمیں",
-    "eligibility": "اسکیم کی اہلیت",
-    "checkEligibility": "اہلیت چیک کریں",
-    "screeningQuestions": "جانچ کے سوالات",
-    "answerQuestions": "اپنی اہلیت جانچنے کے لیے سوالوں کے جواب دیں",
-    "eligibleSchemes": "مستحق اسکیمیں",
-    "noSchemesFound": "آپ کے پروفائل سے ملنے والی کوئی اسکیم نہیں ملی",
-    "journeyUrl": "درخواست کا لنک",
-    "startApplication": "درخواست شروع کریں",
-    "schemeName": "اسکیم کا نام",
-    "schemeDescription": "تفصیل",
-    "benefits": "فوائد",
-    "eligibilityCriteria": "اہلیت کا معیار",
-    "requiredDocuments": "مطلوبہ دستاویزات",
-    "nextSteps": "اگلے اقدامات",
-    "totalSchemes": "کل اسکیمیں",
-    "provider": "فراہم کنندہ",
-    "haqdarshak": "حقدارشک",
-    "knowYourSchemes": "اپنی اسکیمیں جانیں",
-    "indiaOnly": "صرف ہندوستان میں دستیاب ہے",
-    "questions": {
-      "gender": "جنس",
-      "age": "عمر",
-      "maritalStatus": "ازدواجی حیثیت",
-      "monthlyIncome": "ماہانہ گھریلو آمدنی",
-      "landOwnership": "اراضی کی ملکیت",
-      "rationCardType": "راشن کارڈ کی قسم",
-      "religion": "مذہب",
-      "casteCategory": "ذات کی قسم",
-      "occupationalStatus": "پیشہ ورانہ حیثیت",
-      "natureOfJob": "ملازمت کی نوعیت",
-      "personalIncome": "ذاتی ماہانہ آمدنی"
-    },
-    "answers": {
-      "male": "مرد",
-      "female": "خاتون",
-      "other": "دیگر",
-      "married": "شادی شدہ",
-      "unmarried": "غیر شادی شدہ",
-      "widowed": "بیوہ",
-      "divorced": "طلاق یافتہ",
-      "separated": "علیحدہ",
-      "farmer": "کسان",
-      "farmLaborer": "زرعی مزدور",
-      "fisherman": "ماہی گیر",
-      "animalHusbandry": "جانور پالنے والا",
-      "dairyFarmer": "ڈیری فارمر",
-      "poultryFarmer": "پولٹری فارمر",
-      "landOwner": "زمیں دار",
-      "landless": "بے زمین",
-      "sharecropper": "مزارع"
-    },
-    "documents": {
-      "aadhaarCard": "آدھار کارڈ",
-      "bankPassbook": "بینک پاس بک",
-      "landRecords": "زمین کے ریکارڈ",
-      "rationCard": "راشن کارڈ",
-      "casteCertificate": "ذات کا سرٹیفکیٹ",
-      "incomeCertificate": "آمدنی کا سرٹیفکیٹ",
-      "voterID": "ووٹر شناختی کارڈ",
-      "passport": "پاسپورٹ تصویر"
-    },
-    "dataSource": "حقدارشک سے اسکیم کا ڈیٹا"
+  "content": {
+    "forYou": "آپ کے لیے",
+    "seeAll": "سب دیکھیں",
+    "readMore": "مزید پڑھیں",
+    "listen": "سنیں",
+    "watch": "دیکھیں",
+    "minutesRead": "{minutes} منٹ کا مطالعہ",
+    "related": "متعلقہ",
+    "share": "شیئر کریں",
+    "like": "پسند کریں",
+    "noContent": "کوئی مواد دستیاب نہیں",
+    "loadError": "مواد لوڈ نہیں ہو سکا",
+    "notFound": "مواد نہیں ملا"
+  },
+  "home": {
+    "quickActions": "فوری کام",
+    "askQuestion": "سوال پوچھیں",
+    "takePhoto": "پودے کی تشخیص کریں",
+    "viewHistory": "چیٹ ہسٹری",
+    "refresh": "ریفریش کرنے کے لیے کھینچیں"
+  },
+  "notifications": {
+    "title": "اطلاعات",
+    "settings": "اطلاعات کی ترتیبات",
+    "weatherAlerts": "موسمی الرٹس",
+    "contentUpdates": "مواد کی تازہ کاری",
+    "engagement": "تجاویز اور یاد دہانیاں",
+    "enable": "اطلاعات فعال کریں",
+    "disabled": "اطلاعات غیر فعال ہیں۔"
   }
 }

@@ -80,7 +80,8 @@
     "tapToAskNext": "Fọwọ́ tẹ́ láti béèrè èyí tó tẹ̀lé:",
     "analysisComplete": "Ìtúpalẹ̀ ti parí",
     "lowAccuracy": "Kò péye.",
-    "tapToImprove": "Fọwọ́ tẹ́ láti mú dára síi."
+    "tapToImprove": "Fọwọ́ tẹ́ láti mú dára síi.",
+    "servicesWarmingUp": "Iṣẹ́ ń mura, a tún gbìyànjú..."
   },
   "media": {
     "photoLibraryPermission": "A nílò ìwọlé sí ibi ìkóyàwòran láti yan àwòrán. Múu ṣíṣẹ ní Ètò.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Jọ̀wọ́ sọ̀rọ̀ ní {expected}. A rí i pé ọ̀rọ̀ rẹ jẹ́ {detected}.",
     "noSpeechDetected": "A kò rí ọ̀rọ̀ kankan. Jọ̀wọ́ sọ̀rọ̀ kedere kí o tún gbìyànjú.",
     "audioTooShort": "Ìgbàsílẹ̀ kúrú jù. Jọ̀wọ́ sọ̀rọ̀ fún ó kéré tán ìṣẹ́jú àáyá kan.",
-    "audioQualityPoor": "Dídara ohùn kéré jù. Tún gbìyànjú ní ibi tí ó dákẹ́ rọ́rọ́."
+    "audioQualityPoor": "Dídara ohùn kéré jù. Tún gbìyànjú ní ibi tí ó dákẹ́ rọ́rọ́.",
+    "liveTranscription": "Ìkọ ohùn láyè-láyè",
+    "connecting": "Ń sopọ̀...",
+    "reconnecting": "Ń tún sopọ̀...",
+    "connectionError": "Àṣìṣe ìsopọ̀"
   },
   "history": {
     "title": "Àwọn Ìjíròrò",
@@ -263,6 +268,16 @@
         "name": "GAP Iṣẹ́ Àgbẹ̀",
         "tagline": "Àwọn iṣẹ́ ìgbìmọ̀ iṣẹ́ àgbẹ̀",
         "description": "Àwọn iṣẹ́ ìgbìmọ̀ iṣẹ́ àgbẹ̀ gbogboogbò fún ìṣàkóso ohun ọ̀gbìn àti ẹranko ọ̀sìn."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Ìdámọ̀ àrùn ewéko pẹ̀lú èdè 21",
+        "description": "Ṣe ìdámọ̀ àrùn ewéko láti inú fọ́tò pẹ̀lú ìmọ̀-ẹ̀rọ Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Ojú-ọjọ́ àgbáyé pẹ̀lú ìtọ́kasí gígùn àti ìtàn rẹ̀",
+        "description": "Ìwífún ojú-ọjọ́ kúnnákúnná láti ọwọ́ Google pẹ̀lú ìtọ́kasí fún ọjọ́ mẹ́wàá, ìtọ́kasí wákàtí-wákàtí fún wákàtí 240, àti ìtàn ojú-ọjọ́ wákàtí 24 sẹ́yìn."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Ìgbìmọ̀ Ohun Ọ̀gbìn",
       "bestPractices": "Àwọn Ọ̀nà Tó Dárajù",
       "seasonalTips": "Àwọn Àbá Àkókò",
-      "localKnowledge": "Ìmọ̀ Agbègbè"
+      "localKnowledge": "Ìmọ̀ Agbègbè",
+      "cropIdentification": "Ìdámọ̀ Ewéko",
+      "hourlyForecast": "Ìtọ́kasí Wákàtí-wákàtí"
     },
     "fallback": {
       "service": "Iṣẹ́ Iṣẹ́ Àgbẹ̀",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Fún Ẹ",
+    "seeAll": "Wo Gbogbo Rẹ̀",
+    "readMore": "Ka Síwájú",
+    "listen": "Gbọ́",
+    "watch": "Wo",
+    "minutesRead": "Ìṣẹ́jú {minutes} kíkà",
+    "related": "Àwọn Tó Jọra",
+    "share": "Pín",
+    "like": "Fẹ́ràn",
+    "noContent": "Kò sí àkóónú kankan",
+    "loadError": "Kò lè gbé àkóónú jáde",
+    "notFound": "Kò rí àkóónú náà"
+  },
+  "home": {
+    "quickActions": "Àwọn Iṣẹ́ Kánkán",
+    "askQuestion": "Béèrè Ìbéèrè",
+    "takePhoto": "Ṣe Ìwádìí Ewéko",
+    "viewHistory": "Ìtàn Ìjíròrò",
+    "refresh": "Fà láti Sọ Ọtun"
+  },
+  "notifications": {
+    "title": "Àwọn Ìfilọ̀",
+    "settings": "Ètò Àwọn Ìfilọ̀",
+    "weatherAlerts": "Àwọn Ìkìlọ̀ Ojú-ọjọ́",
+    "contentUpdates": "Àwọn Àtúnṣe Àkóónú",
+    "engagement": "Àwọn Àbá àti Ìrántí",
+    "enable": "Mú Àwọn Ìfilọ̀ Ṣiṣẹ́",
+    "disabled": "Àwọn Ìfilọ̀ Kò Ṣiṣẹ́"
   }
 }

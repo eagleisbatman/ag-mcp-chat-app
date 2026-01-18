@@ -80,7 +80,8 @@
     "tapToAskNext": "Торкніться, щоб запитати далі:",
     "analysisComplete": "Аналіз завершено",
     "lowAccuracy": "Низька точність",
-    "tapToImprove": "Торкніться, щоб покращити"
+    "tapToImprove": "Торкніться, щоб покращити",
+    "servicesWarmingUp": "Сервіси запускаються, повторна спроба..."
   },
   "media": {
     "photoLibraryPermission": "Доступ до галереї потрібен, щоб вибрати фото. Увімкніть у Налаштуваннях.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Говоріть {expected}. Ваша мова розпізнана як {detected}.",
     "noSpeechDetected": "Мову не розпізнано. Говоріть чітко та спробуйте ще раз.",
     "audioTooShort": "Запис занадто короткий. Говоріть мінімум 1 секунду.",
-    "audioQualityPoor": "Низька якість звуку. Спробуйте у тихішому місці."
+    "audioQualityPoor": "Низька якість звуку. Спробуйте у тихішому місці.",
+    "liveTranscription": "Транскрипція наживо",
+    "connecting": "Підключення...",
+    "reconnecting": "Повторне підключення...",
+    "connectionError": "Помилка підключення"
   },
   "history": {
     "title": "Розмови",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "Агрономічні консультаційні послуги",
         "description": "Загальні агрономічні консультаційні послуги з управління культурами та худобою."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Діагностика хвороб рослин із підтримкою 21 мови",
+        "description": "Визначте хвороби рослин за фото за допомогою ШІ Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Погода у світі з розширеними прогнозами та історією",
+        "description": "Детальна інформація про погоду від Google з прогнозом на 10 днів, погодинним прогнозом на 240 годин та історією за останні 24 години."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Поради щодо культур",
       "bestPractices": "Передовий досвід",
       "seasonalTips": "Сезонні поради",
-      "localKnowledge": "Місцеві знання"
+      "localKnowledge": "Місцеві знання",
+      "cropIdentification": "Визначення культур",
+      "hourlyForecast": "Погодинний прогноз"
     },
     "fallback": {
       "service": "Аграрний сервіс",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Для вас",
+    "seeAll": "Дивитись все",
+    "readMore": "Читати більше",
+    "listen": "Слухати",
+    "watch": "Дивитись",
+    "minutesRead": "{minutes} хв читання",
+    "related": "Схоже",
+    "share": "Поділитися",
+    "like": "Подобається",
+    "noContent": "Вміст відсутній",
+    "loadError": "Не вдалося завантажити вміст",
+    "notFound": "Вміст не знайдено"
+  },
+  "home": {
+    "quickActions": "Швидкі дії",
+    "askQuestion": "Задати питання",
+    "takePhoto": "Діагностувати рослину",
+    "viewHistory": "Історія чату",
+    "refresh": "Потягніть для оновлення"
+  },
+  "notifications": {
+    "title": "Сповіщення",
+    "settings": "Налаштування сповіщень",
+    "weatherAlerts": "Погодні сповіщення",
+    "contentUpdates": "Оновлення вмісту",
+    "engagement": "Поради та нагадування",
+    "enable": "Увімкнути сповіщення",
+    "disabled": "Сповіщення вимкнено"
   }
 }

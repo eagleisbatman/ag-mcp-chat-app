@@ -80,7 +80,8 @@
     "tapToAskNext": "அடுத்ததைக் கேட்க தட்டவும்:",
     "analysisComplete": "பகுப்பாய்வு நிறைவடைந்தது",
     "lowAccuracy": "குறைந்த துல்லியம்",
-    "tapToImprove": "மேம்படுத்த தட்டவும்"
+    "tapToImprove": "மேம்படுத்த தட்டவும்",
+    "servicesWarmingUp": "சேவைகள் தயாராகின்றன, மீண்டும் முயற்சிக்கிறது..."
   },
   "media": {
     "photoLibraryPermission": "படங்களைத் தேர்ந்தெடுக்கப் புகைப்பட அனுமதி தேவை. அமைப்புகளில் இயக்குங்கள்.",
@@ -112,7 +113,11 @@
     "languageMismatch": "தயவுசெய்து {expected} மொழியில் பேசவும். உங்கள் பேச்சு {detected} என கண்டறியப்பட்டது.",
     "noSpeechDetected": "பேச்சு கண்டறியப்படவில்லை. தெளிவாகப் பேசி மீண்டும் முயற்சிக்கவும்.",
     "audioTooShort": "பதிவு மிகச் சிறியது. குறைந்தபட்சம் 1 வினாடிக்கு பேசவும்.",
-    "audioQualityPoor": "ஆடியோ தரம் மிகக் குறைவு. சத்தமில்லாத இடத்தில் மீண்டும் முயற்சிக்கவும்."
+    "audioQualityPoor": "ஆடியோ தரம் மிகக் குறைவு. சத்தமில்லாத இடத்தில் மீண்டும் முயற்சிக்கவும்.",
+    "liveTranscription": "நேரடி உரைமாற்றம்",
+    "connecting": "இணைக்கிறது...",
+    "reconnecting": "மீண்டும் இணைக்கிறது...",
+    "connectionError": "இணைப்புப் பிழை"
   },
   "history": {
     "title": "உரையாடல்கள்",
@@ -263,6 +268,16 @@
         "name": "GAP விவசாயம்",
         "tagline": "விவசாய ஆலோசனை சேவைகள்",
         "description": "பயிர் மற்றும் கால்நடை மேலாண்மைக்கான பொது விவசாய ஆலோசனை சேவைகள்."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "21 மொழிகளில் பயிர் நோய் கண்டறிதல்",
+        "description": "Plantix AI மூலம் புகைப்படங்களிலிருந்து பயிர் நோய்களைக் கண்டறியவும்."
+      },
+      "googleWeather": {
+        "name": "Google வானிலை",
+        "tagline": "உலக வானிலை, விரிவான முன்னறிவிப்புகள் மற்றும் வரலாறு",
+        "description": "Google வழங்கும் விரிவான வானிலை தரவுகள்: 10 நாள் முன்னறிவிப்பு, 240 மணிநேர மணிநேர முன்னறிவிப்பு மற்றும் கடந்த 24 மணிநேர வானிலை வரலாறு."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "பயிர் ஆலோசனை",
       "bestPractices": "சிறந்த நடைமுறைகள்",
       "seasonalTips": "பருவகால குறிப்புகள்",
-      "localKnowledge": "உள்ளூர் அறிவு"
+      "localKnowledge": "உள்ளூர் அறிவு",
+      "cropIdentification": "பயிர் கண்டறிதல்",
+      "hourlyForecast": "மணிநேர முன்னறிவிப்பு"
     },
     "fallback": {
       "service": "விவசாய சேவை",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "அரசு திட்டங்கள்",
-    "eligibility": "திட்ட தகுதி",
-    "checkEligibility": "தகுதியை சரிபார்க்கவும்",
-    "screeningQuestions": "திரையிடல் கேள்விகள்",
-    "answerQuestions": "உங்கள் தகுதியை சரிபார்க்க கேள்விகளுக்கு பதிலளிக்கவும்",
-    "eligibleSchemes": "தகுதியான திட்டங்கள்",
-    "noSchemesFound": "உங்கள் சுயவிவரத்துடன் பொருந்தும் திட்டங்கள் எதுவும் இல்லை",
-    "journeyUrl": "விண்ணப்ப இணைப்பு",
-    "startApplication": "விண்ணப்பத்தை தொடங்கவும்",
-    "schemeName": "திட்டத்தின் பெயர்",
-    "schemeDescription": "விளக்கம்",
-    "benefits": "நன்மைகள்",
-    "eligibilityCriteria": "தகுதி வரம்புகள்",
-    "requiredDocuments": "தேவையான ஆவணங்கள்",
-    "nextSteps": "அடுத்த கட்டங்கள்",
-    "totalSchemes": "மொத்த திட்டங்கள்",
-    "provider": "வழங்குநர்",
-    "haqdarshak": "ஹக்தார்ஷக்",
-    "knowYourSchemes": "உங்கள் திட்டங்களை அறிந்து கொள்ளுங்கள்",
-    "indiaOnly": "இந்தியாவில் மட்டும் கிடைக்கும்",
-    "questions": {
-      "gender": "பாலினம்",
-      "age": "வயது",
-      "maritalStatus": "திருமண நிலை",
-      "monthlyIncome": "மாதாந்திர வீட்டு வருமானம்",
-      "landOwnership": "நில உடைமை",
-      "rationCardType": "ரேஷன் கார்டு வகை",
-      "religion": "மதம்",
-      "casteCategory": "சாதிப் பிரிவு",
-      "occupationalStatus": "தொழில் நிலை",
-      "natureOfJob": "வேலையின் தன்மை",
-      "personalIncome": "தனிப்பட்ட மாதாந்திர வருமானம்"
-    },
-    "answers": {
-      "male": "ஆண்",
-      "female": "பெண்",
-      "other": "மற்றவை",
-      "married": "திருமணமானவர்",
-      "unmarried": "திருமணமாகாதவர்",
-      "widowed": "விதவை",
-      "divorced": "விவாகரத்து பெற்றவர்",
-      "separated": "பிரிந்தவர்",
-      "farmer": "விவசாயி",
-      "farmLaborer": "விவசாயத் தொழிலாளி",
-      "fisherman": "மீனவர்",
-      "animalHusbandry": "கால்நடை வளர்ப்பு",
-      "dairyFarmer": "பால் பண்ணையாளர்",
-      "poultryFarmer": "கோழிப் பண்ணையாளர்",
-      "landOwner": "நில உரிமையாளர்",
-      "landless": "நிலமற்றவர்",
-      "sharecropper": "பங்குதாரர்"
-    },
-    "documents": {
-      "aadhaarCard": "ஆதார் அட்டை",
-      "bankPassbook": "வங்கி கணக்கு புத்தகம்",
-      "landRecords": "நில ஆவணங்கள்",
-      "rationCard": "ரேஷன் கார்டு",
-      "casteCertificate": "சாதி சான்றிதழ்",
-      "incomeCertificate": "வருமான சான்றிதழ்",
-      "voterID": "வாக்காளர் அடையாள அட்டை",
-      "passport": "பாஸ்போர்ட் புகைப்படம்"
-    },
-    "dataSource": "ஹக்தார்ஷக்கிலிருந்து திட்டத் தரவு"
+  "content": {
+    "forYou": "உங்களுக்காக",
+    "seeAll": "அனைத்தையும் காண்க",
+    "readMore": "மேலும் படிக்க",
+    "listen": "கேளுங்கள்",
+    "watch": "பாருங்கள்",
+    "minutesRead": "{minutes} நிமிடம் வாசிப்பு",
+    "related": "தொடர்புடையது",
+    "share": "பகிரவும்",
+    "like": "விருப்பம்",
+    "noContent": "உள்ளடக்கம் இல்லை",
+    "loadError": "உள்ளடக்கத்தை ஏற்ற முடியவில்லை",
+    "notFound": "உள்ளடக்கம் கண்டறியப்படவில்லை"
+  },
+  "home": {
+    "quickActions": "விரைவுச் செயல்கள்",
+    "askQuestion": "கேள்வி கேளுங்கள்",
+    "takePhoto": "செடியை கண்டறியவும்",
+    "viewHistory": "அரட்டை வரலாறு",
+    "refresh": "புதுப்பிக்க இழுக்கவும்"
+  },
+  "notifications": {
+    "title": "அறிவிப்புகள்",
+    "settings": "அறிவிப்பு அமைப்புகள்",
+    "weatherAlerts": "வானிலை எச்சரிக்கைகள்",
+    "contentUpdates": "உள்ளடக்க புதுப்பிப்புகள்",
+    "engagement": "குறிப்புகள் & நினைவூட்டல்கள்",
+    "enable": "அறிவிப்புகளை இயக்கவும்",
+    "disabled": "அறிவிப்புகள் முடக்கப்பட்டுள்ளன"
   }
 }
