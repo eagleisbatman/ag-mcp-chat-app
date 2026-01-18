@@ -250,9 +250,10 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
   if (provider === 'google-weather' && code !== undefined) {
     // If code is a URL string, use it directly
     if (typeof code === 'string' && code.startsWith('http')) {
+      // Google Weather icons require .png suffix (not @2x.png)
       return (
         <Image
-          source={{ uri: `${code}@2x.png` }}
+          source={{ uri: `${code}.png` }}
           style={[{ width: size, height: size }, style] as unknown as import('expo-image').ImageStyle}
           contentFit="contain"
           placeholder={undefined}

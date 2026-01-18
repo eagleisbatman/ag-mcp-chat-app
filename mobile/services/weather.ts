@@ -19,7 +19,7 @@ export interface WeatherLocation {
 export interface CurrentWeatherData {
   temperature?: number;
   weatherText?: string;
-  weatherIcon?: number;
+  weatherIcon?: number | string; // Google Weather uses URL strings
   humidity?: number;
   windSpeed?: number;
   precipitation?: number;
@@ -29,7 +29,7 @@ export interface ForecastDay {
   date: string;
   tempMax?: number;
   tempMin?: number;
-  dayIcon?: number;
+  dayIcon?: number | string; // Google Weather uses URL strings
   precipitationProbability?: number;
   conditions?: string;
 }
@@ -231,7 +231,7 @@ export const weatherService = {
         date: day.date as string,
         tempMax: (day.max_temp ?? day.max_temp_c) as number | undefined,
         tempMin: (day.min_temp ?? day.min_temp_c) as number | undefined,
-        dayIcon: (day.weather_icon || 1) as number, // Weather code from API
+        dayIcon: day.weather_icon || 1, // Numeric code or URL string for Google Weather
         precipitationProbability: (day.day_precipitation_probability ?? day.day_precipitation_probability_percent ?? 0) as number,
         conditions: day.day_conditions as string | undefined,
       }));
