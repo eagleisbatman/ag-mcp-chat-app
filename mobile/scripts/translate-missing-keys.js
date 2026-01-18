@@ -5,7 +5,13 @@
  * Run: node scripts/translate-missing-keys.js
  */
 
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import { fileURLToPath as fileURLToPathDotenv } from 'url';
+import { dirname, join } from 'path';
+
+// Load .env from scripts directory
+const __dirnameEnv = dirname(fileURLToPathDotenv(import.meta.url));
+dotenv.config({ path: join(__dirnameEnv, '.env') });
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import fs from 'fs';
 import path from 'path';
