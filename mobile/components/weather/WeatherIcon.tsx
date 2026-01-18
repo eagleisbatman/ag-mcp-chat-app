@@ -246,22 +246,12 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
     );
   }
 
-  // Google Weather uses URL-based icons
+  // Google Weather uses URL-based icons - use Ionicons fallback for reliability
   if (provider === 'google-weather' && code !== undefined) {
-    // If code is a URL string, use it directly
-    if (typeof code === 'string' && code.startsWith('http')) {
-      // Google Weather icons require .png suffix (not @2x.png)
-      return (
-        <Image
-          source={{ uri: `${code}.png` }}
-          style={[{ width: size, height: size }, style] as unknown as import('expo-image').ImageStyle}
-          contentFit="contain"
-          placeholder={undefined}
-        />
-      );
-    }
-    // Fallback to Ionicons if URL is not available
-    const iconType = typeof code === 'string' ? extractGoogleIconType(code) : 'cloudy';
+    // Extract icon type from URL or use the code directly
+    const iconType = typeof code === 'string'
+      ? (code.startsWith('http') ? extractGoogleIconType(code) : code)
+      : 'cloudy';
     const iconName = GOOGLE_ICON_FALLBACK_MAP[iconType.toLowerCase()] || 'cloudy';
     const iconColor = color || WEATHER_COLOR_MAP[iconName] || '#78909C';
     return (

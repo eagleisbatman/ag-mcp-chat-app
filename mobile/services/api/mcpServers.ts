@@ -75,6 +75,17 @@ export const getMcpServersLiveStatus = async ({ lat, lon }: { lat?: number; lon?
 
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
+
+    // Debug: Log weather-related servers
+    const weatherServers = data.servers?.filter((s: any) => ['accuweather', 'tomorrow-io', 'google-weather'].includes(s.slug));
+    console.log('[API] getMcpServersLiveStatus - weather servers:', weatherServers?.map((s: any) => ({
+      slug: s.slug,
+      status: s.status,
+      healthStatus: s.healthStatus,
+      isActive: s.isActive,
+      isActiveForRegion: s.isActiveForRegion,
+    })));
+
     return { success: true, ...data };
   } catch (error) {
     return {

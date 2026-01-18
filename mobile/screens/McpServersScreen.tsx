@@ -62,9 +62,43 @@ const SELECTABLE_PROVIDERS: { [key: string]: SelectableProviderConfig } = {
   weather: {
     capability: 'weather',
     providers: ['google-weather', 'accuweather', 'tomorrow-io'],
-    default: 'google-weather',
+    default: 'tomorrow-io', // Tomorrow.io has better global coverage
   },
 };
+
+// Countries where Google Weather API doesn't support current conditions/forecasts
+// Based on https://developers.google.com/maps/documentation/weather/coverage
+const GOOGLE_WEATHER_UNSUPPORTED_COUNTRIES = [
+  // No support at all
+  'CN', 'China',
+  'CU', 'Cuba',
+  'IR', 'Iran',
+  'KP', 'North Korea',
+  'SY', 'Syria',
+  // Partial support (alerts only - no current/forecast)
+  'JP', 'Japan',
+  'KR', 'South Korea',
+  'VN', 'Vietnam',
+];
+
+/**
+ * Get available weather providers based on user's country
+ */
+function getAvailableWeatherProviders(countryCode?: string, countryName?: string): string[] {
+  const allProviders = SELECTABLE_PROVIDERS.weather.providers;
+
+  // Check if Google Weather is unsupported for this country
+  const isGoogleUnsupported = GOOGLE_WEATHER_UNSUPPORTED_COUNTRIES.some(
+    c => c.toUpperCase() === countryCode?.toUpperCase() ||
+         c.toLowerCase() === countryName?.toLowerCase()
+  );
+
+  if (isGoogleUnsupported) {
+    return allProviders.filter(p => p !== 'google-weather');
+  }
+
+  return allProviders;
+}
 
 type MaterialIconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 
@@ -207,6 +241,11 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
   const isComingSoon = server.status === 'coming_soon' || server.displayStatus === 'coming_soon';
   const serverInfo = SERVER_INFO[server.slug];
 
+  // Debug log for Google Weather
+  if (server.slug === 'google-weather') {
+    console.log('[ServiceCard] google-weather render:', { isActive, isSelectable, isSelected, isComingSoon });
+  }
+
   const isTomorrowIo = server.slug === 'tomorrow-io';
   const tomorrowIoLogo = isDark ? TOMORROW_IO_LOGO_DARK : TOMORROW_IO_LOGO_LIGHT;
 
@@ -224,13 +263,23 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
 
   const isInUse = isSelected && isActive;
 
+  // For selectable providers, tapping the row should select it
+  const handleRowPress = () => {
+    console.log('[ServiceCard] Row tapped:', server.slug, { isSelectable, isActive, isSelected });
+    if (isSelectable && isActive && !isSelected) {
+      onSelect();
+    } else {
+      onPress();
+    }
+  };
+
   return (
     <Card style={[styles.serviceCard, !isActive && styles.serviceCardInactive]}>
       <ListRow
         title={info.name}
         subtitle={info.description}
         subtitleNumberOfLines={0} // Allow as many lines as needed
-        onPress={onPress}
+        onPress={handleRowPress}
         left={
           info.logo ? (
             <View style={[
@@ -298,19 +347,48 @@ interface CategorySectionProps {
   onServerPress: (slug: string) => void;
   preferences: ServicePreferences;
   onSelectProvider: (category: string, slug: string) => void;
+  countryCode?: string;
+  countryName?: string;
 }
 
-function CategorySection({ category, servers, theme, isDark, onServerPress, preferences, onSelectProvider }: CategorySectionProps) {
+function CategorySection({ category, servers, theme, isDark, onServerPress, preferences, onSelectProvider, countryCode, countryName }: CategorySectionProps) {
   const config = SERVICE_CATEGORIES[category];
   if (!config || servers.length === 0) return null;
 
-  const activeCount = servers.filter(isServerActive).length;
+  // For weather category, filter out unsupported providers based on country
+  let availableProviders: string[] | undefined;
+  let filteredServers = servers;
+  if (category === 'weather') {
+    availableProviders = getAvailableWeatherProviders(countryCode, countryName);
+    filteredServers = servers.filter(s => availableProviders!.includes(s.slug));
+  }
+
+  const activeCount = filteredServers.filter(isServerActive).length;
   const selectableConfig = SELECTABLE_PROVIDERS[category];
 
+  // Use filtered providers for weather category
+  const providersToCheck = category === 'weather' && availableProviders
+    ? availableProviders
+    : selectableConfig?.providers || [];
+
   const activeSelectableProviders = selectableConfig
-    ? servers.filter(s => selectableConfig.providers.includes(s.slug) && isServerActive(s))
+    ? filteredServers.filter(s => providersToCheck.includes(s.slug) && isServerActive(s))
     : [];
   const hasSelectableProviders = activeSelectableProviders.length > 1;
+
+  // Debug logging for weather category
+  if (category === 'weather') {
+    console.log('[CategorySection] weather servers:', servers.map(s => ({
+      slug: s.slug,
+      isActive: isServerActive(s),
+      status: s.status,
+      isActiveForRegion: s.isActiveForRegion,
+      displayStatus: s.displayStatus,
+      healthStatus: s.healthStatus,
+    })));
+    console.log('[CategorySection] activeSelectableProviders:', activeSelectableProviders.map(s => s.slug));
+    console.log('[CategorySection] hasSelectableProviders:', hasSelectableProviders);
+  }
 
   return (
     <View style={styles.categorySection}>
@@ -320,7 +398,7 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
         </View>
         <Text style={[styles.categoryLabel, { color: theme.text }]}>{t(config.labelKey)}</Text>
         <Text style={[styles.categoryCount, { color: theme.textMuted }]}>
-          {t('mcp.activeCount', { active: activeCount, total: servers.length })}
+          {t('mcp.activeCount', { active: activeCount, total: filteredServers.length })}
         </Text>
       </View>
 
@@ -330,8 +408,8 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
         </Text>
       )}
 
-      {servers.map((server) => {
-        const isSelectable = hasSelectableProviders && selectableConfig.providers.includes(server.slug);
+      {filteredServers.map((server) => {
+        const isSelectable = hasSelectableProviders && providersToCheck.includes(server.slug);
         const isSelected = isSelectable && preferences[category] === server.slug;
 
         return (
@@ -400,6 +478,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
   };
 
   const handleSelectProvider = useCallback(async (category: string, providerSlug: string) => {
+    console.log('[Prefs] SELECT:', category, '=', providerSlug);
     const newPreferences = { ...preferences, [category]: providerSlug };
     setPreferences(newPreferences);
 
@@ -556,6 +635,8 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
               onServerPress={handleServerPress}
               preferences={preferences}
               onSelectProvider={handleSelectProvider}
+              countryCode={locationDetails?.level1CountryCode}
+              countryName={locationDetails?.level1Country || locationDetails?.country}
             />
           ))}
 
