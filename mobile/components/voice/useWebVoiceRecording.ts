@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Platform } from 'react-native';
 import { t } from '../../constants/strings';
 import { error as logError, log } from '../../utils/logger';
@@ -32,7 +32,6 @@ async function blobToBase64(blob: Blob): Promise<string> {
 
 export function useWebVoiceRecording({
   languageCode,
-  languageName,
   onTranscriptionComplete,
   onCancel,
   transcribeAudio,
@@ -49,11 +48,38 @@ export function useWebVoiceRecording({
   const audioChunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const durationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const slideAnimRef = useRef<Animated.Value | null>(null);
+  const isRecordingRef = useRef(false);
+  const hasStartedRef = useRef(false);
+
+  // Audio analysis function - uses ref to check recording state
+  const analyzeAudio = useCallback(() => {
+    if (!analyserRef.current || !isRecordingRef.current) return;
+
+    const analyser = analyserRef.current;
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(dataArray);
+
+    // Calculate average volume
+    const average = dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length;
+    const normalizedLevel = Math.min(1, average / 128);
+
+    setAudioLevel(normalizedLevel);
+    setIsSpeaking(normalizedLevel > 0.1);
+
+    // Continue analyzing while recording
+    if (isRecordingRef.current) {
+      animationFrameRef.current = requestAnimationFrame(analyzeAudio);
+    }
+  }, []);
 
   const cleanup = useCallback(() => {
+    log('[WebVoice] Cleanup called');
+    isRecordingRef.current = false;
+
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
@@ -73,6 +99,14 @@ export function useWebVoiceRecording({
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
+    if (audioContextRef.current) {
+      try {
+        audioContextRef.current.close();
+      } catch (e) {
+        // Ignore
+      }
+      audioContextRef.current = null;
+    }
     mediaRecorderRef.current = null;
     analyserRef.current = null;
     audioChunksRef.current = [];
@@ -82,41 +116,41 @@ export function useWebVoiceRecording({
     setIsSpeaking(false);
   }, []);
 
-  const analyzeAudio = useCallback(() => {
-    if (!analyserRef.current) return;
-
-    const analyser = analyserRef.current;
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(dataArray);
-
-    // Calculate average volume
-    const average = dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length;
-    const normalizedLevel = Math.min(1, average / 128);
-
-    setAudioLevel(normalizedLevel);
-    setIsSpeaking(normalizedLevel > 0.1);
-
-    if (isRecording) {
-      animationFrameRef.current = requestAnimationFrame(analyzeAudio);
-    }
-  }, [isRecording]);
-
   const startRecordingSession = useCallback(async (): Promise<void> => {
-    if (Platform.OS !== 'web') return;
+    if (Platform.OS !== 'web') {
+      log('[WebVoice] Not on web, skipping');
+      return;
+    }
+
+    // Prevent multiple starts
+    if (hasStartedRef.current) {
+      log('[WebVoice] Already started, skipping');
+      return;
+    }
+    hasStartedRef.current = true;
+
+    log('[WebVoice] Starting recording session...');
 
     try {
+      // Check if mediaDevices is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('MediaDevices API not available');
+      }
+
+      log('[WebVoice] Requesting microphone permission...');
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          sampleRate: 16000,
         },
       });
 
+      log('[WebVoice] Got media stream');
       streamRef.current = stream;
 
       // Set up audio analysis
       const audioContext = new AudioContext();
+      audioContextRef.current = audioContext;
       const source = audioContext.createMediaStreamSource(stream);
       const analyser = audioContext.createAnalyser();
       analyser.fftSize = 256;
@@ -124,10 +158,14 @@ export function useWebVoiceRecording({
       analyserRef.current = analyser;
 
       // Set up MediaRecorder
-      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-        ? 'audio/webm;codecs=opus'
-        : 'audio/webm';
+      let mimeType = 'audio/webm';
+      if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported) {
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+          mimeType = 'audio/webm;codecs=opus';
+        }
+      }
 
+      log('[WebVoice] Creating MediaRecorder with mimeType:', mimeType);
       const mediaRecorder = new MediaRecorder(stream, { mimeType });
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
@@ -138,8 +176,16 @@ export function useWebVoiceRecording({
         }
       };
 
+      mediaRecorder.onerror = (event) => {
+        logError('[WebVoice] MediaRecorder error:', event);
+      };
+
+      // Start recording
       mediaRecorder.start(100); // Collect data every 100ms
+      isRecordingRef.current = true;
       setIsRecording(true);
+
+      log('[WebVoice] Recording started');
 
       // Start duration timer
       durationIntervalRef.current = setInterval(() => {
@@ -149,15 +195,16 @@ export function useWebVoiceRecording({
       // Start audio analysis
       analyzeAudio();
 
-      log('Web voice recording started');
     } catch (error) {
-      logError('Web recording start error:', error);
+      logError('[WebVoice] Recording start error:', error);
+      hasStartedRef.current = false;
       showError(t('voice.microphonePermission'));
       onCancel();
     }
   }, [analyzeAudio, onCancel, showError]);
 
   const handleCancel = useCallback(async (): Promise<void> => {
+    log('[WebVoice] Cancel pressed');
     const anim = slideAnimRef.current;
     if (anim) {
       Animated.timing(anim, {
@@ -175,12 +222,25 @@ export function useWebVoiceRecording({
   }, [cleanup, onCancel]);
 
   const handleDone = useCallback(async (): Promise<void> => {
-    if (!isRecording || isTranscribing) return;
+    log('[WebVoice] Done pressed, isRecording:', isRecordingRef.current);
+    if (!isRecordingRef.current || isTranscribing) return;
 
     setIsTranscribing(true);
+    isRecordingRef.current = false;
+
+    // Stop animation frame
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    // Stop duration timer
+    if (durationIntervalRef.current) {
+      clearInterval(durationIntervalRef.current);
+      durationIntervalRef.current = null;
+    }
 
     try {
-      // Stop recording and get audio data
       const mediaRecorder = mediaRecorderRef.current;
       if (!mediaRecorder) {
         throw new Error('No media recorder');
@@ -189,7 +249,11 @@ export function useWebVoiceRecording({
       // Wait for final data
       await new Promise<void>((resolve) => {
         mediaRecorder.onstop = () => resolve();
-        mediaRecorder.stop();
+        if (mediaRecorder.state !== 'inactive') {
+          mediaRecorder.stop();
+        } else {
+          resolve();
+        }
       });
 
       // Stop tracks
@@ -199,19 +263,21 @@ export function useWebVoiceRecording({
 
       // Create blob from chunks
       const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-      const base64 = await blobToBase64(audioBlob);
+      log('[WebVoice] Created audio blob, size:', audioBlob.size);
 
-      // Create a blob URL for the audio
+      const base64 = await blobToBase64(audioBlob);
       const uri = URL.createObjectURL(audioBlob);
 
       // Use live transcript if available, otherwise call API
       if (liveTranscript && liveTranscript.trim()) {
+        log('[WebVoice] Using live transcript');
         onTranscriptionComplete(liveTranscript.trim(), { uri, base64, duration: recordingDuration });
         cleanup();
         return;
       }
 
       // Call transcription API
+      log('[WebVoice] Calling transcription API...');
       const result = await transcribeAudio({
         uri,
         base64,
@@ -220,20 +286,21 @@ export function useWebVoiceRecording({
       });
 
       if (result.success && result.transcription) {
+        log('[WebVoice] Transcription successful:', result.transcription);
         onTranscriptionComplete(result.transcription, { uri, base64, duration: recordingDuration });
       } else {
+        log('[WebVoice] Transcription failed:', result.error);
         showError(result.error || t('voice.transcriptionFailed'));
         onCancel();
       }
     } catch (error) {
-      logError('Web transcription error:', error);
+      logError('[WebVoice] Transcription error:', error);
       showError(t('voice.transcriptionFailed'));
       onCancel();
     } finally {
       cleanup();
     }
   }, [
-    isRecording,
     isTranscribing,
     recordingDuration,
     languageCode,
