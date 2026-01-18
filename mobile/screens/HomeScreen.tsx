@@ -53,6 +53,17 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Countries where Google Weather doesn't support current conditions/forecasts
+  const GOOGLE_WEATHER_UNSUPPORTED = ['CN', 'China', 'CU', 'Cuba', 'IR', 'Iran', 'KP', 'North Korea', 'SY', 'Syria', 'JP', 'Japan', 'KR', 'South Korea', 'VN', 'Vietnam'];
+
+  const isGoogleWeatherSupported = useCallback(() => {
+    const countryCode = locationDetails?.level1CountryCode;
+    const countryName = locationDetails?.level1Country || locationDetails?.country;
+    return !GOOGLE_WEATHER_UNSUPPORTED.some(
+      c => c.toUpperCase() === countryCode?.toUpperCase() || c.toLowerCase() === countryName?.toLowerCase()
+    );
+  }, [locationDetails]);
+
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
@@ -68,6 +79,12 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         }
       } catch (e) {
         log('[HomeScreen] Failed to load weather pref:', e);
+      }
+
+      // Override Google Weather if not supported in user's country
+      if (weatherPref === 'google-weather' && !isGoogleWeatherSupported()) {
+        log('[HomeScreen] Google Weather not supported in this country, switching to tomorrow-io');
+        weatherPref = 'tomorrow-io';
       }
 
       log('[HomeScreen] Loading weather with:', {
@@ -118,7 +135,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     } finally {
       setLoading(false);
     }
-  }, [location, language]);
+  }, [location, language, isGoogleWeatherSupported]);
 
   useEffect(() => {
     loadData();
