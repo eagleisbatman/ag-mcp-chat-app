@@ -70,15 +70,15 @@ const SELECTABLE_PROVIDERS: { [key: string]: SelectableProviderConfig } = {
 // Based on https://developers.google.com/maps/documentation/weather/coverage
 const GOOGLE_WEATHER_UNSUPPORTED_COUNTRIES = [
   // No support at all
-  'CN', 'China',
+  'CN', 'China', '中国',
   'CU', 'Cuba',
-  'IR', 'Iran',
-  'KP', 'North Korea',
-  'SY', 'Syria',
+  'IR', 'Iran', 'ایران',
+  'KP', 'North Korea', '조선', '朝鲜',
+  'SY', 'Syria', 'سوريا',
   // Partial support (alerts only - no current/forecast)
-  'JP', 'Japan',
-  'KR', 'South Korea',
-  'VN', 'Vietnam',
+  'JP', 'Japan', '日本',
+  'KR', 'South Korea', '대한민국', '한국',
+  'VN', 'Vietnam', 'Việt Nam', 'Viet Nam',
 ];
 
 /**
@@ -378,6 +378,9 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
 
   // Debug logging for weather category
   if (category === 'weather') {
+    console.log('[CategorySection] COUNTRY DEBUG:', { countryCode, countryName });
+    console.log('[CategorySection] availableProviders:', availableProviders);
+    console.log('[CategorySection] filteredServers:', filteredServers.map(s => s.slug));
     console.log('[CategorySection] weather servers:', servers.map(s => ({
       slug: s.slug,
       isActive: isServerActive(s),

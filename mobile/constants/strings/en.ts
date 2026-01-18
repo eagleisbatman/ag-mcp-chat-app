@@ -462,6 +462,8 @@ export const en = {
     alert: 'Weather Alert',
     alertDismiss: 'Dismiss',
     loading: 'Loading weather...',
+    loadFailed: 'Weather data unavailable',
+    pullToRefresh: 'Pull down to refresh',
     today: 'Today',
     windUnit: 'km/h',
     dataFrom: 'Data from',

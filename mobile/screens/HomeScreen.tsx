@@ -54,7 +54,16 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const [loading, setLoading] = useState(true);
 
   // Countries where Google Weather doesn't support current conditions/forecasts
-  const GOOGLE_WEATHER_UNSUPPORTED = ['CN', 'China', 'CU', 'Cuba', 'IR', 'Iran', 'KP', 'North Korea', 'SY', 'Syria', 'JP', 'Japan', 'KR', 'South Korea', 'VN', 'Vietnam'];
+  const GOOGLE_WEATHER_UNSUPPORTED = [
+    'CN', 'China', '中国',
+    'CU', 'Cuba',
+    'IR', 'Iran', 'ایران',
+    'KP', 'North Korea', '조선', '朝鲜',
+    'SY', 'Syria', 'سوريا',
+    'JP', 'Japan', '日本',
+    'KR', 'South Korea', '대한민국', '한국',
+    'VN', 'Vietnam', 'Việt Nam', 'Viet Nam',
+  ];
 
   const isGoogleWeatherSupported = useCallback(() => {
     const countryCode = locationDetails?.level1CountryCode;
