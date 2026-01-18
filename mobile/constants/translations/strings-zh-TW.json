@@ -80,7 +80,8 @@
     "tapToAskNext": "輕觸以詢問下一個：",
     "analysisComplete": "分析完成",
     "lowAccuracy": "準確度低",
-    "tapToImprove": "輕觸以改善"
+    "tapToImprove": "輕觸以改善",
+    "servicesWarmingUp": "服務啟動中，正在重試..."
   },
   "media": {
     "photoLibraryPermission": "選圖需相簿權限，請至設定啟用。",
@@ -112,7 +113,11 @@
     "languageMismatch": "請用{expected}說話。您的語音被偵測為{detected}。",
     "noSpeechDetected": "未偵測到語音。請清楚說話並再試一次。",
     "audioTooShort": "錄音太短。請至少說話1秒。",
-    "audioQualityPoor": "音訊品質太差。請在更安靜的環境再試。"
+    "audioQualityPoor": "音訊品質太差。請在更安靜的環境再試。",
+    "liveTranscription": "即時語音轉文字",
+    "connecting": "連接中...",
+    "reconnecting": "重新連接中...",
+    "connectionError": "連接錯誤"
   },
   "history": {
     "title": "對話",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "農業諮詢服務",
         "description": "提供作物和牲畜管理的綜合農業諮詢服務。"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "植物病害診斷，支援21種語言",
+        "description": "使用Plantix AI，透過照片辨識植物病害。"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "全球天氣，提供長期預報及歷史數據",
+        "description": "來自Google的全面天氣數據，提供10天預報、240小時逐時預報，以及過去24小時天氣歷史。"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "作物建議",
       "bestPractices": "最佳作法",
       "seasonalTips": "季節提示",
-      "localKnowledge": "在地知識"
+      "localKnowledge": "在地知識",
+      "cropIdentification": "作物辨識",
+      "hourlyForecast": "逐時預報"
     },
     "fallback": {
       "service": "農業服務",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "為您推薦",
+    "seeAll": "查看全部",
+    "readMore": "閱讀更多",
+    "listen": "收聽",
+    "watch": "觀看",
+    "minutesRead": "{minutes}分鐘閱讀",
+    "related": "相關內容",
+    "share": "分享",
+    "like": "喜歡",
+    "noContent": "沒有內容",
+    "loadError": "無法載入內容",
+    "notFound": "找不到內容"
+  },
+  "home": {
+    "quickActions": "快速操作",
+    "askQuestion": "提問",
+    "takePhoto": "診斷植物",
+    "viewHistory": "聊天紀錄",
+    "refresh": "下拉更新"
+  },
+  "notifications": {
+    "title": "通知",
+    "settings": "通知設定",
+    "weatherAlerts": "天氣警報",
+    "contentUpdates": "內容更新",
+    "engagement": "提示與提醒",
+    "enable": "啟用通知",
+    "disabled": "通知已停用"
   }
 }

@@ -80,7 +80,8 @@
     "tapToAskNext": "ପରବର୍ତ୍ତୀ ପ୍ରଶ୍ନ ପାଇଁ ଟାପ୍ କରନ୍ତୁ:",
     "analysisComplete": "ବିଶ୍ଳେଷଣ ସମ୍ପୂର୍ଣ୍ଣ",
     "lowAccuracy": "କମ୍ ସଠିକତା",
-    "tapToImprove": "ଉନ୍ନତ କରିବାକୁ ଟାପ୍ କରନ୍ତୁ"
+    "tapToImprove": "ଉନ୍ନତ କରିବାକୁ ଟାପ୍ କରନ୍ତୁ",
+    "servicesWarmingUp": "ସେବା ପ୍ରସ୍ତୁତ ହେଉଛି, ପୁଣି ଚେଷ୍ଟା କରାଯାଉଛି।"
   },
   "media": {
     "photoLibraryPermission": "ଛବି ବାଛିବା ପାଇଁ ଫଟୋ ଗ୍ୟାଲେରୀ ଅନୁମତି ଦରକାର। ସେଟିଂସ୍ରେ ଚାଲୁ କରନ୍ତୁ।",
@@ -112,7 +113,11 @@
     "languageMismatch": "ଦୟାକରି {expected} ଭାଷାରେ କୁହନ୍ତୁ। ଆପଣଙ୍କ କଥା {detected} ଭାଷାରେ ବୁଝାପଡିଲା।",
     "noSpeechDetected": "କୌଣସି କଥା ବୁଝାପଡିଲାନି। ଦୟାକରି ସ୍ପଷ୍ଟ ଭାବରେ କହି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
     "audioTooShort": "ରେକର୍ଡିଂ ବହୁତ ଛୋଟ। ଦୟାକରି ଅତି କମରେ ୧ ସେକେଣ୍ଡ୍ କୁହନ୍ତୁ।",
-    "audioQualityPoor": "ଅଡିଓର ଗୁଣବତ୍ତା ବହୁତ କମ୍। ଶାନ୍ତ ଜାଗାରେ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"
+    "audioQualityPoor": "ଅଡିଓର ଗୁଣବତ୍ତା ବହୁତ କମ୍। ଶାନ୍ତ ଜାଗାରେ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
+    "liveTranscription": "ସିଧାସଳଖ ଲେଖା",
+    "connecting": "ସଂଯୋଗ ହେଉଛି...",
+    "reconnecting": "ପୁଣି ସଂଯୋଗ ହେଉଛି...",
+    "connectionError": "ସଂଯୋଗ ତ୍ରୁଟି"
   },
   "history": {
     "title": "କଥାବାର୍ତ୍ତା",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "କୃଷି ପରାମର୍ଶ ସେବା",
         "description": "ଫସଲ ଏବଂ ପଶୁଧନ ପରିଚାଳନା ପାଇଁ ସାଧାରଣ କୃଷି ପରାମର୍ଶ ସେବା।"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "ଫସଲ ରୋଗ ଚିହ୍ନଟ, ୨୧ଟି ଭାଷାରେ ଉପଲବ୍ଧ।",
+        "description": "Plantix AI ବ୍ୟବହାର କରି ଫଟୋରୁ ଫସଲ ରୋଗ ଚିହ୍ନଟ କରନ୍ତୁ।"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "ବିଶ୍ୱ ପାଣିପାଗ, ବିସ୍ତୃତ ପୂର୍ବାନୁମାନ ଓ ପୂର୍ବ ତଥ୍ୟ ସହିତ।",
+        "description": "ଗୁଗୁଲ୍ ରୁ ସମ୍ପୂର୍ଣ୍ଣ ପାଣିପାଗ ତଥ୍ୟ, ୧୦ ଦିନର ପୂର୍ବାନୁମାନ, ୨୪୦ ଘଣ୍ଟାର ଘଣ୍ଟା ପ୍ରତି ପୂର୍ବାନୁମାନ ଏବଂ ଗତ ୨୪ ଘଣ୍ଟାର ପାଣିପାଗ ତଥ୍ୟ ସହିତ।"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "ଫସଲ ପରାମର୍ଶ",
       "bestPractices": "ଉତ୍ତମ ପ୍ରଥା",
       "seasonalTips": "ଋତୁକାଳୀନ ଟିପ୍ସ",
-      "localKnowledge": "ସ୍ଥାନୀୟ ଜ୍ଞାନ"
+      "localKnowledge": "ସ୍ଥାନୀୟ ଜ୍ଞାନ",
+      "cropIdentification": "ଫସଲ ଚିହ୍ନଟ",
+      "hourlyForecast": "ଘଣ୍ଟା ପ୍ରତି ପୂର୍ବାନୁମାନ"
     },
     "fallback": {
       "service": "କୃଷି ସେବା",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "ସରକାରୀ ଯୋଜନା",
-    "eligibility": "ଯୋଜନା ଯୋଗ୍ୟତା",
-    "checkEligibility": "ଯୋଗ୍ୟତା ଯାଞ୍ଚ କରନ୍ତୁ",
-    "screeningQuestions": "ସ୍କ୍ରିନିଂ ପ୍ରଶ୍ନ",
-    "answerQuestions": "ଆପଣଙ୍କ ଯୋଗ୍ୟତା ଯାଞ୍ଚ କରିବାକୁ ପ୍ରଶ୍ନଗୁଡ଼ିକର ଉତ୍ତର ଦିଅନ୍ତୁ",
-    "eligibleSchemes": "ଯୋଗ୍ୟ ଯୋଜନା",
-    "noSchemesFound": "ଆପଣଙ୍କ ପ୍ରୋଫାଇଲ୍ ସହିତ ମେଳ ଖାଉଥିବା କୌଣସି ଯୋଜନା ମିଳିଲା ନାହିଁ",
-    "journeyUrl": "ଆବେଦନ ଲିଙ୍କ୍",
-    "startApplication": "ଆବେଦନ ଆରମ୍ଭ କରନ୍ତୁ",
-    "schemeName": "ଯୋଜନା ନାମ",
-    "schemeDescription": "ବର୍ଣ୍ଣନା",
-    "benefits": "ଲାଭ",
-    "eligibilityCriteria": "ଯୋଗ୍ୟତା ମାନଦଣ୍ଡ",
-    "requiredDocuments": "ଆବଶ୍ୟକୀୟ ଡକ୍ୟୁମେଣ୍ଟ",
-    "nextSteps": "ପରବର୍ତ୍ତୀ ପଦକ୍ଷେପ",
-    "totalSchemes": "ମୋଟ ଯୋଜନା",
-    "provider": "ପ୍ରଦାନକାରୀ",
-    "haqdarshak": "ହକଦର୍ଶକ",
-    "knowYourSchemes": "ଆପଣଙ୍କ ଯୋଜନା ବିଷୟରେ ଜାଣନ୍ତୁ",
-    "indiaOnly": "କେବଳ ଭାରତରେ ଉପଲବ୍ଧ",
-    "questions": {
-      "gender": "ଲିଙ୍ଗ",
-      "age": "ବୟସ",
-      "maritalStatus": "ବୈବାହିକ ସ୍ଥିତି",
-      "monthlyIncome": "ମାସିକ ଘରୋଇ ଆୟ",
-      "landOwnership": "ଜମି ମାଲିକାନା",
-      "rationCardType": "ରାସନ କାର୍ଡ ପ୍ରକାର",
-      "religion": "ଧର୍ମ",
-      "casteCategory": "ଜାତି ବର୍ଗ",
-      "occupationalStatus": "ବୃତ୍ତିଗତ ସ୍ଥିତି",
-      "natureOfJob": "ଚାକିରିର ପ୍ରକୃତି",
-      "personalIncome": "ବ୍ୟକ୍ତିଗତ ମାସିକ ଆୟ"
-    },
-    "answers": {
-      "male": "ପୁରୁଷ",
-      "female": "ମହିଳା",
-      "other": "ଅନ୍ୟ",
-      "married": "ବିବାହିତ",
-      "unmarried": "ଅବିବାହିତ",
-      "widowed": "ବିଧବା",
-      "divorced": "ଛାଡପତ୍ରପ୍ରାପ୍ତ",
-      "separated": "ବିଚ୍ଛିନ୍ନ",
-      "farmer": "କୃଷକ",
-      "farmLaborer": "କୃଷି ଶ୍ରମିକ",
-      "fisherman": "ମତ୍ସ୍ୟଜୀବୀ",
-      "animalHusbandry": "ପଶୁପାଳନ",
-      "dairyFarmer": "ଡେରୀ ଚାଷୀ",
-      "poultryFarmer": "କୁକୁଡ଼ା ଚାଷୀ",
-      "landOwner": "ଜମି ମାଲିକ",
-      "landless": "ଜମିହୀନ",
-      "sharecropper": "ଭାଗଚାଷୀ"
-    },
-    "documents": {
-      "aadhaarCard": "ଆଧାର କାର୍ଡ",
-      "bankPassbook": "ବ୍ୟାଙ୍କ ପାସବୁକ୍",
-      "landRecords": "ଜମି ରେକର୍ଡ",
-      "rationCard": "ରାସନ କାର୍ଡ",
-      "casteCertificate": "ଜାତି ପ୍ରମାଣପତ୍ର",
-      "incomeCertificate": "ଆୟ ପ୍ରମାଣପତ୍ର",
-      "voterID": "ଭୋଟର ପରିଚୟ ପତ୍ର",
-      "passport": "ପାସପୋର୍ଟ ଫଟୋ"
-    },
-    "dataSource": "ହକଦର୍ଶକଙ୍କ ଠାରୁ ଯୋଜନା ତଥ୍ୟ"
+  "content": {
+    "forYou": "ଆପଣଙ୍କ ପାଇଁ",
+    "seeAll": "ସବୁ ଦେଖନ୍ତୁ",
+    "readMore": "ଅଧିକ ପଢ଼ନ୍ତୁ",
+    "listen": "ଶୁଣନ୍ତୁ",
+    "watch": "ଦେଖନ୍ତୁ",
+    "minutesRead": "{minutes} ମିନିଟ୍ ପଢ଼ିବା",
+    "related": "ସମ୍ବନ୍ଧିତ",
+    "share": "ସେୟାର କରନ୍ତୁ",
+    "like": "ଲାଇକ୍ କରନ୍ତୁ",
+    "noContent": "କୌଣସି ବିଷୟବସ୍ତୁ ଉପଲବ୍ଧ ନାହିଁ।",
+    "loadError": "ବିଷୟବସ୍ତୁ ଲୋଡ୍ କରିହେଲା ନାହିଁ।",
+    "notFound": "ବିଷୟବସ୍ତୁ ମିଳିଲା ନାହିଁ।"
+  },
+  "home": {
+    "quickActions": "ତୁରନ୍ତ କାର୍ଯ୍ୟ",
+    "askQuestion": "ପ୍ରଶ୍ନ ପଚାରନ୍ତୁ",
+    "takePhoto": "ଫସଲ ରୋଗ ଚିହ୍ନଟ କରନ୍ତୁ",
+    "viewHistory": "ଚାଟ୍ ଇତିହାସ",
+    "refresh": "ରିଫ୍ରେଶ୍ କରିବା ପାଇଁ ଟାଣନ୍ତୁ"
+  },
+  "notifications": {
+    "title": "ବିଜ୍ଞପ୍ତି",
+    "settings": "ବିଜ୍ଞପ୍ତି ସେଟିଂସ୍",
+    "weatherAlerts": "ପାଣିପାଗ ସତର୍କତା",
+    "contentUpdates": "ବିଷୟବସ୍ତୁ ଅପଡେଟ୍",
+    "engagement": "ଟିପ୍ସ ଓ ମନେ ପକାଇବା",
+    "enable": "ବିଜ୍ଞପ୍ତି ସକ୍ରିୟ କରନ୍ତୁ",
+    "disabled": "ବିଜ୍ଞପ୍ତି ବନ୍ଦ ଅଛି।"
   }
 }

@@ -80,7 +80,8 @@
     "tapToAskNext": "Thepha ukuze ubuze okulandelayo:",
     "analysisComplete": "Ukuhlaziya kuqedile",
     "lowAccuracy": "Ukunemba okuphansi",
-    "tapToImprove": "Thepha ukuze uthuthukise"
+    "tapToImprove": "Thepha ukuze uthuthukise",
+    "servicesWarmingUp": "Amasevisi ayalungiswa, kuyazanywa futhi..."
   },
   "media": {
     "photoLibraryPermission": "Kudingeka ukufinyelela izithombe ukuze ukhethe. Vula kuZilungiselelo.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Sicela ukhulume ngesi-{expected}. Izwi lakho latholwa njengesi-{detected}.",
     "noSpeechDetected": "Alikho izwi elitholakele. Sicela ukhulume ngokucacile futhi uzame futhi.",
     "audioTooShort": "Ukuqopha kufushane kakhulu. Sicela ukhulume okungenani isekhondi elilodwa.",
-    "audioQualityPoor": "Izinga lomsindo liphansi kakhulu. Zama futhi endaweni ethule kakhudlwana."
+    "audioQualityPoor": "Izinga lomsindo liphansi kakhulu. Zama futhi endaweni ethule kakhudlwana.",
+    "liveTranscription": "Ukubhala Phansi Okubukhoma",
+    "connecting": "Iyayixhuma...",
+    "reconnecting": "Iyayixhuma futhi...",
+    "connectionError": "Iphutha Lokuxhuma"
   },
   "history": {
     "title": "Izingxoxo",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "Izinsiza zokwelulekwa ngezolimo",
         "description": "Izinsiza ezijwayelekile zokwelulekwa ngezolimo zokuphatha izitshalo nemfuyo."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Ukuhlola izifo zezitshalo ngokusekelwa kwezilimi ezingama-21",
+        "description": "Thola izifo zezitshalo ngezithombe usebenzisa i-Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Isimo Sezulu Sakwa-Google",
+        "tagline": "Isimo sezulu somhlaba wonke ngezibikezelo eziningi nomlando",
+        "description": "Ulwazi lwesimo sezulu oluphelele oluvela kwa-Google olunezibikezelo zezinsuku eziyi-10, izibikezelo zehora ngalinye zamahora angu-240, nomlando wesimo sezulu wamahora angu-24 adlule."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Iseluleko Ngezitshalo",
       "bestPractices": "Izindlela Ezingcono Kakhulu",
       "seasonalTips": "Amathiphu Esizini",
-      "localKnowledge": "Ulwazi Lwasendaweni"
+      "localKnowledge": "Ulwazi Lwasendaweni",
+      "cropIdentification": "Ukuhlonza Izitshalo",
+      "hourlyForecast": "Isibikezelo Sehora Ngalinye"
     },
     "fallback": {
       "service": "Insiza Yezolimo",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Okwakho",
+    "seeAll": "Bona Konke",
+    "readMore": "Funda Okwengeziwe",
+    "listen": "Lalela",
+    "watch": "Buka",
+    "minutesRead": "Ukufundwa kwemizuzu engu-{minutes}",
+    "related": "Okuhlobene",
+    "share": "Yabelana",
+    "like": "Thanda",
+    "noContent": "Akukho okuqukethwe okutholakala",
+    "loadError": "Ayikwazanga ukulayisha okuqukethwe",
+    "notFound": "Okuqukethwe akutholakalanga"
+  },
+  "home": {
+    "quickActions": "Izenzo Ezisheshayo",
+    "askQuestion": "Buza Umbuzo",
+    "takePhoto": "Hlola Isitshalo",
+    "viewHistory": "Umlando Wezingxoxo",
+    "refresh": "Donsela phansi ukuze uvuselele"
+  },
+  "notifications": {
+    "title": "Izaziso",
+    "settings": "Izilungiselelo Zezaziso",
+    "weatherAlerts": "Izexwayiso Zesimo Sezulu",
+    "contentUpdates": "Izibuyekezo Zokuqukethwe",
+    "engagement": "Amacebiso Nezikhuphulo",
+    "enable": "Vulela Izaziso",
+    "disabled": "Izaziso zivaliwe"
   }
 }

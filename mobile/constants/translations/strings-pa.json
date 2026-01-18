@@ -80,7 +80,8 @@
     "tapToAskNext": "ਅੱਗੇ ਪੁੱਛਣ ਲਈ ਟੈਪ ਕਰੋ:",
     "analysisComplete": "ਵਿਸ਼ਲੇਸ਼ਣ ਪੂਰਾ ਹੋ ਗਿਆ",
     "lowAccuracy": "ਘੱਟ ਸ਼ੁੱਧਤਾ",
-    "tapToImprove": "ਬਿਹਤਰ ਬਣਾਉਣ ਲਈ ਟੈਪ ਕਰੋ"
+    "tapToImprove": "ਬਿਹਤਰ ਬਣਾਉਣ ਲਈ ਟੈਪ ਕਰੋ",
+    "servicesWarmingUp": "ਸੇਵਾਵਾਂ ਚਾਲੂ ਹੋ ਰਹੀਆਂ ਹਨ, ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰ ਰਹੇ ਹਾਂ..."
   },
   "media": {
     "photoLibraryPermission": "ਤਸਵੀਰਾਂ ਚੁਣਨ ਲਈ ਗੈਲਰੀ ਤੱਕ ਪਹੁੰਚ ਦੀ ਲੋੜ ਹੈ। ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਚਾਲੂ ਕਰੋ।",
@@ -112,7 +113,11 @@
     "languageMismatch": "ਕਿਰਪਾ ਕਰਕੇ {expected} ਵਿੱਚ ਬੋਲੋ। ਤੁਹਾਡੀ ਬੋਲੀ {detected} ਵਜੋਂ ਪਛਾਣੀ ਗਈ ਹੈ।",
     "noSpeechDetected": "ਕੋਈ ਗੱਲ ਨਹੀਂ ਸੁਣੀ ਗਈ। ਕਿਰਪਾ ਕਰਕੇ ਸਾਫ਼ ਬੋਲੋ ਅਤੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "audioTooShort": "ਰਿਕਾਰਡਿੰਗ ਬਹੁਤ ਛੋਟੀ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਘੱਟੋ-ਘੱਟ 1 ਸਕਿੰਟ ਲਈ ਬੋਲੋ।",
-    "audioQualityPoor": "ਆਵਾਜ਼ ਦੀ ਗੁਣਵੱਤਾ ਬਹੁਤ ਘੱਟ ਹੈ। ਸ਼ਾਂਤ ਮਾਹੌਲ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+    "audioQualityPoor": "ਆਵਾਜ਼ ਦੀ ਗੁਣਵੱਤਾ ਬਹੁਤ ਘੱਟ ਹੈ। ਸ਼ਾਂਤ ਮਾਹੌਲ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "liveTranscription": "ਲਾਈਵ ਟ੍ਰਾਂਸਕ੍ਰਿਪਸ਼ਨ",
+    "connecting": "ਜੁੜ ਰਿਹਾ ਹੈ...",
+    "reconnecting": "ਦੁਬਾਰਾ ਜੁੜ ਰਿਹਾ ਹੈ...",
+    "connectionError": "ਕੁਨੈਕਸ਼ਨ ਗਲਤੀ"
   },
   "history": {
     "title": "ਗੱਲਬਾਤ",
@@ -263,6 +268,16 @@
         "name": "ਜੀ.ਏ.ਪੀ. ਖੇਤੀਬਾੜੀ",
         "tagline": "ਖੇਤੀਬਾੜੀ ਸਲਾਹ ਸੇਵਾਵਾਂ",
         "description": "ਫ਼ਸਲ ਅਤੇ ਪਸ਼ੂ ਧਨ ਪ੍ਰਬੰਧਨ ਲਈ ਆਮ ਖੇਤੀਬਾੜੀ ਸਲਾਹ ਸੇਵਾਵਾਂ।"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "21 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਪੌਦਿਆਂ ਦੀਆਂ ਬਿਮਾਰੀਆਂ ਦੀ ਪਛਾਣ",
+        "description": "Plantix AI ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਫੋਟੋਆਂ ਤੋਂ ਪੌਦਿਆਂ ਦੀਆਂ ਬਿਮਾਰੀਆਂ ਦੀ ਪਛਾਣ ਕਰੋ।"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "ਵਿਸਤ੍ਰਿਤ ਪੂਰਵ ਅਨੁਮਾਨਾਂ ਅਤੇ ਇਤਿਹਾਸ ਦੇ ਨਾਲ ਗਲੋਬਲ ਮੌਸਮ",
+        "description": "ਗੂਗਲ ਤੋਂ 10-ਦਿਨਾਂ, 240-ਘੰਟੇ ਦੀ ਪ੍ਰਤੀ ਘੰਟਾ ਪੂਰਵ ਅਨੁਮਾਨ, ਅਤੇ ਪਿਛਲੇ 24-ਘੰਟੇ ਦੇ ਮੌਸਮ ਇਤਿਹਾਸ ਦੇ ਨਾਲ ਵਿਆਪਕ ਮੌਸਮ ਡੇਟਾ।"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "ਫ਼ਸਲ ਦੀ ਸਲਾਹ",
       "bestPractices": "ਵਧੀਆ ਅਭਿਆਸ",
       "seasonalTips": "ਮੌਸਮੀ ਸੁਝਾਅ",
-      "localKnowledge": "ਸਥਾਨਕ ਗਿਆਨ"
+      "localKnowledge": "ਸਥਾਨਕ ਗਿਆਨ",
+      "cropIdentification": "ਫ਼ਸਲ ਦੀ ਪਛਾਣ",
+      "hourlyForecast": "ਘੰਟਾਵਾਰ ਪੂਰਵ ਅਨੁਮਾਨ"
     },
     "fallback": {
       "service": "ਖੇਤੀਬਾੜੀ ਸੇਵਾ",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "ਸਰਕਾਰੀ ਸਕੀਮਾਂ",
-    "eligibility": "ਸਕੀਮ ਯੋਗਤਾ",
-    "checkEligibility": "ਯੋਗਤਾ ਜਾਂਚ ਕਰੋ",
-    "screeningQuestions": "ਸਕਰੀਨਿੰਗ ਸਵਾਲ",
-    "answerQuestions": "ਆਪਣੀ ਯੋਗਤਾ ਦੀ ਜਾਂਚ ਕਰਨ ਲਈ ਸਵਾਲਾਂ ਦੇ ਜਵਾਬ ਦਿਓ",
-    "eligibleSchemes": "ਯੋਗ ਸਕੀਮਾਂ",
-    "noSchemesFound": "ਤੁਹਾਡੇ ਪ੍ਰੋਫਾਈਲ ਨਾਲ ਮੇਲ ਖਾਂਦੀ ਕੋਈ ਸਕੀਮ ਨਹੀਂ ਮਿਲੀ",
-    "journeyUrl": "ਐਪਲੀਕੇਸ਼ਨ ਲਿੰਕ",
-    "startApplication": "ਐਪਲੀਕੇਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ",
-    "schemeName": "ਸਕੀਮ ਦਾ ਨਾਮ",
-    "schemeDescription": "ਵੇਰਵਾ",
-    "benefits": "ਲਾਭ",
-    "eligibilityCriteria": "ਯੋਗਤਾ ਮਾਪਦੰਡ",
-    "requiredDocuments": "ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼",
-    "nextSteps": "ਅਗਲੇ ਕਦਮ",
-    "totalSchemes": "ਕੁੱਲ ਸਕੀਮਾਂ",
-    "provider": "ਪ੍ਰਦਾਤਾ",
-    "haqdarshak": "ਹੱਕਦਾਰਸ਼ਕ",
-    "knowYourSchemes": "ਆਪਣੀਆਂ ਸਕੀਮਾਂ ਜਾਣੋ",
-    "indiaOnly": "ਸਿਰਫ਼ ਭਾਰਤ ਵਿੱਚ ਉਪਲਬਧ",
-    "questions": {
-      "gender": "ਲਿੰਗ",
-      "age": "ਉਮਰ",
-      "maritalStatus": "ਵਿਆਹੁਤਾ ਸਥਿਤੀ",
-      "monthlyIncome": "ਮਹੀਨਾਵਾਰ ਘਰੇਲੂ ਆਮਦਨ",
-      "landOwnership": "ਜ਼ਮੀਨ ਦੀ ਮਾਲਕੀ",
-      "rationCardType": "ਰਾਸ਼ਨ ਕਾਰਡ ਦੀ ਕਿਸਮ",
-      "religion": "ਧਰਮ",
-      "casteCategory": "ਜਾਤੀ ਸ਼੍ਰੇਣੀ",
-      "occupationalStatus": "ਵਪਾਰਕ ਸਥਿਤੀ",
-      "natureOfJob": "ਨੌਕਰੀ ਦੀ ਕਿਸਮ",
-      "personalIncome": "ਨਿੱਜੀ ਮਹੀਨਾਵਾਰ ਆਮਦਨ"
-    },
-    "answers": {
-      "male": "ਮਰਦ",
-      "female": "ਔਰਤ",
-      "other": "ਹੋਰ",
-      "married": "ਵਿਆਹਿਆ",
-      "unmarried": "ਗੈਰ-ਵਿਆਹਿਆ",
-      "widowed": "ਵਿਧਵਾ",
-      "divorced": "ਤਲਾਕਸ਼ੁਦਾ",
-      "separated": "ਵੱਖ ਹੋਏ",
-      "farmer": "ਕਿਸਾਨ",
-      "farmLaborer": "ਖੇਤ ਮਜ਼ਦੂਰ",
-      "fisherman": "ਮਛੇਰਾ",
-      "animalHusbandry": "ਪਸ਼ੂ ਪਾਲਣ",
-      "dairyFarmer": "ਡੇਅਰੀ ਕਿਸਾਨ",
-      "poultryFarmer": "ਪੋਲਟਰੀ ਕਿਸਾਨ",
-      "landOwner": "ਜ਼ਮੀਨ ਦਾ ਮਾਲਕ",
-      "landless": "ਭੂਮੀਹੀਣ",
-      "sharecropper": "ਵੰਡਾਈ ਤੇ ਖੇਤੀ ਕਰਨ ਵਾਲਾ"
-    },
-    "documents": {
-      "aadhaarCard": "ਆਧਾਰ ਕਾਰਡ",
-      "bankPassbook": "ਬੈਂਕ ਪਾਸਬੁੱਕ",
-      "landRecords": "ਜ਼ਮੀਨੀ ਰਿਕਾਰਡ",
-      "rationCard": "ਰਾਸ਼ਨ ਕਾਰਡ",
-      "casteCertificate": "ਜਾਤੀ ਸਰਟੀਫਿਕੇਟ",
-      "incomeCertificate": "ਆਮਦਨ ਸਰਟੀਫਿਕੇਟ",
-      "voterID": "ਵੋਟਰ ਆਈਡੀ",
-      "passport": "ਪਾਸਪੋਰਟ ਫੋਟੋ"
-    },
-    "dataSource": "ਹੱਕਦਾਰਸ਼ਕ ਤੋਂ ਸਕੀਮ ਡਾਟਾ"
+  "content": {
+    "forYou": "ਤੁਹਾਡੇ ਲਈ",
+    "seeAll": "ਸਾਰੇ ਦੇਖੋ",
+    "readMore": "ਹੋਰ ਪੜ੍ਹੋ",
+    "listen": "ਸੁਣੋ",
+    "watch": "ਦੇਖੋ",
+    "minutesRead": "{minutes} ਮਿੰਟ ਪੜ੍ਹੋ",
+    "related": "ਸੰਬੰਧਿਤ",
+    "share": "ਸਾਂਝਾ ਕਰੋ",
+    "like": "ਪਸੰਦ ਕਰੋ",
+    "noContent": "ਕੋਈ ਸਮੱਗਰੀ ਉਪਲਬਧ ਨਹੀਂ",
+    "loadError": "ਸਮੱਗਰੀ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ",
+    "notFound": "ਸਮੱਗਰੀ ਨਹੀਂ ਮਿਲੀ"
+  },
+  "home": {
+    "quickActions": "ਤੁਰੰਤ ਕਾਰਵਾਈਆਂ",
+    "askQuestion": "ਸਵਾਲ ਪੁੱਛੋ",
+    "takePhoto": "ਪੌਦੇ ਦਾ ਨਿਦਾਨ ਕਰੋ",
+    "viewHistory": "ਚੈਟ ਇਤਿਹਾਸ",
+    "refresh": "ਰਿਫਰੈਸ਼ ਕਰਨ ਲਈ ਹੇਠਾਂ ਖਿੱਚੋ"
+  },
+  "notifications": {
+    "title": "ਸੂਚਨਾਵਾਂ",
+    "settings": "ਸੂਚਨਾ ਸੈਟਿੰਗਾਂ",
+    "weatherAlerts": "ਮੌਸਮ ਦੀਆਂ ਚਿਤਾਵਨੀਆਂ",
+    "contentUpdates": "ਸਮੱਗਰੀ ਅੱਪਡੇਟ",
+    "engagement": "ਸੁਝਾਅ ਅਤੇ ਯਾਦ ਦਿਵਾਉਣ ਵਾਲੇ",
+    "enable": "ਸੂਚਨਾਵਾਂ ਚਾਲੂ ਕਰੋ",
+    "disabled": "ਸੂਚਨਾਵਾਂ ਬੰਦ ਹਨ"
   }
 }

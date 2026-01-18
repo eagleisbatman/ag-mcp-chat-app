@@ -80,7 +80,8 @@
     "tapToAskNext": "แตะเพื่อถามข้อต่อไป:",
     "analysisComplete": "วิเคราะห์เสร็จสมบูรณ์",
     "lowAccuracy": "ความแม่นยำต่ำ",
-    "tapToImprove": "แตะเพื่อปรับปรุง"
+    "tapToImprove": "แตะเพื่อปรับปรุง",
+    "servicesWarmingUp": "กำลังเตรียมระบบ, ลองใหม่..."
   },
   "media": {
     "photoLibraryPermission": "ต้องอนุญาตให้เข้าถึงคลังรูปภาพเพื่อเลือกรูป เปิดในการตั้งค่า",
@@ -112,7 +113,11 @@
     "languageMismatch": "กรุณาพูดภาษา {expected} ระบบตรวจพบว่าคุณพูดภาษา {detected}",
     "noSpeechDetected": "ไม่พบเสียงพูด กรุณาพูดให้ชัดเจนแล้วลองใหม่",
     "audioTooShort": "อัดเสียงสั้นไป กรุณาพูดอย่างน้อย 1 วินาที",
-    "audioQualityPoor": "คุณภาพเสียงไม่ดี ลองใหม่ในที่ที่เงียบกว่า"
+    "audioQualityPoor": "คุณภาพเสียงไม่ดี ลองใหม่ในที่ที่เงียบกว่า",
+    "liveTranscription": "ถอดเสียงสด",
+    "connecting": "กำลังเชื่อมต่อ...",
+    "reconnecting": "กำลังเชื่อมต่อใหม่...",
+    "connectionError": "ข้อผิดพลาดการเชื่อมต่อ"
   },
   "history": {
     "title": "บทสนทนา",
@@ -263,6 +268,16 @@
         "name": "GAP เกษตรกรรม",
         "tagline": "บริการที่ปรึกษาด้านการเกษตร",
         "description": "บริการที่ปรึกษาด้านการเกษตรทั่วไป สำหรับการจัดการพืชผลและปศุสัตว์"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "วินิจฉัยโรคพืช รองรับ 21 ภาษา",
+        "description": "วินิจฉัยโรคพืชจากภาพถ่ายด้วย AI ของ Plantix"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "สภาพอากาศทั่วโลก พร้อมพยากรณ์และประวัติย้อนหลัง",
+        "description": "ข้อมูลสภาพอากาศครบถ้วนจาก Google พยากรณ์ 10 วัน, พยากรณ์รายชั่วโมง 240 ชั่วโมง และประวัติสภาพอากาศ 24 ชั่วโมงที่ผ่านมา"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "คำแนะนำพืช",
       "bestPractices": "แนวทางปฏิบัติที่ดีที่สุด",
       "seasonalTips": "เคล็ดลับประจำฤดู",
-      "localKnowledge": "ความรู้ท้องถิ่น"
+      "localKnowledge": "ความรู้ท้องถิ่น",
+      "cropIdentification": "ระบุพืชผล",
+      "hourlyForecast": "พยากรณ์รายชั่วโมง"
     },
     "fallback": {
       "service": "บริการด้านการเกษตร",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "สำหรับคุณ",
+    "seeAll": "ดูทั้งหมด",
+    "readMore": "อ่านต่อ",
+    "listen": "ฟัง",
+    "watch": "ดู",
+    "minutesRead": "อ่าน {minutes} นาที",
+    "related": "ที่เกี่ยวข้อง",
+    "share": "แชร์",
+    "like": "ถูกใจ",
+    "noContent": "ไม่มีเนื้อหา",
+    "loadError": "ไม่สามารถโหลดเนื้อหาได้",
+    "notFound": "ไม่พบเนื้อหา"
+  },
+  "home": {
+    "quickActions": "เมนูด่วน",
+    "askQuestion": "ถามคำถาม",
+    "takePhoto": "ถ่ายรูปวินิจฉัยพืช",
+    "viewHistory": "ประวัติแชท",
+    "refresh": "ดึงเพื่อรีเฟรช"
+  },
+  "notifications": {
+    "title": "การแจ้งเตือน",
+    "settings": "ตั้งค่าการแจ้งเตือน",
+    "weatherAlerts": "แจ้งเตือนสภาพอากาศ",
+    "contentUpdates": "อัปเดตเนื้อหา",
+    "engagement": "เคล็ดลับและเตือนความจำ",
+    "enable": "เปิดการแจ้งเตือน",
+    "disabled": "การแจ้งเตือนถูกปิด"
   }
 }

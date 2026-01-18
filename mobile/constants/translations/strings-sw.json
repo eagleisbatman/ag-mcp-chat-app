@@ -80,7 +80,8 @@
     "tapToAskNext": "Gusa kuuliza lingine:",
     "analysisComplete": "Uchanganuzi umekamilika",
     "lowAccuracy": "Usahihi Mdogo",
-    "tapToImprove": "Gusa kuboresha"
+    "tapToImprove": "Gusa kuboresha",
+    "servicesWarmingUp": "Huduma zinajiandaa, inajaribu tena..."
   },
   "media": {
     "photoLibraryPermission": "Ufikiaji wa picha unahitajika kuchagua picha. Washa kwenye Mipangilio.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Tafadhali zungumza kwa {expected}. Sauti yako ilitambuliwa kama {detected}.",
     "noSpeechDetected": "Hakuna sauti iliyopatikana. Tafadhali zungumza wazi na jaribu tena.",
     "audioTooShort": "Sauti fupi sana. Tafadhali zungumza kwa angalau sekunde 1.",
-    "audioQualityPoor": "Sauti haieleweki. Jaribu tena mahali patulivu."
+    "audioQualityPoor": "Sauti haieleweki. Jaribu tena mahali patulivu.",
+    "liveTranscription": "Uandishi wa sauti moja kwa moja",
+    "connecting": "Inaunganisha...",
+    "reconnecting": "Inaunganisha tena...",
+    "connectionError": "Hitilafu ya muunganisho"
   },
   "history": {
     "title": "Mazungumzo",
@@ -263,6 +268,16 @@
         "name": "GAP Kilimo",
         "tagline": "Huduma za ushauri wa kilimo",
         "description": "Huduma za jumla za ushauri wa kilimo kwa usimamizi wa mazao na mifugo."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Utambuzi wa magonjwa ya mimea, inasaidia lugha 21",
+        "description": "Tambua magonjwa ya mimea kutoka picha ukitumia Akili Bandia ya Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Hali ya hewa duniani kote, utabiri mpana na historia",
+        "description": "Data kamili ya hali ya hewa kutoka Google. Utabiri wa siku 10, utabiri wa kila saa (masaa 240), na historia ya saa 24 zilizopita."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Ushauri wa Mazao",
       "bestPractices": "Mbinu Bora",
       "seasonalTips": "Vidokezo vya Msimu",
-      "localKnowledge": "Maarifa ya Wenyeji"
+      "localKnowledge": "Maarifa ya Wenyeji",
+      "cropIdentification": "Utambuzi wa mazao",
+      "hourlyForecast": "Utabiri wa kila saa"
     },
     "fallback": {
       "service": "Huduma ya kilimo",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Kwako",
+    "seeAll": "Tazama Zote",
+    "readMore": "Soma Zaidi",
+    "listen": "Sikiliza",
+    "watch": "Tazama",
+    "minutesRead": "Dakika {minutes} za kusoma",
+    "related": "Zinazohusiana",
+    "share": "Shiriki",
+    "like": "Penda",
+    "noContent": "Hakuna maudhui yaliyopo",
+    "loadError": "Imeshindwa kupakia maudhui",
+    "notFound": "Maudhui hayajapatikana"
+  },
+  "home": {
+    "quickActions": "Vitendo vya Haraka",
+    "askQuestion": "Uliza Swali",
+    "takePhoto": "Chunguza Mmea",
+    "viewHistory": "Historia ya Gumzo",
+    "refresh": "Vuta ili kuburudisha"
+  },
+  "notifications": {
+    "title": "Arifa",
+    "settings": "Mipangilio ya Arifa",
+    "weatherAlerts": "Tahadhari za Hali ya Hewa",
+    "contentUpdates": "Masasisho ya Maudhui",
+    "engagement": "Vidokezo na Vikumbusho",
+    "enable": "Washa Arifa",
+    "disabled": "Arifa zimezimwa"
   }
 }

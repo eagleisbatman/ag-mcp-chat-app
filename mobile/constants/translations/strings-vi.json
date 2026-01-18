@@ -80,7 +80,8 @@
     "tapToAskNext": "Chạm để hỏi tiếp:",
     "analysisComplete": "Phân tích hoàn tất",
     "lowAccuracy": "Độ chính xác thấp",
-    "tapToImprove": "Chạm để cải thiện"
+    "tapToImprove": "Chạm để cải thiện",
+    "servicesWarmingUp": "Đang tải dịch vụ, thử lại..."
   },
   "media": {
     "photoLibraryPermission": "Cần truy cập thư viện ảnh để chọn hình. Bật trong Cài đặt.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Vui lòng nói bằng tiếng {expected}. Giọng nói của bạn được phát hiện là tiếng {detected}.",
     "noSpeechDetected": "Không phát hiện giọng nói. Vui lòng nói rõ và thử lại.",
     "audioTooShort": "Ghi âm quá ngắn. Vui lòng nói ít nhất 1 giây.",
-    "audioQualityPoor": "Chất lượng âm thanh quá thấp. Thử lại ở nơi yên tĩnh hơn."
+    "audioQualityPoor": "Chất lượng âm thanh quá thấp. Thử lại ở nơi yên tĩnh hơn.",
+    "liveTranscription": "Phiên âm trực tiếp",
+    "connecting": "Đang kết nối...",
+    "reconnecting": "Đang kết nối lại...",
+    "connectionError": "Lỗi kết nối"
   },
   "history": {
     "title": "Trò chuyện",
@@ -263,6 +268,16 @@
         "name": "GAP Nông nghiệp",
         "tagline": "Dịch vụ tư vấn nông nghiệp",
         "description": "Dịch vụ tư vấn nông nghiệp tổng hợp cho quản lý cây trồng và vật nuôi."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Chẩn đoán bệnh cây trồng, hỗ trợ 21 ngôn ngữ",
+        "description": "Nhận diện bệnh cây trồng từ ảnh bằng AI của Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Thời tiết toàn cầu với dự báo dài hạn và lịch sử",
+        "description": "Dữ liệu thời tiết đầy đủ từ Google với dự báo 10 ngày, dự báo hàng giờ 240 giờ và lịch sử thời tiết 24 giờ qua."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Tư vấn cây trồng",
       "bestPractices": "Thực hành tốt nhất",
       "seasonalTips": "Mẹo theo mùa",
-      "localKnowledge": "Kiến thức địa phương"
+      "localKnowledge": "Kiến thức địa phương",
+      "cropIdentification": "Nhận diện cây trồng",
+      "hourlyForecast": "Dự báo hàng giờ"
     },
     "fallback": {
       "service": "Dịch vụ nông nghiệp",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Dành cho bạn",
+    "seeAll": "Xem tất cả",
+    "readMore": "Đọc thêm",
+    "listen": "Nghe",
+    "watch": "Xem",
+    "minutesRead": "{minutes} phút đọc",
+    "related": "Liên quan",
+    "share": "Chia sẻ",
+    "like": "Thích",
+    "noContent": "Chưa có nội dung nào",
+    "loadError": "Không thể tải nội dung",
+    "notFound": "Không tìm thấy nội dung"
+  },
+  "home": {
+    "quickActions": "Thao tác nhanh",
+    "askQuestion": "Đặt câu hỏi",
+    "takePhoto": "Chẩn đoán cây trồng",
+    "viewHistory": "Lịch sử trò chuyện",
+    "refresh": "Kéo để làm mới"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "settings": "Cài đặt thông báo",
+    "weatherAlerts": "Cảnh báo thời tiết",
+    "contentUpdates": "Cập nhật nội dung",
+    "engagement": "Mẹo & Nhắc nhở",
+    "enable": "Bật thông báo",
+    "disabled": "Thông báo đã tắt"
   }
 }

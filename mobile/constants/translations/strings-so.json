@@ -80,7 +80,8 @@
     "tapToAskNext": "Taabo si aad u weydiiso xigta:",
     "analysisComplete": "Falanqayntu way dhamaatay",
     "lowAccuracy": "Saxnaan hoose",
-    "tapToImprove": "Taabo si aad u hagaajiso"
+    "tapToImprove": "Taabo si aad u hagaajiso",
+    "servicesWarmingUp": "Adeegyadu way soo kabsanayaan, dib isku dayayaa..."
   },
   "media": {
     "photoLibraryPermission": "Marin u helka maktabadda sawirrada ayaa loo baahan yahay si sawirro loo doorto. Daar Goobaha.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Fadlan ku hadal {expected}. Codkaaga waxaa loo aqoonsaday inuu yahay {detected}.",
     "noSpeechDetected": "Lama helin wax cod ah. Fadlan si cad u hadal oo mar kale isku day.",
     "audioTooShort": "Duubistu aad bay u gaaban tahay. Fadlan ku hadal ugu yaraan 1 ilbiriqsi.",
-    "audioQualityPoor": "Tayada codka waa hooseysaa. Ku celi meel ka xasilloon."
+    "audioQualityPoor": "Tayada codka waa hooseysaa. Ku celi meel ka xasilloon.",
+    "liveTranscription": "Hadal qoraal toos ah",
+    "connecting": "Isku xirmid...",
+    "reconnecting": "Dib isku xirmid...",
+    "connectionError": "Cilad isku xir"
   },
   "history": {
     "title": "Wada Hadallo",
@@ -263,6 +268,16 @@
         "name": "GAP Beeraha",
         "tagline": "Adeegyada talo-siinta beeraha",
         "description": "Adeegyada talo-siinta beeraha ee guud ee maaraynta dalagga iyo xoolaha."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Baadh cudurrada dhirta, 21 luqadood",
+        "description": "Ku aqoonso cudurrada dhirta sawirro adigoo isticmaalaya Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Cimilada adduunka, saadaal dheer iyo taariikh.",
+        "description": "Xog cimilada oo dhammaystiran oo Google ka timid, saadaal 10-maalmood ah, 240-saac oo saacadle ah, iyo taariikhda 24-kii saac ee hore."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Talo Dalag",
       "bestPractices": "Dhaqannada Ugu Wanaagsan",
       "seasonalTips": "Talooyin Xilliyeed",
-      "localKnowledge": "Aqoon Deegaan"
+      "localKnowledge": "Aqoon Deegaan",
+      "cropIdentification": "Aqoonsiga Dalagga",
+      "hourlyForecast": "Saadaal Saacadle ah"
     },
     "fallback": {
       "service": "Adeeg beeraha",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Adiga",
+    "seeAll": "Eeg Dhammaan",
+    "readMore": "Akhri Wax Dheeraad Ah",
+    "listen": "Dhagayso",
+    "watch": "Daawo",
+    "minutesRead": "{minutes} daqiiqo oo akhris ah",
+    "related": "La Xiriira",
+    "share": "La Wadaag",
+    "like": "Jeclow",
+    "noContent": "Ma jiro wax la heli karo",
+    "loadError": "Lama shubi karo waxa ku jira",
+    "notFound": "Macluumaadka lama helin"
+  },
+  "home": {
+    "quickActions": "Falalka Degdegga ah",
+    "askQuestion": "Weydii Su'aal",
+    "takePhoto": "Baadh Dhirta",
+    "viewHistory": "Taariikhda Wada Hadalka",
+    "refresh": "Jiid si aad u cusboonaysiiso"
+  },
+  "notifications": {
+    "title": "Ogeysiisyo",
+    "settings": "Dejinta Ogeysiisyada",
+    "weatherAlerts": "Digniinnada Cimilada",
+    "contentUpdates": "Cusboonaysiinta Macluumaadka",
+    "engagement": "Talooyin & Xusuusiyo",
+    "enable": "Daar Ogeysiisyada",
+    "disabled": "Ogeysiisyadu waa deman yihiin."
   }
 }

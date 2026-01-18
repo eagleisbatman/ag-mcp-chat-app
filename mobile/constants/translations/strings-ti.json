@@ -80,7 +80,8 @@
     "tapToAskNext": "ቀጺልኩም ንምሕታት ጠውቑ፦",
     "analysisComplete": "መርመራ ተዛዚሙ",
     "lowAccuracy": "ትሑት ትኽክለኛነት",
-    "tapToImprove": "ንምምሕያሽ ጠውቑ"
+    "tapToImprove": "ንምምሕያሽ ጠውቑ",
+    "servicesWarmingUp": "ኣገልግሎታት ይጅምሩ ኣለዉ፣ እንደገና ይፍተን..."
   },
   "media": {
     "photoLibraryPermission": "መዝገብ ስእሊ ንምጥቃም ፍቓድ የድሊ። ኣብ ቅጥዓት ኣናዕዕ።",
@@ -112,7 +113,11 @@
     "languageMismatch": "ብ{expected} ተዛረብ። ድምፅኻ ብ{detected} ተረኺቡ።",
     "noSpeechDetected": "ድምፂ ኣይተረኽበን። ንፁር ገርካ ተዛረብን ደጊምካ ፈትንን።",
     "audioTooShort": "ምቕራፅ ኣዝዩ ሓፂር እዩ። ሓደ ሰከንድ ዝኸውን ተዛረብ።",
-    "audioQualityPoor": "ፅሬት ድምፂ ድኹም እዩ። ኣብ ዝሃድአ ቦታ ደጊምካ ፈትን።"
+    "audioQualityPoor": "ፅሬት ድምፂ ድኹም እዩ። ኣብ ዝሃድአ ቦታ ደጊምካ ፈትን።",
+    "liveTranscription": "ብቐጥታ ምትርጓም ድምጺ",
+    "connecting": "ይራኸብ ኣሎ...",
+    "reconnecting": "እንደገና ይራኸብ ኣሎ...",
+    "connectionError": "ስሕተት ምትእስሳር"
   },
   "history": {
     "title": "ዝርርባት",
@@ -263,6 +268,16 @@
         "name": "ጋፕ ሕርሻ",
         "tagline": "ኣገልግሎታት ምኽሪ ሕርሻ",
         "description": "ሓፈሻዊ ኣገልግሎታት ምኽሪ ሕርሻ ንኣእካልን እንስሳ ዘቤት ምሕደራን።"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "ሕማም ኣትክልቲ ብ21 ቋንቋታት ምርመራ",
+        "description": "ብ Plantix AI ኣጠቓቒምኩም ሕማም ኣትክልቲ ካብ ስእሊ ለለዩ።"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "ዓለምለኻዊ ኩነታት ኣየር ምስ ዝርዝር ትንበያን ታሪኽን",
+        "description": "ምሉእ ሓበሬታ ኩነታት ኣየር ካብ ጉግል ብ10-መዓልቲ ትንበያ፣ ብ240-ሰዓት ሰዓታዊ ትንበያ፣ ከምኡ’ውን ታሪኽ ኩነታት ኣየር ናይ ዝሓለፉ 24-ሰዓታት።"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "ምኽሪ ኣእካል",
       "bestPractices": "ዝበለጸ ኣሰራርሓ",
       "seasonalTips": "ምኽሪ ወቕቲ",
-      "localKnowledge": "ናይ ከባቢ ፍልጠት"
+      "localKnowledge": "ናይ ከባቢ ፍልጠት",
+      "cropIdentification": "ምልላይ ኣሕምልቲ",
+      "hourlyForecast": "ሰዓታዊ ትንበያ"
     },
     "fallback": {
       "service": "ኣገልግሎት ሕርሻ",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "ንዓኻ",
+    "seeAll": "ኩሉ ርአ",
+    "readMore": "ዝያዳ ኣንብብ",
+    "listen": "ስማዕ",
+    "watch": "ርአ",
+    "minutesRead": "{minutes} ደቒቕ ንምንባብ",
+    "related": "ዝተዛመደ",
+    "share": "ኣካፍል",
+    "like": "ኣፍቅር",
+    "noContent": "ትሕዝቶ የለን",
+    "loadError": "ትሕዝቶ ክጽዕን ኣይከኣለን",
+    "notFound": "ትሕዝቶ ኣይተረኽበን"
+  },
+  "home": {
+    "quickActions": "ቅልጡፍ ተግባራት",
+    "askQuestion": "ሕቶ ሕተት",
+    "takePhoto": "ኣትክልቲ መርምር",
+    "viewHistory": "ታሪኽ ዕላል",
+    "refresh": "ንምሕዳስ ስሓብ"
+  },
+  "notifications": {
+    "title": "መልእኽቲ",
+    "settings": "ቅንብር መልእኽቲ",
+    "weatherAlerts": "መጠንቀቕታ ኩነታት ኣየር",
+    "contentUpdates": "ምሕደስ ትሕዝቶ",
+    "engagement": "ምኽርታትን መዘኻኸርታታትን",
+    "enable": "መልእኽቲ ኣኽትል",
+    "disabled": "መልእኽቲ ተዓጽዩ ኣሎ"
   }
 }
