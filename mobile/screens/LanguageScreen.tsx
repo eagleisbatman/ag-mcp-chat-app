@@ -149,7 +149,12 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
       <View style={[styles.searchContainer, { backgroundColor: theme.inputBackground }]}>
         <AppIcon name="search" size={20} color={theme.textMuted} />
         <TextInput
-          style={[styles.searchInput, { color: theme.text }]}
+          style={[
+            styles.searchInput,
+            { color: theme.text },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            Platform.OS === 'web' && ({ outlineStyle: 'none' } as any),
+          ]}
           placeholder={t('onboarding.searchLanguages')}
           placeholderTextColor={theme.textMuted}
           value={searchQuery}
@@ -232,7 +237,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
     padding: 0,
-    ...(Platform.OS === 'web' ? { outlineStyle: 'none' } : {}),
   },
   listContent: {
     paddingHorizontal: 24,

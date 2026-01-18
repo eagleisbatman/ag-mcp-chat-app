@@ -262,7 +262,12 @@ const InputToolbar = forwardRef(function InputToolbar(
         ]}>
           <TextInput
             ref={textInputRef}
-            style={[styles.textInput, { color: theme.text }]}
+            style={[
+              styles.textInput,
+              { color: theme.text },
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              Platform.OS === 'web' && ({ outlineStyle: 'none' } as any),
+            ]}
             placeholder={t('chat.messagePlaceholder')}
             placeholderTextColor={theme.textMuted}
             value={text}
@@ -370,7 +375,6 @@ const styles = StyleSheet.create({
     maxHeight: 100,
     textAlignVertical: 'top',
     includeFontPadding: false,
-    ...(Platform.OS === 'web' ? { outlineStyle: 'none' } : {}),
   },
   iconsRow: {
     flexDirection: 'row',
