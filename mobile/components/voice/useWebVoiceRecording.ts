@@ -275,7 +275,13 @@ export function useWebVoiceRecording({
 
       const mimeType = mediaRecorderRef.current?.mimeType || 'audio/webm';
       const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
-      log('[WebVoice] Blob size:', audioBlob.size, 'mimeType:', mimeType);
+      const blobSizeKB = Math.round(audioBlob.size / 1024);
+      log('[WebVoice] Blob size:', blobSizeKB, 'KB, mimeType:', mimeType);
+
+      // Warn if audio is very large (over 2MB)
+      if (audioBlob.size > 2 * 1024 * 1024) {
+        log('[WebVoice] Warning: Large audio file may fail to transcribe');
+      }
 
       const rawBase64 = await blobToBase64(audioBlob);
       // Prepend data URL prefix with correct mime type for the API
@@ -290,6 +296,7 @@ export function useWebVoiceRecording({
         return;
       }
 
+      log('[WebVoice] Calling transcription API, base64 length:', rawBase64.length);
       const result = await transcribeAudioRef.current({
         uri,
         base64,
@@ -300,7 +307,14 @@ export function useWebVoiceRecording({
       if (result.success && result.transcription) {
         onTranscriptionCompleteRef.current(result.transcription, { uri, base64, duration });
       } else {
-        showErrorRef.current(result.error || t('voice.transcriptionFailed'));
+        // Show more specific error message
+        const errorMsg = result.error || t('voice.transcriptionFailed');
+        log('[WebVoice] Transcription failed:', errorMsg);
+        if (blobSizeKB > 1500) {
+          showErrorRef.current('Recording too long. Please try a shorter message.');
+        } else {
+          showErrorRef.current(errorMsg);
+        }
         onCancelRef.current();
       }
     } catch (error) {
