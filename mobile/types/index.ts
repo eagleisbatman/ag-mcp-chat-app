@@ -235,7 +235,7 @@ export interface WeatherCondition {
   feelsLike?: number;
   icon?: string;
   weatherText?: string;
-  weatherIcon?: number;
+  weatherIcon?: number | string; // Google Weather uses URL strings
   precipitation?: number;
 }
 
@@ -251,7 +251,7 @@ export interface WeatherForecast {
   precipProbability?: number;
   precipitationProbability?: number;
   icon?: string;
-  dayIcon?: number;
+  dayIcon?: number | string; // Google Weather uses URL strings
 }
 
 export interface WeatherLocation {
