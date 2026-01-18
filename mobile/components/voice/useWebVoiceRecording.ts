@@ -194,13 +194,23 @@ export function useWebVoiceRecording({
 
       // Audio level analysis (using setInterval at 100ms, much safer than rAF)
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      let lastLevel = 0;
       audioAnalysisIntervalRef.current = setInterval(() => {
         if (!analyserRef.current || !mountedRef.current) return;
         analyserRef.current.getByteFrequencyData(dataArray);
         const avg = dataArray.reduce((sum, v) => sum + v, 0) / dataArray.length;
-        const level = Math.min(1, avg / 128);
-        setAudioLevel(level);
-        setIsSpeaking(level > 0.1);
+        const rawLevel = Math.min(1, avg / 128);
+
+        // Smooth decay: rise fast, fall slowly
+        const level = rawLevel > lastLevel
+          ? rawLevel  // Rise immediately
+          : lastLevel * 0.7;  // Decay by 30% each interval
+        lastLevel = level;
+
+        // Apply minimum threshold to show flat when truly silent
+        const displayLevel = level < 0.02 ? 0 : level;
+        setAudioLevel(displayLevel);
+        setIsSpeaking(displayLevel > 0.08);
       }, 100);
 
       log('[WebVoice] Recording started');
@@ -263,10 +273,13 @@ export function useWebVoiceRecording({
       // Stop tracks
       streamRef.current?.getTracks().forEach(t => t.stop());
 
-      const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-      log('[WebVoice] Blob size:', audioBlob.size);
+      const mimeType = mediaRecorderRef.current?.mimeType || 'audio/webm';
+      const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+      log('[WebVoice] Blob size:', audioBlob.size, 'mimeType:', mimeType);
 
-      const base64 = await blobToBase64(audioBlob);
+      const rawBase64 = await blobToBase64(audioBlob);
+      // Prepend data URL prefix with correct mime type for the API
+      const base64 = `data:${mimeType};base64,${rawBase64}`;
       const uri = URL.createObjectURL(audioBlob);
       const duration = recordingDuration;
 
