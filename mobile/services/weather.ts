@@ -103,6 +103,38 @@ export const weatherService = {
         ? current.location
         : forecast.location || current.location;
 
+      // Debug: Log the combined result
+      log('[Weather] getCurrentAndForecast result:', {
+        provider,
+        hasCurrentData: !!current.data,
+        currentTemp: current.data?.temperature,
+        currentSuccess: current.success,
+        hasForecastData: !!forecast.data,
+        forecastDays: forecast.data?.daily?.length,
+        forecastSuccess: forecast.success,
+      });
+
+      // Check if current weather fetch failed
+      if (!current.success || !current.data) {
+        logError('[Weather] getCurrent failed:', {
+          provider,
+          success: current.success,
+          error: current.error,
+          hasData: !!current.data,
+        });
+        // Return a result that will trigger error state in widget
+        throw new Error(current.error || `Failed to fetch current weather from ${provider}`);
+      }
+
+      // Check if forecast fetch failed (non-fatal, just log)
+      if (!forecast.success || !forecast.data) {
+        log('[Weather] getForecast failed (non-fatal):', {
+          provider,
+          success: forecast.success,
+          error: forecast.error,
+        });
+      }
+
       return {
         current: current.data,
         forecast: forecast.data,
@@ -125,6 +157,7 @@ export const weatherService = {
     provider: string = 'google-weather'
   ): Promise<CurrentWeatherResult> {
     try {
+      log('[Weather] getCurrent called:', { latitude, longitude, language, provider });
       const url = `${API_BASE_URL}/api/weather/current`;
 
       const response = await fetchWithTimeout(url, {
@@ -147,18 +180,41 @@ export const weatherService = {
 
       const result = await response.json();
 
+      // Debug: Log raw API response with full details
+      // Check for nested structure (API Gateway may wrap in data.data)
+      const nestedData = result.data?.data;
+      log('[Weather] Raw API response (current):', {
+        provider,
+        success: result.success,
+        hasData: !!result.data,
+        dataKeys: result.data ? Object.keys(result.data) : [],
+        hasNestedData: !!nestedData,
+        nestedDataKeys: nestedData ? Object.keys(nestedData) : [],
+        currentKeys: (nestedData?.current || result.data?.current) ? Object.keys(nestedData?.current || result.data?.current) : [],
+        temperature: nestedData?.current?.temperature ?? result.data?.current?.temperature,
+        temperature_c: nestedData?.current?.temperature_c ?? result.data?.current?.temperature_c,
+      });
+
       // Map API response to widget-expected format
-      // Handle both normalized (Tomorrow.io) and raw (AccuWeather) field names
-      const currentData = result.data?.current || {};
-      const locationData = result.data?.location || {};
+      // Handle both direct and nested response structures
+      // The API Gateway may return { current: {...} } or { data: { current: {...} } }
+      const rawData = result.data?.data || result.data || {};
+      const currentData = rawData.current || result.data?.current || {};
+      const locationData = rawData.location || result.data?.location || {};
 
       // Extract values with fallbacks for different field naming conventions
       const temperature = currentData.temperature ?? currentData.temperature_c;
       const humidity = currentData.humidity ?? currentData.humidity_percent;
       const windSpeed = currentData.wind_speed ?? currentData.wind_speed_kmh;
 
-      log('[Weather] Current conditions fetched:', {
-        temp: temperature,
+      log('[Weather] Current conditions mapped:', {
+        provider,
+        inputTemp: currentData.temperature,
+        inputTempC: currentData.temperature_c,
+        outputTemp: temperature,
+        tempIsValid: temperature !== null && temperature !== undefined,
+        humidity,
+        windSpeed,
         conditions: currentData.conditions,
       });
 
@@ -201,6 +257,7 @@ export const weatherService = {
     provider: string = 'google-weather'
   ): Promise<ForecastResult> {
     try {
+      log('[Weather] getForecast called:', { latitude, longitude, days, language, provider });
       const url = `${API_BASE_URL}/api/weather/forecast`;
 
       const response = await fetchWithTimeout(url, {
@@ -224,9 +281,22 @@ export const weatherService = {
 
       const result = await response.json();
 
+      // Debug: Log raw API response for Google Weather
+      // Check for nested structure (API Gateway may wrap in data.data)
+      const nestedForecastData = result.data?.data;
+      log('[Weather] Raw API response (forecast):', {
+        provider,
+        success: result.success,
+        hasData: !!result.data,
+        dataKeys: result.data ? Object.keys(result.data) : [],
+        hasNestedData: !!nestedForecastData,
+        forecastLength: nestedForecastData?.forecast?.length ?? result.data?.forecast?.length,
+      });
+
       // Map API response to widget-expected format
-      // Handle both normalized (Tomorrow.io) and raw (AccuWeather) field names
-      const forecastArray = result.data?.forecast || [];
+      // Handle both direct and nested response structures
+      const rawForecastData = nestedForecastData || result.data || {};
+      const forecastArray = rawForecastData.forecast || result.data?.forecast || [];
       const daily: ForecastDay[] = forecastArray.map((day: Record<string, unknown>) => ({
         date: day.date as string,
         tempMax: (day.max_temp ?? day.max_temp_c) as number | undefined,
@@ -236,12 +306,15 @@ export const weatherService = {
         conditions: day.day_conditions as string | undefined,
       }));
 
-      // Get location from forecast response
-      const locationData = result.data?.location || {};
+      // Get location from forecast response (handle nested structure)
+      const locationData = rawForecastData.location || result.data?.location || {};
 
       log('[Weather] Forecast fetched:', {
+        provider,
         days: daily.length,
         city: locationData.name,
+        firstDayTemp: daily[0]?.tempMax,
+        hasForecasts: daily.length > 0,
       });
 
       return {

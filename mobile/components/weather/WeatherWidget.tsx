@@ -84,7 +84,22 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
   const { theme } = useApp();
   const providerName = provider ? PROVIDER_NAMES[provider] || provider : '';
 
-  if (error) return null;
+  // Show error state with retry hint
+  if (error) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.surface }]}>
+        <View style={styles.errorContainer}>
+          <Ionicons name="cloud-offline-outline" size={32} color={theme.textMuted} />
+          <Text style={[styles.errorText, { color: theme.textMuted }]}>
+            {t('weather.loadFailed')}
+          </Text>
+          <Text style={[styles.errorHint, { color: theme.textMuted }]}>
+            {t('weather.pullToRefresh')}
+          </Text>
+        </View>
+      </View>
+    );
+  }
 
   if (loading) {
     return (
@@ -305,6 +320,22 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     overflow: 'hidden',
+  },
+  errorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.xl,
+    paddingHorizontal: SPACING.md,
+    gap: SPACING.sm,
+  },
+  errorText: {
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    textAlign: 'center',
+  },
+  errorHint: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    textAlign: 'center',
   },
   currentRow: {
     flexDirection: 'row',

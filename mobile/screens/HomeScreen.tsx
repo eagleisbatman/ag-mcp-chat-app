@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { ScrollView, View, StyleSheet, RefreshControl, Image, Pressable, Text, ImageSourcePropType } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { useApp } from '../contexts/AppContext';
 import { t } from '../constants/strings';
@@ -14,10 +15,13 @@ import ContentCarousel from '../components/content/ContentCarousel';
 import QuickActions from '../components/home/QuickActions';
 import NotificationBanner from '../components/notifications/NotificationBanner';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { weatherService } from '../services/weather';
 import { contentService } from '../services/content';
-import { error as logError } from '../utils/logger';
+import { error as logError, log } from '../utils/logger';
 import type { RootStackParamList, WeatherData } from '../types';
+
+const SERVICE_PREFS_KEY = '@service_preferences';
 
 const logoImage: ImageSourcePropType = require('../assets/logo.png');
 
@@ -43,6 +47,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherProvider, setWeatherProvider] = useState<string | null>(null);
+  const [weatherError, setWeatherError] = useState(false);
   const [content, setContent] = useState<ContentItem[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -51,18 +56,57 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
+      setWeatherError(false);
+
+      // Load weather provider preference
+      let weatherPref = 'google-weather';
+      try {
+        const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
+        if (stored) {
+          const prefs = JSON.parse(stored);
+          weatherPref = prefs.weather || 'google-weather';
+        }
+      } catch (e) {
+        log('[HomeScreen] Failed to load weather pref:', e);
+      }
+
+      log('[HomeScreen] Loading weather with:', {
+        provider: weatherPref,
+        lat: location?.latitude,
+        lon: location?.longitude
+      });
 
       if (location?.latitude !== null && location?.longitude !== null) {
         const lat = location.latitude as number;
         const lon = location.longitude as number;
-        const [weatherData, contentData, alertsData] = await Promise.all([
-          weatherService.getCurrentAndForecast(lat, lon, language?.code || 'en') as Promise<WeatherData>,
+
+        // Fetch weather separately to handle errors independently
+        let weatherData: WeatherData | null = null;
+        try {
+          weatherData = await weatherService.getCurrentAndForecast(lat, lon, language?.code || 'en', weatherPref) as WeatherData;
+
+          // Debug: Log what we're setting to state
+          log('[HomeScreen] Weather data received:', {
+            provider: weatherPref,
+            hasCurrent: !!(weatherData as any)?.current,
+            currentTemp: (weatherData as any)?.current?.temperature,
+            hasForecast: !!(weatherData as any)?.forecast,
+          });
+
+          setWeather(weatherData);
+          setWeatherProvider((weatherData as any).provider || weatherPref);
+        } catch (weatherErr) {
+          logError('[HomeScreen] Weather fetch failed:', weatherErr);
+          setWeatherError(true);
+          setWeather(null);
+        }
+
+        // Fetch other data in parallel (don't let weather failure block these)
+        const [contentData, alertsData] = await Promise.all([
           contentService.getFeed(lat, lon, language?.code || 'en'),
           weatherService.getAlerts(lat, lon),
         ]);
 
-        setWeather(weatherData);
-        setWeatherProvider((weatherData as any).provider || 'google-weather');
         setContent(contentData);
         setAlerts(alertsData);
       } else {
@@ -79,6 +123,13 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // Re-fetch when screen gains focus (e.g., after changing weather provider)
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [loadData])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -179,6 +230,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         <WeatherWidget
           data={weather}
           loading={loading && location?.latitude !== null}
+          error={weatherError}
           provider={weatherProvider || undefined}
         />
 
