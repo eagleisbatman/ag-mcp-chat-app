@@ -86,12 +86,12 @@ export const weatherService = {
     latitude: number,
     longitude: number,
     language: string = 'en',
-    provider: string = 'accuweather'
+    provider: string = 'google-weather'
   ): Promise<CombinedWeatherResult> {
     try {
       // Different providers support different forecast days
-      // AccuWeather: 5 days, Tomorrow.io: 7 days
-      const forecastDays = provider === 'tomorrow-io' ? 7 : 5;
+      // AccuWeather: 5 days, Tomorrow.io: 7 days, Google Weather: 10 days
+      const forecastDays = provider === 'google-weather' ? 10 : provider === 'tomorrow-io' ? 7 : 5;
 
       const [current, forecast] = await Promise.all([
         this.getCurrent(latitude, longitude, language, provider),
@@ -122,7 +122,7 @@ export const weatherService = {
     latitude: number,
     longitude: number,
     language: string = 'en',
-    provider: string = 'accuweather'
+    provider: string = 'google-weather'
   ): Promise<CurrentWeatherResult> {
     try {
       const url = `${API_BASE_URL}/api/weather/current`;
@@ -196,9 +196,9 @@ export const weatherService = {
   async getForecast(
     latitude: number,
     longitude: number,
-    days: number = 5,
+    days: number = 7,
     language: string = 'en',
-    provider: string = 'accuweather'
+    provider: string = 'google-weather'
   ): Promise<ForecastResult> {
     try {
       const url = `${API_BASE_URL}/api/weather/forecast`;

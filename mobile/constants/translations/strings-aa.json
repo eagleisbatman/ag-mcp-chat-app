@@ -80,7 +80,8 @@
     "tapToAskNext": "Nammadi yablih qiba:",
     "analysisComplete": "Kaayto tammate.",
     "lowAccuracy": "Saxxa hinna.",
-    "tapToImprove": "Daqaba qiba."
+    "tapToImprove": "Daqaba qiba.",
+    "servicesWarmingUp": "Services warming up, retrying..."
   },
   "media": {
     "photoLibraryPermission": "Suura addaleh galtee raqqa adda. Baxan-gurrukkul gaba.",
@@ -112,7 +113,11 @@
     "languageMismatch": "{expected} numaa sagalta. Ku sagal {detected} numaa akke.",
     "noSpeechDetected": "Sagal maleh. Maduwwaanih sagalta, kaak edde gita.",
     "audioTooShort": "Sagal alisah. Tokkel sekon kak alah sagalta.",
-    "audioQualityPoor": "Sagaleh namma digibeh. Awwaci maleh baade kaak edde gita."
+    "audioQualityPoor": "Sagaleh namma digibeh. Awwaci maleh baade kaak edde gita.",
+    "liveTranscription": "Live transcription",
+    "connecting": "Connecting...",
+    "reconnecting": "Reconnecting...",
+    "connectionError": "Connection error"
   },
   "history": {
     "title": "Maxcooti",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "Baari Haa Farmo Macaawis",
         "description": "Faraaqat kee lacag gexsiisa digra baari haa inkih farmo macaawis."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Plant disease diagnosis with 21 language support",
+        "description": "Identify plant diseases from photos using Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Global weather with extended forecasts and history",
+        "description": "Comprehensive weather data from Google with 10-day forecasts, 240-hour hourly forecasts, and past 24-hour weather history."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Faraaqat Farmo",
       "bestPractices": "Lakqo Gaba Abtoot",
       "seasonalTips": "Xaaga Kee Qangara",
-      "localKnowledge": "Baadal Beeko"
+      "localKnowledge": "Baadal Beeko",
+      "cropIdentification": "Crop Identification",
+      "hourlyForecast": "Hourly Forecast"
     },
     "fallback": {
       "service": "Baari Haa Macaawis",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Dawla Guddit",
-    "eligibility": "Guddit Kaxat",
-    "checkEligibility": "Kaxat Saala",
-    "screeningQuestions": "Xaara Barraayât",
-    "answerQuestions": "Barraayât oggol kaxat saalisu",
-    "eligibleSchemes": "Kaxat Guddit",
-    "noSchemesFound": "Keeguk Guddit maanaama",
-    "journeyUrl": "Galgal Xinxin",
-    "startApplication": "Galgal Axiir",
-    "schemeName": "Guddit Inni",
-    "schemeDescription": "Wagi",
-    "benefits": "Fayda",
-    "eligibilityCriteria": "Kaxat Maqaarak",
-    "requiredDocuments": "Waaga Maxcax",
-    "nextSteps": "Aggar Qimmiya",
-    "totalSchemes": "Kulli Guddit",
-    "provider": "Agegita",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Kee Guddit Afte",
-    "indiaOnly": "Hindi qasa Abita",
-    "questions": {
-      "gender": "Saga",
-      "age": "Umar",
-      "maritalStatus": "Inna Xaalat",
-      "monthlyIncome": "Alsati Dari Galak",
-      "landOwnership": "Baaxo Moolak",
-      "rationCardType": "Karat Razion Miyya",
-      "religion": "Diini",
-      "casteCategory": "Diira Miyya",
-      "occupationalStatus": "Macaamil Xaalat",
-      "natureOfJob": "Macaamil Miyya",
-      "personalIncome": "Kee Alsati Galak"
-    },
-    "answers": {
-      "male": "Kori",
-      "female": "Baxxa",
-      "other": "Innam",
-      "married": "Maat",
-      "unmarried": "Cilla",
-      "widowed": "Allooli",
-      "divorced": "Biraayte",
-      "separated": "Fannaayte",
-      "farmer": "Beera",
-      "farmLaborer": "Beera Makaalale",
-      "fisherman": "Kallu Xaagite",
-      "animalHusbandry": "Laacin Baala",
-      "dairyFarmer": "Caadit Beera",
-      "poultryFarmer": "Cita Beera",
-      "landOwner": "Baaxo Le",
-      "landless": "Baaxo Maale",
-      "sharecropper": "Beera Xarfa Le"
-    },
-    "documents": {
-      "aadhaarCard": "Karat Aadhaar",
-      "bankPassbook": "Banki Dafal",
-      "landRecords": "Baaxo Duudi",
-      "rationCard": "Karat Razion",
-      "casteCertificate": "Diira Shahaada",
-      "incomeCertificate": "Galak Shahaada",
-      "voterID": "Karat Botar",
-      "passport": "Pasport Suura"
-    },
-    "dataSource": "Haqdarshak qasa Guddit Macino"
+  "content": {
+    "forYou": "For You",
+    "seeAll": "See All",
+    "readMore": "Read More",
+    "listen": "Listen",
+    "watch": "Watch",
+    "minutesRead": "{minutes} min read",
+    "related": "Related",
+    "share": "Share",
+    "like": "Like",
+    "noContent": "No content available",
+    "loadError": "Could not load content",
+    "notFound": "Content not found"
+  },
+  "home": {
+    "quickActions": "Quick Actions",
+    "askQuestion": "Ask a Question",
+    "takePhoto": "Diagnose Plant",
+    "viewHistory": "Chat History",
+    "refresh": "Pull to refresh"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "settings": "Notification Settings",
+    "weatherAlerts": "Weather Alerts",
+    "contentUpdates": "Content Updates",
+    "engagement": "Tips & Reminders",
+    "enable": "Enable Notifications",
+    "disabled": "Notifications are disabled"
   }
 }

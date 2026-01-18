@@ -61,8 +61,8 @@ const SELECTABLE_PROVIDERS: { [key: string]: SelectableProviderConfig } = {
   },
   weather: {
     capability: 'weather',
-    providers: ['accuweather', 'tomorrow-io'],
-    default: 'accuweather',
+    providers: ['google-weather', 'accuweather', 'tomorrow-io'],
+    default: 'google-weather',
   },
 };
 
@@ -92,7 +92,7 @@ const SERVICE_CATEGORIES: { [key: string]: ServiceCategoryConfig } = {
     labelKey: 'mcp.categories.weather',
     icon: 'weather-partly-cloudy',
     color: '#2196F3',
-    servers: ['accuweather', 'gap-weather', 'edacap', 'weatherapi', 'tomorrow-io'],
+    servers: ['accuweather', 'tomorrow-io', 'google-weather'],
   },
   livestock: {
     labelKey: 'mcp.categories.livestock',
@@ -140,29 +140,17 @@ const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
     icon: 'weather-partly-cloudy',
     logo: require('../assets/logos/accuweather.png'),
   },
-  'gap-weather': {
-    name: 'GAP Weather',
-    stringKey: 'mcp.services.gapWeather',
-    icon: 'weather-lightning-rainy',
-    logo: null,
-  },
-  'edacap': {
-    name: 'EDACAP Climate',
-    stringKey: 'mcp.services.edacap',
-    icon: 'weather-cloudy-arrow-right',
-    logo: null,
-  },
-  'weatherapi': {
-    name: 'WeatherAPI',
-    stringKey: 'mcp.services.weatherapi',
-    icon: 'weather-sunny',
-    logo: null,
-  },
   'tomorrow-io': {
     name: 'Tomorrow.io',
     stringKey: 'mcp.services.tomorrowIo',
     icon: 'cloud-sync',
     logo: require('../assets/logos/Powered_by_Tomorrow-Black.png'),
+  },
+  'google-weather': {
+    name: 'Google Weather',
+    stringKey: 'mcp.services.googleWeather',
+    icon: 'google',
+    logo: null, // Uses MaterialCommunityIcons 'google' icon via the icon field
   },
   'feed-formulation': {
     name: 'Feed Formulation',

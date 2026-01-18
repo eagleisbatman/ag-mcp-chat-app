@@ -177,11 +177,48 @@ const getTomorrowIoIcon = (code: number, isNight = false): ReturnType<typeof req
   return TOMORROW_IO_ICONS[TOMORROW_IO_FALLBACK];
 };
 
+// Google Weather icon URL to Ionicons fallback mapping
+const GOOGLE_ICON_FALLBACK_MAP: Record<string, keyof typeof Ionicons.glyphMap> = {
+  'sunny': 'sunny',
+  'clear': 'sunny',
+  'clear_day': 'sunny',
+  'clear_night': 'moon',
+  'partly_cloudy': 'partly-sunny',
+  'partly_cloudy_day': 'partly-sunny',
+  'partly_cloudy_night': 'cloudy-night',
+  'mostly_cloudy': 'cloudy',
+  'cloudy': 'cloudy',
+  'overcast': 'cloudy',
+  'fog': 'cloudy',
+  'haze': 'cloudy',
+  'drizzle': 'rainy',
+  'rain': 'rainy',
+  'light_rain': 'rainy',
+  'heavy_rain': 'rainy',
+  'showers': 'rainy',
+  'thunderstorm': 'thunderstorm',
+  'snow': 'snow',
+  'light_snow': 'snow',
+  'heavy_snow': 'snow',
+  'sleet': 'snow',
+  'hail': 'snow',
+};
+
+/**
+ * Extract icon type from Google Weather icon URL
+ * e.g., "https://maps.gstatic.com/weather/v1/sunny" -> "sunny"
+ */
+const extractGoogleIconType = (iconUrl: string): string => {
+  if (!iconUrl) return 'cloudy';
+  const parts = iconUrl.split('/');
+  return parts[parts.length - 1] || 'cloudy';
+};
+
 interface WeatherIconProps {
-  code?: number;
+  code?: number | string;
   size?: number;
   color?: string;
-  provider?: 'accuweather' | 'tomorrow-io';
+  provider?: 'accuweather' | 'tomorrow-io' | 'google-weather';
   isNight?: boolean;
   style?: StyleProp<ViewStyle | ImageStyle>;
 }
@@ -189,16 +226,16 @@ interface WeatherIconProps {
 /**
  * WeatherIcon component
  */
-const WeatherIcon: React.FC<WeatherIconProps> = ({ 
-  code, 
-  size = 24, 
-  color, 
-  provider, 
-  isNight = false, 
-  style 
+const WeatherIcon: React.FC<WeatherIconProps> = ({
+  code,
+  size = 24,
+  color,
+  provider,
+  isNight = false,
+  style
 }) => {
   // Use Tomorrow.io V2 icons if provider is tomorrow-io
-  if (provider === 'tomorrow-io' && code !== undefined) {
+  if (provider === 'tomorrow-io' && code !== undefined && typeof code === 'number') {
     const iconSource = getTomorrowIoIcon(code, isNight);
     return (
       <Image
@@ -209,8 +246,35 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
     );
   }
 
+  // Google Weather uses URL-based icons
+  if (provider === 'google-weather' && code !== undefined) {
+    // If code is a URL string, use it directly
+    if (typeof code === 'string' && code.startsWith('http')) {
+      return (
+        <Image
+          source={{ uri: `${code}@2x.png` }}
+          style={[{ width: size, height: size }, style] as unknown as import('expo-image').ImageStyle}
+          contentFit="contain"
+          placeholder={undefined}
+        />
+      );
+    }
+    // Fallback to Ionicons if URL is not available
+    const iconType = typeof code === 'string' ? extractGoogleIconType(code) : 'cloudy';
+    const iconName = GOOGLE_ICON_FALLBACK_MAP[iconType.toLowerCase()] || 'cloudy';
+    const iconColor = color || WEATHER_COLOR_MAP[iconName] || '#78909C';
+    return (
+      <Ionicons
+        name={iconName}
+        size={size}
+        color={iconColor}
+        style={style as StyleProp<ViewStyle>}
+      />
+    );
+  }
+
   // Default to AccuWeather with Ionicons
-  const iconName = (code !== undefined && ACCUWEATHER_ICON_MAP[code]) || 'cloudy';
+  const iconName = (code !== undefined && typeof code === 'number' && ACCUWEATHER_ICON_MAP[code]) || 'cloudy';
   const iconColor = color || WEATHER_COLOR_MAP[iconName] || '#78909C';
 
   return (

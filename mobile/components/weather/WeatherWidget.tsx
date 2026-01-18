@@ -70,8 +70,14 @@ interface WeatherWidgetProps {
 const PROVIDER_NAMES: Record<string, string> = {
   'accuweather': 'AccuWeather',
   'tomorrow-io': 'Tomorrow.io',
-  'gap-weather': 'GAP Weather',
-  'weatherapi': 'WeatherAPI',
+  'google-weather': 'Google Weather',
+};
+
+// Number of forecast days to display per provider
+const PROVIDER_FORECAST_DAYS: Record<string, number> = {
+  'accuweather': 5,
+  'tomorrow-io': 7,
+  'google-weather': 7, // Google supports 10 but 7 is cleaner for UI
 };
 
 const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, provider }) => {
@@ -171,7 +177,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
           style={[styles.forecastStrip, { borderTopColor: theme.surfaceVariant }]}
           contentContainerStyle={styles.forecastContent}
         >
-          {dailyForecasts.slice(0, 5).map((day, index) => {
+          {dailyForecasts.slice(0, PROVIDER_FORECAST_DAYS[provider || 'google-weather'] || 7).map((day, index) => {
             const tempMax = day.high ?? day.tempMax;
             if (tempMax === null || tempMax === undefined) return null;
 

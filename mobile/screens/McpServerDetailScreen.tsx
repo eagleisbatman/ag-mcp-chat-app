@@ -118,6 +118,15 @@ const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
     featureKeys: ['nowcast', 'forecasts', 'alerts', 'historical'],
     coverageKeys: ['worldwide'],
   },
+  'google-weather': {
+    name: 'Google Weather',
+    stringKey: 'mcp.services.googleWeather',
+    icon: 'google',
+    logo: null, // Uses MaterialCommunityIcons 'google' icon via the icon field
+    color: '#4285F4', // Google blue
+    featureKeys: ['currentWeather', 'forecast', 'hourlyForecast', 'historical'],
+    coverageKeys: ['worldwide'],
+  },
   'feed-formulation': {
     name: 'Feed Formulation',
     stringKey: 'mcp.services.feedFormulation',
