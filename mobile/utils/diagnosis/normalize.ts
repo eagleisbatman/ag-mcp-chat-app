@@ -5,6 +5,134 @@ interface ImageQualityObject {
   focus?: string;
   distance?: string;
   quality_warning?: string;
+  overall?: string;
+  issues?: string[];
+}
+
+// === NEW UNIFIED FORMAT FROM API ===
+interface UnifiedDiagnosisFromAPI {
+  crop?: {
+    name: string;
+    scientific_name?: string;
+    confidence: 'high' | 'medium' | 'low' | 'unknown';
+  } | null;
+  health: {
+    status: 'healthy' | 'minor_issue' | 'moderate_issue' | 'severe_issue';
+    confidence: 'high' | 'medium' | 'low' | 'unknown';
+    summary: string;
+  };
+  issues: Array<{
+    name: string;
+    scientific_name?: string;
+    type: 'pest' | 'disease' | 'nutrient_deficiency' | 'environmental' | 'unknown';
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    likelihood: 'possible' | 'likely' | 'very_likely' | 'confirmed';
+    symptoms: string[];
+    affected_parts?: string[];
+    treatments: {
+      organic: Array<{ name: string; description: string; application?: string; frequency?: string; timing?: string }>;
+      chemical: Array<{ name: string; description: string; active_ingredient?: string; dosage?: string; safety_notes?: string }>;
+      preventive: string[];
+    };
+    trigger?: string;
+    affected_crops?: string[];
+  }>;
+  recommendations: string[];
+  image_quality: {
+    overall: 'good' | 'acceptable' | 'poor';
+    issues?: string[];
+  };
+  _meta: {
+    provider: 'agrivision' | 'plantix';
+    duration_ms: number;
+    timestamp: string;
+    requires_lab_test?: boolean;
+    model?: string;
+  };
+  _raw?: unknown;
+}
+
+function isUnifiedFormat(data: unknown): data is UnifiedDiagnosisFromAPI {
+  if (!data || typeof data !== 'object') return false;
+  const d = data as Record<string, unknown>;
+  // New unified format has health.status and _meta.provider
+  return (
+    typeof d.health === 'object' &&
+    d.health !== null &&
+    'status' in (d.health as object) &&
+    typeof d._meta === 'object' &&
+    d._meta !== null &&
+    'provider' in (d._meta as object)
+  );
+}
+
+function normalizeUnifiedFormat(data: UnifiedDiagnosisFromAPI): NormalizedDiagnosis {
+  const provider = data._meta.provider;
+
+  // Map unified health status to display-friendly format
+  const healthStatusMap: Record<string, string> = {
+    'healthy': 'Healthy',
+    'minor_issue': 'Minor Issue',
+    'moderate_issue': 'Issue Detected',
+    'severe_issue': 'Severe Issue',
+  };
+
+  // Map confidence to display format
+  const confidenceMap: Record<string, string> = {
+    'high': 'High',
+    'medium': 'Medium',
+    'low': 'Low',
+    'unknown': '',
+  };
+
+  // Map severity to display format
+  const severityMap: Record<string, string> = {
+    'critical': 'Critical',
+    'high': 'High',
+    'medium': 'Moderate',
+    'low': 'Low',
+  };
+
+  return {
+    _provider: provider,
+    health_status: healthStatusMap[data.health.status] || data.health.status,
+    health_summary: data.health.summary,
+    health_confidence: confidenceMap[data.health.confidence] || undefined,
+    image_quality: data.image_quality?.overall || 'analyzed',
+    diagnostic_notes: data.health.summary,
+    crop: data.crop ? {
+      name: data.crop.name,
+      scientific_name: data.crop.scientific_name,
+      confidence: confidenceMap[data.crop.confidence] || null,
+    } : null,
+    growth_stage: null, // Not in unified format
+    issues: data.issues.map(issue => ({
+      name: issue.name,
+      scientific_name: issue.scientific_name,
+      severity: severityMap[issue.severity] || issue.severity,
+      likelihood: issue.likelihood,
+      symptoms: issue.symptoms,
+      _treatments: [
+        ...issue.treatments.organic.map(t => ({ type: 'organic', description: t.description })),
+        ...issue.treatments.chemical.map(t => ({ type: 'chemical', description: t.description })),
+      ],
+      _prevention: issue.treatments.preventive.map(p => ({ action: p })),
+    })),
+    treatment_recommendations: data.issues.map(issue => ({
+      issue_name: issue.name,
+      organic_options: issue.treatments.organic.map(t => ({
+        name: t.name,
+        description: t.description,
+      })),
+      chemical_options: issue.treatments.chemical.map(t => ({
+        name: t.name || t.active_ingredient || 'Chemical Treatment',
+        description: t.description,
+        active_ingredient: t.active_ingredient,
+      })),
+      preventive_measures: issue.treatments.preventive,
+    })),
+    _raw: data._raw,
+  };
 }
 
 interface PlantixDiagnosis {
@@ -99,18 +227,24 @@ export function normalizeLikelihood(likelihood: string | null | undefined): stri
 
 /**
  * Normalize diagnosis data from different providers (AgriVision vs Plantix)
+ * Now supports the new unified format from API Gateway as well as legacy formats
  * Returns a unified format that works for both display and TTS
  */
 export function normalizeDiagnosis(data: DiagnosisData | string | null | undefined): NormalizedDiagnosis | null {
   if (!data) return null;
 
-  let parsed: PlantixFormat | DiagnosisData = data as PlantixFormat | DiagnosisData;
+  let parsed: PlantixFormat | DiagnosisData | UnifiedDiagnosisFromAPI = data as PlantixFormat | DiagnosisData;
   if (typeof data === 'string') {
     try {
       parsed = JSON.parse(data);
     } catch {
       return null;
     }
+  }
+
+  // Check for new unified format from API first
+  if (isUnifiedFormat(parsed)) {
+    return normalizeUnifiedFormat(parsed);
   }
 
   const parsedAny = parsed as Record<string, unknown>;
