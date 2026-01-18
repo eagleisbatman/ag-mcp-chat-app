@@ -80,7 +80,8 @@
     "tapToAskNext": "ប៉ះដើម្បីសួរ៖",
     "analysisComplete": "វិភាគរួចរាល់",
     "lowAccuracy": "ភាពត្រឹមត្រូវទាប",
-    "tapToImprove": "ប៉ះដើម្បីកែលម្អ"
+    "tapToImprove": "ប៉ះដើម្បីកែលម្អ",
+    "servicesWarmingUp": "សេវា​កំពុង​ដំណើរការ កំពុង​ព្យាយាម​ឡើងវិញ..."
   },
   "media": {
     "photoLibraryPermission": "ត្រូវការចូលមើលបណ្ណាល័យរូបភាព ដើម្បីជ្រើសរើសរូបភាព។ បើកនៅក្នុងការកំណត់។",
@@ -112,7 +113,11 @@
     "languageMismatch": "សូម​និយាយ​ជា​ភាសា {expected}។ សំឡេង​របស់​អ្នក​ត្រូវ​បាន​ចាប់​ជា​ភាសា {detected}។",
     "noSpeechDetected": "មិន​បាន​ចាប់​សំឡេង​និយាយ​ទេ។ សូម​និយាយ​ឲ្យ​បាន​ច្បាស់លាស់ ហើយ​ព្យាយាម​ម្តង​ទៀត។",
     "audioTooShort": "ការ​ថត​សំឡេង​ខ្លី​ពេក។ សូម​និយាយ​យ៉ាង​តិច​១​វិនាទី។",
-    "audioQualityPoor": "គុណភាព​សំឡេង​ទាប​ពេក។ សូម​ព្យាយាម​ម្តង​ទៀត​នៅ​កន្លែង​ស្ងាត់​ជាង​មុន។"
+    "audioQualityPoor": "គុណភាព​សំឡេង​ទាប​ពេក។ សូម​ព្យាយាម​ម្តង​ទៀត​នៅ​កន្លែង​ស្ងាត់​ជាង​មុន។",
+    "liveTranscription": "ការ​សរសេរ​តាម​សំឡេង​ផ្ទាល់",
+    "connecting": "កំពុងភ្ជាប់...",
+    "reconnecting": "កំពុងភ្ជាប់ឡើងវិញ...",
+    "connectionError": "កំហុស​ការ​តភ្ជាប់"
   },
   "history": {
     "title": "ការសន្ទនា",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "សេវាប្រឹក្សាកសិកម្ម",
         "description": "សេវាប្រឹក្សាកសិកម្មទូទៅ សម្រាប់គ្រប់គ្រងដំណាំ និងបសុសត្វ។"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "រោគវិនិច្ឆ័យ​ជំងឺ​រុក្ខជាតិ គាំទ្រ​២១​ភាសា",
+        "description": "កំណត់​អត្តសញ្ញាណ​ជំងឺ​រុក្ខជាតិ​ពី​រូបថត ដោយ​ប្រើ Plantix AI។"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "អាកាសធាតុ​សកល ព្យាករណ៍ និង​ប្រវត្តិ​វែង",
+        "description": "ទិន្នន័យ​អាកាសធាតុ​ពី Google ព្យាករណ៍​១០​ថ្ងៃ ព្យាករណ៍​រៀងរាល់​ម៉ោង (២៤០​ម៉ោង) និង​ប្រវត្តិ​២៤​ម៉ោង​ចុងក្រោយ។"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "ដំបូន្មានដំណាំ",
       "bestPractices": "ការអនុវត្តល្អបំផុត",
       "seasonalTips": "គន្លឹះតាមរដូវ",
-      "localKnowledge": "ចំណេះដឹងមូលដ្ឋាន"
+      "localKnowledge": "ចំណេះដឹងមូលដ្ឋាន",
+      "cropIdentification": "កំណត់​អត្តសញ្ញាណ​ដំណាំ",
+      "hourlyForecast": "ព្យាករណ៍​រៀងរាល់​ម៉ោង"
     },
     "fallback": {
       "service": "សេវាកសិកម្ម",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "សម្រាប់​អ្នក",
+    "seeAll": "មើល​ទាំងអស់",
+    "readMore": "អាន​បន្ត",
+    "listen": "ស្តាប់",
+    "watch": "មើល",
+    "minutesRead": "អាន {minutes} នាទី",
+    "related": "ជាប់​ទាក់ទង",
+    "share": "ចែករំលែក",
+    "like": "ចូលចិត្ត",
+    "noContent": "គ្មាន​មាតិកា​ទេ។",
+    "loadError": "មិន​អាច​ផ្ទុក​មាតិកា​បាន​ទេ។",
+    "notFound": "រក​មិន​ឃើញ​មាតិកា​ទេ។"
+  },
+  "home": {
+    "quickActions": "សកម្មភាព​រហ័ស",
+    "askQuestion": "សួរ​សំណួរ",
+    "takePhoto": "រោគវិនិច្ឆ័យ​រុក្ខជាតិ",
+    "viewHistory": "ប្រវត្តិ​ជជែក",
+    "refresh": "ទាញ​ដើម្បី​ផ្ទុក​ឡើងវិញ"
+  },
+  "notifications": {
+    "title": "ការជូនដំណឹង",
+    "settings": "ការ​កំណត់​ការ​ជូនដំណឹង",
+    "weatherAlerts": "ការ​ដាស់តឿន​អាកាសធាតុ",
+    "contentUpdates": "ព័ត៌មាន​ថ្មីៗ​ពី​មាតិកា",
+    "engagement": "គន្លឹះ និង​ការ​រំលឹក",
+    "enable": "បើក​ការ​ជូនដំណឹង",
+    "disabled": "ការ​ជូនដំណឹង​ត្រូវ​បាន​បិទ"
   }
 }

@@ -80,7 +80,8 @@
     "tapToAskNext": "આગળ પૂછવા માટે ટેપ કરો:",
     "analysisComplete": "વિશ્લેષણ પૂર્ણ",
     "lowAccuracy": "ઓછી સચોટતા",
-    "tapToImprove": "સુધારવા માટે ટેપ કરો"
+    "tapToImprove": "સુધારવા માટે ટેપ કરો",
+    "servicesWarmingUp": "સેવાઓ શરૂ થઈ રહી છે, ફરી પ્રયાસ..."
   },
   "media": {
     "photoLibraryPermission": "ફોટા પસંદ કરવા ગેલેરીની પરવાનગી આપો. સેટિંગ્સમાં ચાલુ કરો.",
@@ -112,7 +113,11 @@
     "languageMismatch": "કૃપા કરીને {expected} માં બોલો. તમારી ભાષા {detected} તરીકે જણાઈ.",
     "noSpeechDetected": "કોઈ અવાજ મળ્યો નથી. સ્પષ્ટ બોલીને ફરી પ્રયાસ કરો.",
     "audioTooShort": "રેકોર્ડિંગ ટૂંકું છે. ઓછામાં ઓછું 1 સેકન્ડ બોલો.",
-    "audioQualityPoor": "અવાજની ગુણવત્તા ખરાબ છે. શાંત જગ્યાએ ફરી પ્રયાસ કરો."
+    "audioQualityPoor": "અવાજની ગુણવત્તા ખરાબ છે. શાંત જગ્યાએ ફરી પ્રયાસ કરો.",
+    "liveTranscription": "જીવંત લખાણ",
+    "connecting": "કનેક્ટ થઈ રહ્યું છે...",
+    "reconnecting": "ફરીથી કનેક્ટ થઈ રહ્યું છે...",
+    "connectionError": "કનેક્શન ભૂલ"
   },
   "history": {
     "title": "વાતચીત",
@@ -263,6 +268,16 @@
         "name": "GAP કૃષિ",
         "tagline": "ખેતીની સલાહ સેવાઓ",
         "description": "પાક અને પશુધન વ્યવસ્થાપન માટે સામાન્ય કૃષિ સલાહકાર સેવાઓ."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "21 ભાષાઓમાં છોડના રોગનું નિદાન",
+        "description": "Plantix AI નો ઉપયોગ કરીને ફોટામાંથી છોડના રોગો ઓળખો."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "વિસ્તૃત આગાહીઓ અને ઇતિહાસ સાથે વૈશ્વિક હવામાન",
+        "description": "Google તરફથી 10-દિવસની, 240-કલાકની કલાકદીઠ આગાહીઓ અને છેલ્લા 24-કલાકના હવામાન ઇતિહાસ સાથે સંપૂર્ણ હવામાન માહિતી."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "પાક સલાહ",
       "bestPractices": "શ્રેષ્ઠ પદ્ધતિઓ",
       "seasonalTips": "મોસમી સૂચનો",
-      "localKnowledge": "સ્થાનિક જ્ઞાન"
+      "localKnowledge": "સ્થાનિક જ્ઞાન",
+      "cropIdentification": "પાકની ઓળખ",
+      "hourlyForecast": "કલાકદીઠ આગાહી"
     },
     "fallback": {
       "service": "કૃષિ સેવા",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "સરકારી યોજનાઓ",
-    "eligibility": "યોજના પાત્રતા",
-    "checkEligibility": "પાત્રતા તપાસો",
-    "screeningQuestions": "ચકાસણી પ્રશ્નો",
-    "answerQuestions": "તમારી પાત્રતા ચકાસવા માટે પ્રશ્નોના જવાબ આપો",
-    "eligibleSchemes": "પાત્ર યોજનાઓ",
-    "noSchemesFound": "તમારી પ્રોફાઇલ સાથે મેળ ખાતી કોઈ યોજના મળી નથી",
-    "journeyUrl": "એપ્લિકેશન લિંક",
-    "startApplication": "એપ્લિકેશન શરૂ કરો",
-    "schemeName": "યોજનાનું નામ",
-    "schemeDescription": "વર્ણન",
-    "benefits": "લાભો",
-    "eligibilityCriteria": "પાત્રતા માપદંડ",
-    "requiredDocuments": "જરૂરી દસ્તાવેજો",
-    "nextSteps": "આગળના પગલાં",
-    "totalSchemes": "કુલ યોજનાઓ",
-    "provider": "પ્રદાતા",
-    "haqdarshak": "હકદર્શક",
-    "knowYourSchemes": "તમારી યોજનાઓ જાણો",
-    "indiaOnly": "ફક્ત ભારતમાં ઉપલબ્ધ છે",
-    "questions": {
-      "gender": "જાતિ",
-      "age": "ઉંમર",
-      "maritalStatus": "વૈવાહિક સ્થિતિ",
-      "monthlyIncome": "માસિક ઘરની આવક",
-      "landOwnership": "જમીનની માલિકી",
-      "rationCardType": "રાશન કાર્ડ પ્રકાર",
-      "religion": "ધર્મ",
-      "casteCategory": "જાતિ વર્ગ",
-      "occupationalStatus": "વ્યવસાયિક સ્થિતિ",
-      "natureOfJob": "નોકરીનો પ્રકાર",
-      "personalIncome": "વ્યક્તિગત માસિક આવક"
-    },
-    "answers": {
-      "male": "પુરુષ",
-      "female": "સ્ત્રી",
-      "other": "અન્ય",
-      "married": "પરિણીત",
-      "unmarried": "અપરિણીત",
-      "widowed": "વિધવા",
-      "divorced": "છૂટાછેડા લીધેલ",
-      "separated": "વિભક્ત",
-      "farmer": "ખેડૂત",
-      "farmLaborer": "ખેત મજૂર",
-      "fisherman": "માછીમાર",
-      "animalHusbandry": "પશુપાલન",
-      "dairyFarmer": "ડેરી ખેડૂત",
-      "poultryFarmer": "મરઘાં ખેડૂત",
-      "landOwner": "જમીન માલિક",
-      "landless": "ભૂમિહીન",
-      "sharecropper": "ભાગ ખેડૂત"
-    },
-    "documents": {
-      "aadhaarCard": "આધાર કાર્ડ",
-      "bankPassbook": "બેંક પાસબુક",
-      "landRecords": "જમીન રેકોર્ડ",
-      "rationCard": "રાશન કાર્ડ",
-      "casteCertificate": "જાતિ પ્રમાણપત્ર",
-      "incomeCertificate": "આવક પ્રમાણપત્ર",
-      "voterID": "મતદાર આઈડી",
-      "passport": "પાસપોર્ટ ફોટો"
-    },
-    "dataSource": "હકદર્શક તરફથી યોજના ડેટા"
+  "content": {
+    "forYou": "તમારા માટે",
+    "seeAll": "બધા જુઓ",
+    "readMore": "વધુ વાંચો",
+    "listen": "સાંભળો",
+    "watch": "જુઓ",
+    "minutesRead": "{minutes} મિનિટ વાંચો",
+    "related": "સંબંધિત",
+    "share": "શેર કરો",
+    "like": "પસંદ કરો",
+    "noContent": "કોઈ સામગ્રી નથી",
+    "loadError": "સામગ્રી લોડ થઈ શકી નથી",
+    "notFound": "સામગ્રી મળી નથી"
+  },
+  "home": {
+    "quickActions": "ઝડપી ક્રિયાઓ",
+    "askQuestion": "પ્રશ્ન પૂછો",
+    "takePhoto": "છોડનું નિદાન કરો",
+    "viewHistory": "ચેટ ઇતિહાસ",
+    "refresh": "રિફ્રેશ કરવા ખેંચો"
+  },
+  "notifications": {
+    "title": "સૂચનાઓ",
+    "settings": "સૂચના સેટિંગ્સ",
+    "weatherAlerts": "હવામાન ચેતવણીઓ",
+    "contentUpdates": "સામગ્રી અપડેટ્સ",
+    "engagement": "ટિપ્સ અને રીમાઇન્ડર્સ",
+    "enable": "સૂચનાઓ ચાલુ કરો",
+    "disabled": "સૂચનાઓ બંધ છે"
   }
 }

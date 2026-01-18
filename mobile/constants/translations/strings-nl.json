@@ -80,7 +80,8 @@
     "tapToAskNext": "Tik voor volgende vraag:",
     "analysisComplete": "Analyse voltooid",
     "lowAccuracy": "Lage nauwkeurigheid",
-    "tapToImprove": "Tik om te verbeteren"
+    "tapToImprove": "Tik om te verbeteren",
+    "servicesWarmingUp": "Diensten starten op, opnieuw proberen..."
   },
   "media": {
     "photoLibraryPermission": "Toegang tot fotobibliotheek is nodig om foto's te kiezen. Activeer in Instellingen.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Spreek in {expected}. Uw taal is herkend als {detected}.",
     "noSpeechDetected": "Geen spraak herkend. Spreek duidelijk en probeer opnieuw.",
     "audioTooShort": "Opname te kort. Spreek minimaal 1 seconde.",
-    "audioQualityPoor": "Geluidskwaliteit te laag. Probeer opnieuw in een rustigere omgeving."
+    "audioQualityPoor": "Geluidskwaliteit te laag. Probeer opnieuw in een rustigere omgeving.",
+    "liveTranscription": "Live transcriptie",
+    "connecting": "Verbinden...",
+    "reconnecting": "Opnieuw verbinden...",
+    "connectionError": "Verbindingsfout"
   },
   "history": {
     "title": "Gesprekken",
@@ -263,6 +268,16 @@
         "name": "GAP Landbouw",
         "tagline": "Landbouwadviesdiensten",
         "description": "Algemene landbouwadviesdiensten voor gewas- en veebeheer."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Diagnose van plantenziekten in 21 talen",
+        "description": "Herken plantenziekten van foto's met Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Google Weer",
+        "tagline": "Wereldwijd weerbericht met uitgebreide voorspellingen en historie",
+        "description": "Uitgebreide weergegevens van Google met 10-daagse voorspellingen, uurlijkse voorspellingen voor 240 uur en het weer van de afgelopen 24 uur."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Gewasadvies",
       "bestPractices": "Beste praktijken",
       "seasonalTips": "Seizoenstips",
-      "localKnowledge": "Lokale kennis"
+      "localKnowledge": "Lokale kennis",
+      "cropIdentification": "Gewassen herkennen",
+      "hourlyForecast": "Uurvoorspelling"
     },
     "fallback": {
       "service": "Landbouwdienst",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Voor jou",
+    "seeAll": "Alles bekijken",
+    "readMore": "Lees meer",
+    "listen": "Luister",
+    "watch": "Kijk",
+    "minutesRead": "{minutes} min lezen",
+    "related": "Gerelateerd",
+    "share": "Delen",
+    "like": "Leuk",
+    "noContent": "Geen inhoud beschikbaar",
+    "loadError": "Inhoud kon niet geladen worden",
+    "notFound": "Inhoud niet gevonden"
+  },
+  "home": {
+    "quickActions": "Snelle acties",
+    "askQuestion": "Stel een vraag",
+    "takePhoto": "Diagnoseer plant",
+    "viewHistory": "Chatgeschiedenis",
+    "refresh": "Trek omlaag om te vernieuwen"
+  },
+  "notifications": {
+    "title": "Meldingen",
+    "settings": "Meldingsinstellingen",
+    "weatherAlerts": "Weermeldingen",
+    "contentUpdates": "Inhoudsupdates",
+    "engagement": "Tips & Herinneringen",
+    "enable": "Meldingen inschakelen",
+    "disabled": "Meldingen zijn uitgeschakeld"
   }
 }

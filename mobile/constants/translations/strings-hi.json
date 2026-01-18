@@ -80,7 +80,8 @@
     "tapToAskNext": "अगला पूछने के लिए टैप करें:",
     "analysisComplete": "विश्लेषण पूरा हो गया",
     "lowAccuracy": "कम सटीकता",
-    "tapToImprove": "बेहतर बनाने के लिए टैप करें"
+    "tapToImprove": "बेहतर बनाने के लिए टैप करें",
+    "servicesWarmingUp": "सेवाएं तैयार हो रही हैं, फिर से कोशिश कर रहे हैं..."
   },
   "media": {
     "photoLibraryPermission": "फोटो चुनने के लिए गैलरी की अनुमति चाहिए। सेटिंग्स में चालू करें।",
@@ -112,7 +113,11 @@
     "languageMismatch": "कृपया {expected} में बोलें। आपकी आवाज़ {detected} में पाई गई है।",
     "noSpeechDetected": "कोई आवाज़ नहीं मिली। कृपया साफ बोलें और फिर कोशिश करें।",
     "audioTooShort": "रिकॉर्डिंग बहुत छोटी है। कृपया कम से कम 1 सेकंड तक बोलें।",
-    "audioQualityPoor": "आवाज़ साफ नहीं है। कृपया शांत जगह पर दोबारा कोशिश करें।"
+    "audioQualityPoor": "आवाज़ साफ नहीं है। कृपया शांत जगह पर दोबारा कोशिश करें।",
+    "liveTranscription": "सीधा बोलकर लिखना",
+    "connecting": "जुड़ रहा है...",
+    "reconnecting": "फिर से जुड़ रहा है...",
+    "connectionError": "कनेक्शन में समस्या"
   },
   "history": {
     "title": "बातचीत",
@@ -267,6 +272,16 @@
         "name": "जीएपी कृषि",
         "tagline": "कृषि सलाहकार सेवाएँ",
         "description": "फसल और पशुधन प्रबंधन के लिए सामान्य कृषि सलाहकार सेवाएँ।"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "21 भाषाओं में पौधों की बीमारियों की पहचान",
+        "description": "Plantix AI का उपयोग करके फोटो से पौधों की बीमारियों की पहचान करें।"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "लंबी अवधि के पूर्वानुमान और इतिहास के साथ वैश्विक मौसम",
+        "description": "Google से व्यापक मौसम डेटा जिसमें 10-दिन का पूर्वानुमान, 240-घंटे का प्रति घंटा पूर्वानुमान और पिछले 24-घंटे का मौसम इतिहास शामिल है।"
       }
     },
     "features": {
@@ -310,7 +325,9 @@
       "cropAdvice": "फसल सलाह",
       "bestPractices": "सर्वोत्तम अभ्यास",
       "seasonalTips": "मौसमी सुझाव",
-      "localKnowledge": "स्थानीय ज्ञान"
+      "localKnowledge": "स्थानीय ज्ञान",
+      "cropIdentification": "फसल की पहचान",
+      "hourlyForecast": "हर घंटे का पूर्वानुमान"
     },
     "fallback": {
       "service": "कृषि सेवा",
@@ -572,69 +589,34 @@
     },
     "dataSource": "मौसम डेटा Tomorrow.io से"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "आपके लिए",
+    "seeAll": "सभी देखें",
+    "readMore": "और पढ़ें",
+    "listen": "सुनें",
+    "watch": "देखें",
+    "minutesRead": "{minutes} मिनट पढ़ें",
+    "related": "संबंधित",
+    "share": "शेयर करें",
+    "like": "पसंद करें",
+    "noContent": "कोई सामग्री उपलब्ध नहीं",
+    "loadError": "सामग्री लोड नहीं हो सकी",
+    "notFound": "सामग्री नहीं मिली"
+  },
+  "home": {
+    "quickActions": "त्वरित कार्य",
+    "askQuestion": "सवाल पूछें",
+    "takePhoto": "पौधे की बीमारी पहचानें",
+    "viewHistory": "चैट का इतिहास",
+    "refresh": "ताज़ा करने के लिए खींचें"
+  },
+  "notifications": {
+    "title": "सूचनाएं",
+    "settings": "सूचना सेटिंग्स",
+    "weatherAlerts": "मौसम अलर्ट",
+    "contentUpdates": "सामग्री अपडेट",
+    "engagement": "सुझाव और रिमाइंडर",
+    "enable": "सूचनाएं चालू करें",
+    "disabled": "सूचनाएं बंद हैं"
   }
 }

@@ -80,7 +80,8 @@
     "tapToAskNext": "Gaaffii itti aanuuf tuqi:",
     "analysisComplete": "Qorannoon xumurameera",
     "lowAccuracy": "Sirrummaan gadi aanaa",
-    "tapToImprove": "Fooyyessuuf tuqi"
+    "tapToImprove": "Fooyyessuuf tuqi",
+    "servicesWarmingUp": "Tajaajilli dammaqaa jira, irra deebiin yaala..."
   },
   "media": {
     "photoLibraryPermission": "Suura filachuuf galmee suuraatti seenuun barbaachisa. Saayitiingii keessatti banaa.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Maaloo {expected} ttiin dubbadhu. Haasaan kee {detected} ta'uun isaa hubatame.",
     "noSpeechDetected": "Haasaan hin argamne. Maaloo ifatti dubbadhuutii irra deebi'ii yaali.",
     "audioTooShort": "Waraabbiin baay'ee gabaabaadha. Maaloo sekondii 1f dubbadhu.",
-    "audioQualityPoor": "Qulqullinni sagalee baay'ee gadaanaadha. Bakka callisaatti deebi'ii yaali."
+    "audioQualityPoor": "Qulqullinni sagalee baay'ee gadaanaadha. Bakka callisaatti deebi'ii yaali.",
+    "liveTranscription": "Barreessuu kallattii",
+    "connecting": "Hidhaa jira...",
+    "reconnecting": "Deebisee hidhaa jira...",
+    "connectionError": "Rakkoo hidhaa"
   },
   "history": {
     "title": "Haasawwan",
@@ -263,6 +268,16 @@
         "name": "GAP Qonnaa",
         "tagline": "Tajaajiloota gorsa qonnaa",
         "description": "Tajaajiloota gorsa qonnaa waliigalaa bulchiinsa midhaanii fi horiif."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Dhukkuba biqiltuu beeku, afaan 21n",
+        "description": "Dhukkuba biqiltuu suuraarraa Plantix AI'n adda baasi."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Qilleensa addunyaa, raaga dheeraa fi seenaa isaa.",
+        "description": "Odeeffannoo qilleensaa Google irraa: Raaga guyyaa 10, raaga sa'aatii 240, fi seenaa qilleensa sa'aatii 24."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Gorsa Midhaanii",
       "bestPractices": "Sirna Hojii Gaarii",
       "seasonalTips": "Gorsa Baraa",
-      "localKnowledge": "Beekumsa Naannoo"
+      "localKnowledge": "Beekumsa Naannoo",
+      "cropIdentification": "Midhaan adda baasuu",
+      "hourlyForecast": "Raaga sa'aatii sa'aatiin"
     },
     "fallback": {
       "service": "Tajaajila Qonnaa",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Siif",
+    "seeAll": "Hundaa ilaali",
+    "readMore": "Dabalata dubbisi",
+    "listen": "Dhaggeeffadhu",
+    "watch": "Ilaali",
+    "minutesRead": "{minutes} daqiiqaa dubbisuuf",
+    "related": "Walqabataa",
+    "share": "Hirii",
+    "like": "Jaaladhu",
+    "noContent": "Qabiyyee hin jiru",
+    "loadError": "Qabiyyeen hin fe'amne",
+    "notFound": "Qabiyyeen hin argamne"
+  },
+  "home": {
+    "quickActions": "Hojii Battalaa",
+    "askQuestion": "Gaaffii Gaafadhu",
+    "takePhoto": "Dhukkuba biqiltuu adda baasi",
+    "viewHistory": "Seenaa Haasaa",
+    "refresh": "Haaromsuuf Harkisi"
+  },
+  "notifications": {
+    "title": "Beeksisoota",
+    "settings": "Qindaa'ina Beeksisootaa",
+    "weatherAlerts": "Akeekkachiisa Qilleensaa",
+    "contentUpdates": "Haaromsa Qabiyyee",
+    "engagement": "Gorsaa fi Yaadachiisa",
+    "enable": "Beeksisoota Dandeessisuu",
+    "disabled": "Beeksisoonni Dhaamaniiru"
   }
 }

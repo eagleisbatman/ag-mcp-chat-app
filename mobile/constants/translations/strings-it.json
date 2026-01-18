@@ -80,7 +80,8 @@
     "tapToAskNext": "Tocca per chiedere ancora:",
     "analysisComplete": "Analisi completata",
     "lowAccuracy": "Bassa precisione",
-    "tapToImprove": "Tocca per migliorare"
+    "tapToImprove": "Tocca per migliorare",
+    "servicesWarmingUp": "Servizi in avvio, riprovo..."
   },
   "media": {
     "photoLibraryPermission": "L'accesso alla galleria foto è necessario per selezionare le immagini. Abilita nelle Impostazioni.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Parla in {expected}. La tua lingua è stata rilevata come {detected}.",
     "noSpeechDetected": "Nessuna voce rilevata. Parla chiaramente e riprova.",
     "audioTooShort": "Registrazione troppo breve. Parla per almeno 1 secondo.",
-    "audioQualityPoor": "Qualità audio troppo bassa. Riprova in un ambiente più silenzioso."
+    "audioQualityPoor": "Qualità audio troppo bassa. Riprova in un ambiente più silenzioso.",
+    "liveTranscription": "Trascrizione dal vivo",
+    "connecting": "Connessione in corso...",
+    "reconnecting": "Riconnessione in corso...",
+    "connectionError": "Errore di connessione"
   },
   "history": {
     "title": "Conversazioni",
@@ -263,6 +268,16 @@
         "name": "GAP Agricoltura",
         "tagline": "Servizi di consulenza agricola",
         "description": "Servizi generali di consulenza agricola per la gestione di colture e bestiame."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Diagnosi di malattie delle piante con supporto in 21 lingue",
+        "description": "Identifica le malattie delle piante da foto usando l'IA di Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Meteo globale con previsioni estese e storico",
+        "description": "Dati meteo completi da Google con previsioni a 10 giorni, orarie per 240 ore e storico delle ultime 24 ore."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Consigli per colture",
       "bestPractices": "Migliori pratiche",
       "seasonalTips": "Consigli stagionali",
-      "localKnowledge": "Conoscenza locale"
+      "localKnowledge": "Conoscenza locale",
+      "cropIdentification": "Identificazione Colture",
+      "hourlyForecast": "Previsioni Orarie"
     },
     "fallback": {
       "service": "Servizio agricolo",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Per Te",
+    "seeAll": "Vedi Tutto",
+    "readMore": "Leggi di più",
+    "listen": "Ascolta",
+    "watch": "Guarda",
+    "minutesRead": "{minutes} min di lettura",
+    "related": "Correlati",
+    "share": "Condividi",
+    "like": "Mi piace",
+    "noContent": "Nessun contenuto disponibile",
+    "loadError": "Impossibile caricare il contenuto",
+    "notFound": "Contenuto non trovato"
+  },
+  "home": {
+    "quickActions": "Azioni Rapide",
+    "askQuestion": "Fai una Domanda",
+    "takePhoto": "Diagnostica Pianta",
+    "viewHistory": "Cronologia Chat",
+    "refresh": "Trascina per aggiornare"
+  },
+  "notifications": {
+    "title": "Notifiche",
+    "settings": "Impostazioni Notifiche",
+    "weatherAlerts": "Avvisi Meteo",
+    "contentUpdates": "Aggiornamenti Contenuti",
+    "engagement": "Consigli e Promemoria",
+    "enable": "Abilita Notifiche",
+    "disabled": "Notifiche disabilitate"
   }
 }

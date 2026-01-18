@@ -80,7 +80,8 @@
     "tapToAskNext": "次に質問するにはタップ:",
     "analysisComplete": "分析完了",
     "lowAccuracy": "低精度",
-    "tapToImprove": "タップして改善"
+    "tapToImprove": "タップして改善",
+    "servicesWarmingUp": "サービス準備中、再試行します..."
   },
   "media": {
     "photoLibraryPermission": "写真選択にはフォトライブラリの許可が必要です。設定で有効に。",
@@ -112,7 +113,11 @@
     "languageMismatch": "{expected}で話してください。{detected}の言語が検出されました。",
     "noSpeechDetected": "声が聞こえませんでした。はっきり話して、もう一度試してください。",
     "audioTooShort": "録音が短すぎます。1秒以上話してください。",
-    "audioQualityPoor": "音質が悪すぎます。もっと静かな場所でもう一度試してください。"
+    "audioQualityPoor": "音質が悪すぎます。もっと静かな場所でもう一度試してください。",
+    "liveTranscription": "ライブ文字起こし",
+    "connecting": "接続中...",
+    "reconnecting": "再接続中...",
+    "connectionError": "接続エラー"
   },
   "history": {
     "title": "会話",
@@ -263,6 +268,16 @@
         "name": "GAPアグリカルチャー",
         "tagline": "営農アドバイスサービス",
         "description": "作物と家畜の管理に関する一般的な営農アドバイスサービス。"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "21言語対応、植物病害を診断",
+        "description": "Plantix AIで写真から植物病害を特定。"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "世界の天気予報、長期予報と過去データ",
+        "description": "Googleの天気データを網羅。10日間予報、240時間毎の予報、過去24時間の天気履歴。"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "作物アドバイス",
       "bestPractices": "優良事例",
       "seasonalTips": "季節のヒント",
-      "localKnowledge": "地域知識"
+      "localKnowledge": "地域知識",
+      "cropIdentification": "作物識別",
+      "hourlyForecast": "時間別予報"
     },
     "fallback": {
       "service": "農業サービス",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "おすすめ",
+    "seeAll": "すべて表示",
+    "readMore": "もっと読む",
+    "listen": "聞く",
+    "watch": "視聴",
+    "minutesRead": "{minutes}分",
+    "related": "関連",
+    "share": "共有",
+    "like": "いいね",
+    "noContent": "コンテンツなし",
+    "loadError": "コンテンツを読み込めません",
+    "notFound": "コンテンツが見つかりません"
+  },
+  "home": {
+    "quickActions": "クイックアクション",
+    "askQuestion": "質問する",
+    "takePhoto": "植物を診断",
+    "viewHistory": "チャット履歴",
+    "refresh": "引っ張って更新"
+  },
+  "notifications": {
+    "title": "通知",
+    "settings": "通知設定",
+    "weatherAlerts": "天気アラート",
+    "contentUpdates": "コンテンツ更新",
+    "engagement": "ヒント・リマインダー",
+    "enable": "通知を有効にする",
+    "disabled": "通知は無効です"
   }
 }
