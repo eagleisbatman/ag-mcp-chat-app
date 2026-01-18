@@ -80,7 +80,8 @@
     "tapToAskNext": "ແຕະເພື່ອຖາມຕໍ່ໄປ:",
     "analysisComplete": "ວິເຄາະສຳເລັດ",
     "lowAccuracy": "ຄວາມຖືກຕ້ອງຕໍ່າ",
-    "tapToImprove": "ແຕະເພື່ອປັບປຸງ"
+    "tapToImprove": "ແຕະເພື່ອປັບປຸງ",
+    "servicesWarmingUp": "ບໍລິການກຳລັງເລີ່ມ, ລອງໃໝ່ອີກຄັ້ງ..."
   },
   "media": {
     "photoLibraryPermission": "ຕ້ອງເຂົ້າເຖິງຄັງຮູບ ເພື່ອເລືອກຮູບ. ເປີດໃຊ້ໃນການຕັ້ງຄ່າ.",
@@ -112,7 +113,11 @@
     "languageMismatch": "ກະລຸນາເວົ້າເປັນພາສາ {expected}. ລະບົບກວດພົບວ່າທ່ານເວົ້າພາສາ {detected}.",
     "noSpeechDetected": "ບໍ່ພົບສຽງເວົ້າ. ກະລຸນາເວົ້າໃຫ້ຊັດເຈນ ແລະ ລອງໃໝ່ອີກຄັ້ງ.",
     "audioTooShort": "ສຽງບັນທຶກສັ້ນເກີນໄປ. ກະລຸນາເວົ້າຢ່າງໜ້ອຍ 1 ວິນາທີ.",
-    "audioQualityPoor": "ຄຸນນະພາບສຽງຕໍ່າເກີນໄປ. ລອງໃໝ່ໃນສະພາບແວດລ້ອມທີ່ງຽບກວ່າ."
+    "audioQualityPoor": "ຄຸນນະພາບສຽງຕໍ່າເກີນໄປ. ລອງໃໝ່ໃນສະພາບແວດລ້ອມທີ່ງຽບກວ່າ.",
+    "liveTranscription": "ກຳລັງຖອດສຽງ",
+    "connecting": "ກຳລັງເຊື່ອມຕໍ່...",
+    "reconnecting": "ກຳລັງເຊື່ອມຕໍ່ໃໝ່...",
+    "connectionError": "ຂໍ້ຜິດພາດໃນການເຊື່ອມຕໍ່"
   },
   "history": {
     "title": "ການສົນທະນາ",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "ບໍລິການໃຫ້ຄຳປຶກສາດ້ານກະສິກຳ",
         "description": "ບໍລິການໃຫ້ຄຳປຶກສາດ້ານກະສິກຳທົ່ວໄປສຳລັບການຈັດການພືດ ແລະ ສັດລ້ຽງ."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "ການວິນິດໄສພະຍາດພືດ, ຮອງຮັບ 21 ພາສາ",
+        "description": "ລະບຸພະຍາດພືດຈາກຮູບພາບ ໂດຍໃຊ້ AI ຂອງ Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "ສະພາບອາກາດທົ່ວໂລກ, ຄາດຄະເນລ່ວງໜ້າ ແລະ ປະຫວັດ",
+        "description": "ຂໍ້ມູນສະພາບອາກາດຄົບຖ້ວນຈາກ Google ພ້ອມພະຍາກອນ 10 ມື້, ລາຍຊົ່ວໂມງ 240 ຊົ່ວໂມງ, ແລະ ປະຫວັດ 24 ຊົ່ວໂມງທີ່ຜ່ານມາ."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "ຄຳແນະນຳພືດ",
       "bestPractices": "ການປະຕິບັດທີ່ດີທີ່ສຸດ",
       "seasonalTips": "ຄຳແນະນຳຕາມລະດູການ",
-      "localKnowledge": "ຄວາມຮູ້ທ້ອງຖິ່ນ"
+      "localKnowledge": "ຄວາມຮູ້ທ້ອງຖິ່ນ",
+      "cropIdentification": "ລະບຸພືດຜົນ",
+      "hourlyForecast": "ພະຍາກອນລາຍຊົ່ວໂມງ"
     },
     "fallback": {
       "service": "ບໍລິການກະສິກຳ",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "ສໍາລັບທ່ານ",
+    "seeAll": "ເບິ່ງທັງໝົດ",
+    "readMore": "ອ່ານເພີ່ມເຕີມ",
+    "listen": "ຟັງ",
+    "watch": "ເບິ່ງ",
+    "minutesRead": "ອ່ານ {minutes} ນາທີ",
+    "related": "ທີ່ກ່ຽວຂ້ອງ",
+    "share": "ແບ່ງປັນ",
+    "like": "ຖືກໃຈ",
+    "noContent": "ບໍ່ມີເນື້ອຫາ",
+    "loadError": "ບໍ່ສາມາດໂຫຼດເນື້ອຫາໄດ້",
+    "notFound": "ບໍ່ພົບເນື້ອຫາ"
+  },
+  "home": {
+    "quickActions": "ເຮັດວຽກດ່ວນ",
+    "askQuestion": "ຖາມຄໍາຖາມ",
+    "takePhoto": "ກວດພະຍາດພືດ",
+    "viewHistory": "ປະຫວັດການສົນທະນາ",
+    "refresh": "ລາກລົງເພື່ອໂຫຼດໃໝ່"
+  },
+  "notifications": {
+    "title": "ການແຈ້ງເຕືອນ",
+    "settings": "ການຕັ້ງຄ່າການແຈ້ງເຕືອນ",
+    "weatherAlerts": "ການແຈ້ງເຕືອນສະພາບອາກາດ",
+    "contentUpdates": "ເນື້ອຫາໃໝ່",
+    "engagement": "ຄຳແນະນຳ ແລະ ການເຕືອນ",
+    "enable": "ເປີດໃຊ້ການແຈ້ງເຕືອນ",
+    "disabled": "ການແຈ້ງເຕືອນຖືກປິດໃຊ້ງານ"
   }
 }

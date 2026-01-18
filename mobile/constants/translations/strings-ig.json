@@ -80,7 +80,8 @@
     "tapToAskNext": "Pịa ịjụ nke ọzọ:",
     "analysisComplete": "Nyocha mechara",
     "lowAccuracy": "Izizi dị ala",
-    "tapToImprove": "Pịa iji meziwanye"
+    "tapToImprove": "Pịa iji meziwanye",
+    "servicesWarmingUp": "Ọrụ na-amalite, na-anwa ọzọ..."
   },
   "media": {
     "photoLibraryPermission": "A chọrọ ikike ịnweta Ebe nchekwa foto iji họrọ onyonyo. Mee ya na Ntọala.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Biko kwuo okwu na {expected}. A chọpụtara na okwu gị bụ {detected}.",
     "noSpeechDetected": "Achọpụtaghị okwu. Biko kwuo n'ụzọ doro anya ma nwaa ọzọ.",
     "audioTooShort": "Ndekọ olu dị mkpụmkpụ nke ukwuu. Biko kwuo okwu maka ọ dịkarịa ala sekọnd 1.",
-    "audioQualityPoor": "Ogo olu dị ala nke ukwuu. Nwaa ọzọ n'ebe dị jụụ karịa."
+    "audioQualityPoor": "Ogo olu dị ala nke ukwuu. Nwaa ọzọ n'ebe dị jụụ karịa.",
+    "liveTranscription": "Ihenye okwu dị ndụ",
+    "connecting": "Na-ejikọ...",
+    "reconnecting": "Na-ejikọ ọzọ...",
+    "connectionError": "Nsogbu njikọ"
   },
   "history": {
     "title": "Mkparịta ụka",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "Ọrụ ndụmọdụ ugbo",
         "description": "Ọrụ ndụmọdụ ọrụ ugbo n'ozuzu maka njikwa ihe ubi na anụ ụlọ."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Nchọpụta ọrịa ihe ọkụkụ, nkwado asụsụ iri abụọ na otu",
+        "description": "Chọpụta ọrịa ihe ọkụkụ site na foto site na iji AI Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Ihu igwe ụwa niile, amụma na akụkọ ya gara aga",
+        "description": "Ama ihu igwe zuru ezu site na Google, nwere amụma ụbọchị iri, amụma awa 240 na akụkọ ihu igwe awa 24 gara aga."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Ndụmọdụ Ubi",
       "bestPractices": "Ụzọ Kacha Mma",
       "seasonalTips": "Ndụmọdụ Oge",
-      "localKnowledge": "Ihe Ọmụma Obodo"
+      "localKnowledge": "Ihe Ọmụma Obodo",
+      "cropIdentification": "Ịmata ihe ọkụkụ",
+      "hourlyForecast": "Amụma awa awa"
     },
     "fallback": {
       "service": "Ọrụ Ugbo",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Maka Gị",
+    "seeAll": "Hụ Ihe Niile",
+    "readMore": "Gụọ Ọzọ",
+    "listen": "Gee Ntị",
+    "watch": "Lelee",
+    "minutesRead": "Minit {minutes} ịgụ",
+    "related": "Ndị metụtara ya",
+    "share": "Kesaa",
+    "like": "Mmasị",
+    "noContent": "Enweghị ihe ọ bụla dị",
+    "loadError": "Enweghị ike ibunye ihe ahụ",
+    "notFound": "Achọtaghị ihe ahụ"
+  },
+  "home": {
+    "quickActions": "Ọrụ Ngwa ngwa",
+    "askQuestion": "Jụọ Ajụjụ",
+    "takePhoto": "Chọpụta Ọrịa Osisi",
+    "viewHistory": "Akụkọ Nkata",
+    "refresh": "Dọta ka o megharịa"
+  },
+  "notifications": {
+    "title": "Ọkwa",
+    "settings": "Ntọala Ọkwa",
+    "weatherAlerts": "Ọkwa Ihu Igwe",
+    "contentUpdates": "Mmelite Ihe",
+    "engagement": "Ndụmọdụ na Ncheta",
+    "enable": "Kwado Ọkwa",
+    "disabled": "Agbanyụrụ Ọkwa"
   }
 }

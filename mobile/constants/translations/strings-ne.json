@@ -80,7 +80,8 @@
     "tapToAskNext": "अर्को सोध्न ट्याप गर्नुहोस्:",
     "analysisComplete": "विश्लेषण पूरा भयो",
     "lowAccuracy": "कम शुद्धता",
-    "tapToImprove": "सुधार गर्न ट्याप गर्नुहोस्"
+    "tapToImprove": "सुधार गर्न ट्याप गर्नुहोस्",
+    "servicesWarmingUp": "सेवाहरू सुरु हुँदैछन्, फेरि प्रयास गर्दै..."
   },
   "media": {
     "photoLibraryPermission": "तस्वीर छनोट गर्न फोटो ग्यालरीको पहुँच चाहिन्छ। सेटिङ्ग्समा खोल्नुहोस्।",
@@ -112,7 +113,11 @@
     "languageMismatch": "कृपया {expected} भाषामा बोल्नुहोस्। तपाईंको बोली {detected} पत्ता लाग्यो।",
     "noSpeechDetected": "आवाज पत्ता लागेन। कृपया स्पष्ट बोल्नुहोस् र फेरि प्रयास गर्नुहोस्।",
     "audioTooShort": "रेकर्डिङ धेरै छोटो भयो। कृपया कम्तिमा १ सेकेन्ड बोल्नुहोस्।",
-    "audioQualityPoor": "अडियो गुणस्तर धेरै कम छ। शान्त ठाउँमा फेरि प्रयास गर्नुहोस्।"
+    "audioQualityPoor": "अडियो गुणस्तर धेरै कम छ। शान्त ठाउँमा फेरि प्रयास गर्नुहोस्।",
+    "liveTranscription": "बोल्दै लेख्ने",
+    "connecting": "जोडिँदैछ...",
+    "reconnecting": "फेरि जोडिँदैछ...",
+    "connectionError": "जडानमा समस्या"
   },
   "history": {
     "title": "कुराकानीहरू",
@@ -263,6 +268,16 @@
         "name": "GAP कृषि",
         "tagline": "कृषि सल्लाहकार सेवाहरू",
         "description": "बाली र पशुधन व्यवस्थापनका लागि सामान्य कृषि सल्लाहकार सेवाहरू।"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "२१ भाषामा बिरुवा रोग पहिचान",
+        "description": "Plantix AI प्रयोग गरेर फोटोबाट बिरुवाको रोग पत्ता लगाउनुहोस्।"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "विस्तृत पूर्वानुमान र इतिहास सहित विश्वभरको मौसम",
+        "description": "गुगलबाट १० दिनको, २४० घण्टाको प्रतिघण्टाको र बितेका २४ घण्टाको मौसमको विस्तृत जानकारी।"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "बाली सल्लाह",
       "bestPractices": "उत्तम अभ्यासहरू",
       "seasonalTips": "मौसमी सुझावहरू",
-      "localKnowledge": "स्थानीय ज्ञान"
+      "localKnowledge": "स्थानीय ज्ञान",
+      "cropIdentification": "बाली पहिचान",
+      "hourlyForecast": "घण्टा-घण्टाको पूर्वानुमान"
     },
     "fallback": {
       "service": "कृषि सेवा",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "सरकारी योजनाहरू",
-    "eligibility": "योजनाको योग्यता",
-    "checkEligibility": "योग्यता जाँच गर्नुहोस्",
-    "screeningQuestions": "छनौट प्रश्नहरू",
-    "answerQuestions": "तपाईंको योग्यता जाँच गर्न प्रश्नहरूको उत्तर दिनुहोस्",
-    "eligibleSchemes": "योग्य योजनाहरू",
-    "noSchemesFound": "तपाईंको प्रोफाइलसँग मिल्दो कुनै योजना फेला परेन",
-    "journeyUrl": "आवेदन लिङ्क",
-    "startApplication": "आवेदन सुरु गर्नुहोस्",
-    "schemeName": "योजनाको नाम",
-    "schemeDescription": "विवरण",
-    "benefits": "लाभहरू",
-    "eligibilityCriteria": "योग्यता मापदण्ड",
-    "requiredDocuments": "आवश्यक कागजातहरू",
-    "nextSteps": "अर्को चरणहरू",
-    "totalSchemes": "कुल योजनाहरू",
-    "provider": "प्रदायक",
-    "haqdarshak": "हकदर्शक",
-    "knowYourSchemes": "आफ्नो योजनाहरू जान्नुहोस्",
-    "indiaOnly": "भारतमा मात्र उपलब्ध छ",
-    "questions": {
-      "gender": "लिङ्ग",
-      "age": "उमेर",
-      "maritalStatus": "वैवाहिक स्थिति",
-      "monthlyIncome": "मासिक घरायसी आय",
-      "landOwnership": "जग्गा स्वामित्व",
-      "rationCardType": "राशन कार्डको प्रकार",
-      "religion": "धर्म",
-      "casteCategory": "जाति श्रेणी",
-      "occupationalStatus": "व्यावसायिक स्थिति",
-      "natureOfJob": "कामको प्रकृति",
-      "personalIncome": "व्यक्तिगत मासिक आय"
-    },
-    "answers": {
-      "male": "पुरुष",
-      "female": "महिला",
-      "other": "अन्य",
-      "married": "विवाहित",
-      "unmarried": "अविवाहित",
-      "widowed": "विधवा",
-      "divorced": "तलाकप्राप्त",
-      "separated": "अलग",
-      "farmer": "किसान",
-      "farmLaborer": "कृषि मजदुर",
-      "fisherman": "माछा मार्ने",
-      "animalHusbandry": "पशुपालन",
-      "dairyFarmer": "दुग्ध किसान",
-      "poultryFarmer": "कुखुरापालक किसान",
-      "landOwner": "जग्गा मालिक",
-      "landless": "भूमिहीन",
-      "sharecropper": "अंशबण्डामा खेती गर्ने"
-    },
-    "documents": {
-      "aadhaarCard": "आधार कार्ड",
-      "bankPassbook": "बैंक पासबुक",
-      "landRecords": "भूमिको अभिलेख",
-      "rationCard": "राशन कार्ड",
-      "casteCertificate": "जाति प्रमाणपत्र",
-      "incomeCertificate": "आय प्रमाणपत्र",
-      "voterID": "मतदाता परिचय पत्र",
-      "passport": "पासपोर्ट फोटो"
-    },
-    "dataSource": "हकदर्शकबाट योजना डेटा"
+  "content": {
+    "forYou": "तपाईंको लागि",
+    "seeAll": "सबै हेर्नुहोस्",
+    "readMore": "थप पढ्नुहोस्",
+    "listen": "सुन्नुहोस्",
+    "watch": "हेर्नुहोस्",
+    "minutesRead": "{minutes} मिनेट पढाइ",
+    "related": "सम्बन्धित",
+    "share": "सेयर गर्नुहोस्",
+    "like": "मन पराउनुहोस्",
+    "noContent": "सामग्री उपलब्ध छैन",
+    "loadError": "सामग्री लोड गर्न सकिएन",
+    "notFound": "सामग्री भेटिएन"
+  },
+  "home": {
+    "quickActions": "छिटो कामहरू",
+    "askQuestion": "प्रश्न सोध्नुहोस्",
+    "takePhoto": "बिरुवा जाँच्नुहोस्",
+    "viewHistory": "च्याट इतिहास",
+    "refresh": "ताजा गर्न तान्नुहोस्"
+  },
+  "notifications": {
+    "title": "सूचनाहरू",
+    "settings": "सूचना सेटिङहरू",
+    "weatherAlerts": "मौसम अलर्टहरू",
+    "contentUpdates": "सामग्री अपडेटहरू",
+    "engagement": "सुझाव र सम्झनाहरू",
+    "enable": "सूचनाहरू सक्षम गर्नुहोस्",
+    "disabled": "सूचनाहरू बन्द छन्"
   }
 }

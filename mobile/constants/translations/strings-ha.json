@@ -80,7 +80,8 @@
     "tapToAskNext": "Danna don tambaya ta gaba:",
     "analysisComplete": "Bincike ya kammala",
     "lowAccuracy": "Ƙarancin daidaito",
-    "tapToImprove": "Danna don ingantawa"
+    "tapToImprove": "Danna don ingantawa",
+    "servicesWarmingUp": "Suna shiri, ana sake gwadawa..."
   },
   "media": {
     "photoLibraryPermission": "Ana buƙatar damar shiga hotuna don zaɓi hoto. Buɗe a Saituna.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Da fatan za ka yi magana da {expected}. An gano yarenka a matsayin {detected}.",
     "noSpeechDetected": "Ba a gano magana ba. Don Allah yi magana a sarari kuma sake gwadawa.",
     "audioTooShort": "Rikodi yayi gajarta. Don Allah yi magana na akalla daƙiƙa 1.",
-    "audioQualityPoor": "Ƙarancin ingancin sauti. Sake gwadawa a wuri mai natsuwa."
+    "audioQualityPoor": "Ƙarancin ingancin sauti. Sake gwadawa a wuri mai natsuwa.",
+    "liveTranscription": "Rubuta kai tsaye",
+    "connecting": "Ana haɗawa...",
+    "reconnecting": "Ana sake haɗawa...",
+    "connectionError": "Matsalar haɗi"
   },
   "history": {
     "title": "Tattaunawa",
@@ -263,6 +268,16 @@
         "name": "GAP Noma",
         "tagline": "Hidimar shawarwari kan noma",
         "description": "Janar hidimar shawarwari kan sarrafa noma da dabbobi."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Gano ciwon shuka da tallafin harsuna 21",
+        "description": "Gano ciwon shuka daga hotuna ta amfani da AI na Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Yanayi na duniya tare da hasashen gaba da tarihi",
+        "description": "Cikakken bayanan yanayi daga Google da hasashen kwana 10, hasashen sa'a-sa'a na awanni 240, da tarihin yanayi na awanni 24 da suka gabata."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Shawara Noma",
       "bestPractices": "Mafi Kyawun Ayuka",
       "seasonalTips": "Shawarwarin Kaka",
-      "localKnowledge": "Ilimin Gida"
+      "localKnowledge": "Ilimin Gida",
+      "cropIdentification": "Gane Amfanin Gona",
+      "hourlyForecast": "Hasashen Sa'a-sa'a"
     },
     "fallback": {
       "service": "Hidimar noma",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Domin Kai",
+    "seeAll": "Duba Duk",
+    "readMore": "Kara Karatu",
+    "listen": "Saurara",
+    "watch": "Kalla",
+    "minutesRead": "Minti {minutes} na karatu",
+    "related": "Masu alaƙa",
+    "share": "Raba",
+    "like": "So",
+    "noContent": "Babu abun ciki",
+    "loadError": "Ba a iya ɗauko abun ciki ba",
+    "notFound": "Ba a samo abun ciki ba"
+  },
+  "home": {
+    "quickActions": "Ayyukan Gaggawa",
+    "askQuestion": "Yi Tambaya",
+    "takePhoto": "Gano Ciwon Shuka",
+    "viewHistory": "Tarihin Hirarraki",
+    "refresh": "Jawo don sabuntawa"
+  },
+  "notifications": {
+    "title": "Sanarwa",
+    "settings": "Saitunan Sanarwa",
+    "weatherAlerts": "Faɗakarwar Yanayi",
+    "contentUpdates": "Sabunta Abubuwan ciki",
+    "engagement": "Nasiha & Tunatarwa",
+    "enable": "Kunna Sanarwa",
+    "disabled": "An kashe Sanarwa"
   }
 }

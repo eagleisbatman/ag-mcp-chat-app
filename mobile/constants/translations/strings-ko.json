@@ -80,7 +80,8 @@
     "tapToAskNext": "다음 질문을 위해 누르세요:",
     "analysisComplete": "분석 완료",
     "lowAccuracy": "낮은 정확도",
-    "tapToImprove": "개선하려면 누르세요"
+    "tapToImprove": "개선하려면 누르세요",
+    "servicesWarmingUp": "서비스 준비 중. 다시 시도합니다..."
   },
   "media": {
     "photoLibraryPermission": "사진을 고르려면 사진첩 접근 권한이 필요합니다. 설정에서 켜주세요.",
@@ -112,7 +113,11 @@
     "languageMismatch": "{expected}로 말해주세요. 음성은 {detected}로 감지되었습니다.",
     "noSpeechDetected": "음성 감지 안 됨. 또렷하게 말하고 다시 시도.",
     "audioTooShort": "녹음 길이가 너무 짧습니다. 1초 이상 말해주세요.",
-    "audioQualityPoor": "음질이 낮습니다. 더 조용한 곳에서 다시 시도해 주세요."
+    "audioQualityPoor": "음질이 낮습니다. 더 조용한 곳에서 다시 시도해 주세요.",
+    "liveTranscription": "실시간 받아쓰기",
+    "connecting": "연결 중...",
+    "reconnecting": "재연결 중...",
+    "connectionError": "연결 오류"
   },
   "history": {
     "title": "대화",
@@ -263,6 +268,16 @@
         "name": "GAP 농업",
         "tagline": "농업 자문 서비스",
         "description": "작물 및 가축 관리를 위한 일반 농업 자문 서비스입니다."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "식물 질병 진단, 21개 언어 지원",
+        "description": "Plantix AI로 사진에서 식물 질병 진단."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "전 세계 날씨, 상세 예보 및 과거 기록",
+        "description": "Google의 상세 날씨 데이터. 10일 예보, 240시간 시간별 예보, 지난 24시간 기록."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "작물 조언",
       "bestPractices": "모범 사례",
       "seasonalTips": "계절별 팁",
-      "localKnowledge": "현지 지식"
+      "localKnowledge": "현지 지식",
+      "cropIdentification": "작물 식별",
+      "hourlyForecast": "시간별 예보"
     },
     "fallback": {
       "service": "농업 서비스",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "추천",
+    "seeAll": "모두 보기",
+    "readMore": "더 보기",
+    "listen": "듣기",
+    "watch": "보기",
+    "minutesRead": "{minutes}분 읽기",
+    "related": "관련",
+    "share": "공유",
+    "like": "좋아요",
+    "noContent": "콘텐츠 없음",
+    "loadError": "콘텐츠를 불러올 수 없습니다",
+    "notFound": "콘텐츠를 찾을 수 없습니다"
+  },
+  "home": {
+    "quickActions": "빠른 실행",
+    "askQuestion": "질문하기",
+    "takePhoto": "식물 진단",
+    "viewHistory": "채팅 기록",
+    "refresh": "당겨서 새로 고침"
+  },
+  "notifications": {
+    "title": "알림",
+    "settings": "알림 설정",
+    "weatherAlerts": "날씨 알림",
+    "contentUpdates": "콘텐츠 업데이트",
+    "engagement": "팁 및 알림",
+    "enable": "알림 켜기",
+    "disabled": "알림이 꺼져 있습니다"
   }
 }

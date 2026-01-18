@@ -80,7 +80,8 @@
     "tapToAskNext": "နောက်ထပ် မေးရန် နှိပ်ပါ:",
     "analysisComplete": "စစ်ဆေးပြီးပါပြီ။",
     "lowAccuracy": "တိကျမှု နည်းပါး",
-    "tapToImprove": "ပိုကောင်းအောင် နှိပ်ပါ။"
+    "tapToImprove": "ပိုကောင်းအောင် နှိပ်ပါ။",
+    "servicesWarmingUp": "ဝန်ဆောင်မှုစတင်နေသည်၊ ပြန်ကြိုးစားနေသည်..."
   },
   "media": {
     "photoLibraryPermission": "ဓာတ်ပုံရွေးရန် ပြခန်းအသုံးပြုခွင့် လိုအပ်ပါသည်။ ဆက်တင်တွင် ဖွင့်ပေးပါ။",
@@ -112,7 +113,11 @@
     "languageMismatch": "{expected} ဘာသာစကားဖြင့် ပြောပါ။ သင့်စကားကို {detected} အဖြစ် တွေ့ရှိရပါသည်။",
     "noSpeechDetected": "စကားသံ မတွေ့ရှိပါ။ ရှင်းရှင်းလင်းလင်းပြောပြီး ထပ်ကြိုးစားပါ။",
     "audioTooShort": "အသံသွင်းမှု တိုလွန်းသည်။ အနည်းဆုံး ၁ စက္ကန့် ပြောပါ။",
-    "audioQualityPoor": "အသံအရည်အသွေး နိမ့်လွန်းသည်။ ပို၍ တိတ်ဆိတ်သောနေရာတွင် ထပ်ကြိုးစားပါ။"
+    "audioQualityPoor": "အသံအရည်အသွေး နိမ့်လွန်းသည်။ ပို၍ တိတ်ဆိတ်သောနေရာတွင် ထပ်ကြိုးစားပါ။",
+    "liveTranscription": "တိုက်ရိုက် စာသားဖော်ပြခြင်း",
+    "connecting": "ချိတ်ဆက်နေသည်...",
+    "reconnecting": "ပြန်လည်ချိတ်ဆက်နေသည်...",
+    "connectionError": "ချိတ်ဆက်မှုပြဿနာ"
   },
   "history": {
     "title": "စကားပြောဆိုမှုများ",
@@ -263,6 +268,16 @@
         "name": "GAP စိုက်ပျိုးရေး",
         "tagline": "စိုက်ပျိုးရေးအကြံပေးဝန်ဆောင်မှုများ",
         "description": "သီးနှံနှင့် မွေးမြူရေးစီမံခန့်ခွဲမှုအတွက် အထွေထွေစိုက်ပျိုးရေးအကြံပေးဝန်ဆောင်မှုများ"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "အပင်ရောဂါရှာဖွေခြင်း၊ ဘာသာစကား ၂၁ မျိုး ထောက်ပံ့",
+        "description": "Plantix AI ဖြင့် ဓာတ်ပုံများမှ အပင်ရောဂါများကို ရှာဖွေပါ။"
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "ကမ္ဘာ့ရာသီဥတု၊ အသေးစိတ်ခန့်မှန်းချက်နှင့် မှတ်တမ်း",
+        "description": "Google မှ ပြည့်စုံသော ရာသီဥတု အချက်အလက်များ။ ၁၀ ရက်တာ ခန့်မှန်းချက်၊ ၂၄၀ နာရီ (တစ်နာရီချင်း) ခန့်မှန်းချက်နှင့် ၂၄ နာရီ မှတ်တမ်းများ ပါဝင်သည်။"
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "သီးနှံအကြံဉာဏ်",
       "bestPractices": "အကောင်းဆုံးနည်းလမ်းများ",
       "seasonalTips": "ရာသီအလိုက်အကြံပြုချက်များ",
-      "localKnowledge": "ဒေသခံဗဟုသုတ"
+      "localKnowledge": "ဒေသခံဗဟုသုတ",
+      "cropIdentification": "သီးနှံဖော်ထုတ်ခြင်း",
+      "hourlyForecast": "နာရီအလိုက် ခန့်မှန်းချက်"
     },
     "fallback": {
       "service": "စိုက်ပျိုးရေးဝန်ဆောင်မှု",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "သင့်အတွက်",
+    "seeAll": "အားလုံးကြည့်ရန်",
+    "readMore": "ဆက်ဖတ်ရန်",
+    "listen": "နားထောင်ရန်",
+    "watch": "ကြည့်ရှုရန်",
+    "minutesRead": "{minutes} မိနစ်ဖတ်",
+    "related": "ဆက်စပ်",
+    "share": "မျှဝေရန်",
+    "like": "နှစ်သက်သည်",
+    "noContent": "အကြောင်းအရာ မရှိပါ",
+    "loadError": "အကြောင်းအရာ တင်မရပါ။",
+    "notFound": "အကြောင်းအရာ ရှာမတွေ့ပါ။"
+  },
+  "home": {
+    "quickActions": "အမြန်လုပ်ဆောင်ချက်များ",
+    "askQuestion": "မေးခွန်းမေးရန်",
+    "takePhoto": "အပင်ရောဂါ စစ်ဆေးရန်",
+    "viewHistory": "စကားပြော မှတ်တမ်း",
+    "refresh": "ဆွဲချ၍ အသစ်လုပ်ရန်"
+  },
+  "notifications": {
+    "title": "အသိပေးချက်များ",
+    "settings": "အသိပေးချက် ဆက်တင်များ",
+    "weatherAlerts": "ရာသီဥတု သတိပေးချက်များ",
+    "contentUpdates": "အကြောင်းအရာ အသစ်များ",
+    "engagement": "အကြံပြုချက်နှင့် သတိပေးချက်များ",
+    "enable": "အသိပေးချက်များ ဖွင့်ရန်",
+    "disabled": "အသိပေးချက်များ ပိတ်ထားသည်"
   }
 }

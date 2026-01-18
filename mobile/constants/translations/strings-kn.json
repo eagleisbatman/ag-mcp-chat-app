@@ -80,7 +80,8 @@
     "tapToAskNext": "ಮುಂದಿನ ಪ್ರಶ್ನೆ ಕೇಳಲು ಟ್ಯಾಪ್ ಮಾಡಿ:",
     "analysisComplete": "ವಿಶ್ಲೇಷಣೆ ಪೂರ್ಣಗೊಂಡಿದೆ",
     "lowAccuracy": "ಕಡಿಮೆ ನಿಖರತೆ",
-    "tapToImprove": "ಸುಧಾರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ"
+    "tapToImprove": "ಸುಧಾರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ",
+    "servicesWarmingUp": "ಸೇವೆಗಳು ಸಿದ್ಧವಾಗುತ್ತಿವೆ, ಮರುಪ್ರಯತ್ನ."
   },
   "media": {
     "photoLibraryPermission": "ಚಿತ್ರಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಲು ಫೋಟೋ ಲೈಬ್ರರಿ ಪ್ರವೇಶ ಬೇಕು. ಸೆಟ್ಟಿಂಗ್ಸ್‌ನಲ್ಲಿ ಸಕ್ರಿಯಗೊಳಿಸಿ.",
@@ -112,7 +113,11 @@
     "languageMismatch": "ದಯವಿಟ್ಟು {expected} ಭಾಷೆಯಲ್ಲಿ ಮಾತನಾಡಿ. ನಿಮ್ಮ ಮಾತು {detected} ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ.",
     "noSpeechDetected": "ಯಾವುದೇ ಮಾತು ಪತ್ತೆಯಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
     "audioTooShort": "ರೆಕಾರ್ಡಿಂಗ್ ಬಹಳ ಚಿಕ್ಕದಾಗಿದೆ. ದಯವಿಟ್ಟು ಕನಿಷ್ಠ 1 ಸೆಕೆಂಡ್ ಮಾತನಾಡಿ.",
-    "audioQualityPoor": "ಆಡಿಯೋ ಗುಣಮಟ್ಟ ಕಡಿಮೆಯಾಗಿದೆ. ದಯವಿಟ್ಟು ಶಬ್ದವಿಲ್ಲದ ಜಾಗದಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+    "audioQualityPoor": "ಆಡಿಯೋ ಗುಣಮಟ್ಟ ಕಡಿಮೆಯಾಗಿದೆ. ದಯವಿಟ್ಟು ಶಬ್ದವಿಲ್ಲದ ಜಾಗದಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "liveTranscription": "ನೇರ ನಕಲು",
+    "connecting": "ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ...",
+    "reconnecting": "ಮರುಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ...",
+    "connectionError": "ಸಂಪರ್ಕ ದೋಷ"
   },
   "history": {
     "title": "ಸಂಭಾಷಣೆಗಳು",
@@ -263,6 +268,16 @@
         "name": "GAP ಕೃಷಿ",
         "tagline": "ಕೃಷಿ ಸಲಹಾ ಸೇವೆಗಳು",
         "description": "ಬೆಳೆ ಮತ್ತು ಜಾನುವಾರು ನಿರ್ವಹಣೆಗಾಗಿ ಸಾಮಾನ್ಯ ಕೃಷಿ ಸಲಹಾ ಸೇವೆಗಳು."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "ಸಸ್ಯ ರೋಗ ಪತ್ತೆ, 21 ಭಾಷೆಗಳಲ್ಲಿ ಬೆಂಬಲ",
+        "description": "Plantix AI ಬಳಸಿ ಫೋಟೋಗಳಿಂದ ಸಸ್ಯ ರೋಗಗಳನ್ನು ಗುರುತಿಸಿ."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "ಜಾಗತಿಕ ಹವಾಮಾನ, ವಿಸ್ತೃತ ಮುನ್ಸೂಚನೆ ಮತ್ತು ಹವಾಮಾನ ಇತಿಹಾಸ",
+        "description": "Google ನಿಂದ ಸಮಗ್ರ ಹವಾಮಾನ ಮಾಹಿತಿ: 10 ದಿನಗಳ ಮುನ್ಸೂಚನೆ, 240 ಗಂಟೆಗಳ ಪ್ರತಿ ಗಂಟೆಯ ಮುನ್ಸೂಚನೆ, ಮತ್ತು ಕಳೆದ 24 ಗಂಟೆಗಳ ಹವಾಮಾನ ಇತಿಹಾಸ."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "ಬೆಳೆ ಸಲಹೆ",
       "bestPractices": "ಉತ್ತಮ ಅಭ್ಯಾಸಗಳು",
       "seasonalTips": "ಕಾಲಿಕ ಸಲಹೆಗಳು",
-      "localKnowledge": "ಸ್ಥಳೀಯ ಜ್ಞಾನ"
+      "localKnowledge": "ಸ್ಥಳೀಯ ಜ್ಞಾನ",
+      "cropIdentification": "ಬೆಳೆ ಗುರುತಿಸುವಿಕೆ",
+      "hourlyForecast": "ಪ್ರತಿ ಗಂಟೆಯ ಮುನ್ಸೂಚನೆ"
     },
     "fallback": {
       "service": "ಕೃಷಿ ಸೇವೆ",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು",
-    "eligibility": "ಯೋಜನೆಯ ಅರ್ಹತೆ",
-    "checkEligibility": "ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಿ",
-    "screeningQuestions": "ಪರಿಶೀಲನಾ ಪ್ರಶ್ನೆಗಳು",
-    "answerQuestions": "ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಲು ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ",
-    "eligibleSchemes": "ಅರ್ಹ ಯೋಜನೆಗಳು",
-    "noSchemesFound": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್‌ಗೆ ಹೊಂದಾಣಿಕೆಯಾಗುವ ಯಾವುದೇ ಯೋಜನೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
-    "journeyUrl": "ಅರ್ಜಿ ಲಿಂಕ್",
-    "startApplication": "ಅರ್ಜಿಯನ್ನು ಪ್ರಾರಂಭಿಸಿ",
-    "schemeName": "ಯೋಜನೆಯ ಹೆಸರು",
-    "schemeDescription": "ವಿವರಣೆ",
-    "benefits": "ಪ್ರಯೋಜನಗಳು",
-    "eligibilityCriteria": "ಅರ್ಹತಾ ಮಾನದಂಡ",
-    "requiredDocuments": "ಬೇಕಾಗುವ ದಾಖಲೆಗಳು",
-    "nextSteps": "ಮುಂದಿನ ಕ್ರಮಗಳು",
-    "totalSchemes": "ಒಟ್ಟು ಯೋಜನೆಗಳು",
-    "provider": "ಒದಗಿಸುವವರು",
-    "haqdarshak": "ಹಕ್‌ದಾರ್ಶಕ್",
-    "knowYourSchemes": "ನಿಮ್ಮ ಯೋಜನೆಗಳನ್ನು ತಿಳಿಯಿರಿ",
-    "indiaOnly": "ಭಾರತದಲ್ಲಿ ಮಾತ್ರ ಲಭ್ಯವಿದೆ",
-    "questions": {
-      "gender": "ಲಿಂಗ",
-      "age": "ವಯಸ್ಸು",
-      "maritalStatus": "ವೈವಾಹಿಕ ಸ್ಥಿತಿ",
-      "monthlyIncome": "ಮಾಸಿಕ ಮನೆ ಆದಾಯ",
-      "landOwnership": "ಭೂ ಮಾಲೀಕತ್ವ",
-      "rationCardType": "ಪಡಿತರ ಚೀಟಿ ಪ್ರಕಾರ",
-      "religion": "ಧರ್ಮ",
-      "casteCategory": "ಜಾತಿ ವರ್ಗ",
-      "occupationalStatus": "ಉದ್ಯೋಗ ಸ್ಥಿತಿ",
-      "natureOfJob": "ಕೆಲಸದ ಸ್ವರೂಪ",
-      "personalIncome": "ವೈಯಕ್ತಿಕ ಮಾಸಿಕ ಆದಾಯ"
-    },
-    "answers": {
-      "male": "ಪುರುಷ",
-      "female": "ಮಹಿಳೆ",
-      "other": "ಇತರೆ",
-      "married": "ವಿವಾಹಿತ",
-      "unmarried": "ಅವಿವಾಹಿತ",
-      "widowed": "ವಿಧವೆ",
-      "divorced": "ವಿಚ್ಛೇದಿತ",
-      "separated": "ಬೇರ್ಪಟ್ಟವರು",
-      "farmer": "ರೈತ",
-      "farmLaborer": "ಕೃಷಿ ಕಾರ್ಮಿಕ",
-      "fisherman": "ಮೀನುಗಾರ",
-      "animalHusbandry": "ಪ್ರಾಣಿ ಸಾಕಣೆ",
-      "dairyFarmer": "ಡೈರಿ ರೈತ",
-      "poultryFarmer": "ಕೋಳಿ ರೈತ",
-      "landOwner": "ಭೂಮಾಲೀಕ",
-      "landless": "ಭೂ ರಹಿತ",
-      "sharecropper": "ಪಾಲುದಾರ"
-    },
-    "documents": {
-      "aadhaarCard": "ಆಧಾರ್ ಕಾರ್ಡ್",
-      "bankPassbook": "ಬ್ಯಾಂಕ್ ಪಾಸ್ಬುಕ್",
-      "landRecords": "ಭೂ ದಾಖಲೆಗಳು",
-      "rationCard": "ಪಡಿತರ ಚೀಟಿ",
-      "casteCertificate": "ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ",
-      "incomeCertificate": "ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ",
-      "voterID": "ಮತದಾರರ ಗುರುತಿನ ಚೀಟಿ",
-      "passport": "ಪಾಸ್ಪೋರ್ಟ್ ಫೋಟೋ"
-    },
-    "dataSource": "ಹಕ್‌ದಾರ್ಶಕ್‌ನಿಂದ ಯೋಜನಾ ಡೇಟಾ"
+  "content": {
+    "forYou": "ನಿಮಗಾಗಿ",
+    "seeAll": "ಎಲ್ಲವನ್ನೂ ನೋಡಿ",
+    "readMore": "ಇನ್ನಷ್ಟು ಓದಿ",
+    "listen": "ಆಲಿಸಿ",
+    "watch": "ವೀಕ್ಷಿಸಿ",
+    "minutesRead": "{minutes} ನಿಮಿಷ ಓದು",
+    "related": "ಸಂಬಂಧಿತ",
+    "share": "ಹಂಚಿಕೊಳ್ಳಿ",
+    "like": "ಇಷ್ಟಪಡಿ",
+    "noContent": "ಯಾವುದೇ ವಿಷಯ ಲಭ್ಯವಿಲ್ಲ",
+    "loadError": "ವಿಷಯವನ್ನು ಲೋಡ್ ಮಾಡಲು ಆಗಲಿಲ್ಲ",
+    "notFound": "ವಿಷಯ ಸಿಗಲಿಲ್ಲ"
+  },
+  "home": {
+    "quickActions": "ತ್ವರಿತ ಕಾರ್ಯಗಳು",
+    "askQuestion": "ಪ್ರಶ್ನೆ ಕೇಳಿ",
+    "takePhoto": "ಸಸ್ಯದ ರೋಗ ಗುರುತಿಸಿ",
+    "viewHistory": "ಚಾಟ್ ಇತಿಹಾಸ",
+    "refresh": "ರಿಫ್ರೆಶ್ ಮಾಡಲು ಕೆಳಗೆ ಎಳೆಯಿರಿ"
+  },
+  "notifications": {
+    "title": "ಅಧಿಸೂಚನೆಗಳು",
+    "settings": "ಅಧಿಸೂಚನೆಗಳ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "weatherAlerts": "ಹವಾಮಾನ ಎಚ್ಚರಿಕೆಗಳು",
+    "contentUpdates": "ವಿಷಯದ ಅಪ್‌ಡೇಟ್‌ಗಳು",
+    "engagement": "ಸಲಹೆಗಳು ಮತ್ತು ಜ್ಞಾಪನೆಗಳು",
+    "enable": "ಅಧಿಸೂಚನೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ",
+    "disabled": "ಅಧಿಸೂಚನೆಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ"
   }
 }

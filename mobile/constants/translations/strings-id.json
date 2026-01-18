@@ -80,7 +80,8 @@
     "tapToAskNext": "Ketuk untuk bertanya berikutnya:",
     "analysisComplete": "Analisis selesai",
     "lowAccuracy": "Akurasi rendah",
-    "tapToImprove": "Ketuk untuk meningkatkan"
+    "tapToImprove": "Ketuk untuk meningkatkan",
+    "servicesWarmingUp": "Layanan sedang dimuat, mencoba lagi..."
   },
   "media": {
     "photoLibraryPermission": "Izinkan akses galeri foto untuk memilih gambar. Aktifkan di Pengaturan.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Tolong bicara bahasa {expected}. Suara terdeteksi bahasa {detected}.",
     "noSpeechDetected": "Tidak ada suara terdeteksi. Bicara yang jelas, coba lagi.",
     "audioTooShort": "Rekaman terlalu singkat. Bicara minimal 1 detik.",
-    "audioQualityPoor": "Kualitas suara kurang baik. Coba lagi di tempat lebih tenang."
+    "audioQualityPoor": "Kualitas suara kurang baik. Coba lagi di tempat lebih tenang.",
+    "liveTranscription": "Teks Langsung",
+    "connecting": "Menghubungkan...",
+    "reconnecting": "Menyambungkan kembali...",
+    "connectionError": "Kesalahan koneksi"
   },
   "history": {
     "title": "Percakapan",
@@ -263,6 +268,16 @@
         "name": "GAP Pertanian",
         "tagline": "Layanan konsultasi pertanian",
         "description": "Layanan konsultasi pertanian umum untuk pengelolaan tanaman dan ternak."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Diagnosis penyakit tanaman dengan dukungan 21 bahasa",
+        "description": "Identifikasi penyakit tanaman dari foto menggunakan AI Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Cuaca global dengan prakiraan lengkap dan riwayat",
+        "description": "Data cuaca lengkap dari Google dengan prakiraan 10 hari, prakiraan per jam selama 240 jam, dan riwayat cuaca 24 jam terakhir."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Saran Tanaman",
       "bestPractices": "Praktik Terbaik",
       "seasonalTips": "Tips Musiman",
-      "localKnowledge": "Pengetahuan Lokal"
+      "localKnowledge": "Pengetahuan Lokal",
+      "cropIdentification": "Identifikasi Tanaman",
+      "hourlyForecast": "Prakiraan Per Jam"
     },
     "fallback": {
       "service": "Layanan pertanian",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "Untuk Anda",
+    "seeAll": "Lihat Semua",
+    "readMore": "Baca Selengkapnya",
+    "listen": "Dengarkan",
+    "watch": "Tonton",
+    "minutesRead": "{minutes} menit baca",
+    "related": "Terkait",
+    "share": "Bagikan",
+    "like": "Suka",
+    "noContent": "Konten tidak tersedia",
+    "loadError": "Gagal memuat konten",
+    "notFound": "Konten tidak ditemukan"
+  },
+  "home": {
+    "quickActions": "Aksi Cepat",
+    "askQuestion": "Ajukan Pertanyaan",
+    "takePhoto": "Diagnosis Tanaman",
+    "viewHistory": "Riwayat Obrolan",
+    "refresh": "Tarik untuk menyegarkan"
+  },
+  "notifications": {
+    "title": "Notifikasi",
+    "settings": "Pengaturan Notifikasi",
+    "weatherAlerts": "Peringatan Cuaca",
+    "contentUpdates": "Pembaruan Konten",
+    "engagement": "Tips & Pengingat",
+    "enable": "Aktifkan Notifikasi",
+    "disabled": "Notifikasi dinonaktifkan"
   }
 }

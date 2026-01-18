@@ -80,7 +80,8 @@
     "tapToAskNext": "पुढील विचारण्यासाठी टॅप करा:",
     "analysisComplete": "विश्लेषण पूर्ण झाले",
     "lowAccuracy": "कमी अचूकता",
-    "tapToImprove": "सुधारण्यासाठी टॅप करा"
+    "tapToImprove": "सुधारण्यासाठी टॅप करा",
+    "servicesWarmingUp": "सेवा सुरू होत आहेत, पुन्हा प्रयत्न करत आहोत..."
   },
   "media": {
     "photoLibraryPermission": "फोटो निवडण्यासाठी गॅलरीची परवानगी हवी आहे. सेटिंग्जमध्ये चालू करा.",
@@ -112,7 +113,11 @@
     "languageMismatch": "कृपया {expected} भाषेत बोला. तुमची भाषा {detected} आढळली.",
     "noSpeechDetected": "आवाज आढळला नाही. स्पष्ट बोला आणि पुन्हा प्रयत्न करा.",
     "audioTooShort": "रेकॉर्डिंग खूप लहान. कृपया किमान 1 सेकंद बोला.",
-    "audioQualityPoor": "आवाजाची गुणवत्ता कमी. शांत ठिकाणी पुन्हा प्रयत्न करा."
+    "audioQualityPoor": "आवाजाची गुणवत्ता कमी. शांत ठिकाणी पुन्हा प्रयत्न करा.",
+    "liveTranscription": "थेट मजकूर रूपांतरण",
+    "connecting": "जोडणी करत आहे...",
+    "reconnecting": "पुन्हा जोडणी करत आहे...",
+    "connectionError": "जोडणी त्रुटी"
   },
   "history": {
     "title": "संभाषणे",
@@ -263,6 +268,16 @@
         "name": "जीएपी कृषी",
         "tagline": "कृषी सल्लागार सेवा",
         "description": "पीक आणि पशुधन व्यवस्थापनासाठी सामान्य कृषी सल्लागार सेवा."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "२१ भाषांमध्ये वनस्पती रोगांचे निदान",
+        "description": "Plantix AI वापरून फोटोंमधून वनस्पती रोग ओळखा."
+      },
+      "googleWeather": {
+        "name": "Google हवामान",
+        "tagline": "विस्तृत अंदाज आणि इतिहासासह जागतिक हवामान",
+        "description": "Google कडून १० दिवसांचा, २४० तासांचा आणि मागील २४ तासांचा विस्तृत हवामान डेटा."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "पीक सल्ला",
       "bestPractices": "उत्तम पद्धती",
       "seasonalTips": "हंगामी टिप्स",
-      "localKnowledge": "स्थानिक ज्ञान"
+      "localKnowledge": "स्थानिक ज्ञान",
+      "cropIdentification": "पीक ओळख",
+      "hourlyForecast": "तासाचा अंदाज"
     },
     "fallback": {
       "service": "कृषी सेवा",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "सरकारी योजना",
-    "eligibility": "योज्यतेचे निकष",
-    "checkEligibility": "योज्यता तपासा",
-    "screeningQuestions": "चाचणी प्रश्न",
-    "answerQuestions": "तुम्ही पात्र आहात की नाही हे तपासण्यासाठी प्रश्नांची उत्तरे द्या",
-    "eligibleSchemes": "पात्र योजना",
-    "noSchemesFound": "तुमच्या प्रोफाइलशी जुळणारी कोणतीही योजना आढळली नाही",
-    "journeyUrl": "अर्ज लिंक",
-    "startApplication": "अर्ज सुरू करा",
-    "schemeName": "योजनेचे नाव",
-    "schemeDescription": "वर्णन",
-    "benefits": "लाभ",
-    "eligibilityCriteria": "पात्रता निकष",
-    "requiredDocuments": "आवश्यक कागदपत्रे",
-    "nextSteps": "पुढील पायऱ्या",
-    "totalSchemes": "एकूण योजना",
-    "provider": "प्रदाता",
-    "haqdarshak": "हकदर्शक",
-    "knowYourSchemes": "तुमच्या योजना जाणून घ्या",
-    "indiaOnly": "केवळ भारतात उपलब्ध",
-    "questions": {
-      "gender": "लिंग",
-      "age": "वय",
-      "maritalStatus": "वैवाहिक स्थिती",
-      "monthlyIncome": "मासिक घरगुती उत्पन्न",
-      "landOwnership": "जमीन मालकी",
-      "rationCardType": "शिधापत्रिका प्रकार",
-      "religion": "धर्म",
-      "casteCategory": "जात प्रवर्ग",
-      "occupationalStatus": "व्यावसायिक स्थिती",
-      "natureOfJob": "नोकरीचा प्रकार",
-      "personalIncome": "वैयक्तिक मासिक उत्पन्न"
-    },
-    "answers": {
-      "male": "पुरुष",
-      "female": "स्त्री",
-      "other": "इतर",
-      "married": "विवाहित",
-      "unmarried": "अविवाहित",
-      "widowed": "विधवा",
-      "divorced": "घटस्फोटित",
-      "separated": " विभक्त",
-      "farmer": "शेतकरी",
-      "farmLaborer": "शेतमजूर",
-      "fisherman": "मच्छीमार",
-      "animalHusbandry": "पशुपालन",
-      "dairyFarmer": "दुग्ध व्यवसाय करणारे शेतकरी",
-      "poultryFarmer": "कुक्कुटपालन करणारे शेतकरी",
-      "landOwner": "जमीन मालक",
-      "landless": "भूमिहीन",
-      "sharecropper": "भागीदारी शेती करणारे"
-    },
-    "documents": {
-      "aadhaarCard": "आधार कार्ड",
-      "bankPassbook": "बँक पासबुक",
-      "landRecords": "जमिनीचे रेकॉर्ड",
-      "rationCard": "रेशन कार्ड",
-      "casteCertificate": "जातीचे प्रमाणपत्र",
-      "incomeCertificate": "उत्पन्न प्रमाणपत्र",
-      "voterID": "मतदार ओळखपत्र",
-      "passport": "पासपोर्ट फोटो"
-    },
-    "dataSource": "हकदर्शककडील योजनेचा डेटा"
+  "content": {
+    "forYou": "तुमच्यासाठी",
+    "seeAll": "सर्व पहा",
+    "readMore": "अधिक वाचा",
+    "listen": "ऐका",
+    "watch": "पहा",
+    "minutesRead": "{minutes} मिनिट वाचन",
+    "related": "संबंधित",
+    "share": "शेअर करा",
+    "like": "लाईक करा",
+    "noContent": "कोणतीही माहिती उपलब्ध नाही",
+    "loadError": "माहिती लोड करता आली नाही",
+    "notFound": "माहिती सापडली नाही"
+  },
+  "home": {
+    "quickActions": "झटपट कृती",
+    "askQuestion": "प्रश्न विचारा",
+    "takePhoto": "वनस्पतीचे निदान करा",
+    "viewHistory": "चॅट इतिहास",
+    "refresh": "रिफ्रेश करण्यासाठी ओढा"
+  },
+  "notifications": {
+    "title": "सूचना",
+    "settings": "सूचना सेटिंग्ज",
+    "weatherAlerts": "हवामान सूचना",
+    "contentUpdates": "माहिती अद्यतने",
+    "engagement": "टिपा आणि स्मरणपत्रे",
+    "enable": "सूचना सक्षम करा",
+    "disabled": "सूचना बंद आहेत"
   }
 }

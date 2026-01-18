@@ -80,7 +80,8 @@
     "tapToAskNext": "הקש כדי לשאול הלאה:",
     "analysisComplete": "ניתוח הושלם",
     "lowAccuracy": "דיוק נמוך",
-    "tapToImprove": "הקש לשיפור"
+    "tapToImprove": "הקש לשיפור",
+    "servicesWarmingUp": "שירותים עולים, מנסה שוב..."
   },
   "media": {
     "photoLibraryPermission": "גישה לגלריית התמונות נדרשת לבחירת תמונות. אפשר בהגדרות.",
@@ -112,7 +113,11 @@
     "languageMismatch": "אנא דבר ב{expected}. זוהתה שפה {detected}.",
     "noSpeechDetected": "לא זוהה דיבור. אנא דבר בבהירות ונסה שוב.",
     "audioTooShort": "ההקלטה קצרה מדי. אנא דבר לפחות שנייה אחת.",
-    "audioQualityPoor": "איכות השמע נמוכה מדי. נסה שוב בסביבה שקטה יותר."
+    "audioQualityPoor": "איכות השמע נמוכה מדי. נסה שוב בסביבה שקטה יותר.",
+    "liveTranscription": "תמלול חי",
+    "connecting": "מתחבר...",
+    "reconnecting": "מתחבר מחדש...",
+    "connectionError": "שגיאת חיבור"
   },
   "history": {
     "title": "שיחות",
@@ -263,6 +268,16 @@
         "name": "GAP חקלאות",
         "tagline": "שירותי ייעוץ חקלאי",
         "description": "שירותי ייעוץ חקלאי כלליים לניהול גידולים ובעלי חיים."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "אבחון מחלות צמחים עם תמיכה ב-21 שפות",
+        "description": "זיהוי מחלות צמחים מתמונות באמצעות AI של Plantix."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "מזג אוויר עולמי עם תחזיות מורחבות והיסטוריה",
+        "description": "נתוני מזג אוויר מקיפים מגוגל עם תחזית ל-10 ימים, תחזית שעתית ל-240 שעות והיסטוריית מזג אוויר מ-24 השעות האחרונות."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "ייעוץ גידולים",
       "bestPractices": "שיטות מומלצות",
       "seasonalTips": "טיפים עונתיים",
-      "localKnowledge": "ידע מקומי"
+      "localKnowledge": "ידע מקומי",
+      "cropIdentification": "זיהוי גידולים",
+      "hourlyForecast": "תחזית שעתית"
     },
     "fallback": {
       "service": "שירות חקלאי",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "בשבילך",
+    "seeAll": "הצג הכל",
+    "readMore": "קרא עוד",
+    "listen": "האזן",
+    "watch": "צפה",
+    "minutesRead": "{minutes} דקות קריאה",
+    "related": "קשור",
+    "share": "שתף",
+    "like": "אהבתי",
+    "noContent": "אין תוכן זמין",
+    "loadError": "לא ניתן לטעון תוכן",
+    "notFound": "תוכן לא נמצא"
+  },
+  "home": {
+    "quickActions": "פעולות מהירות",
+    "askQuestion": "שאל שאלה",
+    "takePhoto": "אבחון צמח",
+    "viewHistory": "היסטוריית צ'אט",
+    "refresh": "משוך לרענון"
+  },
+  "notifications": {
+    "title": "התראות",
+    "settings": "הגדרות התראות",
+    "weatherAlerts": "התראות מזג אוויר",
+    "contentUpdates": "עדכוני תוכן",
+    "engagement": "טיפים ותזכורות",
+    "enable": "הפעל התראות",
+    "disabled": "התראות כבויות"
   }
 }
