@@ -80,7 +80,8 @@
     "tapToAskNext": "Πατήστε για επόμενη ερώτηση:",
     "analysisComplete": "Η ανάλυση ολοκληρώθηκε",
     "lowAccuracy": "Χαμηλή ακρίβεια",
-    "tapToImprove": "Πατήστε για βελτίωση"
+    "tapToImprove": "Πατήστε για βελτίωση",
+    "servicesWarmingUp": "Services warming up, retrying..."
   },
   "media": {
     "photoLibraryPermission": "Χρειάζεται πρόσβαση στις φωτογραφίες για επιλογή εικόνας. Ενεργοποιήστε στις Ρυθμίσεις.",
@@ -112,7 +113,11 @@
     "languageMismatch": "Παρακαλώ μιλήστε σε {expected}. Η ομιλία σας ανιχνεύτηκε ως {detected}.",
     "noSpeechDetected": "Δεν ανιχνεύτηκε ομιλία. Παρακαλώ μιλήστε καθαρά και δοκιμάστε ξανά.",
     "audioTooShort": "Η ηχογράφηση είναι πολύ σύντομη. Παρακαλώ μιλήστε για τουλάχιστον 1 δευτερόλεπτο.",
-    "audioQualityPoor": "Η ποιότητα ήχου είναι πολύ χαμηλή. Δοκιμάστε ξανά σε πιο ήσυχο περιβάλλον."
+    "audioQualityPoor": "Η ποιότητα ήχου είναι πολύ χαμηλή. Δοκιμάστε ξανά σε πιο ήσυχο περιβάλλον.",
+    "liveTranscription": "Live transcription",
+    "connecting": "Connecting...",
+    "reconnecting": "Reconnecting...",
+    "connectionError": "Connection error"
   },
   "history": {
     "title": "Συνομιλίες",
@@ -263,6 +268,16 @@
         "name": "GAP Agriculture",
         "tagline": "Γεωργικές συμβουλευτικές υπηρεσίες",
         "description": "Γενικές γεωργικές συμβουλευτικές υπηρεσίες για τη διαχείριση καλλιεργειών και ζώων."
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Plant disease diagnosis with 21 language support",
+        "description": "Identify plant diseases from photos using Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Global weather with extended forecasts and history",
+        "description": "Comprehensive weather data from Google with 10-day forecasts, 240-hour hourly forecasts, and past 24-hour weather history."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "Συμβουλές Καλλιεργειών",
       "bestPractices": "Βέλτιστες Πρακτικές",
       "seasonalTips": "Εποχιακές Συμβουλές",
-      "localKnowledge": "Τοπική Γνώση"
+      "localKnowledge": "Τοπική Γνώση",
+      "cropIdentification": "Crop Identification",
+      "hourlyForecast": "Hourly Forecast"
     },
     "fallback": {
       "service": "Γεωργική υπηρεσία",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "Government Schemes",
-    "eligibility": "Scheme Eligibility",
-    "checkEligibility": "Check Eligibility",
-    "screeningQuestions": "Screening Questions",
-    "answerQuestions": "Answer the questions to check your eligibility",
-    "eligibleSchemes": "Eligible Schemes",
-    "noSchemesFound": "No schemes found matching your profile",
-    "journeyUrl": "Application Link",
-    "startApplication": "Start Application",
-    "schemeName": "Scheme Name",
-    "schemeDescription": "Description",
-    "benefits": "Benefits",
-    "eligibilityCriteria": "Eligibility Criteria",
-    "requiredDocuments": "Required Documents",
-    "nextSteps": "Next Steps",
-    "totalSchemes": "Total Schemes",
-    "provider": "Provider",
-    "haqdarshak": "Haqdarshak",
-    "knowYourSchemes": "Know Your Schemes",
-    "indiaOnly": "Available in India only",
-    "questions": {
-      "gender": "Gender",
-      "age": "Age",
-      "maritalStatus": "Marital Status",
-      "monthlyIncome": "Monthly Household Income",
-      "landOwnership": "Land Ownership",
-      "rationCardType": "Ration Card Type",
-      "religion": "Religion",
-      "casteCategory": "Caste Category",
-      "occupationalStatus": "Occupational Status",
-      "natureOfJob": "Nature of Job",
-      "personalIncome": "Personal Monthly Income"
-    },
-    "answers": {
-      "male": "Male",
-      "female": "Female",
-      "other": "Other",
-      "married": "Married",
-      "unmarried": "Unmarried",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "separated": "Separated",
-      "farmer": "Farmer",
-      "farmLaborer": "Farm Laborer",
-      "fisherman": "Fisherman",
-      "animalHusbandry": "Animal Husbandry",
-      "dairyFarmer": "Dairy Farmer",
-      "poultryFarmer": "Poultry Farmer",
-      "landOwner": "Land Owner",
-      "landless": "Landless",
-      "sharecropper": "Sharecropper"
-    },
-    "documents": {
-      "aadhaarCard": "Aadhaar Card",
-      "bankPassbook": "Bank Passbook",
-      "landRecords": "Land Records",
-      "rationCard": "Ration Card",
-      "casteCertificate": "Caste Certificate",
-      "incomeCertificate": "Income Certificate",
-      "voterID": "Voter ID",
-      "passport": "Passport Photo"
-    },
-    "dataSource": "Scheme data from Haqdarshak"
+  "content": {
+    "forYou": "For You",
+    "seeAll": "See All",
+    "readMore": "Read More",
+    "listen": "Listen",
+    "watch": "Watch",
+    "minutesRead": "{minutes} min read",
+    "related": "Related",
+    "share": "Share",
+    "like": "Like",
+    "noContent": "No content available",
+    "loadError": "Could not load content",
+    "notFound": "Content not found"
+  },
+  "home": {
+    "quickActions": "Quick Actions",
+    "askQuestion": "Ask a Question",
+    "takePhoto": "Diagnose Plant",
+    "viewHistory": "Chat History",
+    "refresh": "Pull to refresh"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "settings": "Notification Settings",
+    "weatherAlerts": "Weather Alerts",
+    "contentUpdates": "Content Updates",
+    "engagement": "Tips & Reminders",
+    "enable": "Enable Notifications",
+    "disabled": "Notifications are disabled"
   }
 }

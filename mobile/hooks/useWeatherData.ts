@@ -69,7 +69,7 @@ export default function useWeatherData(
         log('[Weather] Failed to load service prefs:', e);
       }
 
-      const weatherPref = prefs.weather || 'accuweather';
+      const weatherPref = prefs.weather || 'google-weather';
 
       const data = await weatherService.getCurrentAndForecast(
         location.latitude,

@@ -252,6 +252,11 @@ export const en = {
         tagline: 'Weather intelligence and forecasting',
         description: 'Advanced weather intelligence platform with high-resolution forecasts.',
       },
+      googleWeather: {
+        name: 'Google Weather',
+        tagline: 'Global weather with extended forecasts and history',
+        description: 'Comprehensive weather data from Google with 10-day forecasts, 240-hour hourly forecasts, and past 24-hour weather history.',
+      },
       feedFormulation: {
         name: 'Feed Formulation',
         tagline: 'Optimal diet calculations for dairy cattle',
@@ -287,6 +292,7 @@ export const en = {
       temperature: 'Temperature',
       humidity: 'Humidity',
       forecast: 'Forecast',
+      hourlyForecast: 'Hourly Forecast',
       precipitation: 'Precipitation',
       evapotranspiration: 'Evapotranspiration',
       solarRadiation: 'Solar Radiation',

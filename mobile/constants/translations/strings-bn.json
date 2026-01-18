@@ -80,7 +80,8 @@
     "tapToAskNext": "পরবর্তী প্রশ্ন করতে ট্যাপ করুন:",
     "analysisComplete": "বিশ্লেষণ সম্পন্ন",
     "lowAccuracy": "কম নির্ভুলতা",
-    "tapToImprove": "উন্নত করতে ট্যাপ করুন"
+    "tapToImprove": "উন্নত করতে ট্যাপ করুন",
+    "servicesWarmingUp": "Services warming up, retrying..."
   },
   "media": {
     "photoLibraryPermission": "ছবি বাছাই করতে গ্যালারির অনুমতি লাগবে। সেটিংসে চালু করুন।",
@@ -112,7 +113,11 @@
     "languageMismatch": "অনুগ্রহ করে {expected} ভাষায় কথা বলুন। আপনার কথা {detected} হিসেবে ধরা পড়েছে।",
     "noSpeechDetected": "কোনো কথা ধরা পড়েনি। অনুগ্রহ করে পরিষ্কারভাবে বলুন এবং আবার চেষ্টা করুন।",
     "audioTooShort": "রেকর্ডিং খুব ছোট। অনুগ্রহ করে অন্তত ১ সেকেন্ড কথা বলুন।",
-    "audioQualityPoor": "অডিওর মান খুব কম। শান্ত পরিবেশে আবার চেষ্টা করুন।"
+    "audioQualityPoor": "অডিওর মান খুব কম। শান্ত পরিবেশে আবার চেষ্টা করুন।",
+    "liveTranscription": "Live transcription",
+    "connecting": "Connecting...",
+    "reconnecting": "Reconnecting...",
+    "connectionError": "Connection error"
   },
   "history": {
     "title": "কথাবার্তা",
@@ -263,6 +268,16 @@
         "name": "GAP কৃষি",
         "tagline": "কৃষি পরামর্শ সেবা",
         "description": "ফসল ও পশুপালন ব্যবস্থাপনার জন্য সাধারণ কৃষি পরামর্শ সেবা।"
+      },
+      "plantix": {
+        "name": "Plantix",
+        "tagline": "Plant disease diagnosis with 21 language support",
+        "description": "Identify plant diseases from photos using Plantix AI."
+      },
+      "googleWeather": {
+        "name": "Google Weather",
+        "tagline": "Global weather with extended forecasts and history",
+        "description": "Comprehensive weather data from Google with 10-day forecasts, 240-hour hourly forecasts, and past 24-hour weather history."
       }
     },
     "features": {
@@ -306,7 +321,9 @@
       "cropAdvice": "ফসল পরামর্শ",
       "bestPractices": "উত্তম চর্চা",
       "seasonalTips": "মৌসুমী টিপস",
-      "localKnowledge": "স্থানীয় জ্ঞান"
+      "localKnowledge": "স্থানীয় জ্ঞান",
+      "cropIdentification": "Crop Identification",
+      "hourlyForecast": "Hourly Forecast"
     },
     "fallback": {
       "service": "কৃষি সেবা",
@@ -572,69 +589,34 @@
     "tapForDetails": "Tap for details",
     "yourLocation": "Your Location"
   },
-  "schemes": {
-    "title": "সরকারি প্রকল্পসমূহ",
-    "eligibility": "প্রকল্পের যোগ্যতা",
-    "checkEligibility": "যোগ্যতা যাচাই করুন",
-    "screeningQuestions": "বাছাই প্রশ্ন",
-    "answerQuestions": "আপনার যোগ্যতা যাচাই করার জন্য প্রশ্নগুলোর উত্তর দিন",
-    "eligibleSchemes": "যোগ্য প্রকল্পসমূহ",
-    "noSchemesFound": "আপনার প্রোফাইলের সাথে মেলে এমন কোনও প্রকল্প পাওয়া যায়নি",
-    "journeyUrl": "আবেদন লিঙ্ক",
-    "startApplication": "আবেদন শুরু করুন",
-    "schemeName": "প্রকল্পের নাম",
-    "schemeDescription": "বিবরণ",
-    "benefits": "সুবিধা",
-    "eligibilityCriteria": "যোগ্যতার মানদণ্ড",
-    "requiredDocuments": "প্রয়োজনীয় নথি",
-    "nextSteps": "পরবর্তী পদক্ষেপ",
-    "totalSchemes": "মোট প্রকল্প",
-    "provider": "সরবরাহকারী",
-    "haqdarshak": "হকদার্শক",
-    "knowYourSchemes": "আপনার প্রকল্পগুলি জানুন",
-    "indiaOnly": "শুধুমাত্র ভারতে উপলব্ধ",
-    "questions": {
-      "gender": "লিঙ্গ",
-      "age": "বয়স",
-      "maritalStatus": "বৈবাহিক অবস্থা",
-      "monthlyIncome": "মাসিক পারিবারিক আয়",
-      "landOwnership": "জমির মালিকানা",
-      "rationCardType": "রেশন কার্ডের ধরণ",
-      "religion": "ধর্ম",
-      "casteCategory": "জাতিগত শ্রেণী",
-      "occupationalStatus": "পেশাগত অবস্থা",
-      "natureOfJob": "চাকরির ধরণ",
-      "personalIncome": "ব্যক্তিগত মাসিক আয়"
-    },
-    "answers": {
-      "male": "পুরুষ",
-      "female": "মহিলা",
-      "other": "অন্যান্য",
-      "married": "বিবাহিত",
-      "unmarried": "অবিবাহিত",
-      "widowed": "বিধবা",
-      "divorced": "তালাকপ্রাপ্ত",
-      "separated": "বিচ্ছিন্ন",
-      "farmer": "কৃষক",
-      "farmLaborer": "কৃষি শ্রমিক",
-      "fisherman": "জেলে",
-      "animalHusbandry": "পশুপালন",
-      "dairyFarmer": "দুগ্ধ খামারী",
-      "poultryFarmer": "পোল্ট্রি খামারী",
-      "landOwner": "জমির মালিক",
-      "landless": "ভূমিহীন",
-      "sharecropper": "ভাগচাষী"
-    },
-    "documents": {
-      "aadhaarCard": "আধার কার্ড",
-      "bankPassbook": "ব্যাঙ্ক পাসবুক",
-      "landRecords": "জমির রেকর্ড",
-      "rationCard": "রেশন কার্ড",
-      "casteCertificate": "জাতি শংসাপত্র",
-      "incomeCertificate": "আয় শংসাপত্র",
-      "voterID": "ভোটার আইডি",
-      "passport": "পাসপোর্ট ছবি"
-    },
-    "dataSource": "হকদার্শক থেকে প্রকল্পের ডেটা"
+  "content": {
+    "forYou": "For You",
+    "seeAll": "See All",
+    "readMore": "Read More",
+    "listen": "Listen",
+    "watch": "Watch",
+    "minutesRead": "{minutes} min read",
+    "related": "Related",
+    "share": "Share",
+    "like": "Like",
+    "noContent": "No content available",
+    "loadError": "Could not load content",
+    "notFound": "Content not found"
+  },
+  "home": {
+    "quickActions": "Quick Actions",
+    "askQuestion": "Ask a Question",
+    "takePhoto": "Diagnose Plant",
+    "viewHistory": "Chat History",
+    "refresh": "Pull to refresh"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "settings": "Notification Settings",
+    "weatherAlerts": "Weather Alerts",
+    "contentUpdates": "Content Updates",
+    "engagement": "Tips & Reminders",
+    "enable": "Enable Notifications",
+    "disabled": "Notifications are disabled"
   }
 }
