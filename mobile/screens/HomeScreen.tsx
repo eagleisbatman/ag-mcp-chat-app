@@ -59,12 +59,12 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
       setWeatherError(false);
 
       // Load weather provider preference
-      let weatherPref = 'google-weather';
+      let weatherPref = 'tomorrow-io'; // Default to Tomorrow.io (better global coverage than Google Weather)
       try {
         const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
         if (stored) {
           const prefs = JSON.parse(stored);
-          weatherPref = prefs.weather || 'google-weather';
+          weatherPref = prefs.weather || 'tomorrow-io';
         }
       } catch (e) {
         log('[HomeScreen] Failed to load weather pref:', e);

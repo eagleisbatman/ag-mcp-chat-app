@@ -86,7 +86,7 @@ export const weatherService = {
     latitude: number,
     longitude: number,
     language: string = 'en',
-    provider: string = 'google-weather'
+    provider: string = 'tomorrow-io'
   ): Promise<CombinedWeatherResult> {
     try {
       // Different providers support different forecast days
@@ -180,19 +180,11 @@ export const weatherService = {
 
       const result = await response.json();
 
-      // Debug: Log raw API response with full details
-      // Check for nested structure (API Gateway may wrap in data.data)
-      const nestedData = result.data?.data;
+      // Debug: Log raw API response
       log('[Weather] Raw API response (current):', {
-        provider,
         success: result.success,
         hasData: !!result.data,
-        dataKeys: result.data ? Object.keys(result.data) : [],
-        hasNestedData: !!nestedData,
-        nestedDataKeys: nestedData ? Object.keys(nestedData) : [],
-        currentKeys: (nestedData?.current || result.data?.current) ? Object.keys(nestedData?.current || result.data?.current) : [],
-        temperature: nestedData?.current?.temperature ?? result.data?.current?.temperature,
-        temperature_c: nestedData?.current?.temperature_c ?? result.data?.current?.temperature_c,
+        provider,
       });
 
       // Map API response to widget-expected format
@@ -209,10 +201,7 @@ export const weatherService = {
 
       log('[Weather] Current conditions mapped:', {
         provider,
-        inputTemp: currentData.temperature,
-        inputTempC: currentData.temperature_c,
-        outputTemp: temperature,
-        tempIsValid: temperature !== null && temperature !== undefined,
+        temperature,
         humidity,
         windSpeed,
         conditions: currentData.conditions,
@@ -281,20 +270,16 @@ export const weatherService = {
 
       const result = await response.json();
 
-      // Debug: Log raw API response for Google Weather
-      // Check for nested structure (API Gateway may wrap in data.data)
-      const nestedForecastData = result.data?.data;
+      // Debug: Log raw API response
       log('[Weather] Raw API response (forecast):', {
-        provider,
         success: result.success,
         hasData: !!result.data,
-        dataKeys: result.data ? Object.keys(result.data) : [],
-        hasNestedData: !!nestedForecastData,
-        forecastLength: nestedForecastData?.forecast?.length ?? result.data?.forecast?.length,
+        provider,
       });
 
       // Map API response to widget-expected format
       // Handle both direct and nested response structures
+      const nestedForecastData = result.data?.data;
       const rawForecastData = nestedForecastData || result.data || {};
       const forecastArray = rawForecastData.forecast || result.data?.forecast || [];
       const daily: ForecastDay[] = forecastArray.map((day: Record<string, unknown>) => ({
@@ -309,12 +294,11 @@ export const weatherService = {
       // Get location from forecast response (handle nested structure)
       const locationData = rawForecastData.location || result.data?.location || {};
 
-      log('[Weather] Forecast fetched:', {
+      log('[Weather] Forecast mapped:', {
         provider,
         days: daily.length,
-        city: locationData.name,
         firstDayTemp: daily[0]?.tempMax,
-        hasForecasts: daily.length > 0,
+        city: locationData.name,
       });
 
       return {
