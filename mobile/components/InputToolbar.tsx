@@ -370,6 +370,7 @@ const styles = StyleSheet.create({
     maxHeight: 100,
     textAlignVertical: 'top',
     includeFontPadding: false,
+    ...(Platform.OS === 'web' ? { outlineStyle: 'none' } : {}),
   },
   iconsRow: {
     flexDirection: 'row',

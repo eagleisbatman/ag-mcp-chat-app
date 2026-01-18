@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -44,6 +44,7 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
   const { theme, language, setLanguage, completeOnboarding } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLang, setSelectedLang] = useState<Language>(language);
+  const sectionListRef = useRef<SectionList<Language, LanguageSection>>(null);
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
   // Group languages by region or filter by search
@@ -53,6 +54,36 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
     }
     return getLanguagesByRegion() as LanguageSection[];
   }, [searchQuery]);
+
+  // Auto-scroll to selected language on mount
+  useEffect(() => {
+    if (searchQuery || !sectionListRef.current) return;
+
+    const sections = displayData as LanguageSection[];
+    let sectionIndex = -1;
+    let itemIndex = -1;
+
+    for (let s = 0; s < sections.length; s++) {
+      const idx = sections[s].data.findIndex(lang => lang.code === selectedLang.code);
+      if (idx !== -1) {
+        sectionIndex = s;
+        itemIndex = idx;
+        break;
+      }
+    }
+
+    if (sectionIndex !== -1 && itemIndex !== -1) {
+      // Small delay to ensure list is rendered
+      setTimeout(() => {
+        sectionListRef.current?.scrollToLocation({
+          sectionIndex,
+          itemIndex,
+          viewOffset: 100, // Offset from top to center better
+          animated: true,
+        });
+      }, 300);
+    }
+  }, []); // Only on mount
 
   const handleSelectLanguage = (lang: Language) => {
     setSelectedLang(lang);
@@ -158,6 +189,7 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
         />
       ) : (
         <SectionList
+          ref={sectionListRef}
           sections={displayData as LanguageSection[]}
           renderItem={renderLanguageItem}
           renderSectionHeader={renderSectionHeader}
@@ -200,6 +232,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
     padding: 0,
+    ...(Platform.OS === 'web' ? { outlineStyle: 'none' } : {}),
   },
   listContent: {
     paddingHorizontal: 24,
