@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { ActivityIndicator, View, StyleSheet, Animated } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Animated, Platform } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
@@ -123,26 +123,59 @@ function AppNavigator() {
   );
 }
 
+// Web container to center and limit width
+function WebContainer({ children }: { children: React.ReactNode }) {
+  if (Platform.OS !== 'web') {
+    return <>{children}</>;
+  }
+
+  return (
+    <View style={styles.webOuterContainer}>
+      <View style={styles.webInnerContainer}>
+        {children}
+      </View>
+    </View>
+  );
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
       <KeyboardProvider>
         <SafeAreaProvider>
-          <AppProvider>
-            <ToastProvider>
-              <AppNavigator />
-            </ToastProvider>
-          </AppProvider>
+          <WebContainer>
+            <AppProvider>
+              <ToastProvider>
+                <AppNavigator />
+              </ToastProvider>
+            </AppProvider>
+          </WebContainer>
         </SafeAreaProvider>
       </KeyboardProvider>
     </ErrorBoundary>
   );
 }
 
+const MAX_WEB_WIDTH = 480; // Mobile-like width for web
+
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  webOuterContainer: {
+    flex: 1,
+    backgroundColor: '#1a1a1a', // Dark background outside the app
+    alignItems: 'center',
+  },
+  webInnerContainer: {
+    flex: 1,
+    width: '100%',
+    maxWidth: MAX_WEB_WIDTH,
+    // Add subtle shadow for depth
+    ...(Platform.OS === 'web' ? {
+      boxShadow: '0 0 20px rgba(0, 0, 0, 0.3)',
+    } : {}),
   },
 });
