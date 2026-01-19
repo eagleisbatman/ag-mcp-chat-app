@@ -13,6 +13,7 @@ interface DiagnosisResult {
   diagnosis?: DiagnosisData;
   metadata?: Record<string, unknown>;
   response?: string; // Natural language response from LLM
+  followUpQuestions?: string[]; // Dynamic follow-up questions from AI
 }
 
 interface FailedDiagnosisResult {
@@ -153,16 +154,23 @@ export function processSuccessfulDiagnosis(diagResult: DiagnosisResult): Success
   
   // Ensure displayText is never empty - use response, then summary, then fallback
   const generatedSummary = generateDiagnosisSummary(cropName, healthStatus, issuesList, healthSummary);
-  const displayText = diagResult.response 
+  const displayText = diagResult.response
     || (generatedSummary && generatedSummary !== '[Plant Diagnosis] Plant: analyzed' ? generatedSummary : null)
     || t('diagnosis.analysisComplete');
+
+  // Extract follow-up questions from API response or raw diagnosis
+  const rawDiag = diagnosisData as Record<string, unknown>;
+  const followUpQuestions = diagResult.followUpQuestions
+    || (rawDiag.follow_up_questions as string[] | undefined)
+    || [];
 
   const botMsg: Message = {
     _id: (Date.now() + 1).toString(),
     text: displayText,
     diagnosisData: diagnosisData,
     createdAt: new Date(),
-    isBot: true
+    isBot: true,
+    followUpQuestions: followUpQuestions.length > 0 ? followUpQuestions : undefined,
   };
 
   const persistData = {
