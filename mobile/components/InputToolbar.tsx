@@ -116,7 +116,7 @@ const InputToolbar = forwardRef(function InputToolbar(
 
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
-        allowsEditing: true,
+        allowsEditing: false, // Don't crop - send full image for accurate diagnosis
         quality: 0.8,
         base64: true,
       });
@@ -149,7 +149,7 @@ const InputToolbar = forwardRef(function InputToolbar(
       }
 
       const result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
+        allowsEditing: false, // Don't crop - send full image for accurate diagnosis
         quality: 0.8,
         base64: true,
       });
