@@ -7,6 +7,7 @@ import { useToast } from '../contexts/ToastContext';
 import { SPACING } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
+import FollowUpQuestions from './FollowUpQuestions';
 import { t } from '../constants/strings';
 import { Message } from '../types';
 import { useMessageTts } from './message/useMessageTts';
@@ -19,6 +20,7 @@ interface MessageItemProps {
   diagnosisTitle?: string;
   onLayout?: (height: number) => void;
   onRetry?: () => void;
+  onFollowUpTap?: (question: string) => void;
 }
 
 /**
@@ -56,7 +58,7 @@ function sanitizeStreamingMarkdown(text: string): string {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosisTitle, onLayout, onRetry }: MessageItemProps): JSX.Element | null {
+function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosisTitle, onLayout, onRetry, onFollowUpTap }: MessageItemProps): JSX.Element | null {
   const { theme, language, locationDetails } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
@@ -174,6 +176,14 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
               onRetry={onRetry}
             />
           )}
+
+          {/* Follow-up questions - show after response is complete */}
+          {!isStreaming && message.followUpQuestions && message.followUpQuestions.length > 0 && onFollowUpTap && (
+            <FollowUpQuestions
+              questions={message.followUpQuestions}
+              onQuestionTap={onFollowUpTap}
+            />
+          )}
         </Animated.View>
       ) : (
         message.text && !message.text.startsWith('[Image for') ? (
@@ -220,6 +230,7 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
     prevProps.message.image === nextProps.message.image &&
     areDiagnosisDataEqual(prevProps.message.diagnosisData, nextProps.message.diagnosisData) &&
     prevProps.message.isStreaming === nextProps.message.isStreaming &&
-    prevProps.isNewMessage === nextProps.isNewMessage
+    prevProps.isNewMessage === nextProps.isNewMessage &&
+    JSON.stringify(prevProps.message.followUpQuestions) === JSON.stringify(nextProps.message.followUpQuestions)
   );
 });

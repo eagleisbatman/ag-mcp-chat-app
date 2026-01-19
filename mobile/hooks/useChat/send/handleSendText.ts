@@ -84,7 +84,9 @@ export function createSendTextHandler({
         onComplete: (fullText: string, metadata?: Record<string, unknown>) => {
           setThinkingText(null);
           setIsTyping(false);
-          updateMessage(botMsgId, { text: fullText });
+          // Extract follow-up questions from metadata
+          const followUpQuestions = metadata?.followUpQuestions as string[] | undefined;
+          updateMessage(botMsgId, { text: fullText, followUpQuestions });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
           const diagnosisMetadata = metadata?.diagnosis as Record<string, unknown> | undefined;

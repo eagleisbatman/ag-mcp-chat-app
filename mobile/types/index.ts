@@ -86,6 +86,7 @@ export interface Message {
   sessionId?: string;
   role?: 'user' | 'assistant' | string;
   content?: string;
+  followUpQuestions?: string[];
 }
 
 /**

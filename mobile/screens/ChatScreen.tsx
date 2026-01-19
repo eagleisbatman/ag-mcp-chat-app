@@ -83,6 +83,12 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
     inputToolbarRef.current?.openAttachSheet();
   }, [scrollToBottom]);
 
+  const handleFollowUpTap = useCallback((question: string) => {
+    // Send the follow-up question as a new message
+    handleSendText(question);
+    scrollToBottom();
+  }, [handleSendText, scrollToBottom]);
+
   const handleRefreshLocation = async () => {
     setIsRefreshingLocation(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -153,6 +159,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
                 isNewMessage={item._id === newestBotMessageId}
                 onLayout={(height) => onMessageLayout(item._id, height)}
                 onRetry={handleDiagnosisRetry}
+                onFollowUpTap={handleFollowUpTap}
               />
             )}
             keyExtractor={(item) => item._id}
