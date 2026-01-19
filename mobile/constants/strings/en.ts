@@ -379,6 +379,7 @@ export const en = {
     treatment: 'Treatment',
     organic: 'Organic',
     chemical: 'Chemical',
+    prevention: 'Prevention',
     severity: 'Severity',
     symptoms: 'Symptoms',
     healthyTitle: 'Healthy Plant',
