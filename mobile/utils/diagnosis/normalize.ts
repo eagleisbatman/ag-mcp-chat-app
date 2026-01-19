@@ -123,11 +123,16 @@ function normalizeUnifiedFormat(data: UnifiedDiagnosisFromAPI): NormalizedDiagno
       organic_options: issue.treatments.organic.map(t => ({
         name: t.name,
         description: t.description,
+        application: t.application,
+        frequency: t.frequency,
+        timing: t.timing,
       })),
       chemical_options: issue.treatments.chemical.map(t => ({
-        name: t.name || t.active_ingredient || 'Chemical Treatment',
+        name: t.name || t.active_ingredient,
         description: t.description,
         active_ingredient: t.active_ingredient,
+        dosage: t.dosage,
+        safety_notes: t.safety_notes,
       })),
       preventive_measures: issue.treatments.preventive,
     })),
