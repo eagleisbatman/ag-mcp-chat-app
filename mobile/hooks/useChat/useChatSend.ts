@@ -94,13 +94,13 @@ export default function useChatSend({
 
   const uploadAudioInBackgroundHandler = useCallback(
     async (audioData: AudioData | null) => {
+      // Upload in background - don't show errors to user as this is non-critical
+      // The transcription/chat flow continues regardless of upload success
       const result = await uploadAudioInBackground(audioData);
-      if (!result.success) {
-        showWarning(t('errors.audioUploadFailed'));
-      }
+      // Errors are logged in uploadAudioInBackground, no need to show to user
       return result;
     },
-    [showWarning]
+    []
   );
 
   return {
