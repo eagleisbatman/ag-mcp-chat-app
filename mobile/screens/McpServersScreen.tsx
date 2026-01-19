@@ -68,32 +68,47 @@ const SELECTABLE_PROVIDERS: { [key: string]: SelectableProviderConfig } = {
 
 // Countries where Google Weather API doesn't support current conditions/forecasts
 // Based on https://developers.google.com/maps/documentation/weather/coverage
-const GOOGLE_WEATHER_UNSUPPORTED_COUNTRIES = [
+// Using lat/long bounding boxes for reliable detection
+const GOOGLE_WEATHER_UNSUPPORTED_BOUNDS: Array<{
+  name: string;
+  minLat: number;
+  maxLat: number;
+  minLon: number;
+  maxLon: number;
+}> = [
   // No support at all
-  'CN', 'China', '中国',
-  'CU', 'Cuba',
-  'IR', 'Iran', 'ایران',
-  'KP', 'North Korea', '조선', '朝鲜',
-  'SY', 'Syria', 'سوريا',
+  { name: 'China', minLat: 18.0, maxLat: 54.0, minLon: 73.0, maxLon: 135.0 },
+  { name: 'Cuba', minLat: 19.5, maxLat: 23.5, minLon: -85.0, maxLon: -74.0 },
+  { name: 'Iran', minLat: 25.0, maxLat: 40.0, minLon: 44.0, maxLon: 63.5 },
+  { name: 'North Korea', minLat: 37.5, maxLat: 43.0, minLon: 124.0, maxLon: 131.0 },
+  { name: 'Syria', minLat: 32.0, maxLat: 37.5, minLon: 35.5, maxLon: 42.5 },
   // Partial support (alerts only - no current/forecast)
-  'JP', 'Japan', '日本',
-  'KR', 'South Korea', '대한민국', '한국',
-  'VN', 'Vietnam', 'Việt Nam', 'Viet Nam',
+  { name: 'Japan', minLat: 24.0, maxLat: 46.0, minLon: 122.0, maxLon: 154.0 },
+  { name: 'South Korea', minLat: 33.0, maxLat: 38.5, minLon: 124.0, maxLon: 132.0 },
+  { name: 'Vietnam', minLat: 8.0, maxLat: 23.5, minLon: 102.0, maxLon: 110.0 },
 ];
 
 /**
- * Get available weather providers based on user's country
+ * Check if coordinates are within a country's bounding box
  */
-function getAvailableWeatherProviders(countryCode?: string, countryName?: string): string[] {
+function isInUnsupportedRegion(latitude?: number, longitude?: number): boolean {
+  if (latitude === undefined || longitude === undefined) return false;
+
+  return GOOGLE_WEATHER_UNSUPPORTED_BOUNDS.some(bounds =>
+    latitude >= bounds.minLat &&
+    latitude <= bounds.maxLat &&
+    longitude >= bounds.minLon &&
+    longitude <= bounds.maxLon
+  );
+}
+
+/**
+ * Get available weather providers based on user's location
+ */
+function getAvailableWeatherProviders(latitude?: number, longitude?: number): string[] {
   const allProviders = SELECTABLE_PROVIDERS.weather.providers;
 
-  // Check if Google Weather is unsupported for this country
-  const isGoogleUnsupported = GOOGLE_WEATHER_UNSUPPORTED_COUNTRIES.some(
-    c => c.toUpperCase() === countryCode?.toUpperCase() ||
-         c.toLowerCase() === countryName?.toLowerCase()
-  );
-
-  if (isGoogleUnsupported) {
+  if (isInUnsupportedRegion(latitude, longitude)) {
     return allProviders.filter(p => p !== 'google-weather');
   }
 
@@ -347,19 +362,19 @@ interface CategorySectionProps {
   onServerPress: (slug: string) => void;
   preferences: ServicePreferences;
   onSelectProvider: (category: string, slug: string) => void;
-  countryCode?: string;
-  countryName?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
-function CategorySection({ category, servers, theme, isDark, onServerPress, preferences, onSelectProvider, countryCode, countryName }: CategorySectionProps) {
+function CategorySection({ category, servers, theme, isDark, onServerPress, preferences, onSelectProvider, latitude, longitude }: CategorySectionProps) {
   const config = SERVICE_CATEGORIES[category];
   if (!config || servers.length === 0) return null;
 
-  // For weather category, filter out unsupported providers based on country
+  // For weather category, filter out unsupported providers based on location
   let availableProviders: string[] | undefined;
   let filteredServers = servers;
   if (category === 'weather') {
-    availableProviders = getAvailableWeatherProviders(countryCode, countryName);
+    availableProviders = getAvailableWeatherProviders(latitude, longitude);
     filteredServers = servers.filter(s => availableProviders!.includes(s.slug));
   }
 
@@ -378,17 +393,10 @@ function CategorySection({ category, servers, theme, isDark, onServerPress, pref
 
   // Debug logging for weather category
   if (category === 'weather') {
-    console.log('[CategorySection] COUNTRY DEBUG:', { countryCode, countryName });
+    console.log('[CategorySection] LOCATION DEBUG:', { latitude, longitude });
+    console.log('[CategorySection] isInUnsupportedRegion:', isInUnsupportedRegion(latitude, longitude));
     console.log('[CategorySection] availableProviders:', availableProviders);
     console.log('[CategorySection] filteredServers:', filteredServers.map(s => s.slug));
-    console.log('[CategorySection] weather servers:', servers.map(s => ({
-      slug: s.slug,
-      isActive: isServerActive(s),
-      status: s.status,
-      isActiveForRegion: s.isActiveForRegion,
-      displayStatus: s.displayStatus,
-      healthStatus: s.healthStatus,
-    })));
     console.log('[CategorySection] activeSelectableProviders:', activeSelectableProviders.map(s => s.slug));
     console.log('[CategorySection] hasSelectableProviders:', hasSelectableProviders);
   }
@@ -638,8 +646,8 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
               onServerPress={handleServerPress}
               preferences={preferences}
               onSelectProvider={handleSelectProvider}
-              countryCode={locationDetails?.level1CountryCode}
-              countryName={locationDetails?.level1Country || locationDetails?.country}
+              latitude={location?.latitude ?? undefined}
+              longitude={location?.longitude ?? undefined}
             />
           ))}
 
