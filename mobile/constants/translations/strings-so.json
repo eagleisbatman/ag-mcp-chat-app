@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "Xogta Cimilada Ma Jiro",
+    "pullToRefresh": "Hoos U Jiid Cusboonaysii"
   },
   "content": {
     "forYou": "Adiga",

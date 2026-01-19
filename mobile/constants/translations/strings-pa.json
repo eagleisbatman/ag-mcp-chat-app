@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "ਮੌਸਮ ਦਾ ਡੇਟਾ ਨਹੀਂ ਮਿਲਿਆ",
+    "pullToRefresh": "ਤਾਜ਼ਾ ਕਰਨ ਲਈ ਹੇਠਾਂ ਖਿੱਚੋ"
   },
   "content": {
     "forYou": "ਤੁਹਾਡੇ ਲਈ",

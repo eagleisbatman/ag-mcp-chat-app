@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "കാലാവസ്ഥാ വിവരങ്ങൾ ലഭ്യമല്ല",
+    "pullToRefresh": "താഴേക്ക് വലിച്ച് പുതുക്കുക"
   },
   "content": {
     "forYou": "നിങ്ങൾക്കായി",

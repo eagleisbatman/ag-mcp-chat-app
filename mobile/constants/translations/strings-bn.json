@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "আবহাওয়ার তথ্য পাওয়া যাচ্ছে না",
+    "pullToRefresh": "রিফ্রেশ করতে নিচে টানুন"
   },
   "content": {
     "forYou": "For You",

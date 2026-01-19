@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "Wetterdaten nicht verfügbar",
+    "pullToRefresh": "Zum Aktualisieren herunterziehen"
   },
   "content": {
     "forYou": "For You",

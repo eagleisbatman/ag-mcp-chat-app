@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "無法取得天氣資料",
+    "pullToRefresh": "下拉以重新整理"
   },
   "content": {
     "forYou": "為您推薦",

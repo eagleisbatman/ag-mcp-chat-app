@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "ရာသီဥတု အချက်အလက် မရနိုင်ပါ",
+    "pullToRefresh": "ပြန်လည်ဆန်းသစ်ရန် အောက်သို့ဆွဲချပါ"
   },
   "content": {
     "forYou": "သင့်အတွက်",

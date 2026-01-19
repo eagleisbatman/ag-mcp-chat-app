@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "வானிலை தகவல் கிடைக்கவில்லை",
+    "pullToRefresh": "புதுப்பிக்க கீழே இழுக்கவும்"
   },
   "content": {
     "forYou": "உங்களுக்காக",

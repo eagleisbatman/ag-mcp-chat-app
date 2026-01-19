@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "मौसम जानकारी आएन",
+    "pullToRefresh": "ताजा गर्न तल तान्नुहोस्"
   },
   "content": {
     "forYou": "तपाईंको लागि",

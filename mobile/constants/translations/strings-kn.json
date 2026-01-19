@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "ಹವಾಮಾನ ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ",
+    "pullToRefresh": "ಕೆಳಗೆ ಎಳೆದು ನವೀಕರಿಸಿ"
   },
   "content": {
     "forYou": "ನಿಮಗಾಗಿ",
