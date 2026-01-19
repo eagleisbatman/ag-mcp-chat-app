@@ -36,6 +36,7 @@ export function useWebVoiceRecording({
   onCancel,
   transcribeAudio,
   showError,
+  onAudioChunk,
   liveTranscript,
 }: UseWebVoiceRecordingOptions) {
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -61,6 +62,7 @@ export function useWebVoiceRecording({
   const showErrorRef = useRef(showError);
   const transcribeAudioRef = useRef(transcribeAudio);
   const onTranscriptionCompleteRef = useRef(onTranscriptionComplete);
+  const onAudioChunkRef = useRef(onAudioChunk);
 
   // Update refs when props change
   useEffect(() => {
@@ -68,7 +70,8 @@ export function useWebVoiceRecording({
     showErrorRef.current = showError;
     transcribeAudioRef.current = transcribeAudio;
     onTranscriptionCompleteRef.current = onTranscriptionComplete;
-  }, [onCancel, showError, transcribeAudio, onTranscriptionComplete]);
+    onAudioChunkRef.current = onAudioChunk;
+  }, [onCancel, showError, transcribeAudio, onTranscriptionComplete, onAudioChunk]);
 
   // Track mount state
   useEffect(() => {
@@ -134,19 +137,24 @@ export function useWebVoiceRecording({
   }, []);
 
   // Stable start function using refs
+  // Note: This hook is used for web AND iOS/Android simulators (where ExpoAudioStream isn't available)
   const startRecordingSession = useCallback(async (): Promise<void> => {
-    if (Platform.OS !== 'web') return;
     if (startedRef.current) {
       log('[WebVoice] Already started');
       return;
     }
     startedRef.current = true;
 
-    log('[WebVoice] Starting...');
+    log('[WebVoice] Starting on platform:', Platform.OS);
 
     try {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        throw new Error('MediaDevices API not available');
+      // Check if Web APIs are available (only on web platform, not on native simulators)
+      if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+        throw new Error(
+          Platform.OS === 'web'
+            ? 'MediaDevices API not available'
+            : 'Voice recording is not supported on simulator. Please use a physical device.'
+        );
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -178,8 +186,19 @@ export function useWebVoiceRecording({
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      mediaRecorder.ondataavailable = async (e) => {
+        if (e.data.size > 0) {
+          audioChunksRef.current.push(e.data);
+          // Stream chunk for live transcription if callback provided
+          if (onAudioChunkRef.current) {
+            try {
+              const base64 = await blobToBase64(e.data);
+              onAudioChunkRef.current(base64);
+            } catch (err) {
+              // Ignore chunk streaming errors
+            }
+          }
+        }
       };
 
       mediaRecorder.start(250);
@@ -218,7 +237,18 @@ export function useWebVoiceRecording({
     } catch (error) {
       logError('[WebVoice] Start error:', error);
       startedRef.current = false;
-      showErrorRef.current(t('voice.microphonePermission'));
+
+      // Show more specific error messages
+      const err = error as Error;
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        showErrorRef.current(t('voice.microphonePermission'));
+      } else if (err.message?.includes('not supported')) {
+        showErrorRef.current(err.message);
+      } else if (err.message?.includes('MediaDevices')) {
+        showErrorRef.current('Microphone access not available. Please use HTTPS.');
+      } else {
+        showErrorRef.current(err.message || t('voice.microphonePermission'));
+      }
       onCancelRef.current();
     }
   }, []);
