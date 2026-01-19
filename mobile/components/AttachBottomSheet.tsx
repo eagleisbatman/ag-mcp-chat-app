@@ -7,6 +7,7 @@ import {
   Animated,
   Modal,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -15,6 +16,8 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import { CameraIcon, ImageIcon } from './ui/LineIcons';
 import { t } from '../constants/strings';
+
+const MAX_WEB_WIDTH = 480; // Match app container width
 
 interface AttachBottomSheetProps {
   visible: boolean;
@@ -36,6 +39,12 @@ export default function AttachBottomSheet({
   const { theme } = useApp();
   const insets = useSafeAreaInsets();
   const isDark = theme.name === 'dark';
+  const { width: windowWidth } = useWindowDimensions();
+  const isWeb = Platform.OS === 'web';
+
+  // On web, constrain to app container width
+  const sheetWidth = isWeb ? Math.min(windowWidth, MAX_WEB_WIDTH) : windowWidth;
+  const horizontalOffset = isWeb ? (windowWidth - sheetWidth) / 2 : 0;
 
   const slideAnim = useRef(new Animated.Value(0)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
@@ -133,6 +142,12 @@ export default function AttachBottomSheet({
           {
             backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF',
             paddingBottom: bottomPadding,
+            // On web, constrain width and center
+            ...(isWeb ? {
+              width: sheetWidth,
+              left: horizontalOffset,
+              right: horizontalOffset,
+            } : {}),
             transform: [
               {
                 translateY: slideAnim.interpolate({
