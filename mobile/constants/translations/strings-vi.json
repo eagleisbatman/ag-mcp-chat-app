@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "Không có thông tin thời tiết",
+    "pullToRefresh": "Kéo xuống để làm mới"
   },
   "content": {
     "forYou": "Dành cho bạn",

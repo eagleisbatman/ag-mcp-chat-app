@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "ไม่พบข้อมูลสภาพอากาศ",
+    "pullToRefresh": "ดึงลงเพื่อรีเฟรช"
   },
   "content": {
     "forYou": "สำหรับคุณ",

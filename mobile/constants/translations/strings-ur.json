@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "موسم کی معلومات دستیاب نہیں",
+    "pullToRefresh": "تازہ کرنے کے لیے نیچے کھینچیں"
   },
   "content": {
     "forYou": "آپ کے لیے",

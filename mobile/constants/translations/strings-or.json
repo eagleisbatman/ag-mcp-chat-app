@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "ପାଣିପାଗ ମିଳୁନାହିଁ",
+    "pullToRefresh": "ପୁଣି ଦେଖିବାକୁ ତଳକୁ ଟାଣନ୍ତୁ"
   },
   "content": {
     "forYou": "ଆପଣଙ୍କ ପାଇଁ",

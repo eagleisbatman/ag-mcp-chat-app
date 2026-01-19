@@ -587,7 +587,9 @@
       "sprayWindows": "छिड़काव के समय",
       "agriculturalImpact": "खेती पर असर"
     },
-    "dataSource": "मौसम डेटा Tomorrow.io से"
+    "dataSource": "मौसम डेटा Tomorrow.io से",
+    "loadFailed": "मौसम डेटा उपलब्ध नहीं",
+    "pullToRefresh": "नीचे खींच कर ताज़ा करें"
   },
   "content": {
     "forYou": "आपके लिए",

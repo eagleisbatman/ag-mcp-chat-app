@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "हवामानाची माहिती उपलब्ध नाही",
+    "pullToRefresh": "ताजे करण्यासाठी खाली ओढा"
   },
   "content": {
     "forYou": "तुमच्यासाठी",

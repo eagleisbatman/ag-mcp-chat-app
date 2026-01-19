@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "ບໍ່ມີຂໍ້ມູນສະພາບອາກາດ",
+    "pullToRefresh": "ດຶງລົງເພື່ອໂຫຼດໃໝ່"
   },
   "content": {
     "forYou": "ສໍາລັບທ່ານ",

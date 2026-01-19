@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "ዅነታት ኣየር ኣይተረኽበን",
+    "pullToRefresh": "ንታሕቲ ስሓብ ንምሕዳስ"
   },
   "content": {
     "forYou": "ንዓኻ",

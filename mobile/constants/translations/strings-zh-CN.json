@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "天气数据不可用",
+    "pullToRefresh": "下拉刷新"
   },
   "content": {
     "forYou": "为你",

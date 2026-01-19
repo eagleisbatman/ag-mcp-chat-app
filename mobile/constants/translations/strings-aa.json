@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "Qambur magiinno",
+    "pullToRefresh": "Gadduguse hooqat'te"
   },
   "content": {
     "forYou": "For You",

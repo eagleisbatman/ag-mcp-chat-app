@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "Погода недоступна",
+    "pullToRefresh": "Потяните, чтобы обновить"
   },
   "content": {
     "forYou": "Для вас",

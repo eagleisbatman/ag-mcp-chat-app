@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "គ្មានព័ត៌មានអាកាសធាតុ",
+    "pullToRefresh": "អូសចុះដើម្បីផ្ទុកឡើងវិញ"
   },
   "content": {
     "forYou": "សម្រាប់​អ្នក",

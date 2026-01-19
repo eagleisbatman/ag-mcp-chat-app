@@ -587,7 +587,9 @@
     "dayFri": "Fri",
     "daySat": "Sat",
     "tapForDetails": "Tap for details",
-    "yourLocation": "Your Location"
+    "yourLocation": "Your Location",
+    "loadFailed": "వాతావరణ సమాచారం దొరకలేదు",
+    "pullToRefresh": "మళ్ళీ చూడటానికి క్రిందకు లాగండి"
   },
   "content": {
     "forYou": "మీ కోసం",
