@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { API_KEY, AI_SERVICES_URL } from '../../utils/config';
+import { API_KEY, API_BASE_URL } from '../../utils/config';
 import { log } from '../../utils/logger';
 
 type LiveServerMessage = {
@@ -28,8 +28,9 @@ const INITIAL_RECONNECT_DELAY_MS = 500;
 const MAX_RECONNECT_DELAY_MS = 4000;
 
 function buildWsUrl(): string {
-  const wsBase = AI_SERVICES_URL.replace(/^http/, 'ws');
-  return `${wsBase.replace(/\/$/, '')}/api/v2/transcribe/live?apiKey=${encodeURIComponent(API_KEY)}`;
+  // Connect to API Gateway which proxies to AI Services
+  const wsBase = API_BASE_URL.replace(/^http/, 'ws');
+  return `${wsBase.replace(/\/$/, '')}/api/transcribe/live?apiKey=${encodeURIComponent(API_KEY)}`;
 }
 
 function extractTranscript(message: LiveServerMessage): string | null {

@@ -16,6 +16,7 @@ interface WebVoiceRecorderProps {
   onCancel: () => void;
   transcribeAudio: (data: { uri: string; base64: string; duration: number; language: string }) => Promise<TranscriptionResult>;
   liveTranscript?: string;
+  onAudioChunk?: (base64: string) => void;
 }
 
 export default function WebVoiceRecorder({
@@ -23,6 +24,7 @@ export default function WebVoiceRecorder({
   onCancel,
   transcribeAudio,
   liveTranscript,
+  onAudioChunk,
 }: WebVoiceRecorderProps): JSX.Element {
   const { theme, language } = useApp();
   const { showError } = useToast();
@@ -46,6 +48,7 @@ export default function WebVoiceRecorder({
     onCancel,
     transcribeAudio,
     showError,
+    onAudioChunk,
     liveTranscript,
   });
 
