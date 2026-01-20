@@ -14,16 +14,10 @@ import { log } from '../utils/logger';
 
 interface StarterQuestionsProps {
   onQuestionTap: (question: string) => void;
-  weatherSummary?: {
-    temperature?: number;
-    conditions?: string;
-    hasRain?: boolean;
-  };
 }
 
 export default function StarterQuestions({
   onQuestionTap,
-  weatherSummary,
 }: StarterQuestionsProps): JSX.Element | null {
   const { theme, location, language } = useApp();
 
@@ -31,7 +25,7 @@ export default function StarterQuestions({
   const [isLoading, setIsLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
 
-  // Fetch once on mount
+  // Fetch once on mount - backend handles weather and time calculation
   useEffect(() => {
     if (hasFetched) return;
 
@@ -43,7 +37,6 @@ export default function StarterQuestions({
           latitude: location?.latitude,
           longitude: location?.longitude,
           language: language?.code,
-          weatherSummary,
         });
         log('📋 [StarterQuestions] Got', result.length, 'questions');
         setQuestions(result.slice(0, 3));
@@ -56,7 +49,7 @@ export default function StarterQuestions({
     }
 
     loadQuestions();
-  }, [hasFetched, location?.latitude, location?.longitude, language?.code, weatherSummary]);
+  }, [hasFetched, location?.latitude, location?.longitude, language?.code]);
 
   const handleTap = (question: string): void => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
