@@ -53,11 +53,17 @@ export function createSendTextHandler({
     persistMessage(userMessage, sessionId, { inputMethod: 'keyboard' });
 
     const botMsgId = (Date.now() + 1).toString();
-    const botMsg: Message = { _id: botMsgId, text: '', createdAt: new Date(), isBot: true };
+    const botMsg: Message = {
+      _id: botMsgId,
+      text: '',
+      createdAt: new Date(),
+      isBot: true,
+      status: 'thinking',
+      thinkingText: t('chat.thinking'),
+    };
     addMessage(botMsg);
 
     try {
-      setThinkingText(t('chat.thinking'));
 
       const history: HistoryMessage[] = messages.slice(0, 10).map(m => {
         let msgText = m.text || '';
@@ -77,16 +83,18 @@ export function createSendTextHandler({
         history,
         sessionId: sessionId ?? undefined,
         onChunk: (chunk: string) => {
-          setThinkingText(null);
-          updateMessage(botMsgId, { text: (prev: string) => (prev || '') + chunk });
+          updateMessage(botMsgId, {
+            text: (prev: string) => (prev || '') + chunk,
+            status: 'streaming',
+            thinkingText: null,
+          });
         },
-        onThinking: (thinking: string) => setThinkingText(thinking),
+        onThinking: (thinking: string) => updateMessage(botMsgId, { thinkingText: thinking }),
         onComplete: (fullText: string, metadata?: Record<string, unknown>) => {
-          setThinkingText(null);
           setIsTyping(false);
           // Extract follow-up questions from metadata
           const followUpQuestions = metadata?.followUpQuestions as string[] | undefined;
-          updateMessage(botMsgId, { text: fullText, followUpQuestions });
+          updateMessage(botMsgId, { text: fullText, followUpQuestions, status: 'complete', thinkingText: null });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
           const diagnosisMetadata = metadata?.diagnosis as Record<string, unknown> | undefined;
@@ -109,7 +117,7 @@ export function createSendTextHandler({
           if (isTimeout && !isRetry && retryCountRef.current < maxRetries) {
             retryCountRef.current++;
             log('🔄 [Chat] Timeout - auto-retrying...');
-            setThinkingText(t('chat.servicesWarmingUp'));
+            updateMessage(botMsgId, { thinkingText: t('chat.servicesWarmingUp') });
             createSendTextHandler({
               messages,
               addMessage,
@@ -129,10 +137,11 @@ export function createSendTextHandler({
           }
 
           retryCountRef.current = 0;
-          setThinkingText(null);
           setIsTyping(false);
           updateMessage(botMsgId, {
             text: (prev: string) => prev && prev.length > 10 ? prev : t('chat.connectionErrorBot'),
+            status: 'complete',
+            thinkingText: null,
           });
 
           if (isNetworkError(error)) {
@@ -146,9 +155,8 @@ export function createSendTextHandler({
       retryCountRef.current = 0;
     } catch (error) {
       retryCountRef.current = 0;
-      setThinkingText(null);
       setIsTyping(false);
-      updateMessage(botMsgId, { text: t('chat.connectionErrorBot') });
+      updateMessage(botMsgId, { text: t('chat.connectionErrorBot'), status: 'complete', thinkingText: null });
       showError(parseErrorMessage(error));
     }
   };

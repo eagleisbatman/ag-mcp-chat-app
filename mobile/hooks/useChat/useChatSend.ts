@@ -66,6 +66,7 @@ export default function useChatSend({
       createSendImageHandler({
         messages,
         addMessage,
+        updateMessage,
         persistMessage,
         ensureSession,
         maybeGenerateTitle,
@@ -73,11 +74,11 @@ export default function useChatSend({
         showWarning,
         locationContext,
         setIsTyping,
-        setThinkingText,
       })(imageData),
     [
       messages,
       addMessage,
+      updateMessage,
       persistMessage,
       ensureSession,
       maybeGenerateTitle,
