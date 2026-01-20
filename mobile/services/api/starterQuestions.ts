@@ -5,6 +5,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { log } from '../../utils/logger';
+import { fetchWithTimeout } from '../../utils/apiHelpers';
 import { API_BASE_URL, API_KEY, ensureDeviceId, getLocalDateTime } from './core';
 
 const SERVICE_PREFS_KEY = '@service_preferences';
@@ -79,15 +80,18 @@ export async function fetchStarterQuestions(
       apiKey: API_KEY ? `${API_KEY.substring(0, 8)}...` : 'MISSING',
     });
 
-    const response = await fetch(`${API_BASE_URL}/api/starter-questions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': API_KEY,
+    const response = await fetchWithTimeout(
+      `${API_BASE_URL}/api/starter-questions`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': API_KEY,
+        },
+        body: JSON.stringify(requestBody),
       },
-      body: JSON.stringify(requestBody),
-      signal: AbortSignal.timeout(15000), // 15s timeout (allow for cold starts)
-    });
+      15000 // 15s timeout (allow for cold starts)
+    );
 
     log('📋 [StarterQuestions] Response status:', response.status);
 
