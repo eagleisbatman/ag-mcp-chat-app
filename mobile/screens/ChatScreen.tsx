@@ -43,14 +43,14 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
 
   const {
     showScrollButton, scrollButtonAnim,
-    scrollToBottom, onMessageLayout,
+    scrollToBottom, scrollToLastConversation, onMessageLayout,
     handleScroll, handleScrollBeginDrag,
     handleLayout, handleContentSizeChange,
     handleScrollToIndexFailed, resetScrollState
-  } = useChatScroll({ 
-    messages, 
-    isTyping, 
-    flatListRef: flatListRef as React.RefObject<FlatList<Message>> 
+  } = useChatScroll({
+    messages,
+    isTyping,
+    flatListRef: flatListRef as React.RefObject<FlatList<Message>>
   });
 
   const { weatherData, weatherLoading, weatherError, weatherProvider } = useWeatherData(
@@ -69,6 +69,17 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
       resetScrollState();
     }
   }, [isNewSession, startNewSession, resetScrollState]);
+
+  // When loading existing session (history), scroll to show the last conversation
+  const prevLoadingRef = useRef(isLoadingSession);
+  useEffect(() => {
+    // Detect when loading just finished (was loading, now not loading)
+    if (prevLoadingRef.current && !isLoadingSession && messages.length > 0 && !isNewSession) {
+      // Scroll to last conversation after history is loaded
+      scrollToLastConversation();
+    }
+    prevLoadingRef.current = isLoadingSession;
+  }, [isLoadingSession, messages.length, isNewSession, scrollToLastConversation]);
 
   const handleSend = useCallback(async (text: string) => {
     await handleSendText(text);
