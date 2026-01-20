@@ -183,19 +183,29 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             scrollEventThrottle={16}
             keyboardShouldPersistTaps="handled"
             onScrollToIndexFailed={handleScrollToIndexFailed}
-            ListHeaderComponent={isTyping && thinkingText ? <TypingIndicator text={thinkingText} /> : null}
-            ListFooterComponent={
+            ListHeaderComponent={
               <>
-                {messages.length === 0 && (
-                  <StarterQuestions onQuestionTap={handleSend} />
+                {isTyping && thinkingText && <TypingIndicator text={thinkingText} />}
+                {/* Show starter questions below welcome message (inverted list = ListHeader is visual bottom) */}
+                {messages.length <= 1 && messages.every(m => m._id === 'welcome' || m.isBot) && (
+                  <StarterQuestions
+                    onQuestionTap={handleSend}
+                    weatherSummary={weatherData ? {
+                      temperature: weatherData.current?.temperature,
+                      conditions: weatherData.current?.conditions,
+                      hasRain: weatherData.current?.conditions?.toLowerCase().includes('rain'),
+                    } : undefined}
+                  />
                 )}
-                <WeatherWidget
-                  data={weatherData}
-                  loading={weatherLoading}
-                  error={weatherError}
-                  provider={weatherProvider ?? undefined}
-                />
               </>
+            }
+            ListFooterComponent={
+              <WeatherWidget
+                data={weatherData}
+                loading={weatherLoading}
+                error={weatherError}
+                provider={weatherProvider ?? undefined}
+              />
             }
           />
         )}

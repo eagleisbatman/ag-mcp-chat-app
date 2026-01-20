@@ -1,42 +1,72 @@
 /**
  * StarterQuestions component
- * Reddit-style flowing chips for empty chat state
- * Displays suggested questions in a horizontally wrapping layout
+ * Full-width tappable cards for empty chat state
+ * Displays personalized suggested questions in a vertical stack layout
+ * Questions are fetched from the API based on user context
  */
-import React from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
-
-// Agriculture-focused starter questions with emojis
-const STARTER_QUESTIONS = [
-  { emoji: '🌾', text: 'Best rice varieties' },
-  { emoji: '🌧️', text: 'Weather for spraying' },
-  { emoji: '🐛', text: 'Pest control tips' },
-  { emoji: '🌱', text: 'When to plant maize' },
-  { emoji: '💧', text: 'Irrigation schedule' },
-  { emoji: '🧪', text: 'Soil testing guide' },
-  { emoji: '🍅', text: 'Tomato diseases' },
-  { emoji: '🌿', text: 'Organic fertilizers' },
-  { emoji: '☀️', text: 'Heat stress signs' },
-  { emoji: '🥔', text: 'Potato blight cure' },
-  { emoji: '🌽', text: 'Maize storage tips' },
-  { emoji: '🐄', text: 'Cattle feed guide' },
-  { emoji: '🌻', text: 'Crop rotation plan' },
-  { emoji: '💰', text: 'Market prices today' },
-  { emoji: '🌾', text: 'Wheat sowing time' },
-];
+import AppIcon from './ui/AppIcon';
+import {
+  fetchStarterQuestions,
+  getFallbackQuestions,
+  StarterQuestion,
+} from '../services/api/starterQuestions';
 
 interface StarterQuestionsProps {
   onQuestionTap: (question: string) => void;
+  weatherSummary?: {
+    temperature?: number;
+    conditions?: string;
+    hasRain?: boolean;
+  };
 }
 
 export default function StarterQuestions({
   onQuestionTap,
+  weatherSummary,
 }: StarterQuestionsProps): JSX.Element {
-  const { theme } = useApp();
+  const { theme, location, language } = useApp();
   const isDark = theme.name === 'dark';
+
+  // Start with fallback questions for immediate display
+  const [questions, setQuestions] = useState<StarterQuestion[]>(getFallbackQuestions());
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch personalized questions on mount
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadQuestions() {
+      try {
+        const personalizedQuestions = await fetchStarterQuestions({
+          latitude: location?.latitude,
+          longitude: location?.longitude,
+          language: language?.code,
+          weatherSummary,
+        });
+
+        if (isMounted && personalizedQuestions.length > 0) {
+          setQuestions(personalizedQuestions);
+        }
+      } catch {
+        // Keep fallback questions on error
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadQuestions();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [location?.latitude, location?.longitude, language?.code, weatherSummary]);
 
   const handleTap = (question: string): void => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -48,83 +78,48 @@ export default function StarterQuestions({
       <Text style={[styles.title, { color: theme.textMuted }]}>
         Try asking about...
       </Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        <View style={styles.chipsContainer}>
-          {/* Row 1 */}
-          <View style={styles.row}>
-            {STARTER_QUESTIONS.slice(0, 5).map((q, i) => (
-              <Pressable
-                key={i}
-                style={({ pressed }) => [
-                  styles.chip,
-                  {
-                    backgroundColor: isDark
-                      ? 'rgba(255, 255, 255, 0.08)'
-                      : 'rgba(0, 0, 0, 0.05)',
-                    opacity: pressed ? 0.7 : 1,
-                  },
-                ]}
-                onPress={() => handleTap(`${q.emoji} ${q.text}`)}
-              >
-                <Text style={styles.emoji}>{q.emoji}</Text>
-                <Text style={[styles.chipText, { color: theme.text }]}>
-                  {q.text}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-          {/* Row 2 */}
-          <View style={styles.row}>
-            {STARTER_QUESTIONS.slice(5, 10).map((q, i) => (
-              <Pressable
-                key={i}
-                style={({ pressed }) => [
-                  styles.chip,
-                  {
-                    backgroundColor: isDark
-                      ? 'rgba(255, 255, 255, 0.08)'
-                      : 'rgba(0, 0, 0, 0.05)',
-                    opacity: pressed ? 0.7 : 1,
-                  },
-                ]}
-                onPress={() => handleTap(`${q.emoji} ${q.text}`)}
-              >
-                <Text style={styles.emoji}>{q.emoji}</Text>
-                <Text style={[styles.chipText, { color: theme.text }]}>
-                  {q.text}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-          {/* Row 3 */}
-          <View style={styles.row}>
-            {STARTER_QUESTIONS.slice(10, 15).map((q, i) => (
-              <Pressable
-                key={i}
-                style={({ pressed }) => [
-                  styles.chip,
-                  {
-                    backgroundColor: isDark
-                      ? 'rgba(255, 255, 255, 0.08)'
-                      : 'rgba(0, 0, 0, 0.05)',
-                    opacity: pressed ? 0.7 : 1,
-                  },
-                ]}
-                onPress={() => handleTap(`${q.emoji} ${q.text}`)}
-              >
-                <Text style={styles.emoji}>{q.emoji}</Text>
-                <Text style={[styles.chipText, { color: theme.text }]}>
-                  {q.text}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
+      <View style={styles.cardsContainer}>
+        {questions.map((q, index) => (
+          <Pressable
+            key={index}
+            style={({ pressed }) => [
+              styles.card,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(255, 255, 255, 0.06)'
+                  : 'rgba(0, 0, 0, 0.03)',
+                borderColor: isDark
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'rgba(0, 0, 0, 0.08)',
+                transform: [{ scale: pressed ? 0.98 : 1 }],
+              },
+            ]}
+            onPress={() => handleTap(q.text)}
+            accessibilityRole="button"
+            accessibilityLabel={q.text}
+            accessibilityHint="Tap to ask this question"
+          >
+            <Text style={styles.emoji}>{q.emoji}</Text>
+            <Text
+              style={[styles.cardText, { color: theme.text }]}
+              numberOfLines={2}
+            >
+              {q.text}
+            </Text>
+            <AppIcon
+              name="arrow-forward"
+              size={18}
+              color={theme.textMuted}
+              style={styles.arrow}
+            />
+          </Pressable>
+        ))}
+      </View>
+      {isLoading && (
+        <View style={styles.loadingIndicator}>
+          <ActivityIndicator size="small" color={theme.textMuted} />
         </View>
-      </ScrollView>
+      )}
     </View>
   );
 }
@@ -132,6 +127,7 @@ export default function StarterQuestions({
 const styles = StyleSheet.create({
   container: {
     paddingVertical: SPACING.lg,
+    paddingHorizontal: SPACING.md,
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -139,29 +135,33 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: SPACING.md,
   },
-  scrollContent: {
-    paddingHorizontal: SPACING.md,
-  },
-  chipsContainer: {
+  cardsContainer: {
     gap: SPACING.sm,
   },
-  row: {
-    flexDirection: 'row',
-    gap: SPACING.xs,
-  },
-  chip: {
+  card: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: SPACING.sm,
+    paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.md,
-    borderRadius: 20,
-    gap: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: SPACING.sm,
   },
   emoji: {
-    fontSize: 14,
+    fontSize: 20,
   },
-  chipText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+  cardText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.medium,
+    lineHeight: 20,
+  },
+  arrow: {
+    opacity: 0.5,
+  },
+  loadingIndicator: {
+    position: 'absolute',
+    top: 8,
+    right: 16,
   },
 });
