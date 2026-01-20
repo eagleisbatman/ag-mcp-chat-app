@@ -81,7 +81,10 @@
     "analysisComplete": "စစ်ဆေးပြီးပါပြီ။",
     "lowAccuracy": "တိကျမှု နည်းပါး",
     "tapToImprove": "ပိုကောင်းအောင် နှိပ်ပါ။",
-    "servicesWarmingUp": "ဝန်ဆောင်မှုစတင်နေသည်၊ ပြန်ကြိုးစားနေသည်..."
+    "servicesWarmingUp": "ဝန်ဆောင်မှုစတင်နေသည်၊ ပြန်ကြိုးစားနေသည်...",
+    "starterQuestionsHeader": "မေးကြည့်ပါ",
+    "starterQuestionsLoading": "အကြံပြုချက်များ ရယူနေသည်...",
+    "followUpQuestionsHeader": "ထပ်မံ မေးကြည့်ပါ"
   },
   "media": {
     "photoLibraryPermission": "ဓာတ်ပုံရွေးရန် ပြခန်းအသုံးပြုခွင့် လိုအပ်ပါသည်။ ဆက်တင်တွင် ဖွင့်ပေးပါ။",

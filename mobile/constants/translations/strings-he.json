@@ -81,7 +81,10 @@
     "analysisComplete": "ניתוח הושלם",
     "lowAccuracy": "דיוק נמוך",
     "tapToImprove": "הקש לשיפור",
-    "servicesWarmingUp": "שירותים עולים, מנסה שוב..."
+    "servicesWarmingUp": "שירותים עולים, מנסה שוב...",
+    "starterQuestionsHeader": "נסה לשאול:",
+    "starterQuestionsLoading": "מביא לך המלצות...",
+    "followUpQuestionsHeader": "תוכל גם לשאול:"
   },
   "media": {
     "photoLibraryPermission": "גישה לגלריית התמונות נדרשת לבחירת תמונות. אפשר בהגדרות.",

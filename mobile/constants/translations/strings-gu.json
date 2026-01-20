@@ -81,7 +81,10 @@
     "analysisComplete": "વિશ્લેષણ પૂર્ણ",
     "lowAccuracy": "ઓછી સચોટતા",
     "tapToImprove": "સુધારવા માટે ટેપ કરો",
-    "servicesWarmingUp": "સેવાઓ શરૂ થઈ રહી છે, ફરી પ્રયાસ..."
+    "servicesWarmingUp": "સેવાઓ શરૂ થઈ રહી છે, ફરી પ્રયાસ...",
+    "starterQuestionsHeader": "પૂછી જુઓ:",
+    "starterQuestionsLoading": "તમારા માટે સૂચનો મેળવી રહ્યા છીએ...",
+    "followUpQuestionsHeader": "આ પણ પૂછી શકો છો:"
   },
   "media": {
     "photoLibraryPermission": "ફોટા પસંદ કરવા ગેલેરીની પરવાનગી આપો. સેટિંગ્સમાં ચાલુ કરો.",

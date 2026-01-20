@@ -81,7 +81,10 @@
     "analysisComplete": "Uchanganuzi umekamilika",
     "lowAccuracy": "Usahihi Mdogo",
     "tapToImprove": "Gusa kuboresha",
-    "servicesWarmingUp": "Huduma zinajiandaa, inajaribu tena..."
+    "servicesWarmingUp": "Huduma zinajiandaa, inajaribu tena...",
+    "starterQuestionsHeader": "Jaribu kuuliza:",
+    "starterQuestionsLoading": "Tunakuandalia mapendekezo...",
+    "followUpQuestionsHeader": "Unaweza pia kuuliza:"
   },
   "media": {
     "photoLibraryPermission": "Ufikiaji wa picha unahitajika kuchagua picha. Washa kwenye Mipangilio.",

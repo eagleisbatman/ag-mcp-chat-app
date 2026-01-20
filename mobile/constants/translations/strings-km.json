@@ -81,7 +81,10 @@
     "analysisComplete": "វិភាគរួចរាល់",
     "lowAccuracy": "ភាពត្រឹមត្រូវទាប",
     "tapToImprove": "ប៉ះដើម្បីកែលម្អ",
-    "servicesWarmingUp": "សេវា​កំពុង​ដំណើរការ កំពុង​ព្យាយាម​ឡើងវិញ..."
+    "servicesWarmingUp": "សេវា​កំពុង​ដំណើរការ កំពុង​ព្យាយាម​ឡើងវិញ...",
+    "starterQuestionsHeader": "សាកសួរមើល៖",
+    "starterQuestionsLoading": "កំពុងរៀបចំការណែនាំសម្រាប់អ្នក...",
+    "followUpQuestionsHeader": "អ្នកអាចសួរបន្ថែម៖"
   },
   "media": {
     "photoLibraryPermission": "ត្រូវការចូលមើលបណ្ណាល័យរូបភាព ដើម្បីជ្រើសរើសរូបភាព។ បើកនៅក្នុងការកំណត់។",

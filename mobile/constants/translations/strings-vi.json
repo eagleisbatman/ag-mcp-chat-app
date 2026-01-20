@@ -81,7 +81,10 @@
     "analysisComplete": "Phân tích hoàn tất",
     "lowAccuracy": "Độ chính xác thấp",
     "tapToImprove": "Chạm để cải thiện",
-    "servicesWarmingUp": "Đang tải dịch vụ, thử lại..."
+    "servicesWarmingUp": "Đang tải dịch vụ, thử lại...",
+    "starterQuestionsHeader": "Thử hỏi:",
+    "starterQuestionsLoading": "Đang tải gợi ý...",
+    "followUpQuestionsHeader": "Bạn cũng có thể hỏi:"
   },
   "media": {
     "photoLibraryPermission": "Cần truy cập thư viện ảnh để chọn hình. Bật trong Cài đặt.",

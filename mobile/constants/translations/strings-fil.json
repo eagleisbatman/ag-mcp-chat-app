@@ -81,7 +81,10 @@
     "analysisComplete": "Tapos na ang pagsusuri",
     "lowAccuracy": "Mababang Katumpakan",
     "tapToImprove": "Pindutin para mapabuti",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "Subukang magtanong:",
+    "starterQuestionsLoading": "Kumukuha ng mga mungkahi...",
+    "followUpQuestionsHeader": "Pwede mo ring itanong:"
   },
   "media": {
     "photoLibraryPermission": "Kailangan ng access sa Photo Library para makapili ng larawan. Paganahin sa Settings.",

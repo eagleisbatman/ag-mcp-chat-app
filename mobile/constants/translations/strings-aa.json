@@ -81,7 +81,10 @@
     "analysisComplete": "Kaayto tammate.",
     "lowAccuracy": "Saxxa hinna.",
     "tapToImprove": "Daqaba qiba.",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "Kaak gexsaay:",
+    "starterQuestionsLoading": "Gexxaay suggudda akuk",
+    "followUpQuestionsHeader": "Keesiy gexsaay:"
   },
   "media": {
     "photoLibraryPermission": "Suura addaleh galtee raqqa adda. Baxan-gurrukkul gaba.",

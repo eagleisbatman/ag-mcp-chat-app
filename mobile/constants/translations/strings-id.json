@@ -81,7 +81,10 @@
     "analysisComplete": "Analisis selesai",
     "lowAccuracy": "Akurasi rendah",
     "tapToImprove": "Ketuk untuk meningkatkan",
-    "servicesWarmingUp": "Layanan sedang dimuat, mencoba lagi..."
+    "servicesWarmingUp": "Layanan sedang dimuat, mencoba lagi...",
+    "starterQuestionsHeader": "Coba tanyakan:",
+    "starterQuestionsLoading": "Memuat saran untuk Anda...",
+    "followUpQuestionsHeader": "Anda bisa juga bertanya:"
   },
   "media": {
     "photoLibraryPermission": "Izinkan akses galeri foto untuk memilih gambar. Aktifkan di Pengaturan.",

@@ -81,7 +81,10 @@
     "analysisComplete": "ວິເຄາະສຳເລັດ",
     "lowAccuracy": "ຄວາມຖືກຕ້ອງຕໍ່າ",
     "tapToImprove": "ແຕະເພື່ອປັບປຸງ",
-    "servicesWarmingUp": "ບໍລິການກຳລັງເລີ່ມ, ລອງໃໝ່ອີກຄັ້ງ..."
+    "servicesWarmingUp": "ບໍລິການກຳລັງເລີ່ມ, ລອງໃໝ່ອີກຄັ້ງ...",
+    "starterQuestionsHeader": "ລອງຖາມເບິ່ງ:",
+    "starterQuestionsLoading": "ກຳລັງຫາຄຳແນະນຳໃຫ້ທ່ານ...",
+    "followUpQuestionsHeader": "ທ່ານອາດຈະຖາມເພີ່ມອີກ:"
   },
   "media": {
     "photoLibraryPermission": "ຕ້ອງເຂົ້າເຖິງຄັງຮູບ ເພື່ອເລືອກຮູບ. ເປີດໃຊ້ໃນການຕັ້ງຄ່າ.",

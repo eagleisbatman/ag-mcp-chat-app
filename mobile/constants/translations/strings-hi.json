@@ -81,7 +81,10 @@
     "analysisComplete": "विश्लेषण पूरा हो गया",
     "lowAccuracy": "कम सटीकता",
     "tapToImprove": "बेहतर बनाने के लिए टैप करें",
-    "servicesWarmingUp": "सेवाएं तैयार हो रही हैं, फिर से कोशिश कर रहे हैं..."
+    "servicesWarmingUp": "सेवाएं तैयार हो रही हैं, फिर से कोशिश कर रहे हैं...",
+    "starterQuestionsHeader": "पूछकर देखें:",
+    "starterQuestionsLoading": "सुझाव मिल रहे हैं...",
+    "followUpQuestionsHeader": "आप और भी पूछ सकते हैं:"
   },
   "media": {
     "photoLibraryPermission": "फोटो चुनने के लिए गैलरी की अनुमति चाहिए। सेटिंग्स में चालू करें।",

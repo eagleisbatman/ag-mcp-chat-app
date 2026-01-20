@@ -81,7 +81,10 @@
     "analysisComplete": "വിശകലനം പൂർത്തിയായി",
     "lowAccuracy": "കൃത്യത കുറവ്",
     "tapToImprove": "മെച്ചപ്പെടുത്താൻ ടാപ്പ് ചെയ്യുക",
-    "servicesWarmingUp": "സേവനങ്ങൾ സജ്ജമാക്കുന്നു, വീണ്ടും ശ്രമിക്കുന്നു..."
+    "servicesWarmingUp": "സേവനങ്ങൾ സജ്ജമാക്കുന്നു, വീണ്ടും ശ്രമിക്കുന്നു...",
+    "starterQuestionsHeader": "ചോദിച്ചു നോക്കൂ:",
+    "starterQuestionsLoading": "നിർദ്ദേശങ്ങൾ ലഭിച്ചുകൊണ്ടിരിക്കുന്നു...",
+    "followUpQuestionsHeader": "ചോദിക്കാവുന്ന മറ്റ് ചോദ്യങ്ങൾ:"
   },
   "media": {
     "photoLibraryPermission": "ചിത്രങ്ങൾ തിരഞ്ഞെടുക്കാൻ ഫോട്ടോ ലൈബ്രറി അനുമതി വേണം. ക്രമീകരണങ്ങളിൽ ഓൺ ചെയ്യുക.",

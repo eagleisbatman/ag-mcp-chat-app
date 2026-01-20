@@ -81,7 +81,10 @@
     "analysisComplete": "分析完成",
     "lowAccuracy": "準確度低",
     "tapToImprove": "輕觸以改善",
-    "servicesWarmingUp": "服務啟動中，正在重試..."
+    "servicesWarmingUp": "服務啟動中，正在重試...",
+    "starterQuestionsHeader": "您可以問：",
+    "starterQuestionsLoading": "正在載入建議...",
+    "followUpQuestionsHeader": "您還可以問："
   },
   "media": {
     "photoLibraryPermission": "選圖需相簿權限，請至設定啟用。",

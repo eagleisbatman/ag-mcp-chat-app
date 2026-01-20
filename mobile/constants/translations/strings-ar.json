@@ -81,7 +81,10 @@
     "analysisComplete": "اكتمل التحليل",
     "lowAccuracy": "دقة منخفضة",
     "tapToImprove": "اضغط للتحسين",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "أسئلة مقترحة:",
+    "starterQuestionsLoading": "جارٍ تحميل الاقتراحات...",
+    "followUpQuestionsHeader": "أسئلة إضافية:"
   },
   "media": {
     "photoLibraryPermission": "يتطلب الوصول إلى مكتبة الصور لاختيار الصور. فعّلها في الإعدادات.",

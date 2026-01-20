@@ -81,7 +81,10 @@
     "analysisComplete": "பகுப்பாய்வு நிறைவடைந்தது",
     "lowAccuracy": "குறைந்த துல்லியம்",
     "tapToImprove": "மேம்படுத்த தட்டவும்",
-    "servicesWarmingUp": "சேவைகள் தயாராகின்றன, மீண்டும் முயற்சிக்கிறது..."
+    "servicesWarmingUp": "சேவைகள் தயாராகின்றன, மீண்டும் முயற்சிக்கிறது...",
+    "starterQuestionsHeader": "கேட்க வேண்டியவை:",
+    "starterQuestionsLoading": "பரிந்துரைகள் தயாராகின்றன...",
+    "followUpQuestionsHeader": "மேலும் கேட்க வேண்டியவை:"
   },
   "media": {
     "photoLibraryPermission": "படங்களைத் தேர்ந்தெடுக்கப் புகைப்பட அனுமதி தேவை. அமைப்புகளில் இயக்குங்கள்.",

@@ -81,7 +81,10 @@
     "analysisComplete": "Analys klar",
     "lowAccuracy": "Låg noggrannhet",
     "tapToImprove": "Tryck för att förbättra",
-    "servicesWarmingUp": "Laddar tjänster, försöker igen..."
+    "servicesWarmingUp": "Laddar tjänster, försöker igen...",
+    "starterQuestionsHeader": "Prova att fråga:",
+    "starterQuestionsLoading": "Hämtar förslag...",
+    "followUpQuestionsHeader": "Du kan också fråga:"
   },
   "media": {
     "photoLibraryPermission": "Åtkomst till galleriet behövs för att välja bilder. Aktivera i Inställningar.",

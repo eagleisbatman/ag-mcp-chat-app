@@ -81,7 +81,10 @@
     "analysisComplete": "Falanqayntu way dhamaatay",
     "lowAccuracy": "Saxnaan hoose",
     "tapToImprove": "Taabo si aad u hagaajiso",
-    "servicesWarmingUp": "Adeegyadu way soo kabsanayaan, dib isku dayayaa..."
+    "servicesWarmingUp": "Adeegyadu way soo kabsanayaan, dib isku dayayaa...",
+    "starterQuestionsHeader": "Iska weydii:",
+    "starterQuestionsLoading": "Diyaarinaya talooyin...",
+    "followUpQuestionsHeader": "Sidoo kale weydii:"
   },
   "media": {
     "photoLibraryPermission": "Marin u helka maktabadda sawirrada ayaa loo baahan yahay si sawirro loo doorto. Daar Goobaha.",

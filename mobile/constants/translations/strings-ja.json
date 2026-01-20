@@ -81,7 +81,10 @@
     "analysisComplete": "分析完了",
     "lowAccuracy": "低精度",
     "tapToImprove": "タップして改善",
-    "servicesWarmingUp": "サービス準備中、再試行します..."
+    "servicesWarmingUp": "サービス準備中、再試行します...",
+    "starterQuestionsHeader": "質問例",
+    "starterQuestionsLoading": "質問を準備中...",
+    "followUpQuestionsHeader": "追加の質問"
   },
   "media": {
     "photoLibraryPermission": "写真選択にはフォトライブラリの許可が必要です。設定で有効に。",

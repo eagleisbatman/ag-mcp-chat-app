@@ -81,7 +81,10 @@
     "analysisComplete": "Analýza dokončena",
     "lowAccuracy": "Nízká přesnost",
     "tapToImprove": "Klepněte pro zlepšení",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "Zkuste se zeptat:",
+    "starterQuestionsLoading": "Načítám návrhy...",
+    "followUpQuestionsHeader": "Můžete se také zeptat:"
   },
   "media": {
     "photoLibraryPermission": "Přístup k fotogalerii je potřeba pro výběr obrázků. Povolte v Nastavení.",
