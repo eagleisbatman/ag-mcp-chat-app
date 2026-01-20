@@ -1,10 +1,10 @@
 /**
  * StarterQuestions component
- * Full-width tappable cards for empty chat state
- * Displays personalized suggested questions fetched from API
+ * Minimal tappable suggestions for empty chat state
+ * Fetches personalized questions from API once on mount
  */
-import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
@@ -26,88 +26,53 @@ export default function StarterQuestions({
   weatherSummary,
 }: StarterQuestionsProps): JSX.Element | null {
   const { theme, location, language } = useApp();
-  const isDark = theme.name === 'dark';
 
-  // Start empty - wait for API
   const [questions, setQuestions] = useState<StarterQuestion[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const hasFetchedRef = useRef(false);
 
-  // Fetch personalized questions on mount
+  // Fetch ONCE on mount only - no re-fetching
   useEffect(() => {
-    let isMounted = true;
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
 
     async function loadQuestions() {
-      log('📋 [StarterQuestions] Starting fetch...');
-      setIsLoading(true);
-
+      log('📋 [StarterQuestions] Fetching once...');
       try {
-        const personalizedQuestions = await fetchStarterQuestions({
+        const result = await fetchStarterQuestions({
           latitude: location?.latitude,
           longitude: location?.longitude,
           language: language?.code,
           weatherSummary,
         });
-
-        log('📋 [StarterQuestions] Received questions:', personalizedQuestions.length);
-
-        if (isMounted && personalizedQuestions.length > 0) {
-          setQuestions(personalizedQuestions);
-        }
+        // Limit to 3 questions
+        setQuestions(result.slice(0, 3));
       } catch (error) {
-        log('❌ [StarterQuestions] Failed to load:', error);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
+        log('❌ [StarterQuestions] Failed:', error);
       }
     }
 
     loadQuestions();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [location?.latitude, location?.longitude, language?.code, weatherSummary]);
+  }, []); // Empty deps - only run once
 
   const handleTap = (question: string): void => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onQuestionTap(question);
   };
 
-  // Show loading spinner while fetching
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color={theme.textMuted} />
-      </View>
-    );
-  }
-
-  // Don't render if no questions
+  // Don't render if no questions yet
   if (questions.length === 0) {
     return null;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: theme.textMuted }]}>
-        Try asking about...
-      </Text>
-      <View style={styles.cardsContainer}>
+      <View style={styles.questionsContainer}>
         {questions.map((q, index) => (
           <Pressable
             key={index}
             style={({ pressed }) => [
-              styles.card,
-              {
-                backgroundColor: isDark
-                  ? 'rgba(255, 255, 255, 0.06)'
-                  : 'rgba(0, 0, 0, 0.03)',
-                borderColor: isDark
-                  ? 'rgba(255, 255, 255, 0.1)'
-                  : 'rgba(0, 0, 0, 0.08)',
-                transform: [{ scale: pressed ? 0.98 : 1 }],
-              },
+              styles.questionRow,
+              { opacity: pressed ? 0.6 : 1 },
             ]}
             onPress={() => handleTap(q.text)}
             accessibilityRole="button"
@@ -115,16 +80,15 @@ export default function StarterQuestions({
             accessibilityHint="Tap to ask this question"
           >
             <Text
-              style={[styles.cardText, { color: theme.text }]}
+              style={[styles.questionText, { color: theme.text }]}
               numberOfLines={2}
             >
               {q.text}
             </Text>
             <AppIcon
-              name="arrow-forward"
-              size={18}
+              name="chevron-forward"
+              size={16}
               color={theme.textMuted}
-              style={styles.arrow}
             />
           </Pressable>
         ))}
@@ -135,39 +99,21 @@ export default function StarterQuestions({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: SPACING.lg,
-    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
   },
-  loadingContainer: {
-    paddingVertical: SPACING.xl,
-    alignItems: 'center',
-    justifyContent: 'center',
+  questionsContainer: {
+    gap: SPACING.xs,
   },
-  title: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    textAlign: 'center',
-    marginBottom: SPACING.md,
-  },
-  cardsContainer: {
-    gap: SPACING.sm,
-  },
-  card: {
+  questionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.md,
-    borderRadius: 12,
-    borderWidth: 1,
+    paddingVertical: SPACING.sm,
     gap: SPACING.sm,
   },
-  cardText: {
+  questionText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    lineHeight: 20,
-  },
-  arrow: {
-    opacity: 0.5,
+    lineHeight: 22,
   },
 });
