@@ -1,5 +1,4 @@
 // Text-to-Speech service - calls API Gateway → AI Services TTS → Cloudinary
-import { fetchWithTimeout } from '../utils/apiHelpers';
 import { getDeviceId } from '../utils/deviceInfo';
 import { API_BASE_URL, API_KEY } from '../utils/config';
 import { log } from '../utils/logger';
@@ -12,6 +11,7 @@ const USER_FRIENDLY_ERRORS: Record<string, string> = {
   timeout: 'Speech is taking too long. Please try again.',
   network: 'Cannot connect to speech service. Check your internet.',
   server: 'Speech service is busy. Please try again.',
+  cancelled: 'Speech generation cancelled.',
   default: 'Could not generate speech. Please try again.',
 };
 
@@ -28,6 +28,7 @@ export interface TTSResult {
   duration?: number;
   audioBase64?: string;
   error?: string;
+  cancelled?: boolean;
 }
 
 /**
@@ -35,16 +36,28 @@ export interface TTSResult {
  * @param text - Text to convert to speech
  * @param language - Language code (e.g., 'en', 'hi', 'sw')
  * @param location - User's location for accent localization
+ * @param signal - Optional AbortSignal to cancel the request
  * @returns Promise with audio URL or error
  */
 export const textToSpeech = async (
   text: string,
   language: string = 'en',
-  location: TTSLocation | null = null
+  location: TTSLocation | null = null,
+  signal?: AbortSignal
 ): Promise<TTSResult> => {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetchWithTimeout(API_URL, {
+
+    // Create AbortController for timeout, combined with external signal
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), TTS_TIMEOUT_MS);
+
+    // If external signal aborts, abort our controller too
+    if (signal) {
+      signal.addEventListener('abort', () => controller.abort());
+    }
+
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +69,10 @@ export const textToSpeech = async (
         location,
         deviceId,
       }),
-    }, TTS_TIMEOUT_MS);
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       // Log technical details but return user-friendly message
@@ -91,6 +107,15 @@ export const textToSpeech = async (
     // Log technical details but return user-friendly message
     const err = error as Error;
     log('TTS exception:', err.message);
+
+    // Check if request was cancelled
+    if (err.name === 'AbortError') {
+      return {
+        success: false,
+        error: USER_FRIENDLY_ERRORS.cancelled,
+        cancelled: true,
+      };
+    }
 
     // Detect error type for appropriate message
     const msg = err.message?.toLowerCase() || '';

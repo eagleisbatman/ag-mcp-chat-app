@@ -131,12 +131,14 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
             <Pressable
               style={styles.speakButton}
               onPress={handleSpeak}
-              disabled={isLoading}
               accessibilityRole="button"
-              accessibilityLabel={isSpeaking ? t('a11y.stopVoicePlayback') : t('a11y.playVoice')}
+              accessibilityLabel={
+                isLoading ? t('a11y.cancelVoiceGeneration') :
+                isSpeaking ? t('a11y.stopVoicePlayback') : t('a11y.playVoice')
+              }
             >
               {isLoading ? (
-                <ActivityIndicator size="small" color={theme.icon} />
+                <ActivityIndicator size="small" color={theme.accent} />
               ) : (
                 <AppIcon
                   name={isSpeaking ? 'stop-circle' : 'volume-high'}
