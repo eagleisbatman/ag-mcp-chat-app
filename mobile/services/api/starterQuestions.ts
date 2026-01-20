@@ -59,6 +59,7 @@ export async function fetchStarterQuestions(
       deviceId: deviceId.substring(0, 8),
       hasLocation: !!(params.latitude && params.longitude),
       hasWeather: !!params.weatherSummary,
+      apiKey: API_KEY ? `${API_KEY.substring(0, 8)}...` : 'MISSING',
     });
 
     const response = await fetch(`${API_BASE_URL}/api/starter-questions`, {
@@ -68,7 +69,7 @@ export async function fetchStarterQuestions(
         'X-API-Key': API_KEY,
       },
       body: JSON.stringify(requestBody),
-      signal: AbortSignal.timeout(5000), // 5s timeout
+      signal: AbortSignal.timeout(15000), // 15s timeout (allow for cold starts)
     });
 
     log('📋 [StarterQuestions] Response status:', response.status);
