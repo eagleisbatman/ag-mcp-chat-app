@@ -81,7 +81,10 @@
     "analysisComplete": "Analisi completata",
     "lowAccuracy": "Bassa precisione",
     "tapToImprove": "Tocca per migliorare",
-    "servicesWarmingUp": "Servizi in avvio, riprovo..."
+    "servicesWarmingUp": "Servizi in avvio, riprovo...",
+    "starterQuestionsHeader": "Prova a chiedere:",
+    "starterQuestionsLoading": "Caricamento suggerimenti...",
+    "followUpQuestionsHeader": "Potresti anche chiedere:"
   },
   "media": {
     "photoLibraryPermission": "L'accesso alla galleria foto è necessario per selezionare le immagini. Abilita nelle Impostazioni.",

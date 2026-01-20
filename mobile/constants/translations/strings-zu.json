@@ -81,7 +81,10 @@
     "analysisComplete": "Ukuhlaziya kuqedile",
     "lowAccuracy": "Ukunemba okuphansi",
     "tapToImprove": "Thepha ukuze uthuthukise",
-    "servicesWarmingUp": "Amasevisi ayalungiswa, kuyazanywa futhi..."
+    "servicesWarmingUp": "Amasevisi ayalungiswa, kuyazanywa futhi...",
+    "starterQuestionsHeader": "Zama ukubuza:",
+    "starterQuestionsLoading": "Sikufunela iziphakamiso...",
+    "followUpQuestionsHeader": "Ungabuza futhi:"
   },
   "media": {
     "photoLibraryPermission": "Kudingeka ukufinyelela izithombe ukuze ukhethe. Vula kuZilungiselelo.",

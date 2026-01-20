@@ -81,7 +81,10 @@
     "analysisComplete": "বিশ্লেষণ সম্পূৰ্ণ হ'ল",
     "lowAccuracy": "কম সঠিকতা",
     "tapToImprove": "উন্নত কৰিবলৈ টেপ কৰক",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "সুধি চাওক:",
+    "starterQuestionsLoading": "পৰামৰ্শসমূহ আহি আছে...",
+    "followUpQuestionsHeader": "আৰু সুধিব পাৰে:"
   },
   "media": {
     "photoLibraryPermission": "ছবি বাছনি কৰিবলৈ ফটো লাইব্ৰেৰীৰ অনুমতি লাগে। ছেটিংছত অন কৰক।",

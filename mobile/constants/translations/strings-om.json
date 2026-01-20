@@ -81,7 +81,10 @@
     "analysisComplete": "Qorannoon xumurameera",
     "lowAccuracy": "Sirrummaan gadi aanaa",
     "tapToImprove": "Fooyyessuuf tuqi",
-    "servicesWarmingUp": "Tajaajilli dammaqaa jira, irra deebiin yaala..."
+    "servicesWarmingUp": "Tajaajilli dammaqaa jira, irra deebiin yaala...",
+    "starterQuestionsHeader": "Gaafachuuf yaali:",
+    "starterQuestionsLoading": "Yaada siif qopheessaa jira...",
+    "followUpQuestionsHeader": "Gaaffilee dabalataa:"
   },
   "media": {
     "photoLibraryPermission": "Suura filachuuf galmee suuraatti seenuun barbaachisa. Saayitiingii keessatti banaa.",

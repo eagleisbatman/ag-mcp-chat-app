@@ -81,7 +81,10 @@
     "analysisComplete": "መርመራ ተዛዚሙ",
     "lowAccuracy": "ትሑት ትኽክለኛነት",
     "tapToImprove": "ንምምሕያሽ ጠውቑ",
-    "servicesWarmingUp": "ኣገልግሎታት ይጅምሩ ኣለዉ፣ እንደገና ይፍተን..."
+    "servicesWarmingUp": "ኣገልግሎታት ይጅምሩ ኣለዉ፣ እንደገና ይፍተን...",
+    "starterQuestionsHeader": "ክትሓትት ትኽእል:",
+    "starterQuestionsLoading": "ሕቶታት ንዓኻ ይዳልዩ ኣለዉ...",
+    "followUpQuestionsHeader": "ከምኡ'ውን ክትሓትት ትኽእል:"
   },
   "media": {
     "photoLibraryPermission": "መዝገብ ስእሊ ንምጥቃም ፍቓድ የድሊ። ኣብ ቅጥዓት ኣናዕዕ።",

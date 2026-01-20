@@ -81,7 +81,10 @@
     "analysisComplete": "ትንተና ተጠናቋል",
     "lowAccuracy": "ዝቅተኛ ትክክለኛነት",
     "tapToImprove": "ለማሻሻል ይንኩ",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "ይሞክሩ:",
+    "starterQuestionsLoading": "ጥቆማዎች በመጫን ላይ...",
+    "followUpQuestionsHeader": "ሌላም ይጠይቁ:"
   },
   "media": {
     "photoLibraryPermission": "የፎቶ ማህደር መዳረሻ ምስል ለመምረጥ ያስፈልጋል። በቅንብሮች ያንቁት።",

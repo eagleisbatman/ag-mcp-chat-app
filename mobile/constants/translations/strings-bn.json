@@ -81,7 +81,10 @@
     "analysisComplete": "বিশ্লেষণ সম্পন্ন",
     "lowAccuracy": "কম নির্ভুলতা",
     "tapToImprove": "উন্নত করতে ট্যাপ করুন",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "জিজ্ঞেস করুন:",
+    "starterQuestionsLoading": "পরামর্শ আনা হচ্ছে...",
+    "followUpQuestionsHeader": "আপনি আরও জিজ্ঞেস করতে পারেন:"
   },
   "media": {
     "photoLibraryPermission": "ছবি বাছাই করতে গ্যালারির অনুমতি লাগবে। সেটিংসে চালু করুন।",

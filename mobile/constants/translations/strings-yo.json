@@ -81,7 +81,10 @@
     "analysisComplete": "Ìtúpalẹ̀ ti parí",
     "lowAccuracy": "Kò péye.",
     "tapToImprove": "Fọwọ́ tẹ́ láti mú dára síi.",
-    "servicesWarmingUp": "Iṣẹ́ ń mura, a tún gbìyànjú..."
+    "servicesWarmingUp": "Iṣẹ́ ń mura, a tún gbìyànjú...",
+    "starterQuestionsHeader": "Gbìyànjú láti béèrè:",
+    "starterQuestionsLoading": "A ń mú àbá wá fún ọ...",
+    "followUpQuestionsHeader": "O tún le béèrè:"
   },
   "media": {
     "photoLibraryPermission": "A nílò ìwọlé sí ibi ìkóyàwòran láti yan àwòrán. Múu ṣíṣẹ ní Ètò.",

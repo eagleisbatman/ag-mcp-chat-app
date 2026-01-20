@@ -81,7 +81,10 @@
     "analysisComplete": "Η ανάλυση ολοκληρώθηκε",
     "lowAccuracy": "Χαμηλή ακρίβεια",
     "tapToImprove": "Πατήστε για βελτίωση",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "Προτεινόμενες ερωτήσεις:",
+    "starterQuestionsLoading": "Φορτώνονται προτάσεις...",
+    "followUpQuestionsHeader": "Άλλες ερωτήσεις:"
   },
   "media": {
     "photoLibraryPermission": "Χρειάζεται πρόσβαση στις φωτογραφίες για επιλογή εικόνας. Ενεργοποιήστε στις Ρυθμίσεις.",

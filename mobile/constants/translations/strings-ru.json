@@ -81,7 +81,10 @@
     "analysisComplete": "Анализ завершен",
     "lowAccuracy": "Низкая точность",
     "tapToImprove": "Нажмите, чтобы улучшить",
-    "servicesWarmingUp": "Загрузка сервисов, повтор..."
+    "servicesWarmingUp": "Загрузка сервисов, повтор...",
+    "starterQuestionsHeader": "Попробуйте спросить:",
+    "starterQuestionsLoading": "Подбираем вопросы...",
+    "followUpQuestionsHeader": "Также можно спросить:"
   },
   "media": {
     "photoLibraryPermission": "Для выбора фото нужен доступ к галерее. Включите в Настройках.",

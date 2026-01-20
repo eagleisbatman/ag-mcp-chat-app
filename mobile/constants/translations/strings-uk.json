@@ -81,7 +81,10 @@
     "analysisComplete": "Аналіз завершено",
     "lowAccuracy": "Низька точність",
     "tapToImprove": "Торкніться, щоб покращити",
-    "servicesWarmingUp": "Сервіси запускаються, повторна спроба..."
+    "servicesWarmingUp": "Сервіси запускаються, повторна спроба...",
+    "starterQuestionsHeader": "Спробуйте запитати:",
+    "starterQuestionsLoading": "Завантажую пропозиції для вас...",
+    "followUpQuestionsHeader": "Також можна запитати:"
   },
   "media": {
     "photoLibraryPermission": "Доступ до галереї потрібен, щоб вибрати фото. Увімкніть у Налаштуваннях.",

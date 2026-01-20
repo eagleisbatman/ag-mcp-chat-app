@@ -81,7 +81,10 @@
     "analysisComplete": "Bincike ya kammala",
     "lowAccuracy": "Ƙarancin daidaito",
     "tapToImprove": "Danna don ingantawa",
-    "servicesWarmingUp": "Suna shiri, ana sake gwadawa..."
+    "servicesWarmingUp": "Suna shiri, ana sake gwadawa...",
+    "starterQuestionsHeader": "Gwada tambaya:",
+    "starterQuestionsLoading": "Ana samo muku shawarwari...",
+    "followUpQuestionsHeader": "Kuna iya kuma tambaya:"
   },
   "media": {
     "photoLibraryPermission": "Ana buƙatar damar shiga hotuna don zaɓi hoto. Buɗe a Saituna.",

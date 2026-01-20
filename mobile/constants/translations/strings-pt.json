@@ -81,7 +81,10 @@
     "analysisComplete": "Análise completa",
     "lowAccuracy": "Baixa Precisão",
     "tapToImprove": "Toque para melhorar",
-    "servicesWarmingUp": "Serviços a iniciar, a tentar novamente..."
+    "servicesWarmingUp": "Serviços a iniciar, a tentar novamente...",
+    "starterQuestionsHeader": "Tente perguntar:",
+    "starterQuestionsLoading": "Carregando sugestões...",
+    "followUpQuestionsHeader": "Pode perguntar também:"
   },
   "media": {
     "photoLibraryPermission": "É preciso acesso à galeria para selecionar fotos. Ative nas Configurações.",

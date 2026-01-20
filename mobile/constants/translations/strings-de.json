@@ -81,7 +81,10 @@
     "analysisComplete": "Analyse abgeschlossen",
     "lowAccuracy": "Geringe Genauigkeit",
     "tapToImprove": "Tippen zum Verbessern",
-    "servicesWarmingUp": "Services warming up, retrying..."
+    "servicesWarmingUp": "Services warming up, retrying...",
+    "starterQuestionsHeader": "Mögliche Fragen:",
+    "starterQuestionsLoading": "Lade Vorschläge...",
+    "followUpQuestionsHeader": "Weitere Fragen:"
   },
   "media": {
     "photoLibraryPermission": "Zugriff auf die Fotobibliothek ist nötig, um Bilder auszuwählen. In den Einstellungen aktivieren.",

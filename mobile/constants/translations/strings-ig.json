@@ -81,7 +81,10 @@
     "analysisComplete": "Nyocha mechara",
     "lowAccuracy": "Izizi dị ala",
     "tapToImprove": "Pịa iji meziwanye",
-    "servicesWarmingUp": "Ọrụ na-amalite, na-anwa ọzọ..."
+    "servicesWarmingUp": "Ọrụ na-amalite, na-anwa ọzọ...",
+    "starterQuestionsHeader": "Nwaa ịjụ:",
+    "starterQuestionsLoading": "Na-achọta aro maka gị...",
+    "followUpQuestionsHeader": "I nwekwara ike ịjụ:"
   },
   "media": {
     "photoLibraryPermission": "A chọrọ ikike ịnweta Ebe nchekwa foto iji họrọ onyonyo. Mee ya na Ntọala.",

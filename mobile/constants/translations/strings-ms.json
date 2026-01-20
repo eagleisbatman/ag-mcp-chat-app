@@ -81,7 +81,10 @@
     "analysisComplete": "Analisis selesai",
     "lowAccuracy": "Ketepatan Rendah",
     "tapToImprove": "Sentuh untuk tingkatkan",
-    "servicesWarmingUp": "Perkhidmatan sedang dimulakan, cuba lagi..."
+    "servicesWarmingUp": "Perkhidmatan sedang dimulakan, cuba lagi...",
+    "starterQuestionsHeader": "Cuba tanya:",
+    "starterQuestionsLoading": "Memuatkan cadangan...",
+    "followUpQuestionsHeader": "Anda juga boleh tanya:"
   },
   "media": {
     "photoLibraryPermission": "Akses Galeri Foto diperlukan untuk pilih gambar. Aktifkan di Tetapan.",

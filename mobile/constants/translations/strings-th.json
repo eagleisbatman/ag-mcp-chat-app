@@ -81,7 +81,10 @@
     "analysisComplete": "วิเคราะห์เสร็จสมบูรณ์",
     "lowAccuracy": "ความแม่นยำต่ำ",
     "tapToImprove": "แตะเพื่อปรับปรุง",
-    "servicesWarmingUp": "กำลังเตรียมระบบ, ลองใหม่..."
+    "servicesWarmingUp": "กำลังเตรียมระบบ, ลองใหม่...",
+    "starterQuestionsHeader": "คำถามแนะนำ:",
+    "starterQuestionsLoading": "กำลังหาคำแนะนำ...",
+    "followUpQuestionsHeader": "คำถามเพิ่มเติม:"
   },
   "media": {
     "photoLibraryPermission": "ต้องอนุญาตให้เข้าถึงคลังรูปภาพเพื่อเลือกรูป เปิดในการตั้งค่า",

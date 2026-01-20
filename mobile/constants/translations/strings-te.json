@@ -81,7 +81,10 @@
     "analysisComplete": "విశ్లేషణ పూర్తయింది",
     "lowAccuracy": "తక్కువ ఖచ్చితత్వం",
     "tapToImprove": "మెరుగుపరచడానికి నొక్కండి",
-    "servicesWarmingUp": "సేవలు సిద్ధమవుతున్నాయి, మళ్ళీ ప్రయత్నిస్తోంది..."
+    "servicesWarmingUp": "సేవలు సిద్ధమవుతున్నాయి, మళ్ళీ ప్రయత్నిస్తోంది...",
+    "starterQuestionsHeader": "ఇలా అడగండి:",
+    "starterQuestionsLoading": "మీ కోసం సూచనలు వస్తున్నాయి...",
+    "followUpQuestionsHeader": "ఇలా కూడా అడగండి:"
   },
   "media": {
     "photoLibraryPermission": "ఫోటోలు ఎంపిక చేసుకోవడానికి గ్యాలరీ అనుమతి అవసరం. సెట్టింగ్స్‌లో ఆన్ చేయండి.",

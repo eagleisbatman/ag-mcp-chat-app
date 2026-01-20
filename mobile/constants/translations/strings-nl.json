@@ -81,7 +81,10 @@
     "analysisComplete": "Analyse voltooid",
     "lowAccuracy": "Lage nauwkeurigheid",
     "tapToImprove": "Tik om te verbeteren",
-    "servicesWarmingUp": "Diensten starten op, opnieuw proberen..."
+    "servicesWarmingUp": "Diensten starten op, opnieuw proberen...",
+    "starterQuestionsHeader": "Vraag bijvoorbeeld:",
+    "starterQuestionsLoading": "Suggesties laden...",
+    "followUpQuestionsHeader": "U kunt ook vragen:"
   },
   "media": {
     "photoLibraryPermission": "Toegang tot fotobibliotheek is nodig om foto's te kiezen. Activeer in Instellingen.",
