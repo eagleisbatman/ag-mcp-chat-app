@@ -82,7 +82,8 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
 
   const handleSend = useCallback(async (text: string) => {
     await handleSendText(text);
-  }, [handleSendText]);
+    scrollToBottom();
+  }, [handleSendText, scrollToBottom]);
 
   const handleSendImageWrapped = useCallback(async (imageData: any) => {
     await handleSendImage(imageData);
