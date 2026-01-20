@@ -1,8 +1,7 @@
 /**
  * StarterQuestions component
  * Full-width tappable cards for empty chat state
- * Displays personalized suggested questions in a vertical stack layout
- * Questions are fetched from the API based on user context
+ * Displays personalized suggested questions fetched from API
  */
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
@@ -10,11 +9,8 @@ import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
-import {
-  fetchStarterQuestions,
-  getFallbackQuestions,
-  StarterQuestion,
-} from '../services/api/starterQuestions';
+import { fetchStarterQuestions, StarterQuestion } from '../services/api/starterQuestions';
+import { log } from '../utils/logger';
 
 interface StarterQuestionsProps {
   onQuestionTap: (question: string) => void;
@@ -28,12 +24,12 @@ interface StarterQuestionsProps {
 export default function StarterQuestions({
   onQuestionTap,
   weatherSummary,
-}: StarterQuestionsProps): JSX.Element {
+}: StarterQuestionsProps): JSX.Element | null {
   const { theme, location, language } = useApp();
   const isDark = theme.name === 'dark';
 
-  // Start with fallback questions for immediate display
-  const [questions, setQuestions] = useState<StarterQuestion[]>(getFallbackQuestions());
+  // Start empty - wait for API
+  const [questions, setQuestions] = useState<StarterQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch personalized questions on mount
@@ -41,6 +37,9 @@ export default function StarterQuestions({
     let isMounted = true;
 
     async function loadQuestions() {
+      log('📋 [StarterQuestions] Starting fetch...');
+      setIsLoading(true);
+
       try {
         const personalizedQuestions = await fetchStarterQuestions({
           latitude: location?.latitude,
@@ -49,11 +48,13 @@ export default function StarterQuestions({
           weatherSummary,
         });
 
+        log('📋 [StarterQuestions] Received questions:', personalizedQuestions.length);
+
         if (isMounted && personalizedQuestions.length > 0) {
           setQuestions(personalizedQuestions);
         }
-      } catch {
-        // Keep fallback questions on error
+      } catch (error) {
+        log('❌ [StarterQuestions] Failed to load:', error);
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -72,6 +73,20 @@ export default function StarterQuestions({
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onQuestionTap(question);
   };
+
+  // Show loading spinner while fetching
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color={theme.textMuted} />
+      </View>
+    );
+  }
+
+  // Don't render if no questions
+  if (questions.length === 0) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -99,7 +114,6 @@ export default function StarterQuestions({
             accessibilityLabel={q.text}
             accessibilityHint="Tap to ask this question"
           >
-            <Text style={styles.emoji}>{q.emoji}</Text>
             <Text
               style={[styles.cardText, { color: theme.text }]}
               numberOfLines={2}
@@ -115,11 +129,6 @@ export default function StarterQuestions({
           </Pressable>
         ))}
       </View>
-      {isLoading && (
-        <View style={styles.loadingIndicator}>
-          <ActivityIndicator size="small" color={theme.textMuted} />
-        </View>
-      )}
     </View>
   );
 }
@@ -128,6 +137,11 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: SPACING.lg,
     paddingHorizontal: SPACING.md,
+  },
+  loadingContainer: {
+    paddingVertical: SPACING.xl,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -147,9 +161,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: SPACING.sm,
   },
-  emoji: {
-    fontSize: 20,
-  },
   cardText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
@@ -158,10 +169,5 @@ const styles = StyleSheet.create({
   },
   arrow: {
     opacity: 0.5,
-  },
-  loadingIndicator: {
-    position: 'absolute',
-    top: 8,
-    right: 16,
   },
 });
