@@ -67,10 +67,22 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
 
   // Combine messages with starter questions as a scrollable item
-  // In inverted list: starter questions at the end = visual top (scrolls up as messages are added)
+  // In inverted list: higher index = visual top, lower index = visual bottom
+  // Order should be: Weather (footer) → Welcome → Starter Questions → User messages → Input
   const listData = useMemo<ListItem[]>(() => {
     const starterItem: StarterQuestionsItem = { _id: 'starter-questions', isStarterQuestions: true };
-    return [...messages, starterItem];
+
+    // Find the welcome message (should stay at visual top, just below weather)
+    const welcomeMsg = messages.find(m => m._id === 'welcome');
+    const otherMessages = messages.filter(m => m._id !== 'welcome');
+
+    // Array order: [other messages (newest first), starter questions, welcome message]
+    // Visual order (top to bottom): Weather → Welcome → Starter Questions → Messages → Input
+    const result: ListItem[] = [...otherMessages, starterItem];
+    if (welcomeMsg) {
+      result.push(welcomeMsg);
+    }
+    return result;
   }, [messages]);
 
   useEffect(() => {
