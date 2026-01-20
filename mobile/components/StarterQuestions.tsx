@@ -28,15 +28,14 @@ export default function StarterQuestions({
   const { theme, location, language } = useApp();
 
   const [questions, setQuestions] = useState<StarterQuestion[]>([]);
-  const hasFetchedRef = useRef(false);
+  const [hasFetched, setHasFetched] = useState(false);
 
-  // Fetch ONCE on mount only - no re-fetching
+  // Fetch once when location is available
   useEffect(() => {
-    if (hasFetchedRef.current) return;
-    hasFetchedRef.current = true;
+    if (hasFetched) return;
 
     async function loadQuestions() {
-      log('📋 [StarterQuestions] Fetching once...');
+      log('📋 [StarterQuestions] Fetching...');
       try {
         const result = await fetchStarterQuestions({
           latitude: location?.latitude,
@@ -44,15 +43,17 @@ export default function StarterQuestions({
           language: language?.code,
           weatherSummary,
         });
-        // Limit to 3 questions
+        log('📋 [StarterQuestions] Got', result.length, 'questions');
         setQuestions(result.slice(0, 3));
+        setHasFetched(true);
       } catch (error) {
         log('❌ [StarterQuestions] Failed:', error);
+        setHasFetched(true); // Don't retry on error
       }
     }
 
     loadQuestions();
-  }, []); // Empty deps - only run once
+  }, [hasFetched, location?.latitude, location?.longitude, language?.code, weatherSummary]);
 
   const handleTap = (question: string): void => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
