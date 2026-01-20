@@ -43,8 +43,8 @@ export async function fetchStarterQuestions(
     const deviceId = await ensureDeviceId();
     const localDateTime = getLocalDateTime();
 
-    // Get weather provider from user preferences
-    let weatherProvider = 'google-weather';
+    // Get weather provider from user preferences (tomorrow-io as fallback - works globally)
+    let weatherProvider = 'tomorrow-io';
     try {
       const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
       if (stored) {

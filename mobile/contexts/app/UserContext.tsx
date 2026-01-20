@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerUser } from '../../services/db';
 import { log } from '../../utils/logger';
+
+const SERVICE_PREFS_KEY = '@service_preferences';
 
 interface UserContextValue {
   userId: string | null;
@@ -24,6 +27,23 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (result.success && result.userId) {
         setUserId(result.userId);
         setIsDbSynced(true);
+
+        // Sync servicePreferences from backend to AsyncStorage
+        // This ensures new users get country-based defaults from the server
+        const servicePreferences = result.user?.preferences?.servicePreferences;
+        if (servicePreferences && typeof servicePreferences === 'object') {
+          try {
+            // Only sync if we have valid preferences from the server
+            const existingPrefs = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
+            if (!existingPrefs) {
+              // No local preferences, use server defaults
+              log('[UserContext] Syncing servicePreferences from server:', servicePreferences);
+              await AsyncStorage.setItem(SERVICE_PREFS_KEY, JSON.stringify(servicePreferences));
+            }
+          } catch (prefError) {
+            log('[UserContext] Failed to sync servicePreferences:', prefError);
+          }
+        }
       }
     } catch (e) {
       setLastSyncError('Could not connect to server. Some features may be limited.');
