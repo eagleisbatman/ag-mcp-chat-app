@@ -83,8 +83,11 @@ export default function useChatScroll({ messages, isTyping, flatListRef }: UseCh
   }, [messages]);
 
   /**
-   * Scroll to position the newest user message at the TOP of the visible area
-   * For inverted FlatList: viewPosition: 0 = visual top, viewPosition: 1 = visual bottom
+   * Scroll to position the newest user message near the TOP of the visible area
+   * For inverted FlatList:
+   *   - viewPosition: 0 = item at visual BOTTOM (where new messages appear)
+   *   - viewPosition: 1 = item at visual TOP (older messages area)
+   * Using 0.85 positions the question near visual top with space below for bot response
    */
   const scrollToUserMessage = useCallback(() => {
     let targetIndex = -1;
@@ -97,13 +100,14 @@ export default function useChatScroll({ messages, isTyping, flatListRef }: UseCh
 
     if (targetIndex === -1 || !flatListRef.current) return;
 
-    log('📜 [Scroll] TOP-ANCHOR: Positioning question at top:', messages[targetIndex]._id);
+    log('📜 [Scroll] TOP-ANCHOR: Positioning question near top:', messages[targetIndex]._id);
 
-    // For inverted FlatList, viewPosition: 0 puts item at visual TOP
+    // viewPosition: 0.85 puts item near visual top, leaving ~15% of viewport below
+    // for the bot response/thinking indicator to be visible
     flatListRef.current.scrollToIndex({
       index: targetIndex,
       animated: true,
-      viewPosition: 0,
+      viewPosition: 0.85,
     });
   }, [messages, flatListRef]);
 
@@ -135,7 +139,7 @@ export default function useChatScroll({ messages, isTyping, flatListRef }: UseCh
       flatListRef.current?.scrollToIndex({
         index: targetIndex,
         animated: false, // No animation for initial load
-        viewPosition: 0, // Position at visual top
+        viewPosition: 0.85, // Position near visual top with room for bot response below
       });
     }, 100);
   }, [messages, flatListRef]);
