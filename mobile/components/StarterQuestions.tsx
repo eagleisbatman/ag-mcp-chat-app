@@ -19,7 +19,7 @@ interface StarterQuestionsProps {
 export default function StarterQuestions({
   onQuestionTap,
 }: StarterQuestionsProps): JSX.Element | null {
-  const { theme, location, language } = useApp();
+  const { theme, location, language, locationDetails } = useApp();
 
   const [questions, setQuestions] = useState<StarterQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +37,7 @@ export default function StarterQuestions({
           latitude: location?.latitude,
           longitude: location?.longitude,
           language: language?.code,
+          country: locationDetails?.level1Country,
         });
         log('📋 [StarterQuestions] Got', result.length, 'questions');
         setQuestions(result.slice(0, 3));
