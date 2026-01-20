@@ -9,6 +9,7 @@ import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
+import { t } from '../constants/strings';
 
 interface FollowUpQuestionsProps {
   questions: string[];
@@ -35,6 +36,9 @@ export default function FollowUpQuestions({
 
   return (
     <View style={styles.container}>
+      <Text style={[styles.headerText, { color: theme.textMuted }]}>
+        {t('chat.followUpQuestionsHeader')}
+      </Text>
       <View style={styles.questionsContainer}>
         {questions.slice(0, 3).map((question, index) => (
           <Pressable
@@ -71,6 +75,11 @@ const styles = StyleSheet.create({
   container: {
     marginTop: SPACING.sm,
     paddingTop: SPACING.xs,
+  },
+  headerText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    marginBottom: SPACING.sm,
   },
   questionsContainer: {
     gap: SPACING.xs,
