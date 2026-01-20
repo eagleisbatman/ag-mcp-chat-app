@@ -4,7 +4,7 @@
  */
 
 import { log } from '../../utils/logger';
-import { API_BASE_URL, API_KEY, ensureDeviceId, getLocalDateTime } from './core';
+import { API_BASE_URL, API_KEY, ensureDeviceId } from './core';
 
 export interface StarterQuestion {
   emoji: string;
@@ -26,11 +26,7 @@ interface FetchStarterQuestionsParams {
   latitude?: number | null;
   longitude?: number | null;
   language?: string;
-  weatherSummary?: {
-    temperature?: number;
-    conditions?: string;
-    hasRain?: boolean;
-  };
+  // Note: weather and time are now calculated server-side from coordinates
 }
 
 
@@ -42,23 +38,19 @@ export async function fetchStarterQuestions(
 ): Promise<StarterQuestion[]> {
   try {
     const deviceId = await ensureDeviceId();
-    const dateTime = getLocalDateTime();
 
+    // Weather and time are now calculated server-side from coordinates
     const requestBody = {
       deviceId,
       latitude: params.latitude ?? undefined,
       longitude: params.longitude ?? undefined,
       language: params.language || 'en',
-      weatherSummary: params.weatherSummary,
-      hour: dateTime.hour,
-      month: dateTime.month,
     };
 
     log('📋 [StarterQuestions] Fetching from API', {
       url: `${API_BASE_URL}/api/starter-questions`,
       deviceId: deviceId.substring(0, 8),
       hasLocation: !!(params.latitude && params.longitude),
-      hasWeather: !!params.weatherSummary,
       apiKey: API_KEY ? `${API_KEY.substring(0, 8)}...` : 'MISSING',
     });
 

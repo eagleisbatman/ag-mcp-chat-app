@@ -185,14 +185,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             ListHeaderComponent={
               /* Show starter questions below welcome message (inverted list = ListHeader is visual bottom) */
               messages.length <= 1 && messages.every(m => m._id === 'welcome' || m.isBot) ? (
-                <StarterQuestions
-                  onQuestionTap={handleSend}
-                  weatherSummary={weatherData ? {
-                    temperature: weatherData.current?.temperature,
-                    conditions: weatherData.current?.condition,
-                    hasRain: weatherData.current?.condition?.toLowerCase().includes('rain'),
-                  } : undefined}
-                />
+                <StarterQuestions onQuestionTap={handleSend} />
               ) : null
             }
             ListFooterComponent={
