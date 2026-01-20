@@ -465,7 +465,8 @@
     "themeMode": "Maddag: {mode}",
     "copyMessage": "Warra fanna ab",
     "askQuestion": "Gaal: {question}",
-    "selectLanguage": "Af {name}"
+    "selectLanguage": "Af {name}",
+    "cancelVoiceGeneration": "Cod dooli dagi"
   },
   "weather": {
     "conditions": {

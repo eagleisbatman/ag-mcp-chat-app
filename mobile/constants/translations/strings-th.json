@@ -465,7 +465,8 @@
     "themeMode": "ธีม: {mode}",
     "copyMessage": "คัดลอกข้อความ",
     "askQuestion": "ถาม: {question}",
-    "selectLanguage": "ภาษา {name}"
+    "selectLanguage": "ภาษา {name}",
+    "cancelVoiceGeneration": "ยกเลิกการสร้างเสียง"
   },
   "weather": {
     "conditions": {

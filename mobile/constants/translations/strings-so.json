@@ -465,7 +465,8 @@
     "themeMode": "Mawduuc: {mode}",
     "copyMessage": "Koobi garee fariinta",
     "askQuestion": "Weydii: {question}",
-    "selectLanguage": "Luqadda {name}"
+    "selectLanguage": "Luqadda {name}",
+    "cancelVoiceGeneration": "Jooji hadalka"
   },
   "weather": {
     "conditions": {

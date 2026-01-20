@@ -465,7 +465,8 @@
     "themeMode": "థీమ్: {mode}",
     "copyMessage": "సందేశాన్ని కాపీ చేయి",
     "askQuestion": "అడుగు: {question}",
-    "selectLanguage": "భాష {name}"
+    "selectLanguage": "భాష {name}",
+    "cancelVoiceGeneration": "మాటల ఉత్పత్తిని ఆపు"
   },
   "weather": {
     "conditions": {

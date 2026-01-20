@@ -465,7 +465,8 @@
     "themeMode": "Salo: {mode}",
     "copyMessage": "Kwafi saƙo",
     "askQuestion": "Tambaya: {question}",
-    "selectLanguage": "Harshe {name}"
+    "selectLanguage": "Harshe {name}",
+    "cancelVoiceGeneration": "Daina magana"
   },
   "weather": {
     "conditions": {

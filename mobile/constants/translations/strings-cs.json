@@ -465,7 +465,8 @@
     "themeMode": "Téma: {mode}",
     "copyMessage": "Zkopírovat zprávu",
     "askQuestion": "Zeptat se: {question}",
-    "selectLanguage": "Jazyk {name}"
+    "selectLanguage": "Jazyk {name}",
+    "cancelVoiceGeneration": "Zrušit generování hlasu"
   },
   "weather": {
     "conditions": {

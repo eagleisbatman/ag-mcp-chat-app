@@ -465,7 +465,8 @@
     "themeMode": "المظهر: {mode}",
     "copyMessage": "نسخ الرسالة",
     "askQuestion": "اسأل: {question}",
-    "selectLanguage": "اللغة {name}"
+    "selectLanguage": "اللغة {name}",
+    "cancelVoiceGeneration": "إلغاء توليد الصوت"
   },
   "weather": {
     "conditions": {

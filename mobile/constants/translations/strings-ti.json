@@ -465,7 +465,8 @@
     "themeMode": "መምስሊ: {mode}",
     "copyMessage": "መልእኽቲ ቅዳሕ",
     "askQuestion": "ሕተት: {question}",
-    "selectLanguage": "ቋንቋ {name}"
+    "selectLanguage": "ቋንቋ {name}",
+    "cancelVoiceGeneration": "ድምጺ ምግናይ ኣቋርጽ"
   },
   "weather": {
     "conditions": {

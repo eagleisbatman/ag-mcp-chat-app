@@ -465,7 +465,8 @@
     "themeMode": "အပြင်အဆင်- {mode}",
     "copyMessage": "မက်ဆေ့ချ် ကူးယူပါ",
     "askQuestion": "မေးခွန်း- {question}",
-    "selectLanguage": "ဘာသာစကား {name}"
+    "selectLanguage": "ဘာသာစကား {name}",
+    "cancelVoiceGeneration": "အသံထုတ်လုပ်မှု ရပ်ဆိုင်းပါ"
   },
   "weather": {
     "conditions": {

@@ -465,7 +465,8 @@
     "themeMode": "پوسته: {mode}",
     "copyMessage": "کپی پیام",
     "askQuestion": "سوال: {question}",
-    "selectLanguage": "زبان {name}"
+    "selectLanguage": "زبان {name}",
+    "cancelVoiceGeneration": "لغو صداسازی"
   },
   "weather": {
     "conditions": {

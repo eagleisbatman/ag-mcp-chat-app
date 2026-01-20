@@ -465,7 +465,8 @@
     "themeMode": "テーマ: {mode}",
     "copyMessage": "メッセージをコピー",
     "askQuestion": "質問: {question}",
-    "selectLanguage": "言語 {name}"
+    "selectLanguage": "言語 {name}",
+    "cancelVoiceGeneration": "音声生成キャンセル"
   },
   "weather": {
     "conditions": {

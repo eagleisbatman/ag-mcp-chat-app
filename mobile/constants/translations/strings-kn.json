@@ -465,7 +465,8 @@
     "themeMode": "ಥೀಮ್: {mode}",
     "copyMessage": "ಸಂದೇಶ ನಕಲಿಸಿ",
     "askQuestion": "ಕೇಳಿ: {question}",
-    "selectLanguage": "ಭಾಷೆ {name}"
+    "selectLanguage": "ಭಾಷೆ {name}",
+    "cancelVoiceGeneration": "ಧ್ವನಿ ಉತ್ಪಾದನೆಯನ್ನು ರದ್ದುಮಾಡು"
   },
   "weather": {
     "conditions": {

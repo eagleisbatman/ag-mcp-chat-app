@@ -465,7 +465,8 @@
     "themeMode": "ຮູບແບບ: {mode}",
     "copyMessage": "ຄັດລອກຂໍ້ຄວາມ",
     "askQuestion": "ຖາມ: {question}",
-    "selectLanguage": "ພາສາ {name}"
+    "selectLanguage": "ພາສາ {name}",
+    "cancelVoiceGeneration": "ຍົກເລີກສ້າງສຽງເວົ້າ"
   },
   "weather": {
     "conditions": {

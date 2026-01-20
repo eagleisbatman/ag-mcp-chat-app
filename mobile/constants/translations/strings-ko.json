@@ -465,7 +465,8 @@
     "themeMode": "테마: {mode}",
     "copyMessage": "메시지 복사",
     "askQuestion": "질문: {question}",
-    "selectLanguage": "언어: {name}"
+    "selectLanguage": "언어: {name}",
+    "cancelVoiceGeneration": "음성 생성 취소"
   },
   "weather": {
     "conditions": {

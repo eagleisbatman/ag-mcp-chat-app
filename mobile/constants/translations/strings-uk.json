@@ -465,7 +465,8 @@
     "themeMode": "Тема: {mode}",
     "copyMessage": "Скопіювати повідомлення",
     "askQuestion": "Запитати: {question}",
-    "selectLanguage": "Мова {name}"
+    "selectLanguage": "Мова {name}",
+    "cancelVoiceGeneration": "Скасувати озвучення"
   },
   "weather": {
     "conditions": {

@@ -465,7 +465,8 @@
     "themeMode": "Àmúyẹ̀: {mode}",
     "copyMessage": "Ṣàdàkọ ìfọ̀rọ̀ránṣẹ́",
     "askQuestion": "Bèèrè: {question}",
-    "selectLanguage": "Èdè {name}"
+    "selectLanguage": "Èdè {name}",
+    "cancelVoiceGeneration": "Fagilee ìṣẹ̀dá ohùn"
   },
   "weather": {
     "conditions": {

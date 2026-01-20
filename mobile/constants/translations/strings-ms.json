@@ -465,7 +465,8 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Salin mesej",
     "askQuestion": "Tanya: {question}",
-    "selectLanguage": "Bahasa {name}"
+    "selectLanguage": "Bahasa {name}",
+    "cancelVoiceGeneration": "Batal penjanaan suara"
   },
   "weather": {
     "conditions": {

@@ -465,7 +465,8 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Copiar mensagem",
     "askQuestion": "Perguntar: {question}",
-    "selectLanguage": "Idioma {name}"
+    "selectLanguage": "Idioma {name}",
+    "cancelVoiceGeneration": "Cancelar geração de voz"
   },
   "weather": {
     "conditions": {

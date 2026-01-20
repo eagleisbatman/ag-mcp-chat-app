@@ -465,7 +465,8 @@
     "themeMode": "थीम: {mode}",
     "copyMessage": "संदेश कॉपी करें",
     "askQuestion": "पूछें: {question}",
-    "selectLanguage": "भाषा {name}"
+    "selectLanguage": "भाषा {name}",
+    "cancelVoiceGeneration": "आवाज़ बनाना रद्द करें"
   },
   "weather": {
     "current": "वर्तमान मौसम",
