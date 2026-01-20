@@ -47,6 +47,10 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
   const sectionListRef = useRef<SectionList<Language, LanguageSection>>(null);
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
+  // Fixed heights for layout calculation
+  const ITEM_HEIGHT = 72; // Language item height (padding 16*2 + content ~40)
+  const SECTION_HEADER_HEIGHT = 48; // Section header height
+
   // Group languages by region or filter by search
   const displayData = useMemo((): Language[] | LanguageSection[] => {
     if (searchQuery) {
@@ -54,6 +58,18 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
     }
     return getLanguagesByRegion() as LanguageSection[];
   }, [searchQuery]);
+
+  // Calculate scroll offset for a given section and item
+  const getScrollOffset = (sections: LanguageSection[], sectionIndex: number, itemIndex: number): number => {
+    let offset = 0;
+    for (let s = 0; s < sectionIndex; s++) {
+      offset += SECTION_HEADER_HEIGHT; // Section header
+      offset += sections[s].data.length * ITEM_HEIGHT; // All items in section
+    }
+    offset += SECTION_HEADER_HEIGHT; // Current section header
+    offset += itemIndex * ITEM_HEIGHT; // Items before target
+    return offset;
+  };
 
   // Auto-scroll to selected language on mount
   useEffect(() => {
@@ -73,17 +89,48 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
     }
 
     if (sectionIndex !== -1 && itemIndex !== -1) {
-      // Small delay to ensure list is rendered
+      // Use scrollToOffset for more reliable scrolling
+      const offset = getScrollOffset(sections, sectionIndex, itemIndex);
       setTimeout(() => {
         sectionListRef.current?.scrollToLocation({
           sectionIndex,
           itemIndex,
-          viewOffset: 100, // Offset from top to center better
+          viewOffset: 150, // Center the item better
           animated: true,
         });
-      }, 300);
+      }, 100);
+
+      // Fallback: try native scroll if scrollToLocation fails
+      setTimeout(() => {
+        const nativeRef = sectionListRef.current?.getScrollResponder?.() as any;
+        if (nativeRef?.scrollTo) {
+          nativeRef.scrollTo({ y: Math.max(0, offset - 150), animated: true });
+        }
+      }, 400);
     }
   }, []); // Only on mount
+
+  // Handle scroll failures gracefully
+  const onScrollToIndexFailed = (info: { index: number; highestMeasuredFrameIndex: number; averageItemLength: number }) => {
+    log('⚠️ [LanguageScreen] Scroll failed, using fallback', info);
+    // Retry with a delay
+    setTimeout(() => {
+      const sections = displayData as LanguageSection[];
+      let sectionIndex = -1;
+      let itemIndex = -1;
+      for (let s = 0; s < sections.length; s++) {
+        const idx = sections[s].data.findIndex(lang => lang.code === selectedLang.code);
+        if (idx !== -1) { sectionIndex = s; itemIndex = idx; break; }
+      }
+      if (sectionIndex !== -1) {
+        const offset = getScrollOffset(sections, sectionIndex, itemIndex);
+        const nativeRef = sectionListRef.current?.getScrollResponder?.() as any;
+        if (nativeRef?.scrollTo) {
+          nativeRef.scrollTo({ y: Math.max(0, offset - 150), animated: true });
+        }
+      }
+    }, 500);
+  };
 
   const handleSelectLanguage = (lang: Language) => {
     setSelectedLang(lang);
@@ -202,6 +249,7 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           stickySectionHeadersEnabled={true}
+          onScrollToIndexFailed={onScrollToIndexFailed}
         />
       )}
 

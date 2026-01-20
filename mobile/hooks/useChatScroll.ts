@@ -18,21 +18,22 @@ interface UseChatScrollReturn {
   // State
   showScrollButton: boolean;
   scrollButtonAnim: Animated.Value;
-  
+
   // Methods
   scrollToBottom: () => void;
   scrollToUserMessage: () => void;
+  scrollToLastConversation: () => void;
   resetScrollState: () => void;
   onMessageLayout: (messageId: string, height: number) => void;
   calculateScrollOffset: (messageId: string) => number;
-  
+
   // Event handlers
   handleScrollBeginDrag: () => void;
   handleScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   handleLayout: (event: LayoutChangeEvent) => void;
   handleContentSizeChange: (width: number, height: number) => void;
   handleScrollToIndexFailed: (info: { index: number; averageItemLength: number }) => void;
-  
+
   // Refs (exposed for advanced use cases)
   isUserScrollingRef: MutableRefObject<boolean>;
   isAnchorLockedRef: MutableRefObject<boolean>;
@@ -82,7 +83,8 @@ export default function useChatScroll({ messages, isTyping, flatListRef }: UseCh
   }, [messages]);
 
   /**
-   * Scroll to the newest user message
+   * Scroll to position the newest user message at the TOP of the visible area
+   * For inverted FlatList: viewPosition: 0 = visual top, viewPosition: 1 = visual bottom
    */
   const scrollToUserMessage = useCallback(() => {
     let targetIndex = -1;
@@ -95,13 +97,47 @@ export default function useChatScroll({ messages, isTyping, flatListRef }: UseCh
 
     if (targetIndex === -1 || !flatListRef.current) return;
 
-    log('📜 [Scroll] TOP-ANCHOR: Aligning to newest question:', messages[targetIndex]._id);
+    log('📜 [Scroll] TOP-ANCHOR: Positioning question at top:', messages[targetIndex]._id);
 
+    // For inverted FlatList, viewPosition: 0 puts item at visual TOP
     flatListRef.current.scrollToIndex({
       index: targetIndex,
       animated: true,
-      viewPosition: 1,
+      viewPosition: 0,
     });
+  }, [messages, flatListRef]);
+
+  /**
+   * Scroll to show the most recent conversation (last user question + response)
+   * Called when loading chat history
+   */
+  const scrollToLastConversation = useCallback(() => {
+    if (!flatListRef.current || messages.length === 0) return;
+
+    // Find the first user message (most recent question in inverted list)
+    let targetIndex = -1;
+    for (let i = 0; i < messages.length; i++) {
+      if (!messages[i].isBot && messages[i]._id !== 'welcome') {
+        targetIndex = i;
+        break;
+      }
+    }
+
+    // If no user message found, scroll to top of messages
+    if (targetIndex === -1) {
+      targetIndex = messages.length - 1;
+    }
+
+    log('📜 [Scroll] HISTORY: Scrolling to last conversation at index:', targetIndex);
+
+    // Small delay to ensure layout is complete
+    setTimeout(() => {
+      flatListRef.current?.scrollToIndex({
+        index: targetIndex,
+        animated: false, // No animation for initial load
+        viewPosition: 0, // Position at visual top
+      });
+    }, 100);
   }, [messages, flatListRef]);
 
   /**
@@ -194,21 +230,22 @@ export default function useChatScroll({ messages, isTyping, flatListRef }: UseCh
     // State
     showScrollButton,
     scrollButtonAnim,
-    
+
     // Methods
     scrollToBottom,
     scrollToUserMessage,
+    scrollToLastConversation,
     resetScrollState,
     onMessageLayout,
     calculateScrollOffset,
-    
+
     // Event handlers
     handleScrollBeginDrag,
     handleScroll,
     handleLayout,
     handleContentSizeChange,
     handleScrollToIndexFailed,
-    
+
     // Refs (exposed for advanced use cases)
     isUserScrollingRef,
     isAnchorLockedRef,
