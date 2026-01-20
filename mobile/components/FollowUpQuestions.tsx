@@ -1,13 +1,13 @@
 /**
  * FollowUpQuestions component
- * Displays tappable follow-up question buttons after bot messages
+ * Displays tappable follow-up question chips after bot messages
+ * Uses a horizontal wrapping layout similar to StarterQuestions
  */
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
-import AppIcon from './ui/AppIcon';
 
 interface FollowUpQuestionsProps {
   questions: string[];
@@ -36,68 +36,51 @@ export default function FollowUpQuestions({
 
   return (
     <View style={styles.container}>
-      {questions.map((question, index) => (
-        <Pressable
-          key={index}
-          style={({ pressed }) => [
-            styles.questionButton,
-            {
-              backgroundColor: isDark
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(0, 0, 0, 0.04)',
-              borderColor: isDark
-                ? 'rgba(255, 255, 255, 0.15)'
-                : 'rgba(0, 0, 0, 0.08)',
-              opacity: pressed ? 0.7 : disabled ? 0.5 : 1,
-            },
-          ]}
-          onPress={() => handleTap(question)}
-          disabled={disabled}
-          accessibilityRole="button"
-          accessibilityLabel={question}
-          accessibilityHint="Tap to ask this question"
-        >
-          <AppIcon
-            name="message-circle"
-            size={14}
-            color={theme.accent}
-            prefer="feather"
-          />
-          <Text
-            style={[styles.questionText, { color: theme.text }]}
-            numberOfLines={2}
+      <View style={styles.chipsWrapper}>
+        {questions.map((question, index) => (
+          <Pressable
+            key={index}
+            style={({ pressed }) => [
+              styles.chip,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(255, 255, 255, 0.08)'
+                  : 'rgba(0, 0, 0, 0.05)',
+                opacity: pressed ? 0.7 : disabled ? 0.5 : 1,
+              },
+            ]}
+            onPress={() => handleTap(question)}
+            disabled={disabled}
+            accessibilityRole="button"
+            accessibilityLabel={question}
+            accessibilityHint="Tap to ask this question"
           >
-            {question}
-          </Text>
-          <AppIcon
-            name="chevron-right"
-            size={14}
-            color={theme.textMuted}
-            prefer="feather"
-          />
-        </Pressable>
-      ))}
+            <Text style={[styles.chipText, { color: theme.text }]}>
+              {question}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: SPACING.sm,
+    marginTop: SPACING.md,
+  },
+  chipsWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: SPACING.xs,
   },
-  questionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  chip: {
     paddingVertical: SPACING.sm,
     paddingHorizontal: SPACING.md,
-    borderRadius: 12,
-    borderWidth: 1,
-    gap: SPACING.sm,
+    borderRadius: 20,
   },
-  questionText: {
-    flex: 1,
+  chipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.normal,
+    fontWeight: TYPOGRAPHY.weights.medium,
   },
 });

@@ -115,6 +115,7 @@ export interface ChatMetadata {
   mcpToolsUsed?: string[];
   extractedEntities?: Record<string, unknown> | null;
   intentSource?: string;
+  followUpQuestions?: string[];
   [key: string]: unknown;
 }
 
@@ -505,6 +506,7 @@ export interface ChatResult {
   region?: string;
   language?: string;
   error?: string;
+  followUpQuestions?: string[];
 }
 
 export interface PlantDiagnosisParams {

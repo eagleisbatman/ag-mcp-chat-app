@@ -35,6 +35,7 @@ export const sendChatMessage = async (params: ChatParams): Promise<ChatResult> =
       response: data.response || data.text || 'No response received',
       region: data.region,
       language: data.language,
+      followUpQuestions: data.followUpQuestions,
     };
   } catch (error) {
     return { success: false, error: parseErrorMessage(error) };
