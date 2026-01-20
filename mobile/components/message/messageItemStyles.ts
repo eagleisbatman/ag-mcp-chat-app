@@ -27,9 +27,9 @@ export const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.xs,
   },
   speakButton: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },

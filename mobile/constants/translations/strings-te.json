@@ -84,7 +84,8 @@
     "servicesWarmingUp": "సేవలు సిద్ధమవుతున్నాయి, మళ్ళీ ప్రయత్నిస్తోంది...",
     "starterQuestionsHeader": "ఇలా అడగండి:",
     "starterQuestionsLoading": "మీ కోసం సూచనలు వస్తున్నాయి...",
-    "followUpQuestionsHeader": "ఇలా కూడా అడగండి:"
+    "followUpQuestionsHeader": "ఇలా కూడా అడగండి:",
+    "askButton": "అడగండి 👆"
   },
   "media": {
     "photoLibraryPermission": "ఫోటోలు ఎంపిక చేసుకోవడానికి గ్యాలరీ అనుమతి అవసరం. సెట్టింగ్స్‌లో ఆన్ చేయండి.",

@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "সুধি চাওক:",
     "starterQuestionsLoading": "পৰামৰ্শসমূহ আহি আছে...",
-    "followUpQuestionsHeader": "আৰু সুধিব পাৰে:"
+    "followUpQuestionsHeader": "আৰু সুধিব পাৰে:",
+    "askButton": "সোধক 👆"
   },
   "media": {
     "photoLibraryPermission": "ছবি বাছনি কৰিবলৈ ফটো লাইব্ৰেৰীৰ অনুমতি লাগে। ছেটিংছত অন কৰক।",

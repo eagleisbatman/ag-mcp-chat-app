@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Se încarcă serviciile, se reîncearcă...",
     "starterQuestionsHeader": "Încearcă să întrebi:",
     "starterQuestionsLoading": "Se încarcă sugestii...",
-    "followUpQuestionsHeader": "Poți întreba și:"
+    "followUpQuestionsHeader": "Poți întreba și:",
+    "askButton": "Întreabă 👆"
   },
   "media": {
     "photoLibraryPermission": "Este necesar accesul la galerie foto pentru a selecta imagini. Activează din Setări.",

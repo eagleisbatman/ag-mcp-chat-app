@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Загрузка сервисов, повтор...",
     "starterQuestionsHeader": "Попробуйте спросить:",
     "starterQuestionsLoading": "Подбираем вопросы...",
-    "followUpQuestionsHeader": "Также можно спросить:"
+    "followUpQuestionsHeader": "Также можно спросить:",
+    "askButton": "Спросить 👆"
   },
   "media": {
     "photoLibraryPermission": "Для выбора фото нужен доступ к галерее. Включите в Настройках.",

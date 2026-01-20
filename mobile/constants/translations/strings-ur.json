@@ -84,7 +84,8 @@
     "servicesWarmingUp": "سروسز تیار ہو رہی ہیں، دوبارہ کوشش...",
     "starterQuestionsHeader": "پوچھ کر دیکھیں:",
     "starterQuestionsLoading": "تجاویز لائی جا رہی ہیں...",
-    "followUpQuestionsHeader": "آپ یہ بھی پوچھ سکتے ہیں:"
+    "followUpQuestionsHeader": "آپ یہ بھی پوچھ سکتے ہیں:",
+    "askButton": "پوچھیں 👆"
   },
   "media": {
     "photoLibraryPermission": "تصاویر منتخب کرنے کے لیے فوٹو لائبریری تک رسائی ضروری ہے۔ سیٹنگز میں فعال کریں۔",

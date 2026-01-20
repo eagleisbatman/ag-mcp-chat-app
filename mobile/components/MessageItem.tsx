@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, Pressable, ActivityIndicator, Animated, useWindowDimensions, LayoutChangeEvent } from 'react-native';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { View, Text, Pressable, Animated, useWindowDimensions, LayoutChangeEvent } from 'react-native';
 import { Image } from 'expo-image';
 import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
@@ -80,6 +80,33 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
   // Animation state
   const [fadeAnim] = useState(() => new Animated.Value(isNewMessage ? 0 : 1));
 
+  // Pulsing animation for TTS loading (cancel indicator)
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (isLoading) {
+      // Start pulsing animation when loading
+      const animation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 0.4,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      animation.start();
+      return () => animation.stop();
+    } else {
+      pulseAnim.setValue(1);
+    }
+  }, [isLoading, pulseAnim]);
+
   useEffect(() => {
     if (isNewMessage && isBot) {
       Animated.timing(fadeAnim, {
@@ -129,7 +156,10 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
         <View style={styles.headerRight}>
           {isBot && (
             <Pressable
-              style={styles.speakButton}
+              style={[
+                styles.speakButton,
+                isLoading && { backgroundColor: theme.errorLight || 'rgba(255, 59, 48, 0.12)' }
+              ]}
               onPress={handleSpeak}
               accessibilityRole="button"
               accessibilityLabel={
@@ -138,11 +168,17 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
               }
             >
               {isLoading ? (
-                <ActivityIndicator size="small" color={theme.accent} />
+                <Animated.View style={{ opacity: pulseAnim }}>
+                  <AppIcon
+                    name="close"
+                    size={20}
+                    color={theme.error}
+                  />
+                </Animated.View>
               ) : (
                 <AppIcon
                   name={isSpeaking ? 'stop-circle' : 'volume-high'}
-                  size={18}
+                  size={20}
                   color={isSpeaking ? theme.error : theme.icon}
                 />
               )}

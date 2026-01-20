@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "مثلاً بپرسید:",
     "starterQuestionsLoading": "در حال بارگذاری پیشنهادها...",
-    "followUpQuestionsHeader": "همچنین می‌توانید بپرسید:"
+    "followUpQuestionsHeader": "همچنین می‌توانید بپرسید:",
+    "askButton": "بپرس 👆"
   },
   "media": {
     "photoLibraryPermission": "برای انتخاب عکس، نیاز به دسترسی گالری داریم. در تنظیمات فعال کنید.",

@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "Kaak gexsaay:",
     "starterQuestionsLoading": "Gexxaay suggudda akuk",
-    "followUpQuestionsHeader": "Keesiy gexsaay:"
+    "followUpQuestionsHeader": "Keesiy gexsaay:",
+    "askButton": "Agtum 👆"
   },
   "media": {
     "photoLibraryPermission": "Suura addaleh galtee raqqa adda. Baxan-gurrukkul gaba.",

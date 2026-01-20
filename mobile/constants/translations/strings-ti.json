@@ -84,7 +84,8 @@
     "servicesWarmingUp": "ኣገልግሎታት ይጅምሩ ኣለዉ፣ እንደገና ይፍተን...",
     "starterQuestionsHeader": "ክትሓትት ትኽእል:",
     "starterQuestionsLoading": "ሕቶታት ንዓኻ ይዳልዩ ኣለዉ...",
-    "followUpQuestionsHeader": "ከምኡ'ውን ክትሓትት ትኽእል:"
+    "followUpQuestionsHeader": "ከምኡ'ውን ክትሓትት ትኽእል:",
+    "askButton": "ሕተት 👆"
   },
   "media": {
     "photoLibraryPermission": "መዝገብ ስእሊ ንምጥቃም ፍቓድ የድሊ። ኣብ ቅጥዓት ኣናዕዕ።",

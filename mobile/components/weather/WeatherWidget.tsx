@@ -82,12 +82,20 @@ const PROVIDER_FORECAST_DAYS: Record<string, number> = {
 
 const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, provider }) => {
   const { theme } = useApp();
+  const isDark = theme.name === 'dark';
   const providerName = provider ? PROVIDER_NAMES[provider] || provider : '';
+
+  // Container style - flat in light mode, subtle card in dark mode
+  const containerStyle = [
+    styles.container,
+    { backgroundColor: theme.surface },
+    isDark && styles.containerDark,
+  ];
 
   // Show error state with retry hint
   if (error) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.surface }]}>
+      <View style={containerStyle}>
         <View style={styles.errorContainer}>
           <Ionicons name="cloud-offline-outline" size={32} color={theme.textMuted} />
           <Text style={[styles.errorText, { color: theme.textMuted }]}>
@@ -103,7 +111,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
 
   if (loading) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.surface }]}>
+      <View style={containerStyle}>
         <View style={styles.currentRow}>
           <View style={styles.tempSection}>
             <SkeletonBox width={48} height={48} style={{ borderRadius: 24 }} />
@@ -146,7 +154,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ data, loading, error, pro
     : (forecast && 'daily' in forecast ? forecast.daily : []);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.surface }]}>
+    <View style={containerStyle}>
       <View style={styles.currentRow}>
         <View style={styles.tempSection}>
           <WeatherIcon code={current.weatherIcon} size={48} provider={provider as any} />
@@ -314,12 +322,14 @@ const styles = StyleSheet.create({
     marginTop: SPACING.md,
     marginBottom: SPACING.sm,
     borderRadius: SPACING.radiusMd,
+    overflow: 'hidden',
+  },
+  containerDark: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 2,
-    overflow: 'hidden',
   },
   errorContainer: {
     alignItems: 'center',

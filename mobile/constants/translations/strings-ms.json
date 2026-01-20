@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Perkhidmatan sedang dimulakan, cuba lagi...",
     "starterQuestionsHeader": "Cuba tanya:",
     "starterQuestionsLoading": "Memuatkan cadangan...",
-    "followUpQuestionsHeader": "Anda juga boleh tanya:"
+    "followUpQuestionsHeader": "Anda juga boleh tanya:",
+    "askButton": "Tanya 👆"
   },
   "media": {
     "photoLibraryPermission": "Akses Galeri Foto diperlukan untuk pilih gambar. Aktifkan di Tetapan.",

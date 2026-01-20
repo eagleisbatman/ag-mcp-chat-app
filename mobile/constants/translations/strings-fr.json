@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "Demandez par exemple :",
     "starterQuestionsLoading": "Chargement des suggestions...",
-    "followUpQuestionsHeader": "Vous pourriez aussi demander :"
+    "followUpQuestionsHeader": "Vous pourriez aussi demander :",
+    "askButton": "Demander 👆"
   },
   "media": {
     "photoLibraryPermission": "Accès à la galerie requis pour choisir des images. Activez dans les Paramètres.",

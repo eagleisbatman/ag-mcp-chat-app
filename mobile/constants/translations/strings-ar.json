@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "أسئلة مقترحة:",
     "starterQuestionsLoading": "جارٍ تحميل الاقتراحات...",
-    "followUpQuestionsHeader": "أسئلة إضافية:"
+    "followUpQuestionsHeader": "أسئلة إضافية:",
+    "askButton": "اسأل 👆"
   },
   "media": {
     "photoLibraryPermission": "يتطلب الوصول إلى مكتبة الصور لاختيار الصور. فعّلها في الإعدادات.",

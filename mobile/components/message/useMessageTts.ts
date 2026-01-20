@@ -25,6 +25,7 @@ export function useMessageTts({
   const [isLoading, setIsLoading] = useState(false);
   const [localTtsUrl, setLocalTtsUrl] = useState(message.ttsAudioUrl);
   const playbackIdRef = useRef(0);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const resolveDiagnosisText = useCallback(async (): Promise<string | null> => {
     const brief = generateDiagnosisTTSBrief(message.diagnosisData);
@@ -35,15 +36,25 @@ export function useMessageTts({
     return fallback;
   }, [languageCode, message.diagnosisData]);
 
-  const stopAllPlayback = useCallback(async () => {
+  const cancelGeneration = useCallback(() => {
+    if (abortControllerRef.current) {
+      log('🔊 [TTS] Cancelling generation...');
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
     playbackIdRef.current += 1;
+    setIsLoading(false);
+  }, []);
+
+  const stopAllPlayback = useCallback(async () => {
+    cancelGeneration();
     try {
       await stopAudio();
     } catch {
       // Ignore
     }
     setIsSpeaking(false);
-  }, []);
+  }, [cancelGeneration]);
 
   const splitTextIntoSegments = useCallback((text: string, maxChars = 220): string[] => {
     const sentences = text
@@ -71,6 +82,13 @@ export function useMessageTts({
   }, []);
 
   const handleSpeak = useCallback(async (): Promise<void> => {
+    // If currently loading (generating), cancel the generation
+    if (isLoading) {
+      cancelGeneration();
+      setIsSpeaking(false);
+      return;
+    }
+
     if (isSpeaking) {
       await stopAllPlayback();
       return;
@@ -107,12 +125,16 @@ export function useMessageTts({
       setIsLoading(true);
       const playbackId = (playbackIdRef.current += 1);
 
+      // Create AbortController for this generation session
+      abortControllerRef.current = new AbortController();
+      const signal = abortControllerRef.current.signal;
+
       // Background full TTS for caching - track with ref to prevent memory leaks
       const cachePlaybackId = playbackId;
-      textToSpeech(textToSpeak, languageCode || 'en', ttsLocation)
+      textToSpeech(textToSpeak, languageCode || 'en', ttsLocation, signal)
         .then((full) => {
-          // Only update cache if this playback session is still active
-          if (playbackIdRef.current === cachePlaybackId) {
+          // Only update cache if this playback session is still active and not cancelled
+          if (playbackIdRef.current === cachePlaybackId && !full.cancelled) {
             const audioSource = full.audioUrl || full.audioBase64;
             if (full.success && audioSource) {
               setLocalTtsUrl(audioSource);
@@ -128,11 +150,17 @@ export function useMessageTts({
         });
 
       const segments = splitTextIntoSegments(textToSpeak);
-      let nextPromise = textToSpeech(segments[0], languageCode || 'en', ttsLocation);
+      let nextPromise = textToSpeech(segments[0], languageCode || 'en', ttsLocation, signal);
 
       for (let i = 0; i < segments.length; i += 1) {
         const segmentResult = await nextPromise;
         if (playbackIdRef.current !== playbackId) return;
+
+        // Check if cancelled
+        if (segmentResult.cancelled) {
+          log('🔊 [TTS] Generation was cancelled');
+          return;
+        }
 
         const audioSource = segmentResult.audioUrl || segmentResult.audioBase64;
         if (!segmentResult.success || !audioSource) {
@@ -142,7 +170,7 @@ export function useMessageTts({
         }
 
         if (i + 1 < segments.length) {
-          nextPromise = textToSpeech(segments[i + 1], languageCode || 'en', ttsLocation);
+          nextPromise = textToSpeech(segments[i + 1], languageCode || 'en', ttsLocation, signal);
         }
 
         const durationMs = (segmentResult.duration || Math.max(2, Math.round(segments[i].length / 14))) * 1000;
@@ -157,8 +185,10 @@ export function useMessageTts({
       setIsSpeaking(false);
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   }, [
+    isLoading,
     isSpeaking,
     languageCode,
     localTtsUrl,
@@ -167,6 +197,7 @@ export function useMessageTts({
     message.text,
     message.ttsAudioUrl,
     onError,
+    cancelGeneration,
     resolveDiagnosisText,
     splitTextIntoSegments,
     stopAllPlayback,
@@ -174,6 +205,11 @@ export function useMessageTts({
 
   useEffect(() => {
     return () => {
+      // Cleanup on unmount - stop audio and cancel any ongoing generation
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
       if (isSpeaking) stopAllPlayback();
     };
   }, [isSpeaking, stopAllPlayback]);

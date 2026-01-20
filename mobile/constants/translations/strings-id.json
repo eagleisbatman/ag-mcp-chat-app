@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Layanan sedang dimuat, mencoba lagi...",
     "starterQuestionsHeader": "Coba tanyakan:",
     "starterQuestionsLoading": "Memuat saran untuk Anda...",
-    "followUpQuestionsHeader": "Anda bisa juga bertanya:"
+    "followUpQuestionsHeader": "Anda bisa juga bertanya:",
+    "askButton": "Tanya 👆"
   },
   "media": {
     "photoLibraryPermission": "Izinkan akses galeri foto untuk memilih gambar. Aktifkan di Pengaturan.",

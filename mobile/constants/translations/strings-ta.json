@@ -84,7 +84,8 @@
     "servicesWarmingUp": "சேவைகள் தயாராகின்றன, மீண்டும் முயற்சிக்கிறது...",
     "starterQuestionsHeader": "கேட்க வேண்டியவை:",
     "starterQuestionsLoading": "பரிந்துரைகள் தயாராகின்றன...",
-    "followUpQuestionsHeader": "மேலும் கேட்க வேண்டியவை:"
+    "followUpQuestionsHeader": "மேலும் கேட்க வேண்டியவை:",
+    "askButton": "கேளுங்கள் 👆"
   },
   "media": {
     "photoLibraryPermission": "படங்களைத் தேர்ந்தெடுக்கப் புகைப்பட அனுமதி தேவை. அமைப்புகளில் இயக்குங்கள்.",

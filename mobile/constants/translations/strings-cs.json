@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "Zkuste se zeptat:",
     "starterQuestionsLoading": "Načítám návrhy...",
-    "followUpQuestionsHeader": "Můžete se také zeptat:"
+    "followUpQuestionsHeader": "Můžete se také zeptat:",
+    "askButton": "Zeptej se 👆"
   },
   "media": {
     "photoLibraryPermission": "Přístup k fotogalerii je potřeba pro výběr obrázků. Povolte v Nastavení.",

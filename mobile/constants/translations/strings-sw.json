@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Huduma zinajiandaa, inajaribu tena...",
     "starterQuestionsHeader": "Jaribu kuuliza:",
     "starterQuestionsLoading": "Tunakuandalia mapendekezo...",
-    "followUpQuestionsHeader": "Unaweza pia kuuliza:"
+    "followUpQuestionsHeader": "Unaweza pia kuuliza:",
+    "askButton": "Uliza 👆"
   },
   "media": {
     "photoLibraryPermission": "Ufikiaji wa picha unahitajika kuchagua picha. Washa kwenye Mipangilio.",

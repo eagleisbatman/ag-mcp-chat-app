@@ -84,7 +84,8 @@
     "servicesWarmingUp": "กำลังเตรียมระบบ, ลองใหม่...",
     "starterQuestionsHeader": "คำถามแนะนำ:",
     "starterQuestionsLoading": "กำลังหาคำแนะนำ...",
-    "followUpQuestionsHeader": "คำถามเพิ่มเติม:"
+    "followUpQuestionsHeader": "คำถามเพิ่มเติม:",
+    "askButton": "ถาม 👆"
   },
   "media": {
     "photoLibraryPermission": "ต้องอนุญาตให้เข้าถึงคลังรูปภาพเพื่อเลือกรูป เปิดในการตั้งค่า",

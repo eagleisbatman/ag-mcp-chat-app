@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Amasevisi ayalungiswa, kuyazanywa futhi...",
     "starterQuestionsHeader": "Zama ukubuza:",
     "starterQuestionsLoading": "Sikufunela iziphakamiso...",
-    "followUpQuestionsHeader": "Ungabuza futhi:"
+    "followUpQuestionsHeader": "Ungabuza futhi:",
+    "askButton": "Buza 👆"
   },
   "media": {
     "photoLibraryPermission": "Kudingeka ukufinyelela izithombe ukuze ukhethe. Vula kuZilungiselelo.",

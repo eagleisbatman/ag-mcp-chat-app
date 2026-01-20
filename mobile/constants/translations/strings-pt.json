@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Serviços a iniciar, a tentar novamente...",
     "starterQuestionsHeader": "Tente perguntar:",
     "starterQuestionsLoading": "Carregando sugestões...",
-    "followUpQuestionsHeader": "Pode perguntar também:"
+    "followUpQuestionsHeader": "Pode perguntar também:",
+    "askButton": "Perguntar 👆"
   },
   "media": {
     "photoLibraryPermission": "É preciso acesso à galeria para selecionar fotos. Ative nas Configurações.",

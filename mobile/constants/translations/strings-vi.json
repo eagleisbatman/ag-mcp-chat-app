@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Đang tải dịch vụ, thử lại...",
     "starterQuestionsHeader": "Thử hỏi:",
     "starterQuestionsLoading": "Đang tải gợi ý...",
-    "followUpQuestionsHeader": "Bạn cũng có thể hỏi:"
+    "followUpQuestionsHeader": "Bạn cũng có thể hỏi:",
+    "askButton": "Hỏi 👆"
   },
   "media": {
     "photoLibraryPermission": "Cần truy cập thư viện ảnh để chọn hình. Bật trong Cài đặt.",

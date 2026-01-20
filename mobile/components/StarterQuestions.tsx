@@ -4,14 +4,55 @@
  * Fetches personalized questions from API once on mount
  */
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Pressable, StyleSheet, Animated } from 'react-native';
+import { View, Text, Pressable, StyleSheet, Animated, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
-import AppIcon from './ui/AppIcon';
 import { fetchStarterQuestions, StarterQuestion } from '../services/api/starterQuestions';
 import { log } from '../utils/logger';
 import { t } from '../constants/strings';
+
+/**
+ * Skeleton loading placeholder with pulsing animation
+ */
+const SkeletonRow: React.FC<{ theme: any; index: number }> = ({ theme, index }) => {
+  const pulseAnim = useRef(new Animated.Value(0.4)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 0.7,
+          duration: 600,
+          delay: index * 100, // Stagger effect
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 0.4,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [pulseAnim, index]);
+
+  return (
+    <Animated.View
+      style={[
+        styles.skeletonRow,
+        { backgroundColor: theme.surfaceVariant, opacity: pulseAnim },
+      ]}
+    >
+      <View style={[styles.skeletonEmoji, { backgroundColor: theme.border }]} />
+      <View style={styles.skeletonTextContainer}>
+        <View style={[styles.skeletonTextLine, { backgroundColor: theme.border, width: '85%' }]} />
+        <View style={[styles.skeletonTextLine, { backgroundColor: theme.border, width: '60%' }]} />
+      </View>
+    </Animated.View>
+  );
+};
 
 interface StarterQuestionsProps {
   onQuestionTap: (question: string) => void;
@@ -66,13 +107,21 @@ export default function StarterQuestions({
     onQuestionTap(question);
   };
 
-  // Show placeholder while loading (no spinner - cleaner UX)
+  // Show skeleton loading state
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <Text style={[styles.headerText, { color: theme.textMuted }]}>
-          {t('chat.starterQuestionsLoading')}
-        </Text>
+        <View style={styles.loadingHeader}>
+          <ActivityIndicator size="small" color={theme.accent} style={styles.loadingSpinner} />
+          <Text style={[styles.headerText, { color: theme.textMuted }]}>
+            {t('chat.starterQuestionsLoading')}
+          </Text>
+        </View>
+        <View style={styles.questionsContainer}>
+          {[0, 1, 2].map((index) => (
+            <SkeletonRow key={index} theme={theme} index={index} />
+          ))}
+        </View>
       </View>
     );
   }
@@ -84,7 +133,7 @@ export default function StarterQuestions({
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-      <Text style={[styles.headerText, { color: theme.textMuted }]}>
+      <Text style={[styles.headerText, styles.headerTextStandalone, { color: theme.textMuted }]}>
         {t('chat.starterQuestionsHeader')}
       </Text>
       <View style={styles.questionsContainer}>
@@ -110,11 +159,9 @@ export default function StarterQuestions({
             >
               {q.text}
             </Text>
-            <AppIcon
-              name="chevron-forward"
-              size={16}
-              color={theme.textMuted}
-            />
+            <View style={[styles.askButton, { backgroundColor: theme.accent }]}>
+              <Text style={styles.askButtonText}>{t('chat.askButton')}</Text>
+            </View>
           </Pressable>
         ))}
       </View>
@@ -127,10 +174,41 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.lg,
   },
+  loadingHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+  },
+  loadingSpinner: {
+    marginRight: SPACING.xs,
+  },
   headerText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.medium,
+  },
+  headerTextStandalone: {
     marginBottom: SPACING.sm,
+  },
+  skeletonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.md,
+    borderRadius: 12,
+    gap: SPACING.sm,
+  },
+  skeletonEmoji: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+  },
+  skeletonTextContainer: {
+    flex: 1,
+    gap: 6,
+  },
+  skeletonTextLine: {
+    height: 12,
+    borderRadius: 6,
   },
   questionsContainer: {
     gap: SPACING.xs,
@@ -151,5 +229,15 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: 22,
+  },
+  askButton: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  askButtonText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: '#FFFFFF',
   },
 });

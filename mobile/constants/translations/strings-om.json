@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Tajaajilli dammaqaa jira, irra deebiin yaala...",
     "starterQuestionsHeader": "Gaafachuuf yaali:",
     "starterQuestionsLoading": "Yaada siif qopheessaa jira...",
-    "followUpQuestionsHeader": "Gaaffilee dabalataa:"
+    "followUpQuestionsHeader": "Gaaffilee dabalataa:",
+    "askButton": "Gaafadhu 👆"
   },
   "media": {
     "photoLibraryPermission": "Suura filachuuf galmee suuraatti seenuun barbaachisa. Saayitiingii keessatti banaa.",

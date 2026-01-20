@@ -84,7 +84,8 @@
     "servicesWarmingUp": "सेवा सुरू होत आहेत, पुन्हा प्रयत्न करत आहोत...",
     "starterQuestionsHeader": "विचारून पहा:",
     "starterQuestionsLoading": "सूचना मिळवत आहोत...",
-    "followUpQuestionsHeader": "हे पण विचारू शकता:"
+    "followUpQuestionsHeader": "हे पण विचारू शकता:",
+    "askButton": "विचारा 👆"
   },
   "media": {
     "photoLibraryPermission": "फोटो निवडण्यासाठी गॅलरीची परवानगी हवी आहे. सेटिंग्जमध्ये चालू करा.",
