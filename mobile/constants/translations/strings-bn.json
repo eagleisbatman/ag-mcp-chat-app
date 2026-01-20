@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "জিজ্ঞেস করুন:",
     "starterQuestionsLoading": "পরামর্শ আনা হচ্ছে...",
-    "followUpQuestionsHeader": "আপনি আরও জিজ্ঞেস করতে পারেন:"
+    "followUpQuestionsHeader": "আপনি আরও জিজ্ঞেস করতে পারেন:",
+    "askButton": "প্রশ্ন করুন 👆"
   },
   "media": {
     "photoLibraryPermission": "ছবি বাছাই করতে গ্যালারির অনুমতি লাগবে। সেটিংসে চালু করুন।",

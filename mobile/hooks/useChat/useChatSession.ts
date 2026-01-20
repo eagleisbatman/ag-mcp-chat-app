@@ -24,6 +24,7 @@ interface DbMessage {
   createdAt: string;
   imageCloudinaryUrl?: string;
   ttsAudioUrl?: string;
+  followUpQuestions?: string[];
   metadata?: string | DbMessageMetadata;
 }
 
@@ -128,6 +129,7 @@ export default function useChatSession(sessionIdParam: string | null = null): Us
             isBot: m.role === 'assistant',
             image: m.imageCloudinaryUrl,
             ttsAudioUrl: m.ttsAudioUrl,
+            followUpQuestions: m.followUpQuestions, // Include follow-up questions from DB
           };
         }).reverse();
 

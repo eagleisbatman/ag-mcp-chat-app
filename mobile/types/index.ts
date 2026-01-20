@@ -527,6 +527,7 @@ export interface PlantDiagnosisResult {
   success: boolean;
   response?: string;
   diagnosis?: Record<string, unknown>;
+  followUpQuestions?: string[];
   metadata?: ChatMetadata;
   error?: string;
 }

@@ -84,7 +84,8 @@
     "servicesWarmingUp": "ບໍລິການກຳລັງເລີ່ມ, ລອງໃໝ່ອີກຄັ້ງ...",
     "starterQuestionsHeader": "ລອງຖາມເບິ່ງ:",
     "starterQuestionsLoading": "ກຳລັງຫາຄຳແນະນຳໃຫ້ທ່ານ...",
-    "followUpQuestionsHeader": "ທ່ານອາດຈະຖາມເພີ່ມອີກ:"
+    "followUpQuestionsHeader": "ທ່ານອາດຈະຖາມເພີ່ມອີກ:",
+    "askButton": "ຖາມ 👆"
   },
   "media": {
     "photoLibraryPermission": "ຕ້ອງເຂົ້າເຖິງຄັງຮູບ ເພື່ອເລືອກຮູບ. ເປີດໃຊ້ໃນການຕັ້ງຄ່າ.",

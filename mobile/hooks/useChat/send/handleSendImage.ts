@@ -107,10 +107,14 @@ export function createSendImageHandler({
         updateMessage(botMsgId, {
           text: botMsg.text,
           diagnosisData: botMsg.diagnosisData,
+          followUpQuestions: botMsg.followUpQuestions, // Include follow-up questions
           status: 'complete',
           thinkingText: null,
         });
-        persistMessage({ ...botMsg, _id: botMsgId }, sessionId, persistData);
+        persistMessage({ ...botMsg, _id: botMsgId }, sessionId, {
+          ...persistData,
+          followUpQuestions: botMsg.followUpQuestions || [], // Persist follow-up questions
+        });
         maybeGenerateTitle(sessionId, [{ ...botMsg, _id: botMsgId }, userMsg, ...messages]).catch((err) => {
           log('[Chat] Title generation failed (non-critical):', err);
         });

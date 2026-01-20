@@ -34,12 +34,14 @@ export const analyzePlantImage = async (params: PlantDiagnosisParams): Promise<P
       success: true,
       response: data.response,
       diagnosis: data.diagnosis,
+      followUpQuestions: data.followUpQuestions || data._meta?.followUpQuestions || [],
       metadata: {
         ...(data._meta || {}),
         intentsDetected: data.intentsDetected || [],
         mcpToolsUsed: data.mcpToolsUsed || [],
         extractedEntities: data.extractedEntities || null,
         intentSource: data.intentSource,
+        followUpQuestions: data.followUpQuestions || data._meta?.followUpQuestions || [],
       },
     };
   } catch (error) {

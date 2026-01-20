@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Diensten starten op, opnieuw proberen...",
     "starterQuestionsHeader": "Vraag bijvoorbeeld:",
     "starterQuestionsLoading": "Suggesties laden...",
-    "followUpQuestionsHeader": "U kunt ook vragen:"
+    "followUpQuestionsHeader": "U kunt ook vragen:",
+    "askButton": "Vraag 👆"
   },
   "media": {
     "photoLibraryPermission": "Toegang tot fotobibliotheek is nodig om foto's te kiezen. Activeer in Instellingen.",

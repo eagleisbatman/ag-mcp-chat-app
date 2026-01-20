@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "Subukang magtanong:",
     "starterQuestionsLoading": "Kumukuha ng mga mungkahi...",
-    "followUpQuestionsHeader": "Pwede mo ring itanong:"
+    "followUpQuestionsHeader": "Pwede mo ring itanong:",
+    "askButton": "Tanong 👆"
   },
   "media": {
     "photoLibraryPermission": "Kailangan ng access sa Photo Library para makapili ng larawan. Paganahin sa Settings.",

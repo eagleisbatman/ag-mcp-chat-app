@@ -84,7 +84,8 @@
     "servicesWarmingUp": "שירותים עולים, מנסה שוב...",
     "starterQuestionsHeader": "נסה לשאול:",
     "starterQuestionsLoading": "מביא לך המלצות...",
-    "followUpQuestionsHeader": "תוכל גם לשאול:"
+    "followUpQuestionsHeader": "תוכל גם לשאול:",
+    "askButton": "שאל 👆"
   },
   "media": {
     "photoLibraryPermission": "גישה לגלריית התמונות נדרשת לבחירת תמונות. אפשר בהגדרות.",

@@ -102,6 +102,7 @@ export function createSendTextHandler({
           persistMessage({ ...botMsg, text: fullText }, sessionId, {
             responseLanguageCode: locationContext.languageCode,
             metadata: metadata || null,
+            followUpQuestions: followUpQuestions || [], // Pass follow-up questions to be stored in DB
             diagnosisCrop: typeof diagnosisCrop === 'object' ? diagnosisCrop?.name : diagnosisCrop,
             diagnosisHealthStatus: diagnosisMetadata?.health_status,
             diagnosisIssues: diagnosisMetadata?.issues,

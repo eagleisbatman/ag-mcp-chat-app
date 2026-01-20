@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Laddar tjänster, försöker igen...",
     "starterQuestionsHeader": "Prova att fråga:",
     "starterQuestionsLoading": "Hämtar förslag...",
-    "followUpQuestionsHeader": "Du kan också fråga:"
+    "followUpQuestionsHeader": "Du kan också fråga:",
+    "askButton": "Fråga 👆"
   },
   "media": {
     "photoLibraryPermission": "Åtkomst till galleriet behövs för att välja bilder. Aktivera i Inställningar.",

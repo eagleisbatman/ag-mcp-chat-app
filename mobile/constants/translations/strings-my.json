@@ -84,7 +84,8 @@
     "servicesWarmingUp": "ဝန်ဆောင်မှုစတင်နေသည်၊ ပြန်ကြိုးစားနေသည်...",
     "starterQuestionsHeader": "မေးကြည့်ပါ",
     "starterQuestionsLoading": "အကြံပြုချက်များ ရယူနေသည်...",
-    "followUpQuestionsHeader": "ထပ်မံ မေးကြည့်ပါ"
+    "followUpQuestionsHeader": "ထပ်မံ မေးကြည့်ပါ",
+    "askButton": "မေးမယ် 👆"
   },
   "media": {
     "photoLibraryPermission": "ဓာတ်ပုံရွေးရန် ပြခန်းအသုံးပြုခွင့် လိုအပ်ပါသည်။ ဆက်တင်တွင် ဖွင့်ပေးပါ။",

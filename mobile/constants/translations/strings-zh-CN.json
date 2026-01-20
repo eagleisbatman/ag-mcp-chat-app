@@ -84,7 +84,8 @@
     "servicesWarmingUp": "服务启动中，正在重试...",
     "starterQuestionsHeader": "试试问：",
     "starterQuestionsLoading": "正在获取建议...",
-    "followUpQuestionsHeader": "您还可以问："
+    "followUpQuestionsHeader": "您还可以问：",
+    "askButton": "问 👆"
   },
   "media": {
     "photoLibraryPermission": "访问相册才能选择图片。请在设置中启用。",

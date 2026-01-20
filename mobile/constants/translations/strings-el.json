@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Services warming up, retrying...",
     "starterQuestionsHeader": "Προτεινόμενες ερωτήσεις:",
     "starterQuestionsLoading": "Φορτώνονται προτάσεις...",
-    "followUpQuestionsHeader": "Άλλες ερωτήσεις:"
+    "followUpQuestionsHeader": "Άλλες ερωτήσεις:",
+    "askButton": "Ρώτα 👆"
   },
   "media": {
     "photoLibraryPermission": "Χρειάζεται πρόσβαση στις φωτογραφίες για επιλογή εικόνας. Ενεργοποιήστε στις Ρυθμίσεις.",

@@ -68,7 +68,11 @@
     "tapLocationToSet": "Tap location to set",
     "senderAssistant": "FarmerChat",
     "senderYou": "You",
-    "tapToAskNext": "Tap to ask next:"
+    "tapToAskNext": "Tap to ask next:",
+    "askButton": "Ask 👆",
+    "starterQuestionsHeader": "Try asking:",
+    "starterQuestionsLoading": "Getting suggestions for you...",
+    "followUpQuestionsHeader": "You might also ask:"
   },
   "media": {
     "photoLibraryPermission": "Photo library access is needed to select images. Enable in Settings.",

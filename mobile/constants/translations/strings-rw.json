@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Serivisi zirimo gutangira, turongera kugerageza...",
     "starterQuestionsHeader": "Wabaza:",
     "starterQuestionsLoading": "Gutegura ibibazo by'ingero...",
-    "followUpQuestionsHeader": "Wabaza nanone:"
+    "followUpQuestionsHeader": "Wabaza nanone:",
+    "askButton": "Baza 👆"
   },
   "media": {
     "photoLibraryPermission": "Bisaba uburenganzira kuri galeri kugira ngo utoranye amafoto. Bihindure mu Igenamiterere.",

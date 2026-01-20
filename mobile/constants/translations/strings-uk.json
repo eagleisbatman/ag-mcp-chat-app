@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Сервіси запускаються, повторна спроба...",
     "starterQuestionsHeader": "Спробуйте запитати:",
     "starterQuestionsLoading": "Завантажую пропозиції для вас...",
-    "followUpQuestionsHeader": "Також можна запитати:"
+    "followUpQuestionsHeader": "Також можна запитати:",
+    "askButton": "Запитай 👆"
   },
   "media": {
     "photoLibraryPermission": "Доступ до галереї потрібен, щоб вибрати фото. Увімкніть у Налаштуваннях.",

@@ -84,7 +84,8 @@
     "servicesWarmingUp": "Hizmetler hazırlanıyor, tekrar deneniyor...",
     "starterQuestionsHeader": "Örnek sorular:",
     "starterQuestionsLoading": "Öneriler yükleniyor...",
-    "followUpQuestionsHeader": "Şunları da sorabilirsiniz:"
+    "followUpQuestionsHeader": "Şunları da sorabilirsiniz:",
+    "askButton": "Sor 👆"
   },
   "media": {
     "photoLibraryPermission": "Görsel seçmek için fotoğraf galerisine erişim gerekli. Ayarlardan açın.",

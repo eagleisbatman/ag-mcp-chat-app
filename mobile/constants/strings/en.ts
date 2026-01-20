@@ -86,6 +86,7 @@ export const en = {
     senderAssistant: 'FarmerChat',
     senderYou: 'You',
     tapToAskNext: 'Tap to ask next:',
+    askButton: 'Ask 👆',
     starterQuestionsHeader: 'Try asking:',
     starterQuestionsLoading: 'Getting suggestions for you...',
     followUpQuestionsHeader: 'You might also ask:',
