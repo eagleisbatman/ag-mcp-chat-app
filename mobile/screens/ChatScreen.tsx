@@ -183,10 +183,9 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             keyboardShouldPersistTaps="handled"
             onScrollToIndexFailed={handleScrollToIndexFailed}
             ListHeaderComponent={
-              /* Show starter questions below welcome message (inverted list = ListHeader is visual bottom) */
-              messages.length <= 1 && messages.every(m => m._id === 'welcome' || m.isBot) ? (
-                <StarterQuestions onQuestionTap={handleSend} />
-              ) : null
+              /* Always show starter questions (inverted list = ListHeader is visual bottom)
+                 Users can scroll back up to see them even after starting a conversation */
+              <StarterQuestions onQuestionTap={handleSend} />
             }
             ListFooterComponent={
               <WeatherWidget

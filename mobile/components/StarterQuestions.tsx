@@ -3,14 +3,15 @@
  * Minimal tappable suggestions for empty chat state
  * Fetches personalized questions from API once on mount
  */
-import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, Pressable, StyleSheet, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import { fetchStarterQuestions, StarterQuestion } from '../services/api/starterQuestions';
 import { log } from '../utils/logger';
+import { t } from '../constants/strings';
 
 interface StarterQuestionsProps {
   onQuestionTap: (question: string) => void;
@@ -22,8 +23,9 @@ export default function StarterQuestions({
   const { theme, location, language, locationDetails } = useApp();
 
   const [questions, setQuestions] = useState<StarterQuestion[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasFetched, setHasFetched] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Fetch once on mount - backend handles weather and time calculation
   useEffect(() => {
@@ -41,6 +43,13 @@ export default function StarterQuestions({
         });
         log('📋 [StarterQuestions] Got', result.length, 'questions');
         setQuestions(result.slice(0, 3));
+
+        // Fade in when questions are loaded
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
       } catch (error) {
         log('❌ [StarterQuestions] Failed:', error);
       } finally {
@@ -50,18 +59,20 @@ export default function StarterQuestions({
     }
 
     loadQuestions();
-  }, [hasFetched, location?.latitude, location?.longitude, language?.code]);
+  }, [hasFetched, location?.latitude, location?.longitude, language?.code, fadeAnim]);
 
   const handleTap = (question: string): void => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onQuestionTap(question);
   };
 
-  // Show loading spinner while fetching
+  // Show placeholder while loading (no spinner - cleaner UX)
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color={theme.textMuted} />
+      <View style={styles.container}>
+        <Text style={[styles.headerText, { color: theme.textMuted }]}>
+          {t('chat.starterQuestionsLoading')}
+        </Text>
       </View>
     );
   }
@@ -72,20 +83,27 @@ export default function StarterQuestions({
   }
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+      <Text style={[styles.headerText, { color: theme.textMuted }]}>
+        {t('chat.starterQuestionsHeader')}
+      </Text>
       <View style={styles.questionsContainer}>
         {questions.map((q, index) => (
           <Pressable
             key={index}
             style={({ pressed }) => [
               styles.questionRow,
-              { opacity: pressed ? 0.6 : 1 },
+              {
+                backgroundColor: pressed ? theme.surfaceVariant : theme.surface,
+                borderColor: theme.border,
+              },
             ]}
             onPress={() => handleTap(q.text)}
             accessibilityRole="button"
             accessibilityLabel={q.text}
             accessibilityHint="Tap to ask this question"
           >
+            <Text style={styles.emoji}>{q.emoji}</Text>
             <Text
               style={[styles.questionText, { color: theme.text }]}
               numberOfLines={2}
@@ -100,7 +118,7 @@ export default function StarterQuestions({
           </Pressable>
         ))}
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -109,9 +127,10 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.lg,
   },
-  loadingContainer: {
-    paddingVertical: SPACING.lg,
-    alignItems: 'center',
+  headerText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weights.medium,
+    marginBottom: SPACING.sm,
   },
   questionsContainer: {
     gap: SPACING.xs,
@@ -120,7 +139,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    borderRadius: 12,
+    borderWidth: 1,
     gap: SPACING.sm,
+  },
+  emoji: {
+    fontSize: 18,
   },
   questionText: {
     flex: 1,
