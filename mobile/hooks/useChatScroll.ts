@@ -199,34 +199,26 @@ export default function useChatScroll({ messages, isTyping, flatListRef }: UseCh
     flatListRef.current?.scrollToOffset({ offset, animated: true });
   }, [flatListRef]);
 
-  // Auto-scroll when typing starts - position user's question at the top
+  // Auto-scroll when new messages are added (user message + thinking indicator)
+  // Since thinking indicator is now part of messages array, scrolling to offset 0
+  // will show both the user question and the thinking indicator below it
   useEffect(() => {
     const typingJustStarted = isTyping && !prevIsTypingRef.current;
     const messagesAdded = messages.length > prevMessagesLengthRef.current;
 
-    if (typingJustStarted && messagesAdded) {
-      blockAutoScrollRef.current = true;
-      shouldScrollToUserRef.current = true;
-
-      // Wait for the message to render and layout to complete
-      // Using multiple frames to ensure React Native has finished layout
+    if (typingJustStarted && messagesAdded && !isUserScrollingRef.current) {
+      // Wait for the messages to render
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          setTimeout(() => {
-            if (shouldScrollToUserRef.current) {
-              scrollToUserMessage();
-              isAnchorLockedRef.current = true;
-            }
-            blockAutoScrollRef.current = false;
-            shouldScrollToUserRef.current = false;
-          }, 100);
+          // Scroll to bottom (offset 0 in inverted list) to show newest messages
+          flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
         });
       });
     }
 
     prevIsTypingRef.current = isTyping;
     prevMessagesLengthRef.current = messages.length;
-  }, [isTyping, messages, scrollToUserMessage]);
+  }, [isTyping, messages.length, flatListRef]);
 
   // Animate scroll button
   useEffect(() => {

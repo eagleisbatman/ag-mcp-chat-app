@@ -13,7 +13,6 @@ import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
 import ChatHeader from '../components/chat/ChatHeader';
 import ScrollToBottomButton from '../components/chat/ScrollToBottomButton';
-import TypingIndicator from '../components/ui/TypingIndicator';
 import WeatherWidget from '../components/weather/WeatherWidget';
 import StarterQuestions from '../components/StarterQuestions';
 
@@ -36,7 +35,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
 
   const {
     messages, isTyping, isLoadingSession, newestBotMessageId,
-    thinkingText, handleSendText, handleSendImage,
+    handleSendText, handleSendImage,
     transcribeAudioForInput, uploadAudioInBackground,
     startNewSession,
   } = useChat(sessionId);
@@ -184,20 +183,17 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             keyboardShouldPersistTaps="handled"
             onScrollToIndexFailed={handleScrollToIndexFailed}
             ListHeaderComponent={
-              <>
-                {isTyping && thinkingText && <TypingIndicator text={thinkingText} />}
-                {/* Show starter questions below welcome message (inverted list = ListHeader is visual bottom) */}
-                {messages.length <= 1 && messages.every(m => m._id === 'welcome' || m.isBot) && (
-                  <StarterQuestions
-                    onQuestionTap={handleSend}
-                    weatherSummary={weatherData ? {
-                      temperature: weatherData.current?.temperature,
-                      conditions: weatherData.current?.conditions,
-                      hasRain: weatherData.current?.conditions?.toLowerCase().includes('rain'),
-                    } : undefined}
-                  />
-                )}
-              </>
+              /* Show starter questions below welcome message (inverted list = ListHeader is visual bottom) */
+              messages.length <= 1 && messages.every(m => m._id === 'welcome' || m.isBot) ? (
+                <StarterQuestions
+                  onQuestionTap={handleSend}
+                  weatherSummary={weatherData ? {
+                    temperature: weatherData.current?.temperature,
+                    conditions: weatherData.current?.condition,
+                    hasRain: weatherData.current?.condition?.toLowerCase().includes('rain'),
+                  } : undefined}
+                />
+              ) : null
             }
             ListFooterComponent={
               <WeatherWidget

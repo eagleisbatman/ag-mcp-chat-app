@@ -11,6 +11,7 @@ import type { ImageData, LocationContextDeps, UploadResult } from './types';
 interface SendImageDeps {
   messages: Message[];
   addMessage: (message: Message) => void;
+  updateMessage: (messageId: string, updates: Record<string, unknown>) => void;
   persistMessage: (message: Message & { cloudinaryUrl?: string }, sessionId: string | null, extra?: Record<string, unknown>) => Promise<string | null>;
   ensureSession: () => Promise<string | null>;
   maybeGenerateTitle: (sessionId: string | null, allMessages: Message[]) => Promise<void>;
@@ -18,12 +19,12 @@ interface SendImageDeps {
   showWarning: (message: string) => void;
   locationContext: LocationContextDeps;
   setIsTyping: (value: boolean) => void;
-  setThinkingText: (value: string | null) => void;
 }
 
 export function createSendImageHandler({
   messages,
   addMessage,
+  updateMessage,
   persistMessage,
   ensureSession,
   maybeGenerateTitle,
@@ -31,7 +32,6 @@ export function createSendImageHandler({
   showWarning,
   locationContext,
   setIsTyping,
-  setThinkingText,
 }: SendImageDeps) {
   return async (imageData: ImageData): Promise<void> => {
     const userMsgText = imageData.text || t('chat.imageAnalyzed');
@@ -44,8 +44,19 @@ export function createSendImageHandler({
     };
     addMessage(userMsg);
     setIsTyping(true);
-    setThinkingText(t('chat.analyzingImage'));
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    // Add thinking placeholder message
+    const botMsgId = (Date.now() + 1).toString();
+    const thinkingMsg: Message = {
+      _id: botMsgId,
+      text: '',
+      createdAt: new Date(),
+      isBot: true,
+      status: 'thinking',
+      thinkingText: t('chat.analyzingImage'),
+    };
+    addMessage(thinkingMsg);
 
     const sessionId = await ensureSession();
 
@@ -78,31 +89,41 @@ export function createSendImageHandler({
 
       if (!diagResult.success) {
         const { errorBotMsg, warningMessage } = processFailedDiagnosis(diagResult);
-        addMessage(errorBotMsg);
-        persistMessage(errorBotMsg, sessionId, {
+        // Update the thinking message with error response
+        updateMessage(botMsgId, {
+          text: errorBotMsg.text,
+          diagnosisData: errorBotMsg.diagnosisData,
+          status: 'complete',
+          thinkingText: null,
+        });
+        persistMessage({ ...errorBotMsg, _id: botMsgId }, sessionId, {
           errorType: diagResult.error || 'diagnosis_failed',
           metadata: { error: diagResult.error },
         });
         showWarning(warningMessage);
       } else {
         const { botMsg, persistData } = processSuccessfulDiagnosis(diagResult);
-        addMessage(botMsg);
-        persistMessage(botMsg, sessionId, persistData);
-        maybeGenerateTitle(sessionId, [botMsg, userMsg, ...messages]).catch((err) => {
+        // Update the thinking message with successful response
+        updateMessage(botMsgId, {
+          text: botMsg.text,
+          diagnosisData: botMsg.diagnosisData,
+          status: 'complete',
+          thinkingText: null,
+        });
+        persistMessage({ ...botMsg, _id: botMsgId }, sessionId, persistData);
+        maybeGenerateTitle(sessionId, [{ ...botMsg, _id: botMsgId }, userMsg, ...messages]).catch((err) => {
           log('[Chat] Title generation failed (non-critical):', err);
         });
       }
     } catch (error) {
       showError(parseErrorMessage(error));
-      addMessage({
-        _id: (Date.now() + 1).toString(),
+      updateMessage(botMsgId, {
         text: t('chat.imageAnalysisFailedBot'),
-        createdAt: new Date(),
-        isBot: true,
+        status: 'complete',
+        thinkingText: null,
       });
     } finally {
       setIsTyping(false);
-      setThinkingText(null);
     }
   };
 }

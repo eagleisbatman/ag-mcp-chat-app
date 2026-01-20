@@ -87,6 +87,9 @@ export interface Message {
   role?: 'user' | 'assistant' | string;
   content?: string;
   followUpQuestions?: string[];
+  // Message status for thinking/streaming states
+  status?: 'thinking' | 'streaming' | 'complete';
+  thinkingText?: string; // Text to show during thinking state
 }
 
 /**

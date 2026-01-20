@@ -8,6 +8,7 @@ import { SPACING } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
 import FollowUpQuestions from './FollowUpQuestions';
+import TypingIndicator from './ui/TypingIndicator';
 import { t } from '../constants/strings';
 import { Message } from '../types';
 import { useMessageTts } from './message/useMessageTts';
@@ -63,7 +64,8 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const isBot = message.isBot;
-  const isStreaming = message.isStreaming || false;
+  const isStreaming = message.isStreaming || message.status === 'streaming';
+  const isThinking = message.status === 'thinking';
 
   const contentMaxWidth = screenWidth - (SPACING.lg * 2);
 
@@ -92,8 +94,8 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
 
   const markdownStyles = useMemo(() => createMarkdownStyles(theme, textColor), [theme, textColor]);
 
-  // Don't render empty streaming messages (after all hooks)
-  if (isBot && isStreaming && !message.text) {
+  // Don't render empty streaming messages (but allow thinking messages)
+  if (isBot && isStreaming && !message.text && !isThinking) {
     return null;
   }
 
@@ -162,7 +164,10 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
       
       {isBot ? (
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
-          {message.text ? (
+          {/* Show typing indicator when thinking */}
+          {isThinking ? (
+            <TypingIndicator text={message.thinkingText || t('chat.thinking')} />
+          ) : message.text ? (
             <Markdown style={markdownStyles}>
               {isStreaming
                 ? sanitizeStreamingMarkdown(message.text) + ' ▋'
@@ -178,7 +183,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
           )}
 
           {/* Follow-up questions - show after response is complete */}
-          {!isStreaming && message.followUpQuestions && message.followUpQuestions.length > 0 && onFollowUpTap && (
+          {!isStreaming && !isThinking && message.followUpQuestions && message.followUpQuestions.length > 0 && onFollowUpTap && (
             <FollowUpQuestions
               questions={message.followUpQuestions}
               onQuestionTap={onFollowUpTap}
@@ -230,6 +235,8 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
     prevProps.message.image === nextProps.message.image &&
     areDiagnosisDataEqual(prevProps.message.diagnosisData, nextProps.message.diagnosisData) &&
     prevProps.message.isStreaming === nextProps.message.isStreaming &&
+    prevProps.message.status === nextProps.message.status &&
+    prevProps.message.thinkingText === nextProps.message.thinkingText &&
     prevProps.isNewMessage === nextProps.isNewMessage &&
     JSON.stringify(prevProps.message.followUpQuestions) === JSON.stringify(nextProps.message.followUpQuestions)
   );
