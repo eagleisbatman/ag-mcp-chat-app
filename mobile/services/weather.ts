@@ -154,7 +154,7 @@ export const weatherService = {
     latitude: number,
     longitude: number,
     language: string = 'en',
-    provider: string = 'google-weather'
+    provider: string = 'tomorrow-io'
   ): Promise<CurrentWeatherResult> {
     try {
       log('[Weather] getCurrent called:', { latitude, longitude, language, provider });
@@ -243,7 +243,7 @@ export const weatherService = {
     longitude: number,
     days: number = 7,
     language: string = 'en',
-    provider: string = 'google-weather'
+    provider: string = 'tomorrow-io'
   ): Promise<ForecastResult> {
     try {
       log('[Weather] getForecast called:', { latitude, longitude, days, language, provider });
