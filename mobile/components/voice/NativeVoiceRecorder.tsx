@@ -5,7 +5,7 @@
 import React, { useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text, Pressable, Animated, ActivityIndicator, Platform } from 'react-native';
 import { Audio } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../../contexts/AppContext';
 import { useToast } from '../../contexts/ToastContext';
