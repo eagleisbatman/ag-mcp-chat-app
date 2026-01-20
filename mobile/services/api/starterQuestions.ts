@@ -3,8 +3,11 @@
  * Fetches personalized starter questions from the API Gateway
  */
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { log } from '../../utils/logger';
-import { API_BASE_URL, API_KEY, ensureDeviceId } from './core';
+import { API_BASE_URL, API_KEY, ensureDeviceId, getLocalDateTime } from './core';
+
+const SERVICE_PREFS_KEY = '@service_preferences';
 
 export interface StarterQuestion {
   emoji: string;
@@ -26,7 +29,7 @@ interface FetchStarterQuestionsParams {
   latitude?: number | null;
   longitude?: number | null;
   language?: string;
-  // Note: weather and time are now calculated server-side from coordinates
+  country?: string;
 }
 
 
@@ -38,19 +41,41 @@ export async function fetchStarterQuestions(
 ): Promise<StarterQuestion[]> {
   try {
     const deviceId = await ensureDeviceId();
+    const localDateTime = getLocalDateTime();
 
-    // Weather and time are now calculated server-side from coordinates
+    // Get weather provider from user preferences
+    let weatherProvider = 'google-weather';
+    try {
+      const stored = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
+      if (stored) {
+        const prefs = JSON.parse(stored);
+        weatherProvider = prefs.weather || 'google-weather';
+      }
+    } catch (e) {
+      log('📋 [StarterQuestions] Failed to load service prefs:', e);
+    }
+
     const requestBody = {
       deviceId,
       latitude: params.latitude ?? undefined,
       longitude: params.longitude ?? undefined,
       language: params.language || 'en',
+      country: params.country,
+      weatherProvider,
+      localDateTime: {
+        hour: localDateTime.hour,
+        month: localDateTime.month,
+        day: localDateTime.day,
+        timezone: localDateTime.timezone,
+      },
     };
 
     log('📋 [StarterQuestions] Fetching from API', {
       url: `${API_BASE_URL}/api/starter-questions`,
       deviceId: deviceId.substring(0, 8),
       hasLocation: !!(params.latitude && params.longitude),
+      weatherProvider,
+      hour: localDateTime.hour,
       apiKey: API_KEY ? `${API_KEY.substring(0, 8)}...` : 'MISSING',
     });
 
