@@ -3,8 +3,8 @@
  * Minimal tappable suggestions for empty chat state
  * Fetches personalized questions from API once on mount
  */
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
@@ -28,14 +28,16 @@ export default function StarterQuestions({
   const { theme, location, language } = useApp();
 
   const [questions, setQuestions] = useState<StarterQuestion[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
 
-  // Fetch once when location is available
+  // Fetch once on mount
   useEffect(() => {
     if (hasFetched) return;
 
     async function loadQuestions() {
-      log('📋 [StarterQuestions] Fetching...');
+      log('📋 [StarterQuestions] Component mounted, starting fetch...');
+      setIsLoading(true);
       try {
         const result = await fetchStarterQuestions({
           latitude: location?.latitude,
@@ -45,10 +47,11 @@ export default function StarterQuestions({
         });
         log('📋 [StarterQuestions] Got', result.length, 'questions');
         setQuestions(result.slice(0, 3));
-        setHasFetched(true);
       } catch (error) {
         log('❌ [StarterQuestions] Failed:', error);
-        setHasFetched(true); // Don't retry on error
+      } finally {
+        setIsLoading(false);
+        setHasFetched(true);
       }
     }
 
@@ -60,7 +63,16 @@ export default function StarterQuestions({
     onQuestionTap(question);
   };
 
-  // Don't render if no questions yet
+  // Show loading spinner while fetching
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color={theme.textMuted} />
+      </View>
+    );
+  }
+
+  // Don't render if no questions
   if (questions.length === 0) {
     return null;
   }
@@ -102,6 +114,10 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.lg,
+  },
+  loadingContainer: {
+    paddingVertical: SPACING.lg,
+    alignItems: 'center',
   },
   questionsContainer: {
     gap: SPACING.xs,

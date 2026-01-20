@@ -1,7 +1,7 @@
 /**
  * FollowUpQuestions component
- * Full-width tappable cards displayed after bot messages
- * Displays follow-up questions in a vertical stack layout
+ * Minimal tappable suggestions displayed after bot messages
+ * Matches StarterQuestions styling for consistency
  */
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
@@ -33,26 +33,15 @@ export default function FollowUpQuestions({
     onQuestionTap(question);
   };
 
-  const isDark = theme.name === 'dark';
-
   return (
     <View style={styles.container}>
-      <View style={styles.cardsContainer}>
-        {questions.map((question, index) => (
+      <View style={styles.questionsContainer}>
+        {questions.slice(0, 3).map((question, index) => (
           <Pressable
             key={index}
             style={({ pressed }) => [
-              styles.card,
-              {
-                backgroundColor: isDark
-                  ? 'rgba(255, 255, 255, 0.06)'
-                  : 'rgba(0, 0, 0, 0.03)',
-                borderColor: isDark
-                  ? 'rgba(255, 255, 255, 0.1)'
-                  : 'rgba(0, 0, 0, 0.08)',
-                opacity: disabled ? 0.5 : 1,
-                transform: [{ scale: pressed && !disabled ? 0.98 : 1 }],
-              },
+              styles.questionRow,
+              { opacity: disabled ? 0.5 : pressed ? 0.6 : 1 },
             ]}
             onPress={() => handleTap(question)}
             disabled={disabled}
@@ -61,16 +50,15 @@ export default function FollowUpQuestions({
             accessibilityHint="Tap to ask this question"
           >
             <Text
-              style={[styles.cardText, { color: theme.text }]}
+              style={[styles.questionText, { color: theme.text }]}
               numberOfLines={2}
             >
               {question}
             </Text>
             <AppIcon
-              name="arrow-forward"
-              size={18}
+              name="chevron-forward"
+              size={16}
               color={theme.textMuted}
-              style={styles.arrow}
             />
           </Pressable>
         ))}
@@ -81,27 +69,21 @@ export default function FollowUpQuestions({
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: SPACING.md,
+    marginTop: SPACING.sm,
+    paddingTop: SPACING.xs,
   },
-  cardsContainer: {
-    gap: SPACING.sm,
+  questionsContainer: {
+    gap: SPACING.xs,
   },
-  card: {
+  questionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.md,
-    borderRadius: 12,
-    borderWidth: 1,
+    paddingVertical: SPACING.sm,
     gap: SPACING.sm,
   },
-  cardText: {
+  questionText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
-    fontWeight: TYPOGRAPHY.weights.medium,
-    lineHeight: 20,
-  },
-  arrow: {
-    opacity: 0.5,
+    lineHeight: 22,
   },
 });
