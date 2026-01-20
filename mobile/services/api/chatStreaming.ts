@@ -10,6 +10,76 @@ import {
 } from './core';
 
 /**
+ * Helper to filter out [FOLLOWUP]...[/FOLLOWUP] tags from streamed text
+ * Returns the clean text to display and tracks if we're inside a FOLLOWUP block
+ */
+function filterFollowUpTags(
+  text: string,
+  pendingBuffer: string,
+  insideFollowUp: boolean
+): { displayText: string; newBuffer: string; stillInsideFollowUp: boolean } {
+  const combined = pendingBuffer + text;
+  let displayText = '';
+  let newBuffer = '';
+  let stillInsideFollowUp = insideFollowUp;
+
+  // If we're inside a FOLLOWUP block, look for the closing tag
+  if (stillInsideFollowUp) {
+    const closeIdx = combined.indexOf('[/FOLLOWUP]');
+    if (closeIdx !== -1) {
+      // Found closing tag - skip everything up to and including it
+      stillInsideFollowUp = false;
+      const afterClose = combined.slice(closeIdx + '[/FOLLOWUP]'.length);
+      // Recursively process the rest
+      return filterFollowUpTags(afterClose, '', false);
+    } else {
+      // Still inside, discard everything
+      return { displayText: '', newBuffer: '', stillInsideFollowUp: true };
+    }
+  }
+
+  // Look for opening tag
+  const openIdx = combined.indexOf('[FOLLOWUP]');
+  if (openIdx !== -1) {
+    // Display everything before the tag
+    displayText = combined.slice(0, openIdx);
+    const afterOpen = combined.slice(openIdx + '[FOLLOWUP]'.length);
+
+    // Check if closing tag is in the same chunk
+    const closeIdx = afterOpen.indexOf('[/FOLLOWUP]');
+    if (closeIdx !== -1) {
+      // Complete tag in this chunk - skip the content
+      const afterClose = afterOpen.slice(closeIdx + '[/FOLLOWUP]'.length);
+      // Recursively process any remaining text
+      const rest = filterFollowUpTags(afterClose, '', false);
+      return {
+        displayText: displayText + rest.displayText,
+        newBuffer: rest.newBuffer,
+        stillInsideFollowUp: rest.stillInsideFollowUp,
+      };
+    } else {
+      // Opening tag but no closing yet - we're now inside
+      return { displayText, newBuffer: '', stillInsideFollowUp: true };
+    }
+  }
+
+  // Check for partial opening tag at the end (e.g., "[FOLLOW" or "[FOLLOWUP")
+  // Buffer the last few characters if they could be part of a tag
+  const possiblePartials = ['[', '[F', '[FO', '[FOL', '[FOLL', '[FOLLO', '[FOLLOW', '[FOLLOWU', '[FOLLOWUP'];
+  for (let i = possiblePartials.length - 1; i >= 0; i--) {
+    const partial = possiblePartials[i];
+    if (combined.endsWith(partial)) {
+      displayText = combined.slice(0, -partial.length);
+      newBuffer = partial;
+      return { displayText, newBuffer, stillInsideFollowUp: false };
+    }
+  }
+
+  // No tags found - display everything
+  return { displayText: combined, newBuffer: '', stillInsideFollowUp: false };
+}
+
+/**
  * Send chat message with STREAMING support
  * Real-time text chunks are passed to onChunk callback
  */
@@ -62,6 +132,9 @@ export const sendChatMessageStreaming = async ({
     let metadata: ChatMetadata = {};
     let lastProcessedIndex = 0;
     let completed = false;
+    // State for filtering [FOLLOWUP] tags from displayed text
+    let followUpBuffer = '';
+    let insideFollowUp = false;
 
     const finishError = (error: Error): void => {
       if (!completed) {
@@ -106,16 +179,27 @@ export const sendChatMessageStreaming = async ({
             toolName?: string;
             response?: string;
             error?: string;
+            followUpQuestions?: string[];
           };
 
           if (parsed.type === 'text') {
             const text = parsed.text || '';
             fullText += text;
-            onChunk?.(text);
+            // Filter out [FOLLOWUP]...[/FOLLOWUP] tags before displaying
+            const filtered = filterFollowUpTags(text, followUpBuffer, insideFollowUp);
+            followUpBuffer = filtered.newBuffer;
+            insideFollowUp = filtered.stillInsideFollowUp;
+            if (filtered.displayText) {
+              onChunk?.(filtered.displayText);
+            }
           } else if (parsed.type === 'thinking' && parsed.thinking) {
             onThinking?.(parsed.thinking);
           } else if (parsed.type === 'complete' && parsed.response) {
             fullText = parsed.response;
+            // Extract follow-up questions from the complete chunk
+            if (parsed.followUpQuestions && parsed.followUpQuestions.length > 0) {
+              metadata.followUpQuestions = parsed.followUpQuestions;
+            }
           } else if (parsed.type === 'meta') {
             metadata = parsed as unknown as ChatMetadata;
           } else if (parsed.type === 'error') {

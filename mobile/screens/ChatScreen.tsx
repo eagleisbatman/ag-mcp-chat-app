@@ -15,6 +15,7 @@ import ChatHeader from '../components/chat/ChatHeader';
 import ScrollToBottomButton from '../components/chat/ScrollToBottomButton';
 import TypingIndicator from '../components/ui/TypingIndicator';
 import WeatherWidget from '../components/weather/WeatherWidget';
+import StarterQuestions from '../components/StarterQuestions';
 
 import { styles } from './chat/styles';
 import { lookupLocation } from '../services/db';
@@ -173,12 +174,17 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             onScrollToIndexFailed={handleScrollToIndexFailed}
             ListHeaderComponent={isTyping && thinkingText ? <TypingIndicator text={thinkingText} /> : null}
             ListFooterComponent={
-              <WeatherWidget
-                data={weatherData}
-                loading={weatherLoading}
-                error={weatherError}
-                provider={weatherProvider ?? undefined}
-              />
+              <>
+                {messages.length === 0 && (
+                  <StarterQuestions onQuestionTap={handleSend} />
+                )}
+                <WeatherWidget
+                  data={weatherData}
+                  loading={weatherLoading}
+                  error={weatherError}
+                  provider={weatherProvider ?? undefined}
+                />
+              </>
             }
           />
         )}
