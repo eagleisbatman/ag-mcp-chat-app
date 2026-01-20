@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect, useState } from 'react';
+import React, { useRef, useCallback, useEffect, useState, useMemo } from 'react';
 import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
@@ -21,6 +21,10 @@ import { lookupLocation } from '../services/db';
 import { t } from '../constants/strings';
 import type { Message } from '../types';
 import type { ChatScreenProps, InputToolbarHandle } from './chat/types';
+
+// Type for starter questions synthetic item
+type StarterQuestionsItem = { _id: 'starter-questions'; isStarterQuestions: true };
+type ListItem = Message | StarterQuestionsItem;
 
 export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const { theme, language, location, locationDetails, setLocation } = useApp();
@@ -53,14 +57,21 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   });
 
   const { weatherData, weatherLoading, weatherError, weatherProvider } = useWeatherData(
-    location?.latitude !== null && location?.longitude !== null 
-      ? { latitude: location.latitude as number, longitude: location.longitude as number } 
+    location?.latitude !== null && location?.longitude !== null
+      ? { latitude: location.latitude as number, longitude: location.longitude as number }
       : null,
     locationDetails,
     language?.code || 'en'
   );
 
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
+
+  // Combine messages with starter questions as a scrollable item
+  // In inverted list: starter questions at the end = visual top (scrolls up as messages are added)
+  const listData = useMemo<ListItem[]>(() => {
+    const starterItem: StarterQuestionsItem = { _id: 'starter-questions', isStarterQuestions: true };
+    return [...messages, starterItem];
+  }, [messages]);
 
   useEffect(() => {
     if (isNewSession) {
@@ -163,17 +174,23 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
         ) : (
           <FlatList
             ref={flatListRef}
-            data={messages}
+            data={listData}
             inverted={true}
-            renderItem={({ item }) => (
-              <MessageItem
-                message={item}
-                isNewMessage={item._id === newestBotMessageId}
-                onLayout={(height) => onMessageLayout(item._id, height)}
-                onRetry={handleDiagnosisRetry}
-                onFollowUpTap={handleFollowUpTap}
-              />
-            )}
+            renderItem={({ item }) => {
+              // Render starter questions as a scrollable item
+              if ('isStarterQuestions' in item) {
+                return <StarterQuestions onQuestionTap={handleSend} />;
+              }
+              return (
+                <MessageItem
+                  message={item}
+                  isNewMessage={item._id === newestBotMessageId}
+                  onLayout={(height) => onMessageLayout(item._id, height)}
+                  onRetry={handleDiagnosisRetry}
+                  onFollowUpTap={handleFollowUpTap}
+                />
+              );
+            }}
             keyExtractor={(item) => item._id}
             contentContainerStyle={styles.messagesList}
             showsVerticalScrollIndicator={false}
@@ -183,11 +200,6 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             scrollEventThrottle={16}
             keyboardShouldPersistTaps="handled"
             onScrollToIndexFailed={handleScrollToIndexFailed}
-            ListHeaderComponent={
-              /* Always show starter questions (inverted list = ListHeader is visual bottom)
-                 Users can scroll back up to see them even after starting a conversation */
-              <StarterQuestions onQuestionTap={handleSend} />
-            }
             ListFooterComponent={
               <WeatherWidget
                 data={weatherData}
