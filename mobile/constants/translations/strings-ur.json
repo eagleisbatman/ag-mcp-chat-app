@@ -465,7 +465,8 @@
     "themeMode": "تھیم: {mode}",
     "copyMessage": "پیغام کاپی کریں",
     "askQuestion": "پوچھیں: {question}",
-    "selectLanguage": "زبان {name}"
+    "selectLanguage": "زبان {name}",
+    "cancelVoiceGeneration": "آواز بنانا بند کریں"
   },
   "weather": {
     "conditions": {

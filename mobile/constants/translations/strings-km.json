@@ -465,7 +465,8 @@
     "themeMode": "ស្បែក៖ {mode}",
     "copyMessage": "ចម្លងសារ",
     "askQuestion": "សួរ៖ {question}",
-    "selectLanguage": "ភាសា {name}"
+    "selectLanguage": "ភាសា {name}",
+    "cancelVoiceGeneration": "បោះបង់សំឡេង"
   },
   "weather": {
     "conditions": {

@@ -465,7 +465,8 @@
     "themeMode": "Itimu: {mode}",
     "copyMessage": "Kopisha umyalezo",
     "askQuestion": "Buza: {question}",
-    "selectLanguage": "Ulimi {name}"
+    "selectLanguage": "Ulimi {name}",
+    "cancelVoiceGeneration": "Khansela ukukhiqizwa kwezwi"
   },
   "weather": {
     "conditions": {

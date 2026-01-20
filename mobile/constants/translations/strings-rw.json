@@ -465,7 +465,8 @@
     "themeMode": "Insanganyamatsiko: {mode}",
     "copyMessage": "Koporora ubutumwa",
     "askQuestion": "Baza: {question}",
-    "selectLanguage": "Ururimi {name}"
+    "selectLanguage": "Ururimi {name}",
+    "cancelVoiceGeneration": "Hagarika kuvuga"
   },
   "weather": {
     "conditions": {

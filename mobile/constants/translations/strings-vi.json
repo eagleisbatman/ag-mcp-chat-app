@@ -465,7 +465,8 @@
     "themeMode": "Chủ đề: {mode}",
     "copyMessage": "Sao chép tin nhắn",
     "askQuestion": "Hỏi: {question}",
-    "selectLanguage": "Ngôn ngữ {name}"
+    "selectLanguage": "Ngôn ngữ {name}",
+    "cancelVoiceGeneration": "Hủy tạo tiếng"
   },
   "weather": {
     "conditions": {

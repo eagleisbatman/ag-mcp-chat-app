@@ -465,7 +465,8 @@
     "themeMode": "Mata duree: {mode}",
     "copyMessage": "Ergaa maki",
     "askQuestion": "Gaafadhu: {question}",
-    "selectLanguage": "Afaan {name}"
+    "selectLanguage": "Afaan {name}",
+    "cancelVoiceGeneration": "Sagalee uumuu haqi"
   },
   "weather": {
     "conditions": {

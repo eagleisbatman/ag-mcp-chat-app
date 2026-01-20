@@ -465,7 +465,8 @@
     "themeMode": "തീം: {mode}",
     "copyMessage": "സന്ദേശം പകർത്തുക",
     "askQuestion": "ചോദിക്കുക: {question}",
-    "selectLanguage": "ഭാഷ {name}"
+    "selectLanguage": "ഭാഷ {name}",
+    "cancelVoiceGeneration": "ശബ്ദം ഉത്പാദിപ്പിക്കുന്നത് നിർത്തുക"
   },
   "weather": {
     "conditions": {

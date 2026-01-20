@@ -465,7 +465,8 @@
     "themeMode": "ገጽታ: {mode}",
     "copyMessage": "መልዕክት ቅዳ",
     "askQuestion": "ጠይቅ: {question}",
-    "selectLanguage": "ቋንቋ {name}"
+    "selectLanguage": "ቋንቋ {name}",
+    "cancelVoiceGeneration": "ድምጽ ማመንጨት አቁም"
   },
   "weather": {
     "conditions": {

@@ -465,7 +465,8 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Mesajı kopyala",
     "askQuestion": "Sor: {question}",
-    "selectLanguage": "Dil {name}"
+    "selectLanguage": "Dil {name}",
+    "cancelVoiceGeneration": "Ses oluşturmayı iptal et"
   },
   "weather": {
     "conditions": {

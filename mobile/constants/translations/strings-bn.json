@@ -465,7 +465,8 @@
     "themeMode": "থিম: {mode}",
     "copyMessage": "মেসেজ কপি করুন",
     "askQuestion": "জিজ্ঞাসা করুন: {question}",
-    "selectLanguage": "ভাষা {name}"
+    "selectLanguage": "ভাষা {name}",
+    "cancelVoiceGeneration": "ভয়েস তৈরি বাতিল করুন"
   },
   "weather": {
     "conditions": {

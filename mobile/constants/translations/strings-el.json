@@ -465,7 +465,8 @@
     "themeMode": "Θέμα: {mode}",
     "copyMessage": "Αντιγραφή μηνύματος",
     "askQuestion": "Ρωτήστε: {question}",
-    "selectLanguage": "Γλώσσα {name}"
+    "selectLanguage": "Γλώσσα {name}",
+    "cancelVoiceGeneration": "Ακύρωση δημιουργίας φωνής"
   },
   "weather": {
     "conditions": {

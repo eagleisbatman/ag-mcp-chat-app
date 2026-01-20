@@ -465,7 +465,8 @@
     "themeMode": "ערכת נושא: {mode}",
     "copyMessage": "העתק הודעה",
     "askQuestion": "שאל: {question}",
-    "selectLanguage": "שפה {name}"
+    "selectLanguage": "שפה {name}",
+    "cancelVoiceGeneration": "ביטול יצירה קולית"
   },
   "weather": {
     "conditions": {

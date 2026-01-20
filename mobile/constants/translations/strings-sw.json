@@ -465,7 +465,8 @@
     "themeMode": "Mandhari: {mode}",
     "copyMessage": "Nakili ujumbe",
     "askQuestion": "Uliza: {question}",
-    "selectLanguage": "Lugha {name}"
+    "selectLanguage": "Lugha {name}",
+    "cancelVoiceGeneration": "Sitisha kutengeneza sauti"
   },
   "weather": {
     "conditions": {

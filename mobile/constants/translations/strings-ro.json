@@ -465,7 +465,8 @@
     "themeMode": "Temă: {mode}",
     "copyMessage": "Copiați mesajul",
     "askQuestion": "Întrebați: {question}",
-    "selectLanguage": "Limba {name}"
+    "selectLanguage": "Limba {name}",
+    "cancelVoiceGeneration": "Anulează generare voce"
   },
   "weather": {
     "conditions": {

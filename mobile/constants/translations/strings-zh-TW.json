@@ -465,7 +465,8 @@
     "themeMode": "主題：{mode}",
     "copyMessage": "複製訊息",
     "askQuestion": "提問：{question}",
-    "selectLanguage": "語言 {name}"
+    "selectLanguage": "語言 {name}",
+    "cancelVoiceGeneration": "取消語音生成"
   },
   "weather": {
     "conditions": {

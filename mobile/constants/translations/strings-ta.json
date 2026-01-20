@@ -465,7 +465,8 @@
     "themeMode": "தீம்: {mode}",
     "copyMessage": "செய்தியை நகலெடு",
     "askQuestion": "கேள்: {question}",
-    "selectLanguage": "மொழி {name}"
+    "selectLanguage": "மொழி {name}",
+    "cancelVoiceGeneration": "குரல் உருவாக்குதலை ரத்து செய்"
   },
   "weather": {
     "conditions": {

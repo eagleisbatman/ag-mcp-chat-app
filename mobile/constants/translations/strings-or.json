@@ -465,7 +465,8 @@
     "themeMode": "ଥିମ୍: {mode}",
     "copyMessage": "ବାର୍ତ୍ତା କପି କରନ୍ତୁ",
     "askQuestion": "ପଚାରନ୍ତୁ: {question}",
-    "selectLanguage": "ଭାଷା {name}"
+    "selectLanguage": "ଭାଷା {name}",
+    "cancelVoiceGeneration": "ସ୍ୱର ସୃଷ୍ଟି ବନ୍ଦ କରନ୍ତୁ"
   },
   "weather": {
     "conditions": {

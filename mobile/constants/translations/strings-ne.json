@@ -465,7 +465,8 @@
     "themeMode": "थिम: {mode}",
     "copyMessage": "सन्देश प्रतिलिपि गर्नुहोस्",
     "askQuestion": "सोध्नुहोस्: {question}",
-    "selectLanguage": "भाषा {name}"
+    "selectLanguage": "भाषा {name}",
+    "cancelVoiceGeneration": "आवाज बन्द गर्नुहोस्"
   },
   "weather": {
     "conditions": {

@@ -465,7 +465,8 @@
     "themeMode": "Ụdị ngosi: {mode}",
     "copyMessage": "Detuo ozi",
     "askQuestion": "Jụọ: {question}",
-    "selectLanguage": "Asụsụ {name}"
+    "selectLanguage": "Asụsụ {name}",
+    "cancelVoiceGeneration": "Kagbuo ime olu"
   },
   "weather": {
     "conditions": {

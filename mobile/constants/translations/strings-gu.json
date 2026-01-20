@@ -465,7 +465,8 @@
     "themeMode": "થીમ: {mode}",
     "copyMessage": "મેસેજ કૉપિ કરો",
     "askQuestion": "પૂછો: {question}",
-    "selectLanguage": "ભાષા {name}"
+    "selectLanguage": "ભાષા {name}",
+    "cancelVoiceGeneration": "અવાજ બનાવવાનું બંધ કરો"
   },
   "weather": {
     "conditions": {

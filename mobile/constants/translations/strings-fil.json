@@ -465,7 +465,8 @@
     "themeMode": "Tema: {mode}",
     "copyMessage": "Kopyahin ang Mensahe",
     "askQuestion": "Tanong: {question}",
-    "selectLanguage": "Wika {name}"
+    "selectLanguage": "Wika {name}",
+    "cancelVoiceGeneration": "Ihinto ang pagsasalita"
   },
   "weather": {
     "conditions": {
