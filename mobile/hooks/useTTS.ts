@@ -3,7 +3,7 @@
  * Handles TTS generation, caching, and playback
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { AVPlaybackStatus } from 'expo-av';
 import { textToSpeech, TTSLocation } from '../services/tts';
 import { playAudio, stopAudio } from '../utils/audioPlayer';
@@ -35,6 +35,9 @@ export default function useTTS({ message, language, locationDetails, onError }: 
   const [isLoading, setIsLoading] = useState(false);
   const [localTtsUrl, setLocalTtsUrl] = useState<string | undefined>(message?.ttsAudioUrl);
 
+  // AbortController for cancelling TTS generation
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   // Convert LocationDetails to TTSLocation format
   const ttsLocation = useMemo((): TTSLocation | null => {
     if (!locationDetails) return null;
@@ -61,10 +64,28 @@ export default function useTTS({ message, language, locationDetails, onError }: 
   }, [message]);
 
   /**
+   * Cancel ongoing TTS generation
+   */
+  const cancelGeneration = useCallback(() => {
+    if (abortControllerRef.current) {
+      log('🔊 [TTS] Cancelling generation...');
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+  }, []);
+
+  /**
    * Handle speak/stop button press
    */
   const handleSpeak = useCallback(async () => {
-    // If already speaking, stop
+    // If currently loading (generating), cancel the generation
+    if (isLoading) {
+      cancelGeneration();
+      return;
+    }
+
+    // If already speaking, stop playback
     if (isSpeaking) {
       await stopAudio();
       setIsSpeaking(false);
@@ -86,6 +107,10 @@ export default function useTTS({ message, language, locationDetails, onError }: 
     // Generate new TTS
     setIsLoading(true);
 
+    // Create new AbortController for this generation
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     try {
       let textToSpeak: string | null = getTextToSpeak();
       if (!textToSpeak) {
@@ -98,7 +123,14 @@ export default function useTTS({ message, language, locationDetails, onError }: 
         }
       }
 
-      const result = await textToSpeech(textToSpeak, language || 'en', ttsLocation);
+      const result = await textToSpeech(textToSpeak, language || 'en', ttsLocation, signal);
+
+      // If cancelled, don't proceed with playback or caching
+      if (result.cancelled) {
+        log('🔊 [TTS] Generation was cancelled');
+        return;
+      }
+
       const audioSource = result.audioUrl || result.audioBase64;
 
       if (result.success && audioSource) {
@@ -128,14 +160,18 @@ export default function useTTS({ message, language, locationDetails, onError }: 
       onError?.(t('voice.voiceUnavailable'));
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
-  }, [isSpeaking, localTtsUrl, message, language, ttsLocation, getTextToSpeak, onError]);
+  }, [isLoading, isSpeaking, localTtsUrl, message, language, ttsLocation, getTextToSpeak, onError, cancelGeneration]);
 
-  // Cleanup on unmount - always stop audio to prevent memory leaks
-  // Note: stopAudio() is safe to call even when not speaking
+  // Cleanup on unmount - stop audio and cancel any ongoing generation
   useEffect(() => {
     return () => {
       stopAudio();
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
     };
   }, []);
 
@@ -144,6 +180,13 @@ export default function useTTS({ message, language, locationDetails, onError }: 
     isLoading,
     handleSpeak,
     stopSpeaking: () => {
+      // Cancel generation if in progress
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+      setIsLoading(false);
+      // Stop playback if playing
       stopAudio();
       setIsSpeaking(false);
     },

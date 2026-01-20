@@ -446,6 +446,7 @@ export const en = {
     openHistory: 'Open chat history',
     playVoice: 'Play voice',
     stopVoicePlayback: 'Stop voice playback',
+    cancelVoiceGeneration: 'Cancel voice generation',
     moreNotifications: '{count} more notifications',
     themeMode: 'Theme: {mode}',
     copyMessage: 'Copy message',
