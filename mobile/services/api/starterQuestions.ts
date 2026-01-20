@@ -33,13 +33,6 @@ interface FetchStarterQuestionsParams {
   };
 }
 
-// Default fallback questions (used when API fails)
-const FALLBACK_QUESTIONS: StarterQuestion[] = [
-  { emoji: '🌾', text: 'What crops grow best in my region?' },
-  { emoji: '🌧️', text: 'Is today good for spraying pesticides?' },
-  { emoji: '🐛', text: 'How do I identify common crop pests?' },
-  { emoji: '💧', text: 'When should I irrigate my crops?' },
-];
 
 /**
  * Fetch personalized starter questions from the API
@@ -61,7 +54,8 @@ export async function fetchStarterQuestions(
       month: dateTime.month,
     };
 
-    log('📋 [StarterQuestions] Fetching personalized questions', {
+    log('📋 [StarterQuestions] Fetching from API', {
+      url: `${API_BASE_URL}/api/starter-questions`,
       deviceId: deviceId.substring(0, 8),
       hasLocation: !!(params.latitude && params.longitude),
       hasWeather: !!params.weatherSummary,
@@ -77,34 +71,36 @@ export async function fetchStarterQuestions(
       signal: AbortSignal.timeout(5000), // 5s timeout
     });
 
+    log('📋 [StarterQuestions] Response status:', response.status);
+
     if (!response.ok) {
-      log('⚠️ [StarterQuestions] API error, using fallback', { status: response.status });
-      return FALLBACK_QUESTIONS;
+      const errorText = await response.text();
+      log('⚠️ [StarterQuestions] API error', {
+        status: response.status,
+        error: errorText.substring(0, 200),
+      });
+      return [];
     }
 
     const data: StarterQuestionsResponse = await response.json();
+    log('📋 [StarterQuestions] API response:', JSON.stringify(data).substring(0, 300));
 
     if (data.success && data.questions?.length > 0) {
       log('✅ [StarterQuestions] Got personalized questions', {
         count: data.questions.length,
+        firstQuestion: data.questions[0]?.text,
         isNewUser: data.meta?.isNewUser,
-        fallback: data.meta?.fallback,
       });
       return data.questions;
     }
 
-    return FALLBACK_QUESTIONS;
+    log('⚠️ [StarterQuestions] No questions in response');
+    return [];
   } catch (error) {
-    log('⚠️ [StarterQuestions] Fetch failed, using fallback', {
+    log('❌ [StarterQuestions] Fetch FAILED', {
       error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack?.substring(0, 200) : undefined,
     });
-    return FALLBACK_QUESTIONS;
+    return [];
   }
-}
-
-/**
- * Get fallback questions (for immediate display before API responds)
- */
-export function getFallbackQuestions(): StarterQuestion[] {
-  return FALLBACK_QUESTIONS;
 }
