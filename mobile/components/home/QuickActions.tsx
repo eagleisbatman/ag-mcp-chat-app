@@ -39,21 +39,21 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onAskQuestion, onTakePhoto,
     {
       id: 'ask',
       icon: 'chatbubble-ellipses',
-      label: t('home_ask_question') || 'Ask a Question',
+      label: t('home.askQuestion'),
       color: theme.accent,
       onPress: () => handlePress(onAskQuestion),
     },
     {
       id: 'diagnose',
       icon: 'camera',
-      label: t('home_take_photo') || 'Diagnose Plant',
+      label: t('home.takePhoto'),
       color: theme.info,
       onPress: () => handlePress(onTakePhoto),
     },
     {
       id: 'history',
       icon: 'time',
-      label: t('home_view_history') || 'Chat History',
+      label: t('home.viewHistory'),
       color: theme.textSecondary,
       onPress: () => handlePress(onViewHistory),
     },
@@ -62,7 +62,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onAskQuestion, onTakePhoto,
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { color: theme.text }]}>
-        {t('home_quick_actions') || 'Quick Actions'}
+        {t('home.quickActions')}
       </Text>
       <View style={styles.actionsRow}>
         {actions.map((action) => (

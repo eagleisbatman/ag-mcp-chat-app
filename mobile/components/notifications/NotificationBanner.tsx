@@ -105,7 +105,7 @@ const NotificationBanner: React.FC<NotificationBannerProps> = ({ alerts = [], on
       {/* Alert content */}
       <View style={styles.content}>
         <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
-          {currentAlert.title || t('weather_alert') || 'Weather Alert'}
+          {currentAlert.title || t('weather.alert')}
         </Text>
         {currentAlert.description && (
           <Text style={[styles.description, { color: colors.text }]} numberOfLines={2}>
