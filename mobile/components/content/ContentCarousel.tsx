@@ -54,7 +54,7 @@ const ContentCarousel: React.FC<ContentCarouselProps> = ({
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={[styles.title, { color: theme.text }]}>
-            {title || t('content_for_you') || 'For You'}
+            {title || t('content.forYou')}
           </Text>
         </View>
         <View style={styles.loadingContainer}>
@@ -70,13 +70,13 @@ const ContentCarousel: React.FC<ContentCarouselProps> = ({
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={[styles.title, { color: theme.text }]}>
-            {title || t('content_for_you') || 'For You'}
+            {title || t('content.forYou')}
           </Text>
         </View>
         <View style={styles.emptyContainer}>
           <Ionicons name="document-text-outline" size={32} color={theme.textMuted} />
           <Text style={[styles.emptyText, { color: theme.textMuted }]}>
-            {t('content_no_content') || 'No content available'}
+            {t('content.noContent')}
           </Text>
         </View>
       </View>
@@ -99,7 +99,7 @@ const ContentCarousel: React.FC<ContentCarouselProps> = ({
       {/* Header with title and See All */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.text }]}>
-          {title || t('content_for_you') || 'For You'}
+          {title || t('content.forYou')}
         </Text>
         {onSeeAll && (
           <TouchableOpacity
@@ -108,7 +108,7 @@ const ContentCarousel: React.FC<ContentCarouselProps> = ({
             activeOpacity={0.7}
           >
             <Text style={[styles.seeAllText, { color: theme.accent }]}>
-              {t('content_see_all') || 'See All'}
+              {t('content.seeAll')}
             </Text>
             <Ionicons name="chevron-forward" size={16} color={theme.accent} />
           </TouchableOpacity>
