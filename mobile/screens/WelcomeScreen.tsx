@@ -6,6 +6,7 @@ import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 import { t } from '../constants/strings';
 import type { Theme, RootStackParamList } from '../types';
 
@@ -30,6 +31,11 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background, paddingTop: headerPaddingTop, paddingBottom: bottomPadding }]}>
+      {/* Language Switcher - Top Right */}
+      <View style={styles.languageSwitcherContainer}>
+        <LanguageSwitcher compact />
+      </View>
+
       {/* Hero Section */}
       <View style={styles.hero}>
         <View style={styles.iconContainer}>
@@ -105,6 +111,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: SPACING['2xl'],
+  },
+  languageSwitcherContainer: {
+    alignItems: 'flex-end',
+    marginBottom: SPACING.md,
   },
   hero: {
     alignItems: 'center',

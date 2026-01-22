@@ -43,7 +43,16 @@
     "searchLanguages": "Zoek talen...",
     "noLanguagesFound": "Geen talen gevonden",
     "suggestedForYou": "Voorgesteld voor jou",
-    "currentLanguage": "Huidig"
+    "currentLanguage": "Huidig",
+    "detectedLocation": "Gedetecteerde locatie:",
+    "detectedLocationFrom": "Gedetecteerd via uw netwerk",
+    "gpsShareBenefit": "GPS delen voor preciezere weer- en bodemgegevens van uw perceel.",
+    "continueWithDetected": "Doorgaan met gedetecteerde locatie",
+    "languageDetected": "Taal gedetecteerd voor {country}",
+    "languageDetectedGeneric": "Taal gedetecteerd op basis van uw locatie",
+    "changeLanguage": "Taal wijzigen",
+    "confirmLanguage": "Bevestigen en doorgaan",
+    "detectedForYou": "Voor u gedetecteerd"
   },
   "chat": {
     "welcomeMessage": "Hallo! 👋 Ik ben je landbouwassistent.\n\nIk kan je helpen met:\n• Gewassen, groenten, fruit en bloemen\n• Vee, pluimvee en viskweek\n• Plaag- en ziektebestrijding\n• Weer- en marktadvies\n\nHoe kan ik je vandaag helpen?",

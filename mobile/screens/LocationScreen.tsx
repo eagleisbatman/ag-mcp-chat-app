@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -12,6 +12,7 @@ import { lookupLocation } from '../services/db';
 import { log } from '../utils/logger';
 import { t } from '../constants/strings';
 import type { Theme, RootStackParamList } from '../types';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 
 interface LocationScreenProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Location'>;
@@ -24,13 +25,16 @@ interface BenefitItemProps {
 }
 
 export default function LocationScreen({ navigation }: LocationScreenProps) {
-  const { theme, setLocation } = useApp();
+  const { theme, setLocation, detectedLocation, detectedCountry, detectedLanguage } = useApp();
   const { showWarning, showError } = useToast();
   const insets = useSafeAreaInsets();
   const headerPaddingTop = Math.max(insets.top + SPACING.headerPaddingOffset, SPACING.headerMinPadding);
   const bottomPadding = Math.max(insets.bottom + 24, 40);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Display name for detected location
+  const detectedLocationName = detectedLocation?.displayName || detectedLocation?.level5City || detectedLocation?.level3District || detectedLocation?.level2State || detectedCountry || null;
 
   const requestLocation = async () => {
     log('📍 [LocationScreen] User tapped "Enable Location"');
@@ -148,10 +152,35 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background, paddingTop: headerPaddingTop, paddingBottom: bottomPadding }]}>
+      {/* Language Switcher - Top Right */}
+      <View style={styles.languageSwitcherContainer}>
+        <LanguageSwitcher compact />
+      </View>
+
+      {/* Detected Location Card */}
+      {detectedLocationName && (
+        <View style={[styles.detectedCard, { backgroundColor: theme.accent + '15' }]}>
+          <View style={styles.detectedCardContent}>
+            <AppIcon name="location" size={20} color={theme.accent} />
+            <View style={styles.detectedCardText}>
+              <Text style={[styles.detectedLabel, { color: theme.textSecondary }]}>
+                {t('onboarding.detectedLocation')}
+              </Text>
+              <Text style={[styles.detectedValue, { color: theme.text }]}>
+                {detectedLocationName}
+              </Text>
+            </View>
+          </View>
+          <Text style={[styles.detectedHint, { color: theme.textMuted }]}>
+            {t('onboarding.detectedLocationFrom')}
+          </Text>
+        </View>
+      )}
+
       {/* Icon */}
       <View style={styles.iconSection}>
         <View style={styles.iconContainer}>
-          <AppIcon name="location" size={64} color={theme.accent} />
+          <AppIcon name="navigate" size={64} color={theme.accent} />
         </View>
       </View>
 
@@ -160,7 +189,7 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
         <Text style={[styles.title, { color: theme.text }]}>
           {t('onboarding.locationTitle')}
         </Text>
-        
+
         <Text style={[styles.description, { color: theme.textSecondary }]}>
           {t('onboarding.locationDescription')}
         </Text>
@@ -171,6 +200,14 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
             <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
           </View>
         )}
+
+        {/* GPS Benefit highlight */}
+        <View style={[styles.gpsHighlight, { backgroundColor: theme.inputBackground }]}>
+          <AppIcon name="sparkles" size={20} color={theme.accent} />
+          <Text style={[styles.gpsHighlightText, { color: theme.text }]}>
+            {t('onboarding.gpsShareBenefit')}
+          </Text>
+        </View>
 
         {/* Benefits */}
         <View style={styles.benefits}>
@@ -209,14 +246,25 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
           style={styles.primaryButton}
         />
 
-        <Button
-          title={t('common.skipForNow')}
-          onPress={skipLocation}
-          variant="secondary"
-          accessibilityLabel={t('common.skipForNow')}
-          style={styles.secondaryButton}
-          textStyle={[styles.secondaryButtonText, { color: theme.textSecondary }]}
-        />
+        {detectedLocationName ? (
+          <Button
+            title={t('onboarding.continueWithDetected')}
+            onPress={skipLocation}
+            variant="secondary"
+            accessibilityLabel={t('onboarding.continueWithDetected')}
+            style={styles.secondaryButton}
+            textStyle={[styles.secondaryButtonText, { color: theme.textSecondary }]}
+          />
+        ) : (
+          <Button
+            title={t('common.skipForNow')}
+            onPress={skipLocation}
+            variant="secondary"
+            accessibilityLabel={t('common.skipForNow')}
+            style={styles.secondaryButton}
+            textStyle={[styles.secondaryButtonText, { color: theme.textSecondary }]}
+          />
+        )}
       </View>
     </View>
   );
@@ -236,14 +284,43 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: SPACING['2xl'],
   },
+  languageSwitcherContainer: {
+    alignItems: 'flex-end',
+    marginBottom: SPACING.md,
+  },
+  detectedCard: {
+    borderRadius: 16,
+    padding: SPACING.md,
+    marginBottom: SPACING.lg,
+  },
+  detectedCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  detectedCardText: {
+    flex: 1,
+  },
+  detectedLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+  },
+  detectedValue: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+  },
+  detectedHint: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: SPACING.xs,
+    marginLeft: 28,
+  },
   iconSection: {
     alignItems: 'center',
-    marginBottom: SPACING['3xl'],
+    marginBottom: SPACING.xl,
   },
   iconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -252,24 +329,37 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: TYPOGRAPHY.sizes['3xl'],
+    fontSize: TYPOGRAPHY.sizes['2xl'],
     fontWeight: TYPOGRAPHY.weights.bold,
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
     textAlign: 'center',
     letterSpacing: -0.5,
   },
   description: {
-    fontSize: TYPOGRAPHY.sizes.base,
+    fontSize: TYPOGRAPHY.sizes.sm,
     textAlign: 'center',
-    lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.relaxed,
-    marginBottom: SPACING['3xl'],
+    lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
+    marginBottom: SPACING.lg,
+  },
+  gpsHighlight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    padding: SPACING.md,
+    borderRadius: 12,
+    marginBottom: SPACING.xl,
+  },
+  gpsHighlightText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    flex: 1,
+    lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
   },
   errorBox: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: SPACING.md,
     borderRadius: 12,
-    marginBottom: SPACING['2xl'],
+    marginBottom: SPACING.lg,
     gap: SPACING.sm,
     backgroundColor: 'transparent',
   },
@@ -278,7 +368,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   benefits: {
-    gap: SPACING.lg,
+    gap: SPACING.md,
   },
   benefitItem: {
     flexDirection: 'row',
@@ -286,7 +376,7 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   benefitText: {
-    fontSize: TYPOGRAPHY.sizes.base,
+    fontSize: TYPOGRAPHY.sizes.sm,
   },
   buttonContainer: {
     gap: SPACING.md,

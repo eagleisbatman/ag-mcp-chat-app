@@ -43,7 +43,16 @@
     "searchLanguages": "Ka raadi luqadaha...",
     "noLanguagesFound": "Lama helin luqado",
     "suggestedForYou": "Lagugu soo jeediyay",
-    "currentLanguage": "Hadda"
+    "currentLanguage": "Hadda",
+    "detectedLocation": "Goobta la helay:",
+    "detectedLocationFrom": "Laga helay shabakadaada",
+    "gpsShareBenefit": "La wadaagida GPS-ka waxaad ku helaysaa xogta cimilada iyo ciidda beertaada oo sax ah.",
+    "continueWithDetected": "Ku sii wad goobtan la helay",
+    "languageDetected": "Luqadda laga helay {country}",
+    "languageDetectedGeneric": "Luqad laga helay goobtaada",
+    "changeLanguage": "Beddel luqadda",
+    "confirmLanguage": "Xaqiiji & Sii wad",
+    "detectedForYou": "Adiga ayaa kuu helay"
   },
   "chat": {
     "welcomeMessage": "Salaam! 👋 Anigu waxaan ahay kaaliyahaaga beeraha.\n\nWaxaan kaa caawin karaa:\n• Dalagyada, khudaarta, midhaha, iyo ubaxa\n• Xoolaha, digaaga, iyo kalluumaysiga\n• Maareynta cayayaanka iyo cudurada\n• Talooyin ku saabsan cimilada iyo suuqa\n\nSideen kuu caawin karaa maanta?",

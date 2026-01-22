@@ -43,7 +43,16 @@
     "searchLanguages": "Поиск языков...",
     "noLanguagesFound": "Языки не найдены",
     "suggestedForYou": "Рекомендуемые для вас",
-    "currentLanguage": "Текущий"
+    "currentLanguage": "Текущий",
+    "detectedLocation": "Местоположение:",
+    "detectedLocationFrom": "Определено по сети",
+    "gpsShareBenefit": "GPS даёт точные данные о погоде и почве для вашего поля.",
+    "continueWithDetected": "Использовать текущее местоположение",
+    "languageDetected": "Язык определён для {country}",
+    "languageDetectedGeneric": "Язык определён по вашему местоположению",
+    "changeLanguage": "Сменить язык",
+    "confirmLanguage": "Подтвердить и далее",
+    "detectedForYou": "Определено для вас"
   },
   "chat": {
     "welcomeMessage": "Здравствуйте! 👋 Я ваш помощник по хозяйству.\n\nЯ могу помочь вам с:\n• Полевые культуры, овощи, фрукты и цветы\n• Животноводство, птицеводство и рыбоводство\n• Борьба с вредителями и болезнями\n• Погода и рыночные советы\n\nЧем я могу помочь вам сегодня?",

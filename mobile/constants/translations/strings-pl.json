@@ -43,7 +43,16 @@
     "searchLanguages": "Szukaj języków...",
     "noLanguagesFound": "Nie znaleziono języków",
     "suggestedForYou": "Sugerowane dla Ciebie",
-    "currentLanguage": "Aktualny"
+    "currentLanguage": "Aktualny",
+    "detectedLocation": "Wykryta lokalizacja:",
+    "detectedLocationFrom": "Wykryto z sieci",
+    "gpsShareBenefit": "Udostępnianie GPS to dokładniejsze dane o pogodzie i glebie dla Twojego pola.",
+    "continueWithDetected": "Kontynuuj z wykrytą lokalizacją",
+    "languageDetected": "Język wykryty dla {country}",
+    "languageDetectedGeneric": "Język wykryty z lokalizacji",
+    "changeLanguage": "Zmień język",
+    "confirmLanguage": "Potwierdź i Kontynuuj",
+    "detectedForYou": "Wykryto dla Ciebie"
   },
   "chat": {
     "welcomeMessage": "Witaj! 👋 Jestem twoim asystentem rolniczym.\n\nMogę pomóc Ci w:\n• Uprawach roślin, warzyw, owoców i kwiatów\n• Hodowli zwierząt (bydło, drób, ryby)\n• Zwalczaniu szkodników i chorób\n• Poradach dotyczących pogody i rynku\n\nJak mogę Ci dzisiaj pomóc?",

@@ -43,7 +43,16 @@
     "searchLanguages": "Wá èdè...",
     "noLanguagesFound": "A kò rí èdè kankan",
     "suggestedForYou": "Èyí Tí A Dábàá fún Ọ",
-    "currentLanguage": "Lọ́wọ́lọ́wọ́"
+    "currentLanguage": "Lọ́wọ́lọ́wọ́",
+    "detectedLocation": "Ipò tí a ti rí:",
+    "detectedLocationFrom": "Láti nẹtiwọọki rẹ",
+    "gpsShareBenefit": "Pípín GPS máa fún ọ ní ìsọfúnni ojú-ọjọ́ àti ilẹ̀ tó tọ̀nà jù lórí oko rẹ.",
+    "continueWithDetected": "Tẹ̀síwájú pẹ̀lú ipò tí a ti rí",
+    "languageDetected": "Èdè tí a rí fún {country}",
+    "languageDetectedGeneric": "Èdè tí a rí láti ipò yín",
+    "changeLanguage": "Yí èdè padà",
+    "confirmLanguage": "Fìdí rẹ múlẹ̀ & Tẹ̀síwájú",
+    "detectedForYou": "Èyí la rí fún ọ"
   },
   "chat": {
     "welcomeMessage": "Pẹlẹ o! 👋 Emi ni olùrànlọ́wọ́ oko rẹ.\n\nMo lè ràn ọ́ lọ́wọ́ pẹ̀lú:\n• Ohun ọ̀gbìn, ewébẹ̀, èso, àti òdòdó\n• Ẹran ọ̀sìn, adìyẹ, àti ẹja sísin\n• Ìṣàkóso kòkòrò àti àìsàn\n• Òye ojú ọjọ́ àti ìmọ̀ràn ọjà\n\nBáwo ni mo ṣe lè ràn ọ́ lọ́wọ́ lónìí?",

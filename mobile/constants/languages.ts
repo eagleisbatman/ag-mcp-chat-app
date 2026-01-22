@@ -198,6 +198,15 @@ const COUNTRY_LANGUAGE_MAP: Record<string, string[]> = {
   'Australia': ['en'],
 };
 
+// Normalize string by removing diacritics and spaces for comparison
+const normalizeString = (str: string): string => {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')  // Remove diacritics
+    .replace(/\s+/g, '')              // Remove spaces
+    .toLowerCase();
+};
+
 // Get suggested languages based on country name
 export const getSuggestedLanguages = (countryName: string | null | undefined): Language[] => {
   if (!countryName) return [];
@@ -208,10 +217,13 @@ export const getSuggestedLanguages = (countryName: string | null | undefined): L
     return codes.map(code => LANGUAGES.find(l => l.code === code)).filter((l): l is Language => l !== undefined);
   }
 
-  // Try partial match (e.g., "United States of America" -> "United States")
-  const countryLower = countryName.toLowerCase();
+  // Normalize the country name for comparison (removes diacritics like Việt Nam -> viet nam)
+  const countryNormalized = normalizeString(countryName);
+
+  // Try partial match with normalized strings
   for (const [key, langCodes] of Object.entries(COUNTRY_LANGUAGE_MAP)) {
-    if (countryLower.includes(key.toLowerCase()) || key.toLowerCase().includes(countryLower)) {
+    const keyNormalized = normalizeString(key);
+    if (countryNormalized.includes(keyNormalized) || keyNormalized.includes(countryNormalized)) {
       return langCodes.map(code => LANGUAGES.find(l => l.code === code)).filter((l): l is Language => l !== undefined);
     }
   }

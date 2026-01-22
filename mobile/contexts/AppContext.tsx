@@ -4,6 +4,7 @@ import { LanguageProvider, useLanguage } from './app/LanguageContext';
 import { LocationProvider, useLocation } from './app/LocationContext';
 import { UserProvider, useUser } from './app/UserContext';
 import { OnboardingProvider, useOnboarding } from './app/OnboardingContext';
+import { OnboardingDetectionProvider, useOnboardingDetection } from './app/OnboardingDetectionContext';
 import { ThemeColors } from '../constants/themes';
 import { ThemeMode, Language, LocationDetails } from '../types';
 
@@ -13,28 +14,35 @@ interface AppContextValue {
   themeMode: ThemeMode;
   setThemeMode: (mode: ThemeMode) => Promise<void>;
   isDark: boolean;
-  
+
   // From LanguageContext
   language: Language;
   setLanguage: (lang: Language) => Promise<void>;
-  
+
   // From LocationContext
   location: { latitude: number | null; longitude: number | null };
   locationStatus: 'pending' | 'granted' | 'denied';
   locationDetails: LocationDetails | null;
   setLocation: (loc: { latitude: number | null; longitude: number | null }, status: 'pending' | 'granted' | 'denied') => Promise<void>;
-  
+
   // From OnboardingContext
   onboardingComplete: boolean;
   completeOnboarding: () => Promise<void>;
   resetOnboarding: () => Promise<void>;
-  
+
+  // From OnboardingDetectionContext
+  detectedLocation: LocationDetails | null;
+  detectedLanguage: Language | null;
+  detectedCountry: string | null;
+  suggestedLanguages: Language[];
+  isDetectionComplete: boolean;
+
   // From UserContext
   userId: string | null;
   isDbSynced: boolean;
   lastSyncError: string | null;
   clearSyncError: () => void;
-  
+
   // Local to AppContext
   currentSessionId: string | null;
   setCurrentSessionId: (id: string | null) => void;
@@ -49,7 +57,8 @@ const AppContextAggregator = ({ children }: { children: ReactNode }) => {
   const { location, locationStatus, locationDetails, setLocation } = useLocation();
   const { userId, isDbSynced, lastSyncError, clearSyncError, isLoadingUser } = useUser();
   const { onboardingComplete, completeOnboarding, resetOnboarding, isLoadingOnboarding } = useOnboarding();
-  
+  const { detectedInfo, detectionComplete, suggestedLanguages, isDetecting } = useOnboardingDetection();
+
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
   const value: AppContextValue = {
@@ -57,9 +66,14 @@ const AppContextAggregator = ({ children }: { children: ReactNode }) => {
     language, setLanguage,
     location, locationStatus, locationDetails, setLocation,
     onboardingComplete, completeOnboarding, resetOnboarding,
+    detectedLocation: detectedInfo.location,
+    detectedLanguage: detectedInfo.language,
+    detectedCountry: detectedInfo.country,
+    suggestedLanguages,
+    isDetectionComplete: detectionComplete,
     userId, isDbSynced, lastSyncError, clearSyncError,
     currentSessionId, setCurrentSessionId,
-    isLoading: isLoadingUser || isLoadingOnboarding,
+    isLoading: isLoadingUser || isLoadingOnboarding || isDetecting,
   };
 
   return (
@@ -72,21 +86,23 @@ const AppContextAggregator = ({ children }: { children: ReactNode }) => {
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   return (
     <UserProvider>
-      <OnboardingProvider>
-        <UserContextConsumer>
-          {(userId, isDbSynced) => (
-            <LocationProvider userId={userId}>
-              <LanguageProvider userId={userId}>
-                <ThemeProvider isDbSynced={isDbSynced}>
-                  <AppContextAggregator>
-                    {children}
-                  </AppContextAggregator>
-                </ThemeProvider>
-              </LanguageProvider>
-            </LocationProvider>
-          )}
-        </UserContextConsumer>
-      </OnboardingProvider>
+      <OnboardingDetectionProvider>
+        <OnboardingProvider>
+          <UserContextConsumer>
+            {(userId, isDbSynced) => (
+              <LocationProvider userId={userId}>
+                <LanguageProvider userId={userId}>
+                  <ThemeProvider isDbSynced={isDbSynced}>
+                    <AppContextAggregator>
+                      {children}
+                    </AppContextAggregator>
+                  </ThemeProvider>
+                </LanguageProvider>
+              </LocationProvider>
+            )}
+          </UserContextConsumer>
+        </OnboardingProvider>
+      </OnboardingDetectionProvider>
     </UserProvider>
   );
 };

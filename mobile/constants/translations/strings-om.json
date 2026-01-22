@@ -43,7 +43,16 @@
     "searchLanguages": "Afaan barbaadi...",
     "noLanguagesFound": "Afaan tokkollee hin argamne",
     "suggestedForYou": "Siif kan Dhiyaate",
-    "currentLanguage": "Ammaa"
+    "currentLanguage": "Ammaa",
+    "detectedLocation": "Bakki argame:",
+    "detectedLocationFrom": "Interneetii kee irraa argame",
+    "gpsShareBenefit": "GPS qooduun odeeffannoo qilleensaa fi biyyee lafa kee irratti caalaatti sirrii ta'e siif kenna",
+    "continueWithDetected": "Bakka argame kanaan itti fufi",
+    "languageDetected": "Afaan biyya {country}f argame",
+    "languageDetectedGeneric": "Afaan bakka kee irraa argame",
+    "changeLanguage": "Afaan jijjiiri",
+    "confirmLanguage": "Mirkaneessi fi Itti Fufi",
+    "detectedForYou": "Siif argame"
   },
   "chat": {
     "welcomeMessage": "Akkam! 👋 Anaan gargaaraa qonnaa keetii.\n\nKanaan si gargaaruu danda'a:\n• Midhaan, Kuduraa, Fuduraa fi Abaaboo\n• Beeylada, Lukkuu fi Qurxummii horsiisuu\n• Tutaafii Dhukkuba too'achuu\n• Qilleensaafii Gorsa Gabaa\n\nHar'a maal si gargaaruu danda'a?",

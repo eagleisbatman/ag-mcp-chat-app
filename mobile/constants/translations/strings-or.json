@@ -43,7 +43,16 @@
     "searchLanguages": "ଭାଷା ଖୋଜନ୍ତୁ...",
     "noLanguagesFound": "କୌଣସି ଭାଷା ମିଳିଲା ନାହିଁ",
     "suggestedForYou": "ଆପଣଙ୍କ ପାଇଁ ପରାମର୍ଶିତ",
-    "currentLanguage": "ବର୍ତ୍ତମାନ"
+    "currentLanguage": "ବର୍ତ୍ତମାନ",
+    "detectedLocation": "ଚିହ୍ନଟ ହୋଇଥିବା ସ୍ଥାନ:",
+    "detectedLocationFrom": "ଆପଣଙ୍କ ନେଟୱର୍କରୁ ଚିହ୍ନଟ",
+    "gpsShareBenefit": "GPS ବ୍ୟବହାର କଲେ କ୍ଷେତ ପାଇଁ ଅଧିକ ସଠିକ୍ ପାଣିପାଗ ଓ ମାଟି ତଥ୍ୟ ମିଳିବ।",
+    "continueWithDetected": "ଚିହ୍ନଟ ହୋଇଥିବା ସ୍ଥାନ ସହିତ ଆଗକୁ ବଢନ୍ତୁ",
+    "languageDetected": "{country} ପାଇଁ ଭାଷା ଚିହ୍ନଟ ହୋଇଛି",
+    "languageDetectedGeneric": "ଆପଣଙ୍କ ସ୍ଥାନରୁ ଭାଷା ଚିହ୍ନଟ ହୋଇଛି",
+    "changeLanguage": "ଭାଷା ପରିବର୍ତ୍ତନ କରନ୍ତୁ",
+    "confirmLanguage": "ନିଶ୍ଚିତ କରନ୍ତୁ ଓ ଆଗକୁ ବଢନ୍ତୁ",
+    "detectedForYou": "ଆପଣଙ୍କ ପାଇଁ ଚିହ୍ନଟ ହୋଇଛି"
   },
   "chat": {
     "welcomeMessage": "ନମସ୍କାର! 👋 ମୁଁ ଆପଣଙ୍କ ଚାଷ ସହାୟକ।\n\nମୁଁ ଆପଣଙ୍କୁ ଏଥିରେ ସାହାଯ୍ୟ କରିପାରିବି:\n• ଫସଲ, ପନିପରିବା, ଫଳ ଏବଂ ଫୁଲ\n• ପଶୁ, କୁକୁଡ଼ା ଓ ମାଛ ଚାଷ\n• କୀଟ ଓ ରୋଗ ପରିଚାଳନା\n• ପାଣିପାଗ ଓ ବଜାର ପରାମର୍ଶ\n\nଆଜି ମୁଁ ଆପଣଙ୍କୁ କିପରି ସାହାଯ୍ୟ କରିପାରିବି?",

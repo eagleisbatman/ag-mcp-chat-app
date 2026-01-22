@@ -43,7 +43,16 @@
     "searchLanguages": "Maghanap ng mga wika...",
     "noLanguagesFound": "Walang nakitang wika",
     "suggestedForYou": "Iminungkahi para sa Iyo",
-    "currentLanguage": "Kasalukuyan"
+    "currentLanguage": "Kasalukuyan",
+    "detectedLocation": "Nakita ang lokasyon:",
+    "detectedLocationFrom": "Mula sa iyong network",
+    "gpsShareBenefit": "Ang paggamit ng GPS ay magbibigay ng mas tumpak na datos ng panahon at lupa para sa iyong bukid.",
+    "continueWithDetected": "Magpatuloy gamit ang nakitang lokasyon",
+    "languageDetected": "Nakita ang wika para sa {country}",
+    "languageDetectedGeneric": "Nakita ang wika mula sa iyong lokasyon",
+    "changeLanguage": "Baguhin ang wika",
+    "confirmLanguage": "Kumpirmahin at Magpatuloy",
+    "detectedForYou": "Nakita para sa iyo"
   },
   "chat": {
     "welcomeMessage": "Kumusta! 👋 Ako ang iyong katulong sa pagsasaka.\n\nMatutulungan kita sa:\n• Mga pananim, gulay, prutas, at bulaklak\n• Pag-aalaga ng hayop, manok, at isda\n• Pamamahala sa peste at sakit\n• Payo sa panahon at pamilihan\n\nPaano ako makakatulong sa iyo ngayon?",

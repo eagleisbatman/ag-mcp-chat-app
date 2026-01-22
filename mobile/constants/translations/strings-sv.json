@@ -43,7 +43,16 @@
     "searchLanguages": "Sök språk...",
     "noLanguagesFound": "Inga språk hittades",
     "suggestedForYou": "Föreslaget för dig",
-    "currentLanguage": "Aktuell"
+    "currentLanguage": "Aktuell",
+    "detectedLocation": "Upptäckt plats:",
+    "detectedLocationFrom": "Upptäckt från ditt nätverk",
+    "gpsShareBenefit": "GPS-delning ger mer exakta väder- och jorddata för dina fält.",
+    "continueWithDetected": "Fortsätt med upptäckt plats",
+    "languageDetected": "Språk upptäckt för {country}",
+    "languageDetectedGeneric": "Språk upptäckt från din plats",
+    "changeLanguage": "Ändra språk",
+    "confirmLanguage": "Bekräfta och fortsätt",
+    "detectedForYou": "Upptäckt för dig"
   },
   "chat": {
     "welcomeMessage": "Hej! 👋 Jag är din jordbruksassistent.\n\nJag kan hjälpa dig med:\n• Grödor, grönsaker, frukter och blommor\n• Boskap, fjäderfä och fiskodling\n• Skadedjur och sjukdomsbekämpning\n• Väder- och marknadsråd\n\nHur kan jag hjälpa dig idag?",

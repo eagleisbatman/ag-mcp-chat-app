@@ -43,7 +43,16 @@
     "searchLanguages": "Sprachen suchen...",
     "noLanguagesFound": "Keine Sprachen gefunden",
     "suggestedForYou": "Vorschläge für dich",
-    "currentLanguage": "Aktuell"
+    "currentLanguage": "Aktuell",
+    "detectedLocation": "Erkannter Standort:",
+    "detectedLocationFrom": "Erkannt über Ihr Netzwerk",
+    "gpsShareBenefit": "GPS teilen für genaue Wetter- und Bodendaten Ihres Feldes.",
+    "continueWithDetected": "Mit erkanntem Standort fortfahren",
+    "languageDetected": "Sprache für {country} erkannt",
+    "languageDetectedGeneric": "Sprache anhand Ihres Standorts erkannt",
+    "changeLanguage": "Sprache ändern",
+    "confirmLanguage": "Bestätigen & Weiter",
+    "detectedForYou": "Für Sie erkannt"
   },
   "chat": {
     "welcomeMessage": "Hallo! 👋 Ich bin Ihr Landwirtschafts-Assistent.\n\nIch kann Ihnen helfen bei:\n• Feldfrüchten, Gemüse, Obst und Blumen\n• Viehzucht, Geflügelzucht und Fischzucht\n• Schädlings- und Krankheitsbekämpfung\n• Wetter- und Marktberatung\n\nWie kann ich Ihnen heute helfen?",

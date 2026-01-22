@@ -43,7 +43,16 @@
     "searchLanguages": "ค้นหาภาษา...",
     "noLanguagesFound": "ไม่พบภาษา",
     "suggestedForYou": "แนะนำสำหรับคุณ",
-    "currentLanguage": "ปัจจุบัน"
+    "currentLanguage": "ปัจจุบัน",
+    "detectedLocation": "ตำแหน่งที่ตรวจพบ:",
+    "detectedLocationFrom": "ตรวจพบจากเครือข่ายของคุณ",
+    "gpsShareBenefit": "เปิด GPS เพื่อข้อมูลสภาพอากาศและดินที่แม่นยำระดับแปลง",
+    "continueWithDetected": "ไปต่อด้วยตำแหน่งที่ตรวจพบ",
+    "languageDetected": "ตรวจพบภาษาสำหรับ {country}",
+    "languageDetectedGeneric": "ตรวจพบภาษาจากตำแหน่งของคุณ",
+    "changeLanguage": "เปลี่ยนภาษา",
+    "confirmLanguage": "ยืนยันและดำเนินการต่อ",
+    "detectedForYou": "ตรวจพบให้คุณ"
   },
   "chat": {
     "welcomeMessage": "สวัสดี! 👋 ฉันคือผู้ช่วยเกษตรของคุณ\n\nฉันช่วยคุณได้เรื่อง:\n• พืชผัก ผลไม้ และดอกไม้\n• ปศุสัตว์ สัตว์ปีก และการเลี้ยงปลา\n• การจัดการศัตรูพืชและโรค\n• แนะนำเรื่องสภาพอากาศและราคาตลาด\n\nวันนี้ให้ฉันช่วยอะไรดี?",

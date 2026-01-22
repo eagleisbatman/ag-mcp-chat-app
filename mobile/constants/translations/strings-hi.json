@@ -43,7 +43,16 @@
     "searchLanguages": "भाषाएं खोजें...",
     "noLanguagesFound": "कोई भाषा नहीं मिली",
     "suggestedForYou": "आपके लिए सुझाव",
-    "currentLanguage": "वर्तमान"
+    "currentLanguage": "वर्तमान",
+    "detectedLocation": "पता लगाया गया स्थान:",
+    "detectedLocationFrom": "आपके नेटवर्क से पता चला",
+    "gpsShareBenefit": "जीपीएस साझा करने से आपको खेत के लिए सटीक मौसम और मिट्टी का डेटा मिलता है।",
+    "continueWithDetected": "पता लगाए गए स्थान के साथ आगे बढ़ें",
+    "languageDetected": "{country} के लिए भाषा मिली",
+    "languageDetectedGeneric": "आपके स्थान से भाषा मिली",
+    "changeLanguage": "भाषा बदलें",
+    "confirmLanguage": "पुष्टि करें और आगे बढ़ें",
+    "detectedForYou": "आपके लिए मिला"
   },
   "chat": {
     "welcomeMessage": "नमस्ते! 👋 मैं आपका खेती सहायक हूँ।\n\nमैं आपकी मदद कर सकता हूँ:\n• फसल, सब्ज़ियाँ, फल और फूल\n• पशुधन, कुक्कुट और मत्स्य पालन\n• कीट और रोग प्रबंधन\n• मौसम और बाज़ार सलाह\n\nआज मैं आपकी कैसे मदद कर सकता हूँ?",

@@ -43,7 +43,16 @@
     "searchLanguages": "Tafuta lugha...",
     "noLanguagesFound": "Hakuna lugha zilizopatikana",
     "suggestedForYou": "Imependekezwa Kwako",
-    "currentLanguage": "Ya Sasa"
+    "currentLanguage": "Ya Sasa",
+    "detectedLocation": "Eneo lililogunduliwa:",
+    "detectedLocationFrom": "Kugunduliwa kutoka mtandao wako",
+    "gpsShareBenefit": "Kushiriki GPS hukupa data sahihi zaidi ya hali ya hewa na udongo wa shamba.",
+    "continueWithDetected": "Endelea na eneo lililogunduliwa",
+    "languageDetected": "Lugha iliyogunduliwa kwa {country}",
+    "languageDetectedGeneric": "Lugha iliyogunduliwa kutoka eneo lako",
+    "changeLanguage": "Badilisha lugha",
+    "confirmLanguage": "Thibitisha na Endelea",
+    "detectedForYou": "Imegunduliwa kwako"
   },
   "chat": {
     "welcomeMessage": "Habari! 👋 Mimi ni msaidizi wako wa kilimo.\n\nNinaweza kukusaidia na:\n• Mazao, mboga, matunda, na maua\n• Mifugo, kuku, na ufugaji wa samaki\n• Kudhibiti wadudu na magonjwa\n• Ushauri wa hali ya hewa na soko\n\nNinaweza kukusaidiaje leo?",

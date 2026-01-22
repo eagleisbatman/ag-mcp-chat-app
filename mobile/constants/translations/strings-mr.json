@@ -43,7 +43,16 @@
     "searchLanguages": "भाषा शोधा...",
     "noLanguagesFound": "कोणतीही भाषा आढळली नाही",
     "suggestedForYou": "तुमच्यासाठी सुचवलेले",
-    "currentLanguage": "सध्याची"
+    "currentLanguage": "सध्याची",
+    "detectedLocation": "शोधलेले स्थान:",
+    "detectedLocationFrom": "तुमच्या नेटवर्कवरून शोधले",
+    "gpsShareBenefit": "GPS शेअर केल्याने तुम्हाला शेतासाठी अचूक हवामान आणि मातीची माहिती मिळते",
+    "continueWithDetected": "शोधलेल्या स्थानासह पुढे जा",
+    "languageDetected": "{country} साठी भाषा शोधली",
+    "languageDetectedGeneric": "तुमच्या स्थानावरून भाषा शोधली",
+    "changeLanguage": "भाषा बदला",
+    "confirmLanguage": "पुष्टी करा आणि पुढे जा",
+    "detectedForYou": "तुमच्यासाठी शोधले"
   },
   "chat": {
     "welcomeMessage": "नमस्कार! 👋 मी तुमचा शेती सहाय्यक आहे.\n\nमी तुम्हाला यात मदत करू शकेन:\n• पिके, भाजीपाला, फळे आणि फुले\n• पशुधन, कुक्कुटपालन आणि मत्स्यशेती\n• कीड आणि रोग व्यवस्थापन\n• हवामान आणि बाजारभाव सल्ला\n\nआज मी तुम्हाला कशी मदत करू शकेन?",

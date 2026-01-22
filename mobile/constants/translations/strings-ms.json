@@ -43,7 +43,16 @@
     "searchLanguages": "Cari bahasa...",
     "noLanguagesFound": "Tiada bahasa ditemui",
     "suggestedForYou": "Disarankan untuk Anda",
-    "currentLanguage": "Semasa"
+    "currentLanguage": "Semasa",
+    "detectedLocation": "Lokasi dikesan:",
+    "detectedLocationFrom": "Dikesan dari rangkaian anda",
+    "gpsShareBenefit": "Berkongsi GPS beri data cuaca & tanah ladang lebih tepat",
+    "continueWithDetected": "Teruskan guna lokasi dikesan",
+    "languageDetected": "Bahasa dikesan untuk {country}",
+    "languageDetectedGeneric": "Bahasa dikesan dari lokasi anda",
+    "changeLanguage": "Tukar bahasa",
+    "confirmLanguage": "Sahkan & Teruskan",
+    "detectedForYou": "Dikesan untuk anda"
   },
   "chat": {
     "welcomeMessage": "Helo! 👋 Saya pembantu pertanian anda.\n\nSaya boleh bantu anda dengan:\n• Tanaman, sayur-sayuran, buah-buahan, dan bunga\n• Penternakan haiwan, ayam itik, dan ikan\n• Pengurusan perosak dan penyakit\n• Nasihat cuaca dan pasaran\n\nBagaimana saya boleh bantu anda hari ini?",

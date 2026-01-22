@@ -43,7 +43,16 @@
     "searchLanguages": "زبانیں تلاش کریں...",
     "noLanguagesFound": "کوئی زبان نہیں ملی",
     "suggestedForYou": "آپ کے لیے تجویز کردہ",
-    "currentLanguage": "موجودہ"
+    "currentLanguage": "موجودہ",
+    "detectedLocation": "مقام کا پتہ چلا:",
+    "detectedLocationFrom": "آپ کے نیٹ ورک سے معلوم ہوا",
+    "gpsShareBenefit": "GPS شیئر کرنے سے آپ کو کھیت کی سطح پر موسم اور مٹی کا زیادہ درست ڈیٹا ملے گا۔",
+    "continueWithDetected": "پہچانے گئے مقام کے ساتھ جاری رکھیں",
+    "languageDetected": "{country} کے لیے زبان پہچان لی گئی",
+    "languageDetectedGeneric": "آپ کے مقام سے زبان پہچان لی گئی",
+    "changeLanguage": "زبان تبدیل کریں",
+    "confirmLanguage": "تصدیق کریں اور جاری رکھیں",
+    "detectedForYou": "آپ کے لیے پہچانا گیا"
   },
   "chat": {
     "welcomeMessage": "ہیلو! 👋 میں آپ کا زرعی معاون ہوں۔\n\nمیں آپ کی مدد کر سکتا ہوں:\n• فصلوں، سبزیوں، پھلوں اور پھولوں میں\n• مویشی، پولٹری اور مچھلی پالنے میں\n• کیڑوں اور بیماریوں کے انتظام میں\n• موسم اور منڈی کے مشورے میں\n\nآج میں آپ کی کیسے مدد کر سکتا ہوں؟",

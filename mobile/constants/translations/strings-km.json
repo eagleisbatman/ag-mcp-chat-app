@@ -43,7 +43,16 @@
     "searchLanguages": "ស្វែងរកភាសា...",
     "noLanguagesFound": "មិនមានភាសារកឃើញ",
     "suggestedForYou": "បានណែនាំសម្រាប់អ្នក",
-    "currentLanguage": "បច្ចុប្បន្ន"
+    "currentLanguage": "បច្ចុប្បន្ន",
+    "detectedLocation": "ទីតាំងដែលបានរកឃើញ:",
+    "detectedLocationFrom": "រកឃើញពីបណ្ដាញរបស់អ្នក",
+    "gpsShareBenefit": "ការចែករំលែក GPS ផ្ដល់ទិន្នន័យអាកាសធាតុ និងដីត្រឹមត្រូវ សម្រាប់វាលស្រែ។",
+    "continueWithDetected": "បន្តជាមួយទីតាំងដែលបានរកឃើញ",
+    "languageDetected": "ភាសារកឃើញសម្រាប់ {country}",
+    "languageDetectedGeneric": "ភាសារកឃើញពីទីតាំងរបស់អ្នក",
+    "changeLanguage": "ប្ដូរភាសា",
+    "confirmLanguage": "បញ្ជាក់ និងបន្ត",
+    "detectedForYou": "រកឃើញសម្រាប់អ្នក"
   },
   "chat": {
     "welcomeMessage": "សួស្តី! 👋 ខ្ញុំជាជំនួយការកសិកម្មរបស់អ្នក។\n\nខ្ញុំអាចជួយអ្នកបានលើ៖\n• ដំណាំ បន្លែ ផ្លែឈើ និងផ្កា\n• ការចិញ្ចឹមសត្វ បក្សី និងត្រី\n• ការគ្រប់គ្រងសត្វល្អិត និងជំងឺ\n• ដំបូន្មានអាកាសធាតុ និងទីផ្សារ\n\nតើខ្ញុំអាចជួយអ្វីអ្នកនៅថ្ងៃនេះ?",

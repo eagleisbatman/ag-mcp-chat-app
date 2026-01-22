@@ -43,7 +43,16 @@
     "searchLanguages": "ਭਾਸ਼ਾਵਾਂ ਖੋਜੋ...",
     "noLanguagesFound": "ਕੋਈ ਭਾਸ਼ਾ ਨਹੀਂ ਮਿਲੀ",
     "suggestedForYou": "ਤੁਹਾਡੇ ਲਈ ਸੁਝਾਏ ਗਏ",
-    "currentLanguage": "ਮੌਜੂਦਾ"
+    "currentLanguage": "ਮੌਜੂਦਾ",
+    "detectedLocation": "ਪਤਾ ਲੱਗੀ ਥਾਂ:",
+    "detectedLocationFrom": "ਤੁਹਾਡੇ ਨੈੱਟਵਰਕ ਤੋਂ ਪਤਾ ਲੱਗੀ",
+    "gpsShareBenefit": "GPS ਸਾਂਝਾ ਕਰਨ ਨਾਲ ਤੁਹਾਨੂੰ ਖੇਤ ਪੱਧਰ 'ਤੇ ਮੌਸਮ ਅਤੇ ਮਿੱਟੀ ਦਾ ਵਧੇਰੇ ਸਹੀ ਡਾਟਾ ਮਿਲਦਾ ਹੈ",
+    "continueWithDetected": "ਪਤਾ ਲੱਗੀ ਥਾਂ ਨਾਲ ਜਾਰੀ ਰੱਖੋ",
+    "languageDetected": "{country} ਲਈ ਭਾਸ਼ਾ ਪਤਾ ਲੱਗੀ",
+    "languageDetectedGeneric": "ਤੁਹਾਡੀ ਥਾਂ ਤੋਂ ਭਾਸ਼ਾ ਪਤਾ ਲੱਗੀ",
+    "changeLanguage": "ਭਾਸ਼ਾ ਬਦਲੋ",
+    "confirmLanguage": "ਪੁਸ਼ਟੀ ਕਰੋ ਅਤੇ ਅੱਗੇ ਵਧੋ",
+    "detectedForYou": "ਤੁਹਾਡੇ ਲਈ ਪਤਾ ਲੱਗੀ"
   },
   "chat": {
     "welcomeMessage": "ਸਤ ਸ੍ਰੀ ਅਕਾਲ! 👋 ਮੈਂ ਤੁਹਾਡਾ ਖੇਤੀ ਸਹਾਇਕ ਹਾਂ।\n\nਮੈਂ ਤੁਹਾਡੀ ਮਦਦ ਕਰ ਸਕਦਾ ਹਾਂ:\n• ਫਸਲਾਂ, ਸਬਜ਼ੀਆਂ, ਫਲ ਅਤੇ ਫੁੱਲ\n• ਪਸ਼ੂ, ਪੋਲਟਰੀ ਅਤੇ ਮੱਛੀ ਪਾਲਣ\n• ਕੀੜੇ ਅਤੇ ਬਿਮਾਰੀਆਂ ਦਾ ਪ੍ਰਬੰਧਨ\n• ਮੌਸਮ ਅਤੇ ਮੰਡੀ ਦੀ ਸਲਾਹ\n\nਅੱਜ ਮੈਂ ਤੁਹਾਡੀ ਕਿਵੇਂ ਮਦਦ ਕਰ ਸਕਦਾ ਹਾਂ?",

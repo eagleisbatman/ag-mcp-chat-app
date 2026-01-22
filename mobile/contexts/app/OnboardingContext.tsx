@@ -41,7 +41,15 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const resetOnboarding = async () => {
     setOnboardingComplete(false);
     try {
-      await AsyncStorage.removeItem('onboardingComplete');
+      // Clear all onboarding-related data so detection runs fresh
+      await Promise.all([
+        AsyncStorage.removeItem('onboardingComplete'),
+        AsyncStorage.removeItem('language'),
+        AsyncStorage.removeItem('location'),
+        AsyncStorage.removeItem('locationDetails'),
+        AsyncStorage.removeItem('detectedLocationDetails'),
+      ]);
+      log('🔄 [Onboarding] Reset complete - all settings cleared');
     } catch (e) {
       log('Error resetting onboarding:', e);
     }

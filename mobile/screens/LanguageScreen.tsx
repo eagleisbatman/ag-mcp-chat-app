@@ -41,23 +41,40 @@ interface LanguageScreenProps {
 }
 
 export default function LanguageScreen({ navigation }: LanguageScreenProps) {
-  const { theme, language, setLanguage, completeOnboarding } = useApp();
+  const { theme, language, setLanguage, completeOnboarding, detectedLanguage, detectedCountry, suggestedLanguages } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLang, setSelectedLang] = useState<Language>(language);
+  // Default to detected language if available, otherwise use the current language
+  const [selectedLang, setSelectedLang] = useState<Language>(detectedLanguage || language);
   const sectionListRef = useRef<SectionList<Language, LanguageSection>>(null);
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
+
+  // Check if selected language is the detected one
+  const isDetectedLanguage = detectedLanguage && selectedLang.code === detectedLanguage.code;
 
   // Fixed heights for layout calculation
   const ITEM_HEIGHT = 72; // Language item height (padding 16*2 + content ~40)
   const SECTION_HEADER_HEIGHT = 48; // Section header height
 
   // Group languages by region or filter by search
+  // When there are suggested languages, put them at the top
   const displayData = useMemo((): Language[] | LanguageSection[] => {
     if (searchQuery) {
       return searchLanguages(searchQuery) as Language[];
     }
-    return getLanguagesByRegion() as LanguageSection[];
-  }, [searchQuery]);
+
+    const regionSections = getLanguagesByRegion() as LanguageSection[];
+
+    // If we have suggested languages, add them as the first section
+    if (suggestedLanguages.length > 0) {
+      const suggestedSection: LanguageSection = {
+        title: t('onboarding.suggestedForYou'),
+        data: suggestedLanguages,
+      };
+      return [suggestedSection, ...regionSections];
+    }
+
+    return regionSections;
+  }, [searchQuery, suggestedLanguages]);
 
   // Calculate scroll offset for a given section and item
   const getScrollOffset = (sections: LanguageSection[], sectionIndex: number, itemIndex: number): number => {
@@ -147,7 +164,9 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
 
   const renderLanguageItem: ListRenderItem<Language> & SectionListRenderItem<Language, LanguageSection> = ({ item }) => {
     const isSelected = selectedLang.code === item.code;
-    
+    const isSuggested = suggestedLanguages.some(l => l.code === item.code);
+    const isDetected = detectedLanguage?.code === item.code;
+
     return (
       <Pressable
         style={[
@@ -160,14 +179,30 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
         android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
       >
         <View style={styles.languageInfo}>
-          <Text style={[styles.languageName, { color: theme.text }, isSelected && styles.languageNameSelected]}>
-            {item.name}
-          </Text>
+          <View style={styles.languageNameRow}>
+            <Text style={[styles.languageName, { color: theme.text }, isSelected && styles.languageNameSelected]}>
+              {item.name}
+            </Text>
+            {isDetected && (
+              <View style={[styles.detectedBadge, { backgroundColor: theme.accent + '20' }]}>
+                <Text style={[styles.detectedBadgeText, { color: theme.accent }]}>
+                  {t('onboarding.detectedForYou')}
+                </Text>
+              </View>
+            )}
+            {!isDetected && isSuggested && (
+              <View style={[styles.suggestedBadge, { backgroundColor: theme.textMuted + '30' }]}>
+                <Text style={[styles.suggestedBadgeText, { color: theme.textSecondary }]}>
+                  {t('onboarding.suggestedForYou')}
+                </Text>
+              </View>
+            )}
+          </View>
           <Text style={[styles.nativeName, { color: theme.textSecondary }]}>
             {item.nativeName}
           </Text>
         </View>
-        
+
         {isSelected && (
           <AppIcon name="checkmark-circle" size={24} color={theme.accent} />
         )}
@@ -191,6 +226,18 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
         subtitle={t('onboarding.languageSubtitle')}
         align="left"
       />
+
+      {/* Detected Language Banner */}
+      {detectedLanguage && (
+        <View style={[styles.detectedBanner, { backgroundColor: theme.accent + '15' }]}>
+          <AppIcon name="sparkles" size={20} color={theme.accent} />
+          <Text style={[styles.detectedBannerText, { color: theme.text }]}>
+            {detectedCountry
+              ? t('onboarding.languageDetected', { country: detectedCountry })
+              : t('onboarding.languageDetectedGeneric')}
+          </Text>
+        </View>
+      )}
 
       {/* Search */}
       <View style={[styles.searchContainer, { backgroundColor: theme.inputBackground }]}>
@@ -312,6 +359,12 @@ const styles = StyleSheet.create({
   languageInfo: {
     flex: 1,
   },
+  languageNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    flexWrap: 'wrap',
+  },
   languageName: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: TYPOGRAPHY.weights.semibold,
@@ -322,6 +375,36 @@ const styles = StyleSheet.create({
   },
   nativeName: {
     fontSize: TYPOGRAPHY.sizes.base,
+  },
+  detectedBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginHorizontal: 24,
+    marginBottom: SPACING.md,
+    padding: SPACING.md,
+    borderRadius: 12,
+  },
+  detectedBannerText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    flex: 1,
+  },
+  detectedBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  detectedBadgeText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.medium,
+  },
+  suggestedBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  suggestedBadgeText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
   },
   emptyState: {
     alignItems: 'center',

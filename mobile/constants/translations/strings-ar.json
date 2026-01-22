@@ -43,7 +43,16 @@
     "searchLanguages": "البحث عن لغات...",
     "noLanguagesFound": "لم يتم العثور على لغات",
     "suggestedForYou": "مقترح لك",
-    "currentLanguage": "الحالية"
+    "currentLanguage": "الحالية",
+    "detectedLocation": "الموقع المحدد:",
+    "detectedLocationFrom": "تم تحديده من شبكتك",
+    "gpsShareBenefit": "مشاركة GPS تمنحك معلومات طقس وتربة دقيقة لحقلك.",
+    "continueWithDetected": "استمر بالموقع المحدد",
+    "languageDetected": "اللغة المحددة لـ {country}",
+    "languageDetectedGeneric": "تم تحديد اللغة من موقعك",
+    "changeLanguage": "تغيير اللغة",
+    "confirmLanguage": "تأكيد ومتابعة",
+    "detectedForYou": "محدد لك"
   },
   "chat": {
     "welcomeMessage": "مرحباً! 👋 أنا مساعدك الزراعي.\n\nيمكنني مساعدتك في:\n• المحاصيل، الخضروات، الفواكه، والزهور\n• المواشي، الدواجن، واستزراع الأسماك\n• إدارة الآفات والأمراض\n• نصائح الطقس والسوق\n\nكيف يمكنني مساعدتك اليوم؟",
