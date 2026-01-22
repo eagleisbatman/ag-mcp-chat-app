@@ -17,13 +17,13 @@ interface LanguageSwitcherProps {
 }
 
 export default function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
-  const { theme, detectedLanguage, suggestedLanguages, language, setLanguage, onboardingComplete } = useApp();
+  const { theme, detectedLanguage, suggestedLanguages, language, setLanguage, hasUserSelectedLanguage } = useApp();
   const [modalVisible, setModalVisible] = useState(false);
   const insets = useSafeAreaInsets();
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
-  // During onboarding, use detected language; after onboarding, use saved language
-  const currentLang = onboardingComplete ? language : (detectedLanguage || language);
+  // Use detected language for display until the user explicitly selects one.
+  const currentLang = (!hasUserSelectedLanguage && detectedLanguage) ? detectedLanguage : language;
 
   const handleSelectLanguage = async (lang: Language) => {
     await setLanguage(lang);

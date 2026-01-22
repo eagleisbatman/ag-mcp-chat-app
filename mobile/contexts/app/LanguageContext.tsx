@@ -11,6 +11,7 @@ import { Language } from '../../types';
 interface LanguageContextValue {
   language: Language;
   setLanguage: (lang: Language) => Promise<void>;
+  hasUserSelectedLanguage: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
@@ -22,6 +23,7 @@ export const LanguageProvider = ({ children, userId }: { children: ReactNode; us
     nativeName: 'English', 
     region: 'Europe' 
   });
+  const [hasUserSelectedLanguage, setHasUserSelectedLanguage] = useState(false);
 
   useEffect(() => {
     const loadLanguage = async () => {
@@ -30,6 +32,7 @@ export const LanguageProvider = ({ children, userId }: { children: ReactNode; us
         if (savedLanguage) {
           const lang = JSON.parse(savedLanguage) as Language;
           setLanguageState(lang);
+          setHasUserSelectedLanguage(true);
           setLocale(lang.code);
           await loadTranslations(lang.code);
 
@@ -39,6 +42,8 @@ export const LanguageProvider = ({ children, userId }: { children: ReactNode; us
             I18nManager.allowRTL(needsRTL);
             I18nManager.forceRTL(needsRTL);
           }
+        } else {
+          setHasUserSelectedLanguage(false);
         }
       } catch (e) {
         log('Error loading language:', e);
@@ -78,6 +83,7 @@ export const LanguageProvider = ({ children, userId }: { children: ReactNode; us
   const setLanguage = async (lang: Language) => {
     log('🌐 [LanguageContext] Saving language:', lang.name, `(${lang.code})`);
     setLanguageState(lang);
+    setHasUserSelectedLanguage(true);
 
     try {
       setLocale(lang.code);
@@ -116,7 +122,7 @@ export const LanguageProvider = ({ children, userId }: { children: ReactNode; us
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
+    <LanguageContext.Provider value={{ language, setLanguage, hasUserSelectedLanguage }}>
       {children}
     </LanguageContext.Provider>
   );

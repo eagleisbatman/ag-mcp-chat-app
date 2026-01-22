@@ -33,7 +33,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "transparent",
+        "backgroundColor": "#2E9B5B",
         "monochromeImage": "./assets/adaptive-icon.png"
       },
       "softwareKeyboardLayoutMode": "resize",
@@ -76,6 +76,16 @@
       ]
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0"
+          }
+        }
+      ],
       [
         "expo-location",
         {
