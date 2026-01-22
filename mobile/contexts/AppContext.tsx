@@ -18,6 +18,7 @@ interface AppContextValue {
   // From LanguageContext
   language: Language;
   setLanguage: (lang: Language) => Promise<void>;
+  hasUserSelectedLanguage: boolean;
 
   // From LocationContext
   location: { latitude: number | null; longitude: number | null };
@@ -53,7 +54,7 @@ const AppContext = createContext<AppContextValue | null>(null);
 
 const AppContextAggregator = ({ children }: { children: ReactNode }) => {
   const { theme, themeMode, setThemeMode, isDark } = useTheme();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, hasUserSelectedLanguage } = useLanguage();
   const { location, locationStatus, locationDetails, setLocation } = useLocation();
   const { userId, isDbSynced, lastSyncError, clearSyncError, isLoadingUser } = useUser();
   const { onboardingComplete, completeOnboarding, resetOnboarding, isLoadingOnboarding } = useOnboarding();
@@ -63,7 +64,7 @@ const AppContextAggregator = ({ children }: { children: ReactNode }) => {
 
   const value: AppContextValue = {
     theme, themeMode, setThemeMode, isDark,
-    language, setLanguage,
+    language, setLanguage, hasUserSelectedLanguage,
     location, locationStatus, locationDetails, setLocation,
     onboardingComplete, completeOnboarding, resetOnboarding,
     detectedLocation: detectedInfo.location,

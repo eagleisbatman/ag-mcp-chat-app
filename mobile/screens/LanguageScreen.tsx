@@ -41,10 +41,12 @@ interface LanguageScreenProps {
 }
 
 export default function LanguageScreen({ navigation }: LanguageScreenProps) {
-  const { theme, language, setLanguage, completeOnboarding, detectedLanguage, detectedCountry, suggestedLanguages } = useApp();
+  const { theme, language, setLanguage, completeOnboarding, detectedLanguage, detectedCountry, suggestedLanguages, hasUserSelectedLanguage } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
-  // Default to detected language if available, otherwise use the current language
-  const [selectedLang, setSelectedLang] = useState<Language>(detectedLanguage || language);
+  // Prefer detected language until user explicitly selects one.
+  const initialLang = (!hasUserSelectedLanguage && detectedLanguage) ? detectedLanguage : language;
+  const [selectedLang, setSelectedLang] = useState<Language>(initialLang);
+  const [hasManualSelection, setHasManualSelection] = useState(false);
   const sectionListRef = useRef<SectionList<Language, LanguageSection>>(null);
   const rippleColor = theme.name === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
 
@@ -87,6 +89,14 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
     offset += itemIndex * ITEM_HEIGHT; // Items before target
     return offset;
   };
+
+  // Sync selection to detected language until the user makes a choice
+  useEffect(() => {
+    if (hasManualSelection || hasUserSelectedLanguage) return;
+    if (detectedLanguage) {
+      setSelectedLang(detectedLanguage);
+    }
+  }, [detectedLanguage, hasManualSelection, hasUserSelectedLanguage]);
 
   // Auto-scroll to selected language on mount
   useEffect(() => {
@@ -151,6 +161,7 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
 
   const handleSelectLanguage = (lang: Language) => {
     setSelectedLang(lang);
+    setHasManualSelection(true);
   };
 
   const handleContinue = async () => {

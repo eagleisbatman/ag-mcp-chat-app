@@ -27,6 +27,50 @@ interface OnboardingDetectionContextValue {
 
 const OnboardingDetectionContext = createContext<OnboardingDetectionContextValue | null>(null);
 
+const normalizeLocaleToLanguageCode = (locale: string): string => {
+  const normalized = locale.replace('_', '-').toLowerCase();
+  const parts = normalized.split('-');
+  const base = parts[0];
+  const region = parts[1];
+
+  const aliases: Record<string, string> = {
+    tl: 'fil',
+    iw: 'he',
+    in: 'id',
+  };
+
+  const mappedBase = aliases[base] || base;
+
+  if (mappedBase === 'zh') {
+    if (region && ['tw', 'hk', 'mo'].includes(region)) {
+      return 'zh-TW';
+    }
+    return 'zh-CN';
+  }
+
+  return mappedBase;
+};
+
+const getDeviceLanguageCode = (): string | null => {
+  try {
+    const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+    if (!locale) return null;
+    return normalizeLocaleToLanguageCode(locale);
+  } catch {
+    return null;
+  }
+};
+
+const pickDetectedLanguage = (suggested: Language[]): Language | null => {
+  if (!suggested.length) return null;
+  const deviceLang = getDeviceLanguageCode();
+  if (deviceLang) {
+    const match = suggested.find(lang => lang.code.toLowerCase() === deviceLang.toLowerCase());
+    if (match) return match;
+  }
+  return suggested[0];
+};
+
 export const OnboardingDetectionProvider = ({ children }: { children: ReactNode }) => {
   const [detectedInfo, setDetectedInfo] = useState<DetectedInfo>({
     location: null,
@@ -79,7 +123,12 @@ export const OnboardingDetectionProvider = ({ children }: { children: ReactNode 
           setSuggestedLanguages(suggested);
 
           if (suggested.length > 0) {
-            const detectedLang = suggested[0];
+            const detectedLang = pickDetectedLanguage(suggested);
+            if (!detectedLang) {
+              setDetectionComplete(true);
+              setIsDetecting(false);
+              return;
+            }
             log('🌐 [OnboardingDetection] Detected language from saved location:', detectedLang.code);
 
             setDetectedInfo({
@@ -119,7 +168,12 @@ export const OnboardingDetectionProvider = ({ children }: { children: ReactNode 
           setSuggestedLanguages(suggested);
 
           if (suggested.length > 0) {
-            const detectedLang = suggested[0];
+            const detectedLang = pickDetectedLanguage(suggested);
+            if (!detectedLang) {
+              setDetectionComplete(true);
+              setIsDetecting(false);
+              return;
+            }
             log('🌐 [OnboardingDetection] Detected language:', detectedLang.code, 'for country:', country);
 
             setDetectedInfo({

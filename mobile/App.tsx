@@ -1,10 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { ActivityIndicator, View, StyleSheet, Animated, Platform } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as SplashScreen from 'expo-splash-screen';
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 import { AppProvider, useApp } from './contexts/AppContext';
 import { ToastProvider, useToast } from './contexts/ToastContext';
@@ -93,8 +97,12 @@ function AppNavigator() {
   const { isLoading, onboardingComplete, theme, isDark } = useApp();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
+  // Hide splash screen and animate in when loading is complete
+  const onLayoutRootView = useCallback(async () => {
     if (!isLoading) {
+      // Hide the native splash screen
+      await SplashScreen.hideAsync();
+      // Start fade-in animation
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 400,
@@ -103,12 +111,13 @@ function AppNavigator() {
     }
   }, [isLoading, fadeAnim]);
 
+  useEffect(() => {
+    onLayoutRootView();
+  }, [onLayoutRootView]);
+
   if (isLoading) {
-    return (
-      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
-        <ActivityIndicator size="large" color={theme.accent} />
-      </View>
-    );
+    // Return null to keep showing the native splash screen
+    return null;
   }
 
   return (
