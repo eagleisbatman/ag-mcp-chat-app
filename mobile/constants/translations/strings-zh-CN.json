@@ -43,7 +43,16 @@
     "searchLanguages": "搜索语言...",
     "noLanguagesFound": "未找到语言",
     "suggestedForYou": "为您推荐",
-    "currentLanguage": "当前"
+    "currentLanguage": "当前",
+    "detectedLocation": "检测到位置：",
+    "detectedLocationFrom": "来自您的网络",
+    "gpsShareBenefit": "GPS共享可提供更精确的田间气象和土壤数据",
+    "continueWithDetected": "继续使用当前位置",
+    "languageDetected": "为{country}检测到语言",
+    "languageDetectedGeneric": "根据您所在位置检测到语言",
+    "changeLanguage": "更改语言",
+    "confirmLanguage": "确认并继续",
+    "detectedForYou": "已为您检测"
   },
   "chat": {
     "welcomeMessage": "你好！👋 我是您的农事助手。\n\n我能帮您解决：\n• 农作物、蔬菜、水果和花卉\n• 畜牧、禽类和水产养殖\n• 病虫害防治\n• 天气和市场建议\n\n今天能帮您什么？",

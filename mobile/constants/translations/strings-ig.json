@@ -43,7 +43,16 @@
     "searchLanguages": "Chọọ asụsụ...",
     "noLanguagesFound": "Achọtaghị asụsụ ọ bụla",
     "suggestedForYou": "Ntụnye Maka Gị",
-    "currentLanguage": "Ugbu a"
+    "currentLanguage": "Ugbu a",
+    "detectedLocation": "Ebe achọtara:",
+    "detectedLocationFrom": "Achọtara site na netwọkụ gị",
+    "gpsShareBenefit": "Ikesa GPS na-enye gị ozi ihu igwe na ala ziri ezi karị, n'ọkwa ubi.",
+    "continueWithDetected": "Gaa n'ihu jiri ebe achọtara",
+    "languageDetected": "Asụsụ achọtara maka {country}",
+    "languageDetectedGeneric": "Asụsụ achọtara site na ebe ị nọ",
+    "changeLanguage": "Gbanwee asụsụ",
+    "confirmLanguage": "Kwenye na Gaa n'ihu",
+    "detectedForYou": "Achọtara maka gị"
   },
   "chat": {
     "welcomeMessage": "Nnọọ! 👋 Abụ m onye enyemaka gị n'ọrụ ugbo.\n\nM nwere ike inyere gị aka na:\n• Ihe ubi, akwụkwọ nri, mkpụrụ osisi, na okooko osisi\n• Ịzụ anụ ụlọ, ọkụkọ, na azụ\n• Nchịkwa ahụhụ na ọrịa\n• Ndụmọdụ ihu igwe na ahịa\n\nOlee otú m ga-esi nyere gị aka taa?",

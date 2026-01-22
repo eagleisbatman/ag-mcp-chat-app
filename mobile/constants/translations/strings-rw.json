@@ -43,7 +43,16 @@
     "searchLanguages": "Shaka indimi...",
     "noLanguagesFound": "Nta ndimi zabonetse",
     "suggestedForYou": "Zateganyijwe kuri wowe",
-    "currentLanguage": "Iriho"
+    "currentLanguage": "Iriho",
+    "detectedLocation": "Aho uri hagaragaye:",
+    "detectedLocationFrom": "Byagaragaye binyuze ku murongo wawe",
+    "gpsShareBenefit": "Kwifashisha GPS bituma ubona amakuru y'ikirere n'ubutaka anyaganye, yihariye ku murima wawe",
+    "continueWithDetected": "Komeza ukoreshe aho uherereye hagaragaye",
+    "languageDetected": "Ururimi rwahagaruwe kubera {country}",
+    "languageDetectedGeneric": "Ururimi rwahagaruwe bitewe n'aho uherereye",
+    "changeLanguage": "Hindura ururimi",
+    "confirmLanguage": "Emeza & Komeza",
+    "detectedForYou": "Byahaguwe kuri wowe"
   },
   "chat": {
     "welcomeMessage": "Mwaramutse! 👋 Ndi umufasha wanyu mu buhinzi.\n\nNshobora kubafasha mu:\n• Imyaka, imboga, imbuto n'indabyo\n• Amatungo, inkoko n'amafi\n• Kurwanya udukoko n'indwara\n• Itegenanyagihe n'ubujyanama ku masoko\n\nMbufashe iki uyu munsi?",

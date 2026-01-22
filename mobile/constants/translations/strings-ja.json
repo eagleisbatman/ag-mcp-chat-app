@@ -43,7 +43,16 @@
     "searchLanguages": "言語を検索...",
     "noLanguagesFound": "言語が見つかりませんでした",
     "suggestedForYou": "あなたへのおすすめ",
-    "currentLanguage": "現在"
+    "currentLanguage": "現在",
+    "detectedLocation": "現在地:",
+    "detectedLocationFrom": "ネットワークから取得",
+    "gpsShareBenefit": "GPS共有で、より正確な畑の天気・土壌データを利用できます。",
+    "continueWithDetected": "現在地で続行",
+    "languageDetected": "{country}の言語を検出しました",
+    "languageDetectedGeneric": "現在地から言語を検出",
+    "changeLanguage": "言語を変更",
+    "confirmLanguage": "確認して続行",
+    "detectedForYou": "あなたにおすすめ"
   },
   "chat": {
     "welcomeMessage": "こんにちは！👋 私はあなたの農業アシスタントです。\n\n私がお手伝いできること：\n• 作物、野菜、果物、花\n• 家畜、家禽、養殖\n• 病害虫対策\n• 天気や市場のアドバイス\n\n今日は何をお手伝いしましょうか？",

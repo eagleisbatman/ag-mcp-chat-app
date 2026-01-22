@@ -43,7 +43,16 @@
     "searchLanguages": "Dilleri Ara...",
     "noLanguagesFound": "Dil bulunamadı.",
     "suggestedForYou": "Sana Özel",
-    "currentLanguage": "Mevcut"
+    "currentLanguage": "Mevcut",
+    "detectedLocation": "Tespit edilen konum:",
+    "detectedLocationFrom": "Ağınızdan tespit edildi",
+    "gpsShareBenefit": "GPS paylaşımı, tarlanıza özel daha doğru hava ve toprak bilgisi sunar.",
+    "continueWithDetected": "Tespit edilen konumla devam et",
+    "languageDetected": "{country} için dil tespit edildi",
+    "languageDetectedGeneric": "Konumunuzdan dil tespit edildi",
+    "changeLanguage": "Dili değiştir",
+    "confirmLanguage": "Onayla ve Devam Et",
+    "detectedForYou": "Sizin için tespit edildi"
   },
   "chat": {
     "welcomeMessage": "Merhaba! 👋 Ben sizin tarım asistanınızım.\n\nSize şunlarda yardımcı olabilirim:\n• Bitkiler, sebzeler, meyveler ve çiçekler\n• Hayvancılık, kümes hayvanları ve balık çiftçiliği\n• Haşere ve hastalık yönetimi\n• Hava durumu ve pazar tavsiyeleri\n\nBugün size nasıl yardımcı olabilirim?",

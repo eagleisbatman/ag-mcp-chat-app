@@ -43,7 +43,16 @@
     "searchLanguages": "Afa geeya...",
     "noLanguagesFound": "Afa affeena hinna",
     "suggestedForYou": "Ni-y kayseh",
-    "currentLanguage": "Amma"
+    "currentLanguage": "Amma",
+    "detectedLocation": "Barra Akeediyya:",
+    "detectedLocationFrom": "Koo network-ukka gexennah",
+    "gpsShareBenefit": "GPS koo-gaacisam, digaaga-tira barrah walal kee baaxâ walal xaquuq qambisa koo-gacisa.",
+    "continueWithDetected": "Akeediyya barra-kelluk kobxa",
+    "languageDetected": "Af akeediyya {country}-keh",
+    "languageDetectedGeneric": "Af koo barra-kelluk akeediyya",
+    "changeLanguage": "Af ceele",
+    "confirmLanguage": "Oggol kee kobxa",
+    "detectedForYou": "Akeediyya koo-keh"
   },
   "chat": {
     "welcomeMessage": "Naabira! 👋 An koo faxa baaddo garte.\n\nTaamoomii kee koo gargaaraama:\n• Baadi, sabuul, mixu kee qacaar\n• Maggala, qanxar kee korma biso\n• Badi kee deero cato\n• Saaqi kee kuta-xagu sinam\n\nAmma elle koo gargaaraama?",

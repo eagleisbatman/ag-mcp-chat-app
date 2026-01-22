@@ -43,7 +43,16 @@
     "searchLanguages": "Cari bahasa...",
     "noLanguagesFound": "Tidak ada bahasa ditemukan",
     "suggestedForYou": "Disarankan untuk Anda",
-    "currentLanguage": "Saat Ini"
+    "currentLanguage": "Saat Ini",
+    "detectedLocation": "Lokasi Terdeteksi:",
+    "detectedLocationFrom": "Terdeteksi dari jaringan Anda",
+    "gpsShareBenefit": "Berbagi GPS memberi data cuaca dan tanah yang lebih akurat, sesuai lokasi lahan Anda.",
+    "continueWithDetected": "Lanjutkan dengan lokasi terdeteksi",
+    "languageDetected": "Bahasa terdeteksi untuk {country}",
+    "languageDetectedGeneric": "Bahasa terdeteksi dari lokasi Anda",
+    "changeLanguage": "Ubah bahasa",
+    "confirmLanguage": "Konfirmasi & Lanjutkan",
+    "detectedForYou": "Terdeteksi untuk Anda"
   },
   "chat": {
     "welcomeMessage": "Halo! 👋 Saya asisten pertanian Anda.\n\nSaya bisa bantu Anda soal:\n• Tanaman pangan, sayur, buah, dan bunga\n• Ternak, unggas, dan ikan\n• Pengendalian hama dan penyakit\n• Saran cuaca dan harga pasar\n\nAda yang bisa saya bantu hari ini?",

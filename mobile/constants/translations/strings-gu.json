@@ -43,7 +43,16 @@
     "searchLanguages": "ભાષાઓ શોધો...",
     "noLanguagesFound": "કોઈ ભાષા મળી નથી",
     "suggestedForYou": "તમારા માટે સૂચવેલ",
-    "currentLanguage": "વર્તમાન"
+    "currentLanguage": "વર્તમાન",
+    "detectedLocation": "શોધાયેલ સ્થાન:",
+    "detectedLocationFrom": "તમારા નેટવર્ક પરથી શોધાયેલ",
+    "gpsShareBenefit": "GPS શેર કરવાથી તમને ખેતર સ્તરની વધુ સચોટ હવામાન અને જમીનની માહિતી મળે છે",
+    "continueWithDetected": "શોધાયેલ સ્થાન સાથે ચાલુ રાખો",
+    "languageDetected": "{country} માટે ભાષા શોધાઈ",
+    "languageDetectedGeneric": "તમારા સ્થાન પરથી ભાષા શોધાઈ",
+    "changeLanguage": "ભાષા બદલો",
+    "confirmLanguage": "ખાતરી કરો અને આગળ વધો",
+    "detectedForYou": "તમારા માટે શોધાયેલ"
   },
   "chat": {
     "welcomeMessage": "નમસ્તે! 👋 હું તમારો ખેતી સહાયક છું.\n\nહું તમને આમાં મદદ કરી શકું છું:\n• પાક, શાકભાજી, ફળો અને ફૂલો\n• પશુધન, મરઘા-બતકાં અને મત્સ્યપાલન\n• જીવાત અને રોગ નિયંત્રણ\n• હવામાન અને બજાર સલાહ\n\nઆજે હું તમારી શી મદદ કરી શકું?",

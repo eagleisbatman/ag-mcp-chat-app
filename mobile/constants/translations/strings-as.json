@@ -43,7 +43,16 @@
     "searchLanguages": "ভাষা বিচাৰক...",
     "noLanguagesFound": "কোনো ভাষা পোৱা নগল",
     "suggestedForYou": "আপোনাৰ বাবে পৰামৰ্শ",
-    "currentLanguage": "বৰ্তমান"
+    "currentLanguage": "বৰ্তমান",
+    "detectedLocation": "ধৰা পৰা স্থান:",
+    "detectedLocationFrom": "আপোনাৰ নেটৱৰ্কৰ পৰা ধৰা পৰিছে",
+    "gpsShareBenefit": "GPS শ্বেয়াৰ কৰিলে আপুনি পথাৰৰ অধিক সঠিক বতৰ আৰু মাটিৰ তথ্য পাব।",
+    "continueWithDetected": "ধৰা পৰা স্থানৰ সৈতে আগবাঢ়ক",
+    "languageDetected": "{country} ৰ বাবে ভাষা চিনাক্ত কৰা হৈছে",
+    "languageDetectedGeneric": "আপোনাৰ স্থানৰ পৰা ভাষা চিনাক্ত কৰা হৈছে",
+    "changeLanguage": "ভাষা সলনি কৰক",
+    "confirmLanguage": "নিশ্চিত কৰক আৰু আগবাঢ়ক",
+    "detectedForYou": "আপোনাৰ বাবে চিনাক্ত কৰা হৈছে"
   },
   "chat": {
     "welcomeMessage": "নমস্কাৰ! 👋 মই আপোনাৰ খেতি সহায়ক।\n\nমই আপোনাক সহায় কৰিব পাৰো:\n• শস্য, শাক-পাচলি, ফল আৰু ফুল\n• পশুপালন, কুকুৰা পালন আৰু মীন পালন\n• কীট-পতংগ আৰু ৰোগ নিয়ন্ত্ৰণ\n• বতৰ আৰু বজাৰৰ পৰামৰ্শ\n\nআজি মই আপোনাক কেনেকৈ সহায় কৰিব পাৰো?",

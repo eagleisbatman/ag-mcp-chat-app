@@ -43,7 +43,16 @@
     "searchLanguages": "Hledat jazyky...",
     "noLanguagesFound": "Žádné jazyky nenalezeny",
     "suggestedForYou": "Doporučeno pro vás",
-    "currentLanguage": "Aktuální"
+    "currentLanguage": "Aktuální",
+    "detectedLocation": "Zjištěná poloha:",
+    "detectedLocationFrom": "Zjištěno z vaší sítě",
+    "gpsShareBenefit": "Sdílení GPS zajistí přesnější data o počasí a půdě pro konkrétní pole",
+    "continueWithDetected": "Pokračovat se zjištěnou polohou",
+    "languageDetected": "Zjištěný jazyk pro {country}",
+    "languageDetectedGeneric": "Jazyk zjištěn z vaší polohy",
+    "changeLanguage": "Změnit jazyk",
+    "confirmLanguage": "Potvrdit a pokračovat",
+    "detectedForYou": "Zjištěno pro vás"
   },
   "chat": {
     "welcomeMessage": "Ahoj! 👋 Jsem váš zemědělský asistent.\n\nPomohu vám s:\n• plodinami, zeleninou, ovocem a květinami\n• chovem hospodářských zvířat, drůbeže a ryb\n• ochranou proti škůdcům a chorobám\n• předpovědí počasí a radami pro trh\n\nJak vám dnes mohu pomoci?",

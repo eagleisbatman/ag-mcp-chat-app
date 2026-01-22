@@ -43,7 +43,16 @@
     "searchLanguages": "ቋንቋታት ድለ...",
     "noLanguagesFound": "ቋንቋታት ኣይተረኽቡን",
     "suggestedForYou": "ንዓኹም ዝተመኸረ",
-    "currentLanguage": "ዘሎ"
+    "currentLanguage": "ዘሎ",
+    "detectedLocation": "ዝተረኽበ ቦታ:",
+    "detectedLocationFrom": "ካብ መርበብካ ዝተረኽበ",
+    "gpsShareBenefit": "ጂፒኤስ ምጥቃም ንግራትካ ዝበለጸ ትክክለኛ ኣየርን መሬትን ሓበሬታ የረክበካ።",
+    "continueWithDetected": "በዚ ዝተረኽበ ቦታ ቀጽል",
+    "languageDetected": "ን {country} ዝተረኽበ ቋንቋ",
+    "languageDetectedGeneric": "ካብ ቦታኻ ዝተረኽበ ቋንቋ",
+    "changeLanguage": "ቋንቋ ቅይር",
+    "confirmLanguage": "ኣረጋግጽን ቀጽልን",
+    "detectedForYou": "ንዓኻ ዝተረኽበ"
   },
   "chat": {
     "welcomeMessage": "ሰላም! 👋 ኣነ ሓጋዚ ሕርሻኹም እየ።\n\nበዚ ክሕግዘኩም እኽእል እየ፦\n• ኣእካል፣ ኣሕምልቲ፣ ፍሩታን ኣግራብን\n• እንስሳ ዘቤት፣ ኣዕዋፍን ዓሳ ሕርሻን\n• ምቁጽጻር ሓሸራን ሕማምን\n• ኣየርን ምኽሪ ዕዳጋን\n\nሎሚ ብኸመይ ክሕግዘኩም እኽእል?",

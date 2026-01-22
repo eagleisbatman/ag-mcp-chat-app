@@ -43,7 +43,16 @@
     "searchLanguages": "Tìm ngôn ngữ...",
     "noLanguagesFound": "Không tìm thấy ngôn ngữ nào",
     "suggestedForYou": "Gợi ý cho bạn",
-    "currentLanguage": "Hiện tại"
+    "currentLanguage": "Hiện tại",
+    "detectedLocation": "Vị trí hiện tại:",
+    "detectedLocationFrom": "Phát hiện từ mạng của bạn",
+    "gpsShareBenefit": "Chia sẻ GPS giúp bạn nhận thông tin thời tiết và đất đai chính xác hơn cho từng thửa ruộng.",
+    "continueWithDetected": "Tiếp tục với vị trí hiện tại",
+    "languageDetected": "Ngôn ngữ được phát hiện cho {country}",
+    "languageDetectedGeneric": "Ngôn ngữ được phát hiện từ vị trí của bạn",
+    "changeLanguage": "Đổi ngôn ngữ",
+    "confirmLanguage": "Xác nhận và Tiếp tục",
+    "detectedForYou": "Đã phát hiện cho bạn"
   },
   "chat": {
     "welcomeMessage": "Chào bạn! 👋 Tôi là trợ lý nông nghiệp của bạn.\n\nTôi có thể giúp bạn về:\n• Cây trồng, rau củ, trái cây và hoa\n• Chăn nuôi gia súc, gia cầm và thủy sản\n• Phòng trừ sâu bệnh\n• Dự báo thời tiết và tư vấn thị trường\n\nHôm nay tôi có thể giúp gì cho bạn?",

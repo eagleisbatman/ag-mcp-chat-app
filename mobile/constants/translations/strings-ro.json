@@ -43,7 +43,16 @@
     "searchLanguages": "Căutați limbi...",
     "noLanguagesFound": "Nicio limbă găsită",
     "suggestedForYou": "Sugerate pentru tine",
-    "currentLanguage": "Curentă"
+    "currentLanguage": "Curentă",
+    "detectedLocation": "Locație detectată:",
+    "detectedLocationFrom": "Detectată din rețeaua dvs.",
+    "gpsShareBenefit": "Partajarea GPS oferă date meteo și de sol mai precise, specifice terenului dvs.",
+    "continueWithDetected": "Continuă cu locația detectată",
+    "languageDetected": "Limbă detectată pentru {country}",
+    "languageDetectedGeneric": "Limbă detectată din locația dvs.",
+    "changeLanguage": "Schimbă limba",
+    "confirmLanguage": "Confirmă și Continuă",
+    "detectedForYou": "Detectată pentru dvs."
   },
   "chat": {
     "welcomeMessage": "Bună! 👋 Sunt asistentul tău agricol.\n\nTe pot ajuta cu:\n• Culturi, legume, fructe și flori\n• Creșterea animalelor, păsărilor și peștelui\n• Gestionarea dăunătorilor și bolilor\n• Sfaturi meteo și de piață\n\nCum te pot ajuta astăzi?",

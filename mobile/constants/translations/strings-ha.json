@@ -43,7 +43,16 @@
     "searchLanguages": "Bincika harsuna...",
     "noLanguagesFound": "Ba a sami harsuna ba",
     "suggestedForYou": "Shawara a Gareka",
-    "currentLanguage": "Na Yanzu"
+    "currentLanguage": "Na Yanzu",
+    "detectedLocation": "Wuri da aka gano:",
+    "detectedLocationFrom": "An gano daga network ɗinka",
+    "gpsShareBenefit": "Raba GPS zai baka ingantaccen bayanin yanayi da ƙasa na gona.",
+    "continueWithDetected": "Ci gaba da wurin da aka gano.",
+    "languageDetected": "An gano harshe na {country}",
+    "languageDetectedGeneric": "An gano harshe daga wurinka",
+    "changeLanguage": "Canja harshe",
+    "confirmLanguage": "Tabbatar kuma Ci gaba",
+    "detectedForYou": "An gano maka"
   },
   "chat": {
     "welcomeMessage": "Sannu! 👋 Ni ne mataimakinka a harkar noma.\n\nZan iya taimaka maka da:\n• Noma (irin su hatsi, kayan lambu, 'ya'yan itace, furanni)\n• Kiwo (irin su dabbobi, kaji, kifi)\n• Kariya daga kwari da cututtuka\n• Shawara kan yanayi da kasuwa\n\nTa yaya zan iya taimaka maka yau?",

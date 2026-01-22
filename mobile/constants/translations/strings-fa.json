@@ -43,7 +43,16 @@
     "searchLanguages": "جستجوی زبان‌ها...",
     "noLanguagesFound": "زبانی پیدا نشد",
     "suggestedForYou": "پیشنهادی برای شما",
-    "currentLanguage": "فعلی"
+    "currentLanguage": "فعلی",
+    "detectedLocation": "موقعیت شناسایی شده:",
+    "detectedLocationFrom": "شناسایی شده از طریق شبکه شما",
+    "gpsShareBenefit": "اشتراک‌گذاری GPS، داده‌های آب و هوا و خاک را در سطح مزرعه دقیق‌تر می‌کند.",
+    "continueWithDetected": "ادامه با موقعیت شناسایی شده",
+    "languageDetected": "زبان شناسایی شده برای {country}",
+    "languageDetectedGeneric": "زبان شناسایی شده از موقعیت مکانی شما",
+    "changeLanguage": "تغییر زبان",
+    "confirmLanguage": "تایید و ادامه",
+    "detectedForYou": "برای شما شناسایی شد"
   },
   "chat": {
     "welcomeMessage": "سلام! 👋 من دستیار کشاورزی شما هستم.\n\nمن می‌توانم در موارد زیر به شما کمک کنم:\n• محصولات زراعی، سبزیجات، میوه‌ها و گل‌ها\n• دامداری، پرورش طیور و آبزیان\n• مدیریت آفات و بیماری‌ها\n• مشاوره آب و هوا و بازار\n\nامروز چطور می‌توانم به شما کمک کنم؟",

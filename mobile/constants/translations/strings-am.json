@@ -43,7 +43,16 @@
     "searchLanguages": "ቋንቋዎችን ፈልግ...",
     "noLanguagesFound": "ምንም ቋንቋ አልተገኘም",
     "suggestedForYou": "ለእርስዎ የተጠቆመ",
-    "currentLanguage": "አሁን ያለው"
+    "currentLanguage": "አሁን ያለው",
+    "detectedLocation": "የተገኘ ቦታ:",
+    "detectedLocationFrom": "ከመረብዎ የተገኘ",
+    "gpsShareBenefit": "ጂፒኤስ ማጋራት ይበልጥ ትክክለኛ፣ ለእርሻዎ የሚሆን የአየር ሁኔታና የአፈር መረጃ ይሰጥዎታል።",
+    "continueWithDetected": "በተገኘው ቦታ ይቀጥሉ",
+    "languageDetected": "ለ {country} ቋንቋ ተለይቷል",
+    "languageDetectedGeneric": "ከቦታዎ ቋንቋ ተለይቷል",
+    "changeLanguage": "ቋንቋ ይቀይሩ",
+    "confirmLanguage": "ያረጋግጡና ይቀጥሉ",
+    "detectedForYou": "ለእርስዎ ተለይቷል"
   },
   "chat": {
     "welcomeMessage": "ሰላም! 👋 እኔ የእርሻ ረዳትህ ነኝ።\n\nልረዳህ የምችለው:\n• ሰብሎች፣ አትክልቶች፣ ፍራፍሬዎች እና አበባዎች\n• የቀንድ ከብት፣ የዶሮ እና የዓሳ እርባታ\n• ተባይ እና በሽታ አያያዝ\n• የአየር ሁኔታ እና የገበያ መረጃ\n\nዛሬ እንዴት ልረዳህ እችላለሁ?",

@@ -43,7 +43,16 @@
     "searchLanguages": "Sesha izilimi...",
     "noLanguagesFound": "Azitholakalanga izilimi",
     "suggestedForYou": "Kuphakanyiswe Kuwe",
-    "currentLanguage": "Okwamanje"
+    "currentLanguage": "Okwamanje",
+    "detectedLocation": "Indawo ekhonjiwe:",
+    "detectedLocationFrom": "Ikhonjwe kwi-network yakho",
+    "gpsShareBenefit": "Ukwabelana nge-GPS kuletha idatha yesimo sezulu nenhlabathi yasendle enembile kakhulu.",
+    "continueWithDetected": "Qhubeka nendawo ekhonjiwe",
+    "languageDetected": "Ulimi lukhonjwe olwe-{country}",
+    "languageDetectedGeneric": "Ulimi lukhonjwe endaweni yakho",
+    "changeLanguage": "Shintsha ulimi",
+    "confirmLanguage": "Qinisekisa bese uqhubeka",
+    "detectedForYou": "Kukhonjwe kuwena"
   },
   "chat": {
     "welcomeMessage": "Sawubona! 👋 Ngingumsizi wakho wokulima.\n\nNgingakusiza ngalokhu:\n• Izitshalo, imifino, izithelo nezimbali\n• Imfuyo, izinkukhu nokufuya inhlanzi\n• Ukuphatha izinambuzane nezifo\n• Isimo sezulu nezeluleko ngemakethe\n\nNgingakusiza kanjani namuhla?",

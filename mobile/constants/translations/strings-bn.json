@@ -43,7 +43,16 @@
     "searchLanguages": "ভাষা খুঁজুন...",
     "noLanguagesFound": "কোনো ভাষা পাওয়া যায়নি",
     "suggestedForYou": "আপনার জন্য প্রস্তাবিত",
-    "currentLanguage": "বর্তমান"
+    "currentLanguage": "বর্তমান",
+    "detectedLocation": "শনাক্তকৃত অবস্থান:",
+    "detectedLocationFrom": "আপনার নেটওয়ার্ক থেকে পাওয়া গেছে",
+    "gpsShareBenefit": "জিপিএস ব্যবহার করলে আপনি মাঠের জন্য আরও সঠিক আবহাওয়া ও মাটির তথ্য পাবেন",
+    "continueWithDetected": "শনাক্তকৃত অবস্থান নিয়ে এগিয়ে যান",
+    "languageDetected": "{country} এর জন্য ভাষা সনাক্ত হয়েছে",
+    "languageDetectedGeneric": "আপনার অবস্থান থেকে ভাষা সনাক্ত হয়েছে",
+    "changeLanguage": "ভাষা পরিবর্তন করুন",
+    "confirmLanguage": "নিশ্চিত করুন ও এগিয়ে যান",
+    "detectedForYou": "আপনার জন্য সনাক্ত হয়েছে"
   },
   "chat": {
     "welcomeMessage": "নমস্কার! 👋 আমি আপনার কৃষি সহায়ক।\n\nআমি আপনাকে সাহায্য করতে পারি:\n• ফসল, সবজি, ফল ও ফুল\n• গবাদি পশু, হাঁস-মুরগি ও মাছ চাষ\n• পোকামাকড় ও রোগ দমন\n• আবহাওয়া ও বাজারের পরামর্শ\n\nআজ আমি আপনাকে কিভাবে সাহায্য করতে পারি?",

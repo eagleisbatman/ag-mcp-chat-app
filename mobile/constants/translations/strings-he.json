@@ -43,7 +43,16 @@
     "searchLanguages": "חפש שפות...",
     "noLanguagesFound": "לא נמצאו שפות",
     "suggestedForYou": "מומלץ עבורך",
-    "currentLanguage": "נוכחית"
+    "currentLanguage": "נוכחית",
+    "detectedLocation": "מיקום זוהה:",
+    "detectedLocationFrom": "זוהה מהרשת שלך",
+    "gpsShareBenefit": "שיתוף GPS ייתן לך נתוני מזג אוויר וקרקע מדויקים יותר, ברמת השדה.",
+    "continueWithDetected": "המשך עם המיקום המזוהה",
+    "languageDetected": "שפה מזוהה עבור {country}",
+    "languageDetectedGeneric": "שפה מזוהה מהמיקום שלך",
+    "changeLanguage": "שנה שפה",
+    "confirmLanguage": "אשר והמשך",
+    "detectedForYou": "מזוהה עבורך"
   },
   "chat": {
     "welcomeMessage": "שלום! 👋 אני העוזר החקלאי שלך.\n\nאני יכול לעזור לך עם:\n• גידולי שדה, ירקות, פירות ופרחים\n• גידול בעלי חיים, עופות ודגים\n• ניהול מזיקים ומחלות\n• ייעוץ מזג אוויר ושוק\n\nאיך אוכל לעזור לך היום?",

@@ -43,7 +43,16 @@
     "searchLanguages": "Buscar idiomas...",
     "noLanguagesFound": "No se encontraron idiomas",
     "suggestedForYou": "Sugerido para ti",
-    "currentLanguage": "Actual"
+    "currentLanguage": "Actual",
+    "detectedLocation": "Ubicación detectada:",
+    "detectedLocationFrom": "Detectada de tu red",
+    "gpsShareBenefit": "Compartir GPS te da datos de clima y suelo más exactos para tu campo",
+    "continueWithDetected": "Continuar con ubicación detectada",
+    "languageDetected": "Idioma detectado para {country}",
+    "languageDetectedGeneric": "Idioma detectado de tu ubicación",
+    "changeLanguage": "Cambiar idioma",
+    "confirmLanguage": "Confirmar y Continuar",
+    "detectedForYou": "Detectado para ti"
   },
   "chat": {
     "welcomeMessage": "¡Hola! 👋 Soy tu asistente agrícola.\n\nPuedo ayudarte con:\n• Cultivos, hortalizas, frutas y flores\n• Ganadería, avicultura y piscicultura\n• Manejo de plagas y enfermedades\n• Consejos de clima y mercado\n\n¿En qué puedo ayudarte hoy?",
