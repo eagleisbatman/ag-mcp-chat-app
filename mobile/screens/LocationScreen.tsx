@@ -32,9 +32,25 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
   const bottomPadding = Math.max(insets.bottom + 24, 40);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const GPS_TIMEOUT_MS = 8000;
 
   // Display name for detected location
   const detectedLocationName = detectedLocation?.displayName || detectedLocation?.level5City || detectedLocation?.level3District || detectedLocation?.level2State || detectedCountry || null;
+
+  const withTimeout = async <T,>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> => {
+    return await new Promise<T>((resolve, reject) => {
+      const timeoutId = setTimeout(() => reject(new Error(`${label} timeout`)), timeoutMs);
+      promise
+        .then(result => {
+          clearTimeout(timeoutId);
+          resolve(result);
+        })
+        .catch(err => {
+          clearTimeout(timeoutId);
+          reject(err);
+        });
+    });
+  };
 
   const requestLocation = async () => {
     log('📍 [LocationScreen] User tapped "Enable Location"');
@@ -63,18 +79,22 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
         // If no cached location, use getCurrentPositionAsync (active GPS request)
         if (!loc?.coords) {
           log('📍 [LocationScreen] No cached location, requesting fresh GPS fix...');
-          loc = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Balanced,
-          });
+          loc = await withTimeout(
+            Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }),
+            GPS_TIMEOUT_MS,
+            'GPS balanced'
+          );
           log('📍 [LocationScreen] getCurrentPositionAsync result:', loc?.coords);
         }
 
         // Final fallback: try with lower accuracy if high accuracy fails
         if (!loc?.coords) {
           log('📍 [LocationScreen] Balanced accuracy failed, trying low accuracy...');
-          loc = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Low,
-          });
+          loc = await withTimeout(
+            Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Low }),
+            GPS_TIMEOUT_MS,
+            'GPS low'
+          );
         }
 
         if (loc?.coords) {
@@ -127,18 +147,21 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
           { latitude: result.latitude ?? null, longitude: result.longitude ?? null },
           'granted'
         );
+        setIsLoading(false);
         navigation.navigate('Language');
       } else {
         // This case is now handled by the gateway returning a success:true fallback,
         // but we keep this for extra safety.
         log('⚠️ [LocationScreen] IP location returned failure, using default fallback');
         await setLocation({ latitude: 0, longitude: 0 }, 'denied');
+        setIsLoading(false);
         navigation.navigate('Language');
       }
     } catch (error: any) {
       log('❌ [LocationScreen] IP location error, using default fallback:', error.message);
       // Don't block the user, just use a default location
       await setLocation({ latitude: 0, longitude: 0 }, 'denied');
+      setIsLoading(false);
       navigation.navigate('Language');
     }
   };
