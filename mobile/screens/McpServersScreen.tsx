@@ -141,7 +141,7 @@ const SERVICE_CATEGORIES: { [key: string]: ServiceCategoryConfig } = {
     labelKey: 'mcp.categories.weather',
     icon: 'weather-partly-cloudy',
     color: '#2196F3',
-    servers: ['accuweather', 'tomorrow-io', 'google-weather', 'gap-weather'],
+    servers: ['accuweather', 'tomorrow-io', 'google-weather'],
   },
   livestock: {
     labelKey: 'mcp.categories.livestock',
@@ -153,7 +153,13 @@ const SERVICE_CATEGORIES: { [key: string]: ServiceCategoryConfig } = {
     labelKey: 'mcp.categories.agriculture',
     icon: 'sprout',
     color: '#FF9800',
-    servers: ['nextgen', 'decision-tree', 'gap-agriculture'],
+    servers: ['nextgen', 'decision-tree'],
+  },
+  gap: {
+    labelKey: 'mcp.categories.gap',
+    icon: 'earth',
+    color: '#009688',
+    servers: ['gap-weather', 'edacap'],
   },
 };
 
@@ -207,6 +213,12 @@ const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
     icon: 'weather-partly-cloudy',
     logo: null,
   },
+  'edacap': {
+    name: 'EDACaP Climate',
+    stringKey: 'mcp.services.edacap',
+    icon: 'weather-partly-cloudy',
+    logo: null,
+  },
   'feed-formulation': {
     name: 'Feed Formulation',
     stringKey: 'mcp.services.feedFormulation',
@@ -223,12 +235,6 @@ const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
     name: 'Decision Tree',
     stringKey: 'mcp.services.decisionTree',
     icon: 'source-branch',
-    logo: null,
-  },
-  'gap-agriculture': {
-    name: 'GAP Agriculture',
-    stringKey: 'mcp.services.gapAgriculture',
-    icon: 'sprout',
     logo: null,
   },
 };
@@ -642,7 +648,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
             </Text>
           </View>
 
-          {['plant_health', 'soil', 'weather', 'livestock', 'agriculture'].map(category => (
+          {['plant_health', 'soil', 'weather', 'gap', 'livestock', 'agriculture'].map(category => (
             <CategorySection
               key={category}
               category={category}
