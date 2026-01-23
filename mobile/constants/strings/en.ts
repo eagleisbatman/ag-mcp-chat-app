@@ -225,7 +225,7 @@ export const en = {
       weather: 'Weather & Climate',
       livestock: 'Livestock Nutrition',
       agriculture: 'Crop Advisory',
-      gap: 'GAP Regional Services',
+      gap: 'Regional Weather Services',
     },
     services: {
       agrivision: {
