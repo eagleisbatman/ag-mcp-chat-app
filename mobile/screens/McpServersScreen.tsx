@@ -141,7 +141,7 @@ const SERVICE_CATEGORIES: { [key: string]: ServiceCategoryConfig } = {
     labelKey: 'mcp.categories.weather',
     icon: 'weather-partly-cloudy',
     color: '#2196F3',
-    servers: ['accuweather', 'tomorrow-io', 'google-weather'],
+    servers: ['accuweather', 'tomorrow-io', 'google-weather', 'gap-weather'],
   },
   livestock: {
     labelKey: 'mcp.categories.livestock',
@@ -200,6 +200,12 @@ const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
     stringKey: 'mcp.services.googleWeather',
     icon: 'google',
     logo: null, // Uses MaterialCommunityIcons 'google' icon via the icon field
+  },
+  'gap-weather': {
+    name: 'GAP Weather',
+    stringKey: 'mcp.services.gapWeather',
+    icon: 'weather-partly-cloudy',
+    logo: null,
   },
   'feed-formulation': {
     name: 'Feed Formulation',
