@@ -206,6 +206,15 @@ export default function NativeVoiceRecorder({
   const handleDone = useCallback(async (): Promise<void> => {
     if (!recordingRef.current || isTranscribing) return;
 
+    // Don't try to transcribe if recording duration is too short (< 1 second)
+    // This prevents errors when user immediately taps Done after granting permission
+    if (recordingDuration < 1) {
+      log('[NativeVoice] Recording too short, canceling');
+      cleanup();
+      onCancel();
+      return;
+    }
+
     log('[NativeVoice] Done pressed');
     setIsTranscribing(true);
 
