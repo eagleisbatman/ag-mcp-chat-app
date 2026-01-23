@@ -95,6 +95,12 @@
       "expo-font",
       "react-native-edge-to-edge"
     ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f5d06645-f6a9-4679-8828-794db537e8c9"
+    },
     "extra": {
       "eas": {
         "projectId": "f5d06645-f6a9-4679-8828-794db537e8c9"
