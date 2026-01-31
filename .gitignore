@@ -39,3 +39,6 @@ mobile/.expo/
 
 # Test scripts
 *.sh
+
+# Claude Code instructions (local only)
+CLAUDE.md
