@@ -5,6 +5,7 @@ yarn.lock
 
 # Environment variables
 .env
+.env.*
 .env.local
 .env.production
 .credentials.env
@@ -29,6 +30,9 @@ Thumbs.db
 
 # Documentation (generated/local)
 mobile/docs/
+docs/
+*.md
+!README.md
 
 # Claude Code local files
 .claude/
