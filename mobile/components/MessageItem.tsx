@@ -14,6 +14,7 @@ import { Message } from '../types';
 import { useMessageTts } from './message/useMessageTts';
 import { createMarkdownStyles } from './message/markdownStyles';
 import { styles } from './message/messageItemStyles';
+import ImageViewerModal from './chat/ImageViewerModal';
 
 interface MessageItemProps {
   message: Message;
@@ -76,6 +77,9 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
     locationDetails,
     onError: showError,
   });
+
+  // Image viewer state
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
 
   // Animation state
   const [fadeAnim] = useState(() => new Animated.Value(isNewMessage ? 0 : 1));
@@ -166,14 +170,16 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
         <View style={styles.userRow}>
           <View style={[styles.userBubble, { backgroundColor: theme.userMessage }]}>
             {message.image && (
-              <Image
-                source={{ uri: message.image }}
-                style={styles.image}
-                contentFit="cover"
-                transition={200}
-                placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
-                accessibilityLabel={t('a11y.attachedImage')}
-              />
+              <Pressable onPress={() => setImageViewerVisible(true)}>
+                <Image
+                  source={{ uri: message.image }}
+                  style={styles.image}
+                  contentFit="cover"
+                  transition={200}
+                  placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
+                  accessibilityLabel={t('a11y.attachedImage')}
+                />
+              </Pressable>
             )}
             {message.text && !message.text.startsWith('[Image for') && (
               <Text style={[styles.messageText, { color: theme.userMessageText }]}>
@@ -185,6 +191,9 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
             </Text>
           </View>
         </View>
+        {message.image && (
+          <ImageViewerModal visible={imageViewerVisible} imageUri={message.image} onClose={() => setImageViewerVisible(false)} />
+        )}
       </View>
     );
   }
@@ -229,14 +238,16 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
         </View>
 
         {message.image && (
-          <Image
-            source={{ uri: message.image }}
-            style={styles.image}
-            contentFit="cover"
-            transition={200}
-            placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
-            accessibilityLabel={t('a11y.attachedImage')}
-          />
+          <Pressable onPress={() => setImageViewerVisible(true)}>
+            <Image
+              source={{ uri: message.image }}
+              style={styles.image}
+              contentFit="cover"
+              transition={200}
+              placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
+              accessibilityLabel={t('a11y.attachedImage')}
+            />
+          </Pressable>
         )}
 
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
@@ -268,6 +279,9 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
           )}
         </Animated.View>
       </View>
+      {message.image && (
+        <ImageViewerModal visible={imageViewerVisible} imageUri={message.image} onClose={() => setImageViewerVisible(false)} />
+      )}
     </View>
   );
 }
