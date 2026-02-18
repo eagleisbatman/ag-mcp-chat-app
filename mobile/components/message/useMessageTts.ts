@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { textToSpeech } from '../../services/tts';
-import { playAudio, stopAudio } from '../../utils/audioPlayer';
+import { playAudio, stopAudio, getRecordingActive } from '../../utils/audioPlayer';
 import { playAudioWithTimeout } from '../../utils/audioPlayback';
 import { generateDiagnosisTTSBrief, generateDiagnosisTTSText } from '../../utils/diagnosisNormalizer';
 import { getDiagnosisTtsSummary } from '../../services/diagnosisSummary';
@@ -26,6 +26,7 @@ export function useMessageTts({
   const [localTtsUrl, setLocalTtsUrl] = useState(message.ttsAudioUrl);
   const playbackIdRef = useRef(0);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const mountedRef = useRef(true);
 
   const resolveDiagnosisText = useCallback(async (): Promise<string | null> => {
     const brief = generateDiagnosisTTSBrief(message.diagnosisData);
@@ -82,6 +83,12 @@ export function useMessageTts({
   }, []);
 
   const handleSpeak = useCallback(async (): Promise<void> => {
+    // Don't start TTS while recording is active
+    if (getRecordingActive()) {
+      log('🔊 [TTS] Blocked: recording is active');
+      return;
+    }
+
     // If currently loading (generating), cancel the generation
     if (isLoading) {
       cancelGeneration();
@@ -129,27 +136,28 @@ export function useMessageTts({
       abortControllerRef.current = new AbortController();
       const signal = abortControllerRef.current.signal;
 
-      // Background full TTS for caching - track with ref to prevent memory leaks
-      const cachePlaybackId = playbackId;
-      textToSpeech(textToSpeak, languageCode || 'en', ttsLocation, signal)
-        .then((full) => {
-          // Only update cache if this playback session is still active and not cancelled
-          if (playbackIdRef.current === cachePlaybackId && !full.cancelled) {
-            const audioSource = full.audioUrl || full.audioBase64;
-            if (full.success && audioSource) {
-              setLocalTtsUrl(audioSource);
-              log('TTS cached successfully for future playback');
-            }
-          }
-        })
-        .catch((err) => {
-          // Only log if this playback session is still active
-          if (playbackIdRef.current === cachePlaybackId) {
-            log('TTS cache error:', (err as Error).message);
-          }
-        });
-
       const segments = splitTextIntoSegments(textToSpeak);
+
+      // Only fire background full-text cache request if there are multiple segments.
+      // For single-segment text, the segment result itself will be used for caching.
+      if (segments.length > 1) {
+        const cachePlaybackId = playbackId;
+        textToSpeech(textToSpeak, languageCode || 'en', ttsLocation, signal)
+          .then((full) => {
+            if (mountedRef.current && playbackIdRef.current === cachePlaybackId && !full.cancelled) {
+              const audioSource = full.audioUrl || full.audioBase64;
+              if (full.success && audioSource) {
+                setLocalTtsUrl(audioSource);
+                log('TTS cached successfully for future playback');
+              }
+            }
+          })
+          .catch((err) => {
+            if (mountedRef.current && playbackIdRef.current === cachePlaybackId) {
+              log('TTS cache error:', (err as Error).message);
+            }
+          });
+      }
       let nextPromise = textToSpeech(segments[0], languageCode || 'en', ttsLocation, signal);
 
       for (let i = 0; i < segments.length; i += 1) {
@@ -167,6 +175,11 @@ export function useMessageTts({
           log('TTS segment error:', segmentResult.error);
           onError(t('voice.voiceUnavailableLater'));
           return;
+        }
+
+        // Cache single-segment result directly (avoids duplicate API call)
+        if (segments.length === 1 && mountedRef.current) {
+          setLocalTtsUrl(audioSource);
         }
 
         if (i + 1 < segments.length) {
@@ -203,16 +216,23 @@ export function useMessageTts({
     stopAllPlayback,
   ]);
 
+  // Use ref to always have latest stopAllPlayback without re-running the effect
+  const stopAllPlaybackRef = useRef(stopAllPlayback);
+  stopAllPlaybackRef.current = stopAllPlayback;
+
   useEffect(() => {
+    mountedRef.current = true;
     return () => {
-      // Cleanup on unmount - stop audio and cancel any ongoing generation
+      mountedRef.current = false;
+      // Cleanup on unmount - always stop audio and cancel any ongoing generation
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
         abortControllerRef.current = null;
       }
-      if (isSpeaking) stopAllPlayback();
+      // Always stop playback on unmount (don't rely on stale isSpeaking closure)
+      stopAllPlaybackRef.current();
     };
-  }, [isSpeaking, stopAllPlayback]);
+  }, []);
 
   return { isSpeaking, isLoading, handleSpeak };
 }
