@@ -32,7 +32,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const { showSuccess, showWarning, showError } = useToast();
   
   // Explicitly typing the FlatList ref to allow null
-  const flatListRef = useRef<FlatList<Message>>(null);
+  const flatListRef = useRef<FlatList<ListItem>>(null);
   const inputToolbarRef = useRef<InputToolbarHandle>(null);
 
   const sessionId = route?.params?.sessionId;
@@ -54,7 +54,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   } = useChatScroll({
     messages,
     isTyping,
-    flatListRef: flatListRef as React.RefObject<FlatList<Message>>
+    flatListRef: flatListRef
   });
 
   const { weatherData, weatherLoading, weatherError, weatherProvider } = useWeatherData(
