@@ -11,7 +11,7 @@ import { Message } from '../types';
 interface UseChatScrollOptions {
   messages: Message[];
   isTyping: boolean;
-  flatListRef: RefObject<FlatList<Message>>;
+  flatListRef: RefObject<FlatList<any> | null>;
 }
 
 interface UseChatScrollReturn {
