@@ -16,6 +16,21 @@ let currentWebAudio: HTMLAudioElement | null = null;
 let currentWebBlobUrl: string | null = null;
 let isPlaying = false;
 
+// Global audio session lock to prevent TTS during recording and vice versa
+let isRecordingActive = false;
+
+/**
+ * Mark recording session as active. TTS playback will be blocked.
+ */
+export const setRecordingActive = (active: boolean): void => {
+  isRecordingActive = active;
+};
+
+/**
+ * Check if a recording session is currently active.
+ */
+export const getRecordingActive = (): boolean => isRecordingActive;
+
 type PlaybackStatusCallback = (status: AVPlaybackStatus) => void;
 
 /**
@@ -165,9 +180,11 @@ export const playAudio = async (
       // Direct URL playback (Cloudinary)
       audioSource = { uri: source };
     } else {
-      // Base64 - write to temp file first
+      // Base64 - write to temp file first (strip data URL prefix if present)
+      const dataUrlMatch = source.match(/^data:[^;]+;base64,(.+)$/s);
+      const rawBase64 = dataUrlMatch ? dataUrlMatch[1] : source;
       tempFileUri = `${FileSystem.cacheDirectory}tts_audio_${Date.now()}.wav`;
-      await FileSystem.writeAsStringAsync(tempFileUri, source, {
+      await FileSystem.writeAsStringAsync(tempFileUri, rawBase64, {
         encoding: 'base64',
       });
       audioSource = { uri: tempFileUri };
@@ -292,4 +309,6 @@ export default {
   pauseAudio,
   resumeAudio,
   isAudioPlaying,
+  setRecordingActive,
+  getRecordingActive,
 };

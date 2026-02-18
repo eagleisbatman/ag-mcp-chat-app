@@ -87,6 +87,17 @@ export default function WebVoiceRecorder({
             <Text style={[styles.transcribingText, { color: theme.text }]}>
               {t('voice.transcribing')}
             </Text>
+            <Pressable
+              onPress={handleCancel}
+              accessibilityRole="button"
+              accessibilityLabel={t('voice.cancel')}
+              style={[
+                styles.cancelButton,
+                { backgroundColor: isDark ? 'rgba(255, 69, 58, 0.15)' : theme.errorLight },
+              ]}
+            >
+              <Text style={[styles.buttonLabel, { color: theme.error }]}>{t('voice.cancel')}</Text>
+            </Pressable>
           </View>
         ) : (
           <>

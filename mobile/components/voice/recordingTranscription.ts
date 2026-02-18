@@ -30,6 +30,31 @@ interface FinishRecordingParams {
   transcriptionTimeoutMs?: number;
 }
 
+/**
+ * Convert a TranscriptionResult error code to a user-friendly message.
+ * Re-usable across both native and web recorders.
+ */
+export function getTranscriptionErrorMessage(
+  result: TranscriptionResult,
+  languageName?: string,
+): string {
+  switch (result.errorCode) {
+    case 'LANGUAGE_MISMATCH':
+      return t('voice.languageMismatch', {
+        expected: result.errorDetails?.expected || languageName || 'selected language',
+        detected: result.errorDetails?.detected || 'another language',
+      });
+    case 'NO_SPEECH':
+      return t('voice.noSpeechDetected');
+    case 'AUDIO_TOO_SHORT':
+      return t('voice.audioTooShort');
+    case 'AUDIO_QUALITY':
+      return t('voice.audioQualityPoor');
+    default:
+      return result.error || t('voice.couldNotTranscribeAudio');
+  }
+}
+
 export async function finishRecording({
   stopRecording,
   lastRecordingUri,
@@ -89,26 +114,9 @@ export async function finishRecording({
     };
   }
 
-  let errorMessage: string;
-  switch (transcriptResult?.errorCode) {
-    case 'LANGUAGE_MISMATCH':
-      errorMessage = t('voice.languageMismatch', {
-        expected: transcriptResult.errorDetails?.expected || languageName || 'selected language',
-        detected: transcriptResult.errorDetails?.detected || 'another language',
-      });
-      break;
-    case 'NO_SPEECH':
-      errorMessage = t('voice.noSpeechDetected');
-      break;
-    case 'AUDIO_TOO_SHORT':
-      errorMessage = t('voice.audioTooShort');
-      break;
-    case 'AUDIO_QUALITY':
-      errorMessage = t('voice.audioQualityPoor');
-      break;
-    default:
-      errorMessage = transcriptResult?.error || t('voice.couldNotTranscribeAudio');
-  }
+  const errorMessage = transcriptResult
+    ? getTranscriptionErrorMessage(transcriptResult, languageName)
+    : t('voice.couldNotTranscribeAudio');
 
   return { success: false, errorMessage };
 }

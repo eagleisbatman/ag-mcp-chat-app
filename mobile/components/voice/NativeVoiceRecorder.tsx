@@ -17,6 +17,8 @@ import { styles } from './voiceRecorderStyles';
 import { MAX_RECORDING_DURATION } from './recordingOptions';
 import { useRecorderAnimations } from './useRecorderAnimations';
 import { log, error as logError } from '../../utils/logger';
+import { setRecordingActive, stopAudio } from '../../utils/audioPlayer';
+import { getTranscriptionErrorMessage } from './recordingTranscription';
 import type { AudioData, TranscriptionResult } from './recordingTranscription';
 
 interface NativeVoiceRecorderProps {
@@ -42,12 +44,15 @@ export default function NativeVoiceRecorder({
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
 
+  const lastRecordingUriRef = useRef<string | null>(null);
   const recordingRef = useRef<Audio.Recording | null>(null);
   const durationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const meterIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const slideAnimRef = useRef<Animated.Value | null>(null);
   const mountedRef = useRef(true);
   const startedRef = useRef(false);
+  const doneInProgressRef = useRef(false);
+  const durationRef = useRef(0);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -89,6 +94,19 @@ export default function NativeVoiceRecorder({
       // Ignore
     }
 
+    // Clean up temp recording file
+    if (lastRecordingUriRef.current) {
+      FileSystem.deleteAsync(lastRecordingUriRef.current, { idempotent: true }).catch(() => {});
+      lastRecordingUriRef.current = null;
+    }
+
+    // Clear global audio session lock
+    setRecordingActive(false);
+
+    // Reset refs for potential re-use
+    startedRef.current = false;
+    durationRef.current = 0;
+
     if (mountedRef.current) {
       setIsRecording(false);
       setRecordingDuration(0);
@@ -106,6 +124,10 @@ export default function NativeVoiceRecorder({
     log('[NativeVoice] Starting native recording');
 
     try {
+      // Stop any active TTS playback before recording
+      await stopAudio();
+      setRecordingActive(true);
+
       // Request permissions
       const { granted } = await Audio.requestPermissionsAsync();
       if (!granted) {
@@ -146,10 +168,14 @@ export default function NativeVoiceRecorder({
 
       setIsRecording(true);
 
-      // Duration timer
+      // Duration timer (mirror to ref to avoid stale closures)
       durationIntervalRef.current = setInterval(() => {
         if (mountedRef.current) {
-          setRecordingDuration(prev => prev + 1);
+          setRecordingDuration(prev => {
+            const next = prev + 1;
+            durationRef.current = next;
+            return next;
+          });
         }
       }, 1000);
 
@@ -204,17 +230,19 @@ export default function NativeVoiceRecorder({
   }, [cleanup, onCancel]);
 
   const handleDone = useCallback(async (): Promise<void> => {
-    if (!recordingRef.current || isTranscribing) return;
+    // Use ref guard to prevent double-tap race condition
+    if (!recordingRef.current || doneInProgressRef.current) return;
 
     // Don't try to transcribe if recording duration is too short (< 1 second)
-    // This prevents errors when user immediately taps Done after granting permission
-    if (recordingDuration < 1) {
+    // Use ref to avoid stale closure over state
+    if (durationRef.current < 1) {
       log('[NativeVoice] Recording too short, canceling');
       cleanup();
       onCancel();
       return;
     }
 
+    doneInProgressRef.current = true;
     log('[NativeVoice] Done pressed');
     setIsTranscribing(true);
 
@@ -237,6 +265,7 @@ export default function NativeVoiceRecorder({
         throw new Error('No recording URI');
       }
 
+      lastRecordingUriRef.current = uri;
       log('[NativeVoice] Recording URI:', uri);
 
       // Read file as base64
@@ -245,7 +274,7 @@ export default function NativeVoiceRecorder({
       });
 
       const base64 = `data:audio/m4a;base64,${base64Raw}`;
-      const duration = recordingDuration;
+      const duration = durationRef.current;
 
       log('[NativeVoice] Calling transcription API, base64 length:', base64Raw.length);
 
@@ -259,7 +288,7 @@ export default function NativeVoiceRecorder({
       if (result.success && result.transcription) {
         onTranscriptionComplete(result.transcription, { uri, base64, duration });
       } else {
-        const errorMsg = result.error || t('voice.transcriptionFailed');
+        const errorMsg = getTranscriptionErrorMessage(result);
         log('[NativeVoice] Transcription failed:', errorMsg);
         showError(errorMsg);
         onCancel();
@@ -270,9 +299,10 @@ export default function NativeVoiceRecorder({
       showError(t('voice.transcriptionFailed'));
       onCancel();
     } finally {
+      doneInProgressRef.current = false;
       await cleanup();
     }
-  }, [isTranscribing, recordingDuration, languageCode, cleanup, transcribeAudio, onTranscriptionComplete, showError, onCancel]);
+  }, [languageCode, cleanup, transcribeAudio, onTranscriptionComplete, showError, onCancel]);
 
   const { slideAnim, pulseAnim, textOpacity } = useRecorderAnimations({
     isRecording,
@@ -324,6 +354,17 @@ export default function NativeVoiceRecorder({
             <Text style={[styles.transcribingText, { color: theme.text }]}>
               {t('voice.transcribing')}
             </Text>
+            <Pressable
+              onPress={handleCancel}
+              accessibilityRole="button"
+              accessibilityLabel={t('voice.cancel')}
+              style={[
+                styles.cancelButton,
+                { backgroundColor: isDark ? 'rgba(255, 69, 58, 0.15)' : theme.errorLight },
+              ]}
+            >
+              <Text style={[styles.buttonLabel, { color: theme.error }]}>{t('voice.cancel')}</Text>
+            </Pressable>
           </View>
         ) : (
           <>

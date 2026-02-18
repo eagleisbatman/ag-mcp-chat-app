@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Platform } from 'react-native';
 import { t } from '../../constants/strings';
 import { error as logError, log } from '../../utils/logger';
+import { setRecordingActive, stopAudio } from '../../utils/audioPlayer';
 import { MAX_RECORDING_DURATION } from './recordingOptions';
+import { getTranscriptionErrorMessage } from './recordingTranscription';
 import type { AudioData, TranscriptionResult } from './recordingTranscription';
 import { useRecorderAnimations } from './useRecorderAnimations';
 
@@ -48,6 +50,7 @@ export function useWebVoiceRecording({
   // All refs for managing recording state
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const blobUrlRef = useRef<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -56,6 +59,8 @@ export function useWebVoiceRecording({
   const slideAnimRef = useRef<Animated.Value | null>(null);
   const mountedRef = useRef(true);
   const startedRef = useRef(false);
+  const doneInProgressRef = useRef(false);
+  const durationRef = useRef(0);
 
   // Stable refs for callbacks to avoid dependency issues
   const onCancelRef = useRef(onCancel);
@@ -128,6 +133,19 @@ export function useWebVoiceRecording({
     analyserRef.current = null;
     audioChunksRef.current = [];
 
+    // Revoke any outstanding blob URL to prevent memory leak
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = null;
+    }
+
+    // Clear global audio session lock
+    setRecordingActive(false);
+
+    // Reset refs for potential re-use
+    startedRef.current = false;
+    durationRef.current = 0;
+
     if (mountedRef.current) {
       setIsRecording(false);
       setRecordingDuration(0);
@@ -148,6 +166,10 @@ export function useWebVoiceRecording({
     log('[WebVoice] Starting on platform:', Platform.OS);
 
     try {
+      // Stop any active TTS playback before recording
+      await stopAudio();
+      setRecordingActive(true);
+
       // Check if Web APIs are available (only on web platform, not on native simulators)
       if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
         throw new Error(
@@ -204,10 +226,14 @@ export function useWebVoiceRecording({
       mediaRecorder.start(250);
       setIsRecording(true);
 
-      // Duration timer (using setInterval, not requestAnimationFrame)
+      // Duration timer (mirror to ref to avoid stale closures)
       durationIntervalRef.current = setInterval(() => {
         if (mountedRef.current) {
-          setRecordingDuration(prev => prev + 1);
+          setRecordingDuration(prev => {
+            const next = prev + 1;
+            durationRef.current = next;
+            return next;
+          });
         }
       }, 1000);
 
@@ -272,8 +298,10 @@ export function useWebVoiceRecording({
   }, [cleanup]);
 
   const handleDone = useCallback(async (): Promise<void> => {
-    if (!mediaRecorderRef.current || isTranscribing) return;
+    // Use ref guard to prevent double-tap race condition
+    if (!mediaRecorderRef.current || doneInProgressRef.current) return;
 
+    doneInProgressRef.current = true;
     log('[WebVoice] Done pressed');
     setIsTranscribing(true);
 
@@ -317,7 +345,8 @@ export function useWebVoiceRecording({
       // Prepend data URL prefix with correct mime type for the API
       const base64 = `data:${mimeType};base64,${rawBase64}`;
       const uri = URL.createObjectURL(audioBlob);
-      const duration = recordingDuration;
+      blobUrlRef.current = uri;
+      const duration = durationRef.current;
 
       // Use live transcript or call API
       if (liveTranscript?.trim()) {
@@ -337,14 +366,12 @@ export function useWebVoiceRecording({
       if (result.success && result.transcription) {
         onTranscriptionCompleteRef.current(result.transcription, { uri, base64, duration });
       } else {
-        // Show more specific error message
-        const errorMsg = result.error || t('voice.transcriptionFailed');
+        // Use error code-aware messages
+        const errorMsg = blobSizeKB > 1500
+          ? 'Recording too long. Please try a shorter message.'
+          : getTranscriptionErrorMessage(result);
         log('[WebVoice] Transcription failed:', errorMsg);
-        if (blobSizeKB > 1500) {
-          showErrorRef.current('Recording too long. Please try a shorter message.');
-        } else {
-          showErrorRef.current(errorMsg);
-        }
+        showErrorRef.current(errorMsg);
         onCancelRef.current();
       }
     } catch (error) {
@@ -352,9 +379,10 @@ export function useWebVoiceRecording({
       showErrorRef.current(t('voice.transcriptionFailed'));
       onCancelRef.current();
     } finally {
+      doneInProgressRef.current = false;
       cleanup();
     }
-  }, [isTranscribing, recordingDuration, languageCode, liveTranscript, cleanup]);
+  }, [languageCode, liveTranscript, cleanup]);
 
   const { slideAnim, pulseAnim, textOpacity } = useRecorderAnimations({
     isRecording,

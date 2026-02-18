@@ -54,7 +54,7 @@ export const textToSpeech = async (
 
     // If external signal aborts, abort our controller too
     if (signal) {
-      signal.addEventListener('abort', () => controller.abort());
+      signal.addEventListener('abort', () => controller.abort(), { once: true });
     }
 
     const response = await fetch(API_URL, {
