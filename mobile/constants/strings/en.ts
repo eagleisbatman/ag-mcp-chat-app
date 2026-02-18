@@ -73,6 +73,8 @@ export const en = {
     locationUpdateFailed: 'Could not update location',
     loadingConversation: 'Loading conversation...',
     thinking: 'Thinking...',
+    today: 'Today',
+    yesterday: 'Yesterday',
     messagePlaceholder: 'Message...',
     fromVoice: 'From voice — edit if needed',
     voiceTranscribed: 'Voice transcribed! Edit if needed, then send.',
