@@ -1,10 +1,12 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import './global.css';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import { ActivityIndicator, View, StyleSheet, Animated, Platform } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
 
 // Keep the splash screen visible while we fetch resources
@@ -95,6 +97,24 @@ function SyncErrorWatcher() {
 
 function AppNavigator() {
   const { isLoading, onboardingComplete, theme, isDark } = useApp();
+
+  // Bridge app theme to React Native Paper MD3 theme
+  const paperTheme = useMemo(() => {
+    const base = isDark ? MD3DarkTheme : MD3LightTheme;
+    return {
+      ...base,
+      colors: {
+        ...base.colors,
+        primary: theme.accent,
+        onPrimary: '#FFFFFF',
+        background: theme.background,
+        surface: theme.surface,
+        onBackground: theme.text,
+        onSurface: theme.text,
+        error: theme.error,
+      },
+    };
+  }, [isDark, theme]);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Hide splash screen and animate in when loading is complete
@@ -121,14 +141,16 @@ function AppNavigator() {
   }
 
   return (
-    <Animated.View style={{ flex: 1, backgroundColor: theme.background, opacity: fadeAnim }}>
-      <SystemBars style={isDark ? 'light' : 'dark'} />
-      <OfflineIndicator />
-      <SyncErrorWatcher />
-      <NavigationContainer linking={linking}>
-        {onboardingComplete ? <MainStack /> : <OnboardingStack />}
-      </NavigationContainer>
-    </Animated.View>
+    <PaperProvider theme={paperTheme}>
+      <Animated.View style={{ flex: 1, backgroundColor: theme.background, opacity: fadeAnim }}>
+        <SystemBars style={isDark ? 'light' : 'dark'} />
+        <OfflineIndicator />
+        <SyncErrorWatcher />
+        <NavigationContainer linking={linking}>
+          {onboardingComplete ? <MainStack /> : <OnboardingStack />}
+        </NavigationContainer>
+      </Animated.View>
+    </PaperProvider>
   );
 }
 

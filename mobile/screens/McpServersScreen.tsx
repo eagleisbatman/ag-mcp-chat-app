@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { RadioButton } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -339,17 +340,13 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
               </View>
             )}
             {isSelectable && isActive && (
-              <Pressable
+              <RadioButton
+                value={server.id || ''}
+                status={isSelected ? 'checked' : 'unchecked'}
                 onPress={onSelect}
-                style={({ pressed }) => [styles.radioButton, pressed && { opacity: 0.7 }]}
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              >
-                {isSelected ? (
-                  <MaterialCommunityIcons name="radiobox-marked" size={22} color={theme.accent} />
-                ) : (
-                  <MaterialCommunityIcons name="radiobox-blank" size={22} color={theme.textMuted} />
-                )}
-              </Pressable>
+                color={theme.accent}
+                uncheckedColor={theme.textMuted}
+              />
             )}
             {isComingSoon && (
               <View style={[styles.comingSoonBadge, { backgroundColor: theme.warning + '20' }]}>
