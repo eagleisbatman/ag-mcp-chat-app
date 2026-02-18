@@ -4,14 +4,29 @@ import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 export const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.xs,
+  },
+  // User message: right-aligned bubble
+  userRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  userBubble: {
+    maxWidth: '80%',
+    borderRadius: SPACING.radiusLg,
+    borderTopRightRadius: SPACING.xs,
+    paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
-    borderTopWidth: 0,
+  },
+  // Bot message: full-width, no bubble (clean markdown layout)
+  botRow: {
+    flexDirection: 'column',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: SPACING.sm,
+    marginBottom: SPACING.xs,
   },
   headerRight: {
     flexDirection: 'row',
@@ -36,7 +51,7 @@ export const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 240,
-    borderRadius: 12,
+    borderRadius: SPACING.radiusMd,
     marginBottom: SPACING.md,
   },
   markdownContainer: {
@@ -46,5 +61,10 @@ export const styles = StyleSheet.create({
   messageText: {
     fontSize: TYPOGRAPHY.sizes.base,
     lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.normal,
+  },
+  userTimestamp: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: SPACING.xs,
+    alignSelf: 'flex-end',
   },
 });

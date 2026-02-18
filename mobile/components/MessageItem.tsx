@@ -141,20 +141,44 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
     }
   };
 
+  if (!isBot) {
+    // User message — right-aligned bubble
+    return (
+      <View style={styles.container} onLayout={handleLayout}>
+        <View style={styles.userRow}>
+          <View style={[styles.userBubble, { backgroundColor: theme.userMessage }]}>
+            {message.image && (
+              <Image
+                source={{ uri: message.image }}
+                style={styles.image}
+                contentFit="cover"
+                transition={200}
+                placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
+              />
+            )}
+            {message.text && !message.text.startsWith('[Image for') && (
+              <Text style={[styles.messageText, { color: theme.userMessageText }]}>
+                {message.text}
+              </Text>
+            )}
+            <Text style={[styles.userTimestamp, { color: theme.textMuted }]}>
+              {formatTime(message.createdAt)}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  // Bot message — full-width with header
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: 'transparent' },
-      ]}
-      onLayout={handleLayout}
-    >
-      <View style={styles.header}>
-        <Text style={[styles.senderName, { color: isBot ? theme.accent : theme.textSecondary }]}>
-          {isBot ? t('chat.senderAssistant') : t('chat.senderYou')}
-        </Text>
-        <View style={styles.headerRight}>
-          {isBot && (
+    <View style={styles.container} onLayout={handleLayout}>
+      <View style={styles.botRow}>
+        <View style={styles.header}>
+          <Text style={[styles.senderName, { color: theme.accent }]}>
+            {t('chat.senderAssistant')}
+          </Text>
+          <View style={styles.headerRight}>
             <Pressable
               style={[
                 styles.speakButton,
@@ -169,11 +193,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
             >
               {isLoading ? (
                 <Animated.View style={{ opacity: pulseAnim }}>
-                  <AppIcon
-                    name="close"
-                    size={20}
-                    color={theme.error}
-                  />
+                  <AppIcon name="close" size={20} color={theme.error} />
                 </Animated.View>
               ) : (
                 <AppIcon
@@ -183,58 +203,42 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
                 />
               )}
             </Pressable>
-          )}
-          <Text style={[styles.timestamp, { color: theme.textMuted }]}>
-            {formatTime(message.createdAt)}
-          </Text>
+            <Text style={[styles.timestamp, { color: theme.textMuted }]}>
+              {formatTime(message.createdAt)}
+            </Text>
+          </View>
         </View>
-      </View>
 
-      {message.image && (
-        <Image 
-          source={{ uri: message.image }} 
-          style={styles.image}
-          contentFit="cover"
-          transition={200}
-          placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
-        />
-      )}
-      
-      {isBot ? (
+        {message.image && (
+          <Image
+            source={{ uri: message.image }}
+            style={styles.image}
+            contentFit="cover"
+            transition={200}
+            placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
+          />
+        )}
+
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
-          {/* Show typing indicator when thinking */}
           {isThinking ? (
             <TypingIndicator text={message.thinkingText || t('chat.thinking')} />
           ) : message.text ? (
             <Markdown style={markdownStyles}>
               {isStreaming
-                ? sanitizeStreamingMarkdown(message.text) + ' ▋'
+                ? sanitizeStreamingMarkdown(message.text) + ' \u258B'
                 : message.text}
             </Markdown>
           ) : null}
 
           {message.diagnosisData && (
-            <DiagnosisCard
-              diagnosis={message.diagnosisData}
-              onRetry={onRetry}
-            />
+            <DiagnosisCard diagnosis={message.diagnosisData} onRetry={onRetry} />
           )}
 
-          {/* Follow-up questions - show after response is complete */}
           {!isStreaming && !isThinking && message.followUpQuestions && message.followUpQuestions.length > 0 && onFollowUpTap && (
-            <FollowUpQuestions
-              questions={message.followUpQuestions}
-              onQuestionTap={onFollowUpTap}
-            />
+            <FollowUpQuestions questions={message.followUpQuestions} onQuestionTap={onFollowUpTap} />
           )}
         </Animated.View>
-      ) : (
-        message.text && !message.text.startsWith('[Image for') ? (
-          <Text style={[styles.messageText, { color: theme.text }]}>
-            {message.text}
-          </Text>
-        ) : null
-      )}
+      </View>
     </View>
   );
 }
