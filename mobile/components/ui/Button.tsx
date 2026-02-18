@@ -20,9 +20,7 @@ interface ButtonProps {
 
 function getRipple({ theme }: { theme: ThemeColors }): PressableAndroidRippleConfig | undefined {
   if (Platform.OS !== 'android') return undefined;
-  const isDark = theme.name === 'dark';
-  const base = isDark ? '#FFFFFF' : '#000000';
-  const color = withAlpha(base, 0.12);
+  const color = withAlpha(theme.text, 0.12);
   return { color, borderless: false };
 }
 

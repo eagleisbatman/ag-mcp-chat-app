@@ -140,7 +140,7 @@ export default function AttachBottomSheet({
         style={[
           styles.sheet,
           {
-            backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF',
+            backgroundColor: theme.surfaceElevated,
             paddingBottom: bottomPadding,
             // On web, constrain width and center
             ...(isWeb ? {
@@ -161,7 +161,7 @@ export default function AttachBottomSheet({
       >
         {/* Handle bar */}
         <View style={styles.handleContainer}>
-          <View style={[styles.handle, { backgroundColor: isDark ? '#48484A' : '#D1D1D6' }]} />
+          <View style={[styles.handle, { backgroundColor: theme.textMuted }]} />
         </View>
 
         {/* Header */}
@@ -180,8 +180,8 @@ export default function AttachBottomSheet({
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             android_ripple={Platform.OS === 'android' ? { color: rippleColor, borderless: true } : undefined}
           >
-            <View style={[styles.closeButtonCircle, { backgroundColor: isDark ? '#38383A' : '#E5E5EA' }]}>
-              <AppIcon name="x" size={16} color={isDark ? '#98989D' : '#8E8E93'} prefer="feather" />
+            <View style={[styles.closeButtonCircle, { backgroundColor: theme.inputBorder }]}>
+              <AppIcon name="x" size={16} color={theme.textMuted} prefer="feather" />
             </View>
           </Pressable>
         </View>
@@ -190,11 +190,11 @@ export default function AttachBottomSheet({
         <View style={styles.optionsGrid}>
           {/* Camera Card */}
           <Pressable
-            style={[styles.optionCard, { backgroundColor: isDark ? '#2C2C2E' : '#F2F2F7' }]}
+            style={[styles.optionCard, { backgroundColor: theme.surfaceVariant }]}
             onPress={() => handleOption(onCamera)}
             android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
           >
-            <View style={[styles.iconCircle, { backgroundColor: isDark ? '#38383A' : '#E5E5EA' }]}>
+            <View style={[styles.iconCircle, { backgroundColor: theme.inputBorder }]}>
               <CameraIcon size={28} color={isDark ? theme.accent : theme.iconPrimary} />
             </View>
             <Text style={[styles.optionLabel, { color: theme.text }]}>{t('media.camera')}</Text>
@@ -202,11 +202,11 @@ export default function AttachBottomSheet({
 
           {/* Photos Card */}
           <Pressable
-            style={[styles.optionCard, { backgroundColor: isDark ? '#2C2C2E' : '#F2F2F7' }]}
+            style={[styles.optionCard, { backgroundColor: theme.surfaceVariant }]}
             onPress={() => handleOption(onPhotos)}
             android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
           >
-            <View style={[styles.iconCircle, { backgroundColor: isDark ? '#38383A' : '#E5E5EA' }]}>
+            <View style={[styles.iconCircle, { backgroundColor: theme.inputBorder }]}>
               <ImageIcon size={28} color={isDark ? theme.accent : theme.iconPrimary} />
             </View>
             <Text style={[styles.optionLabel, { color: theme.text }]}>{t('media.photos')}</Text>
