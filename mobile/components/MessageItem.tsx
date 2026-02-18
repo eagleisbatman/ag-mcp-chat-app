@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import Markdown from 'react-native-markdown-display';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
-import { SPACING } from '../constants/themes';
+import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
 import FollowUpQuestions from './FollowUpQuestions';
@@ -80,6 +80,9 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
   // Animation state
   const [fadeAnim] = useState(() => new Animated.Value(isNewMessage ? 0 : 1));
 
+  // Blinking cursor animation for streaming
+  const cursorOpacity = useRef(new Animated.Value(1)).current;
+
   // Pulsing animation for TTS loading (cancel indicator)
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
@@ -106,6 +109,21 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
       pulseAnim.setValue(1);
     }
   }, [isLoading, pulseAnim]);
+
+  useEffect(() => {
+    if (isStreaming && message.text) {
+      const blink = Animated.loop(
+        Animated.sequence([
+          Animated.timing(cursorOpacity, { toValue: 0, duration: 400, useNativeDriver: true }),
+          Animated.timing(cursorOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+        ])
+      );
+      blink.start();
+      return () => { blink.stop(); cursorOpacity.setValue(0); };
+    } else {
+      cursorOpacity.setValue(0);
+    }
+  }, [isStreaming, !!message.text, cursorOpacity]);
 
   useEffect(() => {
     if (isNewMessage && isBot) {
@@ -144,7 +162,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
   if (!isBot) {
     // User message — right-aligned bubble
     return (
-      <View style={styles.container} onLayout={handleLayout}>
+      <View style={styles.container} onLayout={handleLayout} accessible accessibilityRole="text" accessibilityLabel={`${t('a11y.yourMessage')}: ${message.text || t('a11y.imageMessage')}, ${formatTime(message.createdAt)}`}>
         <View style={styles.userRow}>
           <View style={[styles.userBubble, { backgroundColor: theme.userMessage }]}>
             {message.image && (
@@ -154,6 +172,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
                 contentFit="cover"
                 transition={200}
                 placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
+                accessibilityLabel={t('a11y.attachedImage')}
               />
             )}
             {message.text && !message.text.startsWith('[Image for') && (
@@ -172,7 +191,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
 
   // Bot message — full-width with header
   return (
-    <View style={styles.container} onLayout={handleLayout}>
+    <View style={styles.container} onLayout={handleLayout} accessibilityRole="text">
       <View style={styles.botRow}>
         <View style={styles.header}>
           <Text style={[styles.senderName, { color: theme.accent }]}>
@@ -216,6 +235,7 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
             contentFit="cover"
             transition={200}
             placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
+            accessibilityLabel={t('a11y.attachedImage')}
           />
         )}
 
@@ -223,11 +243,20 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
           {isThinking ? (
             <TypingIndicator text={message.thinkingText || t('chat.thinking')} />
           ) : message.text ? (
-            <Markdown style={markdownStyles}>
-              {isStreaming
-                ? sanitizeStreamingMarkdown(message.text) + ' \u258B'
-                : message.text}
-            </Markdown>
+            <>
+              <Markdown style={markdownStyles}>
+                {isStreaming
+                  ? sanitizeStreamingMarkdown(message.text)
+                  : message.text}
+              </Markdown>
+              {isStreaming && (
+                <Animated.Text
+                  style={{ opacity: cursorOpacity, color: theme.text, fontSize: TYPOGRAPHY.sizes.base, marginTop: -4 }}
+                >
+                  {'\u258B'}
+                </Animated.Text>
+              )}
+            </>
           ) : null}
 
           {message.diagnosisData && (

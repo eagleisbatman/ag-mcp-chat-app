@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
+  Pressable,
   ActivityIndicator,
   ListRenderItem,
 } from 'react-native';
@@ -102,16 +102,15 @@ const ContentCarousel: React.FC<ContentCarouselProps> = ({
           {title || t('content.forYou')}
         </Text>
         {onSeeAll && (
-          <TouchableOpacity
-            style={styles.seeAllButton}
+          <Pressable
+            style={({ pressed }) => [styles.seeAllButton, pressed && { opacity: 0.7 }]}
             onPress={onSeeAll}
-            activeOpacity={0.7}
           >
             <Text style={[styles.seeAllText, { color: theme.accent }]}>
               {t('content.seeAll')}
             </Text>
             <Ionicons name="chevron-forward" size={16} color={theme.accent} />
-          </TouchableOpacity>
+          </Pressable>
         )}
       </View>
 
