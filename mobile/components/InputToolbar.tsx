@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingTop: SPACING.md,
     paddingBottom: SPACING.sm,
-    minHeight: 100,
+    minHeight: 80,
   },
   textInput: {
     fontSize: TYPOGRAPHY.sizes.base,

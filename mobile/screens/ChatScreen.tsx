@@ -13,6 +13,7 @@ import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
 import ChatHeader from '../components/chat/ChatHeader';
 import ScrollToBottomButton from '../components/chat/ScrollToBottomButton';
+import DateSeparator from '../components/chat/DateSeparator';
 import WeatherWidget from '../components/weather/WeatherWidget';
 import StarterQuestions from '../components/StarterQuestions';
 
@@ -188,19 +189,32 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             ref={flatListRef}
             data={listData}
             inverted={true}
-            renderItem={({ item }) => {
+            renderItem={({ item, index }) => {
               // Render starter questions as a scrollable item
               if ('isStarterQuestions' in item) {
                 return <StarterQuestions onQuestionTap={handleSend} />;
               }
+
+              // Check if we need a date separator above this message
+              // In inverted list, index+1 = older message (visually above)
+              const nextItem = listData[index + 1];
+              const showDateSeparator = nextItem && !('isStarterQuestions' in nextItem) && (() => {
+                const currDate = new Date(item.createdAt);
+                const nextDate = new Date(nextItem.createdAt);
+                return currDate.toDateString() !== nextDate.toDateString();
+              })();
+
               return (
-                <MessageItem
-                  message={item}
-                  isNewMessage={item._id === newestBotMessageId}
-                  onLayout={(height) => onMessageLayout(item._id, height)}
-                  onRetry={handleDiagnosisRetry}
-                  onFollowUpTap={handleFollowUpTap}
-                />
+                <>
+                  <MessageItem
+                    message={item}
+                    isNewMessage={item._id === newestBotMessageId}
+                    onLayout={(height) => onMessageLayout(item._id, height)}
+                    onRetry={handleDiagnosisRetry}
+                    onFollowUpTap={handleFollowUpTap}
+                  />
+                  {showDateSeparator && <DateSeparator date={item.createdAt} />}
+                </>
               );
             }}
             keyExtractor={(item) => item._id}
