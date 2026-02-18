@@ -465,6 +465,9 @@ export const en = {
     copyMessage: 'Copy message',
     askQuestion: 'Ask: {question}',
     selectLanguage: 'Language {name}',
+    yourMessage: 'Your message',
+    imageMessage: 'Image',
+    attachedImage: 'Attached image',
   },
   weather: {
     current: 'Current Weather',

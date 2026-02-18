@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../contexts/AppContext';
@@ -60,14 +60,13 @@ const ContentCard: React.FC<ContentCardProps> = ({ item, onPress, variant = 'def
   };
 
   return (
-    <TouchableOpacity
-      style={[
+    <Pressable
+      style={({ pressed }) => [
         styles.container,
         isCompact && styles.containerCompact,
-        { backgroundColor: theme.surface },
+        { backgroundColor: theme.surface, opacity: pressed ? 0.9 : 1 },
       ]}
       onPress={onPress}
-      activeOpacity={0.9}
     >
       {/* Thumbnail */}
       <View style={[styles.imageContainer, isCompact && styles.imageContainerCompact]}>
@@ -158,7 +157,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ item, onPress, variant = 'def
           )}
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

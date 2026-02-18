@@ -5,7 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
-  TouchableOpacity,
+  Pressable,
   Image,
   ImageSourcePropType,
 } from 'react-native';
@@ -339,9 +339,9 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
               </View>
             )}
             {isSelectable && isActive && (
-              <TouchableOpacity
+              <Pressable
                 onPress={onSelect}
-                style={styles.radioButton}
+                style={({ pressed }) => [styles.radioButton, pressed && { opacity: 0.7 }]}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 {isSelected ? (
@@ -349,7 +349,7 @@ function ServiceCard({ server, theme, isDark, onPress, isSelectable, isSelected,
                 ) : (
                   <MaterialCommunityIcons name="radiobox-blank" size={22} color={theme.textMuted} />
                 )}
-              </TouchableOpacity>
+              </Pressable>
             )}
             {isComingSoon && (
               <View style={[styles.comingSoonBadge, { backgroundColor: theme.warning + '20' }]}>

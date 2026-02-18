@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../../contexts/AppContext';
@@ -90,9 +90,9 @@ const NotificationBanner: React.FC<NotificationBannerProps> = ({ alerts = [], on
     onPress?.(currentAlert);
   };
 
-  const Container = onPress ? TouchableOpacity : View;
+  const Container = onPress ? Pressable : View;
   const containerProps = onPress
-    ? { style: [styles.container, { backgroundColor: colors.background }], onPress: handlePress, activeOpacity: 0.9 }
+    ? { style: [styles.container, { backgroundColor: colors.background }], onPress: handlePress }
     : { style: [styles.container, { backgroundColor: colors.background }] };
 
   return (
@@ -115,14 +115,14 @@ const NotificationBanner: React.FC<NotificationBannerProps> = ({ alerts = [], on
       </View>
 
       {/* Dismiss button */}
-      <TouchableOpacity
-        style={styles.dismissButton}
+      <Pressable
+        style={({ pressed }) => [styles.dismissButton, pressed && { opacity: 0.7 }]}
         onPress={handleDismiss}
         hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
         accessibilityLabel={t('a11y.dismiss') || 'Dismiss'}
       >
         <Ionicons name="close" size={20} color={colors.text} />
-      </TouchableOpacity>
+      </Pressable>
 
       {/* Multiple alerts indicator */}
       {visibleAlerts.length > 1 && (

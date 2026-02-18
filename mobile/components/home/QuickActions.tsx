@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../../contexts/AppContext';
@@ -66,11 +66,10 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onAskQuestion, onTakePhoto,
       </Text>
       <View style={styles.actionsRow}>
         {actions.map((action) => (
-          <TouchableOpacity
+          <Pressable
             key={action.id}
-            style={[styles.actionButton, { backgroundColor: theme.surface }]}
+            style={({ pressed }) => [styles.actionButton, { backgroundColor: theme.surface, opacity: pressed ? 0.8 : 1 }]}
             onPress={action.onPress}
-            activeOpacity={0.8}
           >
             <View style={[styles.iconContainer, { backgroundColor: `${action.color}15` }]}>
               <Ionicons name={action.icon} size={24} color={action.color} />
@@ -81,7 +80,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onAskQuestion, onTakePhoto,
             >
               {action.label}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </View>
     </View>

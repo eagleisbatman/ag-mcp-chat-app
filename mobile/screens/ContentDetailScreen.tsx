@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Share,
   Linking,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -342,15 +342,15 @@ export default function ContentDetailScreen({ navigation, route }: ContentDetail
         )}
 
         {content.sourceUrl && (
-          <TouchableOpacity
-            style={[styles.sourceLink, { borderColor: theme.accent }]}
+          <Pressable
+            style={({ pressed }) => [styles.sourceLink, { borderColor: theme.accent }, pressed && { opacity: 0.7 }]}
             onPress={() => Linking.openURL(content.sourceUrl!)}
           >
             <Ionicons name="open-outline" size={16} color={theme.accent} />
             <Text style={[styles.sourceLinkText, { color: theme.accent }]}>
               {t('content.readMore')}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         )}
 
         {relatedContent.length > 0 && (
