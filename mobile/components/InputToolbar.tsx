@@ -315,7 +315,7 @@ const InputToolbar = forwardRef(function InputToolbar(
                 style={[
                   styles.sendButton,
                   { backgroundColor: hasText
-                      ? (isDark ? '#FFFFFF' : '#000000')
+                      ? theme.text
                       : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)')
                   }
                 ]}
@@ -324,7 +324,7 @@ const InputToolbar = forwardRef(function InputToolbar(
                 accessibilityLabel={hasText ? t('a11y.sendMessage') : t('a11y.recordVoice')}
               >
                 {hasText ? (
-                  <AppIcon name="arrow-up" size={20} color={isDark ? '#000000' : '#FFFFFF'} prefer="feather" />
+                  <AppIcon name="arrow-up" size={20} color={theme.background} prefer="feather" />
                 ) : (
                   <VoiceWaveIcon size={20} color={theme.icon} />
                 )}
