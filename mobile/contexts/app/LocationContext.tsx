@@ -15,7 +15,7 @@ interface LocationContextValue {
   location: LocationCoords;
   locationStatus: LocationStatus;
   locationDetails: LocationDetails | null;
-  setLocation: (loc: LocationCoords, status: LocationStatus) => Promise<void>;
+  setLocation: (loc: LocationCoords, status: LocationStatus, details?: LocationDetails) => Promise<void>;
 }
 
 const LocationContext = createContext<LocationContextValue | null>(null);
@@ -40,7 +40,7 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
 
           if (savedLocationDetails) {
             setLocationDetails(JSON.parse(savedLocationDetails) as LocationDetails);
-          } else if (loc.latitude && loc.longitude) {
+          } else if (loc.latitude !== null && loc.longitude !== null) {
             lookupLocationDetails(loc.latitude, loc.longitude);
           }
         } else if (savedLocationDetails) {
@@ -110,13 +110,23 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
     }
   };
 
-  const setLocation = async (loc: LocationCoords, status: LocationStatus) => {
+  const setLocation = async (loc: LocationCoords, status: LocationStatus, details?: LocationDetails) => {
     setLocationState(loc);
     setLocationStatus(status);
-    if (status === 'granted' && loc.latitude && loc.longitude) {
+
+    if (status === 'granted' && loc.latitude !== null && loc.longitude !== null) {
       try {
         await AsyncStorage.setItem('location', JSON.stringify(loc));
-        await lookupLocationDetails(loc.latitude, loc.longitude);
+
+        if (details) {
+          // Use pre-fetched details directly (avoids redundant API call)
+          setLocationDetails(details);
+          await AsyncStorage.setItem('locationDetails', JSON.stringify(details));
+          await syncLocationToDb(details, loc.latitude, loc.longitude);
+        } else {
+          // No details provided — reverse-geocode the coordinates
+          await lookupLocationDetails(loc.latitude, loc.longitude);
+        }
       } catch (e) {
         log('Error saving location:', e);
       }

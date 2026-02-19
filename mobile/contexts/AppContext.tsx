@@ -24,7 +24,7 @@ interface AppContextValue {
   location: { latitude: number | null; longitude: number | null };
   locationStatus: 'pending' | 'granted' | 'denied';
   locationDetails: LocationDetails | null;
-  setLocation: (loc: { latitude: number | null; longitude: number | null }, status: 'pending' | 'granted' | 'denied') => Promise<void>;
+  setLocation: (loc: { latitude: number | null; longitude: number | null }, status: 'pending' | 'granted' | 'denied', details?: LocationDetails) => Promise<void>;
 
   // From OnboardingContext
   onboardingComplete: boolean;
