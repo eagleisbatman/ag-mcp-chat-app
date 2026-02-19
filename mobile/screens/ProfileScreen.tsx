@@ -21,24 +21,25 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import Card from '../components/ui/Card';
+import { t } from '../constants/strings';
 import type { RootStackParamList, UserRole, FarmingType } from '../types';
 
 interface ProfileScreenProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Profile'>;
 }
 
-const ROLE_OPTIONS: { value: UserRole; label: string }[] = [
-  { value: 'farmer', label: 'Farmer' },
-  { value: 'extension_worker', label: 'Extension Worker' },
+const ROLE_OPTIONS: { value: UserRole; labelKey: string }[] = [
+  { value: 'farmer', labelKey: 'profile.roleFarmer' },
+  { value: 'extension_worker', labelKey: 'profile.roleExtensionWorker' },
 ];
 
-const FARMING_TYPE_OPTIONS: { value: FarmingType; label: string; icon: string }[] = [
-  { value: 'agriculture', label: 'Agriculture', icon: 'leaf' },
-  { value: 'horticulture', label: 'Horticulture', icon: 'flower' },
-  { value: 'dairy', label: 'Dairy', icon: 'water' },
-  { value: 'livestock', label: 'Livestock', icon: 'paw' },
-  { value: 'poultry', label: 'Poultry', icon: 'egg' },
-  { value: 'aquaculture', label: 'Aquaculture', icon: 'fish' },
+const FARMING_TYPE_OPTIONS: { value: FarmingType; labelKey: string; icon: string }[] = [
+  { value: 'agriculture', labelKey: 'profile.agriculture', icon: 'leaf' },
+  { value: 'horticulture', labelKey: 'profile.horticulture', icon: 'flower' },
+  { value: 'dairy', labelKey: 'profile.dairy', icon: 'water' },
+  { value: 'livestock', labelKey: 'profile.livestock', icon: 'paw' },
+  { value: 'poultry', labelKey: 'profile.poultry', icon: 'egg' },
+  { value: 'aquaculture', labelKey: 'profile.aquaculture', icon: 'fish' },
 ];
 
 export default function ProfileScreen({ navigation }: ProfileScreenProps) {
@@ -84,13 +85,13 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
         farmingTypes,
       });
       if (success) {
-        showSuccess('Profile updated');
+        showSuccess(t('profile.profileUpdated'));
         navigation.goBack();
       } else {
-        showError('Failed to update profile');
+        showError(t('profile.profileUpdateFailed'));
       }
     } catch {
-      showError('Failed to update profile');
+      showError(t('profile.profileUpdateFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -103,14 +104,14 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
       keyboardShouldPersistTaps="handled"
     >
       <ScreenHeader
-        title="Profile"
+        title={t('profile.title')}
         left={
           <IconButton
             icon="arrow-back"
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={<View />}
@@ -118,13 +119,13 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
 
       {/* Name */}
       <View style={styles.section}>
-        <Text style={[styles.label, { color: theme.textMuted }]}>Name</Text>
+        <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.name')}</Text>
         <Card>
           <TextInput
             style={[styles.input, { color: theme.text }]}
             value={name}
             onChangeText={setName}
-            placeholder="Your name"
+            placeholder={t('profile.namePlaceholder')}
             placeholderTextColor={theme.textMuted}
             autoCapitalize="words"
           />
@@ -133,13 +134,13 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
 
       {/* Phone */}
       <View style={styles.section}>
-        <Text style={[styles.label, { color: theme.textMuted }]}>Phone (optional)</Text>
+        <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.phone')}</Text>
         <Card>
           <TextInput
             style={[styles.input, { color: theme.text }]}
             value={phone}
             onChangeText={setPhone}
-            placeholder="+91 XXXXX XXXXX"
+            placeholder={t('profile.phonePlaceholder')}
             placeholderTextColor={theme.textMuted}
             keyboardType="phone-pad"
           />
@@ -148,7 +149,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
 
       {/* Gender */}
       <View style={styles.section}>
-        <Text style={[styles.label, { color: theme.textMuted }]}>Gender</Text>
+        <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.gender')}</Text>
         <View style={styles.chipRow}>
           {['male', 'female', 'other'].map((g) => (
             <TouchableOpacity
@@ -168,7 +169,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
                   { color: gender === g ? theme.accent : theme.text },
                 ]}
               >
-                {g.charAt(0).toUpperCase() + g.slice(1)}
+                {t(`profile.${g}`)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -177,7 +178,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
 
       {/* Role */}
       <View style={styles.section}>
-        <Text style={[styles.label, { color: theme.textMuted }]}>Role</Text>
+        <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.role')}</Text>
         <View style={styles.chipRow}>
           {ROLE_OPTIONS.map((opt) => (
             <TouchableOpacity
@@ -197,7 +198,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
                   { color: role === opt.value ? theme.accent : theme.text },
                 ]}
               >
-                {opt.label}
+                {t(opt.labelKey)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -206,7 +207,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
 
       {/* Farming Types */}
       <View style={styles.section}>
-        <Text style={[styles.label, { color: theme.textMuted }]}>Farming Activities</Text>
+        <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.farmingActivities')}</Text>
         <View style={styles.chipRow}>
           {FARMING_TYPE_OPTIONS.map((opt) => {
             const selected = farmingTypes.includes(opt.value);
@@ -228,7 +229,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
                     { color: selected ? theme.accent : theme.text },
                   ]}
                 >
-                  {opt.label}
+                  {t(opt.labelKey)}
                 </Text>
               </TouchableOpacity>
             );
@@ -247,7 +248,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
           {isSaving ? (
             <ActivityIndicator color="#fff" size="small" />
           ) : (
-            <Text style={styles.saveButtonText}>Save Profile</Text>
+            <Text style={styles.saveButtonText}>{t('profile.saveProfile')}</Text>
           )}
         </TouchableOpacity>
       </View>

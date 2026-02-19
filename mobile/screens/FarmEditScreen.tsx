@@ -21,6 +21,7 @@ import { useToast } from '../contexts/ToastContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
+import { t } from '../constants/strings';
 import type { RootStackParamList } from '../types';
 
 interface FarmEditScreenProps {
@@ -44,7 +45,7 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
   const handleSave = async () => {
     const trimmedName = name.trim();
     if (!trimmedName) {
-      showError('Please enter a farm name');
+      showError(t('farm.enterFarmName'));
       return;
     }
 
@@ -52,7 +53,7 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
     try {
       const areaNum = area.trim() ? parseFloat(area) : undefined;
       if (areaNum !== undefined && isNaN(areaNum)) {
-        showError('Please enter a valid area');
+        showError(t('farm.enterValidArea'));
         setIsSaving(false);
         return;
       }
@@ -63,10 +64,10 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
           totalAreaHectares: areaNum,
         });
         if (success) {
-          showSuccess('Farm updated');
+          showSuccess(t('farm.farmUpdated'));
           navigation.goBack();
         } else {
-          showError('Failed to update farm');
+          showError(t('farm.farmUpdateFailed'));
         }
       } else {
         const newFarm = await addFarm({
@@ -74,14 +75,14 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
           totalAreaHectares: areaNum,
         });
         if (newFarm) {
-          showSuccess('Farm added');
+          showSuccess(t('farm.farmAdded'));
           navigation.goBack();
         } else {
-          showError('Failed to add farm');
+          showError(t('farm.farmAddFailed'));
         }
       }
     } catch {
-      showError('Something went wrong');
+      showError(t('farm.farmAddFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -94,14 +95,14 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
       keyboardShouldPersistTaps="handled"
     >
       <ScreenHeader
-        title={isEdit ? 'Edit Farm' : 'New Farm'}
+        title={isEdit ? t('farm.editFarm') : t('farm.newFarm')}
         left={
           <IconButton
             icon="arrow-back"
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={<View />}
@@ -109,13 +110,13 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
 
       {/* Farm Name */}
       <View style={styles.section}>
-        <Text style={[styles.label, { color: theme.textMuted }]}>Farm Name</Text>
+        <Text style={[styles.label, { color: theme.textMuted }]}>{t('farm.farmName')}</Text>
         <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
           <TextInput
             style={[styles.input, { color: theme.text }]}
             value={name}
             onChangeText={setName}
-            placeholder="e.g. Main Farm"
+            placeholder={t('farm.farmNamePlaceholder')}
             placeholderTextColor={theme.textMuted}
             autoCapitalize="words"
             autoFocus={!isEdit}
@@ -126,14 +127,14 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
       {/* Total Area */}
       <View style={styles.section}>
         <Text style={[styles.label, { color: theme.textMuted }]}>
-          Total Area (hectares, optional)
+          {t('farm.totalArea')}
         </Text>
         <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
           <TextInput
             style={[styles.input, { color: theme.text }]}
             value={area}
             onChangeText={setArea}
-            placeholder="e.g. 2.5"
+            placeholder={t('farm.totalAreaPlaceholder')}
             placeholderTextColor={theme.textMuted}
             keyboardType="decimal-pad"
           />
@@ -152,7 +153,7 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
             <ActivityIndicator color="#fff" size="small" />
           ) : (
             <Text style={styles.saveButtonText}>
-              {isEdit ? 'Save Changes' : 'Add Farm'}
+              {isEdit ? t('plot.saveChanges') : t('farm.addFarm')}
             </Text>
           )}
         </TouchableOpacity>
