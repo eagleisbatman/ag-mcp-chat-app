@@ -11,7 +11,7 @@ import Button from '../components/ui/Button';
 import { lookupLocation } from '../services/db';
 import { log } from '../utils/logger';
 import { t } from '../constants/strings';
-import type { Theme, RootStackParamList } from '../types';
+import type { Theme, RootStackParamList, LocationDetails } from '../types';
 import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 
 interface LocationScreenProps {
@@ -135,32 +135,40 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
 
       const result = await lookupLocation(null, null, 'auto');
 
-      if (result.success) {
+      if (result.success && result.source !== 'none') {
         log('🌐 [LocationScreen] IP location lookup complete:', result.displayName);
-        
-        // Show informative message if using IP (unless it's the "none" fallback)
+
         if (result.source === 'ip') {
           showWarning(t('onboarding.usingIpLocation'));
         }
 
+        // Build location details from the result to avoid a redundant second API call
+        const details: LocationDetails = {
+          ...result,
+          latitude: result.latitude ?? 0,
+          longitude: result.longitude ?? 0,
+          displayName: result.displayName || result.level5City || result.level3District || result.level2State || result.level1Country || 'Location set',
+          source: (result.source as LocationDetails['source']) || 'ip',
+        };
+
         await setLocation(
           { latitude: result.latitude ?? null, longitude: result.longitude ?? null },
-          'granted'
+          'granted',
+          details
         );
         setIsLoading(false);
         navigation.navigate('Language');
       } else {
-        // This case is now handled by the gateway returning a success:true fallback,
-        // but we keep this for extra safety.
-        log('⚠️ [LocationScreen] IP location returned failure, using default fallback');
-        await setLocation({ latitude: 0, longitude: 0 }, 'denied');
+        // IP lookup returned no usable location — continue without coordinates
+        log('⚠️ [LocationScreen] IP location returned no usable result, continuing without location');
+        await setLocation({ latitude: null, longitude: null }, 'denied');
         setIsLoading(false);
         navigation.navigate('Language');
       }
     } catch (error: any) {
-      log('❌ [LocationScreen] IP location error, using default fallback:', error.message);
-      // Don't block the user, just use a default location
-      await setLocation({ latitude: 0, longitude: 0 }, 'denied');
+      log('❌ [LocationScreen] IP location error, continuing without location:', error.message);
+      // Don't block the user — continue without coordinates
+      await setLocation({ latitude: null, longitude: null }, 'denied');
       setIsLoading(false);
       navigation.navigate('Language');
     }
