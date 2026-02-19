@@ -20,6 +20,7 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import AppIcon from '../components/ui/AppIcon';
+import { t } from '../constants/strings';
 import type { RootStackParamList, Plot } from '../types';
 
 interface FarmDetailScreenProps {
@@ -39,20 +40,20 @@ export default function FarmDetailScreen({ navigation, route }: FarmDetailScreen
     return (
       <View style={[styles.container, { backgroundColor: theme.background }]}>
         <ScreenHeader
-          title="Farm"
+          title={t('farm.myFarms')}
           left={
             <IconButton
               icon="arrow-back"
               onPress={() => navigation.goBack()}
               backgroundColor="transparent"
               color={theme.text}
-              accessibilityLabel="Back"
+              accessibilityLabel={t('common.back')}
             />
           }
           right={<View />}
         />
         <View style={styles.empty}>
-          <Text style={[styles.emptyText, { color: theme.textMuted }]}>Farm not found</Text>
+          <Text style={[styles.emptyText, { color: theme.textMuted }]}>{t('farm.farmNotFound')}</Text>
         </View>
       </View>
     );
@@ -60,20 +61,20 @@ export default function FarmDetailScreen({ navigation, route }: FarmDetailScreen
 
   const handleDelete = () => {
     Alert.alert(
-      'Delete Farm',
-      `Are you sure you want to delete "${farm.name}"? This will also delete all plots and crop data.`,
+      t('farm.deleteFarm'),
+      t('farm.deleteFarmConfirm', { name: farm.name }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: async () => {
             const success = await deleteFarm(farm.id);
             if (success) {
-              showSuccess('Farm deleted');
+              showSuccess(t('farm.farmDeleted'));
               navigation.goBack();
             } else {
-              showError('Failed to delete farm');
+              showError(t('farm.farmDeleteFailed'));
             }
           },
         },
@@ -96,7 +97,7 @@ export default function FarmDetailScreen({ navigation, route }: FarmDetailScreen
               {plot.name}
             </Text>
             <Text style={[styles.plotMeta, { color: theme.textMuted }]}>
-              {plot.areaHectares ? `${plot.areaHectares} ha` : 'Area not set'}
+              {plot.areaHectares ? `${plot.areaHectares} ha` : t('farm.areaNotSet')}
               {plot.soilType ? ` · ${plot.soilType}` : ''}
               {plot.irrigationType ? ` · ${plot.irrigationType}` : ''}
             </Text>
@@ -133,7 +134,7 @@ export default function FarmDetailScreen({ navigation, route }: FarmDetailScreen
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={
@@ -142,7 +143,7 @@ export default function FarmDetailScreen({ navigation, route }: FarmDetailScreen
             onPress={() => navigation.navigate('FarmEdit', { farmId: farm.id })}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Edit farm"
+            accessibilityLabel={t('farm.editFarm')}
           />
         }
       />
@@ -155,30 +156,30 @@ export default function FarmDetailScreen({ navigation, route }: FarmDetailScreen
         <View style={[styles.summaryCard, { backgroundColor: theme.surfaceVariant }]}>
           {farm.totalAreaHectares && (
             <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>Total Area</Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>{t('farm.totalAreaLabel')}</Text>
               <Text style={[styles.summaryValue, { color: theme.text }]}>
-                {farm.totalAreaHectares} hectares
+                {t('farm.totalAreaValue', { area: farm.totalAreaHectares })}
               </Text>
             </View>
           )}
           <View style={styles.summaryRow}>
-            <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>Plots</Text>
+            <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>{t('farm.plots')}</Text>
             <Text style={[styles.summaryValue, { color: theme.text }]}>
-              {farm.plots?.length || 0}
+              {t('farm.plotsCount', { count: farm.plots?.length || 0 })}
             </Text>
           </View>
         </View>
 
         {/* Plots section */}
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Plots</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('farm.plots')}</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('PlotEdit', { farmId: farm.id })}
             style={[styles.addButton, { backgroundColor: theme.accent }]}
             activeOpacity={0.8}
           >
             <AppIcon name="plus" size={16} color="#fff" />
-            <Text style={styles.addButtonText}>Add Plot</Text>
+            <Text style={styles.addButtonText}>{t('farm.addPlot')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -187,7 +188,7 @@ export default function FarmDetailScreen({ navigation, route }: FarmDetailScreen
         ) : (
           <View style={styles.emptyPlots}>
             <Text style={[styles.emptyPlotsText, { color: theme.textMuted }]}>
-              No plots yet. Add your first plot to start tracking crops.
+              {t('farm.noPlots')}
             </Text>
           </View>
         )}
@@ -198,7 +199,7 @@ export default function FarmDetailScreen({ navigation, route }: FarmDetailScreen
           style={[styles.deleteButton, { borderColor: theme.error }]}
           activeOpacity={0.7}
         >
-          <Text style={[styles.deleteButtonText, { color: theme.error }]}>Delete Farm</Text>
+          <Text style={[styles.deleteButtonText, { color: theme.error }]}>{t('farm.deleteFarm')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

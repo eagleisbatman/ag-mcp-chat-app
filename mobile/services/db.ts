@@ -473,7 +473,7 @@ export async function getProfile(): Promise<ApiResult<UserProfile>> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
-      `${API_BASE_URL}/api/users/${deviceId}/profile`,
+      `${API_BASE_URL}/api/profile/${deviceId}/profile`,
       { headers },
       DB_TIMEOUT_MS
     );
@@ -492,7 +492,7 @@ export async function updateProfile(
 ): Promise<ApiResult<UserProfile>> {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/${deviceId}/profile`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/profile/${deviceId}/profile`, {
       method: 'PUT',
       headers,
       body: JSON.stringify(fields),

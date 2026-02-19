@@ -18,6 +18,7 @@ import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import AppIcon from '../components/ui/AppIcon';
 import FarmCard from '../components/farm/FarmCard';
+import { t } from '../constants/strings';
 import type { RootStackParamList, Farm } from '../types';
 
 interface FarmListScreenProps {
@@ -38,9 +39,9 @@ export default function FarmListScreen({ navigation }: FarmListScreenProps) {
   const renderEmpty = () => (
     <View style={styles.empty}>
       <AppIcon name="sprout" size={48} color={theme.textMuted} />
-      <Text style={[styles.emptyTitle, { color: theme.text }]}>No farms yet</Text>
+      <Text style={[styles.emptyTitle, { color: theme.text }]}>{t('farm.noFarms')}</Text>
       <Text style={[styles.emptySubtitle, { color: theme.textMuted }]}>
-        Add your first farm to track plots and crops
+        {t('farm.noFarmsHint')}
       </Text>
     </View>
   );
@@ -48,14 +49,14 @@ export default function FarmListScreen({ navigation }: FarmListScreenProps) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ScreenHeader
-        title="My Farms"
+        title={t('farm.myFarms')}
         left={
           <IconButton
             icon="arrow-back"
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={
@@ -64,7 +65,7 @@ export default function FarmListScreen({ navigation }: FarmListScreenProps) {
             onPress={() => navigation.navigate('FarmEdit', {})}
             backgroundColor={theme.accent}
             color="#fff"
-            accessibilityLabel="Add farm"
+            accessibilityLabel={t('farm.addFarm')}
             size={36}
           />
         }

@@ -24,6 +24,7 @@ import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import AppIcon from '../components/ui/AppIcon';
 import CropPicker from '../components/farm/CropPicker';
+import { t } from '../constants/strings';
 import {
   createPlot,
   updatePlot,
@@ -40,10 +41,10 @@ interface PlotEditScreenProps {
 }
 
 const SOIL_TYPES = ['clay', 'sandy', 'loam', 'silt', 'black cotton', 'red'];
-const IRRIGATION_TYPES: Array<{ value: Plot['irrigationType']; label: string }> = [
-  { value: 'rainfed', label: 'Rainfed' },
-  { value: 'irrigated', label: 'Irrigated' },
-  { value: 'mixed', label: 'Mixed' },
+const IRRIGATION_TYPES: Array<{ value: Plot['irrigationType']; labelKey: string }> = [
+  { value: 'rainfed', labelKey: 'plot.rainfed' },
+  { value: 'irrigated', labelKey: 'plot.irrigated' },
+  { value: 'mixed', labelKey: 'plot.mixed' },
 ];
 const CROP_STATUSES: CropAllocation['status'][] = ['planned', 'planted', 'growing', 'flowering', 'harvested', 'active'];
 
@@ -68,7 +69,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
   const handleSave = async () => {
     const trimmedName = name.trim();
     if (!trimmedName) {
-      showError('Please enter a plot name');
+      showError(t('plot.enterPlotName'));
       return;
     }
 
@@ -76,7 +77,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
     try {
       const areaNum = area.trim() ? parseFloat(area) : undefined;
       if (areaNum !== undefined && isNaN(areaNum)) {
-        showError('Please enter a valid area');
+        showError(t('farm.enterValidArea'));
         setIsSaving(false);
         return;
       }
@@ -89,11 +90,11 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
           irrigationType: (irrigationType as Plot['irrigationType']) || undefined,
         });
         if (result.success) {
-          showSuccess('Plot updated');
+          showSuccess(t('plot.plotUpdated'));
           await refreshFarms();
           navigation.goBack();
         } else {
-          showError('Failed to update plot');
+          showError(t('plot.plotUpdateFailed'));
         }
       } else {
         const result = await createPlot(farmId, {
@@ -103,15 +104,15 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
           irrigationType: (irrigationType as Plot['irrigationType']) || undefined,
         });
         if (result.success) {
-          showSuccess('Plot added');
+          showSuccess(t('plot.plotAdded'));
           await refreshFarms();
           navigation.goBack();
         } else {
-          showError('Failed to add plot');
+          showError(t('plot.plotAddFailed'));
         }
       }
     } catch {
-      showError('Something went wrong');
+      showError(t('plot.plotAddFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -119,19 +120,19 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
 
   const handleDeletePlot = () => {
     if (!plotId) return;
-    Alert.alert('Delete Plot', `Delete "${existing?.name || 'this plot'}" and all its crop data?`, [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('plot.deletePlot'), t('plot.deletePlotConfirm', { name: existing?.name || 'this plot' }), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Delete',
+        text: t('common.delete'),
         style: 'destructive',
         onPress: async () => {
           const result = await deletePlot(plotId);
           if (result.success) {
-            showSuccess('Plot deleted');
+            showSuccess(t('plot.plotDeleted'));
             await refreshFarms();
             navigation.goBack();
           } else {
-            showError('Failed to delete plot');
+            showError(t('plot.plotDeleteFailed'));
           }
         },
       },
@@ -142,7 +143,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
     async (crop: MasterCrop) => {
       if (!plotId) {
         // For new plots, just track locally — they'll be saved when the plot is created
-        showError('Please save the plot first, then add crops');
+        showError(t('plot.savePlotFirst'));
         return;
       }
       const result = await allocateCrop(plotId, {
@@ -153,7 +154,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
         setCrops((prev) => [...prev, result.data as CropAllocation]);
         await refreshFarms();
       } else {
-        showError('Failed to add crop');
+        showError(t('plot.cropAddFailed'));
       }
     },
     [plotId, refreshFarms, showError]
@@ -166,7 +167,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
         setCrops((prev) => prev.filter((c) => c.id !== allocationId));
         await refreshFarms();
       } else {
-        showError('Failed to remove crop');
+        showError(t('plot.cropRemoveFailed'));
       }
     },
     [refreshFarms, showError]
@@ -180,14 +181,14 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
         keyboardShouldPersistTaps="handled"
       >
         <ScreenHeader
-          title={isEdit ? 'Edit Plot' : 'New Plot'}
+          title={isEdit ? t('plot.editPlot') : t('plot.newPlot')}
           left={
             <IconButton
               icon="arrow-back"
               onPress={() => navigation.goBack()}
               backgroundColor="transparent"
               color={theme.text}
-              accessibilityLabel="Back"
+              accessibilityLabel={t('common.back')}
             />
           }
           right={<View />}
@@ -195,13 +196,13 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
 
         {/* Plot Name */}
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Plot Name</Text>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('plot.plotName')}</Text>
           <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
             <TextInput
               style={[styles.input, { color: theme.text }]}
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Plot A"
+              placeholder={t('plot.plotNamePlaceholder')}
               placeholderTextColor={theme.textMuted}
               autoCapitalize="words"
               autoFocus={!isEdit}
@@ -211,13 +212,13 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
 
         {/* Area */}
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Area (hectares, optional)</Text>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('plot.area')}</Text>
           <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
             <TextInput
               style={[styles.input, { color: theme.text }]}
               value={area}
               onChangeText={setArea}
-              placeholder="e.g. 0.5"
+              placeholder={t('plot.areaPlaceholder')}
               placeholderTextColor={theme.textMuted}
               keyboardType="decimal-pad"
             />
@@ -226,7 +227,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
 
         {/* Soil Type */}
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Soil Type</Text>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('plot.soilType')}</Text>
           <View style={styles.chipRow}>
             {SOIL_TYPES.map((s) => (
               <TouchableOpacity
@@ -243,7 +244,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
                 <Text
                   style={[styles.chipText, { color: soilType === s ? theme.accent : theme.text }]}
                 >
-                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                  {t(`plot.${s.replace(/\s+/g, '')}`)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -252,7 +253,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
 
         {/* Irrigation */}
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Irrigation</Text>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('plot.irrigation')}</Text>
           <View style={styles.chipRow}>
             {IRRIGATION_TYPES.map((opt) => (
               <TouchableOpacity
@@ -272,7 +273,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
                     { color: irrigationType === opt.value ? theme.accent : theme.text },
                   ]}
                 >
-                  {opt.label}
+                  {t(opt.labelKey)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -284,7 +285,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
           <View style={styles.section}>
             <View style={styles.cropHeader}>
               <Text style={[styles.label, { color: theme.textMuted, marginBottom: 0 }]}>
-                Crops
+                {t('plot.crops')}
               </Text>
               <TouchableOpacity
                 onPress={() => setShowCropPicker(true)}
@@ -292,7 +293,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
                 activeOpacity={0.8}
               >
                 <AppIcon name="plus" size={14} color="#fff" />
-                <Text style={styles.addCropBtnText}>Add</Text>
+                <Text style={styles.addCropBtnText}>{t('plot.addCrop')}</Text>
               </TouchableOpacity>
             </View>
 
@@ -320,7 +321,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
                                   )
                                 );
                               } else {
-                                showError('Failed to update crop status');
+                                showError(t('plot.cropStatusUpdateFailed'));
                               }
                             }}
                             style={[
@@ -337,7 +338,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
                                 { color: c.status === s ? theme.accent : theme.textMuted },
                               ]}
                             >
-                              {s}
+                              {t(`plot.status${s.charAt(0).toUpperCase() + s.slice(1)}`)}
                             </Text>
                           </TouchableOpacity>
                         ))}
@@ -354,7 +355,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
               </View>
             ) : (
               <Text style={[styles.noCropsText, { color: theme.textMuted }]}>
-                No crops allocated yet
+                {t('plot.noCropsAllocated')}
               </Text>
             )}
           </View>
@@ -372,7 +373,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
               <ActivityIndicator color="#fff" size="small" />
             ) : (
               <Text style={styles.saveButtonText}>
-                {isEdit ? 'Save Changes' : 'Add Plot'}
+                {isEdit ? t('plot.saveChanges') : t('plot.addPlotButton')}
               </Text>
             )}
           </TouchableOpacity>
@@ -386,7 +387,7 @@ export default function PlotEditScreen({ navigation, route }: PlotEditScreenProp
               style={[styles.deleteButton, { borderColor: theme.error }]}
               activeOpacity={0.7}
             >
-              <Text style={[styles.deleteButtonText, { color: theme.error }]}>Delete Plot</Text>
+              <Text style={[styles.deleteButtonText, { color: theme.error }]}>{t('plot.deletePlot')}</Text>
             </TouchableOpacity>
           </View>
         )}

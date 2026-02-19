@@ -157,17 +157,17 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
 
       {/* My Farms */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>MY FARMS</Text>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t('farm.sectionMyFarms')}</Text>
         <Card>
           <ListRow
-            title={farms.length > 0 ? `${farms.length} farm${farms.length > 1 ? 's' : ''}` : 'No farms yet'}
+            title={farms.length > 0 ? t(farms.length > 1 ? 'farm.farmsCountPlural' : 'farm.farmsCount', { count: farms.length }) : t('farm.noFarms')}
             subtitle={
               farms.length > 0
                 ? farms.map((f) => {
                     const plotCount = f.plots?.length || 0;
-                    return `${f.name} (${plotCount} plot${plotCount !== 1 ? 's' : ''})`;
+                    return `${f.name} (${t(plotCount !== 1 ? 'farm.plotCountPlural' : 'farm.plotCount', { count: plotCount })})`;
                   }).join(', ')
-                : 'Add your first farm to get personalized advice'
+                : t('farm.noFarmsYetHint')
             }
             left={
               <View style={styles.iconContainer}>
@@ -183,10 +183,10 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
 
       {/* My Livestock */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>MY LIVESTOCK</Text>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t('livestock.sectionMyLivestock')}</Text>
         <Card>
           <ListRow
-            title={animals.length > 0 ? `${animals.length} animal${animals.length > 1 ? 's' : ''}` : 'No livestock yet'}
+            title={animals.length > 0 ? t(animals.length > 1 ? 'livestock.animalsCountPlural' : 'livestock.animalsCount', { count: animals.length }) : t('livestock.noLivestock')}
             subtitle={
               animals.length > 0
                 ? (() => {
@@ -197,7 +197,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
                     }
                     return Object.entries(byType).map(([type, count]) => `${type}: ${count}`).join(', ');
                   })()
-                : 'Track your animals for better management'
+                : t('livestock.noLivestockYetHint')
             }
             left={
               <View style={styles.iconContainer}>
@@ -214,11 +214,11 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
       {/* Extension Worker Section — only for EWs */}
       {isEW && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>EXTENSION WORKER</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t('extensionWorker.sectionExtensionWorker')}</Text>
           <Card>
             <ListRow
-              title="My Farmers"
-              subtitle="Manage connected farmers"
+              title={t('extensionWorker.myFarmers')}
+              subtitle={t('extensionWorker.myFarmersHint')}
               left={
                 <View style={styles.iconContainer}>
                   <AppIcon name="people" size={18} color={theme.accent} />
@@ -230,8 +230,8 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
               accessibilityLabel="My farmers"
             />
             <ListRow
-              title="Pending Requests"
-              subtitle="Review connection requests"
+              title={t('extensionWorker.pendingRequests')}
+              subtitle={t('extensionWorker.pendingRequestsHint')}
               left={
                 <View style={styles.iconContainer}>
                   <AppIcon name="time" size={18} color={theme.warning} />
