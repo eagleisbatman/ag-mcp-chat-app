@@ -10,6 +10,7 @@ import {
 import * as Location from 'expo-location';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useApp } from '../contexts/AppContext';
+import { useProfile } from '../contexts/app/ProfileContext';
 import { useToast } from '../contexts/ToastContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
@@ -17,6 +18,7 @@ import IconButton from '../components/ui/IconButton';
 import Card from '../components/ui/Card';
 import ListRow from '../components/ui/ListRow';
 import AppIcon from '../components/ui/AppIcon';
+import ProfileCard from '../components/profile/ProfileCard';
 import { lookupLocation } from '../services/db';
 import { log } from '../utils/logger';
 import { t } from '../constants/strings';
@@ -34,6 +36,8 @@ interface ThemeOption {
 
 export default function SettingsScreen({ navigation }: SettingsScreenProps) {
   const { showSuccess, showWarning, showError } = useToast();
+  const { farms, animals, profile } = useProfile();
+  const isEW = profile?.role === 'extension_worker';
   const [isUpdatingLocation, setIsUpdatingLocation] = useState(false);
   const {
     theme,
@@ -123,8 +127,8 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
   const locationTitle = isUpdatingLocation
     ? t('settings.updatingLocation')
     : locationDetails?.displayName ||
-      (location?.latitude !== null && location?.longitude !== null
-        ? `${location.latitude!.toFixed(4)}, ${location.longitude!.toFixed(4)}` 
+      (location?.latitude != null && location?.longitude != null
+        ? `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`
         : t('settings.locationNotSet'));
 
   return (
@@ -145,6 +149,101 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
         }
         right={<View />}
       />
+
+      {/* Profile Card */}
+      <View style={styles.section}>
+        <ProfileCard onPress={() => navigation.navigate('Profile')} />
+      </View>
+
+      {/* My Farms */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>MY FARMS</Text>
+        <Card>
+          <ListRow
+            title={farms.length > 0 ? `${farms.length} farm${farms.length > 1 ? 's' : ''}` : 'No farms yet'}
+            subtitle={
+              farms.length > 0
+                ? farms.map((f) => {
+                    const plotCount = f.plots?.length || 0;
+                    return `${f.name} (${plotCount} plot${plotCount !== 1 ? 's' : ''})`;
+                  }).join(', ')
+                : 'Add your first farm to get personalized advice'
+            }
+            left={
+              <View style={styles.iconContainer}>
+                <AppIcon name="leaf" size={18} color={theme.accent} />
+              </View>
+            }
+            onPress={() => navigation.navigate('FarmList')}
+            paddingHorizontal={SPACING.md}
+            accessibilityLabel="Manage farms"
+          />
+        </Card>
+      </View>
+
+      {/* My Livestock */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>MY LIVESTOCK</Text>
+        <Card>
+          <ListRow
+            title={animals.length > 0 ? `${animals.length} animal${animals.length > 1 ? 's' : ''}` : 'No livestock yet'}
+            subtitle={
+              animals.length > 0
+                ? (() => {
+                    const byType: Record<string, number> = {};
+                    for (const a of animals) {
+                      const type = a.livestockName || 'Unknown';
+                      byType[type] = (byType[type] || 0) + (a.trackingMode === 'herd' ? (a.herdSize || 1) : 1);
+                    }
+                    return Object.entries(byType).map(([type, count]) => `${type}: ${count}`).join(', ');
+                  })()
+                : 'Track your animals for better management'
+            }
+            left={
+              <View style={styles.iconContainer}>
+                <AppIcon name="paw" size={18} color={theme.warning} />
+              </View>
+            }
+            onPress={() => navigation.navigate('LivestockList')}
+            paddingHorizontal={SPACING.md}
+            accessibilityLabel="Manage livestock"
+          />
+        </Card>
+      </View>
+
+      {/* Extension Worker Section — only for EWs */}
+      {isEW && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>EXTENSION WORKER</Text>
+          <Card>
+            <ListRow
+              title="My Farmers"
+              subtitle="Manage connected farmers"
+              left={
+                <View style={styles.iconContainer}>
+                  <AppIcon name="people" size={18} color={theme.accent} />
+                </View>
+              }
+              onPress={() => navigation.navigate('MyFarmers')}
+              paddingHorizontal={SPACING.md}
+              divider
+              accessibilityLabel="My farmers"
+            />
+            <ListRow
+              title="Pending Requests"
+              subtitle="Review connection requests"
+              left={
+                <View style={styles.iconContainer}>
+                  <AppIcon name="time" size={18} color={theme.warning} />
+                </View>
+              }
+              onPress={() => navigation.navigate('PendingRequests')}
+              paddingHorizontal={SPACING.md}
+              accessibilityLabel="Pending requests"
+            />
+          </Card>
+        </View>
+      )}
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t('settings.sectionConversations')}</Text>
@@ -187,7 +286,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
         <Card>
           <ListRow
             title={locationTitle}
-            subtitle={location?.latitude !== null && locationDetails?.formattedAddress ? locationDetails.formattedAddress : undefined}
+            subtitle={location?.latitude != null && locationDetails?.formattedAddress ? locationDetails.formattedAddress : undefined}
             hint={!isUpdatingLocation ? t('settings.locationHint') : undefined}
             left={
               <View style={styles.iconContainer}>

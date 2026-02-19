@@ -5,8 +5,9 @@ import { LocationProvider, useLocation } from './app/LocationContext';
 import { UserProvider, useUser } from './app/UserContext';
 import { OnboardingProvider, useOnboarding } from './app/OnboardingContext';
 import { OnboardingDetectionProvider, useOnboardingDetection } from './app/OnboardingDetectionContext';
+import { ProfileProvider, useProfile } from './app/ProfileContext';
 import { ThemeColors } from '../constants/themes';
-import { ThemeMode, Language, LocationDetails } from '../types';
+import { ThemeMode, Language, LocationDetails, UserProfile, Farm, Animal, MasterCrop, MasterLivestock } from '../types';
 
 interface AppContextValue {
   // From ThemeContext
@@ -44,6 +45,14 @@ interface AppContextValue {
   lastSyncError: string | null;
   clearSyncError: () => void;
 
+  // From ProfileContext
+  profile: UserProfile | null;
+  farms: Farm[];
+  animals: Animal[];
+  masterCrops: MasterCrop[];
+  masterLivestock: MasterLivestock[];
+  profileSummary: string;
+
   // Local to AppContext
   currentSessionId: string | null;
   setCurrentSessionId: (id: string | null) => void;
@@ -59,6 +68,7 @@ const AppContextAggregator = ({ children }: { children: ReactNode }) => {
   const { userId, isDbSynced, lastSyncError, clearSyncError, isLoadingUser } = useUser();
   const { onboardingComplete, completeOnboarding, resetOnboarding, isLoadingOnboarding } = useOnboarding();
   const { detectedInfo, detectionComplete, suggestedLanguages, isDetecting } = useOnboardingDetection();
+  const { profile, farms, animals, masterCrops, masterLivestock, profileSummary } = useProfile();
 
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
@@ -73,6 +83,7 @@ const AppContextAggregator = ({ children }: { children: ReactNode }) => {
     suggestedLanguages,
     isDetectionComplete: detectionComplete,
     userId, isDbSynced, lastSyncError, clearSyncError,
+    profile, farms, animals, masterCrops, masterLivestock, profileSummary,
     currentSessionId, setCurrentSessionId,
     isLoading: isLoadingUser || isLoadingOnboarding || isDetecting,
   };
@@ -94,9 +105,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
               <LocationProvider userId={userId}>
                 <LanguageProvider userId={userId}>
                   <ThemeProvider isDbSynced={isDbSynced}>
-                    <AppContextAggregator>
-                      {children}
-                    </AppContextAggregator>
+                    <LanguageCodeConsumer>
+                      {(languageCode) => (
+                        <ProfileProvider userId={userId} languageCode={languageCode}>
+                          <AppContextAggregator>
+                            {children}
+                          </AppContextAggregator>
+                        </ProfileProvider>
+                      )}
+                    </LanguageCodeConsumer>
                   </ThemeProvider>
                 </LanguageProvider>
               </LocationProvider>
@@ -112,6 +129,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 const UserContextConsumer = ({ children }: { children: (userId: string | null, isDbSynced: boolean) => ReactNode }) => {
   const { userId, isDbSynced } = useUser();
   return <>{children(userId, isDbSynced)}</>;
+};
+
+// Helper component to consume language code for ProfileProvider
+const LanguageCodeConsumer = ({ children }: { children: (languageCode: string) => ReactNode }) => {
+  const { language } = useLanguage();
+  return <>{children(language.code)}</>;
 };
 
 export const useApp = () => {

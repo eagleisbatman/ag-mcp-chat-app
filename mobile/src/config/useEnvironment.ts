@@ -23,7 +23,7 @@ interface UseEnvironmentReturn {
   /** Current environment configuration */
   config: EnvironmentConfig;
   /** MCP server URLs for current environment */
-  mcpServers: typeof MCP_SERVERS.production;
+  mcpServers: (typeof MCP_SERVERS)[Environment];
   /** Whether environment is being loaded */
   isLoading: boolean;
   /** Switch to a different environment */
