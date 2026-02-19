@@ -40,7 +40,7 @@ interface PlotEditScreenProps {
   route: RouteProp<RootStackParamList, 'PlotEdit'>;
 }
 
-const SOIL_TYPES = ['clay', 'sandy', 'loam', 'silt', 'black cotton', 'red'];
+const SOIL_TYPES = ['clay', 'sandy', 'loamy', 'silt', 'red', 'black', 'laterite', 'alluvial'];
 const IRRIGATION_TYPES: Array<{ value: Plot['irrigationType']; labelKey: string }> = [
   { value: 'rainfed', labelKey: 'plot.rainfed' },
   { value: 'irrigated', labelKey: 'plot.irrigated' },

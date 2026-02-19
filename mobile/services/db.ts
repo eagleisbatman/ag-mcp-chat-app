@@ -31,10 +31,16 @@ import {
 
 const DB_TIMEOUT_MS = TIMEOUTS.DB;
 
-const headers: Record<string, string> = {
+const baseHeaders: Record<string, string> = {
   'Content-Type': 'application/json',
   'X-API-Key': API_KEY,
 };
+
+/** Build request headers with device identity */
+function getHeaders(deviceId?: string): Record<string, string> {
+  if (!deviceId) return baseHeaders;
+  return { ...baseHeaders, 'x-device-id': deviceId };
+}
 
 // ============================================
 // Response Mappers — flatten nested relations
@@ -77,7 +83,7 @@ export async function registerUser(): Promise<UserResult> {
     
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/register`, {
       method: 'POST',
-      headers,
+      headers: baseHeaders,
       body: JSON.stringify(deviceInfo),
     }, DB_TIMEOUT_MS);
     
@@ -105,7 +111,7 @@ export async function registerUser(): Promise<UserResult> {
 export async function getCurrentUser(): Promise<User | null> {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/me?deviceId=${deviceId}`, { headers }, DB_TIMEOUT_MS);
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/me?deviceId=${deviceId}`, { headers: getHeaders(deviceId) }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return null;
@@ -127,7 +133,7 @@ export async function updatePreferences(preferences: Record<string, unknown>): P
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/preferences`, {
       method: 'PUT',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, ...preferences }),
     }, DB_TIMEOUT_MS);
     
@@ -151,7 +157,7 @@ export async function saveLocation(locationData: LocationData): Promise<ApiResul
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/users/location`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, ...locationData }),
     }, DB_TIMEOUT_MS);
     
@@ -178,7 +184,7 @@ export async function listSessions(options: Record<string, unknown> = {}): Promi
   try {
     const deviceId = await getDeviceId();
     const params = new URLSearchParams({ deviceId, ...options } as Record<string, string>);
-    const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions?${params}`, { headers }, DB_TIMEOUT_MS);
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions?${params}`, { headers: getHeaders(deviceId) }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, sessions: [], error: `HTTP ${response.status}` };
@@ -200,7 +206,7 @@ export async function createSession(options: Record<string, unknown> = {}): Prom
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, ...options }),
     }, DB_TIMEOUT_MS);
     
@@ -224,7 +230,7 @@ export async function getSession(sessionId: string, messageLimit: number = 50): 
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/sessions/${sessionId}?deviceId=${deviceId}&messageLimit=${messageLimit}`,
-      { headers },
+      { headers: getHeaders(deviceId) },
       DB_TIMEOUT_MS
     );
     
@@ -248,7 +254,7 @@ export async function updateSession(sessionId: string, updates: Record<string, u
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/sessions/${sessionId}`, {
       method: 'PATCH',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, ...updates }),
     }, DB_TIMEOUT_MS);
     
@@ -272,7 +278,7 @@ export async function deleteSession(sessionId: string): Promise<ApiResult> {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/sessions/${sessionId}?deviceId=${deviceId}`,
-      { method: 'DELETE', headers },
+      { method: 'DELETE', headers: getHeaders(deviceId) },
       DB_TIMEOUT_MS
     );
     
@@ -300,7 +306,7 @@ export async function saveMessage(messageData: Record<string, unknown>): Promise
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, ...messageData }),
     }, DB_TIMEOUT_MS);
     
@@ -323,7 +329,7 @@ export async function getMessages(sessionId: string, options: Record<string, unk
   try {
     const deviceId = await getDeviceId();
     const params = new URLSearchParams({ deviceId, ...options } as Record<string, string>);
-    const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages/${sessionId}?${params}`, { headers }, DB_TIMEOUT_MS);
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages/${sessionId}?${params}`, { headers: getHeaders(deviceId) }, DB_TIMEOUT_MS);
     
     if (!response.ok) {
       return { success: false, messages: [], error: `HTTP ${response.status}` };
@@ -345,7 +351,7 @@ export async function updateMessage(messageId: string, updates: Record<string, u
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/messages/${messageId}`, {
       method: 'PATCH',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, ...updates }),
     }, DB_TIMEOUT_MS);
     
@@ -374,11 +380,12 @@ export async function lookupLocation(
   ipAddress: string | null = null
 ): Promise<LocationLookupResult> {
   try {
+    const deviceId = await getDeviceId();
     log('🔌 [DB] Looking up location:', { latitude, longitude, ipAddress });
-    
+
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/location-lookup`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ latitude, longitude, ipAddress }),
     }, DB_TIMEOUT_MS);
     
@@ -414,11 +421,12 @@ export async function lookupLocation(
  */
 export async function generateTitle(messages: Array<{ role: string; content: string }>, language: string = 'en'): Promise<TitleResult> {
   try {
+    const deviceId = await getDeviceId();
     log('🔌 [DB] Generating title with', messages.length, 'messages, language:', language);
-    
+
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/generate-title`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ messages, language }),
     }, DB_TIMEOUT_MS);
     
@@ -456,7 +464,7 @@ export async function logEvent(
     const deviceId = await getDeviceId();
     await fetchWithTimeout(`${API_BASE_URL}/api/analytics/event`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, sessionId, eventName, eventData }),
     }, DB_TIMEOUT_MS);
   } catch (error) {
@@ -473,8 +481,8 @@ export async function getProfile(): Promise<ApiResult<UserProfile>> {
   try {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
-      `${API_BASE_URL}/api/profile/${deviceId}/profile`,
-      { headers },
+      `${API_BASE_URL}/api/profile/${deviceId}`,
+      { headers: getHeaders(deviceId) },
       DB_TIMEOUT_MS
     );
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -492,9 +500,9 @@ export async function updateProfile(
 ): Promise<ApiResult<UserProfile>> {
   try {
     const deviceId = await getDeviceId();
-    const response = await fetchWithTimeout(`${API_BASE_URL}/api/profile/${deviceId}/profile`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/profile/${deviceId}`, {
       method: 'PUT',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify(fields),
     }, DB_TIMEOUT_MS);
     if (!response.ok) {
@@ -519,7 +527,7 @@ export async function getFarms(): Promise<ApiResult<Farm[]>> {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/farms?deviceId=${deviceId}`,
-      { headers },
+      { headers: getHeaders(deviceId) },
       DB_TIMEOUT_MS
     );
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -540,7 +548,7 @@ export async function createFarm(
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, ...farm }),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -558,9 +566,10 @@ export async function updateFarm(
   fields: Partial<Pick<Farm, 'name' | 'latitude' | 'longitude' | 'totalAreaHectares'>>
 ): Promise<ApiResult<Farm>> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms/${farmId}`, {
       method: 'PUT',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify(fields),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -575,9 +584,10 @@ export async function updateFarm(
 
 export async function deleteFarm(farmId: string): Promise<ApiResult> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms/${farmId}`, {
       method: 'DELETE',
-      headers,
+      headers: getHeaders(deviceId),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
     return { success: true };
@@ -597,9 +607,10 @@ export async function createPlot(
   plot: { name: string; areaHectares?: number; soilType?: string; irrigationType?: string }
 ): Promise<ApiResult<Plot>> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms/${farmId}/plots`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify(plot),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -617,9 +628,10 @@ export async function updatePlot(
   fields: Partial<Pick<Plot, 'name' | 'areaHectares' | 'soilType' | 'irrigationType'>>
 ): Promise<ApiResult<Plot>> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms/plots/${plotId}`, {
       method: 'PUT',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify(fields),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -634,9 +646,10 @@ export async function updatePlot(
 
 export async function deletePlot(plotId: string): Promise<ApiResult> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms/plots/${plotId}`, {
       method: 'DELETE',
-      headers,
+      headers: getHeaders(deviceId),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
     return { success: true };
@@ -652,9 +665,10 @@ export async function allocateCrop(
   allocation: { cropId: string; percentageArea?: number; season?: string; plantingDate?: string; status?: string }
 ): Promise<ApiResult<CropAllocation>> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms/plots/${plotId}/crops`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify(allocation),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -672,9 +686,10 @@ export async function updateCropAllocation(
   fields: { status?: string; percentageArea?: number; season?: string }
 ): Promise<ApiResult<CropAllocation>> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms/crop-allocations/${allocationId}`, {
       method: 'PUT',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify(fields),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -689,9 +704,10 @@ export async function updateCropAllocation(
 
 export async function removeCropAllocation(allocationId: string): Promise<ApiResult> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/farms/crop-allocations/${allocationId}`, {
       method: 'DELETE',
-      headers,
+      headers: getHeaders(deviceId),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
     return { success: true };
@@ -711,7 +727,7 @@ export async function getAnimals(status?: string): Promise<ApiResult<Animal[]>> 
     const deviceId = await getDeviceId();
     let url = `${API_BASE_URL}/api/livestock?deviceId=${deviceId}`;
     if (status) url += `&status=${status}`;
-    const response = await fetchWithTimeout(url, { headers }, DB_TIMEOUT_MS);
+    const response = await fetchWithTimeout(url, { headers: getHeaders(deviceId) }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
     const data = await response.json();
     const animals = ((data.data || []) as Record<string, unknown>[]).map(mapAnimal);
@@ -734,7 +750,7 @@ export async function createAnimal(
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/livestock`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify({ deviceId, ...animal }),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -752,9 +768,10 @@ export async function updateAnimal(
   fields: Partial<Pick<Animal, 'name' | 'tagId' | 'trackingMode' | 'herdSize' | 'breed' | 'gender' | 'weightKg' | 'lactationStatus' | 'status'>>
 ): Promise<ApiResult<Animal>> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/livestock/${animalId}`, {
       method: 'PUT',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify(fields),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -769,9 +786,10 @@ export async function updateAnimal(
 
 export async function deleteAnimal(animalId: string): Promise<ApiResult> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/livestock/${animalId}`, {
       method: 'DELETE',
-      headers,
+      headers: getHeaders(deviceId),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
     return { success: true };
@@ -787,9 +805,10 @@ export async function recordAnimalEvent(
   event: { eventType: AnimalEventType; eventDate?: string; eventData?: Record<string, unknown>; notes?: string }
 ): Promise<ApiResult<AnimalEvent>> {
   try {
+    const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/livestock/${animalId}/events`, {
       method: 'POST',
-      headers,
+      headers: getHeaders(deviceId),
       body: JSON.stringify(event),
     }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -816,7 +835,7 @@ export async function getMasterCrops(
     if (params?.search) query.set('search', params.search);
 
     const url = `${API_BASE_URL}/api/master/crops${query.toString() ? '?' + query.toString() : ''}`;
-    const response = await fetchWithTimeout(url, { headers }, DB_TIMEOUT_MS);
+    const response = await fetchWithTimeout(url, { headers: baseHeaders }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
     const data = await response.json();
     return { success: true, data: data.data };
@@ -836,7 +855,7 @@ export async function getMasterLivestock(
     if (params?.category) query.set('category', params.category);
 
     const url = `${API_BASE_URL}/api/master/livestock${query.toString() ? '?' + query.toString() : ''}`;
-    const response = await fetchWithTimeout(url, { headers }, DB_TIMEOUT_MS);
+    const response = await fetchWithTimeout(url, { headers: baseHeaders }, DB_TIMEOUT_MS);
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
     const data = await response.json();
     return { success: true, data: data.data };
@@ -857,7 +876,7 @@ export async function getMasterBreeds(
 
     const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/master/breeds?${query.toString()}`,
-      { headers },
+      { headers: baseHeaders },
       DB_TIMEOUT_MS
     );
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -879,7 +898,7 @@ export async function getMyFarmers(): Promise<ApiResult<FarmerEwMapping[]>> {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/farmer-ew/my-farmers/${deviceId}`,
-      { headers },
+      { headers: getHeaders(deviceId) },
       DB_TIMEOUT_MS
     );
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -897,7 +916,7 @@ export async function getMyEws(): Promise<ApiResult<FarmerEwMapping[]>> {
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/farmer-ew/my-ews/${deviceId}`,
-      { headers },
+      { headers: getHeaders(deviceId) },
       DB_TIMEOUT_MS
     );
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -915,7 +934,7 @@ export async function getPendingMappings(): Promise<ApiResult<FarmerEwMapping[]>
     const deviceId = await getDeviceId();
     const response = await fetchWithTimeout(
       `${API_BASE_URL}/api/farmer-ew/pending/${deviceId}`,
-      { headers },
+      { headers: getHeaders(deviceId) },
       DB_TIMEOUT_MS
     );
     if (!response.ok) return { success: false, error: `HTTP ${response.status}` };
@@ -938,7 +957,7 @@ export async function connectFarmer(
       `${API_BASE_URL}/api/farmer-ew/map`,
       {
         method: 'POST',
-        headers,
+        headers: getHeaders(deviceId),
         body: JSON.stringify({
           ewDeviceId: deviceId,
           farmerPhone,
@@ -974,7 +993,7 @@ export async function respondToMapping(
       `${API_BASE_URL}/api/farmer-ew/${mappingId}/respond`,
       {
         method: 'PUT',
-        headers,
+        headers: getHeaders(deviceId),
         body: JSON.stringify({ status, deviceId }),
       },
       DB_TIMEOUT_MS
@@ -999,7 +1018,7 @@ export async function createConnectedSession(
       `${API_BASE_URL}/api/farmer-ew/connected-session`,
       {
         method: 'POST',
-        headers,
+        headers: getHeaders(deviceId),
         body: JSON.stringify({
           sessionId,
           ewDeviceId: deviceId,
