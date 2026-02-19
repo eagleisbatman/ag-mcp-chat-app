@@ -29,6 +29,18 @@ import LanguageSelectScreen from './screens/LanguageSelectScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import McpServersScreen from './screens/McpServersScreen';
 import McpServerDetailScreen from './screens/McpServerDetailScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import FarmListScreen from './screens/FarmListScreen';
+import FarmDetailScreen from './screens/FarmDetailScreen';
+import FarmEditScreen from './screens/FarmEditScreen';
+import PlotEditScreen from './screens/PlotEditScreen';
+import LivestockListScreen from './screens/LivestockListScreen';
+import LivestockDetailScreen from './screens/LivestockDetailScreen';
+import LivestockEditScreen from './screens/LivestockEditScreen';
+import LivestockEventScreen from './screens/LivestockEventScreen';
+import MyFarmersScreen from './screens/MyFarmersScreen';
+import ConnectFarmerScreen from './screens/ConnectFarmerScreen';
+import PendingRequestsScreen from './screens/PendingRequestsScreen';
 
 // Type safe navigator
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -77,6 +89,18 @@ function MainStack() {
       <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
       <Stack.Screen name="McpServers" component={McpServersScreen} />
       <Stack.Screen name="McpServerDetail" component={McpServerDetailScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="FarmList" component={FarmListScreen} />
+      <Stack.Screen name="FarmDetail" component={FarmDetailScreen} />
+      <Stack.Screen name="FarmEdit" component={FarmEditScreen} />
+      <Stack.Screen name="PlotEdit" component={PlotEditScreen} />
+      <Stack.Screen name="LivestockList" component={LivestockListScreen} />
+      <Stack.Screen name="LivestockDetail" component={LivestockDetailScreen} />
+      <Stack.Screen name="LivestockEdit" component={LivestockEditScreen} />
+      <Stack.Screen name="LivestockEvent" component={LivestockEventScreen} />
+      <Stack.Screen name="MyFarmers" component={MyFarmersScreen} />
+      <Stack.Screen name="ConnectFarmer" component={ConnectFarmerScreen} />
+      <Stack.Screen name="PendingRequests" component={PendingRequestsScreen} />
     </Stack.Navigator>
   );
 }

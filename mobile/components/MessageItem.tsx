@@ -8,9 +8,10 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
 import FollowUpQuestions from './FollowUpQuestions';
+import A2UIDispatcher from './a2ui/A2UIDispatcher';
 import TypingIndicator from './ui/TypingIndicator';
 import { t } from '../constants/strings';
-import { Message } from '../types';
+import { Message, A2UIPayload } from '../types';
 import { useMessageTts } from './message/useMessageTts';
 import { createMarkdownStyles } from './message/markdownStyles';
 import { styles } from './message/messageItemStyles';
@@ -23,6 +24,8 @@ interface MessageItemProps {
   onLayout?: (height: number) => void;
   onRetry?: () => void;
   onFollowUpTap?: (question: string) => void;
+  onA2UIPress?: (widget: A2UIPayload) => void;
+  respondedA2UIWidgetIds?: Set<string>;
 }
 
 /**
@@ -60,7 +63,7 @@ function sanitizeStreamingMarkdown(text: string): string {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosisTitle, onLayout, onRetry, onFollowUpTap }: MessageItemProps): JSX.Element | null {
+function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosisTitle, onLayout, onRetry, onFollowUpTap, onA2UIPress, respondedA2UIWidgetIds }: MessageItemProps): JSX.Element | null {
   const { theme, language, locationDetails } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
@@ -277,6 +280,14 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
           {!isStreaming && !isThinking && message.followUpQuestions && message.followUpQuestions.length > 0 && onFollowUpTap && (
             <FollowUpQuestions questions={message.followUpQuestions} onQuestionTap={onFollowUpTap} />
           )}
+
+          {!isStreaming && !isThinking && message.a2uiWidgets && message.a2uiWidgets.length > 0 && onA2UIPress && (
+            <A2UIDispatcher
+              widgets={message.a2uiWidgets}
+              onWidgetPress={onA2UIPress}
+              respondedWidgetIds={respondedA2UIWidgetIds}
+            />
+          )}
         </Animated.View>
       </View>
       {message.image && (
@@ -323,6 +334,8 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
     prevProps.message.status === nextProps.message.status &&
     prevProps.message.thinkingText === nextProps.message.thinkingText &&
     prevProps.isNewMessage === nextProps.isNewMessage &&
-    JSON.stringify(prevProps.message.followUpQuestions) === JSON.stringify(nextProps.message.followUpQuestions)
+    JSON.stringify(prevProps.message.followUpQuestions) === JSON.stringify(nextProps.message.followUpQuestions) &&
+    JSON.stringify(prevProps.message.a2uiWidgets) === JSON.stringify(nextProps.message.a2uiWidgets) &&
+    prevProps.respondedA2UIWidgetIds === nextProps.respondedA2UIWidgetIds
   );
 });

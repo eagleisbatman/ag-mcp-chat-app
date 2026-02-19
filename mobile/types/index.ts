@@ -90,6 +90,9 @@ export interface Message {
   // Message status for thinking/streaming states
   status?: 'thinking' | 'streaming' | 'complete';
   thinkingText?: string; // Text to show during thinking state
+  // A2UI widgets attached to this message (from AI)
+  a2uiWidgets?: A2UIPayload[];
+  a2uiResponseData?: Record<string, unknown>;
 }
 
 /**
@@ -119,6 +122,7 @@ export interface ChatMetadata {
   extractedEntities?: Record<string, unknown> | null;
   intentSource?: string;
   followUpQuestions?: string[];
+  a2uiWidgets?: A2UIPayload[];
   [key: string]: unknown;
 }
 
@@ -316,8 +320,289 @@ export interface User {
   language?: string;
   location?: LocationData | LocationDetails;
   themeMode?: ThemeMode;
+  // Profile fields
+  name?: string;
+  phone?: string;
+  gender?: 'male' | 'female' | 'other';
+  profilePictureUrl?: string;
+  role?: UserRole;
+  profileCompleteness?: number;
+  farmingTypes?: FarmingType[];
   createdAt?: Date | string;
   updatedAt?: Date | string;
+  // Backend-returned preferences (from registration)
+  preferences?: {
+    servicePreferences?: Record<string, unknown>;
+    [key: string]: unknown;
+  };
+}
+
+// ============================================
+// Profile & Role Types
+// ============================================
+
+export type UserRole = 'farmer' | 'extension_worker' | 'admin';
+
+export type FarmingType =
+  | 'agriculture'
+  | 'horticulture'
+  | 'poultry'
+  | 'livestock'
+  | 'dairy'
+  | 'aquaculture';
+
+/**
+ * Full user profile (returned from /api/users/:deviceId/profile)
+ */
+export interface UserProfile {
+  id: string;
+  deviceId: string;
+  name?: string;
+  phone?: string;
+  gender?: 'male' | 'female' | 'other';
+  profilePictureUrl?: string;
+  role: UserRole;
+  profileCompleteness: number;
+  farmingTypes: FarmingType[];
+  farms: Farm[];
+  animals: Animal[];
+  organizationMemberships: OrganizationMembership[];
+}
+
+// ============================================
+// Master Data Types (Crops & Livestock reference)
+// ============================================
+
+export interface MasterCrop {
+  id: string;
+  name: string;
+  scientificName?: string;
+  category?: string;
+  growingSeason?: string;
+  growthDays?: number;
+  cropKey: string;
+  translatedName?: string | null;
+  aliases?: string[];
+}
+
+export interface MasterLivestock {
+  id: string;
+  name: string;
+  scientificName?: string;
+  category?: string;
+  commonBreeds?: Breed[];
+  livestockKey: string;
+  translatedName?: string | null;
+  aliases?: string[];
+}
+
+export interface Breed {
+  name: string;
+  purpose?: string;
+  sourceId?: string;
+}
+
+// ============================================
+// Farm & Plot Types
+// ============================================
+
+export interface Farm {
+  id: string;
+  userId: string;
+  name: string;
+  latitude?: number;
+  longitude?: number;
+  totalAreaHectares?: number;
+  dataSource?: 'manual' | 'ai_conversation' | 'extension_worker';
+  plots: Plot[];
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+export interface Plot {
+  id: string;
+  farmId: string;
+  name: string;
+  areaHectares?: number;
+  soilType?: string;
+  irrigationType?: 'rainfed' | 'irrigated' | 'mixed';
+  cropAllocations: CropAllocation[];
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+export interface CropAllocation {
+  id: string;
+  plotId: string;
+  cropId: string;
+  cropName?: string;
+  percentageArea?: number;
+  season?: string;
+  plantingDate?: Date | string;
+  expectedHarvestDate?: Date | string;
+  status: 'active' | 'planned' | 'planted' | 'growing' | 'flowering' | 'harvested';
+}
+
+// ============================================
+// Animal & Livestock Types
+// ============================================
+
+export type TrackingMode = 'individual' | 'herd';
+export type AnimalStatus = 'active' | 'sold' | 'deceased' | 'transferred';
+export type LactationStatus = 'lactating' | 'dry' | 'not_applicable';
+
+export interface Animal {
+  id: string;
+  userId: string;
+  livestockId?: string;
+  livestockName?: string;
+  name?: string;
+  tagId?: string;
+  trackingMode: TrackingMode;
+  herdSize?: number;
+  breed?: string;
+  gender?: 'male' | 'female';
+  dateOfBirth?: Date | string;
+  weightKg?: number;
+  lactationStatus?: LactationStatus;
+  status: AnimalStatus;
+  events?: AnimalEvent[];
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+export type AnimalEventType =
+  | 'vaccination'
+  | 'calving'
+  | 'health_issue'
+  | 'treatment'
+  | 'sale'
+  | 'death'
+  | 'weight_record'
+  | 'milk_record'
+  | 'breeding'
+  | 'deworming';
+
+export interface AnimalEvent {
+  id: string;
+  animalId: string;
+  eventType: AnimalEventType;
+  eventDate: Date | string;
+  eventData?: Record<string, unknown>;
+  notes?: string;
+  recordedBy?: string;
+  createdAt: Date | string;
+}
+
+// ============================================
+// Organization Types
+// ============================================
+
+export type OrgType =
+  | 'cooperative'
+  | 'fpo'
+  | 'ngo'
+  | 'government'
+  | 'private'
+  | 'research';
+
+export type MemberRole = 'admin' | 'manager' | 'extension_worker' | 'member';
+export type MemberStatus = 'pending' | 'approved' | 'rejected';
+
+export interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+  orgType: OrgType;
+  capabilities: string[];
+  phone?: string;
+  logoUrl?: string;
+  isVerified: boolean;
+}
+
+export interface OrganizationMembership {
+  id: string;
+  organizationId: string;
+  organization?: Organization;
+  memberRole: MemberRole;
+  status: MemberStatus;
+  joinedAt?: Date | string;
+}
+
+// ============================================
+// Farmer-EW Mapping Types
+// ============================================
+
+export type MappingStatus = 'pending' | 'approved' | 'rejected' | 'revoked';
+
+export interface FarmerEwMapping {
+  id: string;
+  farmerId: string;
+  ewId: string;
+  farmerName?: string;
+  ewName?: string;
+  status: MappingStatus;
+  organizationId?: string;
+  createdAt: Date | string;
+  farmer?: {
+    id: string;
+    deviceId: string;
+    name?: string;
+    phone?: string;
+    isProxy?: boolean;
+    profileCompleteness?: number;
+  };
+  ew?: {
+    id: string;
+    name?: string;
+    phone?: string;
+  };
+  organization?: {
+    name: string;
+  };
+}
+
+// ============================================
+// A2UI (Agent-to-UI) Types
+// ============================================
+
+export type A2UIWidgetType =
+  | 'crop_picker'
+  | 'livestock_picker'
+  | 'plot_selector'
+  | 'farmer_picker'
+  | 'number_input'
+  | 'date_picker'
+  | 'multi_select'
+  | 'confirmation'
+  | 'form'
+  | 'profile_prompt';
+
+export type A2UIStatus = 'pending' | 'responded' | 'expired';
+
+/**
+ * A2UI payload sent from AI to trigger structured UI widgets.
+ * Only used for disambiguation of the user's existing entities
+ * when there are multiple candidates.
+ */
+export interface A2UIPayload {
+  widgetId: string;
+  widgetType: A2UIWidgetType;
+  title?: string;
+  description?: string;
+  context?: Record<string, unknown>;
+  required?: boolean;
+  responseKey?: string;
+}
+
+/**
+ * User's structured response to an A2UI widget
+ */
+export interface A2UIResponse {
+  widgetId: string;
+  widgetType: A2UIWidgetType;
+  responseData: Record<string, unknown>;
+  displayText: string; // Human-readable text sent as chat message
 }
 
 export interface UserPreferences {
@@ -487,8 +772,11 @@ export interface StreamingChatParams {
   locationDetails?: LocationDetails;
   history?: HistoryMessage[];
   sessionId?: string;
+  a2uiResponse?: A2UIResponse;
+  connectedFarmerProfileId?: string;
   onChunk?: (text: string) => void;
   onThinking?: (thinking: string) => void;
+  onA2UI?: (payload: A2UIPayload) => void;
   onComplete?: (fullResponse: string, metadata: ChatMetadata) => void;
   onError?: (error: Error) => void;
 }
@@ -563,7 +851,7 @@ export type RootStackParamList = {
   Location: undefined;
   Language: undefined;
   // Main
-  Chat: { sessionId?: string; newSession?: boolean; openCamera?: boolean } | undefined;
+  Chat: { sessionId?: string; newSession?: boolean; openCamera?: boolean; onBehalfOfDeviceId?: string } | undefined;
   History: undefined;
   Settings: undefined;
   LanguageSelect: undefined;
@@ -571,6 +859,21 @@ export type RootStackParamList = {
   McpServerDetail: { serverId: string };
   Home: undefined;
   ContentDetail: { contentId: string };
+  // Profile & Farm Management
+  Profile: undefined;
+  FarmList: undefined;
+  FarmDetail: { farmId: string };
+  FarmEdit: { farmId?: string }; // undefined = new farm
+  PlotEdit: { farmId: string; plotId?: string }; // undefined plotId = new plot
+  // Livestock Management
+  LivestockList: undefined;
+  LivestockDetail: { animalId: string };
+  LivestockEdit: { animalId?: string }; // undefined = new animal
+  LivestockEvent: { animalId: string; eventType?: AnimalEventType };
+  // EW Features
+  MyFarmers: undefined;
+  ConnectFarmer: undefined;
+  PendingRequests: undefined;
 };
 
 // ============================================

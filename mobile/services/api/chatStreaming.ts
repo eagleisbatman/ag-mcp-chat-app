@@ -1,5 +1,5 @@
 import { log } from '../../utils/logger';
-import type { ChatMetadata, StreamingChatParams } from '../../types';
+import type { ChatMetadata, StreamingChatParams, A2UIPayload } from '../../types';
 import {
   API_KEY,
   CHAT_API_URL,
@@ -95,6 +95,7 @@ export const sendChatMessageStreaming = async ({
   onThinking,
   onComplete,
   onError,
+  onA2UI,
 }: StreamingChatParams): Promise<{ success: boolean; error?: string }> => {
   const deviceId = await ensureDeviceId();
   const formattedHistory = history
@@ -180,6 +181,7 @@ export const sendChatMessageStreaming = async ({
             response?: string;
             error?: string;
             followUpQuestions?: string[];
+            a2ui?: A2UIPayload;
           };
 
           if (parsed.type === 'text') {
@@ -200,8 +202,13 @@ export const sendChatMessageStreaming = async ({
             if (parsed.followUpQuestions && parsed.followUpQuestions.length > 0) {
               metadata.followUpQuestions = parsed.followUpQuestions;
             }
+          } else if (parsed.type === 'a2ui' && parsed.a2ui) {
+            // Collect A2UI directives in metadata and notify callback
+            if (!metadata.a2uiWidgets) metadata.a2uiWidgets = [];
+            metadata.a2uiWidgets.push(parsed.a2ui);
+            onA2UI?.(parsed.a2ui);
           } else if (parsed.type === 'meta') {
-            metadata = parsed as unknown as ChatMetadata;
+            metadata = { ...metadata, ...(parsed as unknown as ChatMetadata) };
           } else if (parsed.type === 'error') {
             finishError(new Error(parsed.error || 'Stream error'));
             return;
