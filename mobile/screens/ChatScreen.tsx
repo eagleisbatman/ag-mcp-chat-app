@@ -20,7 +20,7 @@ import StarterQuestions from '../components/StarterQuestions';
 import { styles } from './chat/styles';
 import { lookupLocation } from '../services/db';
 import { t } from '../constants/strings';
-import type { Message } from '../types';
+import type { Message, A2UIPayload } from '../types';
 import type { ChatScreenProps, InputToolbarHandle } from './chat/types';
 
 // Type for starter questions synthetic item
@@ -66,6 +66,9 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   );
 
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
+
+  // Track which A2UI widgets the user has already responded to
+  const [respondedA2UIWidgetIds, setRespondedA2UIWidgetIds] = useState<Set<string>>(new Set());
 
   // Combine messages with starter questions as a scrollable item
   // In inverted list: higher index = visual top, lower index = visual bottom
@@ -122,6 +125,17 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const handleFollowUpTap = useCallback((question: string) => {
     // Send the follow-up question as a new message
     handleSendText(question);
+    scrollToBottom();
+  }, [handleSendText, scrollToBottom]);
+
+  const handleA2UIPress = useCallback((widget: A2UIPayload) => {
+    // Mark this widget as responded
+    setRespondedA2UIWidgetIds(prev => new Set(prev).add(widget.widgetId));
+    // Build a display text from widget context (e.g. selected option label)
+    const ctx = widget.context || {};
+    const displayText = (ctx.selectedLabel as string) || widget.title || `Selected: ${widget.widgetType}`;
+    // Send the selection as a chat message so the AI receives the user's choice
+    handleSendText(displayText);
     scrollToBottom();
   }, [handleSendText, scrollToBottom]);
 
@@ -212,6 +226,8 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
                     onLayout={(height) => onMessageLayout(item._id, height)}
                     onRetry={handleDiagnosisRetry}
                     onFollowUpTap={handleFollowUpTap}
+                    onA2UIPress={handleA2UIPress}
+                    respondedA2UIWidgetIds={respondedA2UIWidgetIds}
                   />
                   {showDateSeparator && <DateSeparator date={item.createdAt} />}
                 </>

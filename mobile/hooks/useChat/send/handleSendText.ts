@@ -4,7 +4,7 @@ import { log } from '../../../utils/logger';
 import { parseErrorMessage, isNetworkError } from '../../../utils/apiHelpers';
 import { t } from '../../../constants/strings';
 import { generateDiagnosisTTSBrief } from '../../../utils/diagnosisNormalizer';
-import type { HistoryMessage, Message } from '../../../types';
+import type { HistoryMessage, Message, A2UIPayload } from '../../../types';
 import type { LocationContextDeps } from './types';
 
 interface SendTextDeps {
@@ -92,9 +92,10 @@ export function createSendTextHandler({
         onThinking: (thinking: string) => updateMessage(botMsgId, { thinkingText: thinking }),
         onComplete: (fullText: string, metadata?: Record<string, unknown>) => {
           setIsTyping(false);
-          // Extract follow-up questions from metadata
+          // Extract follow-up questions and A2UI widgets from metadata
           const followUpQuestions = metadata?.followUpQuestions as string[] | undefined;
-          updateMessage(botMsgId, { text: fullText, followUpQuestions, status: 'complete', thinkingText: null });
+          const a2uiWidgets = metadata?.a2uiWidgets as A2UIPayload[] | undefined;
+          updateMessage(botMsgId, { text: fullText, followUpQuestions, a2uiWidgets, status: 'complete', thinkingText: null });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
           const diagnosisMetadata = metadata?.diagnosis as Record<string, unknown> | undefined;
