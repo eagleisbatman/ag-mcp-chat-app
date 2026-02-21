@@ -131,9 +131,11 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const handleA2UIPress = useCallback((widget: A2UIPayload) => {
     // Mark this widget as responded
     setRespondedA2UIWidgetIds(prev => new Set(prev).add(widget.widgetId));
-    // Build a display text from widget context (e.g. selected option label)
+    // Build a display text from widget context, sanitized and length-bounded
     const ctx = widget.context || {};
-    const displayText = (ctx.selectedLabel as string) || widget.title || `Selected: ${widget.widgetType}`;
+    const raw = (ctx.selectedLabel as string) || widget.title || `Selected: ${widget.widgetType}`;
+    // Sanitize: strip control chars, limit to 200 chars
+    const displayText = raw.replace(/[\x00-\x1f]/g, '').slice(0, 200);
     // Send the selection as a chat message so the AI receives the user's choice
     handleSendText(displayText);
     scrollToBottom();
@@ -226,8 +228,8 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
                     onLayout={(height) => onMessageLayout(item._id, height)}
                     onRetry={handleDiagnosisRetry}
                     onFollowUpTap={handleFollowUpTap}
-                    onA2UIPress={handleA2UIPress}
-                    respondedA2UIWidgetIds={respondedA2UIWidgetIds}
+                    onA2UIPress={item.a2uiWidgets?.length ? handleA2UIPress : undefined}
+                    respondedA2UIWidgetIds={item.a2uiWidgets?.length ? respondedA2UIWidgetIds : undefined}
                   />
                   {showDateSeparator && <DateSeparator date={item.createdAt} />}
                 </>
