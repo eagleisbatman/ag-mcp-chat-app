@@ -38,7 +38,7 @@ const NUDGE_MESSAGES: Record<string, string> = {
 };
 
 export default function ChatScreen({ navigation, route }: ChatScreenProps) {
-  const { theme, language, location, locationDetails, setLocation } = useApp();
+  const { theme, language, location, locationDetails, setLocation, userId } = useApp();
   const { showSuccess, showWarning, showError } = useToast();
 
   // Explicitly typing the FlatList ref to allow null
@@ -91,8 +91,8 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   // Load persisted respondedWidgetIds when session loads
   useEffect(() => {
     respondedLoadedRef.current = false;
-    if (!sessionId) return;
-    AsyncStorage.getItem(`responded:${sessionId}`).then((stored) => {
+    if (!sessionId || !userId) return;
+    AsyncStorage.getItem(`responded:${userId}:${sessionId}`).then((stored) => {
       if (stored) {
         try {
           const ids = JSON.parse(stored) as string[];
@@ -106,14 +106,17 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
       }
       respondedLoadedRef.current = true;
     });
-  }, [sessionId]);
+  }, [sessionId, userId]);
 
   // Persist respondedWidgetIds on change (only after initial load completes to avoid overwriting)
+  // Debounced to avoid thrashing AsyncStorage when multiple widgets are responded to quickly.
   useEffect(() => {
-    if (sessionId && respondedA2UIWidgetIds.size > 0 && respondedLoadedRef.current) {
-      AsyncStorage.setItem(`responded:${sessionId}`, JSON.stringify([...respondedA2UIWidgetIds]));
-    }
-  }, [sessionId, respondedA2UIWidgetIds]);
+    if (!sessionId || !userId || respondedA2UIWidgetIds.size === 0 || !respondedLoadedRef.current) return;
+    const timer = setTimeout(() => {
+      AsyncStorage.setItem(`responded:${userId}:${sessionId}`, JSON.stringify([...respondedA2UIWidgetIds]));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [sessionId, userId, respondedA2UIWidgetIds]);
 
   // A2UI picker system (replaces per-type modal state + handlers)
   const {
@@ -180,8 +183,12 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
     scrollToBottom();
   }, [handleSendText, scrollToBottom]);
 
-  const handleSendImageWrapped = useCallback(async (imageData: any) => {
-    await handleSendImage(imageData);
+  // InputToolbar types base64 as optional but handleSendImage requires it.
+  // Narrow here rather than using 'any' to preserve type safety.
+  const handleSendImageTyped = useCallback((data: { uri: string; base64?: string; text?: string }) => {
+    if (data.base64 !== undefined) {
+      handleSendImage({ uri: data.uri, base64: data.base64, text: data.text });
+    }
   }, [handleSendImage]);
 
   const handleDiagnosisRetry = useCallback(() => {
@@ -329,7 +336,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
       <InputToolbar
         ref={inputToolbarRef}
         onSendText={handleSend}
-        onSendImage={handleSendImageWrapped}
+        onSendImage={handleSendImageTyped}
         transcribeAudio={transcribeAudioForInput}
         uploadAudioInBackground={uploadAudioInBackground}
         disabled={isTyping}

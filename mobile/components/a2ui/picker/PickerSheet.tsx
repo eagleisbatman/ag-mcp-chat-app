@@ -5,7 +5,7 @@
  * followed by an optional form step. New picker types only need a config — no new component.
  */
 
-import React, { useState, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -137,8 +137,13 @@ export default function PickerSheet({
 
   // ---- Handlers ----
 
-  // Track whether the component is still mounted to avoid state updates after close
-  const mountedRef = useRef(true);
+  // Track whether the picker is currently active (visible and not yet closed).
+  // Initialized to `visible` so it reflects the correct state when the sheet opens.
+  // Set to true when visible and false when closed — never set inside click handlers.
+  const isActiveRef = useRef(visible);
+  useEffect(() => {
+    isActiveRef.current = visible;
+  }, [visible]);
 
   const resetState = useCallback(() => {
     setSearch('');
@@ -149,7 +154,7 @@ export default function PickerSheet({
 
   // Close always works — even during submission (user escape hatch)
   const handleClose = useCallback(() => {
-    mountedRef.current = false;
+    isActiveRef.current = false;
     resetState();
     onClose();
   }, [resetState, onClose]);
@@ -166,7 +171,7 @@ export default function PickerSheet({
         timeout,
       ])
         .then((result) => {
-          if (!mountedRef.current) return;
+          if (!isActiveRef.current) return;
           if (!result.saved && purpose === 'collect') {
             onSaveError?.();
           } else if (result.saved && purpose === 'collect') {
@@ -176,7 +181,7 @@ export default function PickerSheet({
           resetState();
         })
         .catch(() => {
-          if (!mountedRef.current) return;
+          if (!isActiveRef.current) return;
           onSaveError?.();
           resetState();
         });
@@ -187,7 +192,6 @@ export default function PickerSheet({
   const handleItemSelect = useCallback(
     (item: PickerItem) => {
       if (submitting) return;
-      mountedRef.current = true;
       setSelectedItem(item);
       setSearch('');
       if (hasFormStep) {
@@ -204,7 +208,6 @@ export default function PickerSheet({
   const handleFormSubmit = useCallback(
     (formData: Record<string, string>) => {
       if (!selectedItem || submitting) return;
-      mountedRef.current = true;
       runCompletion(selectedItem, formData);
     },
     [selectedItem, submitting, runCompletion],
