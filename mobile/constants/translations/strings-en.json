@@ -236,10 +236,10 @@
         "tagline": "Weather intelligence and forecasting",
         "description": "Advanced weather intelligence platform with high-resolution forecasts and nowcasting capabilities."
       },
-      "feedFormulation": {
-        "name": "Feed Formulation",
-        "tagline": "Optimal diet calculations for dairy cattle",
-        "description": "Calculate the most cost-effective feed mix for your dairy cattle. Takes into account milk production targets, body weight, and available local feeds."
+      "rationsmart": {
+        "name": "RationSmart",
+        "tagline": "Smart dairy cattle nutrition for every farm",
+        "description": "Create cow profiles and get AI-optimized feed recommendations tailored to your herd."
       },
       "nextgen": {
         "name": "NextGen Fertilizer",

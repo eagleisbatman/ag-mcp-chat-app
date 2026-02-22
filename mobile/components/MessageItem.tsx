@@ -9,6 +9,7 @@ import AppIcon from './ui/AppIcon';
 import DiagnosisCard from './DiagnosisCard';
 import FollowUpQuestions from './FollowUpQuestions';
 import A2UIDispatcher from './a2ui/A2UIDispatcher';
+import RationFlowRenderer from './chat/RationFlowRenderer';
 import TypingIndicator from './ui/TypingIndicator';
 import { t } from '../constants/strings';
 import { Message, A2UIPayload } from '../types';
@@ -256,6 +257,8 @@ function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosis
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
           {isThinking ? (
             <TypingIndicator text={message.thinkingText || t('chat.thinking')} />
+          ) : message.flowStep ? (
+            <RationFlowRenderer flowStep={message.flowStep} />
           ) : message.text ? (
             <>
               <Markdown style={markdownStyles}>
@@ -334,6 +337,7 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
     prevProps.message.status === nextProps.message.status &&
     prevProps.message.thinkingText === nextProps.message.thinkingText &&
     prevProps.isNewMessage === nextProps.isNewMessage &&
+    prevProps.message.flowStep === nextProps.message.flowStep &&
     JSON.stringify(prevProps.message.followUpQuestions) === JSON.stringify(nextProps.message.followUpQuestions) &&
     JSON.stringify(prevProps.message.a2uiWidgets) === JSON.stringify(nextProps.message.a2uiWidgets) &&
     prevProps.respondedA2UIWidgetIds === nextProps.respondedA2UIWidgetIds

@@ -4,7 +4,7 @@ import { log } from '../../../utils/logger';
 import { parseErrorMessage, isNetworkError } from '../../../utils/apiHelpers';
 import { t } from '../../../constants/strings';
 import { generateDiagnosisTTSBrief } from '../../../utils/diagnosisNormalizer';
-import type { HistoryMessage, Message, A2UIPayload } from '../../../types';
+import type { HistoryMessage, Message, A2UIPayload, RationFlowStep } from '../../../types';
 import type { LocationContextDeps } from './types';
 
 interface SendTextDeps {
@@ -74,6 +74,9 @@ export function createSendTextHandler({
         return { _id: m._id, text: msgText, isBot: m.isBot };
       });
 
+      // Capture flow step from SSE stream (set by onFlowStep callback)
+      let capturedFlowStep: RationFlowStep | undefined;
+
       await sendChatMessageStreaming({
         message: text,
         latitude: locationContext.location.latitude ?? undefined,
@@ -90,12 +93,17 @@ export function createSendTextHandler({
           });
         },
         onThinking: (thinking: string) => updateMessage(botMsgId, { thinkingText: thinking }),
+        onFlowStep: (flowStep: RationFlowStep) => {
+          capturedFlowStep = flowStep;
+          // Flow steps are atomic (not streamed incrementally) — mark complete immediately
+          updateMessage(botMsgId, { flowStep, status: 'complete', thinkingText: null });
+        },
         onComplete: (fullText: string, metadata?: Record<string, unknown>) => {
           setIsTyping(false);
           // Extract follow-up questions and A2UI widgets from metadata
           const followUpQuestions = metadata?.followUpQuestions as string[] | undefined;
           const a2uiWidgets = metadata?.a2uiWidgets as A2UIPayload[] | undefined;
-          updateMessage(botMsgId, { text: fullText, followUpQuestions, a2uiWidgets, status: 'complete', thinkingText: null });
+          updateMessage(botMsgId, { text: fullText || null, followUpQuestions, a2uiWidgets, flowStep: capturedFlowStep, status: 'complete', thinkingText: null });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
           const diagnosisMetadata = metadata?.diagnosis as Record<string, unknown> | undefined;
