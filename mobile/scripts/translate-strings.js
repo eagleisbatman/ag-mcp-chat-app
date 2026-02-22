@@ -9,8 +9,8 @@
  *   node scripts/translate-strings.js vi   # Vietnamese
  */
 
-import 'dotenv/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -18,6 +18,7 @@ import { LANGUAGES } from './utils/languages.js';
 import { extractJSON, flattenObject, unflattenObject } from './utils/translationHelpers.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '.env') });
 const OUTPUT_DIR = path.join(__dirname, '../constants/translations');
 
 // Get language from command line
@@ -93,9 +94,9 @@ async function main() {
   console.log(`║  🌍 Translating to ${langInfo.name.padEnd(30)}       ║`);
   console.log('╚════════════════════════════════════════════════════════════╝\n');
 
-  // Import the English strings
-  const stringsModule = await import('../constants/strings.js');
-  const englishStrings = stringsModule.STRINGS.en;
+  // Import the English strings (use .ts extension — requires tsx or ts-node runtime)
+  const stringsModule = await import('../constants/strings/en.ts');
+  const englishStrings = stringsModule.en;
 
   console.log('📖 Loaded English strings\n');
 
@@ -104,7 +105,7 @@ async function main() {
   console.log(`📊 Total strings to translate: ${Object.keys(flatStrings).length}\n`);
 
   // Translate in sections to avoid token limits
-  const sections = ['common', 'onboarding', 'chat', 'media', 'voice', 'history', 'settings', 'mcp', 'system', 'errors', 'diagnosis', 'a11y'];
+  const sections = Object.keys(englishStrings);
   const allTranslations = {};
 
   for (const section of sections) {

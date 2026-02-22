@@ -93,6 +93,8 @@ export interface Message {
   // A2UI widgets attached to this message (from AI)
   a2uiWidgets?: A2UIPayload[];
   a2uiResponseData?: Record<string, unknown>;
+  // RationSmart flow step (structured data for localized rendering)
+  flowStep?: RationFlowStep;
 }
 
 /**
@@ -582,8 +584,9 @@ export type A2UIStatus = 'pending' | 'responded' | 'expired';
 
 /**
  * A2UI payload sent from AI to trigger structured UI widgets.
- * Only used for disambiguation of the user's existing entities
- * when there are multiple candidates.
+ * Supports two purposes:
+ * - 'clarify': disambiguation among existing profile entities (e.g. "which crop?")
+ * - 'collect': save new data to the farmer's profile (e.g. "add your crops")
  */
 export interface A2UIPayload {
   widgetId: string;
@@ -593,6 +596,8 @@ export interface A2UIPayload {
   context?: Record<string, unknown>;
   required?: boolean;
   responseKey?: string;
+  /** 'clarify' = disambiguation; 'collect' = save new data to profile */
+  purpose?: 'clarify' | 'collect';
 }
 
 /**
@@ -603,6 +608,16 @@ export interface A2UIResponse {
   widgetType: A2UIWidgetType;
   responseData: Record<string, unknown>;
   displayText: string; // Human-readable text sent as chat message
+}
+
+/**
+ * Structured payload from RationSmart conversational flow.
+ * Received as 'flow_step' SSE chunks — rendered using i18n keys + data.
+ */
+export interface RationFlowStep {
+  step: string;
+  messageKey: string;
+  data?: Record<string, unknown>;
 }
 
 export interface UserPreferences {
@@ -777,6 +792,7 @@ export interface StreamingChatParams {
   onChunk?: (text: string) => void;
   onThinking?: (thinking: string) => void;
   onA2UI?: (payload: A2UIPayload) => void;
+  onFlowStep?: (flowStep: RationFlowStep) => void;
   onComplete?: (fullResponse: string, metadata: ChatMetadata) => void;
   onError?: (error: Error) => void;
 }
@@ -851,7 +867,7 @@ export type RootStackParamList = {
   Location: undefined;
   Language: undefined;
   // Main
-  Chat: { sessionId?: string; newSession?: boolean; openCamera?: boolean; onBehalfOfDeviceId?: string } | undefined;
+  Chat: { sessionId?: string; newSession?: boolean; openCamera?: boolean; onBehalfOfDeviceId?: string; nudgeMessage?: string } | undefined;
   History: undefined;
   Settings: undefined;
   LanguageSelect: undefined;

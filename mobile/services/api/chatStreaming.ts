@@ -1,9 +1,11 @@
 import { log } from '../../utils/logger';
-import type { ChatMetadata, StreamingChatParams, A2UIPayload } from '../../types';
+import type { ChatMetadata, StreamingChatParams, A2UIPayload, RationFlowStep } from '../../types';
 import {
   API_KEY,
   CHAT_API_URL,
   CHAT_TIMEOUT_MS,
+  FALLBACK_LATITUDE,
+  FALLBACK_LONGITUDE,
   buildLocationContext,
   ensureDeviceId,
   getLocalDateTime,
@@ -96,6 +98,7 @@ export const sendChatMessageStreaming = async ({
   onComplete,
   onError,
   onA2UI,
+  onFlowStep,
 }: StreamingChatParams): Promise<{ success: boolean; error?: string }> => {
   const deviceId = await ensureDeviceId();
   const formattedHistory = history
@@ -115,8 +118,8 @@ export const sendChatMessageStreaming = async ({
 
   const requestBody = {
     message,
-    latitude: latitude || -1.2864,
-    longitude: longitude || 36.8172,
+    latitude: latitude ?? FALLBACK_LATITUDE,
+    longitude: longitude ?? FALLBACK_LONGITUDE,
     language: language || 'en',
     location: locationContext,
     history: formattedHistory,
@@ -182,6 +185,7 @@ export const sendChatMessageStreaming = async ({
             error?: string;
             followUpQuestions?: string[];
             a2ui?: A2UIPayload;
+            flowStep?: RationFlowStep;
           };
 
           if (parsed.type === 'text') {
@@ -207,6 +211,8 @@ export const sendChatMessageStreaming = async ({
             if (!metadata.a2uiWidgets) metadata.a2uiWidgets = [];
             metadata.a2uiWidgets.push(parsed.a2ui);
             onA2UI?.(parsed.a2ui);
+          } else if (parsed.type === 'flow_step' && parsed.flowStep) {
+            onFlowStep?.(parsed.flowStep);
           } else if (parsed.type === 'meta') {
             metadata = { ...metadata, ...(parsed as unknown as ChatMetadata) };
           } else if (parsed.type === 'error') {
