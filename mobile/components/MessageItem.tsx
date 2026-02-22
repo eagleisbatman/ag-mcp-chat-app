@@ -21,7 +21,6 @@ import ImageViewerModal from './chat/ImageViewerModal';
 interface MessageItemProps {
   message: Message;
   isNewMessage?: boolean;
-  diagnosisTitle?: string;
   onLayout?: (height: number) => void;
   onRetry?: () => void;
   onFollowUpTap?: (question: string) => void;
@@ -30,10 +29,18 @@ interface MessageItemProps {
 }
 
 /**
- * Sanitize streaming text to prevent partial markdown from rendering incorrectly
+ * Sanitize streaming text to prevent partial markdown from rendering incorrectly.
+ * Early-exits when the trailing character cannot produce incomplete markdown,
+ * avoiding expensive lookbehind regex on the majority of streaming chunks.
  */
 function sanitizeStreamingMarkdown(text: string): string {
   if (!text) return text;
+
+  // Only run expensive regex checks when the text could have incomplete markers
+  const lastChar = text[text.length - 1];
+  if (lastChar !== '*' && lastChar !== '[' && lastChar !== ']' && lastChar !== '`' && lastChar !== '#') {
+    return text;
+  }
 
   // Count open/close markers
   const starMatch = text.match(/\*+$/g);
@@ -64,7 +71,7 @@ function sanitizeStreamingMarkdown(text: string): string {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false, diagnosisTitle: _diagnosisTitle, onLayout, onRetry, onFollowUpTap, onA2UIPress, respondedA2UIWidgetIds }: MessageItemProps): JSX.Element | null {
+function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onFollowUpTap, onA2UIPress, respondedA2UIWidgetIds }: MessageItemProps): JSX.Element | null {
   const { theme, language, locationDetails } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
@@ -319,12 +326,17 @@ function areDiagnosisDataEqual(
   // If types differ, not equal
   if (typeof prev !== typeof next) return false;
 
-  // For objects, compare JSON representation (stable for diagnosis data)
-  try {
-    return JSON.stringify(prev) === JSON.stringify(next);
-  } catch {
-    return false;
+  // For objects, use shallow key comparison — sufficient for diagnosis data
+  // and avoids JSON.stringify key-order instability
+  if (typeof prev === 'object' && typeof next === 'object') {
+    const pObj = prev as Record<string, unknown>;
+    const nObj = next as Record<string, unknown>;
+    const pKeys = Object.keys(pObj);
+    const nKeys = Object.keys(nObj);
+    if (pKeys.length !== nKeys.length) return false;
+    return pKeys.every(k => pObj[k] === nObj[k]);
   }
+  return false;
 }
 
 export default React.memo(MessageItem, (prevProps, nextProps) => {
@@ -338,8 +350,8 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
     prevProps.message.thinkingText === nextProps.message.thinkingText &&
     prevProps.isNewMessage === nextProps.isNewMessage &&
     prevProps.message.flowStep === nextProps.message.flowStep &&
-    JSON.stringify(prevProps.message.followUpQuestions) === JSON.stringify(nextProps.message.followUpQuestions) &&
-    JSON.stringify(prevProps.message.a2uiWidgets) === JSON.stringify(nextProps.message.a2uiWidgets) &&
+    (prevProps.message.followUpQuestions ?? []).join('|') === (nextProps.message.followUpQuestions ?? []).join('|') &&
+    (prevProps.message.a2uiWidgets ?? []).map(w => w.widgetId).join(',') === (nextProps.message.a2uiWidgets ?? []).map(w => w.widgetId).join(',') &&
     prevProps.respondedA2UIWidgetIds === nextProps.respondedA2UIWidgetIds
   );
 });

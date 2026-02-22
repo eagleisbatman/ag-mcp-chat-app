@@ -38,21 +38,27 @@ export function createSendTextHandler({
   retryCountRef,
   maxRetries,
 }: SendTextDeps) {
-  return async (text: string, isRetry = false): Promise<void> => {
+  return async (text: string, isRetry = false, existingBotMsgId?: string): Promise<void> => {
     const userMessage: Message = {
       _id: Date.now().toString(),
       text,
       createdAt: new Date(),
       isBot: false,
     };
-    addMessage(userMessage);
-    setIsTyping(true);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    if (!existingBotMsgId) {
+      addMessage(userMessage);
+      setIsTyping(true);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
 
     const sessionId = await ensureSession();
-    persistMessage(userMessage, sessionId, { inputMethod: 'keyboard' });
 
-    const botMsgId = (Date.now() + 1).toString();
+    if (!existingBotMsgId) {
+      persistMessage(userMessage, sessionId, { inputMethod: 'keyboard' });
+    }
+
+    const botMsgId = existingBotMsgId ?? (Date.now() + 1).toString();
     const botMsg: Message = {
       _id: botMsgId,
       text: '',
@@ -61,7 +67,10 @@ export function createSendTextHandler({
       status: 'thinking',
       thinkingText: t('chat.thinking'),
     };
-    addMessage(botMsg);
+
+    if (!existingBotMsgId) {
+      addMessage(botMsg);
+    }
 
     try {
 
@@ -142,7 +151,7 @@ export function createSendTextHandler({
               setThinkingText,
               retryCountRef,
               maxRetries,
-            })(text, true);
+            })(text, true, botMsgId);
             return;
           }
 
