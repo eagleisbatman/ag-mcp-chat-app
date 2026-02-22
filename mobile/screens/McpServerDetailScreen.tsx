@@ -127,14 +127,14 @@ const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
     featureKeys: ['currentWeather', 'forecast', 'hourlyForecast', 'historical'],
     coverageKeys: ['worldwide'],
   },
-  'feed-formulation': {
-    name: 'Feed Formulation',
-    stringKey: 'mcp.services.feedFormulation',
+  'rationsmart': {
+    name: 'RationSmart',
+    stringKey: 'mcp.services.rationsmart',
     icon: 'cow',
     logo: null,
-    color: '#4CAF50',
-    featureKeys: ['dietOptimization', 'nutrientBalance', 'localFeeds', 'costCalculation'],
-    coverageKeys: ['ethiopia'],
+    color: '#795548',
+    featureKeys: ['cowProfiles', 'dietOptimization', 'feedingSchedules', 'dietTracking'],
+    coverageKeys: ['bangladesh', 'ethiopia', 'india', 'indonesia', 'morocco', 'nepal', 'pakistan', 'philippines', 'thailand', 'vietnam'],
   },
   'nextgen': {
     name: 'NextGen Fertilizer',

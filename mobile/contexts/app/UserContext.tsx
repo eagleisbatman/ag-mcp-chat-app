@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerUser } from '../../services/db';
 import { log } from '../../utils/logger';
 
-const SERVICE_PREFS_KEY = '@service_preferences';
+/** User-scoped key for service preferences (prevents leakage on shared devices). */
+const getServicePrefsKey = (uid: string) => `${uid}:@service_preferences`;
 
 interface UserContextValue {
   userId: string | null;
@@ -34,11 +35,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         if (servicePreferences && typeof servicePreferences === 'object') {
           try {
             // Only sync if we have valid preferences from the server
-            const existingPrefs = await AsyncStorage.getItem(SERVICE_PREFS_KEY);
+            const prefsKey = getServicePrefsKey(result.userId);
+            const existingPrefs = await AsyncStorage.getItem(prefsKey);
             if (!existingPrefs) {
               // No local preferences, use server defaults
               log('[UserContext] Syncing servicePreferences from server:', servicePreferences);
-              await AsyncStorage.setItem(SERVICE_PREFS_KEY, JSON.stringify(servicePreferences));
+              await AsyncStorage.setItem(prefsKey, JSON.stringify(servicePreferences));
             }
           } catch (prefError) {
             log('[UserContext] Failed to sync servicePreferences:', prefError);

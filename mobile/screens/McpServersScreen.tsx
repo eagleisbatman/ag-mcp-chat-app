@@ -148,7 +148,7 @@ const SERVICE_CATEGORIES: { [key: string]: ServiceCategoryConfig } = {
     labelKey: 'mcp.categories.livestock',
     icon: 'cow',
     color: '#66BB6A',
-    servers: ['feed-formulation'],
+    servers: ['rationsmart'],
   },
   agriculture: {
     labelKey: 'mcp.categories.agriculture',
@@ -220,9 +220,9 @@ const SERVER_INFO: { [key: string]: ServerInfoConfig } = {
     icon: 'weather-partly-cloudy',
     logo: null,
   },
-  'feed-formulation': {
-    name: 'Feed Formulation',
-    stringKey: 'mcp.services.feedFormulation',
+  'rationsmart': {
+    name: 'RationSmart',
+    stringKey: 'mcp.services.rationsmart',
     icon: 'cow',
     logo: null,
   },

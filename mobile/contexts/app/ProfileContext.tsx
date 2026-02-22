@@ -18,12 +18,16 @@ import {
   updateAnimal as apiUpdateAnimal,
   deleteAnimal as apiDeleteAnimal,
   recordAnimalEvent as apiRecordEvent,
+  createPlot as apiCreatePlot,
+  allocateCrop as apiAllocateCrop,
   getMasterCrops,
   getMasterLivestock,
 } from '../../services/db';
 import {
   UserProfile,
   Farm,
+  Plot,
+  CropAllocation,
   Animal,
   AnimalEvent,
   AnimalEventType,
@@ -71,6 +75,9 @@ interface ProfileContextValue {
   addEvent: (animalId: string, event: { eventType: AnimalEventType; eventDate?: string; eventData?: Record<string, unknown>; notes?: string }) => Promise<AnimalEvent | null>;
   refreshAnimals: () => Promise<void>;
 
+  // Convenience: add a crop to the user's default farm/plot (creates farm + plot if needed)
+  addCropToDefaultPlot: (cropId: string) => Promise<boolean>;
+
   // Master data
   masterCrops: MasterCrop[];
   masterLivestock: MasterLivestock[];
@@ -99,6 +106,14 @@ export const ProfileProvider = ({
   const [masterCrops, setMasterCrops] = useState<MasterCrop[]>([]);
   const [masterLivestock, setMasterLivestock] = useState<MasterLivestock[]>([]);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+
+  // Ref to current farms for use in callbacks (avoids stale closure)
+  const farmsRef = useRef(farms);
+  // Mutex to prevent concurrent addCropToDefaultPlot calls creating duplicate farms
+  const cropToDefaultMutex = useRef(false);
+
+  // Keep farmsRef in sync with farms state
+  useEffect(() => { farmsRef.current = farms; }, [farms]);
 
   // Load from AsyncStorage when userId is known (user-scoped keys prevent data leakage)
   useEffect(() => {
@@ -262,6 +277,77 @@ export const ProfileProvider = ({
     }
   }, []);
 
+  /**
+   * Add a crop to the user's default farm/plot. Creates farm + plot if needed.
+   * Uses a mutex to prevent concurrent calls from creating duplicate farms.
+   * Reads farmsRef (not stale closure) for latest state.
+   */
+  const addCropToDefaultPlot = useCallback(async (cropId: string): Promise<boolean> => {
+    // Mutex: prevent concurrent calls from racing to create duplicate farms
+    if (cropToDefaultMutex.current) {
+      log('addCropToDefaultPlot: skipped (another call in progress)');
+      return false;
+    }
+    cropToDefaultMutex.current = true;
+
+    try {
+      // Read latest farms from ref (not stale closure)
+      const currentFarms = farmsRef.current;
+
+      // 1. Get or create default farm
+      let farm = currentFarms[0];
+      if (!farm) {
+        const farmResult = await apiCreateFarm({ name: 'My Farm' });
+        if (!farmResult.success || !farmResult.data) {
+          log('addCropToDefaultPlot: failed to create farm');
+          return false;
+        }
+        farm = farmResult.data;
+        setFarms((prev) => {
+          const updated = [farm!, ...prev];
+          AsyncStorage.setItem(storageKeys(userIdRef.current).FARMS, JSON.stringify(updated)).catch(() => {});
+          return updated;
+        });
+      }
+
+      // 2. Get first plot or create default
+      let plotId = farm.plots?.[0]?.id;
+      if (!plotId) {
+        const plotResult = await apiCreatePlot(farm.id, { name: 'Main Plot' });
+        if (!plotResult.success || !plotResult.data) {
+          log('addCropToDefaultPlot: failed to create plot');
+          return false;
+        }
+        plotId = plotResult.data.id;
+      }
+
+      // 3. Check for existing allocation of same crop (prevent duplicates)
+      const existingAlloc = farm.plots
+        ?.flatMap(p => p.cropAllocations || [])
+        ?.find(a => a.cropId === cropId);
+      if (existingAlloc) {
+        log('addCropToDefaultPlot: crop already allocated, skipping');
+        return true; // Already exists — success without duplicate
+      }
+
+      // 4. Add crop allocation
+      const allocResult = await apiAllocateCrop(plotId, { cropId, status: 'planted' });
+      if (!allocResult.success) {
+        log('addCropToDefaultPlot: failed to allocate crop');
+        return false;
+      }
+
+      // 5. Refresh to pick up changes for next AI call
+      await refreshFarms();
+      return true;
+    } catch (err) {
+      log('addCropToDefaultPlot error:', err);
+      return false;
+    } finally {
+      cropToDefaultMutex.current = false;
+    }
+  }, [refreshFarms]);
+
   // ── Animals ──────────────────────────────────────
   const addAnimal = useCallback(async (
     animal: { livestockId: string; name?: string; trackingMode?: string; herdSize?: number; breed?: string; gender?: string }
@@ -378,6 +464,7 @@ export const ProfileProvider = ({
         updateFarm: updateFarmCb,
         deleteFarm: deleteFarmCb,
         refreshFarms,
+        addCropToDefaultPlot,
         animals,
         addAnimal,
         updateAnimal: updateAnimalCb,

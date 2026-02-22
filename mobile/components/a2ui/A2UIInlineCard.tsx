@@ -41,7 +41,7 @@ export default function A2UIInlineCard({ widget, onPress, responded }: A2UIInlin
         styles.container,
         {
           backgroundColor: responded ? theme.surfaceVariant : theme.accent + '12',
-          borderColor: responded ? theme.border : theme.accent + '40',
+          borderColor: responded ? theme.inputBorder : theme.accent + '40',
         },
       ]}
       accessibilityLabel={widget.title || 'Select an option'}

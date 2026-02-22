@@ -1,6 +1,6 @@
 import { fetchWithTimeout, parseErrorMessage } from '../../utils/apiHelpers';
 import type { PlantDiagnosisParams, PlantDiagnosisResult } from '../../types';
-import { API_KEY, CHAT_API_URL, CHAT_TIMEOUT_MS, buildLocationContext, ensureDeviceId, getLocalDateTime } from './core';
+import { API_KEY, CHAT_API_URL, CHAT_TIMEOUT_MS, FALLBACK_LATITUDE, FALLBACK_LONGITUDE, buildLocationContext, ensureDeviceId, getLocalDateTime } from './core';
 
 /**
  * Analyze plant image via API Gateway
@@ -15,8 +15,8 @@ export const analyzePlantImage = async (params: PlantDiagnosisParams): Promise<P
       headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
       body: JSON.stringify({
         message: 'Analyze this plant image for health issues and provide diagnosis.',
-        latitude: params.latitude || -1.2864,
-        longitude: params.longitude || 36.8172,
+        latitude: params.latitude ?? FALLBACK_LATITUDE,
+        longitude: params.longitude ?? FALLBACK_LONGITUDE,
         language: params.language || 'en',
         location: locationContext,
         image: params.imageBase64,

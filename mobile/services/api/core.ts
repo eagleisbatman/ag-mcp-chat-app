@@ -7,6 +7,10 @@ export const CHAT_API_URL = `${API_BASE_URL}/api/chat`;
 export const CHAT_TIMEOUT_MS = TIMEOUTS.CHAT;
 export const DEFAULT_TIMEOUT_MS = TIMEOUTS.DEFAULT;
 
+/** Nairobi, Kenya — default fallback when user location is unavailable. */
+export const FALLBACK_LATITUDE = -1.2864;
+export const FALLBACK_LONGITUDE = 36.8172;
+
 let cachedDeviceId: string | null = null;
 
 /**
