@@ -1,5 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState, useMemo } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 
@@ -8,6 +9,7 @@ import { useToast } from '../contexts/ToastContext';
 import useChat from '../hooks/useChat';
 import useChatScroll from '../hooks/useChatScroll';
 import useWeatherData from '../hooks/useWeatherData';
+import { useA2UIPicker } from '../hooks/useA2UIPicker';
 
 import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
@@ -16,6 +18,7 @@ import ScrollToBottomButton from '../components/chat/ScrollToBottomButton';
 import DateSeparator from '../components/chat/DateSeparator';
 import WeatherWidget from '../components/weather/WeatherWidget';
 import StarterQuestions from '../components/StarterQuestions';
+import PickerSheet from '../components/a2ui/picker/PickerSheet';
 
 import { styles } from './chat/styles';
 import { lookupLocation } from '../services/db';
@@ -27,16 +30,24 @@ import type { ChatScreenProps, InputToolbarHandle } from './chat/types';
 type StarterQuestionsItem = { _id: 'starter-questions'; isStarterQuestions: true };
 type ListItem = Message | StarterQuestionsItem;
 
+// Whitelist of allowed nudge message keys (prevents prompt injection from push payloads)
+const NUDGE_MESSAGES: Record<string, string> = {
+  setup_farm_profile: "Let's set up your farm profile so I can give you better advice",
+  add_crops: 'What crops are you growing this season?',
+  add_livestock: 'What animals do you keep on your farm?',
+};
+
 export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const { theme, language, location, locationDetails, setLocation } = useApp();
   const { showSuccess, showWarning, showError } = useToast();
-  
+
   // Explicitly typing the FlatList ref to allow null
   const flatListRef = useRef<FlatList<ListItem>>(null);
   const inputToolbarRef = useRef<InputToolbarHandle>(null);
 
   const sessionId = route?.params?.sessionId;
   const isNewSession = route?.params?.newSession;
+  const nudgeMessage = route?.params?.nudgeMessage;
 
   const {
     messages, isTyping, isLoadingSession, newestBotMessageId,
@@ -67,8 +78,53 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
 
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
 
-  // Track which A2UI widgets the user has already responded to
+  // Track which A2UI widgets the user has already responded to (persisted per session).
+  //
+  // Race condition prevention:
+  // - AsyncStorage.getItem is async, so the user could respond to a widget BEFORE the load completes.
+  // - respondedLoadedRef gates persistence writes: we don't write until the initial load finishes,
+  //   preventing an empty/partial Set from overwriting the stored data.
+  // - On load, we MERGE stored IDs with any already in state (added between mount and load).
   const [respondedA2UIWidgetIds, setRespondedA2UIWidgetIds] = useState<Set<string>>(new Set());
+  const respondedLoadedRef = useRef(false);
+
+  // Load persisted respondedWidgetIds when session loads
+  useEffect(() => {
+    respondedLoadedRef.current = false;
+    if (!sessionId) return;
+    AsyncStorage.getItem(`responded:${sessionId}`).then((stored) => {
+      if (stored) {
+        try {
+          const ids = JSON.parse(stored) as string[];
+          if (Array.isArray(ids) && ids.length > 0) {
+            setRespondedA2UIWidgetIds((prev) => {
+              const merged = new Set([...ids, ...prev]);
+              return merged;
+            });
+          }
+        } catch { /* ignore corrupt data */ }
+      }
+      respondedLoadedRef.current = true;
+    });
+  }, [sessionId]);
+
+  // Persist respondedWidgetIds on change (only after initial load completes to avoid overwriting)
+  useEffect(() => {
+    if (sessionId && respondedA2UIWidgetIds.size > 0 && respondedLoadedRef.current) {
+      AsyncStorage.setItem(`responded:${sessionId}`, JSON.stringify([...respondedA2UIWidgetIds]));
+    }
+  }, [sessionId, respondedA2UIWidgetIds]);
+
+  // A2UI picker system (replaces per-type modal state + handlers)
+  const {
+    pickerState, items: pickerItems, suggestedItems, profileActions,
+    openPicker, handleComplete: handlePickerComplete,
+    handleClose: handlePickerClose,
+    handleSaveError, handleSaveSuccess,
+  } = useA2UIPicker({
+    handleSendText, scrollToBottom, showSuccess, showError,
+    respondedA2UIWidgetIds, setRespondedA2UIWidgetIds,
+  });
 
   // Combine messages with starter questions as a scrollable item
   // In inverted list: higher index = visual top, lower index = visual bottom
@@ -95,6 +151,18 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
       resetScrollState();
     }
   }, [isNewSession, startNewSession, resetScrollState]);
+
+  // Auto-send nudge message (e.g. from push notification for profile collection)
+  const nudgeSentRef = useRef(false);
+  useEffect(() => {
+    if (nudgeMessage && !nudgeSentRef.current && !isLoadingSession) {
+      const safeMessage = NUDGE_MESSAGES[nudgeMessage];
+      if (safeMessage) {
+        nudgeSentRef.current = true;
+        handleSendText(safeMessage);
+      }
+    }
+  }, [nudgeMessage, isLoadingSession, handleSendText]);
 
   // When loading existing session (history), scroll to show the last conversation
   const prevLoadingRef = useRef(isLoadingSession);
@@ -128,18 +196,10 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
     scrollToBottom();
   }, [handleSendText, scrollToBottom]);
 
+  // A2UI press delegates to the picker system (registered pickers open modals, others send text)
   const handleA2UIPress = useCallback((widget: A2UIPayload) => {
-    // Mark this widget as responded
-    setRespondedA2UIWidgetIds(prev => new Set(prev).add(widget.widgetId));
-    // Build a display text from widget context, sanitized and length-bounded
-    const ctx = widget.context || {};
-    const raw = (ctx.selectedLabel as string) || widget.title || `Selected: ${widget.widgetType}`;
-    // Sanitize: strip control chars, limit to 200 chars
-    const displayText = raw.replace(/[\x00-\x1f]/g, '').slice(0, 200);
-    // Send the selection as a chat message so the AI receives the user's choice
-    handleSendText(displayText);
-    scrollToBottom();
-  }, [handleSendText, scrollToBottom]);
+    openPicker(widget);
+  }, [openPicker]);
 
   const handleRefreshLocation = async () => {
     setIsRefreshingLocation(true);
@@ -244,6 +304,10 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             scrollEventThrottle={16}
             keyboardShouldPersistTaps="handled"
             onScrollToIndexFailed={handleScrollToIndexFailed}
+            initialNumToRender={15}
+            maxToRenderPerBatch={10}
+            windowSize={7}
+            removeClippedSubviews={Platform.OS === 'android'}
             ListFooterComponent={
               <WeatherWidget
                 data={weatherData}
@@ -270,7 +334,23 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
         uploadAudioInBackground={uploadAudioInBackground}
         disabled={isTyping}
       />
+
+      {/* A2UI Picker — single generic modal driven by picker registry */}
+      {pickerState.config && (
+        <PickerSheet
+          visible={pickerState.visible}
+          onClose={handlePickerClose}
+          config={pickerState.config}
+          items={pickerItems}
+          title={pickerState.widget?.title}
+          suggestedItems={suggestedItems}
+          purpose={pickerState.widget?.purpose}
+          profileActions={profileActions}
+          onComplete={handlePickerComplete}
+          onSaveError={handleSaveError}
+          onSaveSuccess={handleSaveSuccess}
+        />
+      )}
     </View>
   );
 }
-

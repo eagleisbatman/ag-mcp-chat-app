@@ -98,6 +98,15 @@ export default function NotificationHandler(): null {
         });
         break;
 
+      case 'profile_collection':
+        // Navigate to Chat with a predefined nudge to trigger A2UI data collection.
+        // Uses a fixed message (never free-text from push payload) to prevent prompt injection.
+        navigation.navigate('Chat', {
+          newSession: true,
+          nudgeMessage: 'setup_farm_profile',
+        });
+        break;
+
       case 'mcp_update':
         // Navigate to MCP servers screen
         navigation.navigate('McpServers', {
