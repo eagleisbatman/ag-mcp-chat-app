@@ -598,6 +598,8 @@ export interface A2UIPayload {
   responseKey?: string;
   /** 'clarify' = disambiguation; 'collect' = save new data to profile */
   purpose?: 'clarify' | 'collect';
+  /** DB interaction ID for audit logging — provided by gateway when message is returned */
+  interactionId?: string;
 }
 
 /**
@@ -787,6 +789,7 @@ export interface StreamingChatParams {
   locationDetails?: LocationDetails;
   history?: HistoryMessage[];
   sessionId?: string;
+  onBehalfOfFarmerUserId?: string;
   a2uiResponse?: A2UIResponse;
   connectedFarmerProfileId?: string;
   onChunk?: (text: string) => void;
@@ -867,7 +870,7 @@ export type RootStackParamList = {
   Location: undefined;
   Language: undefined;
   // Main
-  Chat: { sessionId?: string; newSession?: boolean; openCamera?: boolean; onBehalfOfDeviceId?: string; nudgeMessage?: string } | undefined;
+  Chat: { sessionId?: string; newSession?: boolean; openCamera?: boolean; onBehalfOfFarmerUserId?: string; onBehalfOfFarmerName?: string; nudgeMessage?: string } | undefined;
   History: undefined;
   Settings: undefined;
   LanguageSelect: undefined;

@@ -16,6 +16,7 @@ export default function useChatSend({
   ensureSession,
   persistMessage,
   maybeGenerateTitle,
+  onBehalfOfFarmerUserId,
 }: UseChatSendOptions): UseChatSendReturn {
   const { language, location, locationDetails } = useApp();
   const { showError, showWarning } = useToast();
@@ -47,6 +48,7 @@ export default function useChatSend({
         setThinkingText,
         retryCountRef,
         maxRetries: MAX_RETRIES,
+        onBehalfOfFarmerUserId,
       })(text, isRetry),
     [
       messages,
@@ -58,6 +60,7 @@ export default function useChatSend({
       showError,
       showWarning,
       locationContext,
+      onBehalfOfFarmerUserId,
     ]
   );
 

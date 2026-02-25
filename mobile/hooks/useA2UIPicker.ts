@@ -9,6 +9,8 @@ import { useState, useCallback, useMemo } from 'react';
 import { useProfile } from '../contexts/app/ProfileContext';
 import { getPickerConfig } from '../components/a2ui/picker/pickerRegistry';
 import { t } from '../constants/strings';
+import { API_BASE_URL, API_KEY, ensureDeviceId } from '../services/api/core';
+import { log } from '../utils/logger';
 import type { PickerConfig, PickerItem, ProfileActions } from '../components/a2ui/picker/types';
 import type { A2UIPayload } from '../types';
 
@@ -32,6 +34,28 @@ interface PickerState {
 }
 
 const CLOSED_STATE: PickerState = { visible: false, widget: null, config: null };
+
+/**
+ * Fire-and-forget: log the user's A2UI response to the gateway audit table.
+ * Failures are non-critical — logged but never shown to the user.
+ */
+async function logA2UIResponse(interactionId: string, responseData: Record<string, unknown>): Promise<void> {
+  try {
+    const deviceId = await ensureDeviceId();
+    const url = `${API_BASE_URL}/api/a2ui/${encodeURIComponent(interactionId)}/respond`;
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': API_KEY,
+        'X-Device-Id': deviceId,
+      },
+      body: JSON.stringify({ responseData }),
+    });
+  } catch (err) {
+    log('[A2UI] Audit log failed (non-critical):', err);
+  }
+}
 
 export function useA2UIPicker({
   handleSendText,
@@ -96,6 +120,10 @@ export function useA2UIPicker({
       const widget = pickerState.widget;
       if (widget) {
         setRespondedA2UIWidgetIds((prev) => new Set(prev).add(widget.widgetId));
+        // Fire-and-forget audit log if the gateway provided an interactionId
+        if (widget.interactionId) {
+          logA2UIResponse(widget.interactionId, { widgetId: widget.widgetId, displayText: text });
+        }
       }
       handleSendText(text);
       setPickerState(CLOSED_STATE);

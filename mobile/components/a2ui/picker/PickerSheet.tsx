@@ -171,6 +171,8 @@ export default function PickerSheet({
         timeout,
       ])
         .then((result) => {
+          // Guard: if the user dismissed the picker before completion resolved,
+          // do NOT send a chat message or show toasts — the user intentionally cancelled.
           if (!isActiveRef.current) return;
           if (!result.saved && purpose === 'collect') {
             onSaveError?.();
@@ -180,9 +182,15 @@ export default function PickerSheet({
           onComplete(result.text);
           resetState();
         })
-        .catch(() => {
+        .catch((err) => {
+          // Guard: same — suppress all side effects if user already dismissed
           if (!isActiveRef.current) return;
-          onSaveError?.();
+          // Only show the save error for genuine failures (not timeouts from a
+          // dismiss-then-wait scenario, which isActiveRef already filters above).
+          const isTimeout = err instanceof Error && err.message === 'timeout';
+          if (!isTimeout || purpose === 'collect') {
+            onSaveError?.();
+          }
           resetState();
         });
     },

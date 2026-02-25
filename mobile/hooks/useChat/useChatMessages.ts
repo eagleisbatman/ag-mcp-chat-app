@@ -7,6 +7,7 @@ import * as Haptics from 'expo-haptics';
 import { useApp } from '../../contexts/AppContext';
 import { saveMessage, updateMessage as updateDbMessage } from '../../services/db';
 import { Message } from '../../types';
+import { log } from '../../utils/logger';
 
 type TextUpdateFn = (prev: string) => string;
 
@@ -80,8 +81,12 @@ export default function useChatMessages(
         imageCloudinaryUrl: message.cloudinaryUrl,
         ...extra,
       });
+      if (!result.success) {
+        log('⚠️ [persistMessage] Message persistence failed:', result.error);
+      }
       return result.success ? (result.message?.id ?? null) : null;
     } catch (e) {
+      log('❌ [persistMessage] Unexpected error:', e instanceof Error ? e.message : String(e));
       return null;
     }
   }, [isDbSynced, language]);

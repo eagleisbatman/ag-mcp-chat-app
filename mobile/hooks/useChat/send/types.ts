@@ -7,6 +7,7 @@ export interface UseChatSendOptions {
   ensureSession: () => Promise<string | null>;
   persistMessage: (message: Message & { cloudinaryUrl?: string }, sessionId: string | null, extra?: Record<string, unknown>) => Promise<string | null>;
   maybeGenerateTitle: (sessionId: string | null, allMessages: Message[]) => Promise<void>;
+  onBehalfOfFarmerUserId?: string;
 }
 
 export interface ImageData {

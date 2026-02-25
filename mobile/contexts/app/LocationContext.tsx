@@ -25,12 +25,22 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
   const [locationStatus, setLocationStatus] = useState<LocationStatus>('pending');
   const [locationDetails, setLocationDetails] = useState<LocationDetails | null>(null);
 
+  // Scope storage keys by userId to prevent cross-user data leakage on shared devices
+  const locationKey = userId ? `${userId}:location` : 'location';
+  const locationDetailsKey = userId ? `${userId}:locationDetails` : 'locationDetails';
+  const pendingLocationSyncKey = userId ? `${userId}:pendingLocationSync` : 'pendingLocationSync';
+
   useEffect(() => {
+    // Reset state when switching users
+    setLocationState({ latitude: null, longitude: null });
+    setLocationStatus('pending');
+    setLocationDetails(null);
+
     const loadLocation = async () => {
       try {
         const [savedLocation, savedLocationDetails] = await Promise.all([
-          AsyncStorage.getItem('location'),
-          AsyncStorage.getItem('locationDetails'),
+          AsyncStorage.getItem(locationKey),
+          AsyncStorage.getItem(locationDetailsKey),
         ]);
 
         if (savedLocation) {
@@ -51,7 +61,7 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
       }
     };
     loadLocation();
-  }, []);
+  }, [userId]);
 
   const syncLocationToDb = async (
     locationResult: any, 
@@ -69,8 +79,8 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
     
     if (!userId) {
       try {
-        await AsyncStorage.setItem('pendingLocationSync', JSON.stringify({ 
-          locationResult, latitude, longitude, timestamp: Date.now() 
+        await AsyncStorage.setItem(pendingLocationSyncKey, JSON.stringify({
+          locationResult, latitude, longitude, timestamp: Date.now()
         }));
       } catch (e) {
         log('Error saving pending location:', e);
@@ -102,7 +112,7 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
           source: (result.source as LocationDetails['source']) || 'gps',
         };
         setLocationDetails(normalized);
-        await AsyncStorage.setItem('locationDetails', JSON.stringify(normalized));
+        await AsyncStorage.setItem(locationDetailsKey, JSON.stringify(normalized));
         await syncLocationToDb(normalized, latitude, longitude);
       }
     } catch (e) {
@@ -116,12 +126,12 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
 
     if (status === 'granted' && loc.latitude !== null && loc.longitude !== null) {
       try {
-        await AsyncStorage.setItem('location', JSON.stringify(loc));
+        await AsyncStorage.setItem(locationKey, JSON.stringify(loc));
 
         if (details) {
           // Use pre-fetched details directly (avoids redundant API call)
           setLocationDetails(details);
-          await AsyncStorage.setItem('locationDetails', JSON.stringify(details));
+          await AsyncStorage.setItem(locationDetailsKey, JSON.stringify(details));
           await syncLocationToDb(details, loc.latitude, loc.longitude);
         } else {
           // No details provided — reverse-geocode the coordinates
