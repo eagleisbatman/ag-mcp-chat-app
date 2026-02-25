@@ -52,10 +52,12 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
   };
 
   const handleChatOnBehalf = (mapping: FarmerEwMapping) => {
-    if (!mapping.farmer?.deviceId) return;
+    if (!mapping.farmer?.id) return;
+    const farmerName = mapping.farmer.name || mapping.farmer.phone || 'Unknown Farmer';
     navigation.navigate('Chat', {
       newSession: true,
-      onBehalfOfDeviceId: mapping.farmer.deviceId,
+      onBehalfOfFarmerUserId: mapping.farmer.id,
+      onBehalfOfFarmerName: farmerName,
     });
   };
 

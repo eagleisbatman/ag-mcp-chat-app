@@ -77,7 +77,6 @@ export async function fetchStarterQuestions(
       hasLocation: !!(params.latitude && params.longitude),
       weatherProvider,
       hour: localDateTime.hour,
-      apiKey: API_KEY ? `${API_KEY.substring(0, 8)}...` : 'MISSING',
     });
 
     const response = await fetchWithTimeout(

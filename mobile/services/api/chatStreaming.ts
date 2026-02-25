@@ -93,6 +93,7 @@ export const sendChatMessageStreaming = async ({
   locationDetails,
   history = [],
   sessionId,
+  onBehalfOfFarmerUserId,
   onChunk,
   onThinking,
   onComplete,
@@ -126,6 +127,7 @@ export const sendChatMessageStreaming = async ({
     stream: true,
     deviceId,
     sessionId,
+    ...(onBehalfOfFarmerUserId && { onBehalfOfFarmerUserId }),
     clientDateTime: getLocalDateTime(),
   };
 

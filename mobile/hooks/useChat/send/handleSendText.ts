@@ -21,6 +21,7 @@ interface SendTextDeps {
   setThinkingText: (value: string | null) => void;
   retryCountRef: { current: number };
   maxRetries: number;
+  onBehalfOfFarmerUserId?: string;
 }
 
 export function createSendTextHandler({
@@ -37,6 +38,7 @@ export function createSendTextHandler({
   setThinkingText,
   retryCountRef,
   maxRetries,
+  onBehalfOfFarmerUserId,
 }: SendTextDeps) {
   return async (text: string, isRetry = false, existingBotMsgId?: string): Promise<void> => {
     const userMessage: Message = {
@@ -94,6 +96,7 @@ export function createSendTextHandler({
         locationDetails: locationContext.locationDetails ?? undefined,
         history,
         sessionId: sessionId ?? undefined,
+        onBehalfOfFarmerUserId,
         onChunk: (chunk: string) => {
           updateMessage(botMsgId, {
             text: (prev: string) => (prev || '') + chunk,
@@ -151,6 +154,7 @@ export function createSendTextHandler({
               setThinkingText,
               retryCountRef,
               maxRetries,
+              onBehalfOfFarmerUserId,
             })(text, true, botMsgId);
             return;
           }

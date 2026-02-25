@@ -48,13 +48,15 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const sessionId = route?.params?.sessionId;
   const isNewSession = route?.params?.newSession;
   const nudgeMessage = route?.params?.nudgeMessage;
+  const onBehalfOfFarmerUserId = route?.params?.onBehalfOfFarmerUserId;
+  const onBehalfOfFarmerName = route?.params?.onBehalfOfFarmerName;
 
   const {
     messages, isTyping, isLoadingSession, newestBotMessageId,
     handleSendText, handleSendImage,
     transcribeAudioForInput, uploadAudioInBackground,
     startNewSession,
-  } = useChat(sessionId);
+  } = useChat(sessionId, onBehalfOfFarmerUserId);
 
   const {
     showScrollButton, scrollButtonAnim,
@@ -260,6 +262,17 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
         onOpenSettings={() => navigation.navigate('Settings')}
         isRefreshing={isRefreshingLocation}
       />
+
+      {onBehalfOfFarmerUserId && (
+        <View style={{ backgroundColor: theme.warning + '20', paddingVertical: 6, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ color: theme.warning, fontSize: 13, fontWeight: '600' }}>
+            {'Chatting as: '}
+          </Text>
+          <Text style={{ color: theme.warning, fontSize: 13 }} numberOfLines={1}>
+            {onBehalfOfFarmerName || 'Farmer'}
+          </Text>
+        </View>
+      )}
 
       <View style={styles.messagesContainer} onLayout={handleLayout}>
         {isLoadingSession ? (

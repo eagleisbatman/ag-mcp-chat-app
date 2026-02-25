@@ -142,9 +142,12 @@ export const ProfileProvider = ({
     loadCached();
   }, [userId]);
 
-  // Background sync when userId is available
+  // Background sync when userId is available.
+  // Uses a cancellation flag to prevent stale data from a previous userId being written
+  // to state after the component has moved to a new user (or unmounted).
   useEffect(() => {
     if (!userId) return;
+    let cancelled = false;
 
     const keys = storageKeys(userId);
     const syncFromApi = async () => {
@@ -154,6 +157,8 @@ export const ProfileProvider = ({
           apiFetchFarms(),
           apiFetchAnimals(),
         ]);
+
+        if (cancelled) return;
 
         if (profileResult.success && profileResult.data) {
           setProfile(profileResult.data);
@@ -168,10 +173,14 @@ export const ProfileProvider = ({
           await AsyncStorage.setItem(keys.ANIMALS, JSON.stringify(animalsResult.data));
         }
       } catch (e) {
-        log('Error syncing profile from API:', e);
+        if (!cancelled) {
+          log('Error syncing profile from API:', e);
+        }
       }
     };
     syncFromApi();
+
+    return () => { cancelled = true; };
   }, [userId]);
 
   // Load master data (once)

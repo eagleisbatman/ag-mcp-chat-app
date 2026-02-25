@@ -20,7 +20,7 @@ interface UseChatReturn {
   startNewSession: () => void;
 }
 
-export default function useChat(sessionIdParam: string | null = null): UseChatReturn {
+export default function useChat(sessionIdParam: string | null = null, onBehalfOfFarmerUserId?: string): UseChatReturn {
   // Session management
   const {
     messages,
@@ -54,6 +54,7 @@ export default function useChat(sessionIdParam: string | null = null): UseChatRe
     ensureSession,
     persistMessage,
     maybeGenerateTitle,
+    onBehalfOfFarmerUserId,
   });
 
   return {
