@@ -85,6 +85,7 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
           right={<AppIcon name="arrow-forward" size={20} color="#FFFFFF" />}
           accessibilityLabel={t('onboarding.getStarted')}
           style={styles.button}
+          testID="welcome-get-started"
         />
       </View>
     </View>

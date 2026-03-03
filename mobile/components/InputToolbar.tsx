@@ -15,9 +15,10 @@ import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import VoiceRecorder from './VoiceRecorder';
 import AttachBottomSheet from './AttachBottomSheet';
+import ImagePreviewModal from './ImagePreviewModal';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import AppIcon from './ui/AppIcon';
-import { PlusIcon, ClockIcon, VoiceWaveIcon } from './ui/LineIcons';
+import { ImageIcon, ClockIcon } from './ui/LineIcons';
 import { t } from '../constants/strings';
 import { log, error as logError } from '../utils/logger';
 
@@ -78,6 +79,7 @@ const InputToolbar = forwardRef(function InputToolbar(
   const [pendingAudioData, setPendingAudioData] = useState<AudioData | null>(null);
   const [isFromVoice, setIsFromVoice] = useState(false);
   const [showMediaMenu, setShowMediaMenu] = useState(false);
+  const [previewImage, setPreviewImage] = useState<{ uri: string; base64?: string } | null>(null);
   const textInputRef = useRef<TextInput>(null);
 
   useImperativeHandle(ref, () => ({
@@ -124,12 +126,7 @@ const InputToolbar = forwardRef(function InputToolbar(
       if (!result.canceled && result.assets[0]) {
         const asset = result.assets[0];
         Haptics.selectionAsync();
-        onSendImage({
-          uri: asset.uri,
-          base64: asset.base64 ?? undefined,
-          text: text.trim(),
-        });
-        setText('');
+        setPreviewImage({ uri: asset.uri, base64: asset.base64 ?? undefined });
       }
     } catch (error) {
       logError('Image picker error:', error);
@@ -157,12 +154,7 @@ const InputToolbar = forwardRef(function InputToolbar(
       if (!result.canceled && result.assets[0]) {
         const asset = result.assets[0];
         Haptics.selectionAsync();
-        onSendImage({
-          uri: asset.uri,
-          base64: asset.base64 ?? undefined,
-          text: text.trim(),
-        });
-        setText('');
+        setPreviewImage({ uri: asset.uri, base64: asset.base64 ?? undefined });
       }
     } catch (error) {
       logError('Camera error:', error);
@@ -212,6 +204,21 @@ const InputToolbar = forwardRef(function InputToolbar(
     setShowMediaMenu(false);
   };
 
+  const handlePreviewSend = (): void => {
+    if (!previewImage) return;
+    onSendImage({
+      uri: previewImage.uri,
+      base64: previewImage.base64,
+      text: text.trim(),
+    });
+    setText('');
+    setPreviewImage(null);
+  };
+
+  const handlePreviewCancel = (): void => {
+    setPreviewImage(null);
+  };
+
   if (isRecordingMode) {
     return (
       <VoiceRecorder
@@ -227,6 +234,13 @@ const InputToolbar = forwardRef(function InputToolbar(
   const hasText = text.trim().length > 0;
 
   return (
+    <>
+    <ImagePreviewModal
+      visible={!!previewImage}
+      imageUri={previewImage?.uri || ''}
+      onSend={handlePreviewSend}
+      onCancel={handlePreviewCancel}
+    />
     <KeyboardStickyView offset={{ closed: 0, opened: 0 }} style={{ backgroundColor: theme.background }}>
       <View style={[styles.wrapper, { paddingBottom: bottomPadding, backgroundColor: theme.background }]}>
         {isFromVoice && (
@@ -262,6 +276,7 @@ const InputToolbar = forwardRef(function InputToolbar(
         ]}>
           <TextInput
             ref={textInputRef}
+            testID="chat-input"
             style={[
               styles.textInput,
               { color: theme.text },
@@ -284,6 +299,7 @@ const InputToolbar = forwardRef(function InputToolbar(
           <View style={styles.iconsRow}>
             <View style={styles.leftIcons}>
               <Pressable
+                testID="chat-attach"
                 style={[
                   styles.iconButton,
                   { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
@@ -292,11 +308,12 @@ const InputToolbar = forwardRef(function InputToolbar(
                 disabled={disabled}
                 accessibilityLabel={t('a11y.attachMedia')}
               >
-                <PlusIcon size={20} color={theme.icon} />
+                <ImageIcon size={20} color={theme.icon} />
               </Pressable>
 
               {onOpenHistory && (
                 <Pressable
+                  testID="chat-history"
                   style={[
                     styles.iconButton,
                     { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
@@ -312,6 +329,7 @@ const InputToolbar = forwardRef(function InputToolbar(
 
             <View style={styles.rightIcons}>
               <Pressable
+                testID="chat-send"
                 style={[
                   styles.sendButton,
                   { backgroundColor: hasText
@@ -326,7 +344,7 @@ const InputToolbar = forwardRef(function InputToolbar(
                 {hasText ? (
                   <AppIcon name="arrow-up" size={20} color={theme.background} prefer="feather" />
                 ) : (
-                  <VoiceWaveIcon size={20} color={theme.icon} />
+                  <AppIcon name="mic" size={20} color={theme.icon} prefer="feather" />
                 )}
               </Pressable>
             </View>
@@ -334,6 +352,7 @@ const InputToolbar = forwardRef(function InputToolbar(
         </View>
       </View>
     </KeyboardStickyView>
+    </>
   );
 });
 

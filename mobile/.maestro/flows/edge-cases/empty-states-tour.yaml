@@ -1,0 +1,77 @@
+appId: org.digitalgreen.agmcp
+name: "Edge Case - Empty States Tour (All Sections)"
+tags:
+  - edge-case
+  - regression
+properties:
+  testCaseId: "TC-EDGE-004"
+  priority: "Medium"
+---
+# TC-EDGE-004: Visit Farms and Livestock screens via hamburger menu and verify
+# the empty state UI (or list, if data exists) is present and free of visual defects.
+# Does NOT use clearState — tests what the current account sees.
+
+- startRecording: "edge-empty-states-tour"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- takeScreenshot: "empty-tour-01-logged-in"
+
+# === Chat Screen (Home) ===
+- extendedWaitUntil:
+    id: ${output.chat.input}
+    timeout: 8000
+- takeScreenshot: "empty-tour-02-chat"
+- assertVisible:
+    id: ${output.chat.input}
+- assertWithAI: "The Chat screen shows either an empty state with starter questions or an existing conversation. The input field is present and the screen has no visual defects."
+  optional: true
+- assertNoDefectsWithAI:
+    optional: true
+
+# === Farms (via hamburger menu → Settings → My Farms) ===
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Farms"
+- extendedWaitUntil:
+    visible: ".*Farms.*|.*farm.*|.*Add.*"
+    timeout: 8000
+- takeScreenshot: "empty-tour-03-farms"
+- assertVisible:
+    id: ${output.farm.add}
+    optional: true
+- assertWithAI: "The Farms screen displays either an empty state CTA or a list of farms. No visual defects are present."
+  optional: true
+- assertNoDefectsWithAI:
+    optional: true
+
+# Back to Settings
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+
+# === Livestock (via Settings → My Livestock) ===
+- tapOn:
+    text: "My Livestock"
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*|.*Add.*"
+    timeout: 8000
+- takeScreenshot: "empty-tour-04-livestock"
+- assertVisible:
+    id: ${output.livestock.add}
+    optional: true
+- assertWithAI: "The Livestock screen displays either an empty state CTA or a list of animals. No visual defects are present."
+  optional: true
+- assertNoDefectsWithAI:
+    optional: true
+
+- takeScreenshot: "empty-tour-05-complete"
+
+- stopRecording

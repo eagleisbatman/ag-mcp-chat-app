@@ -1,0 +1,25 @@
+appId: org.digitalgreen.agmcp
+name: "A2UI - Livestock Picker (WIP)"
+tags:
+  - a2ui
+  - wip
+properties:
+  testCaseId: "TC-A2UI-002"
+  priority: "High"
+---
+# [WIP] A2UI livestock picker is triggered by a non-deterministic AI response.
+# Without a mock backend that guarantees the livestock_picker widget is returned,
+# this flow cannot be reliably automated.
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "a2ui-livestock-picker"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "a2ui-livestock-01-placeholder"
+
+- stopRecording

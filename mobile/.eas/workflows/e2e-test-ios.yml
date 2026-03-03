@@ -1,0 +1,86 @@
+# EAS Workflow: E2E Tests — iOS
+# Builds a development client, then runs Maestro E2E tests on iOS simulator.
+#
+# Trigger: manually or on PR to development branch
+# Docs: https://docs.expo.dev/eas/workflows/
+
+name: E2E Tests (iOS)
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  build-ios:
+    name: Build iOS Simulator
+    type: build
+    params:
+      platform: ios
+      profile: development-simulator
+    outputs:
+      app: build-artifact
+
+  e2e-test-ios:
+    name: Run Maestro E2E Tests (iOS)
+    needs: [build-ios]
+    type: maestro
+    params:
+      # Use the .app from the build step
+      build_id: ${{ needs.build-ios.outputs.build_id }}
+      # Flow configuration — same as Android minus Android-only tests
+      flow_path: |
+        .maestro/flows/onboarding/first-launch.yaml
+        .maestro/flows/navigation/tab-navigation.yaml
+        .maestro/flows/chat/empty-state.yaml
+        .maestro/flows/chat/send-message.yaml
+        .maestro/flows/chat/stop-generation.yaml
+        .maestro/flows/chat/long-message.yaml
+        .maestro/flows/chat/follow-up-questions.yaml
+        .maestro/flows/chat/rapid-messages.yaml
+        .maestro/flows/chat/voice-input.yaml
+        .maestro/flows/chat/image-diagnosis.yaml
+        .maestro/flows/profile/edit-profile.yaml
+        .maestro/flows/profile/completeness-bar.yaml
+        .maestro/flows/profile/gender-selection.yaml
+        .maestro/flows/profile/profile-picture.yaml
+        .maestro/flows/profile/phone-country-code.yaml
+        .maestro/flows/farm/empty-state.yaml
+        .maestro/flows/farm/add-farm.yaml
+        .maestro/flows/farm/edit-farm.yaml
+        .maestro/flows/farm/add-plot.yaml
+        .maestro/flows/farm/delete-farm.yaml
+        .maestro/flows/livestock/empty-state.yaml
+        .maestro/flows/livestock/add-animal.yaml
+        .maestro/flows/livestock/edit-animal.yaml
+        .maestro/flows/livestock/add-event.yaml
+        .maestro/flows/livestock/delete-animal.yaml
+        .maestro/flows/a2ui/crop-picker.yaml
+        .maestro/flows/a2ui/livestock-picker.yaml
+        .maestro/flows/a2ui/picker-search.yaml
+        .maestro/flows/a2ui/picker-dismiss.yaml
+        .maestro/flows/a2ui/number-input.yaml
+        .maestro/flows/a2ui/form-widget.yaml
+        .maestro/flows/a2ui/confirmation-dialog.yaml
+        .maestro/flows/settings/tts-toggle.yaml
+        .maestro/flows/settings/language-switch.yaml
+        .maestro/flows/settings/notification-toggle.yaml
+        .maestro/flows/settings/about-screen.yaml
+        .maestro/flows/settings/mcp-servers.yaml
+        .maestro/flows/settings/history-search.yaml
+        .maestro/flows/settings/delete-account.yaml
+        .maestro/flows/rationsmart/start-flow.yaml
+        .maestro/flows/rationsmart/select-breed.yaml
+        .maestro/flows/rationsmart/enter-cow-details.yaml
+        .maestro/flows/rationsmart/view-diet.yaml
+        .maestro/flows/edge-cases/back-navigation.yaml
+        .maestro/flows/edge-cases/orientation-change.yaml
+        .maestro/flows/edge-cases/empty-states-tour.yaml
+        .maestro/flows/edge-cases/session-timeout.yaml
+        .maestro/flows/smoke/critical-path.yaml
+        .maestro/flows/smoke/full-regression.yaml
+    env:
+      FARMER_PHONE: "0798765432"

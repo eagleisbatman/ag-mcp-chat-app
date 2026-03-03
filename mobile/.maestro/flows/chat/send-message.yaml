@@ -1,0 +1,49 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Send Message and Receive Response"
+tags:
+  - chat
+  - smoke
+  - regression
+properties:
+  testCaseId: "TC-CHAT-001"
+  priority: "Critical"
+---
+# TC-CHAT-001: Type a message, send it, wait for AI response to finish streaming.
+# Uses testID selectors: chat-input (TextInput), chat-send (send/voice button).
+
+- startRecording: "chat-send-message"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "chat-send-01-ready"
+
+# Tap the message input and type the question
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "What crops grow well in Kenya?"
+
+- takeScreenshot: "chat-send-02-typed"
+
+# Send the message
+- tapOn:
+    id: ${output.chat.send}
+
+- takeScreenshot: "chat-send-03-sent"
+
+# Wait for the AI response to finish streaming
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+
+- takeScreenshot: "chat-send-04-response-received"
+
+- assertWithAI: "The screen shows a chat conversation with a user message about crops in Kenya and an AI response containing agricultural advice or crop names. The response is fully rendered."
+  optional: true
+
+- takeScreenshot: "chat-send-05-final"
+
+- stopRecording

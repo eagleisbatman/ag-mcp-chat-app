@@ -1,0 +1,24 @@
+appId: org.digitalgreen.agmcp
+name: "A2UI - Number Input Widget (WIP)"
+tags:
+  - a2ui
+  - wip
+properties:
+  testCaseId: "TC-A2UI-005"
+  priority: "Medium"
+---
+# [WIP] Tests the number input A2UI widget. Widget rendering is non-deterministic
+# (depends on AI response). Cannot be reliably automated without a mock backend.
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "a2ui-number-input"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "a2ui-number-input-01-placeholder"
+
+- stopRecording

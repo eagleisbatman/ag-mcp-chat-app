@@ -95,6 +95,9 @@ export interface Message {
   a2uiResponseData?: Record<string, unknown>;
   // RationSmart flow step (structured data for localized rendering)
   flowStep?: RationFlowStep;
+  // Error state for retry functionality
+  isError?: boolean;
+  retryData?: { lastMessage: string };
 }
 
 /**
@@ -125,6 +128,7 @@ export interface ChatMetadata {
   intentSource?: string;
   followUpQuestions?: string[];
   a2uiWidgets?: A2UIPayload[];
+  interactionId?: string;
   [key: string]: unknown;
 }
 
@@ -325,7 +329,7 @@ export interface User {
   // Profile fields
   name?: string;
   phone?: string;
-  gender?: 'male' | 'female' | 'other';
+  gender?: 'male' | 'female' | 'other' | 'prefer_not_to_say';
   profilePictureUrl?: string;
   role?: UserRole;
   profileCompleteness?: number;
@@ -361,7 +365,7 @@ export interface UserProfile {
   deviceId: string;
   name?: string;
   phone?: string;
-  gender?: 'male' | 'female' | 'other';
+  gender?: 'male' | 'female' | 'other' | 'prefer_not_to_say';
   profilePictureUrl?: string;
   role: UserRole;
   profileCompleteness: number;
@@ -792,6 +796,7 @@ export interface StreamingChatParams {
   onBehalfOfFarmerUserId?: string;
   a2uiResponse?: A2UIResponse;
   connectedFarmerProfileId?: string;
+  previousInteractionId?: string;
   onChunk?: (text: string) => void;
   onThinking?: (thinking: string) => void;
   onA2UI?: (payload: A2UIPayload) => void;
@@ -891,8 +896,9 @@ export type RootStackParamList = {
   LivestockEvent: { animalId: string; eventType?: AnimalEventType };
   // EW Features
   MyFarmers: undefined;
-  ConnectFarmer: undefined;
+  ConnectFarmer: { otpVerified?: boolean; verifiedPhone?: string } | undefined;
   PendingRequests: undefined;
+  OtpVerification: { phone: string; purpose: string };
 };
 
 // ============================================

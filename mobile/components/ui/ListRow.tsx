@@ -25,6 +25,7 @@ interface ListRowProps {
   contentStyle?: ViewStyle | ViewStyle[];
   accessibilityLabel?: string;
   subtitleNumberOfLines?: number; // New prop to control subtitle truncation
+  testID?: string;
 }
 
 export default function ListRow({
@@ -48,6 +49,7 @@ export default function ListRow({
   contentStyle,
   accessibilityLabel,
   subtitleNumberOfLines = 2, // Default to 2
+  testID,
 }: ListRowProps): JSX.Element {
   const { theme } = useApp();
   const resolvedShowChevron = showChevron ?? Boolean(onPress);
@@ -60,6 +62,7 @@ export default function ListRow({
     <Pressable
       accessibilityRole={onPress ? 'button' : undefined}
       accessibilityLabel={accessibilityLabel}
+      testID={testID}
       onPress={onPress}
       onLongPress={onLongPress}
       delayLongPress={delayLongPress}

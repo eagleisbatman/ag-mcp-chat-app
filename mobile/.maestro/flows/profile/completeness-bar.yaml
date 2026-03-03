@@ -1,0 +1,56 @@
+appId: org.digitalgreen.agmcp
+name: "Profile - Completeness Progress Bar"
+tags:
+  - profile
+  - regression
+properties:
+  testCaseId: "TC-PROF-002"
+  priority: "Medium"
+---
+# Check that the profile completeness indicator updates after saving a field.
+
+- startRecording: "profile-completeness"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Profile via hamburger menu → Settings → Profile
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    id: ${output.settings.profile}
+- extendedWaitUntil:
+    id: ${output.profile.name}
+    timeout: 8000
+- takeScreenshot: "completeness-01-profile-loaded"
+
+- assertWithAI: "The profile screen may show a completeness indicator — a progress bar, percentage, or checklist. Some fields may already be filled."
+  optional: true
+- takeScreenshot: "completeness-02-initial-progress"
+
+# Edit name to trigger completeness recalculation
+- tapOn:
+    id: ${output.profile.name}
+- eraseText: 50
+- inputText: "Completeness Test"
+- takeScreenshot: "completeness-03-name-filled"
+
+# Save
+- hideKeyboard
+- tapOn:
+    id: ${output.profile.save}
+    enabled: true
+- extendedWaitUntil:
+    visible: "saved|updated|success|Profile"
+    timeout: 15000
+    optional: true
+- takeScreenshot: "completeness-04-after-save"
+
+- assertWithAI: "After saving, the profile completeness indicator should show equal or higher completion. If a progress bar exists, it should have advanced."
+  optional: true
+
+- stopRecording

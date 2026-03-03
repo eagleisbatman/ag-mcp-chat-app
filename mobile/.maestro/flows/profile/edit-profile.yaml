@@ -1,0 +1,74 @@
+appId: org.digitalgreen.agmcp
+name: "Profile - Edit Name and Gender"
+tags:
+  - profile
+  - regression
+properties:
+  testCaseId: "TC-PROF-001"
+  priority: "High"
+---
+# TC-PROF-001: Navigate to Profile, update name, select gender, save.
+# Uses testID selectors: settings-profile row, profile-name input,
+# profile-gender-* chips, profile-save button.
+
+- startRecording: "profile-edit"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Settings (via hamburger menu) → Profile
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "profile-edit-01-settings"
+
+- tapOn:
+    id: ${output.settings.profile}
+- extendedWaitUntil:
+    id: ${output.profile.name}
+    timeout: 8000
+- takeScreenshot: "profile-edit-02-profile-screen"
+
+- assertVisible:
+    text: "Profile"
+    optional: true
+- assertNoDefectsWithAI:
+    optional: true
+
+# Edit name
+- tapOn:
+    id: ${output.profile.name}
+- eraseText: 50
+- inputText: "Test Farmer"
+- takeScreenshot: "profile-edit-03-name-entered"
+
+# Select gender chip (Male)
+- scrollUntilVisible:
+    element:
+      id: ${output.profile.genderMale}
+    direction: DOWN
+    timeout: 5000
+- tapOn:
+    id: ${output.profile.genderMale}
+- takeScreenshot: "profile-edit-04-gender-selected"
+
+# Save
+- hideKeyboard
+- tapOn:
+    id: ${output.profile.save}
+    enabled: true
+- takeScreenshot: "profile-edit-05-saving"
+
+# Verify save confirmation
+- extendedWaitUntil:
+    visible: "saved|updated|success|Profile"
+    timeout: 15000
+- takeScreenshot: "profile-edit-06-saved"
+
+- assertWithAI: "The profile should show a success message or indicator confirming the profile was saved. The name field should contain 'Test Farmer'."
+  optional: true
+
+- stopRecording

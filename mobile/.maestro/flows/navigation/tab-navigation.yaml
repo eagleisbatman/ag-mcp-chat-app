@@ -1,0 +1,144 @@
+appId: org.digitalgreen.agmcp
+name: "Navigation - Hamburger Menu Navigation"
+tags:
+  - navigation
+  - smoke
+  - regression
+properties:
+  testCaseId: "TC-NAV-001"
+  priority: "High"
+---
+# TC-NAV-001: Verify hamburger menu navigates to Settings, and Settings rows
+# navigate to the correct screens (My Farms, My Livestock, Chat History, Profile).
+# Chat is the home/root screen — no tab bar exists.
+
+- startRecording: "hamburger-menu-navigation"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# ===== Chat screen (default landing) =====
+- extendedWaitUntil:
+    id: ${output.chat.input}
+    timeout: 8000
+- takeScreenshot: "nav-01-chat-home"
+- assertNoDefectsWithAI:
+    optional: true
+
+# ===== Hamburger menu → Settings =====
+- tapOn:
+    id: ${output.chat.settings}
+- waitForAnimationToEnd:
+    timeout: 1500
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "nav-02-settings-screen"
+- assertNoDefectsWithAI:
+    optional: true
+
+# Verify key settings rows exist
+- assertVisible:
+    id: ${output.settings.profile}
+    optional: true
+- assertVisible:
+    id: ${output.settings.language}
+    optional: true
+
+# ===== Settings → My Farms =====
+- tapOn:
+    text: "My Farms"
+- waitForAnimationToEnd:
+    timeout: 1500
+- extendedWaitUntil:
+    visible: ".*Farms.*|.*farm.*|.*Add.*"
+    timeout: 8000
+- takeScreenshot: "nav-03-farms-screen"
+- assertNoDefectsWithAI:
+    optional: true
+
+# Back to Settings
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+
+# ===== Settings → My Livestock =====
+- tapOn:
+    text: "My Livestock"
+- waitForAnimationToEnd:
+    timeout: 1500
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*|.*Add.*"
+    timeout: 8000
+- takeScreenshot: "nav-04-livestock-screen"
+- assertNoDefectsWithAI:
+    optional: true
+
+# Back to Settings
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+
+# ===== Settings → Chat History =====
+- tapOn:
+    id: ${output.settings.history}
+- waitForAnimationToEnd:
+    timeout: 1500
+- extendedWaitUntil:
+    visible: "Conversations|History|conversation|session"
+    timeout: 8000
+- takeScreenshot: "nav-05-history-screen"
+- assertNoDefectsWithAI:
+    optional: true
+
+# Back to Settings
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+
+# ===== Settings → Profile =====
+- tapOn:
+    id: ${output.settings.profile}
+- waitForAnimationToEnd:
+    timeout: 1500
+- extendedWaitUntil:
+    id: ${output.profile.name}
+    timeout: 8000
+- takeScreenshot: "nav-06-profile-screen"
+- assertNoDefectsWithAI:
+    optional: true
+
+# ===== Back to Chat — verify state preserved =====
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- pressKey: back
+- waitForAnimationToEnd:
+    timeout: 1500
+- extendedWaitUntil:
+    id: ${output.chat.input}
+    timeout: 8000
+- takeScreenshot: "nav-07-back-to-chat"
+
+# ===== Rapid navigation stress test =====
+# Open Settings, go to Farms, back, go to Livestock, back, back to Chat
+- tapOn:
+    id: ${output.chat.settings}
+- tapOn:
+    text: "My Farms"
+- pressKey: back
+- tapOn:
+    text: "My Livestock"
+- pressKey: back
+- pressKey: back
+- extendedWaitUntil:
+    id: ${output.chat.input}
+    timeout: 8000
+- takeScreenshot: "nav-08-rapid-navigation-complete"
+
+- stopRecording

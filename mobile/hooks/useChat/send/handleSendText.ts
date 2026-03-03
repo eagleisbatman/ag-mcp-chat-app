@@ -4,7 +4,9 @@ import { log } from '../../../utils/logger';
 import { parseErrorMessage, isNetworkError } from '../../../utils/apiHelpers';
 import { t } from '../../../constants/strings';
 import { generateDiagnosisTTSBrief } from '../../../utils/diagnosisNormalizer';
-import type { HistoryMessage, Message, A2UIPayload, RationFlowStep } from '../../../types';
+import { cacheDietResult } from '../../../services/rationCache';
+import { ensureDeviceId } from '../../../services/api/core';
+import type { HistoryMessage, Message, A2UIPayload, A2UIResponse, RationFlowStep } from '../../../types';
 import type { LocationContextDeps } from './types';
 
 interface SendTextDeps {
@@ -22,6 +24,8 @@ interface SendTextDeps {
   retryCountRef: { current: number };
   maxRetries: number;
   onBehalfOfFarmerUserId?: string;
+  abortRef?: { current: (() => void) | null };
+  interactionIdRef?: { current: string | null };
 }
 
 export function createSendTextHandler({
@@ -39,8 +43,10 @@ export function createSendTextHandler({
   retryCountRef,
   maxRetries,
   onBehalfOfFarmerUserId,
+  abortRef,
+  interactionIdRef,
 }: SendTextDeps) {
-  return async (text: string, isRetry = false, existingBotMsgId?: string): Promise<void> => {
+  return async (text: string, isRetry = false, existingBotMsgId?: string, a2uiResponse?: A2UIResponse): Promise<void> => {
     const userMessage: Message = {
       _id: Date.now().toString(),
       text,
@@ -74,6 +80,10 @@ export function createSendTextHandler({
       addMessage(botMsg);
     }
 
+    // Track whether a retry was initiated so we don't clear abortRef after
+    // streamPromise resolves (the retry will have stored its own abort handle).
+    let retriedInFlight = false;
+
     try {
 
       const history: HistoryMessage[] = messages.slice(0, 10).map(m => {
@@ -88,7 +98,7 @@ export function createSendTextHandler({
       // Capture flow step from SSE stream (set by onFlowStep callback)
       let capturedFlowStep: RationFlowStep | undefined;
 
-      await sendChatMessageStreaming({
+      const { promise: streamPromise, abort } = sendChatMessageStreaming({
         message: text,
         latitude: locationContext.location.latitude ?? undefined,
         longitude: locationContext.location.longitude ?? undefined,
@@ -97,6 +107,8 @@ export function createSendTextHandler({
         history,
         sessionId: sessionId ?? undefined,
         onBehalfOfFarmerUserId,
+        a2uiResponse,
+        previousInteractionId: interactionIdRef?.current ?? undefined,
         onChunk: (chunk: string) => {
           updateMessage(botMsgId, {
             text: (prev: string) => (prev || '') + chunk,
@@ -109,9 +121,26 @@ export function createSendTextHandler({
           capturedFlowStep = flowStep;
           // Flow steps are atomic (not streamed incrementally) — mark complete immediately
           updateMessage(botMsgId, { flowStep, status: 'complete', thinkingText: null });
+          // Cache diet results for offline access
+          if (flowStep.data?.feeds && Array.isArray(flowStep.data.feeds)) {
+            ensureDeviceId().then((did) => {
+              if (did) {
+                const cowId = (flowStep.data?.cowId as string) || 'default';
+                cacheDietResult(did, cowId, {
+                  feeds: flowStep.data!.feeds as Array<{ name: string; quantity_kg: number; cost: number }>,
+                  totalCost: (flowStep.data!.totalCost as number) || 0,
+                  currency: (flowStep.data!.currency as string) || '',
+                });
+              }
+            }).catch(() => {});
+          }
         },
         onComplete: (fullText: string, metadata?: Record<string, unknown>) => {
           setIsTyping(false);
+          // Store interactionId for stateful Gemini conversation chaining
+          if (interactionIdRef && metadata?.interactionId) {
+            interactionIdRef.current = metadata.interactionId as string;
+          }
           // Extract follow-up questions and A2UI widgets from metadata
           const followUpQuestions = metadata?.followUpQuestions as string[] | undefined;
           const a2uiWidgets = metadata?.a2uiWidgets as A2UIPayload[] | undefined;
@@ -140,6 +169,7 @@ export function createSendTextHandler({
             retryCountRef.current++;
             log('🔄 [Chat] Timeout - auto-retrying...');
             updateMessage(botMsgId, { thinkingText: t('chat.servicesWarmingUp') });
+            retriedInFlight = true;
             createSendTextHandler({
               messages,
               addMessage,
@@ -155,16 +185,21 @@ export function createSendTextHandler({
               retryCountRef,
               maxRetries,
               onBehalfOfFarmerUserId,
+              abortRef,
+              interactionIdRef,
             })(text, true, botMsgId);
             return;
           }
 
           retryCountRef.current = 0;
           setIsTyping(false);
+          if (abortRef) abortRef.current = null;
           updateMessage(botMsgId, {
             text: (prev: string) => prev && prev.length > 10 ? prev : t('chat.connectionErrorBot'),
             status: 'complete',
             thinkingText: null,
+            isError: true,
+            retryData: { lastMessage: text },
           });
 
           if (isNetworkError(error)) {
@@ -175,11 +210,24 @@ export function createSendTextHandler({
         },
       });
 
-      retryCountRef.current = 0;
+      // Store abort handle so callers can cancel the stream
+      if (abortRef) abortRef.current = abort;
+
+      await streamPromise;
+
+      // Only clear abort handle if no retry was started (retry stores its own abort)
+      if (abortRef && !retriedInFlight) abortRef.current = null;
+      if (!retriedInFlight) retryCountRef.current = 0;
     } catch (error) {
       retryCountRef.current = 0;
       setIsTyping(false);
-      updateMessage(botMsgId, { text: t('chat.connectionErrorBot'), status: 'complete', thinkingText: null });
+      updateMessage(botMsgId, {
+        text: t('chat.connectionErrorBot'),
+        status: 'complete',
+        thinkingText: null,
+        isError: true,
+        retryData: { lastMessage: text },
+      });
       showError(parseErrorMessage(error));
     }
   };

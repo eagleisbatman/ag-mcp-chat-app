@@ -1,0 +1,28 @@
+appId: org.digitalgreen.agmcp
+name: "EW - Disconnect Farmer Connection (WIP)"
+tags:
+  - ew
+  - wip
+properties:
+  testCaseId: "TC-EW-005"
+  priority: "Medium"
+---
+# [WIP] Disconnect farmer requires EW role account with an active connection.
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "ew-disconnect-farmer"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate via hamburger menu — Farmers row only visible for EW role
+- tapOn:
+    id: ${output.chat.settings}
+    optional: true
+- tapOn:
+    text: "Farmers"
+    optional: true
+- takeScreenshot: "ew-disconnect-01-placeholder"
+
+- stopRecording

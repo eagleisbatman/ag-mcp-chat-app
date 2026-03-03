@@ -1,0 +1,30 @@
+appId: org.digitalgreen.agmcp
+name: "EW - My Farmers List and Search (WIP)"
+tags:
+  - ew
+  - wip
+properties:
+  testCaseId: "TC-EW-002"
+  priority: "Medium"
+---
+# [WIP] EW My Farmers list requires an extension_worker role account.
+# The Farmers section is accessible via hamburger menu for EW role users.
+# Uses testIDs: farmers-search (search input), farmers-add (add button).
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "ew-my-farmers-list"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate via hamburger menu — Farmers row only visible for EW role
+- tapOn:
+    id: ${output.chat.settings}
+    optional: true
+- tapOn:
+    text: "Farmers"
+    optional: true
+- takeScreenshot: "ew-my-farmers-01-placeholder"
+
+- stopRecording

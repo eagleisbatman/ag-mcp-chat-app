@@ -1,0 +1,28 @@
+appId: org.digitalgreen.agmcp
+name: "EW - Pending Connection Requests (WIP)"
+tags:
+  - ew
+  - wip
+properties:
+  testCaseId: "TC-EW-004"
+  priority: "Medium"
+---
+# [WIP] Pending requests require EW role account and backend integration.
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "ew-pending-requests"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate via hamburger menu — Farmers row only visible for EW role
+- tapOn:
+    id: ${output.chat.settings}
+    optional: true
+- tapOn:
+    text: "Farmers"
+    optional: true
+- takeScreenshot: "ew-pending-01-placeholder"
+
+- stopRecording

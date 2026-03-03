@@ -23,6 +23,7 @@ interface MessageItemProps {
   isNewMessage?: boolean;
   onLayout?: (height: number) => void;
   onRetry?: () => void;
+  onRetryMessage?: (text: string) => void;
   onFollowUpTap?: (question: string) => void;
   onA2UIPress?: (widget: A2UIPayload) => void;
   respondedA2UIWidgetIds?: Set<string>;
@@ -71,7 +72,7 @@ function sanitizeStreamingMarkdown(text: string): string {
   return text;
 }
 
-function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onFollowUpTap, onA2UIPress, respondedA2UIWidgetIds }: MessageItemProps): JSX.Element | null {
+function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onRetryMessage, onFollowUpTap, onA2UIPress, respondedA2UIWidgetIds }: MessageItemProps): JSX.Element | null {
   const { theme, language, locationDetails } = useApp();
   const { showError } = useToast();
   const { width: screenWidth } = useWindowDimensions();
@@ -287,6 +288,30 @@ function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onFollo
             <DiagnosisCard diagnosis={message.diagnosisData} onRetry={onRetry} />
           )}
 
+          {message.isError && message.retryData && onRetryMessage && (
+            <Pressable
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 6,
+                marginTop: SPACING.sm,
+                paddingVertical: 6,
+                paddingHorizontal: 12,
+                borderRadius: 16,
+                backgroundColor: theme.error + '15',
+                alignSelf: 'flex-start',
+              }}
+              onPress={() => onRetryMessage(message.retryData!.lastMessage)}
+              accessibilityRole="button"
+              accessibilityLabel={t('common.retry')}
+            >
+              <AppIcon name="refresh-cw" size={14} color={theme.error} prefer="feather" />
+              <Text style={{ color: theme.error, fontSize: 13, fontWeight: '600' }}>
+                {t('common.retry')}
+              </Text>
+            </Pressable>
+          )}
+
           {!isStreaming && !isThinking && message.followUpQuestions && message.followUpQuestions.length > 0 && onFollowUpTap && (
             <FollowUpQuestions questions={message.followUpQuestions} onQuestionTap={onFollowUpTap} />
           )}
@@ -348,10 +373,13 @@ export default React.memo(MessageItem, (prevProps, nextProps) => {
     prevProps.message.isStreaming === nextProps.message.isStreaming &&
     prevProps.message.status === nextProps.message.status &&
     prevProps.message.thinkingText === nextProps.message.thinkingText &&
+    prevProps.message.isError === nextProps.message.isError &&
     prevProps.isNewMessage === nextProps.isNewMessage &&
     prevProps.message.flowStep === nextProps.message.flowStep &&
     (prevProps.message.followUpQuestions ?? []).join('|') === (nextProps.message.followUpQuestions ?? []).join('|') &&
     (prevProps.message.a2uiWidgets ?? []).map(w => w.widgetId).join(',') === (nextProps.message.a2uiWidgets ?? []).map(w => w.widgetId).join(',') &&
-    prevProps.respondedA2UIWidgetIds === nextProps.respondedA2UIWidgetIds
+    // Only re-render when THIS message's widgets' responded state changes (not any widget)
+    (prevProps.message.a2uiWidgets ?? []).filter(w => prevProps.respondedA2UIWidgetIds?.has(w.widgetId)).length ===
+    (nextProps.message.a2uiWidgets ?? []).filter(w => nextProps.respondedA2UIWidgetIds?.has(w.widgetId)).length
   );
 });

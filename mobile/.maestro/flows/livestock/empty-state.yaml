@@ -1,0 +1,49 @@
+appId: org.digitalgreen.agmcp
+name: "Livestock - Empty State (No Animals)"
+tags:
+  - livestock
+  - regression
+properties:
+  testCaseId: "TC-LIVE-001"
+  priority: "Medium"
+---
+# TC-LIVE-001: Navigate to Livestock via hamburger menu and verify the screen loads.
+# If no animals exist an empty state with Add CTA should be visible.
+# The Add button (livestock-add) should always be present.
+
+- startRecording: "livestock-empty-state"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Livestock via hamburger menu → Settings → My Livestock
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Livestock"
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*|.*Add.*"
+    timeout: 8000
+- takeScreenshot: "livestock-empty-01-screen"
+
+- assertVisible:
+    text: "My Livestock"
+    optional: true
+- assertNoDefectsWithAI:
+    optional: true
+
+# Add button should always be visible
+- assertVisible:
+    id: ${output.livestock.add}
+    optional: true
+
+- assertWithAI: "The Livestock screen shows either an empty state with a CTA to add the first animal, or a list of existing animals. The UI should be clean with no defects."
+  optional: true
+
+- takeScreenshot: "livestock-empty-02-final"
+
+- stopRecording

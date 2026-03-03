@@ -24,7 +24,89 @@ import { SPACING, TYPOGRAPHY } from '../../../constants/themes';
 import AppIcon from '../../ui/AppIcon';
 import { t } from '../../../constants/strings';
 import PickerFormStep from './PickerFormStep';
-import type { PickerConfig, PickerItem, ProfileActions } from './types';
+import type { PickerConfig, PickerItem, PickerStep as PickerStepType, ProfileActions } from './types';
+
+// ============================================
+// NumberInputStep — standalone numeric input
+// ============================================
+
+function NumberInputStep({
+  step,
+  theme,
+  submitting,
+  onSubmit,
+}: {
+  step: PickerStepType;
+  theme: { text: string; textMuted: string; accent: string; surfaceVariant: string; border: string; name: string };
+  submitting: boolean;
+  onSubmit: (value: string) => void;
+}) {
+  const [value, setValueState] = React.useState('');
+  const numVal = parseFloat(value);
+  const isValid =
+    value.trim().length > 0 &&
+    !isNaN(numVal) &&
+    (step.min === undefined || numVal >= step.min) &&
+    (step.max === undefined || numVal <= step.max);
+
+  return (
+    <View style={{ flex: 1, paddingHorizontal: SPACING.lg, paddingTop: SPACING.xl }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: SPACING.sm }}>
+        <TextInput
+          style={{
+            flex: 1,
+            fontSize: TYPOGRAPHY.sizes['2xl'],
+            fontWeight: TYPOGRAPHY.weights.bold,
+            color: theme.text,
+            textAlign: 'center',
+            paddingVertical: SPACING.lg,
+            borderBottomWidth: 2,
+            borderBottomColor: isValid ? theme.accent : theme.border,
+          }}
+          value={value}
+          onChangeText={setValueState}
+          placeholder={step.numberPlaceholder || '0'}
+          placeholderTextColor={theme.textMuted}
+          keyboardType="decimal-pad"
+          autoFocus
+        />
+        {step.unit && (
+          <Text style={{ fontSize: TYPOGRAPHY.sizes.lg, color: theme.textMuted }}>
+            {step.unit}
+          </Text>
+        )}
+      </View>
+
+      {step.min !== undefined && step.max !== undefined && (
+        <Text style={{ color: theme.textMuted, fontSize: TYPOGRAPHY.sizes.xs, textAlign: 'center', marginTop: SPACING.sm }}>
+          {step.min} – {step.max}
+        </Text>
+      )}
+
+      <TouchableOpacity
+        style={{
+          marginTop: SPACING.xl,
+          paddingVertical: SPACING.md,
+          borderRadius: 12,
+          alignItems: 'center',
+          backgroundColor: isValid && !submitting ? theme.accent : theme.border,
+          opacity: isValid && !submitting ? 1 : 0.4,
+        }}
+        onPress={() => isValid && !submitting && onSubmit(value)}
+        disabled={!isValid || submitting}
+        activeOpacity={0.8}
+      >
+        {submitting ? (
+          <ActivityIndicator color="#fff" size="small" />
+        ) : (
+          <Text style={{ color: '#fff', fontSize: TYPOGRAPHY.sizes.md, fontWeight: TYPOGRAPHY.weights.semibold }}>
+            {step.submitLabel || t('common.submit')}
+          </Text>
+        )}
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 // ============================================
 // Internal list types
@@ -52,8 +134,8 @@ interface PickerSheetProps {
   purpose?: 'clarify' | 'collect';
   /** Profile actions injected from caller (avoids hooks in configs). */
   profileActions: ProfileActions;
-  /** Called with display text when flow completes successfully. */
-  onComplete: (text: string) => void;
+  /** Called with display text and optional structured data when flow completes. */
+  onComplete: (text: string, responseData?: Record<string, unknown>) => void;
   /** Called when a collect save fails. */
   onSaveError?: () => void;
   /** Called after a successful collect save. */
@@ -159,12 +241,13 @@ export default function PickerSheet({
     onClose();
   }, [resetState, onClose]);
 
-  /** Run config.onComplete with a 10s timeout to prevent indefinite hang. */
+  /** Run config.onComplete with a configurable timeout to prevent indefinite hang. */
   const runCompletion = useCallback(
-    (item: PickerItem, formData: Record<string, string> | undefined) => {
+    (item: PickerItem | null, formData: Record<string, string> | undefined) => {
       setSubmitting(true);
+      const timeoutMs = config.timeoutMs ?? 10_000;
       const timeout = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('timeout')), 10_000),
+        setTimeout(() => reject(new Error('timeout')), timeoutMs),
       );
       Promise.race([
         config.onComplete(item, formData, purpose, profileActions),
@@ -179,7 +262,7 @@ export default function PickerSheet({
           } else if (result.saved && purpose === 'collect') {
             onSaveSuccess?.();
           }
-          onComplete(result.text);
+          onComplete(result.text, result.responseData);
           resetState();
         })
         .catch((err) => {
@@ -226,18 +309,103 @@ export default function PickerSheet({
     setSelectedItem(null);
   }, []);
 
-  // ---- Form step rendering ----
-  if (currentStep?.type === 'form' && selectedItem) {
+  // ---- Confirmation step rendering ----
+  if (currentStep?.type === 'confirmation') {
+    return (
+      <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={handleClose}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]} edges={['top', 'bottom']}>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: theme.text }]}>
+              {title || config.title}
+            </Text>
+            <TouchableOpacity onPress={handleClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityRole="button" accessibilityLabel="Close">
+              <AppIcon name="close" size={24} color={theme.text} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.confirmContent} accessibilityRole="alert">
+            {purpose && (
+              <Text style={[styles.confirmDescription, { color: theme.textSecondary }]}>
+                {title || config.title}
+              </Text>
+            )}
+
+            {submitting ? (
+              <ActivityIndicator size="large" color={theme.accent} />
+            ) : (
+              <View style={styles.confirmButtons}>
+                <TouchableOpacity
+                  style={[styles.confirmButton, { backgroundColor: theme.accent }]}
+                  onPress={() => runCompletion(null, { response: 'yes' })}
+                  activeOpacity={0.8}
+                  accessibilityRole="button"
+                  accessibilityLabel={currentStep.confirmLabel || t('common.yes')}
+                >
+                  <Text style={styles.confirmButtonText}>
+                    {currentStep.confirmLabel || t('common.yes')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.confirmButton, { backgroundColor: theme.surface, borderWidth: 1, borderColor: theme.border }]}
+                  onPress={() => runCompletion(null, { response: 'no' })}
+                  activeOpacity={0.8}
+                  accessibilityRole="button"
+                  accessibilityLabel={currentStep.cancelLabel || t('common.no')}
+                >
+                  <Text style={[styles.confirmButtonText, { color: theme.text }]}>
+                    {currentStep.cancelLabel || t('common.no')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </SafeAreaView>
+      </Modal>
+    );
+  }
+
+  // ---- Number input step rendering ----
+  if (currentStep?.type === 'number_input') {
     return (
       <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={handleClose}>
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]} edges={['top', 'bottom']}>
           <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <View style={styles.header}>
-              <TouchableOpacity onPress={handleBack} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
-                <AppIcon name="arrow-back" size={24} color={theme.text} />
+              <Text style={[styles.title, { color: theme.text }]}>
+                {title || config.title}
+              </Text>
+              <TouchableOpacity onPress={handleClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+                <AppIcon name="close" size={24} color={theme.text} />
               </TouchableOpacity>
-              <Text style={[styles.title, { color: theme.text, flex: 1, marginLeft: SPACING.md }]}>
-                {selectedItem.label}
+            </View>
+
+            <NumberInputStep
+              step={currentStep}
+              theme={theme}
+              submitting={submitting}
+              onSubmit={(value) => runCompletion(null, { value })}
+            />
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </Modal>
+    );
+  }
+
+  // ---- Form step rendering (standalone or after list) ----
+  if (currentStep?.type === 'form') {
+    const isStandalone = stepIndex === 0;
+    return (
+      <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={handleClose}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]} edges={['top', 'bottom']}>
+          <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <View style={styles.header}>
+              {!isStandalone && (
+                <TouchableOpacity onPress={handleBack} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+                  <AppIcon name="arrow-back" size={24} color={theme.text} />
+                </TouchableOpacity>
+              )}
+              <Text style={[styles.title, { color: theme.text, flex: 1, marginLeft: isStandalone ? 0 : SPACING.md }]}>
+                {isStandalone ? (title || config.title) : selectedItem?.label}
               </Text>
               <TouchableOpacity onPress={handleClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
                 <AppIcon name="close" size={24} color={theme.text} />
@@ -247,7 +415,13 @@ export default function PickerSheet({
             <PickerFormStep
               fields={currentStep.fields || []}
               submitLabel={currentStep.submitLabel}
-              onSubmit={handleFormSubmit}
+              onSubmit={(formData) => {
+                if (isStandalone) {
+                  runCompletion(null, formData);
+                } else {
+                  handleFormSubmit(formData);
+                }
+              }}
             />
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -341,11 +515,33 @@ export default function PickerSheet({
             }}
             ListEmptyComponent={
               <View style={styles.emptyList}>
-                <Text style={[styles.emptyText, { color: theme.textMuted }]}>
-                  {items.length === 0
-                    ? (currentStep?.loadingText || t('chat.loading') || 'Loading...')
-                    : (currentStep?.emptyText || t('chat.noResults') || 'No results found')}
-                </Text>
+                {items.length === 0 ? (
+                  <Text style={[styles.emptyText, { color: theme.textMuted }]}>
+                    {currentStep?.loadingText || t('chat.loading') || 'Loading...'}
+                  </Text>
+                ) : (
+                  <>
+                    <Text style={[styles.emptyText, { color: theme.textMuted }]}>
+                      {currentStep?.emptyText || t('chat.noResults') || 'No results found'}
+                    </Text>
+                    {/* "Add custom" option — send search text directly as response */}
+                    {search.trim().length > 0 && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          const customItem: PickerItem = { id: `custom_${search.trim()}`, label: search.trim() };
+                          handleItemSelect(customItem);
+                        }}
+                        activeOpacity={0.7}
+                        style={[styles.customOption, { borderColor: theme.accent }]}
+                      >
+                        <AppIcon name="add" size={18} color={theme.accent} />
+                        <Text style={[styles.customOptionText, { color: theme.accent }]}>
+                          {t('a2ui.notListed') || 'Not listed? Type a name'}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </>
+                )}
               </View>
             }
             keyboardShouldPersistTaps="handled"
@@ -402,6 +598,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
+    minHeight: 48,
   },
   itemInfo: {
     flex: 1,
@@ -430,5 +627,45 @@ const styles = StyleSheet.create({
   },
   submittingText: {
     fontSize: TYPOGRAPHY.sizes.sm,
+  },
+  customOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginTop: SPACING.lg,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    borderWidth: 1,
+    borderRadius: 12,
+    borderStyle: 'dashed',
+  },
+  customOptionText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weights.medium,
+  },
+  confirmContent: {
+    flex: 1,
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING['2xl'],
+    justifyContent: 'center',
+  },
+  confirmDescription: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    textAlign: 'center',
+    marginBottom: SPACING['2xl'],
+    lineHeight: 22,
+  },
+  confirmButtons: {
+    gap: SPACING.md,
+  },
+  confirmButton: {
+    paddingVertical: SPACING.md,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  confirmButtonText: {
+    color: '#fff',
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weights.semibold,
   },
 });

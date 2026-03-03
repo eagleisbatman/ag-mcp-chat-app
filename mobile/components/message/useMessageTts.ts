@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { textToSpeech } from '../../services/tts';
 import { playAudio, stopAudio, getRecordingActive } from '../../utils/audioPlayer';
 import { playAudioWithTimeout } from '../../utils/audioPlayback';
@@ -83,6 +84,12 @@ export function useMessageTts({
   }, []);
 
   const handleSpeak = useCallback(async (): Promise<void> => {
+    // Check if TTS is disabled in settings
+    const ttsEnabled = await AsyncStorage.getItem('tts_enabled');
+    if (ttsEnabled === 'false') {
+      return;
+    }
+
     // Don't start TTS while recording is active
     if (getRecordingActive()) {
       log('🔊 [TTS] Blocked: recording is active');

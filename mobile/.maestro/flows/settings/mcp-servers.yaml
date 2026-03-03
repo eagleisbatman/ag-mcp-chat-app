@@ -1,0 +1,57 @@
+appId: org.digitalgreen.agmcp
+name: "Settings - MCP Servers List"
+tags:
+  - settings
+  - regression
+properties:
+  testCaseId: "TC-SET-005"
+  priority: "Low"
+---
+# TC-SET-005: Open AI Services (MCP servers) screen and verify it loads.
+# Uses testID: settings-mcp to open the row.
+
+- startRecording: "settings-mcp-servers"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Settings via hamburger menu
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "mcp-01-settings"
+
+# Tap AI Services / MCP row
+- scrollUntilVisible:
+    element:
+      id: ${output.settings.mcp}
+    direction: DOWN
+    timeout: 5000
+- tapOn:
+    id: ${output.settings.mcp}
+- waitForAnimationToEnd:
+    timeout: 1500
+- takeScreenshot: "mcp-02-mcp-screen"
+
+# Verify the MCP servers screen loaded
+- runFlow:
+    when:
+      visible: "Weather|Soil|Plantix|AgriVision|server|Server|MCP"
+    commands:
+      - takeScreenshot: "mcp-03-servers-visible"
+      - assertWithAI: "The screen shows a list of MCP servers (data sources) with their names and status indicators. Servers may include Weather, Soil, Plantix, AgriVision, RationSmart, etc."
+        optional: true
+
+- assertNoDefectsWithAI:
+    optional: true
+
+# Go back to Settings
+- pressKey:
+    key: back
+    optional: true
+- takeScreenshot: "mcp-04-back"
+
+- stopRecording

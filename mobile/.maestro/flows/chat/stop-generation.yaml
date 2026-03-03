@@ -1,0 +1,66 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Stop Generation Button"
+tags:
+  - chat
+  - regression
+properties:
+  testCaseId: "TC-CHAT-003"
+  priority: "High"
+---
+# TC-CHAT-003: Send a long-response message, tap Stop while streaming.
+# The Stop tap is optional because response timing varies.
+# Uses testID selectors for input and send button.
+
+- startRecording: "chat-stop-generation"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+# Start a new chat to ensure clean state
+- tapOn:
+    id: ${output.chat.newChat}
+    optional: true
+
+- takeScreenshot: "stop-gen-01-ready"
+
+# Type a message that triggers a long response
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "Give me a detailed step-by-step guide on dairy farming in East Africa including breeds, feed, and milking schedules"
+
+# Send
+- tapOn:
+    id: ${output.chat.send}
+
+- takeScreenshot: "stop-gen-02-sent"
+
+# Wait for streaming to begin (Thinking indicator or Stop button)
+- extendedWaitUntil:
+    visible: "Thinking|Stop"
+    timeout: 20000
+
+- takeScreenshot: "stop-gen-03-streaming"
+
+# Tap Stop — optional since AI may finish before we tap
+- tapOn:
+    text: "Stop"
+    optional: true
+
+- takeScreenshot: "stop-gen-04-stop-tapped"
+
+# Thinking indicator should be gone (either stopped or finished naturally)
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+
+- takeScreenshot: "stop-gen-05-generation-stopped"
+
+- assertWithAI: "The screen shows a chat with a user message and a partial or complete AI response. The input field at the bottom should be re-enabled for new messages."
+  optional: true
+
+- takeScreenshot: "stop-gen-06-final"
+
+- stopRecording

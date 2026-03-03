@@ -81,6 +81,7 @@ export default function LanguageSwitcher({ compact = false }: LanguageSwitcherPr
           style={[styles.compactButton, { backgroundColor: theme.inputBackground }]}
           onPress={() => setModalVisible(true)}
           android_ripple={Platform.OS === 'android' ? { color: rippleColor } : undefined}
+          testID="language-switcher"
         >
           <AppIcon name="globe-outline" size={18} color={theme.textSecondary} />
           <Text style={[styles.compactText, { color: theme.text }]}>

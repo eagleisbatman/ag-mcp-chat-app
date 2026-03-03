@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,9 +6,11 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Switch,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import { useApp } from '../contexts/AppContext';
 import { useProfile } from '../contexts/app/ProfileContext';
 import { useToast } from '../contexts/ToastContext';
@@ -19,7 +21,9 @@ import Card from '../components/ui/Card';
 import ListRow from '../components/ui/ListRow';
 import AppIcon from '../components/ui/AppIcon';
 import ProfileCard from '../components/profile/ProfileCard';
-import { lookupLocation } from '../services/db';
+import { useNotifications } from '../contexts/NotificationContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { lookupLocation, deleteAccount } from '../services/db';
 import { log } from '../utils/logger';
 import { t } from '../constants/strings';
 import type { RootStackParamList } from '../types';
@@ -37,8 +41,21 @@ interface ThemeOption {
 export default function SettingsScreen({ navigation }: SettingsScreenProps) {
   const { showSuccess, showWarning, showError } = useToast();
   const { farms, animals, profile } = useProfile();
+  const { preferences, updatePreferences, isPermissionGranted, requestPermission } = useNotifications();
   const isEW = profile?.role === 'extension_worker';
   const [isUpdatingLocation, setIsUpdatingLocation] = useState(false);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
+
+  useEffect(() => {
+    AsyncStorage.getItem('tts_enabled').then((v) => {
+      if (v !== null) setTtsEnabled(v !== 'false');
+    });
+  }, []);
+
+  const handleToggleTts = async (value: boolean) => {
+    setTtsEnabled(value);
+    await AsyncStorage.setItem('tts_enabled', value ? 'true' : 'false');
+  };
   const {
     theme,
     themeMode,
@@ -78,8 +95,8 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
         showWarning(t('settings.gpsFailed'));
         await fetchIPLocation();
       }
-    } catch (error: any) {
-      log('❌ [Settings] GPS error:', error.message);
+    } catch (error) {
+      log('❌ [Settings] GPS error:', (error as Error).message);
       showWarning(t('settings.gpsFailed'));
       await fetchIPLocation();
     } finally {
@@ -96,7 +113,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
       } else {
         showError(t('settings.locationUpdateFailed'));
       }
-    } catch (error: any) {
+    } catch {
       showError(t('settings.locationUpdateFailed'));
     }
   };
@@ -107,8 +124,8 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
       t('settings.resetConfirmMessage'),
       [
         { text: t('common.cancel'), style: 'cancel' },
-        { 
-          text: t('settings.resetOnboarding'), 
+        {
+          text: t('settings.resetOnboarding'),
           style: 'destructive',
           onPress: async () => {
             await resetOnboarding();
@@ -116,6 +133,55 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
         },
       ]
     );
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      t('settings.deleteAccountTitle'),
+      t('settings.deleteAccountMessage'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => {
+            // Second confirmation
+            Alert.alert(
+              t('settings.deleteAccountConfirmTitle'),
+              t('settings.deleteAccountConfirmMessage'),
+              [
+                { text: t('common.cancel'), style: 'cancel' },
+                {
+                  text: t('common.delete'),
+                  style: 'destructive',
+                  onPress: async () => {
+                    const result = await deleteAccount();
+                    if (result.success) {
+                      showSuccess(t('settings.deleteAccountSuccess'));
+                      await resetOnboarding();
+                    } else {
+                      showError(t('settings.deleteAccountFailed'));
+                    }
+                  },
+                },
+              ],
+            );
+          },
+        },
+      ],
+    );
+  };
+
+  const handleToggleNotification = async (key: keyof typeof preferences, value: boolean) => {
+    // If enabling any notification and permission not granted, request it first
+    if (value && !isPermissionGranted) {
+      const granted = await requestPermission();
+      if (!granted) {
+        showWarning(t('notifications.disabled'));
+        return;
+      }
+    }
+    await updatePreferences({ [key]: value });
   };
 
   const themeOptions: ThemeOption[] = [
@@ -259,6 +325,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
             onPress={() => navigation.navigate('History')}
             paddingHorizontal={SPACING.md}
             accessibilityLabel={t('settings.chatHistory')}
+            testID="settings-history"
           />
         </Card>
       </View>
@@ -277,6 +344,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
             onPress={() => navigation.navigate('McpServers')}
             paddingHorizontal={SPACING.md}
             accessibilityLabel={t('settings.aiServices')}
+            testID="settings-mcp"
           />
         </Card>
       </View>
@@ -331,6 +399,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
             onPress={handleChangeLanguage}
             paddingHorizontal={SPACING.md}
             accessibilityLabel={t('settings.sectionLanguage')}
+            testID="settings-language"
           />
         </Card>
       </View>
@@ -360,10 +429,104 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
               showChevron={false}
               divider={index < themeOptions.length - 1}
               paddingHorizontal={SPACING.md}
-              onPress={() => setThemeMode(option.value as any)}
+              onPress={() => setThemeMode(option.value as 'light' | 'dark' | 'system')}
               accessibilityLabel={t('a11y.themeMode', { mode: option.label })}
             />
           ))}
+        </Card>
+      </View>
+
+      {/* Notifications */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t('notifications.title')}</Text>
+        <Card>
+          <ListRow
+            title={t('notifications.weatherAlerts')}
+            left={
+              <View style={styles.iconContainer}>
+                <AppIcon name="cloud" size={18} color={theme.accent} />
+              </View>
+            }
+            right={
+              <Switch
+                value={preferences.weatherAlerts}
+                onValueChange={(v) => handleToggleNotification('weatherAlerts', v)}
+                trackColor={{ false: theme.border, true: theme.accent + '80' }}
+                thumbColor={preferences.weatherAlerts ? theme.accent : theme.textMuted}
+              />
+            }
+            showChevron={false}
+            divider
+            paddingHorizontal={SPACING.md}
+            accessibilityLabel={t('notifications.weatherAlerts')}
+          />
+          <ListRow
+            title={t('notifications.contentUpdates')}
+            left={
+              <View style={styles.iconContainer}>
+                <AppIcon name="newspaper" size={18} color={theme.accent} />
+              </View>
+            }
+            right={
+              <Switch
+                value={preferences.contentUpdates}
+                onValueChange={(v) => handleToggleNotification('contentUpdates', v)}
+                trackColor={{ false: theme.border, true: theme.accent + '80' }}
+                thumbColor={preferences.contentUpdates ? theme.accent : theme.textMuted}
+              />
+            }
+            showChevron={false}
+            divider
+            paddingHorizontal={SPACING.md}
+            accessibilityLabel={t('notifications.contentUpdates')}
+          />
+          <ListRow
+            title={t('notifications.engagement')}
+            left={
+              <View style={styles.iconContainer}>
+                <AppIcon name="bulb" size={18} color={theme.warning} />
+              </View>
+            }
+            right={
+              <Switch
+                value={preferences.tipsAndReminders}
+                onValueChange={(v) => handleToggleNotification('tipsAndReminders', v)}
+                trackColor={{ false: theme.border, true: theme.accent + '80' }}
+                thumbColor={preferences.tipsAndReminders ? theme.accent : theme.textMuted}
+              />
+            }
+            showChevron={false}
+            paddingHorizontal={SPACING.md}
+            accessibilityLabel={t('notifications.engagement')}
+          />
+        </Card>
+      </View>
+
+      {/* Text-to-Speech */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.textMuted }]}>{t('settings.sectionAccessibility')}</Text>
+        <Card>
+          <ListRow
+            title={t('settings.textToSpeech')}
+            subtitle={t('settings.textToSpeechHint')}
+            left={
+              <View style={styles.iconContainer}>
+                <AppIcon name="volume-2" size={18} color={theme.accent} />
+              </View>
+            }
+            right={
+              <Switch
+                testID="settings-tts"
+                value={ttsEnabled}
+                onValueChange={handleToggleTts}
+                trackColor={{ false: theme.border, true: theme.accent + '80' }}
+                thumbColor={ttsEnabled ? theme.accent : theme.textMuted}
+              />
+            }
+            showChevron={false}
+            paddingHorizontal={SPACING.md}
+            accessibilityLabel={t('settings.textToSpeech')}
+          />
         </Card>
       </View>
 
@@ -381,7 +544,23 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
             }
             onPress={handleResetOnboarding}
             paddingHorizontal={SPACING.md}
+            divider
             accessibilityLabel={t('settings.resetOnboarding')}
+            testID="settings-reset"
+          />
+          <ListRow
+            title={t('settings.deleteAccount')}
+            subtitle={t('settings.deleteAccountSubtitle')}
+            titleColor={theme.error}
+            left={
+              <View style={styles.iconContainer}>
+                <AppIcon name="trash-2" size={18} color={theme.error} />
+              </View>
+            }
+            onPress={handleDeleteAccount}
+            paddingHorizontal={SPACING.md}
+            accessibilityLabel={t('settings.deleteAccount')}
+            testID="settings-delete-account"
           />
         </Card>
       </View>

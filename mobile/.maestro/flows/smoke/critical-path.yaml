@@ -1,0 +1,71 @@
+appId: org.digitalgreen.agmcp
+name: "Smoke - Critical Path (Onboard → Chat)"
+tags:
+  - smoke
+  - critical
+properties:
+  testCaseId: "TC-SMOKE-001"
+  priority: "Critical"
+---
+# TC-SMOKE-001: Minimum viable "does the app work" test.
+# Launch → onboarding (if needed) → verify main chat screen loads with testID selectors.
+# Chat is the home screen — no tab bar.
+#
+# NEVER uses clearState — breaks Metro bundler on iOS dev builds.
+
+- startRecording: "smoke-critical-path"
+
+- runScript: ../../scripts/page-objects.js
+
+- launchApp:
+    stopApp: false
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- takeScreenshot: "smoke-01-app-launched"
+
+# Complete onboarding if Welcome screen is showing
+- runFlow:
+    when:
+      visible: "Get Started"
+    file: ../../subflows/complete-onboarding.yaml
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+# Verify main chat screen loaded
+- extendedWaitUntil:
+    visible: ".*Message.*"
+    timeout: 20000
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- takeScreenshot: "smoke-02-main-screen"
+
+# Verify chat input is ready (testID)
+- assertVisible:
+    id: ${output.chat.input}
+    optional: true
+
+# Verify header buttons exist
+- assertVisible:
+    id: ${output.chat.newChat}
+    optional: true
+
+# Verify hamburger menu button exists
+- assertVisible:
+    id: ${output.chat.settings}
+    optional: true
+
+- takeScreenshot: "smoke-03-chat-verified"
+
+- assertNoDefectsWithAI:
+    optional: true
+
+- stopRecording

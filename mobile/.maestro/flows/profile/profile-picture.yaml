@@ -1,0 +1,71 @@
+appId: org.digitalgreen.agmcp
+name: "Profile - Profile Picture / Avatar"
+tags:
+  - profile
+  - regression
+properties:
+  testCaseId: "TC-PROF-004"
+  priority: "Low"
+---
+# Test avatar tap and photo picker interaction. Cancels without actually
+# changing the picture to preserve test state.
+
+- startRecording: "profile-picture"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Profile via hamburger menu → Settings → Profile
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    id: ${output.settings.profile}
+- extendedWaitUntil:
+    id: ${output.profile.name}
+    timeout: 8000
+- takeScreenshot: "profile-pic-01-profile-screen"
+
+- assertWithAI: "The profile screen shows a profile picture area or avatar at the top. It may show a default placeholder icon or initials. A camera/edit icon overlay may indicate it is tappable."
+  optional: true
+
+# Tap the avatar area (no dedicated testID — use positional or text fallbacks)
+- tapOn:
+    id: "profile-avatar"
+    optional: true
+- takeScreenshot: "profile-pic-02-avatar-tapped"
+
+# Photo picker or action sheet
+- runFlow:
+    when:
+      visible: "Camera|Gallery|Photo Library|Choose|Take Photo"
+    commands:
+      - takeScreenshot: "profile-pic-03-picker-options"
+      - tapOn:
+          text: "Gallery|Photo Library|Choose"
+          optional: true
+      - takeScreenshot: "profile-pic-04-gallery-opened"
+
+# Handle photo permission
+- runFlow:
+    when:
+      visible: "Allow|access photo"
+    commands:
+      - tapOn:
+          text: "Allow|OK"
+          optional: true
+
+# Cancel without changing the picture
+- tapOn:
+    text: "Cancel"
+    optional: true
+- pressKey:
+    key: back
+    optional: true
+
+- takeScreenshot: "profile-pic-05-final"
+
+- stopRecording

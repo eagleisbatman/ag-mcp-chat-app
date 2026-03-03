@@ -1,0 +1,22 @@
+appId: org.digitalgreen.agmcp
+tags:
+  - subflow
+---
+# Navigate back to Chat screen (the root/home screen).
+# Chat is the default home screen — no tab tap needed.
+# If we're on a deeper screen, press back until chat input is visible.
+# Chat input is confirmed via its testID: chat-input.
+
+- runScript: ../scripts/page-objects.js
+
+# Press back to return toward root if needed
+- pressKey:
+    key: back
+    optional: true
+
+- waitForAnimationToEnd:
+    timeout: 1500
+
+- extendedWaitUntil:
+    id: ${output.chat.input}
+    timeout: 10000

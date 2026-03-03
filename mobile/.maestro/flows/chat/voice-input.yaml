@@ -1,0 +1,66 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Voice Input (Record Button)"
+tags:
+  - chat
+  - regression
+properties:
+  testCaseId: "TC-CHAT-005"
+  priority: "Medium"
+---
+# TC-CHAT-005: Verify the send button acts as the voice/record button when
+# the chat input is empty (no text typed). Tap it, screenshot, dismiss.
+#
+# The send button testID is chat-send in both states.
+# Steps are optional since microphone permissions may block on CI.
+
+- startRecording: "chat-voice-input"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+# Confirm the chat input is empty (voice mode)
+- assertVisible:
+    id: ${output.chat.input}
+
+- takeScreenshot: "voice-01-chat-ready-voice-mode"
+
+# The send button (chat-send) should be visible in voice mode
+- assertVisible:
+    id: ${output.chat.send}
+
+# Tap the voice button to start recording
+- tapOn:
+    id: ${output.chat.send}
+    optional: true
+
+- takeScreenshot: "voice-02-voice-mode-tapped"
+
+# Handle microphone permission dialog if it appears
+- runFlow:
+    when:
+      visible: "Allow|microphone|Microphone"
+    commands:
+      - tapOn:
+          text: ".*Allow While Using.*|.*Allow.*|.*OK.*"
+          optional: true
+      - takeScreenshot: "voice-03-permission-handled"
+
+- assertWithAI: "The screen shows a voice recording interface or a microphone permission prompt. If recording is active, a waveform, timer, or stop/cancel button may be visible."
+  optional: true
+
+- takeScreenshot: "voice-04-recording-ui"
+
+# Cancel or dismiss voice mode
+- tapOn:
+    text: "Cancel|Close"
+    optional: true
+- pressKey:
+    key: back
+    optional: true
+
+- takeScreenshot: "voice-05-final"
+
+- stopRecording

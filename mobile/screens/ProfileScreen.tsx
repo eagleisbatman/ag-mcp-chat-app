@@ -12,15 +12,24 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
+  Pressable,
 } from 'react-native';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import * as Haptics from 'expo-haptics';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { parsePhoneNumberFromString, type CountryCode } from 'libphonenumber-js';
 import { useApp } from '../contexts/AppContext';
 import { useProfile } from '../contexts/app/ProfileContext';
 import { useToast } from '../contexts/ToastContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
+import AppIcon from '../components/ui/AppIcon';
 import Card from '../components/ui/Card';
+import CountryCodePicker, { usePersistedCountryCode } from '../components/phone/CountryCodePicker';
+import { uploadImage } from '../services/upload';
 import { t } from '../constants/strings';
 import type { RootStackParamList, UserRole, FarmingType } from '../types';
 
@@ -49,11 +58,15 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
 
   const [name, setName] = useState(profile?.name || '');
   const [phone, setPhone] = useState(profile?.phone || '');
+  const [countryCode, setCountryCode] = usePersistedCountryCode('KE');
   const [gender, setGender] = useState<string>(profile?.gender || '');
   const [role, setRole] = useState<UserRole>(profile?.role || 'farmer');
   const [farmingTypes, setFarmingTypes] = useState<FarmingType[]>(profile?.farmingTypes || []);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingPicture, setIsUploadingPicture] = useState(false);
+  const [pictureUrl, setPictureUrl] = useState<string | null>(profile?.profilePictureUrl ?? null);
   const initializedRef = useRef(false);
+  const completeness = Math.max(0, Math.min(100, profile?.profileCompleteness ?? 0));
 
   // Only sync from profile context on first mount — not on every profile update,
   // which would overwrite the user's in-progress edits.
@@ -64,23 +77,78 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
       setGender(profile.gender || '');
       setRole(profile.role || 'farmer');
       setFarmingTypes(profile.farmingTypes || []);
+      setPictureUrl(profile.profilePictureUrl ?? null);
+      // Try to detect country from stored phone number
+      if (profile.phone) {
+        const parsed = parsePhoneNumberFromString(profile.phone);
+        if (parsed?.country) {
+          setCountryCode(parsed.country);
+        }
+      }
       initializedRef.current = true;
     }
   }, [profile]);
 
+  const handlePickProfilePicture = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        showError(t('media.photoLibraryPermission'));
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.7,
+        base64: true,
+      });
+
+      if (result.canceled || !result.assets[0]?.base64) return;
+
+      Haptics.selectionAsync();
+      setIsUploadingPicture(true);
+
+      const uploadResult = await uploadImage(result.assets[0].base64, 'ag-mcp/profiles');
+      if (uploadResult.success && uploadResult.url) {
+        setPictureUrl(uploadResult.url);
+        // Save immediately so user sees the change without pressing Save
+        await updateProfile({ profilePictureUrl: uploadResult.url });
+        showSuccess(t('profile.pictureUpdated'));
+      } else {
+        showError(t('profile.pictureUploadFailed'));
+      }
+    } catch {
+      showError(t('profile.pictureUploadFailed'));
+    } finally {
+      setIsUploadingPicture(false);
+    }
+  };
+
+  /** Build initials for fallback avatar */
+  const initials = (name || 'U').split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'U';
+
   const toggleFarmingType = (type: FarmingType) => {
     setFarmingTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+      prev.includes(type) ? prev.filter((ft) => ft !== type) : [...prev, type]
     );
   };
 
-  const handleSave = async () => {
+  const doSave = async () => {
     setIsSaving(true);
     try {
+      // Format phone to E.164 using country code
+      let formattedPhone: string | undefined;
+      if (phone.trim()) {
+        const parsed = parsePhoneNumberFromString(phone.trim(), countryCode);
+        formattedPhone = parsed?.isValid() ? parsed.format('E.164') : phone.trim();
+      }
+
       const success = await updateProfile({
         name: name.trim() || undefined,
-        phone: phone.trim() || undefined,
-        gender: (gender as 'male' | 'female' | 'other') || undefined,
+        phone: formattedPhone,
+        gender: (gender as 'male' | 'female' | 'other' | 'prefer_not_to_say') || undefined,
         role,
         farmingTypes,
       });
@@ -95,6 +163,21 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleSave = () => {
+    if (role !== profile?.role) {
+      Alert.alert(
+        t('profile.roleChangeTitle'),
+        t('profile.roleChangeMessage'),
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          { text: t('common.continue'), onPress: () => doSave() },
+        ]
+      );
+      return;
+    }
+    doSave();
   };
 
   return (
@@ -117,11 +200,49 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
         right={<View />}
       />
 
+      {/* Profile Picture Avatar */}
+      <View style={[styles.section, { marginTop: SPACING.lg, alignItems: 'center' }]}>
+        <Pressable onPress={handlePickProfilePicture} disabled={isUploadingPicture} style={styles.avatarContainer}>
+          {pictureUrl ? (
+            <Image source={{ uri: pictureUrl }} style={styles.avatar} contentFit="cover" />
+          ) : (
+            <View style={[styles.avatar, styles.avatarFallback, { backgroundColor: theme.accent + '30' }]}>
+              <Text style={[styles.avatarInitials, { color: theme.accent }]}>{initials}</Text>
+            </View>
+          )}
+          {isUploadingPicture ? (
+            <View style={[styles.cameraBadge, { backgroundColor: theme.surface }]}>
+              <ActivityIndicator size="small" color={theme.accent} />
+            </View>
+          ) : (
+            <View style={[styles.cameraBadge, { backgroundColor: theme.accent }]}>
+              <AppIcon name="camera" size={14} color="#fff" prefer="feather" />
+            </View>
+          )}
+        </Pressable>
+      </View>
+
+      {/* Profile Completeness */}
+      <View style={[styles.section, { marginTop: SPACING.md }]}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: SPACING.xs }}>
+          <Text style={[styles.label, { color: theme.textMuted, marginBottom: 0 }]}>
+            {t('profile.completeness')}
+          </Text>
+          <Text style={{ color: theme.accent, fontSize: TYPOGRAPHY.sizes.sm, fontWeight: TYPOGRAPHY.weights.semibold }}>
+            {completeness}%
+          </Text>
+        </View>
+        <View style={{ height: 6, backgroundColor: theme.surface, borderRadius: 3, overflow: 'hidden' }}>
+          <View style={{ height: '100%', width: `${completeness}%`, backgroundColor: theme.accent, borderRadius: 3 }} />
+        </View>
+      </View>
+
       {/* Name */}
       <View style={styles.section}>
         <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.name')}</Text>
         <Card>
           <TextInput
+            testID="profile-name"
             style={[styles.input, { color: theme.text }]}
             value={name}
             onChangeText={setName}
@@ -135,25 +256,22 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
       {/* Phone */}
       <View style={styles.section}>
         <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.phone')}</Text>
-        <Card>
-          <TextInput
-            style={[styles.input, { color: theme.text }]}
-            value={phone}
-            onChangeText={setPhone}
-            placeholder={t('profile.phonePlaceholder')}
-            placeholderTextColor={theme.textMuted}
-            keyboardType="phone-pad"
-          />
-        </Card>
+        <CountryCodePicker
+          countryCode={countryCode}
+          onCountryChange={setCountryCode}
+          phone={phone}
+          onPhoneChange={setPhone}
+        />
       </View>
 
       {/* Gender */}
       <View style={styles.section}>
         <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.gender')}</Text>
         <View style={styles.chipRow}>
-          {['male', 'female', 'other'].map((g) => (
+          {['male', 'female', 'other', 'prefer_not_to_say'].map((g) => (
             <TouchableOpacity
               key={g}
+              testID={`profile-gender-${g}`}
               onPress={() => setGender(g)}
               style={[
                 styles.chip,
@@ -183,6 +301,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
           {ROLE_OPTIONS.map((opt) => (
             <TouchableOpacity
               key={opt.value}
+              testID={`profile-role-${opt.value}`}
               onPress={() => setRole(opt.value)}
               style={[
                 styles.chip,
@@ -240,6 +359,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
       {/* Save Button */}
       <View style={styles.section}>
         <TouchableOpacity
+          testID="profile-save"
           onPress={handleSave}
           disabled={isSaving}
           style={[styles.saveButton, { backgroundColor: theme.accent }]}
@@ -298,5 +418,33 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: TYPOGRAPHY.weights.semibold,
+  },
+  avatarContainer: {
+    position: 'relative',
+  },
+  avatar: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+  },
+  avatarFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarInitials: {
+    fontSize: 28,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+  },
+  cameraBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
   },
 });

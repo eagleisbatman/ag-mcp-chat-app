@@ -1,0 +1,51 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Follow-Up Suggestion Chips"
+tags:
+  - chat
+  - regression
+properties:
+  testCaseId: "TC-CHAT-011"
+  priority: "Medium"
+---
+# Send a message, wait for response, check for "You might also ask:" chips.
+# The follow-up check is optional since not all responses include them.
+
+- startRecording: "chat-follow-up-questions"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "follow-up-01-ready"
+
+# Send a message that tends to trigger follow-up chips
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "Tell me about maize farming in Kenya"
+- tapOn:
+    id: ${output.chat.send}
+
+- takeScreenshot: "follow-up-02-sent"
+
+# Wait for response
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+
+- takeScreenshot: "follow-up-03-response-complete"
+
+# Check for follow-up suggestion chips (optional — not guaranteed)
+- assertVisible:
+    text: "You might also ask:"
+    optional: true
+
+- takeScreenshot: "follow-up-04-chips-checked"
+
+- assertWithAI: "The screen shows a chat conversation with a user question about maize farming and an AI response. Below the response there may be follow-up suggestion chips under 'You might also ask:'. The input field is at the bottom."
+  optional: true
+
+- takeScreenshot: "follow-up-05-final"
+
+- stopRecording

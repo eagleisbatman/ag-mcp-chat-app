@@ -85,7 +85,12 @@ function filterFollowUpTags(
  * Send chat message with STREAMING support
  * Real-time text chunks are passed to onChunk callback
  */
-export const sendChatMessageStreaming = async ({
+export interface StreamingChatResult {
+  promise: Promise<{ success: boolean; error?: string }>;
+  abort: () => void;
+}
+
+export const sendChatMessageStreaming = ({
   message,
   latitude,
   longitude,
@@ -94,154 +99,195 @@ export const sendChatMessageStreaming = async ({
   history = [],
   sessionId,
   onBehalfOfFarmerUserId,
+  a2uiResponse,
+  previousInteractionId,
   onChunk,
   onThinking,
   onComplete,
   onError,
   onA2UI,
   onFlowStep,
-}: StreamingChatParams): Promise<{ success: boolean; error?: string }> => {
-  const deviceId = await ensureDeviceId();
-  const formattedHistory = history
-    .filter(m => m._id !== 'welcome' && m.text)
-    .slice(0, 10)
-    .reverse()
-    .map(m => ({ text: m.text || '', isBot: m.isBot }));
+}: StreamingChatParams): StreamingChatResult => {
+  let xhrRef: XMLHttpRequest | null = null;
+  let aborted = false;
 
-  const locationContext = buildLocationContext(locationDetails);
+  const promise = (async () => {
+    const deviceId = await ensureDeviceId();
+    const formattedHistory = history
+      .filter(m => m._id !== 'welcome' && m.text)
+      .slice(0, 10)
+      .reverse()
+      .map(m => ({ text: m.text || '', isBot: m.isBot }));
 
-  log('📤 [API] Starting streaming chat:', {
-    historyCount: formattedHistory.length,
-    location: locationContext?.displayName || `${latitude}, ${longitude}`,
-    language,
-    deviceId: deviceId?.substring(0, 15) + '...',
-  });
+    const locationContext = buildLocationContext(locationDetails);
 
-  const requestBody = {
-    message,
-    latitude: latitude ?? FALLBACK_LATITUDE,
-    longitude: longitude ?? FALLBACK_LONGITUDE,
-    language: language || 'en',
-    location: locationContext,
-    history: formattedHistory,
-    stream: true,
-    deviceId,
-    sessionId,
-    ...(onBehalfOfFarmerUserId && { onBehalfOfFarmerUserId }),
-    clientDateTime: getLocalDateTime(),
-  };
+    log('📤 [API] Starting streaming chat:', {
+      historyCount: formattedHistory.length,
+      location: locationContext?.displayName || `${latitude}, ${longitude}`,
+      language,
+      deviceId: deviceId?.substring(0, 15) + '...',
+    });
 
-  return new Promise((resolve) => {
-    const xhr = new XMLHttpRequest();
-    let buffer = '';
-    let fullText = '';
-    let metadata: ChatMetadata = {};
-    let lastProcessedIndex = 0;
-    let completed = false;
-    // State for filtering [FOLLOWUP] tags from displayed text
-    let followUpBuffer = '';
-    let insideFollowUp = false;
-
-    const finishError = (error: Error): void => {
-      if (!completed) {
-        completed = true;
-        onError?.(error);
-      }
-      resolve({ success: false, error: error.message });
+    const requestBody = {
+      message,
+      latitude: latitude ?? FALLBACK_LATITUDE,
+      longitude: longitude ?? FALLBACK_LONGITUDE,
+      language: language || 'en',
+      location: locationContext,
+      history: formattedHistory,
+      stream: true,
+      deviceId,
+      sessionId,
+      ...(onBehalfOfFarmerUserId && { onBehalfOfFarmerUserId }),
+      ...(a2uiResponse && { a2uiResponse }),
+      ...(previousInteractionId && { previousInteractionId }),
+      clientDateTime: getLocalDateTime(),
     };
 
-    xhr.open('POST', CHAT_API_URL, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-API-Key', API_KEY);
-    xhr.setRequestHeader('Accept', 'text/event-stream');
+    // If abort was called before XHR was created, bail out
+    if (aborted) {
+      return { success: false, error: 'Aborted' };
+    }
 
-    xhr.onprogress = (): void => {
-      const newData = xhr.responseText.slice(lastProcessedIndex);
-      lastProcessedIndex = xhr.responseText.length;
-      buffer += newData;
+    return new Promise<{ success: boolean; error?: string }>((resolve) => {
+      const xhr = new XMLHttpRequest();
+      xhrRef = xhr;
+      let buffer = '';
+      let fullText = '';
+      let metadata: ChatMetadata = {};
+      let lastProcessedIndex = 0;
+      let completed = false;
+      // State for filtering [FOLLOWUP] tags from displayed text
+      let followUpBuffer = '';
+      let insideFollowUp = false;
 
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
+      const finishError = (error: Error): void => {
+        log('❌ [API] Streaming chat error:', error.message, 'status:', xhr.status, 'response:', xhr.responseText?.substring(0, 200));
+        if (!completed) {
+          completed = true;
+          onError?.(error);
+        }
+        resolve({ success: false, error: error.message });
+      };
 
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const data = line.slice(6).trim();
+      xhr.open('POST', CHAT_API_URL, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('X-API-Key', API_KEY);
+      xhr.setRequestHeader('Accept', 'text/event-stream');
+      xhr.setRequestHeader('X-Device-Id', deviceId);
 
-        if (data === '[DONE]') {
+      xhr.onprogress = (): void => {
+        const newData = xhr.responseText.slice(lastProcessedIndex);
+        lastProcessedIndex = xhr.responseText.length;
+        buffer += newData;
+
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+
+          if (data === '[DONE]') {
+            if (!completed) {
+              completed = true;
+              log('📥 [API] Stream complete:', { textLength: fullText.length });
+              onComplete?.(fullText, metadata);
+            }
+            resolve({ success: true });
+            return;
+          }
+
+          try {
+            const parsed = JSON.parse(data) as {
+              type: string;
+              text?: string;
+              thinking?: string;
+              toolName?: string;
+              response?: string;
+              error?: string;
+              interactionId?: string;
+              followUpQuestions?: string[];
+              a2ui?: A2UIPayload;
+              flowStep?: RationFlowStep;
+            };
+
+            if (parsed.type === 'text') {
+              const text = parsed.text || '';
+              fullText += text;
+              // Filter out [FOLLOWUP]...[/FOLLOWUP] tags before displaying
+              const filtered = filterFollowUpTags(text, followUpBuffer, insideFollowUp);
+              followUpBuffer = filtered.newBuffer;
+              insideFollowUp = filtered.stillInsideFollowUp;
+              if (filtered.displayText) {
+                onChunk?.(filtered.displayText);
+              }
+            } else if (parsed.type === 'thinking' && parsed.thinking) {
+              onThinking?.(parsed.thinking);
+            } else if (parsed.type === 'complete' && parsed.response) {
+              fullText = parsed.response;
+              // Capture interactionId for stateful Gemini conversation chaining
+              if (parsed.interactionId) {
+                metadata.interactionId = parsed.interactionId;
+              }
+              // Extract follow-up questions from the complete chunk
+              if (parsed.followUpQuestions && parsed.followUpQuestions.length > 0) {
+                metadata.followUpQuestions = parsed.followUpQuestions;
+              }
+            } else if (parsed.type === 'a2ui' && parsed.a2ui) {
+              // Collect A2UI directives in metadata and notify callback
+              if (!metadata.a2uiWidgets) metadata.a2uiWidgets = [];
+              metadata.a2uiWidgets.push(parsed.a2ui);
+              onA2UI?.(parsed.a2ui);
+            } else if (parsed.type === 'flow_step' && parsed.flowStep) {
+              onFlowStep?.(parsed.flowStep);
+            } else if (parsed.type === 'meta') {
+              metadata = { ...metadata, ...(parsed as unknown as ChatMetadata) };
+            } else if (parsed.type === 'error') {
+              finishError(new Error(parsed.error || 'Stream error'));
+              return;
+            }
+          } catch {
+            // Skip partial JSON
+          }
+        }
+      };
+
+      xhr.onload = (): void => {
+        if (xhr.status >= 200 && xhr.status < 300) {
           if (!completed) {
             completed = true;
-            log('📥 [API] Stream complete:', { textLength: fullText.length });
             onComplete?.(fullText, metadata);
           }
           resolve({ success: true });
-          return;
+        } else {
+          finishError(new Error(`API error: ${xhr.status}`));
         }
+      };
 
-        try {
-          const parsed = JSON.parse(data) as {
-            type: string;
-            text?: string;
-            thinking?: string;
-            toolName?: string;
-            response?: string;
-            error?: string;
-            followUpQuestions?: string[];
-            a2ui?: A2UIPayload;
-            flowStep?: RationFlowStep;
-          };
-
-          if (parsed.type === 'text') {
-            const text = parsed.text || '';
-            fullText += text;
-            // Filter out [FOLLOWUP]...[/FOLLOWUP] tags before displaying
-            const filtered = filterFollowUpTags(text, followUpBuffer, insideFollowUp);
-            followUpBuffer = filtered.newBuffer;
-            insideFollowUp = filtered.stillInsideFollowUp;
-            if (filtered.displayText) {
-              onChunk?.(filtered.displayText);
-            }
-          } else if (parsed.type === 'thinking' && parsed.thinking) {
-            onThinking?.(parsed.thinking);
-          } else if (parsed.type === 'complete' && parsed.response) {
-            fullText = parsed.response;
-            // Extract follow-up questions from the complete chunk
-            if (parsed.followUpQuestions && parsed.followUpQuestions.length > 0) {
-              metadata.followUpQuestions = parsed.followUpQuestions;
-            }
-          } else if (parsed.type === 'a2ui' && parsed.a2ui) {
-            // Collect A2UI directives in metadata and notify callback
-            if (!metadata.a2uiWidgets) metadata.a2uiWidgets = [];
-            metadata.a2uiWidgets.push(parsed.a2ui);
-            onA2UI?.(parsed.a2ui);
-          } else if (parsed.type === 'flow_step' && parsed.flowStep) {
-            onFlowStep?.(parsed.flowStep);
-          } else if (parsed.type === 'meta') {
-            metadata = { ...metadata, ...(parsed as unknown as ChatMetadata) };
-          } else if (parsed.type === 'error') {
-            finishError(new Error(parsed.error || 'Stream error'));
-            return;
-          }
-        } catch {
-          // Skip partial JSON
-        }
-      }
-    };
-
-    xhr.onload = (): void => {
-      if (xhr.status >= 200 && xhr.status < 300) {
+      xhr.onabort = () => {
         if (!completed) {
           completed = true;
+          // Treat partial text as the final response on abort
           onComplete?.(fullText, metadata);
         }
         resolve({ success: true });
-      } else {
-        finishError(new Error(`API error: ${xhr.status}`));
-      }
-    };
+      };
 
-    xhr.onerror = () => finishError(new Error('Network request failed'));
-    xhr.ontimeout = () => finishError(new Error('Request timeout'));
-    xhr.timeout = CHAT_TIMEOUT_MS;
-    xhr.send(JSON.stringify(requestBody));
-  });
+      xhr.onerror = () => finishError(new Error('Network request failed'));
+      xhr.ontimeout = () => finishError(new Error('Request timeout'));
+      xhr.timeout = CHAT_TIMEOUT_MS;
+      xhr.send(JSON.stringify(requestBody));
+    });
+  })();
+
+  return {
+    promise,
+    abort: () => {
+      aborted = true;
+      if (xhrRef) {
+        xhrRef.abort();
+      }
+    },
+  };
 };

@@ -1,0 +1,58 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Image/Camera Attach Media Flow"
+tags:
+  - chat
+  - regression
+  - wip
+properties:
+  testCaseId: "TC-CHAT-015"
+  priority: "Medium"
+---
+# [WIP] Tap the Attach button and screenshot the media options.
+# Marked wip — camera/gallery requires device permissions and media files.
+# Uses testID: chat-attach.
+
+- startRecording: "chat-image-diagnosis"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "image-diag-01-chat-ready"
+
+# Tap the Attach media button (testID: chat-attach)
+- tapOn:
+    id: ${output.chat.attach}
+    optional: true
+
+- takeScreenshot: "image-diag-02-attach-tapped"
+
+# Verify media options appear
+- runFlow:
+    when:
+      visible: "Camera|Gallery|Photo Library|Take Photo"
+    commands:
+      - takeScreenshot: "image-diag-03-media-options"
+      - assertWithAI: "The screen shows options for attaching media such as Camera, Gallery, or Photo Library in a bottom sheet or action sheet."
+        optional: true
+
+# Handle permission dialog
+- runFlow:
+    when:
+      visible: "Allow|access photo|Photos"
+    commands:
+      - tapOn:
+          text: "Allow Full Access|Allow|OK"
+          optional: true
+      - takeScreenshot: "image-diag-04-permission"
+
+# Cancel without selecting media
+- tapOn:
+    text: "Cancel|Close"
+    optional: true
+
+- takeScreenshot: "image-diag-05-final"
+
+- stopRecording

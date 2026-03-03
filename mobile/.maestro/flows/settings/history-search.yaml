@@ -1,0 +1,82 @@
+appId: org.digitalgreen.agmcp
+name: "Settings - Chat History Screen and Search"
+tags:
+  - settings
+  - regression
+properties:
+  testCaseId: "TC-SET-006"
+  priority: "Medium"
+---
+# TC-SET-006: Open the Chat History screen from Settings, type in the search
+# input, and verify filtering works.
+# Uses testIDs: settings-history (row), history-search (TextInput).
+
+- startRecording: "settings-history-search"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# First create a chat session so history isn't empty
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "Tell me about soil testing"
+- tapOn:
+    id: ${output.chat.send}
+- takeScreenshot: "history-01-creating-session"
+
+# Wait for AI response
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+- takeScreenshot: "history-02-session-created"
+
+# Navigate to Settings via hamburger menu and open History
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+
+- tapOn:
+    id: ${output.settings.history}
+- waitForAnimationToEnd:
+    timeout: 1500
+- takeScreenshot: "history-03-history-screen"
+
+# Verify Conversations/History screen loaded
+- extendedWaitUntil:
+    visible: "Conversations|History|conversation|session"
+    timeout: 8000
+
+- assertVisible:
+    text: "Conversations"
+    optional: true
+- assertNoDefectsWithAI:
+    optional: true
+
+# Type in the search input
+- tapOn:
+    id: ${output.historyScreen.search}
+- inputText: "soil"
+- takeScreenshot: "history-04-search-typed"
+
+# Verify filtered results
+- extendedWaitUntil:
+    visible: "soil|Soil|Hello"
+    timeout: 8000
+- takeScreenshot: "history-05-search-results"
+
+- assertWithAI: "The history screen shows filtered results matching the search term 'soil'. At least one conversation mentioning soil testing should be visible."
+  optional: true
+
+# Tap a result to open the session
+- tapOn:
+    text: ".*soil.*|.*Soil.*"
+    index: 0
+    optional: true
+- takeScreenshot: "history-06-session-opened"
+
+- stopRecording

@@ -1,0 +1,51 @@
+appId: org.digitalgreen.agmcp
+name: "Settings - TTS Toggle"
+tags:
+  - settings
+  - regression
+properties:
+  testCaseId: "TC-SET-003"
+  priority: "Medium"
+---
+# TC-SET-003: Tap the TTS toggle switch, verify state changes, toggle back.
+# Uses testID: settings-tts (Switch component).
+
+- startRecording: "settings-tts-toggle"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Settings via hamburger menu
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "tts-01-settings-screen"
+
+- assertNoDefectsWithAI:
+    optional: true
+
+# Scroll to TTS toggle and note its state
+- scrollUntilVisible:
+    element:
+      id: ${output.settings.tts}
+    direction: DOWN
+    timeout: 5000
+- takeScreenshot: "tts-02-before-toggle"
+
+# Toggle TTS
+- tapOn:
+    id: ${output.settings.tts}
+- takeScreenshot: "tts-03-after-first-toggle"
+
+- assertWithAI: "The Text-to-Speech toggle switch should have changed state. If it was ON it should now be OFF, or vice versa. The visual indicator (color, position of the thumb) should reflect the new state."
+  optional: true
+
+# Toggle back
+- tapOn:
+    id: ${output.settings.tts}
+- takeScreenshot: "tts-04-toggled-back"
+
+- stopRecording

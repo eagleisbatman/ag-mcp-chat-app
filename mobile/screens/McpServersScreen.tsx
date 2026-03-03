@@ -26,7 +26,7 @@ import Button from '../components/ui/Button';
 import { SkeletonCard } from '../components/ui/Skeleton';
 import { t } from '../constants/strings';
 import { updatePreferences } from '../services/db';
-import { error as logError } from '../utils/logger';
+import { warn as logWarn } from '../utils/logger';
 import type { Theme, RootStackParamList, McpServer } from '../types';
 
 const STORAGE_KEY = '@service_preferences';
@@ -493,7 +493,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
         setPreferences(defaults);
       }
     } catch (error) {
-      logError('Failed to load service preferences:', error);
+      logWarn('Failed to load service preferences:', error);
     }
   };
 
@@ -509,7 +509,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
         showSuccess(t('mcp.preferencesSaved'));
       }
     } catch (error) {
-      logError('Failed to save preference:', error);
+      logWarn('Failed to save preference:', error);
     }
   }, [preferences, showSuccess]);
 
@@ -531,7 +531,7 @@ export default function McpServersScreen({ navigation }: McpServersScreenProps) 
         throw new Error(response.error || t('mcp.failedToFetch'));
       }
     } catch (err: any) {
-      logError('Fetch MCP servers error:', err);
+      logWarn('Fetch MCP servers error:', err);
       setError(err.message);
       showError(t('mcp.couldNotLoad'));
     } finally {

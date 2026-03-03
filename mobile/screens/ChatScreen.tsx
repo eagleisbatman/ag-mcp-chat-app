@@ -1,9 +1,10 @@
 import React, { useRef, useCallback, useEffect, useState, useMemo } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Platform } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Platform, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 
+import { useNetInfo } from '@react-native-community/netinfo';
 import { useApp } from '../contexts/AppContext';
 import { useToast } from '../contexts/ToastContext';
 import useChat from '../hooks/useChat';
@@ -13,6 +14,7 @@ import { useA2UIPicker } from '../hooks/useA2UIPicker';
 
 import MessageItem from '../components/MessageItem';
 import InputToolbar from '../components/InputToolbar';
+import AppIcon from '../components/ui/AppIcon';
 import ChatHeader from '../components/chat/ChatHeader';
 import ScrollToBottomButton from '../components/chat/ScrollToBottomButton';
 import DateSeparator from '../components/chat/DateSeparator';
@@ -40,6 +42,8 @@ const NUDGE_MESSAGES: Record<string, string> = {
 export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const { theme, language, location, locationDetails, setLocation, userId } = useApp();
   const { showSuccess, showWarning, showError } = useToast();
+  const netInfo = useNetInfo();
+  const isOffline = netInfo.isConnected === false;
 
   // Explicitly typing the FlatList ref to allow null
   const flatListRef = useRef<FlatList<ListItem>>(null);
@@ -55,7 +59,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
     messages, isTyping, isLoadingSession, newestBotMessageId,
     handleSendText, handleSendImage,
     transcribeAudioForInput, uploadAudioInBackground,
-    startNewSession,
+    startNewSession, abortStreaming,
   } = useChat(sessionId, onBehalfOfFarmerUserId);
 
   const {
@@ -129,6 +133,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   } = useA2UIPicker({
     handleSendText, scrollToBottom, showSuccess, showError,
     respondedA2UIWidgetIds, setRespondedA2UIWidgetIds,
+    onBehalfOfFarmerUserId,
   });
 
   // Combine messages with starter questions as a scrollable item
@@ -266,11 +271,18 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
       {onBehalfOfFarmerUserId && (
         <View style={{ backgroundColor: theme.warning + '20', paddingVertical: 6, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ color: theme.warning, fontSize: 13, fontWeight: '600' }}>
-            {'Chatting as: '}
+            {t('extensionWorker.chattingAs')}{' '}
           </Text>
           <Text style={{ color: theme.warning, fontSize: 13 }} numberOfLines={1}>
-            {onBehalfOfFarmerName || 'Farmer'}
+            {onBehalfOfFarmerName || t('extensionWorker.farmer')}
           </Text>
+        </View>
+      )}
+
+      {isOffline && (
+        <View style={{ backgroundColor: theme.error + '15', paddingVertical: 8, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <AppIcon name="wifi-off" size={16} color={theme.error} prefer="feather" />
+          <Text style={{ color: theme.error, fontSize: 13, fontWeight: '500' }}>{t('system.offline')}</Text>
         </View>
       )}
 
@@ -301,18 +313,19 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
               })();
 
               return (
-                <>
+                <View>
                   <MessageItem
                     message={item}
                     isNewMessage={item._id === newestBotMessageId}
                     onLayout={(height) => onMessageLayout(item._id, height)}
                     onRetry={handleDiagnosisRetry}
+                    onRetryMessage={handleSend}
                     onFollowUpTap={handleFollowUpTap}
                     onA2UIPress={item.a2uiWidgets?.length ? handleA2UIPress : undefined}
                     respondedA2UIWidgetIds={item.a2uiWidgets?.length ? respondedA2UIWidgetIds : undefined}
                   />
                   {showDateSeparator && <DateSeparator date={item.createdAt} />}
-                </>
+                </View>
               );
             }}
             keyExtractor={(item) => item._id}
@@ -322,7 +335,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             onScrollBeginDrag={handleScrollBeginDrag}
             onContentSizeChange={handleContentSizeChange}
             scrollEventThrottle={16}
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps="always"
             onScrollToIndexFailed={handleScrollToIndexFailed}
             initialNumToRender={15}
             maxToRenderPerBatch={10}
@@ -346,13 +359,39 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
         />
       </View>
 
+      {isTyping && (
+        <View style={{ alignItems: 'center', paddingVertical: 6 }}>
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 6,
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 22,
+              backgroundColor: theme.text + '12',
+              minHeight: 44,
+            }}
+            onPress={abortStreaming}
+            accessibilityRole="button"
+            accessibilityLabel={t('chat.stopGenerating')}
+          >
+            <AppIcon name="stop-circle" size={14} color={theme.textMuted} prefer="feather" />
+            <Text style={{ color: theme.textMuted, fontSize: 13, fontWeight: '500' }}>
+              {t('chat.stopGenerating')}
+            </Text>
+          </Pressable>
+        </View>
+      )}
+
       <InputToolbar
         ref={inputToolbarRef}
         onSendText={handleSend}
         onSendImage={handleSendImageTyped}
         transcribeAudio={transcribeAudioForInput}
         uploadAudioInBackground={uploadAudioInBackground}
-        disabled={isTyping}
+        disabled={isTyping || isOffline}
+        onOpenHistory={() => navigation.navigate('History')}
       />
 
       {/* A2UI Picker — single generic modal driven by picker registry */}

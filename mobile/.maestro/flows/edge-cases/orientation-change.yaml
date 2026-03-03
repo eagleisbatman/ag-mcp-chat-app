@@ -1,0 +1,50 @@
+appId: org.digitalgreen.agmcp
+name: "Edge Case - Orientation Change (Portrait / Landscape)"
+tags:
+  - edge-case
+  - regression
+properties:
+  testCaseId: "TC-EDGE-003"
+  priority: "Low"
+---
+# TC-EDGE-003: Rotate to LANDSCAPE, screenshot, rotate back to PORTRAIT,
+# verify layout is preserved.
+# Note: The app may lock to portrait — this test verifies graceful handling.
+
+- startRecording: "edge-orientation-change"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "orientation-01-portrait-chat"
+
+# Rotate to landscape
+- setOrientation: LANDSCAPE
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: "orientation-02-landscape"
+
+- assertWithAI: "The app is in landscape orientation. The chat screen should display without visual glitches, clipping, or overlapping elements. If the app locks to portrait, it should still render correctly."
+  optional: true
+- assertNoDefectsWithAI:
+    optional: true
+
+# Rotate back to portrait
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: "orientation-03-portrait-restored"
+
+# Verify chat input is still accessible
+- assertVisible:
+    id: ${output.chat.input}
+    optional: true
+- takeScreenshot: "orientation-04-layout-preserved"
+
+- assertWithAI: "After rotating back to portrait the chat screen layout is intact. The input field is at the bottom, messages are readable, and no content is cut off."
+  optional: true
+
+- stopRecording

@@ -1,0 +1,81 @@
+appId: org.digitalgreen.agmcp
+name: "Farm - Add New Farm"
+tags:
+  - farm
+  - regression
+properties:
+  testCaseId: "TC-FARM-002"
+  priority: "High"
+---
+# TC-FARM-002: Tap Add Farm, enter a name, save, verify the farm appears.
+# Uses testID selectors: farm-add, farm-name, farm-location, farm-save.
+
+- startRecording: "farm-add"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Farms via hamburger menu → Settings → My Farms
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Farms"
+- extendedWaitUntil:
+    visible: ".*Farms.*|.*farm.*|.*Add.*"
+    timeout: 8000
+- takeScreenshot: "farm-add-01-farms-screen"
+
+# Tap Add Farm (header button)
+- tapOn:
+    id: ${output.farm.add}
+- extendedWaitUntil:
+    id: ${output.farm.name}
+    timeout: 8000
+- takeScreenshot: "farm-add-02-edit-screen"
+
+- assertNoDefectsWithAI:
+    optional: true
+
+# Enter farm name
+- tapOn:
+    id: ${output.farm.name}
+- inputText: "Test Farm Alpha"
+- takeScreenshot: "farm-add-03-name-entered"
+
+# Tap GPS detect (optional — may show permission dialog)
+- tapOn:
+    id: ${output.farm.location}
+    optional: true
+- takeScreenshot: "farm-add-04-gps-tapped"
+
+# Handle location permission dialog
+- runFlow:
+    when:
+      visible: "Allow|location permission"
+    commands:
+      - tapOn:
+          text: ".*Allow While Using.*|.*Allow.*|.*While Using.*"
+          optional: true
+      - takeScreenshot: "farm-add-05-permission-granted"
+
+# Save the farm
+- hideKeyboard
+- tapOn:
+    id: ${output.farm.save}
+    enabled: true
+- takeScreenshot: "farm-add-06-saving"
+
+# Verify farm was created — name should appear in list
+- extendedWaitUntil:
+    visible: "Test Farm Alpha|saved|created|success|My Farms"
+    timeout: 15000
+- takeScreenshot: "farm-add-07-created"
+
+- assertWithAI: "The screen should confirm that 'Test Farm Alpha' was successfully created. The farm should appear in the farm list or a success indicator should be visible."
+  optional: true
+
+- stopRecording

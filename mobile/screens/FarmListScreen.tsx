@@ -67,6 +67,7 @@ export default function FarmListScreen({ navigation }: FarmListScreenProps) {
             color="#fff"
             accessibilityLabel={t('farm.addFarm')}
             size={36}
+            testID="farm-add"
           />
         }
       />

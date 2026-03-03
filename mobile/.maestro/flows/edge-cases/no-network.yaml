@@ -1,0 +1,66 @@
+appId: org.digitalgreen.agmcp
+name: "Edge Case - No Network / Airplane Mode (Android Only)"
+tags:
+  - edge-case
+  - regression
+properties:
+  testCaseId: "TC-EDGE-001"
+  priority: "Medium"
+---
+# TC-EDGE-001: Enable airplane mode (Android only), verify offline indicator
+# appears on chat screen and in Settings, then restore network.
+# iOS does not support programmatic airplane mode.
+
+- startRecording: "edge-no-network"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- takeScreenshot: "no-network-01-initial-online"
+
+# ── Android: full offline test ─────────────────────────────────────────────────
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - setAirplaneMode: enabled
+      - takeScreenshot: "no-network-02-airplane-on"
+
+      - extendedWaitUntil:
+          visible: "offline|no connection|network|internet"
+          timeout: 15000
+      - takeScreenshot: "no-network-03-offline-indicator"
+
+      # Check chat screen offline state
+      - takeScreenshot: "no-network-04-chat-offline"
+
+      # Check Settings via hamburger menu
+      - tapOn:
+          id: ${output.chat.settings}
+      - takeScreenshot: "no-network-05-settings-offline"
+
+      # Back to Chat
+      - pressKey: back
+      - takeScreenshot: "no-network-06-back-to-chat-offline"
+
+      - assertWithAI: "The app shows a clear offline indicator. The user knows they are offline. Chat input should be disabled or show an offline warning."
+        optional: true
+
+      # Restore network
+      - setAirplaneMode: disabled
+      - takeScreenshot: "no-network-07-reconnecting"
+
+      - extendedWaitUntil:
+          notVisible: "offline|no connection"
+          timeout: 20000
+      - takeScreenshot: "no-network-08-back-online"
+
+# ── iOS: cannot toggle airplane mode ──────────────────────────────────────────
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - takeScreenshot: "no-network-ios-skipped"
+
+- stopRecording

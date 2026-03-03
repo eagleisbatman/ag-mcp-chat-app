@@ -16,6 +16,7 @@ interface IconButtonProps {
   style?: ViewStyle | ViewStyle[] | null;
   hitSlop?: Insets;
   accessibilityLabel?: string;
+  testID?: string;
 }
 
 export default function IconButton({
@@ -30,6 +31,7 @@ export default function IconButton({
   style,
   hitSlop,
   accessibilityLabel,
+  testID,
 }: IconButtonProps): JSX.Element {
   const { theme } = useApp();
   const resolvedBackground = backgroundColor ?? 'transparent';
@@ -42,6 +44,7 @@ export default function IconButton({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
+      testID={testID}
       style={[
         styles.base,
         {

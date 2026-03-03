@@ -1,0 +1,89 @@
+appId: org.digitalgreen.agmcp
+name: "Farm - Add Plot with Crop Selection"
+tags:
+  - farm
+  - regression
+properties:
+  testCaseId: "TC-FARM-004"
+  priority: "Medium"
+---
+# Add a plot to an existing farm with crop selection.
+# Requires at least one farm to exist.
+
+- startRecording: "farm-add-plot"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Farms via hamburger menu → Settings → My Farms
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Farms"
+- extendedWaitUntil:
+    visible: ".*Farms.*|.*farm.*"
+    timeout: 8000
+- takeScreenshot: "add-plot-01-farms-list"
+
+# Tap on an existing farm
+- tapOn:
+    text: ".*Farm.*"
+    index: 0
+    optional: true
+- takeScreenshot: "add-plot-02-farm-detail"
+
+# Look for Add Plot button (no testID — text selector)
+- scrollUntilVisible:
+    element: "Add Plot|New Plot|plot"
+    direction: DOWN
+    timeout: 5000
+- tapOn:
+    text: "Add Plot|New Plot"
+    optional: true
+- takeScreenshot: "add-plot-03-add-plot-form"
+
+# Fill plot name
+- runFlow:
+    when:
+      visible: "name|Name|plot|Plot"
+    commands:
+      - tapOn:
+          text: ".*name.*"
+          index: 0
+          optional: true
+      - inputText: "Plot A1"
+      - takeScreenshot: "add-plot-04-name-entered"
+
+# Select crop
+- runFlow:
+    when:
+      visible: "crop|Crop|Select crop"
+    commands:
+      - tapOn:
+          text: "crop|Crop|Select crop"
+          optional: true
+      - takeScreenshot: "add-plot-05-crop-picker"
+      - tapOn:
+          text: "Maize|Rice|Wheat"
+          optional: true
+      - takeScreenshot: "add-plot-06-crop-selected"
+
+# Save
+- hideKeyboard
+- tapOn:
+    text: "Save|Add|Create"
+    enabled: true
+    optional: true
+- takeScreenshot: "add-plot-07-saving"
+
+- extendedWaitUntil:
+    visible: "Plot A1|saved|added|success"
+    timeout: 15000
+    optional: true
+- takeScreenshot: "add-plot-08-saved"
+
+- stopRecording

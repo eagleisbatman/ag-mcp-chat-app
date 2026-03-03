@@ -1,0 +1,24 @@
+appId: org.digitalgreen.agmcp
+name: "A2UI - Picker Dismiss Without Selection (WIP)"
+tags:
+  - a2ui
+  - wip
+properties:
+  testCaseId: "TC-A2UI-004"
+  priority: "Medium"
+---
+# [WIP] Tests dismissing a picker without selection. Requires picker widget
+# to be rendered first (non-deterministic AI response).
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "a2ui-picker-dismiss"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "a2ui-picker-dismiss-01-placeholder"
+
+- stopRecording

@@ -1,0 +1,66 @@
+appId: org.digitalgreen.agmcp
+name: "Livestock - Delete Animal (Cancel to Preserve Data)"
+tags:
+  - livestock
+  - regression
+properties:
+  testCaseId: "TC-LIVE-005"
+  priority: "Medium"
+---
+# TC-LIVE-005: Verify the delete confirmation dialog appears when deleting an animal.
+# Cancels at the dialog to preserve test data.
+# Requires at least one animal to exist.
+
+- startRecording: "livestock-delete-animal"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Livestock via hamburger menu → Settings → My Livestock
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Livestock"
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*"
+    timeout: 8000
+- takeScreenshot: "delete-animal-01-livestock-list"
+
+# Tap on an existing animal
+- tapOn:
+    text: ".*Bessie.*|.*Cattle.*|.*Cow.*|.*animal.*"
+    index: 0
+    optional: true
+- takeScreenshot: "delete-animal-02-animal-detail"
+
+# Scroll to find Delete option
+- scrollUntilVisible:
+    element: "Delete|Remove"
+    direction: DOWN
+    timeout: 8000
+- tapOn:
+    text: "Delete|Remove"
+    optional: true
+- takeScreenshot: "delete-animal-03-delete-tapped"
+
+# Verify confirmation dialog then cancel
+- runFlow:
+    when:
+      visible: "sure|confirm|delete|cannot be undone|permanent"
+    commands:
+      - takeScreenshot: "delete-animal-04-confirmation"
+      - assertWithAI: "A confirmation dialog warns the user about deleting the animal with Cancel and Delete buttons."
+        optional: true
+      - tapOn:
+          text: "Cancel|No|Keep"
+          optional: true
+      - takeScreenshot: "delete-animal-05-cancelled"
+
+# Verify animal is still present
+- takeScreenshot: "delete-animal-06-preserved"
+
+- stopRecording

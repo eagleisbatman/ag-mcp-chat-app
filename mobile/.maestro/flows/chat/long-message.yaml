@@ -1,0 +1,63 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Long Message (500 chars)"
+tags:
+  - chat
+  - regression
+  - edge-case
+properties:
+  testCaseId: "TC-CHAT-006"
+  priority: "Medium"
+---
+# TC-CHAT-006: Send a 500-character message and verify no UI overflow.
+# Uses testID selectors for chat-input and chat-send.
+
+- startRecording: "chat-long-message"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "long-msg-01-ready"
+
+# Type a ~500-character message
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "I have a large farm in western Kenya near Kisumu where I grow maize, beans, sorghum, and millet. The soil is clay-loam with moderate drainage. Last season I had problems with fall armyworm on the maize and bacterial blight on the beans. I also have five dairy cows and twelve sheep. What integrated pest management strategies and livestock feeding schedules should I use next season to maximise yield?"
+
+- takeScreenshot: "long-msg-02-typed"
+
+# Send
+- tapOn:
+    id: ${output.chat.send}
+
+- takeScreenshot: "long-msg-03-sent"
+
+# Verify the long user message appears in the chat
+- extendedWaitUntil:
+    visible: "Kisumu|integrated pest|western Kenya"
+    timeout: 10000
+
+- takeScreenshot: "long-msg-04-user-message-visible"
+
+- assertWithAI: "The user's long message about farming in western Kenya is displayed in a chat bubble. The text wraps correctly without being cut off, overlapping, or overflowing the bubble boundaries."
+  optional: true
+
+# Wait for full AI response
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 90000
+
+- takeScreenshot: "long-msg-05-response-received"
+
+# Scroll to verify full conversation is accessible
+- scroll:
+    direction: UP
+- takeScreenshot: "long-msg-06-scrolled-up"
+
+- scroll:
+    direction: DOWN
+- takeScreenshot: "long-msg-07-final"
+
+- stopRecording

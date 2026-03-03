@@ -4,7 +4,7 @@
  * Fetches personalized questions from API once on mount
  */
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Pressable, StyleSheet, Animated, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
@@ -138,15 +138,16 @@ export default function StarterQuestions({
       </Text>
       <View style={styles.questionsContainer}>
         {questions.map((q, index) => (
-          <Pressable
+          <TouchableOpacity
             key={index}
-            style={({ pressed }) => [
+            style={[
               styles.questionRow,
               {
-                backgroundColor: pressed ? theme.surfaceVariant : theme.surface,
+                backgroundColor: theme.surface,
                 borderColor: theme.border,
               },
             ]}
+            activeOpacity={0.7}
             onPress={() => handleTap(q.text)}
             accessibilityRole="button"
             accessibilityLabel={q.text}
@@ -162,7 +163,7 @@ export default function StarterQuestions({
             <View style={[styles.askButton, { backgroundColor: theme.accent }]}>
               <Text style={styles.askButtonText}>{t('chat.askButton')}</Text>
             </View>
-          </Pressable>
+          </TouchableOpacity>
         ))}
       </View>
     </Animated.View>

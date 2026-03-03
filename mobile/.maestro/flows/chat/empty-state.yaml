@@ -1,0 +1,40 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Empty State with Starter Questions"
+tags:
+  - chat
+  - regression
+properties:
+  testCaseId: "TC-CHAT-010"
+  priority: "High"
+---
+# TC-CHAT-010: Verify the chat empty state shows the "Try asking:" starter
+# questions and the chat input is visible and ready.
+
+- startRecording: "chat-empty-state"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "chat-empty-01-initial"
+
+# The chat-input testID confirms we are on the chat screen
+- assertVisible:
+    id: ${output.chat.input}
+
+# Verify starter questions header
+- assertVisible: "Try asking:"
+
+- takeScreenshot: "chat-empty-02-starter-questions-visible"
+
+- assertWithAI: "The screen shows a fresh chat with suggested starter questions under a 'Try asking:' header. There are no previous chat messages. The input field at the bottom shows the 'Message...' placeholder."
+  optional: true
+
+- assertNoDefectsWithAI:
+    optional: true
+
+- takeScreenshot: "chat-empty-03-final"
+
+- stopRecording

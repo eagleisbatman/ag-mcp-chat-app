@@ -1,0 +1,72 @@
+appId: org.digitalgreen.agmcp
+name: "Edge Case - Session Timeout Behavior (WIP)"
+tags:
+  - edge-case
+  - regression
+  - wip
+properties:
+  testCaseId: "TC-EDGE-005"
+  priority: "Low"
+---
+# TC-EDGE-005 [WIP]: Session timeout is hard to test deterministically because
+# the timeout duration is long and not configurable via test arguments.
+#
+# Current approach: background the app and relaunch — a proxy for session staleness.
+# This flow is marked `wip` and excluded from the default regression run.
+
+- startRecording: "edge-session-timeout"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Send a message to establish an active session
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "Hello, what is crop rotation?"
+- tapOn:
+    id: ${output.chat.send}
+- takeScreenshot: "timeout-01-message-sent"
+
+# Wait for response
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+- takeScreenshot: "timeout-02-response-received"
+
+# Background the app (proxy for session staleness)
+- pressKey: home
+- takeScreenshot: "timeout-03-backgrounded"
+
+# Re-open the app without clearing state
+- launchApp:
+    clearState: false
+- takeScreenshot: "timeout-04-reopened"
+
+# Verify the app resumes properly
+- extendedWaitUntil:
+    visible: ".*Message.*"
+    timeout: 15000
+- takeScreenshot: "timeout-05-resumed"
+
+# Send another message to verify session is still active
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "Can you explain more?"
+- tapOn:
+    id: ${output.chat.send}
+- takeScreenshot: "timeout-06-second-message"
+
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+- takeScreenshot: "timeout-07-second-response"
+
+- assertWithAI: "After being backgrounded and relaunched, the app resumed gracefully. The second message received a response, indicating the session is still valid."
+  optional: true
+
+- stopRecording
