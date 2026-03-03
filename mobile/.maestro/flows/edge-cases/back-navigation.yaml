@@ -1,0 +1,103 @@
+appId: org.digitalgreen.agmcp
+name: "Edge Case - Back Navigation Through Screens"
+tags:
+  - edge-case
+  - regression
+properties:
+  testCaseId: "TC-EDGE-002"
+  priority: "Medium"
+---
+# TC-EDGE-002: Navigate deep into the app (hamburger menu → Settings → Profile)
+# then use back navigation (Android back key / iOS swipe back) and verify the
+# correct screen is restored at each step.
+# Uses testID: settings-profile to open profile screen.
+
+- startRecording: "edge-back-navigation"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- takeScreenshot: "back-nav-01-initial"
+
+# Navigate deep: hamburger menu → Settings → Profile
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "back-nav-02-settings"
+
+- tapOn:
+    id: ${output.settings.profile}
+- extendedWaitUntil:
+    id: ${output.profile.name}
+    timeout: 8000
+- takeScreenshot: "back-nav-03-profile"
+
+# Back — iOS swipe or Android back key
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          direction: RIGHT
+          start: "0%, 50%"
+          end: "40%, 50%"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - pressKey: back
+
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "back-nav-04-back-to-settings"
+
+# Navigate to Farms via Settings → My Farms
+- tapOn:
+    text: "My Farms"
+- extendedWaitUntil:
+    visible: ".*Farms.*|.*farm.*"
+    timeout: 8000
+- takeScreenshot: "back-nav-05-farms"
+
+- tapOn:
+    text: ".*Farm.*|.*farm.*"
+    index: 0
+    optional: true
+- takeScreenshot: "back-nav-06-farm-detail"
+
+- pressKey: back
+- takeScreenshot: "back-nav-07-back-to-farms"
+
+# Back to Settings
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+
+# Navigate to Livestock via Settings → My Livestock
+- tapOn:
+    text: "My Livestock"
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*"
+    timeout: 8000
+- takeScreenshot: "back-nav-08-livestock"
+
+# Return to Chat via back presses
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- pressKey: back
+- extendedWaitUntil:
+    id: ${output.chat.input}
+    timeout: 8000
+- takeScreenshot: "back-nav-09-back-to-chat"
+
+- assertWithAI: "The Chat screen is displayed correctly after multiple navigation steps. The input field is visible and no visual glitches are present."
+  optional: true
+
+- stopRecording

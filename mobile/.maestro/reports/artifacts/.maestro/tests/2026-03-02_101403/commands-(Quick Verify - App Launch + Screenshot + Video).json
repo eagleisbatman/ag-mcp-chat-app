@@ -1,0 +1,136 @@
+[ {
+  "command" : {
+    "startRecordingCommand" : {
+      "path" : "verify-app-launch",
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426648341,
+    "duration" : 6
+  }
+}, {
+  "command" : {
+    "launchAppCommand" : {
+      "appId" : "org.digitalgreen.agmcp",
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426648347,
+    "duration" : 1470
+  }
+}, {
+  "command" : {
+    "applyConfigurationCommand" : {
+      "config" : {
+        "appId" : "org.digitalgreen.agmcp",
+        "name" : "Quick Verify - App Launch + Screenshot + Video",
+        "tags" : [ "verify" ],
+        "ext" : {
+          "properties" : {
+            "testCaseId" : "TC-VERIFY-001",
+            "priority" : "Critical"
+          }
+        }
+      },
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426648341,
+    "duration" : 0
+  }
+}, {
+  "command" : {
+    "assertNoDefectsWithAICommand" : {
+      "optional" : true
+    }
+  },
+  "metadata" : {
+    "status" : "WARNED",
+    "timestamp" : 1772426652525
+  }
+}, {
+  "command" : {
+    "defineVariablesCommand" : {
+      "env" : {
+        "MAESTRO_FILENAME" : "quick-verify"
+      },
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426648339,
+    "duration" : 2
+  }
+}, {
+  "command" : {
+    "waitForAnimationToEndCommand" : {
+      "timeout" : 3000,
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426651550,
+    "duration" : 932
+  }
+}, {
+  "command" : {
+    "takeScreenshotCommand" : {
+      "path" : "verify-02-settled",
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426652482,
+    "duration" : 43
+  }
+}, {
+  "command" : {
+    "takeScreenshotCommand" : {
+      "path" : "verify-01-app-loaded",
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426651504,
+    "duration" : 46
+  }
+}, {
+  "command" : {
+    "stopRecordingCommand" : {
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426652526,
+    "duration" : 26
+  }
+}, {
+  "command" : {
+    "assertConditionCommand" : {
+      "condition" : {
+        "visible" : {
+          "textRegex" : ".*FarmerChat.*|.*language.*|.*Language.*|.*Chat.*",
+          "optional" : false
+        }
+      },
+      "timeout" : "20000",
+      "optional" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1772426649817,
+    "duration" : 1687
+  }
+} ]

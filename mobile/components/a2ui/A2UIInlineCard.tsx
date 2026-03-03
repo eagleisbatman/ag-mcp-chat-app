@@ -44,7 +44,10 @@ export default function A2UIInlineCard({ widget, onPress, responded }: A2UIInlin
           borderColor: responded ? theme.inputBorder : theme.accent + '40',
         },
       ]}
+      accessibilityRole="button"
       accessibilityLabel={widget.title || 'Select an option'}
+      accessibilityHint={responded ? 'Already responded' : 'Tap to open picker'}
+      accessibilityState={{ disabled: responded }}
     >
       <View style={[styles.iconWrap, { backgroundColor: theme.accent + '20' }]}>
         <AppIcon name={iconName} size={18} color={theme.accent} />

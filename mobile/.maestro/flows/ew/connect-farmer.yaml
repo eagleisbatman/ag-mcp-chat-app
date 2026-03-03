@@ -1,0 +1,38 @@
+appId: org.digitalgreen.agmcp
+name: "EW - Connect Farmer via Phone + OTP (WIP)"
+tags:
+  - ew
+  - wip
+env:
+  FARMER_PHONE: ${FARMER_PHONE || "0798765432"}
+properties:
+  testCaseId: "TC-EW-001"
+  priority: "High"
+---
+# [WIP] EW Connect Farmer flow requires:
+# 1. An account with extension_worker role (not testable without role switching)
+# 2. OTP verification (requires backend mock that returns predictable code)
+# 3. The Farmers section (accessible via hamburger menu for EW role)
+#
+# Uses testID selectors: farmers-add, connect-verify, connect-skip,
+# otp-input, otp-verify, otp-resend.
+#
+# Excluded from default regression run via `wip` tag.
+# To enable: set up EW test account and configure OTP mock.
+
+- startRecording: "ew-connect-farmer"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Farmers section only visible for EW role — will no-op on farmer accounts
+- tapOn:
+    id: ${output.chat.settings}
+    optional: true
+- tapOn:
+    text: "Farmers"
+    optional: true
+- takeScreenshot: "ew-connect-01-placeholder"
+
+- stopRecording

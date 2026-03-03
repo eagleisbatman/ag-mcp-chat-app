@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   FlatList,
   RefreshControl,
@@ -33,8 +34,16 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
   const { showSuccess, showError } = useToast();
   
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const filteredSessions = searchQuery.trim()
+    ? sessions.filter((s) => {
+        const q = searchQuery.toLowerCase();
+        return (s.title || '').toLowerCase().includes(q);
+      })
+    : sessions;
 
   const loadSessions = useCallback(async () => {
     if (!isDbSynced) {
@@ -178,9 +187,36 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
             backgroundColor="transparent"
             color={theme.accent}
             accessibilityLabel={t('history.newChat')}
+            testID="history-new-chat"
           />
         }
       />
+
+      {/* Search bar */}
+      {!isLoading && isDbSynced && sessions.length > 0 && (
+        <View style={[styles.searchContainer, { borderBottomColor: theme.border }]}>
+          <AppIcon name="search" size={16} color={theme.textMuted} />
+          <TextInput
+            testID="history-search"
+            style={[styles.searchInput, { color: theme.text }]}
+            placeholder={t('history.searchPlaceholder')}
+            placeholderTextColor={theme.textMuted}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          {searchQuery.length > 0 && (
+            <IconButton
+              icon="x"
+              size={16}
+              onPress={() => setSearchQuery('')}
+              backgroundColor="transparent"
+              color={theme.textMuted}
+            />
+          )}
+        </View>
+      )}
 
       {isLoading ? (
         <View style={styles.loadingContainer}>
@@ -202,7 +238,7 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
         </View>
       ) : (
         <FlatList
-          data={sessions}
+          data={filteredSessions}
           renderItem={renderSession}
           keyExtractor={(item) => item.id}
           contentContainerStyle={[
@@ -226,6 +262,19 @@ export default function HistoryScreen({ navigation }: HistoryScreenProps) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.xs,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    gap: SPACING.xs,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    paddingVertical: SPACING.xs,
+  },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   listContent: { padding: 16 },
   emptyListContent: { flex: 1 },

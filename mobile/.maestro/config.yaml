@@ -1,0 +1,112 @@
+# Maestro E2E Test Configuration — FarmerChat
+# See: https://maestro.mobile.dev/reference/configuration
+
+flows:
+  - "flows/**"
+
+includeTags: []
+excludeTags:
+  - wip
+  - subflow
+
+executionOrder:
+  continueOnFailure: true
+  flowsOrder:
+    # 1. Onboarding (must run first — clears state)
+    - flows/onboarding/first-launch.yaml
+    # 2. Navigation baseline (hamburger menu)
+    - flows/navigation/tab-navigation.yaml
+    # 3. Chat flows
+    - flows/chat/empty-state.yaml
+    - flows/chat/send-message.yaml
+    - flows/chat/follow-up-questions.yaml
+    - flows/chat/stop-generation.yaml
+    - flows/chat/long-message.yaml
+    - flows/chat/rapid-messages.yaml
+    - flows/chat/voice-input.yaml
+    - flows/chat/image-diagnosis.yaml
+    - flows/chat/offline-state.yaml
+    # 4. Profile
+    - flows/profile/edit-profile.yaml
+    - flows/profile/completeness-bar.yaml
+    - flows/profile/gender-selection.yaml
+    - flows/profile/profile-picture.yaml
+    - flows/profile/phone-country-code.yaml
+    # 5. Farm
+    - flows/farm/empty-state.yaml
+    - flows/farm/add-farm.yaml
+    - flows/farm/edit-farm.yaml
+    - flows/farm/add-plot.yaml
+    - flows/farm/delete-farm.yaml
+    # 6. Livestock
+    - flows/livestock/empty-state.yaml
+    - flows/livestock/add-animal.yaml
+    - flows/livestock/edit-animal.yaml
+    - flows/livestock/add-event.yaml
+    - flows/livestock/delete-animal.yaml
+    # 7. A2UI
+    - flows/a2ui/crop-picker.yaml
+    - flows/a2ui/livestock-picker.yaml
+    - flows/a2ui/picker-search.yaml
+    - flows/a2ui/picker-dismiss.yaml
+    - flows/a2ui/number-input.yaml
+    - flows/a2ui/form-widget.yaml
+    - flows/a2ui/confirmation-dialog.yaml
+    # 8. Settings
+    - flows/settings/tts-toggle.yaml
+    - flows/settings/language-switch.yaml
+    - flows/settings/notification-toggle.yaml
+    - flows/settings/about-screen.yaml
+    - flows/settings/mcp-servers.yaml
+    - flows/settings/history-search.yaml
+    - flows/settings/delete-account.yaml
+    # 9. EW
+    - flows/ew/connect-farmer.yaml
+    - flows/ew/my-farmers-list.yaml
+    - flows/ew/chat-on-behalf.yaml
+    - flows/ew/pending-requests.yaml
+    - flows/ew/disconnect-farmer.yaml
+    # 10. RationSmart
+    - flows/rationsmart/start-flow.yaml
+    - flows/rationsmart/select-breed.yaml
+    - flows/rationsmart/enter-cow-details.yaml
+    - flows/rationsmart/view-diet.yaml
+    # 11. Edge cases
+    - flows/edge-cases/no-network.yaml
+    - flows/edge-cases/back-navigation.yaml
+    - flows/edge-cases/orientation-change.yaml
+    - flows/edge-cases/empty-states-tour.yaml
+    - flows/edge-cases/session-timeout.yaml
+    # 12. Smoke (full regression)
+    - flows/smoke/critical-path.yaml
+    - flows/smoke/full-regression.yaml
+
+# Output configuration
+output:
+  format: html
+  path: reports/
+
+# Default tags for filtering
+tags:
+  smoke:
+    - smoke
+  regression:
+    - regression
+  chat:
+    - chat
+  a2ui:
+    - a2ui
+  profile:
+    - profile
+  farm:
+    - farm
+  livestock:
+    - livestock
+  settings:
+    - settings
+  ew:
+    - ew
+  rationsmart:
+    - rationsmart
+  edge-case:
+    - edge-case

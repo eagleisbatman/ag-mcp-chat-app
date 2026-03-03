@@ -1,0 +1,181 @@
+appId: org.digitalgreen.agmcp
+name: "Smoke - Full Regression (Hamburger Menu Navigation)"
+tags:
+  - regression
+properties:
+  testCaseId: "TC-REG-001"
+  priority: "Critical"
+---
+# TC-REG-001: Full regression — onboard → visit all sections via hamburger menu → verify key elements.
+# Navigation: Chat (home) → hamburger menu → Settings → rows for Farms, Livestock, etc.
+# Uses testID selectors where available for stronger assertions.
+#
+# NEVER uses clearState — breaks Metro bundler on iOS dev builds.
+
+- startRecording: "smoke-full-regression"
+
+- runScript: ../../scripts/page-objects.js
+
+- launchApp:
+    stopApp: false
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- takeScreenshot: "full-reg-01-app-launched"
+
+# Complete onboarding if needed
+- runFlow:
+    when:
+      visible: "Get Started"
+    file: ../../subflows/complete-onboarding.yaml
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- extendedWaitUntil:
+    visible: ".*Message.*"
+    timeout: 20000
+
+- takeScreenshot: "full-reg-02-onboarding-done"
+
+# ── 1. Chat Screen (Home) ────────────────────────────────────────────────────
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- extendedWaitUntil:
+    id: ${output.chat.input}
+    timeout: 10000
+
+- assertVisible:
+    id: ${output.chat.input}
+    optional: true
+- assertVisible:
+    id: ${output.chat.newChat}
+    optional: true
+- assertVisible:
+    id: ${output.chat.settings}
+    optional: true
+
+- takeScreenshot: "full-reg-03-chat-home"
+- assertNoDefectsWithAI:
+    optional: true
+
+# ── 2. Hamburger Menu → Settings ─────────────────────────────────────────────
+- tapOn:
+    id: ${output.chat.settings}
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 10000
+
+- assertVisible:
+    id: ${output.settings.profile}
+    optional: true
+- assertVisible:
+    id: ${output.settings.language}
+    optional: true
+
+- takeScreenshot: "full-reg-04-settings"
+- assertNoDefectsWithAI:
+    optional: true
+
+# ── 3. Settings → My Farms ───────────────────────────────────────────────────
+- tapOn:
+    text: "My Farms"
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- extendedWaitUntil:
+    visible: ".*Farms.*|.*farm.*|.*Add.*"
+    timeout: 10000
+
+- assertVisible:
+    id: ${output.farm.add}
+    optional: true
+
+- takeScreenshot: "full-reg-05-farms"
+- assertNoDefectsWithAI:
+    optional: true
+
+# Back to Settings
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+
+# ── 4. Settings → My Livestock ───────────────────────────────────────────────
+- tapOn:
+    text: "My Livestock"
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*|.*Add.*"
+    timeout: 10000
+
+- assertVisible:
+    id: ${output.livestock.add}
+    optional: true
+
+- takeScreenshot: "full-reg-06-livestock"
+- assertNoDefectsWithAI:
+    optional: true
+
+# Back to Settings
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+
+- takeScreenshot: "full-reg-07-settings-revisited"
+- assertNoDefectsWithAI:
+    optional: true
+
+# ── 5. Return to Chat ────────────────────────────────────────────────────────
+- pressKey: back
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- extendedWaitUntil:
+    id: ${output.chat.input}
+    timeout: 10000
+
+- takeScreenshot: "full-reg-08-back-to-chat"
+- assertNoDefectsWithAI:
+    optional: true
+
+- takeScreenshot: "full-reg-09-complete"
+
+- stopRecording

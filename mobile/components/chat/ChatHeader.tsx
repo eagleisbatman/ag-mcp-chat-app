@@ -83,6 +83,7 @@ function ChatHeader({
             backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
             color={theme.icon}
             accessibilityLabel={t('a11y.newChat')}
+            testID="header-new-chat"
           />
           <IconButton
             icon="menu"
@@ -92,6 +93,7 @@ function ChatHeader({
             backgroundColor={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'}
             color={theme.icon}
             accessibilityLabel={t('a11y.openSettings')}
+            testID="header-settings"
           />
         </>
       }

@@ -1,4 +1,4 @@
-import type { Message, LocationDetails } from '../../../types';
+import type { Message, LocationDetails, A2UIResponse } from '../../../types';
 
 export interface UseChatSendOptions {
   messages: Message[];
@@ -36,10 +36,12 @@ export interface UploadResult {
 export interface UseChatSendReturn {
   isTyping: boolean;
   thinkingText: string | null;
-  handleSendText: (text: string, isRetry?: boolean) => Promise<void>;
+  /** Send text. Second arg: boolean for retry, or A2UIResponse for structured picker data. */
+  handleSendText: (text: string, isRetryOrA2ui?: boolean | A2UIResponse) => Promise<void>;
   handleSendImage: (imageData: ImageData) => Promise<void>;
   transcribeAudioForInput: (audioData: AudioData) => Promise<TranscribeResult>;
   uploadAudioInBackground: (audioData: AudioData | null) => Promise<UploadResult>;
+  abortStreaming: () => void;
 }
 
 export interface LocationState {

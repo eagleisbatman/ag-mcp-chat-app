@@ -1,0 +1,89 @@
+appId: org.digitalgreen.agmcp
+name: "Livestock - Add Animal"
+tags:
+  - livestock
+  - regression
+properties:
+  testCaseId: "TC-LIVE-002"
+  priority: "High"
+---
+# TC-LIVE-002: Tap Add Animal, enter a name, save, verify the animal appears.
+# Uses testID selectors: livestock-add, livestock-name, livestock-save.
+
+- startRecording: "livestock-add-animal"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Livestock via hamburger menu → Settings → My Livestock
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Livestock"
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*|.*Add.*"
+    timeout: 8000
+- takeScreenshot: "add-animal-01-livestock-screen"
+
+# Tap Add Animal (header button)
+- tapOn:
+    id: ${output.livestock.add}
+- extendedWaitUntil:
+    id: ${output.livestock.name}
+    timeout: 8000
+    optional: true
+- extendedWaitUntil:
+    visible: "type|select|animal|Name|name"
+    timeout: 8000
+- takeScreenshot: "add-animal-02-add-form"
+
+- assertNoDefectsWithAI:
+    optional: true
+
+# Select livestock type (text-based — picker list items have no testIDs)
+- tapOn:
+    text: "Cattle|Cow|cattle"
+    optional: true
+- takeScreenshot: "add-animal-03-type-selected"
+
+# Enter name
+- tapOn:
+    id: ${output.livestock.name}
+    optional: true
+- inputText: "Bessie"
+- takeScreenshot: "add-animal-04-name-entered"
+
+# Fill optional fields (breed, tag, DOB) via text selectors
+- scrollUntilVisible:
+    element: "breed|Breed"
+    direction: DOWN
+    timeout: 5000
+- tapOn:
+    text: ".*breed.*"
+    optional: true
+- tapOn:
+    text: "Holstein|Friesian|Local"
+    optional: true
+- takeScreenshot: "add-animal-05-breed-selected"
+
+# Save
+- hideKeyboard
+- tapOn:
+    id: ${output.livestock.save}
+    enabled: true
+- takeScreenshot: "add-animal-06-saving"
+
+# Verify animal was added
+- extendedWaitUntil:
+    visible: "Bessie|saved|added|success|My Livestock"
+    timeout: 15000
+- takeScreenshot: "add-animal-07-saved"
+
+- assertWithAI: "The screen should confirm that the animal 'Bessie' was successfully added. It should appear in the livestock list or show a success indicator."
+  optional: true
+
+- stopRecording

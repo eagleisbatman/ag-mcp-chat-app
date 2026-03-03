@@ -1,0 +1,23 @@
+appId: org.digitalgreen.agmcp
+name: "RationSmart - Enter Cow Details (WIP)"
+tags:
+  - rationsmart
+  - wip
+properties:
+  testCaseId: "TC-RS-003"
+  priority: "Medium"
+---
+# [WIP] Cow details collection is part of the RationSmart AI conversation flow.
+# Non-deterministic — excluded from default regression run via `wip` tag.
+
+- startRecording: "rationsmart-cow-details"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "rs-details-01-placeholder"
+
+- stopRecording

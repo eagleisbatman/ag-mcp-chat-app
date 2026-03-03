@@ -42,11 +42,15 @@ export interface PickerFormField {
   key: string;
   label: string;
   placeholder: string;
-  type: 'text' | 'number';
+  type: 'text' | 'number' | 'decimal' | 'select' | 'toggle';
   optional?: boolean;
   maxLength?: number;
   /** For number fields: maximum allowed value (default: 9999999). */
   maxValue?: number;
+  /** For select fields: dropdown options. */
+  options?: { value: string; label: string }[];
+  /** For toggle fields: label when on/off. */
+  toggleLabels?: { on: string; off: string };
 }
 
 // ============================================
@@ -55,7 +59,7 @@ export interface PickerFormField {
 
 /** A single step in a picker flow. */
 export interface PickerStep {
-  type: 'list' | 'form';
+  type: 'list' | 'form' | 'confirmation' | 'number_input';
   // List step options:
   searchPlaceholder?: string;
   emptyText?: string;
@@ -63,6 +67,15 @@ export interface PickerStep {
   // Form step options:
   fields?: PickerFormField[];
   submitLabel?: string;
+  // Confirmation step options:
+  confirmLabel?: string;
+  cancelLabel?: string;
+  // Number input step options:
+  min?: number;
+  max?: number;
+  step?: number;
+  unit?: string;
+  numberPlaceholder?: string;
 }
 
 /** Profile action functions passed to onComplete (avoids hooks in configs). */
@@ -72,6 +85,8 @@ export interface ProfileActions {
     livestockId: string; name?: string; trackingMode?: string;
     herdSize?: number;
   }) => Promise<Animal | null>;
+  /** When EW chats on behalf, saves should target the farmer's profile. */
+  onBehalfOfFarmerUserId?: string;
 }
 
 /** Master data sets passed to mapItems (avoids hooks in configs). */
@@ -104,14 +119,18 @@ export interface PickerConfig {
    */
   mapItems: (data: MasterData) => PickerItem[];
 
+  /** Timeout in ms for the onComplete handler (default: 10000). Override for slow operations. */
+  timeoutMs?: number;
+
   /**
    * Called when the user completes all steps.
-   * Returns display text for chat and whether data was saved.
+   * Returns display text for chat, whether data was saved, and optional structured response data.
+   * `item` is null for non-list flows (confirmation, standalone form, number_input).
    */
   onComplete: (
-    item: PickerItem,
+    item: PickerItem | null,
     formData: Record<string, string> | undefined,
     purpose: 'clarify' | 'collect' | undefined,
     actions: ProfileActions,
-  ) => Promise<{ text: string; saved: boolean }>;
+  ) => Promise<{ text: string; saved: boolean; responseData?: Record<string, unknown> }>;
 }

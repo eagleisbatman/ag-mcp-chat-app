@@ -12,7 +12,7 @@ export const analyzePlantImage = async (params: PlantDiagnosisParams): Promise<P
 
     const response = await fetchWithTimeout(CHAT_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY, 'X-Device-Id': deviceId },
       body: JSON.stringify({
         message: 'Analyze this plant image for health issues and provide diagnosis.',
         latitude: params.latitude ?? FALLBACK_LATITUDE,

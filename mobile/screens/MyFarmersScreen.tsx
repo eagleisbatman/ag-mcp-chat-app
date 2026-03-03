@@ -1,12 +1,14 @@
 /**
  * MyFarmersScreen — List of farmers connected to this Extension Worker.
  * Allows starting a connected chat session on behalf of a farmer.
+ * Features: search/filter, proxy counter, chat-on-behalf.
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   FlatList,
   TouchableOpacity,
@@ -22,7 +24,11 @@ import IconButton from '../components/ui/IconButton';
 import Card from '../components/ui/Card';
 import AppIcon from '../components/ui/AppIcon';
 import { getMyFarmers } from '../services/db';
+import { t } from '../constants/strings';
 import type { RootStackParamList, FarmerEwMapping } from '../types';
+
+const MAX_PROXY_FARMERS = 200;
+const PROXY_WARNING_THRESHOLD = 180;
 
 interface MyFarmersScreenProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'MyFarmers'>;
@@ -33,6 +39,7 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
   const { showError } = useToast();
   const [farmers, setFarmers] = useState<FarmerEwMapping[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   useFocusEffect(
     useCallback(() => {
@@ -46,14 +53,31 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
     if (result.success && result.data) {
       setFarmers(result.data);
     } else {
-      showError(result.error || 'Failed to load farmers');
+      showError(result.error || t('extensionWorker.loadFarmersFailed'));
     }
     setIsLoading(false);
   };
 
+  // Filter farmers by search term (name or phone)
+  const filteredFarmers = useMemo(() => {
+    if (!search.trim()) return farmers;
+    const q = search.trim().toLowerCase();
+    return farmers.filter((m) => {
+      const name = (m.farmer?.name || '').toLowerCase();
+      const phone = (m.farmer?.phone || '').toLowerCase();
+      return name.includes(q) || phone.includes(q);
+    });
+  }, [farmers, search]);
+
+  // Count proxy farmers
+  const proxyCount = useMemo(() =>
+    farmers.filter((m) => m.farmer?.isProxy).length,
+    [farmers]
+  );
+
   const handleChatOnBehalf = (mapping: FarmerEwMapping) => {
     if (!mapping.farmer?.id) return;
-    const farmerName = mapping.farmer.name || mapping.farmer.phone || 'Unknown Farmer';
+    const farmerName = mapping.farmer.name || mapping.farmer.phone || t('extensionWorker.unknownFarmer');
     navigation.navigate('Chat', {
       newSession: true,
       onBehalfOfFarmerUserId: mapping.farmer.id,
@@ -63,7 +87,7 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
 
   const renderFarmer = ({ item }: { item: FarmerEwMapping }) => {
     const farmer = item.farmer;
-    const name = farmer?.name || farmer?.phone || 'Unknown Farmer';
+    const name = farmer?.name || farmer?.phone || t('extensionWorker.unknownFarmer');
     const isProxy = farmer?.isProxy;
     const completeness = farmer?.profileCompleteness || 0;
 
@@ -88,7 +112,9 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
               </Text>
               {isProxy && (
                 <View style={[styles.proxyBadge, { backgroundColor: theme.warning + '20' }]}>
-                  <Text style={[styles.proxyText, { color: theme.warning }]}>Proxy</Text>
+                  <Text style={[styles.proxyText, { color: theme.warning }]}>
+                    {t('extensionWorker.proxy')}
+                  </Text>
                 </View>
               )}
             </View>
@@ -122,14 +148,14 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ScreenHeader
-        title="My Farmers"
+        title={t('extensionWorker.myFarmers')}
         left={
           <IconButton
             icon="arrow-back"
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={
@@ -138,7 +164,8 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
             onPress={() => navigation.navigate('ConnectFarmer')}
             backgroundColor="transparent"
             color={theme.accent}
-            accessibilityLabel="Connect farmer"
+            accessibilityLabel={t('extensionWorker.connectFarmer')}
+            testID="farmers-add"
           />
         }
       />
@@ -150,9 +177,11 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
       ) : farmers.length === 0 ? (
         <View style={styles.centered}>
           <AppIcon name="people-outline" size={48} color={theme.textMuted} />
-          <Text style={[styles.emptyTitle, { color: theme.text }]}>No farmers connected</Text>
+          <Text style={[styles.emptyTitle, { color: theme.text }]}>
+            {t('extensionWorker.noFarmersConnected')}
+          </Text>
           <Text style={[styles.emptySubtitle, { color: theme.textMuted }]}>
-            Connect with farmers to assist them via the app
+            {t('extensionWorker.noFarmersHint')}
           </Text>
           <TouchableOpacity
             style={[styles.addButton, { backgroundColor: theme.accent }]}
@@ -160,18 +189,50 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
             activeOpacity={0.8}
           >
             <AppIcon name="person-add" size={18} color="#fff" />
-            <Text style={styles.addButtonText}>Connect a Farmer</Text>
+            <Text style={styles.addButtonText}>{t('extensionWorker.connectAFarmer')}</Text>
           </TouchableOpacity>
         </View>
       ) : (
-        <FlatList
-          data={farmers}
-          renderItem={renderFarmer}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          onRefresh={loadFarmers}
-          refreshing={isLoading}
-        />
+        <>
+          {/* Proxy counter */}
+          <View style={styles.counterRow}>
+            <Text style={[
+              styles.counterText,
+              { color: proxyCount >= PROXY_WARNING_THRESHOLD ? theme.warning : theme.textMuted },
+            ]}>
+              {t(farmers.length !== 1 ? 'extensionWorker.farmersCount' : 'extensionWorker.farmerCount', { count: farmers.length })}
+              {proxyCount > 0 && ` (${proxyCount}/${MAX_PROXY_FARMERS} ${t('extensionWorker.proxy').toLowerCase()})`}
+            </Text>
+          </View>
+
+          {/* Search bar */}
+          <View style={[styles.searchContainer, { borderColor: theme.border, backgroundColor: theme.surface }]}>
+            <AppIcon name="search" size={18} color={theme.textMuted} />
+            <TextInput
+              testID="farmers-search"
+              style={[styles.searchInput, { color: theme.text }]}
+              placeholder={t('extensionWorker.searchFarmers') || 'Search by name or phone'}
+              placeholderTextColor={theme.textMuted}
+              value={search}
+              onChangeText={setSearch}
+              autoCorrect={false}
+            />
+            {search.length > 0 && (
+              <TouchableOpacity onPress={() => setSearch('')}>
+                <AppIcon name="close-circle" size={18} color={theme.textMuted} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <FlatList
+            data={filteredFarmers}
+            renderItem={renderFarmer}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.list}
+            onRefresh={loadFarmers}
+            refreshing={isLoading}
+          />
+        </>
       )}
     </View>
   );
@@ -179,7 +240,7 @@ export default function MyFarmersScreen({ navigation }: MyFarmersScreenProps) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  list: { padding: SPACING.lg, gap: SPACING.sm },
+  list: { paddingHorizontal: SPACING.lg, paddingBottom: SPACING.lg, gap: SPACING.sm },
   card: { marginBottom: 0 },
   centered: {
     flex: 1,
@@ -187,6 +248,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: SPACING['2xl'],
     gap: SPACING.sm,
+  },
+  counterRow: {
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.sm,
+    paddingBottom: SPACING.xs,
+  },
+  counterText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weights.medium,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+    paddingHorizontal: SPACING.md,
+    borderRadius: 10,
+    borderWidth: 1,
+    gap: SPACING.sm,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: SPACING.sm,
+    fontSize: TYPOGRAPHY.sizes.sm,
   },
   farmerRow: {
     flexDirection: 'row',

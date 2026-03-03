@@ -47,15 +47,19 @@ export function createLivestockPickerConfig(): PickerConfig {
         id: l.id,
         label: l.translatedName || l.name,
         sublabel: l.translatedName && l.translatedName !== l.name ? l.name : undefined,
-        category: l.category || 'Other',
+        category: t(`categories.${(l.category || 'Other').toLowerCase().replace(/\s+/g, '_')}`) || l.category || 'Other',
       })),
 
+    // Livestock saves can be slow — allow 30s instead of default 10s
+    timeoutMs: 30_000,
+
     onComplete: async (
-      item: PickerItem,
+      item: PickerItem | null,
       formData: Record<string, string> | undefined,
       purpose: 'clarify' | 'collect' | undefined,
       actions: ProfileActions,
     ) => {
+      if (!item) return { text: '', saved: false };
       const name = formData?.name?.trim().slice(0, 200) || undefined;
       // Defense-in-depth: PickerFormStep validates before enabling submit, but we
       // re-validate here to guard against programmatic calls or future refactors.
@@ -66,6 +70,7 @@ export function createLivestockPickerConfig(): PickerConfig {
         : undefined;
 
       const displayText = name ? `${item.label} - ${name}` : item.label;
+      const responseData = { livestockId: item.id, livestockName: item.label, name, herdSize };
 
       if (purpose === 'collect') {
         const animal = await actions.addAnimal({
@@ -74,9 +79,9 @@ export function createLivestockPickerConfig(): PickerConfig {
           herdSize,
           trackingMode: herdSize && herdSize > 1 ? 'herd' : 'individual',
         });
-        return { text: displayText, saved: !!animal };
+        return { text: displayText, saved: !!animal, responseData };
       }
-      return { text: displayText, saved: true };
+      return { text: displayText, saved: true, responseData };
     },
   };
 }

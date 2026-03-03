@@ -258,12 +258,29 @@ export const NotificationProvider = ({ children, onNotificationOpened }: Notific
   );
 };
 
+// Safe defaults when NotificationProvider is not in the tree
+// (e.g. OneSignal SDK not yet installed)
+const NOOP_ASYNC = async () => {};
+const NOOP_DEFAULTS: NotificationContextValue = {
+  isInitialized: false,
+  isPermissionGranted: false,
+  playerId: null,
+  preferences: { weatherAlerts: true, contentUpdates: true, tipsAndReminders: true },
+  lastNotification: null,
+  pendingNavigation: null,
+  initialize: NOOP_ASYNC,
+  requestPermission: async () => false,
+  registerToken: async () => null,
+  updatePreferences: async (p) => ({ weatherAlerts: true, contentUpdates: true, tipsAndReminders: true, ...p }),
+  setRegion: NOOP_ASYNC,
+  setLanguage: NOOP_ASYNC,
+  setExternalUserId: NOOP_ASYNC,
+  clearPendingNavigation: () => {},
+};
+
 export const useNotifications = (): NotificationContextValue => {
   const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error('useNotifications must be used within NotificationProvider');
-  }
-  return context;
+  return context ?? NOOP_DEFAULTS;
 };
 
 export default NotificationContext;

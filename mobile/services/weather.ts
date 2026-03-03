@@ -1,7 +1,7 @@
 // Weather API service - calls API Gateway for weather data
 import { fetchWithTimeout, parseErrorMessage } from '../utils/apiHelpers';
 import { API_BASE_URL, API_KEY, TIMEOUTS } from '../utils/config';
-import { log, error as logError } from '../utils/logger';
+import { log, warn as logWarn } from '../utils/logger';
 
 const DEFAULT_TIMEOUT_MS = TIMEOUTS.WEATHER;
 
@@ -116,7 +116,7 @@ export const weatherService = {
 
       // Check if current weather fetch failed
       if (!current.success || !current.data) {
-        logError('[Weather] getCurrent failed:', {
+        logWarn('[Weather] getCurrent failed:', {
           provider,
           success: current.success,
           error: current.error,
@@ -142,7 +142,7 @@ export const weatherService = {
         provider: current.provider || provider,
       };
     } catch (error) {
-      logError('Error fetching weather data:', error);
+      logWarn('Error fetching weather data:', error);
       throw error;
     }
   },
@@ -225,7 +225,7 @@ export const weatherService = {
         provider: result.data?.provider || provider,
       };
     } catch (error) {
-      logError('Current weather error:', error);
+      logWarn('Current weather error:', error);
       return {
         success: false,
         error: parseErrorMessage(error),
@@ -311,7 +311,7 @@ export const weatherService = {
         },
       };
     } catch (error) {
-      logError('Weather forecast error:', error);
+      logWarn('Weather forecast error:', error);
       return {
         success: false,
         error: parseErrorMessage(error),
@@ -390,7 +390,7 @@ export const weatherService = {
         data: result.data || [],
       };
     } catch (error) {
-      logError('Hourly forecast error:', error);
+      logWarn('Hourly forecast error:', error);
       return {
         success: false,
         error: parseErrorMessage(error),

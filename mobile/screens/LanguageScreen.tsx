@@ -254,6 +254,7 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
       <View style={[styles.searchContainer, { backgroundColor: theme.inputBackground }]}>
         <AppIcon name="search" size={20} color={theme.textMuted} />
         <TextInput
+          testID="language-search"
           style={[
             styles.searchInput,
             { color: theme.text },
@@ -319,6 +320,7 @@ export default function LanguageScreen({ navigation }: LanguageScreenProps) {
           right={<AppIcon name="arrow-forward" size={20} color="#FFFFFF" />}
           accessibilityLabel={t('common.continue')}
           style={styles.button}
+          testID="language-continue"
         />
       </View>
     </View>

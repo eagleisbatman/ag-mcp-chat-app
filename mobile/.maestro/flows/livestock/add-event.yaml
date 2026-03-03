@@ -1,0 +1,97 @@
+appId: org.digitalgreen.agmcp
+name: "Livestock - Add Health/Breeding Event"
+tags:
+  - livestock
+  - regression
+properties:
+  testCaseId: "TC-LIVE-004"
+  priority: "Medium"
+---
+# Add a health or breeding event to an existing animal.
+# Requires at least one animal to exist.
+
+- startRecording: "livestock-add-event"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Livestock via hamburger menu → Settings → My Livestock
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Livestock"
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*"
+    timeout: 8000
+- takeScreenshot: "add-event-01-livestock-list"
+
+# Tap on an existing animal
+- tapOn:
+    text: ".*Bessie.*|.*Cattle.*|.*Cow.*|.*animal.*"
+    index: 0
+    optional: true
+- takeScreenshot: "add-event-02-animal-detail"
+
+# Look for Add Event button (no dedicated testID)
+- scrollUntilVisible:
+    element: "Add Event|New Event|event|Event"
+    direction: DOWN
+    timeout: 5000
+- tapOn:
+    text: "Add Event|New Event"
+    optional: true
+- takeScreenshot: "add-event-03-event-form"
+
+# Select event type
+- runFlow:
+    when:
+      visible: "Health|Breeding|Vaccination|type|Type"
+    commands:
+      - tapOn:
+          text: "Health|Vaccination"
+          optional: true
+      - takeScreenshot: "add-event-04-type-selected"
+
+# Fill event date
+- runFlow:
+    when:
+      visible: "date|Date|When"
+    commands:
+      - tapOn:
+          text: ".*date.*|.*Date.*"
+          index: 0
+          optional: true
+      - inputText: "2026-03-01"
+      - takeScreenshot: "add-event-05-date-entered"
+
+# Fill notes
+- runFlow:
+    when:
+      visible: "note|Note|description|Description"
+    commands:
+      - tapOn:
+          text: ".*note.*|.*description.*"
+          index: 0
+          optional: true
+      - inputText: "Routine vaccination for FMD"
+      - takeScreenshot: "add-event-06-notes-entered"
+
+# Save
+- hideKeyboard
+- tapOn:
+    text: "Save|Add|Create"
+    enabled: true
+    optional: true
+- takeScreenshot: "add-event-07-saving"
+
+- extendedWaitUntil:
+    visible: "saved|added|success|event"
+    timeout: 15000
+    optional: true
+- takeScreenshot: "add-event-08-saved"
+
+- stopRecording

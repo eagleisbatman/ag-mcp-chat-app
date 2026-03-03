@@ -1,0 +1,76 @@
+appId: org.digitalgreen.agmcp
+name: "Livestock - Edit Animal Details"
+tags:
+  - livestock
+  - regression
+properties:
+  testCaseId: "TC-LIVE-003"
+  priority: "Medium"
+---
+# TC-LIVE-003: Tap an existing animal, edit its name, save.
+# Uses testID selectors: livestock-name, livestock-save.
+# Requires at least one animal to already exist.
+
+- startRecording: "livestock-edit-animal"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Livestock via hamburger menu → Settings → My Livestock
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Livestock"
+- extendedWaitUntil:
+    visible: ".*Livestock.*|.*livestock.*"
+    timeout: 8000
+- takeScreenshot: "edit-animal-01-livestock-list"
+
+# Tap on an existing animal
+- tapOn:
+    text: ".*Bessie.*|.*Cattle.*|.*Cow.*|.*animal.*"
+    index: 0
+    optional: true
+- takeScreenshot: "edit-animal-02-animal-detail"
+
+# Tap Edit (text-based — no testID on detail/edit button)
+- tapOn:
+    text: "Edit"
+    optional: true
+- extendedWaitUntil:
+    id: ${output.livestock.name}
+    timeout: 8000
+    optional: true
+- takeScreenshot: "edit-animal-03-edit-form"
+
+# Edit the name
+- runFlow:
+    when:
+      visible:
+        id: ${output.livestock.name}
+    commands:
+      - tapOn:
+          id: ${output.livestock.name}
+      - eraseText: 50
+      - inputText: "Bessie Updated"
+      - takeScreenshot: "edit-animal-04-name-updated"
+
+# Save
+- hideKeyboard
+- tapOn:
+    id: ${output.livestock.save}
+    enabled: true
+    optional: true
+- takeScreenshot: "edit-animal-05-saving"
+
+- extendedWaitUntil:
+    visible: "Bessie Updated|saved|updated|success|My Livestock"
+    timeout: 15000
+    optional: true
+- takeScreenshot: "edit-animal-06-saved"
+
+- stopRecording

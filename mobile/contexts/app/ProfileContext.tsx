@@ -69,8 +69,9 @@ interface ProfileContextValue {
   addAnimal: (animal: {
     livestockId: string; name?: string; trackingMode?: string;
     herdSize?: number; breed?: string; gender?: string;
+    tagId?: string; dateOfBirth?: string; lactationStatus?: string;
   }) => Promise<Animal | null>;
-  updateAnimal: (animalId: string, fields: Partial<Pick<Animal, 'name' | 'breed' | 'weightKg' | 'lactationStatus' | 'status'>>) => Promise<boolean>;
+  updateAnimal: (animalId: string, fields: Partial<Pick<Animal, 'name' | 'breed' | 'weightKg' | 'lactationStatus' | 'status' | 'tagId' | 'dateOfBirth'>>) => Promise<boolean>;
   deleteAnimal: (animalId: string) => Promise<boolean>;
   addEvent: (animalId: string, event: { eventType: AnimalEventType; eventDate?: string; eventData?: Record<string, unknown>; notes?: string }) => Promise<AnimalEvent | null>;
   refreshAnimals: () => Promise<void>;
@@ -81,6 +82,8 @@ interface ProfileContextValue {
   // Master data
   masterCrops: MasterCrop[];
   masterLivestock: MasterLivestock[];
+  masterDataError: boolean;
+  retryMasterData: () => Promise<void>;
 
   // Derived
   profileSummary: string;
@@ -106,6 +109,7 @@ export const ProfileProvider = ({
   const [masterCrops, setMasterCrops] = useState<MasterCrop[]>([]);
   const [masterLivestock, setMasterLivestock] = useState<MasterLivestock[]>([]);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [masterDataError, setMasterDataError] = useState(false);
 
   // Ref to current farms for use in callbacks (avoids stale closure)
   const farmsRef = useRef(farms);
@@ -183,31 +187,43 @@ export const ProfileProvider = ({
     return () => { cancelled = true; };
   }, [userId]);
 
-  // Load master data (once)
+  // Refs for master data lengths (avoids stale closure without causing callback recreation)
+  const masterCropsLenRef = useRef(masterCrops.length);
+  const masterLivestockLenRef = useRef(masterLivestock.length);
+  useEffect(() => { masterCropsLenRef.current = masterCrops.length; }, [masterCrops.length]);
+  useEffect(() => { masterLivestockLenRef.current = masterLivestock.length; }, [masterLivestock.length]);
+
+  // Load master data (once, with error tracking for retry)
+  const loadMasterData = useCallback(async () => {
+    try {
+      setMasterDataError(false);
+      const [cropsResult, livestockResult] = await Promise.all([
+        getMasterCrops({ lang: languageCode }),
+        getMasterLivestock({ lang: languageCode }),
+      ]);
+
+      if (cropsResult.success && cropsResult.data) {
+        setMasterCrops(cropsResult.data);
+        await AsyncStorage.setItem(storageKeys(userIdRef.current).MASTER_CROPS, JSON.stringify(cropsResult.data));
+      }
+      if (livestockResult.success && livestockResult.data) {
+        setMasterLivestock(livestockResult.data);
+        await AsyncStorage.setItem(storageKeys(userIdRef.current).MASTER_LIVESTOCK, JSON.stringify(livestockResult.data));
+      }
+      // If both failed and we have no cached data, mark as error
+      if ((!cropsResult.success && masterCropsLenRef.current === 0) || (!livestockResult.success && masterLivestockLenRef.current === 0)) {
+        setMasterDataError(true);
+      }
+    } catch (e) {
+      log('Error loading master data:', e);
+      setMasterDataError(true);
+    }
+  }, [languageCode]);
+
   useEffect(() => {
     if (!userId) return;
-
-    const loadMasterData = async () => {
-      try {
-        const [cropsResult, livestockResult] = await Promise.all([
-          getMasterCrops({ lang: languageCode }),
-          getMasterLivestock({ lang: languageCode }),
-        ]);
-
-        if (cropsResult.success && cropsResult.data) {
-          setMasterCrops(cropsResult.data);
-          await AsyncStorage.setItem(storageKeys(userIdRef.current).MASTER_CROPS, JSON.stringify(cropsResult.data));
-        }
-        if (livestockResult.success && livestockResult.data) {
-          setMasterLivestock(livestockResult.data);
-          await AsyncStorage.setItem(storageKeys(userIdRef.current).MASTER_LIVESTOCK, JSON.stringify(livestockResult.data));
-        }
-      } catch (e) {
-        log('Error loading master data:', e);
-      }
-    };
     loadMasterData();
-  }, [userId, languageCode]);
+  }, [userId, loadMasterData]);
 
   // ── Profile ──────────────────────────────────────
   const updateProfile = useCallback(async (
@@ -358,9 +374,22 @@ export const ProfileProvider = ({
   }, [refreshFarms]);
 
   // ── Animals ──────────────────────────────────────
+  // Ref to current animals for idempotency check (avoids stale closure)
+  const animalsRef = useRef(animals);
+  useEffect(() => { animalsRef.current = animals; }, [animals]);
+
   const addAnimal = useCallback(async (
-    animal: { livestockId: string; name?: string; trackingMode?: string; herdSize?: number; breed?: string; gender?: string }
+    animal: { livestockId: string; name?: string; trackingMode?: string; herdSize?: number; breed?: string; gender?: string; tagId?: string; dateOfBirth?: string; lactationStatus?: string }
   ): Promise<Animal | null> => {
+    // Idempotency: skip if animal with same livestockId + name already exists
+    const existing = animalsRef.current.find(
+      (a) => a.livestockId === animal.livestockId && (a.name || '') === (animal.name || ''),
+    );
+    if (existing) {
+      log('addAnimal: duplicate animal (same livestockId + name), skipping');
+      return existing;
+    }
+
     const result = await apiCreateAnimal(animal);
     if (result.success && result.data) {
       setAnimals((prev) => {
@@ -375,7 +404,7 @@ export const ProfileProvider = ({
 
   const updateAnimalCb = useCallback(async (
     animalId: string,
-    fields: Partial<Pick<Animal, 'name' | 'breed' | 'weightKg' | 'lactationStatus' | 'status'>>
+    fields: Partial<Pick<Animal, 'name' | 'breed' | 'weightKg' | 'lactationStatus' | 'status' | 'tagId' | 'dateOfBirth'>>
   ): Promise<boolean> => {
     const result = await apiUpdateAnimal(animalId, fields);
     if (result.success && result.data) {
@@ -482,6 +511,8 @@ export const ProfileProvider = ({
         refreshAnimals,
         masterCrops,
         masterLivestock,
+        masterDataError,
+        retryMasterData: loadMasterData,
         profileSummary,
       }}
     >

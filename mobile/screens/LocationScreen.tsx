@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -275,6 +275,7 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
           }
           accessibilityLabel={t('onboarding.enableLocation')}
           style={styles.primaryButton}
+          testID="location-enable"
         />
 
         {detectedLocationName ? (
@@ -285,6 +286,7 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
             accessibilityLabel={t('onboarding.continueWithDetected')}
             style={styles.secondaryButton}
             textStyle={[styles.secondaryButtonText, { color: theme.textSecondary }]}
+            testID="location-skip"
           />
         ) : (
           <Button
@@ -294,6 +296,7 @@ export default function LocationScreen({ navigation }: LocationScreenProps) {
             accessibilityLabel={t('common.skipForNow')}
             style={styles.secondaryButton}
             textStyle={[styles.secondaryButtonText, { color: theme.textSecondary }]}
+            testID="location-skip"
           />
         )}
       </View>

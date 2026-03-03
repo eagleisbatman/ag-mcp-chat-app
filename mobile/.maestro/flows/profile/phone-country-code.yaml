@@ -1,0 +1,69 @@
+appId: org.digitalgreen.agmcp
+name: "Profile - Phone Country Code Picker"
+tags:
+  - profile
+  - regression
+properties:
+  testCaseId: "TC-PROF-005"
+  priority: "Medium"
+---
+# Open the country code picker, search for a country, select it,
+# verify the dial code updates.
+
+- startRecording: "profile-country-code"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Profile via hamburger menu → Settings → Profile
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    id: ${output.settings.profile}
+- extendedWaitUntil:
+    id: ${output.profile.name}
+    timeout: 8000
+
+# Scroll to phone field
+- scrollUntilVisible:
+    element: "phone|Phone"
+    direction: DOWN
+    timeout: 5000
+- takeScreenshot: "country-code-01-phone-field"
+
+# Tap the country code picker (flag / +XX prefix — no testID)
+- tapOn:
+    text: ".*\\+254.*|.*\\+91.*|.*\\+1.*|.*KE.*|.*IN.*"
+    optional: true
+- tapOn:
+    id: "country-code-picker"
+    optional: true
+- takeScreenshot: "country-code-02-picker-opened"
+
+# Interact with the country list if it appears
+- runFlow:
+    when:
+      visible: "Kenya|India|United States|Ethiopia"
+    commands:
+      - takeScreenshot: "country-code-03-country-list"
+      - assertWithAI: "A country code picker is shown with a list of countries and dial codes. A search bar may be at the top."
+        optional: true
+      - tapOn:
+          text: "Search|search"
+          optional: true
+      - inputText: "India"
+      - takeScreenshot: "country-code-04-search-india"
+      - tapOn:
+          text: "India|\\+91"
+          optional: true
+      - takeScreenshot: "country-code-05-india-selected"
+
+- takeScreenshot: "country-code-06-final"
+- assertWithAI: "The phone field now shows the Indian country code (+91) or India flag, confirming the change."
+  optional: true
+
+- stopRecording

@@ -6,7 +6,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { weatherService } from '../services/weather';
-import { log, error as logError } from '../utils/logger';
+import { log, warn as logWarn } from '../utils/logger';
 import { LocationDetails, WeatherData } from '../types';
 
 const SERVICE_PREFS_KEY = '@service_preferences';
@@ -89,7 +89,7 @@ export default function useWeatherData(
       setWeatherProvider(data.provider || weatherPref);
       setWeatherData(data);
     } catch (error) {
-      logError('[Weather] Failed to fetch weather:', error);
+      logWarn('[Weather] Failed to fetch weather:', error);
       setWeatherError(true);
     } finally {
       setWeatherLoading(false);

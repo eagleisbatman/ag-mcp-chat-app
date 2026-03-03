@@ -21,7 +21,7 @@ import IconButton from '../components/ui/IconButton';
 import Card from '../components/ui/Card';
 import AppIcon from '../components/ui/AppIcon';
 import Button from '../components/ui/Button';
-import { error as logError } from '../utils/logger';
+import { warn as logWarn } from '../utils/logger';
 import { t } from '../constants/strings';
 import type { Theme, RootStackParamList, McpServer } from '../types';
 
@@ -215,7 +215,7 @@ export default function McpServerDetailScreen({ navigation, route }: McpServerDe
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      logError('Fetch MCP server error:', err);
+      logWarn('Fetch MCP server error:', err);
       setError(errorMessage);
       showError(t('mcp.couldNotLoadDetails'));
     } finally {

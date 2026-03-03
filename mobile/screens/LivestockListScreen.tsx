@@ -17,6 +17,7 @@ import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import AppIcon from '../components/ui/AppIcon';
 import AnimalCard from '../components/livestock/AnimalCard';
+import { t } from '../constants/strings';
 import type { RootStackParamList, Animal } from '../types';
 
 interface LivestockListScreenProps {
@@ -42,9 +43,9 @@ export default function LivestockListScreen({ navigation }: LivestockListScreenP
   const renderEmpty = () => (
     <View style={styles.empty}>
       <AppIcon name="paw" size={48} color={theme.textMuted} />
-      <Text style={[styles.emptyTitle, { color: theme.text }]}>No livestock yet</Text>
+      <Text style={[styles.emptyTitle, { color: theme.text }]}>{t('livestock.noLivestock')}</Text>
       <Text style={[styles.emptySubtitle, { color: theme.textMuted }]}>
-        Add your first animal to track health and events
+        {t('livestock.noLivestockHint')}
       </Text>
     </View>
   );
@@ -52,14 +53,14 @@ export default function LivestockListScreen({ navigation }: LivestockListScreenP
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ScreenHeader
-        title="My Livestock"
+        title={t('livestock.myLivestock')}
         left={
           <IconButton
             icon="arrow-back"
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={
@@ -68,8 +69,9 @@ export default function LivestockListScreen({ navigation }: LivestockListScreenP
             onPress={() => navigation.navigate('LivestockEdit', {})}
             backgroundColor={theme.accent}
             color="#fff"
-            accessibilityLabel="Add animal"
+            accessibilityLabel={t('livestock.addAnimal')}
             size={36}
+            testID="livestock-add"
           />
         }
       />

@@ -36,6 +36,7 @@ export default function ProfileCard({ onPress }: ProfileCardProps) {
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
+      testID="settings-profile"
       style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.border }]}
       accessibilityLabel="Edit profile"
     >

@@ -1,0 +1,25 @@
+appId: org.digitalgreen.agmcp
+name: "A2UI - Confirmation Dialog Yes/No (WIP)"
+tags:
+  - a2ui
+  - wip
+properties:
+  testCaseId: "TC-A2UI-007"
+  priority: "Medium"
+---
+# [WIP] Tests the A2UI yes/no confirmation dialog widget. Widget rendering
+# is non-deterministic (AI decides when to show it).
+# Cannot be reliably automated without a mock backend.
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "a2ui-confirmation-dialog"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "a2ui-confirmation-01-placeholder"
+
+- stopRecording

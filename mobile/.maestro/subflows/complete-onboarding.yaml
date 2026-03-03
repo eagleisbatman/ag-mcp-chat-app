@@ -1,0 +1,101 @@
+appId: org.digitalgreen.agmcp
+tags:
+  - subflow
+---
+# Complete onboarding — reusable subflow
+# Flow: Welcome ("Get Started") → Location ("Skip") → Language ("Continue") → Main app
+#
+# Uses testID selectors (id:) where available, falls back to text for the
+# language list items (they are dynamically rendered and have no stable testIDs).
+#
+# IMPORTANT: Does NOT use clearState (breaks Metro bundler on iOS dev builds).
+# Assumes the app is already launched and showing the Welcome screen.
+
+- runScript: ../scripts/page-objects.js
+
+# ===== Dismiss any dev error overlay on entry =====
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: dismiss-errors.yaml
+
+# ===== Step 1: Welcome Screen =====
+- extendedWaitUntil:
+    visible: ".*FarmerChat.*|.*Get Started.*"
+    timeout: 20000
+
+- takeScreenshot: "subflow-onboarding-01-welcome"
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: dismiss-errors.yaml
+
+- tapOn:
+    id: ${output.welcome.getStarted}
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: dismiss-errors.yaml
+
+# ===== Step 2: Location Screen =====
+- extendedWaitUntil:
+    visible: "Share Your Location|location|Location|Skip"
+    timeout: 15000
+
+- takeScreenshot: "subflow-onboarding-02-location"
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: dismiss-errors.yaml
+
+- tapOn:
+    id: ${output.location.skip}
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: dismiss-errors.yaml
+
+# ===== Step 3: Language Screen =====
+- extendedWaitUntil:
+    visible: "Select Language|language|Language|English"
+    timeout: 15000
+
+- takeScreenshot: "subflow-onboarding-03-language"
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: dismiss-errors.yaml
+
+# Select English from the list (list items don't have testIDs)
+- tapOn:
+    text: "English"
+    optional: true
+
+- tapOn:
+    id: ${output.language.continueBtn}
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: dismiss-errors.yaml
+
+# ===== Verify: Main app loaded =====
+- extendedWaitUntil:
+    visible: ".*Message.*"
+    timeout: 20000
+
+- takeScreenshot: "subflow-onboarding-04-main-app"

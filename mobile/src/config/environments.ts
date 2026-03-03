@@ -47,7 +47,7 @@ const PRODUCTION: EnvironmentConfig = {
  */
 const DEVELOPMENT: EnvironmentConfig = {
   name: 'Development',
-  apiGateway: 'https://api-gateway-development-a0ed.up.railway.app',
+  apiGateway: 'https://api-gateway-development-01.up.railway.app',
   aiServices: 'https://ag-mcp-ai-services-development.up.railway.app',
   apiKey: process.env.EXPO_PUBLIC_API_KEY || '',
   features: {

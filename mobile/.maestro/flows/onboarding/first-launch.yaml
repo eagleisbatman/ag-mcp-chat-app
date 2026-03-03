@@ -1,0 +1,143 @@
+appId: org.digitalgreen.agmcp
+name: "Onboarding - First Launch Happy Path"
+tags:
+  - onboarding
+  - smoke
+  - regression
+properties:
+  testCaseId: "TC-ONB-001"
+  priority: "Critical"
+---
+# TC-ONB-001: First-launch onboarding full happy path.
+# Flow: Welcome → Location → Language → Main chat.
+# Chat is the home screen — no tab bar to verify.
+#
+# NEVER uses clearState — reinstalls the app on iOS dev builds
+# and breaks the Metro bundler connection.
+
+- startRecording: "onboarding-first-launch"
+
+- runScript: ../../scripts/page-objects.js
+
+- launchApp:
+    stopApp: false
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+# ===== Step 1: Welcome Screen =====
+- extendedWaitUntil:
+    visible: ".*FarmerChat.*|.*Get Started.*"
+    timeout: 20000
+
+- takeScreenshot: "onboarding-01-welcome-screen"
+
+- assertVisible: "FarmerChat"
+- assertVisible:
+    text: "Your AI-powered farming companion"
+    optional: true
+- assertVisible:
+    id: ${output.welcome.getStarted}
+
+- assertNoDefectsWithAI:
+    optional: true
+
+- takeScreenshot: "onboarding-02-before-get-started"
+
+- tapOn:
+    id: ${output.welcome.getStarted}
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+# ===== Step 2: Location Screen =====
+- extendedWaitUntil:
+    visible: "Share Your Location|location|Location|Skip"
+    timeout: 15000
+
+- takeScreenshot: "onboarding-03-location-screen"
+
+- assertVisible:
+    text: "Share Your Location"
+    optional: true
+- assertVisible:
+    id: ${output.location.skip}
+
+- assertNoDefectsWithAI:
+    optional: true
+
+- tapOn:
+    id: ${output.location.skip}
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- takeScreenshot: "onboarding-04-location-skipped"
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+# ===== Step 3: Language Screen =====
+- extendedWaitUntil:
+    visible: "Select Language|language|Language|English"
+    timeout: 15000
+
+- takeScreenshot: "onboarding-05-language-screen"
+
+- assertVisible:
+    text: "Select Language"
+    optional: true
+- assertVisible:
+    id: ${output.language.continueBtn}
+- assertVisible: "English"
+
+- assertNoDefectsWithAI:
+    optional: true
+
+# Select English from the language list
+- tapOn:
+    text: "English"
+
+- takeScreenshot: "onboarding-06-english-selected"
+
+- tapOn:
+    id: ${output.language.continueBtn}
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+# ===== Step 4: Verify main app loaded =====
+- extendedWaitUntil:
+    visible: ".*Message.*"
+    timeout: 20000
+
+- takeScreenshot: "onboarding-07-main-app-loaded"
+
+# Verify chat home screen elements
+- assertVisible:
+    id: ${output.chat.input}
+    optional: true
+- assertVisible:
+    id: ${output.chat.settings}
+    optional: true
+
+- assertNoDefectsWithAI:
+    optional: true
+
+- takeScreenshot: "onboarding-08-complete"
+
+- stopRecording

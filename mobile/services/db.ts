@@ -273,6 +273,31 @@ export async function updateSession(sessionId: string, updates: Record<string, u
 /**
  * Archive/delete a session
  */
+/**
+ * Delete user account and all associated data.
+ * Calls DELETE /api/profile/:deviceId on the gateway.
+ */
+export async function deleteAccount(): Promise<ApiResult> {
+  try {
+    const deviceId = await getDeviceId();
+    const response = await fetchWithTimeout(
+      `${API_BASE_URL}/api/profile/${deviceId}`,
+      { method: 'DELETE', headers: getHeaders(deviceId) },
+      DB_TIMEOUT_MS
+    );
+
+    if (!response.ok) {
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+
+    return await response.json();
+  } catch (err) {
+    const error = err as Error;
+    logError('Delete account error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 export async function deleteSession(sessionId: string): Promise<ApiResult> {
   try {
     const deviceId = await getDeviceId();
@@ -765,7 +790,7 @@ export async function createAnimal(
 
 export async function updateAnimal(
   animalId: string,
-  fields: Partial<Pick<Animal, 'name' | 'tagId' | 'trackingMode' | 'herdSize' | 'breed' | 'gender' | 'weightKg' | 'lactationStatus' | 'status'>>
+  fields: Partial<Pick<Animal, 'name' | 'tagId' | 'trackingMode' | 'herdSize' | 'breed' | 'gender' | 'dateOfBirth' | 'weightKg' | 'lactationStatus' | 'status'>>
 ): Promise<ApiResult<Animal>> {
   try {
     const deviceId = await getDeviceId();
@@ -949,7 +974,8 @@ export async function getPendingMappings(): Promise<ApiResult<FarmerEwMapping[]>
 
 export async function connectFarmer(
   farmerPhone: string,
-  organizationId?: string
+  organizationId?: string,
+  farmerConsent?: boolean
 ): Promise<ApiResult<FarmerEwMapping>> {
   try {
     const deviceId = await getDeviceId();
@@ -962,6 +988,7 @@ export async function connectFarmer(
           ewDeviceId: deviceId,
           farmerPhone,
           organizationId,
+          ...(farmerConsent !== undefined && { farmerConsent }),
         }),
       },
       DB_TIMEOUT_MS
@@ -1008,9 +1035,8 @@ export async function respondToMapping(
 }
 
 export async function createConnectedSession(
-  farmerDeviceId: string,
   sessionId: string,
-  reason?: string
+  opts: { farmerDeviceId?: string; farmerUserId?: string; reason?: string }
 ): Promise<ApiResult> {
   try {
     const deviceId = await getDeviceId();
@@ -1022,8 +1048,9 @@ export async function createConnectedSession(
         body: JSON.stringify({
           sessionId,
           ewDeviceId: deviceId,
-          farmerDeviceId,
-          reason,
+          ...(opts.farmerDeviceId && { farmerDeviceId: opts.farmerDeviceId }),
+          ...(opts.farmerUserId && { farmerUserId: opts.farmerUserId }),
+          ...(opts.reason && { reason: opts.reason }),
         }),
       },
       DB_TIMEOUT_MS

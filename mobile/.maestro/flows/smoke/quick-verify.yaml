@@ -1,0 +1,45 @@
+appId: org.digitalgreen.agmcp
+name: "Quick Verify - App Launch Check"
+tags:
+  - verify
+properties:
+  testCaseId: "TC-VERIFY-001"
+  priority: "Critical"
+---
+# TC-VERIFY-001: Minimal pipeline verification — launch the app, wait for any
+# screen, screenshot, done. Completes in under 30 seconds.
+# Confirms the Maestro pipeline and the app binary are both working.
+#
+# NEVER uses clearState.
+
+- startRecording: "verify-app-launch"
+
+- launchApp:
+    stopApp: false
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+# Wait for any recognizable screen
+- extendedWaitUntil:
+    visible: ".*FarmerChat.*|.*Get Started.*|.*Chat.*|.*Message.*|.*Settings.*|.*Language.*|.*Select Language.*"
+    timeout: 20000
+
+- takeScreenshot: "verify-01-app-loaded"
+
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../../subflows/dismiss-errors.yaml
+
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- takeScreenshot: "verify-02-settled"
+
+- assertNoDefectsWithAI:
+    optional: true
+
+- stopRecording

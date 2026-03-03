@@ -41,9 +41,12 @@ import LivestockEventScreen from './screens/LivestockEventScreen';
 import MyFarmersScreen from './screens/MyFarmersScreen';
 import ConnectFarmerScreen from './screens/ConnectFarmerScreen';
 import PendingRequestsScreen from './screens/PendingRequestsScreen';
+import OtpVerificationScreen from './screens/OtpVerificationScreen';
 
-// Type safe navigator
+// Type safe navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const noHeader = { headerShown: false } as const;
 
 // Deep linking configuration
 const linking: LinkingOptions<RootStackParamList> = {
@@ -52,9 +55,7 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Chat: {
         path: 'chat/:sessionId?',
-        parse: {
-          sessionId: (sessionId: string) => sessionId,
-        },
+        parse: { sessionId: (s: string) => s },
       },
       History: 'history',
       Settings: 'settings',
@@ -62,9 +63,7 @@ const linking: LinkingOptions<RootStackParamList> = {
       McpServers: 'debug/mcp-servers',
       McpServerDetail: {
         path: 'debug/mcp-servers/:serverId',
-        parse: {
-          serverId: (serverId: string) => serverId,
-        },
+        parse: { serverId: (s: string) => s },
       },
     },
   },
@@ -72,7 +71,7 @@ const linking: LinkingOptions<RootStackParamList> = {
 
 function OnboardingStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={noHeader}>
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Location" component={LocationScreen} />
       <Stack.Screen name="Language" component={LanguageScreen} />
@@ -82,25 +81,31 @@ function OnboardingStack() {
 
 function MainStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={noHeader}>
+      {/* Chat is the home screen */}
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="History" component={HistoryScreen} />
+      {/* Settings hub (accessed via hamburger menu in chat header) */}
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
       <Stack.Screen name="McpServers" component={McpServersScreen} />
       <Stack.Screen name="McpServerDetail" component={McpServerDetailScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      {/* Farm management */}
       <Stack.Screen name="FarmList" component={FarmListScreen} />
       <Stack.Screen name="FarmDetail" component={FarmDetailScreen} />
       <Stack.Screen name="FarmEdit" component={FarmEditScreen} />
       <Stack.Screen name="PlotEdit" component={PlotEditScreen} />
+      {/* Livestock management */}
       <Stack.Screen name="LivestockList" component={LivestockListScreen} />
       <Stack.Screen name="LivestockDetail" component={LivestockDetailScreen} />
       <Stack.Screen name="LivestockEdit" component={LivestockEditScreen} />
       <Stack.Screen name="LivestockEvent" component={LivestockEventScreen} />
+      {/* Extension Worker features */}
       <Stack.Screen name="MyFarmers" component={MyFarmersScreen} />
       <Stack.Screen name="ConnectFarmer" component={ConnectFarmerScreen} />
       <Stack.Screen name="PendingRequests" component={PendingRequestsScreen} />
+      <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} />
     </Stack.Navigator>
   );
 }

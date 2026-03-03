@@ -1,0 +1,23 @@
+appId: org.digitalgreen.agmcp
+name: "RationSmart - Select Cow Breed (WIP)"
+tags:
+  - rationsmart
+  - wip
+properties:
+  testCaseId: "TC-RS-002"
+  priority: "Medium"
+---
+# [WIP] Breed selection appears as part of the RationSmart AI conversation flow.
+# Non-deterministic — excluded from default regression run via `wip` tag.
+
+- startRecording: "rationsmart-select-breed"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "rs-breed-01-placeholder"
+
+- stopRecording

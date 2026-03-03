@@ -1,0 +1,75 @@
+appId: org.digitalgreen.agmcp
+name: "Profile - Gender Chip Selection"
+tags:
+  - profile
+  - regression
+properties:
+  testCaseId: "TC-PROF-003"
+  priority: "Medium"
+---
+# TC-PROF-003: Tap each gender chip in turn and verify selection state.
+# Uses testID selectors: profile-gender-male, profile-gender-female,
+# profile-gender-other, profile-gender-preferNotToSay.
+
+- startRecording: "profile-gender-selection"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Profile via hamburger menu → Settings → Profile
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    id: ${output.settings.profile}
+- extendedWaitUntil:
+    id: ${output.profile.name}
+    timeout: 8000
+- takeScreenshot: "gender-01-profile-screen"
+
+# Scroll to gender chips
+- scrollUntilVisible:
+    element:
+      id: ${output.profile.genderMale}
+    direction: DOWN
+    timeout: 5000
+
+- takeScreenshot: "gender-02-chips-visible"
+
+- assertWithAI: "The screen shows gender selection chips including at least Male, Female, and Prefer not to say. Chips should be clearly styled with selected/unselected states."
+  optional: true
+
+# Tap each gender chip in sequence
+- tapOn:
+    id: ${output.profile.genderMale}
+- takeScreenshot: "gender-03-male-selected"
+
+- tapOn:
+    id: ${output.profile.genderFemale}
+- takeScreenshot: "gender-04-female-selected"
+
+- tapOn:
+    id: ${output.profile.genderOther}
+    optional: true
+- takeScreenshot: "gender-05-other-selected"
+
+- tapOn:
+    id: ${output.profile.genderPreferNotToSay}
+    optional: true
+- takeScreenshot: "gender-06-prefer-not-to-say-selected"
+
+# Leave on a valid selection and save
+- tapOn:
+    id: ${output.profile.genderFemale}
+    optional: true
+
+- tapOn:
+    id: ${output.profile.save}
+    optional: true
+
+- takeScreenshot: "gender-07-final"
+
+- stopRecording

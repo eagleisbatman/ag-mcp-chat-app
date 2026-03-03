@@ -5,7 +5,7 @@
 import useChatSession from './useChatSession';
 import useChatMessages from './useChatMessages';
 import useChatSend from './useChatSend';
-import { Message } from '../../types';
+import { Message, A2UIResponse } from '../../types';
 
 interface UseChatReturn {
   messages: Message[];
@@ -13,11 +13,12 @@ interface UseChatReturn {
   isLoadingSession: boolean;
   newestBotMessageId: string | null;
   thinkingText: string | null;
-  handleSendText: (text: string, isRetry?: boolean) => Promise<void>;
+  handleSendText: (text: string, isRetryOrA2ui?: boolean | A2UIResponse) => Promise<void>;
   handleSendImage: (imageData: { uri: string; base64: string; text?: string }) => Promise<void>;
   transcribeAudioForInput: (audioData: { base64: string; language?: string }) => Promise<{ success: boolean; transcription?: string; error?: string }>;
   uploadAudioInBackground: (audioData: { base64: string } | null) => Promise<{ success: boolean; url?: string; error?: string }>;
   startNewSession: () => void;
+  abortStreaming: () => void;
 }
 
 export default function useChat(sessionIdParam: string | null = null, onBehalfOfFarmerUserId?: string): UseChatReturn {
@@ -47,6 +48,7 @@ export default function useChat(sessionIdParam: string | null = null, onBehalfOf
     handleSendImage,
     transcribeAudioForInput,
     uploadAudioInBackground,
+    abortStreaming,
   } = useChatSend({
     messages,
     addMessage,
@@ -68,6 +70,7 @@ export default function useChat(sessionIdParam: string | null = null, onBehalfOf
     transcribeAudioForInput,
     uploadAudioInBackground,
     startNewSession,
+    abortStreaming,
   };
 }
 

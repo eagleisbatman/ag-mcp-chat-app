@@ -3,7 +3,7 @@
  * Shows a polished "thinking" state with pulsing dots and gradient text
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, TextStyle } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -117,9 +117,25 @@ export default function TypingIndicator({ text }: TypingIndicatorProps): JSX.Ele
     return englishIndicators.some((indicator) => lowerText.includes(indicator));
   };
 
-  const displayText = text?.trim()
+  // Elapsed time counter
+  const [elapsed, setElapsed] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    setElapsed(0);
+    intervalRef.current = setInterval(() => {
+      setElapsed((prev) => prev + 1);
+    }, 1000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
+  const baseText = text?.trim()
     ? (looksEnglishThinking() ? fallbackText : text)
     : fallbackText;
+
+  const displayText = elapsed > 0 ? `${baseText} ${elapsed}s` : baseText;
 
   return (
     <View style={styles.container}>

@@ -1,0 +1,77 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Rapid Messages (3 in Succession)"
+tags:
+  - chat
+  - edge-case
+properties:
+  testCaseId: "TC-CHAT-013"
+  priority: "Medium"
+---
+# Send 3 messages in quick succession and verify all appear and get responses.
+# Uses testID selectors: chat-input, chat-send.
+
+- startRecording: "chat-rapid-messages"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "rapid-01-ready"
+
+# ── Message 1 ──────────────────────────────────────────────────────────────────
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "What is maize?"
+- tapOn:
+    id: ${output.chat.send}
+- takeScreenshot: "rapid-02-first-sent"
+
+- extendedWaitUntil:
+    visible: "What is maize"
+    timeout: 8000
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+- takeScreenshot: "rapid-03-first-response"
+
+# ── Message 2 ──────────────────────────────────────────────────────────────────
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "What about rice?"
+- tapOn:
+    id: ${output.chat.send}
+- takeScreenshot: "rapid-04-second-sent"
+
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+- takeScreenshot: "rapid-05-second-response"
+
+# ── Message 3 ──────────────────────────────────────────────────────────────────
+- tapOn:
+    id: ${output.chat.input}
+- inputText: "And wheat?"
+- tapOn:
+    id: ${output.chat.send}
+- takeScreenshot: "rapid-06-third-sent"
+
+- extendedWaitUntil:
+    notVisible: "Thinking"
+    timeout: 60000
+- takeScreenshot: "rapid-07-third-response"
+
+# Verify all 3 conversations are present
+- assertWithAI: "The chat contains three user messages (about maize, rice, and wheat) and three corresponding AI responses. All messages are visible when scrolling. No messages are missing or duplicated."
+  optional: true
+
+- scroll:
+    direction: UP
+- takeScreenshot: "rapid-08-scrolled-up"
+
+- scroll:
+    direction: DOWN
+- takeScreenshot: "rapid-09-final"
+
+- stopRecording

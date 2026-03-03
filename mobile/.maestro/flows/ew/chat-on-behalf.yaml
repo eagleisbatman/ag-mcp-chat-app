@@ -1,0 +1,31 @@
+appId: org.digitalgreen.agmcp
+name: "EW - Chat on Behalf of Farmer (WIP)"
+tags:
+  - ew
+  - wip
+properties:
+  testCaseId: "TC-EW-003"
+  priority: "High"
+---
+# [WIP] Chat on behalf requires:
+# 1. EW role account
+# 2. At least one connected farmer
+# 3. The Farmers section being accessible via hamburger menu
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "ew-chat-on-behalf"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate via hamburger menu — Farmers row only visible for EW role
+- tapOn:
+    id: ${output.chat.settings}
+    optional: true
+- tapOn:
+    text: "Farmers"
+    optional: true
+- takeScreenshot: "ew-chat-on-behalf-01-placeholder"
+
+- stopRecording

@@ -12,19 +12,21 @@ import { t } from '../constants/strings';
 import { API_BASE_URL, API_KEY, ensureDeviceId } from '../services/api/core';
 import { log } from '../utils/logger';
 import type { PickerConfig, PickerItem, ProfileActions } from '../components/a2ui/picker/types';
-import type { A2UIPayload } from '../types';
+import type { A2UIPayload, A2UIResponse } from '../types';
 
 // IMPORTANT: This side-effect import registers all picker configs with the registry.
 // Removing it will cause all pickers to fall through to text-only mode silently.
 import '../components/a2ui/picker/configs';
 
 interface UseA2UIPickerDeps {
-  handleSendText: (text: string) => void;
+  handleSendText: (text: string, a2uiResponse?: boolean | A2UIResponse) => void;
   scrollToBottom: () => void;
   showSuccess: (msg: string) => void;
   showError: (msg: string) => void;
   respondedA2UIWidgetIds: Set<string>;
   setRespondedA2UIWidgetIds: React.Dispatch<React.SetStateAction<Set<string>>>;
+  /** When EW chats on behalf, saves target the farmer's profile. */
+  onBehalfOfFarmerUserId?: string;
 }
 
 interface PickerState {
@@ -51,6 +53,7 @@ async function logA2UIResponse(interactionId: string, responseData: Record<strin
         'X-Device-Id': deviceId,
       },
       body: JSON.stringify({ responseData }),
+      signal: AbortSignal.timeout(10_000),
     });
   } catch (err) {
     log('[A2UI] Audit log failed (non-critical):', err);
@@ -64,14 +67,15 @@ export function useA2UIPicker({
   showError,
   respondedA2UIWidgetIds,
   setRespondedA2UIWidgetIds,
+  onBehalfOfFarmerUserId,
 }: UseA2UIPickerDeps) {
   const { masterCrops, masterLivestock, addCropToDefaultPlot, addAnimal } = useProfile();
   const [pickerState, setPickerState] = useState<PickerState>(CLOSED_STATE);
 
   // Profile actions passed to picker configs (avoids hooks in configs)
   const profileActions: ProfileActions = useMemo(
-    () => ({ addCropToDefaultPlot, addAnimal }),
-    [addCropToDefaultPlot, addAnimal],
+    () => ({ addCropToDefaultPlot, addAnimal, onBehalfOfFarmerUserId }),
+    [addCropToDefaultPlot, addAnimal, onBehalfOfFarmerUserId],
   );
 
   // Map master data into PickerItem[] based on active config
@@ -116,25 +120,40 @@ export function useA2UIPicker({
 
   // Called by PickerSheet when the user completes the picker flow
   const handleComplete = useCallback(
-    (text: string) => {
+    (text: string, responseData?: Record<string, unknown>) => {
       const widget = pickerState.widget;
+      const a2uiResponse: A2UIResponse | undefined = widget ? {
+        widgetId: widget.widgetId,
+        widgetType: widget.widgetType,
+        responseData: responseData || {},
+        displayText: text,
+      } : undefined;
+
       if (widget) {
         setRespondedA2UIWidgetIds((prev) => new Set(prev).add(widget.widgetId));
         // Fire-and-forget audit log if the gateway provided an interactionId
         if (widget.interactionId) {
-          logA2UIResponse(widget.interactionId, { widgetId: widget.widgetId, displayText: text });
+          logA2UIResponse(widget.interactionId, { ...(a2uiResponse || { widgetId: widget.widgetId, displayText: text }) });
         }
       }
-      handleSendText(text);
+      // Send structured a2uiResponse alongside display text so AI receives structured data
+      handleSendText(text, a2uiResponse);
       setPickerState(CLOSED_STATE);
       scrollToBottom();
     },
     [pickerState.widget, setRespondedA2UIWidgetIds, handleSendText, scrollToBottom],
   );
 
+  // Close without completing — send dismiss signal so AI can re-prompt
   const handleClose = useCallback(() => {
+    const widget = pickerState.widget;
+    if (widget) {
+      setRespondedA2UIWidgetIds((prev) => new Set(prev).add(widget.widgetId));
+      handleSendText(t('a2ui.dismissed') || '[A2UI_DISMISSED]');
+      scrollToBottom();
+    }
     setPickerState(CLOSED_STATE);
-  }, []);
+  }, [pickerState.widget, setRespondedA2UIWidgetIds, handleSendText, scrollToBottom]);
 
   const handleSaveError = useCallback(() => {
     showError(t('chat.profileSaveFailed') || 'Could not save to profile. Please try again.');

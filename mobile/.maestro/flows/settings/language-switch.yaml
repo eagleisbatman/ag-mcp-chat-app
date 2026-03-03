@@ -1,0 +1,75 @@
+appId: org.digitalgreen.agmcp
+name: "Settings - Language Switch"
+tags:
+  - settings
+  - regression
+properties:
+  testCaseId: "TC-SET-002"
+  priority: "High"
+---
+# TC-SET-002: Open Language settings, switch to a non-English language,
+# verify the UI updates, then switch back to English.
+# Uses testID: settings-language to open the language row.
+# Language list items do not have testIDs — use text selectors.
+
+- startRecording: "settings-language-switch"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Settings via hamburger menu
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "lang-01-settings-english"
+
+# Tap Language row
+- tapOn:
+    id: ${output.settings.language}
+- waitForAnimationToEnd:
+    timeout: 1500
+- takeScreenshot: "lang-02-language-selector"
+
+- assertWithAI: "The screen shows a list of available languages. The current language (English) should be highlighted or marked as selected."
+  optional: true
+
+# Switch to Swahili or another available language
+- tapOn:
+    text: "Swahili|Kiswahili|Hindi"
+    optional: true
+- takeScreenshot: "lang-03-language-changed"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: "lang-04-ui-updated"
+
+- assertWithAI: "The UI text should now be in the selected language (not English). Headers and button text should all reflect the language change."
+  optional: true
+
+# Find Language row again (its label may now be in the selected language)
+- tapOn:
+    id: ${output.settings.language}
+    optional: true
+- tapOn:
+    text: "Language|Lugha|language"
+    optional: true
+
+# Switch back to English
+- tapOn:
+    text: "English"
+    optional: true
+- takeScreenshot: "lang-05-back-to-english"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Verify English is restored
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "lang-06-english-restored"
+
+- stopRecording

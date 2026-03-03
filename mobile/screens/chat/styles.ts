@@ -7,8 +7,6 @@ export const styles = StyleSheet.create({
   messagesList: {
     paddingTop: SPACING.sm,
     paddingHorizontal: 0,
-    flexGrow: 1,
-    justifyContent: 'flex-end',
   },
   loadingContainer: {
     flex: 1,

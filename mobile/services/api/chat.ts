@@ -17,7 +17,7 @@ export const sendChatMessage = async (params: ChatParams): Promise<ChatResult> =
     const locationContext = buildLocationContext(params.locationDetails);
     const response = await fetchWithTimeout(CHAT_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY, 'X-Device-Id': deviceId },
       body: JSON.stringify({
         ...params,
         location: locationContext,

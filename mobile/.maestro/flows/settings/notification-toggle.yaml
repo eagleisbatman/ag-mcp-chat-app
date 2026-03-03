@@ -1,0 +1,60 @@
+appId: org.digitalgreen.agmcp
+name: "Settings - Notification Toggle Rows"
+tags:
+  - settings
+  - regression
+properties:
+  testCaseId: "TC-SET-008"
+  priority: "Low"
+---
+# TC-SET-008: Verify notification toggle rows are visible in Settings.
+# No dedicated testID for notification toggles — uses text selectors.
+# Toggles back to original state after each interaction.
+
+- startRecording: "settings-notification-toggle"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Settings via hamburger menu
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "notification-01-settings"
+
+# Scroll to notification rows
+- scrollUntilVisible:
+    element: "Notification|notification|Push"
+    direction: DOWN
+    timeout: 5000
+- takeScreenshot: "notification-02-rows-visible"
+
+- assertWithAI: "The Settings screen should show one or more notification toggle rows. Each row should have a label and a switch control."
+  optional: true
+
+# Toggle the first notification row
+- tapOn:
+    text: ".*Notification.*|.*notification.*"
+    optional: true
+- takeScreenshot: "notification-03-toggled"
+
+# Handle permission dialog on iOS
+- runFlow:
+    when:
+      visible: "Allow Notifications|notification permission"
+    commands:
+      - tapOn:
+          text: "Allow|OK"
+          optional: true
+      - takeScreenshot: "notification-04-permission-handled"
+
+# Toggle back to original state
+- tapOn:
+    text: ".*Notification.*|.*notification.*"
+    optional: true
+- takeScreenshot: "notification-05-toggled-back"
+
+- stopRecording

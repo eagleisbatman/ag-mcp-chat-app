@@ -36,7 +36,7 @@ export function getLocalDateTime(): ClientDateTime {
 
   return {
     isoDateTime: now.toISOString(),
-    localDateTime: now.toString(),
+    localDateTime: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
     year: now.getFullYear(),
     month: now.getMonth() + 1,
     day: now.getDate(),

@@ -1,0 +1,28 @@
+appId: org.digitalgreen.agmcp
+name: "RationSmart - Start Feed Planning Flow (WIP)"
+tags:
+  - rationsmart
+  - wip
+properties:
+  testCaseId: "TC-RS-001"
+  priority: "High"
+---
+# [WIP] RationSmart is triggered by a non-deterministic AI conversation flow.
+# The AI must recognise the intent and invoke the RationSmart MCP tool, which
+# requires specific backend conditions (correct country, livestock in profile, etc).
+#
+# Without a mock backend that guarantees the flow is invoked, these tests
+# cannot be reliably automated.
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "rationsmart-start-flow"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "rs-start-01-placeholder"
+
+- stopRecording

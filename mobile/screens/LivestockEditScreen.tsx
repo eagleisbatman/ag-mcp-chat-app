@@ -23,7 +23,8 @@ import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import AppIcon from '../components/ui/AppIcon';
 import BreedPicker from '../components/livestock/BreedPicker';
-import type { RootStackParamList, TrackingMode, MasterLivestock, Breed } from '../types';
+import { t } from '../constants/strings';
+import type { RootStackParamList, TrackingMode, LactationStatus, MasterLivestock, Breed } from '../types';
 
 interface LivestockEditScreenProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'LivestockEdit'>;
@@ -49,6 +50,11 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
   const [herdSize, setHerdSize] = useState(existing?.herdSize?.toString() || '');
   const [breed, setBreed] = useState(existing?.breed || '');
   const [gender, setGender] = useState(existing?.gender || '');
+  const [tagId, setTagId] = useState(existing?.tagId || '');
+  const [dateOfBirth, setDateOfBirth] = useState(
+    existing?.dateOfBirth ? new Date(existing.dateOfBirth).toISOString().split('T')[0] : ''
+  );
+  const [lactationStatus, setLactationStatus] = useState<LactationStatus | ''>(existing?.lactationStatus || '');
   const [showBreedPicker, setShowBreedPicker] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -56,8 +62,22 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
 
   const handleSave = async () => {
     if (!isEdit && !selectedType) {
-      showError('Please select a livestock type');
+      showError(t('livestock.selectLivestockType'));
       return;
+    }
+
+    // Validate dateOfBirth format if provided
+    const trimmedDob = dateOfBirth.trim();
+    if (trimmedDob && !/^\d{4}-\d{2}-\d{2}$/.test(trimmedDob)) {
+      showError(t('livestock.invalidDateOfBirth'));
+      return;
+    }
+    if (trimmedDob) {
+      const parsed = new Date(trimmedDob);
+      if (isNaN(parsed.getTime()) || parsed > new Date()) {
+        showError(t('livestock.invalidDateOfBirth'));
+        return;
+      }
     }
 
     setIsSaving(true);
@@ -66,12 +86,15 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
         const success = await updateAnimal(animalId, {
           name: name.trim() || undefined,
           breed: breed || undefined,
+          tagId: tagId.trim() || undefined,
+          dateOfBirth: trimmedDob || undefined,
+          lactationStatus: lactationStatus || undefined,
         });
         if (success) {
-          showSuccess('Animal updated');
+          showSuccess(t('livestock.animalUpdated'));
           navigation.goBack();
         } else {
-          showError('Failed to update animal');
+          showError(t('livestock.animalUpdateFailed'));
         }
       } else {
         const newAnimal = await addAnimal({
@@ -81,16 +104,19 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
           herdSize: trackingMode === 'herd' && herdSize ? parseInt(herdSize, 10) : undefined,
           breed: breed || undefined,
           gender: gender || undefined,
+          tagId: tagId.trim() || undefined,
+          dateOfBirth: trimmedDob || undefined,
+          lactationStatus: lactationStatus || undefined,
         });
         if (newAnimal) {
-          showSuccess('Animal added');
+          showSuccess(t('livestock.animalAdded'));
           navigation.goBack();
         } else {
-          showError('Failed to add animal');
+          showError(t('livestock.animalAddFailed'));
         }
       }
     } catch {
-      showError('Something went wrong');
+      showError(t('common.somethingWentWrong'));
     } finally {
       setIsSaving(false);
     }
@@ -108,14 +134,14 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
         keyboardShouldPersistTaps="handled"
       >
         <ScreenHeader
-          title={isEdit ? 'Edit Animal' : 'New Animal'}
+          title={isEdit ? t('livestock.editAnimal') : t('livestock.newAnimal')}
           left={
             <IconButton
               icon="arrow-back"
               onPress={() => navigation.goBack()}
               backgroundColor="transparent"
               color={theme.text}
-              accessibilityLabel="Back"
+              accessibilityLabel={t('common.back')}
             />
           }
           right={<View />}
@@ -124,7 +150,7 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
         {/* Livestock Type (create only) */}
         {!isEdit && (
           <View style={styles.section}>
-            <Text style={[styles.label, { color: theme.textMuted }]}>Livestock Type</Text>
+            <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestock.livestockType')}</Text>
             <View style={styles.chipRow}>
               {masterLivestock.map((lt) => {
                 const selected = selectedType?.id === lt.id;
@@ -157,7 +183,7 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
             </View>
             {masterLivestock.length === 0 && (
               <Text style={[styles.hintText, { color: theme.textMuted }]}>
-                Loading livestock types...
+                {t('livestock.loadingLivestockTypes')}
               </Text>
             )}
           </View>
@@ -166,11 +192,11 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
         {/* Tracking Mode (create only) */}
         {!isEdit && (
           <View style={styles.section}>
-            <Text style={[styles.label, { color: theme.textMuted }]}>Tracking Mode</Text>
+            <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestock.trackingMode')}</Text>
             <View style={styles.chipRow}>
               {([
-                { value: 'individual' as TrackingMode, label: 'Individual' },
-                { value: 'herd' as TrackingMode, label: 'Herd' },
+                { value: 'individual' as TrackingMode, labelKey: 'livestock.individual' },
+                { value: 'herd' as TrackingMode, labelKey: 'livestock.herd' },
               ]).map((opt) => (
                 <TouchableOpacity
                   key={opt.value}
@@ -189,7 +215,7 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
                       { color: trackingMode === opt.value ? theme.accent : theme.text },
                     ]}
                   >
-                    {opt.label}
+                    {t(opt.labelKey)}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -200,13 +226,13 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
         {/* Herd Size */}
         {trackingMode === 'herd' && !isEdit && (
           <View style={styles.section}>
-            <Text style={[styles.label, { color: theme.textMuted }]}>Herd Size</Text>
+            <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestock.herdSize')}</Text>
             <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
               <TextInput
                 style={[styles.input, { color: theme.text }]}
                 value={herdSize}
                 onChangeText={setHerdSize}
-                placeholder="e.g. 12"
+                placeholder={t('livestock.herdSizePlaceholder')}
                 placeholderTextColor={theme.textMuted}
                 keyboardType="number-pad"
               />
@@ -217,14 +243,15 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
         {/* Name */}
         <View style={styles.section}>
           <Text style={[styles.label, { color: theme.textMuted }]}>
-            {trackingMode === 'herd' ? 'Herd Name (optional)' : 'Name (optional)'}
+            {trackingMode === 'herd' ? t('livestock.herdNameOptional') : t('livestock.nameOptional')}
           </Text>
           <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
             <TextInput
+              testID="livestock-name"
               style={[styles.input, { color: theme.text }]}
               value={name}
               onChangeText={setName}
-              placeholder={trackingMode === 'herd' ? 'e.g. Main Herd' : 'e.g. Aster'}
+              placeholder={trackingMode === 'herd' ? t('livestock.herdNamePlaceholder') : t('livestock.namePlaceholder')}
               placeholderTextColor={theme.textMuted}
               autoCapitalize="words"
             />
@@ -233,7 +260,7 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
 
         {/* Breed */}
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Breed</Text>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestock.breed')}</Text>
           <TouchableOpacity
             onPress={() => setShowBreedPicker(true)}
             style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}
@@ -246,7 +273,7 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
                   { color: breed ? theme.text : theme.textMuted },
                 ]}
               >
-                {breed || 'Select breed...'}
+                {breed || t('livestock.selectBreed')}
               </Text>
               <AppIcon name="chevron-down" size={18} color={theme.textMuted} />
             </View>
@@ -256,7 +283,7 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
         {/* Gender (create only) */}
         {!isEdit && trackingMode === 'individual' && (
           <View style={styles.section}>
-            <Text style={[styles.label, { color: theme.textMuted }]}>Gender</Text>
+            <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestock.gender')}</Text>
             <View style={styles.chipRow}>
               {['male', 'female'].map((g) => (
                 <TouchableOpacity
@@ -273,7 +300,69 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
                   <Text
                     style={[styles.chipText, { color: gender === g ? theme.accent : theme.text }]}
                   >
-                    {g.charAt(0).toUpperCase() + g.slice(1)}
+                    {t(`livestock.${g}`)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Tag ID */}
+        <View style={styles.section}>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestock.tagId')}</Text>
+          <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
+            <TextInput
+              style={[styles.input, { color: theme.text }]}
+              value={tagId}
+              onChangeText={setTagId}
+              placeholder={t('livestock.tagIdPlaceholder')}
+              placeholderTextColor={theme.textMuted}
+              autoCapitalize="characters"
+            />
+          </View>
+        </View>
+
+        {/* Date of Birth */}
+        <View style={styles.section}>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestock.dateOfBirth')}</Text>
+          <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
+            <TextInput
+              style={[styles.input, { color: theme.text }]}
+              value={dateOfBirth}
+              onChangeText={setDateOfBirth}
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor={theme.textMuted}
+              keyboardType="default"
+              maxLength={10}
+            />
+          </View>
+          <Text style={[styles.hintText, { color: theme.textMuted, marginTop: SPACING.xs, marginLeft: SPACING.xs }]}>
+            {t('livestock.dateOfBirthHint') || 'Example: 2024-06-15'}
+          </Text>
+        </View>
+
+        {/* Lactation Status */}
+        {trackingMode === 'individual' && (
+          <View style={styles.section}>
+            <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestock.lactationStatusLabel')}</Text>
+            <View style={styles.chipRow}>
+              {(['lactating', 'dry', 'not_applicable'] as LactationStatus[]).map((ls) => (
+                <TouchableOpacity
+                  key={ls}
+                  onPress={() => setLactationStatus(lactationStatus === ls ? '' : ls)}
+                  style={[
+                    styles.chip,
+                    {
+                      backgroundColor: lactationStatus === ls ? theme.accent + '20' : theme.surfaceVariant,
+                      borderColor: lactationStatus === ls ? theme.accent : 'transparent',
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[styles.chipText, { color: lactationStatus === ls ? theme.accent : theme.text }]}
+                  >
+                    {t(`livestock.lactation_${ls}`)}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -284,6 +373,7 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
         {/* Save Button */}
         <View style={styles.section}>
           <TouchableOpacity
+            testID="livestock-save"
             onPress={handleSave}
             disabled={isSaving}
             style={[styles.saveButton, { backgroundColor: theme.accent }]}
@@ -293,7 +383,7 @@ export default function LivestockEditScreen({ navigation, route }: LivestockEdit
               <ActivityIndicator color="#fff" size="small" />
             ) : (
               <Text style={styles.saveButtonText}>
-                {isEdit ? 'Save Changes' : 'Add Animal'}
+                {isEdit ? t('livestock.saveChanges') : t('livestock.addAnimalButton')}
               </Text>
             )}
           </TouchableOpacity>

@@ -1,0 +1,57 @@
+appId: org.digitalgreen.agmcp
+name: "Settings - Delete Account (Cancel — Do Not Delete)"
+tags:
+  - settings
+  - regression
+properties:
+  testCaseId: "TC-SET-007"
+  priority: "High"
+---
+# TC-SET-007: Scroll to Delete Account, tap it, verify the confirmation dialog
+# appears, then CANCEL. Never actually deletes the account.
+# Uses testID: settings-delete-account.
+
+- startRecording: "settings-delete-account"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Settings via hamburger menu
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "delete-acct-01-settings"
+
+# Scroll to Delete Account row
+- scrollUntilVisible:
+    element:
+      id: ${output.settings.deleteAccount}
+    direction: DOWN
+    timeout: 10000
+- takeScreenshot: "delete-acct-02-button-visible"
+
+- tapOn:
+    id: ${output.settings.deleteAccount}
+
+# Verify confirmation dialog
+- extendedWaitUntil:
+    visible: "sure|confirm|delete|permanent|cannot be undone"
+    timeout: 8000
+- takeScreenshot: "delete-acct-03-confirmation-dialog"
+
+- assertWithAI: "A confirmation dialog warns the user that account deletion is permanent and all data will be lost. Cancel and Delete/Confirm buttons should be visible."
+  optional: true
+
+# Cancel — do not delete
+- tapOn:
+    text: "Cancel|No|Keep"
+- takeScreenshot: "delete-acct-04-cancelled"
+
+# Verify we're still on Settings
+- assertVisible: ".*Settings.*"
+- takeScreenshot: "delete-acct-05-still-on-settings"
+
+- stopRecording

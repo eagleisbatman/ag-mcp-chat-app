@@ -24,20 +24,23 @@ export function createCropPickerConfig(): PickerConfig {
         id: c.id,
         label: c.translatedName || c.name,
         sublabel: c.translatedName && c.translatedName !== c.name ? c.name : undefined,
-        category: c.category || 'Other',
+        // Use i18n key for known categories, fallback to raw server value
+        category: t(`categories.${(c.category || 'Other').toLowerCase().replace(/\s+/g, '_')}`) || c.category || 'Other',
       })),
 
     onComplete: async (
-      item: PickerItem,
+      item: PickerItem | null,
       _formData: Record<string, string> | undefined,
       purpose: 'clarify' | 'collect' | undefined,
       actions: ProfileActions,
     ) => {
+      if (!item) return { text: '', saved: false };
+      const responseData = { cropId: item.id, cropName: item.label };
       if (purpose === 'collect') {
         const ok = await actions.addCropToDefaultPlot(item.id);
-        return { text: item.label, saved: ok };
+        return { text: item.label, saved: ok, responseData };
       }
-      return { text: item.label, saved: true };
+      return { text: item.label, saved: true, responseData };
     },
   };
 }

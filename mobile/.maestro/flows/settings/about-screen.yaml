@@ -1,0 +1,50 @@
+appId: org.digitalgreen.agmcp
+name: "Settings - About Screen (Version + Branding)"
+tags:
+  - settings
+  - regression
+properties:
+  testCaseId: "TC-SET-004"
+  priority: "Low"
+---
+# TC-SET-004: Scroll to the bottom of Settings and verify version info
+# and Digital Green branding are visible.
+# No testID on the about/version section — uses text and AI assertions.
+
+- startRecording: "settings-about"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Settings via hamburger menu
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- takeScreenshot: "about-01-settings-top"
+
+# Scroll to the bottom to find version/about section
+- scrollUntilVisible:
+    element: "FarmerChat v2.0.0|Digital Green|v2|version|Version"
+    direction: DOWN
+    timeout: 8000
+- takeScreenshot: "about-02-about-section"
+
+# Verify version info and branding text
+- assertVisible:
+    text: "FarmerChat v2.0.0"
+    optional: true
+- assertVisible:
+    text: "Powered by Digital Green"
+    optional: true
+
+- assertWithAI: "The bottom of the Settings screen shows the app version (e.g. FarmerChat v2.0.0) and the Digital Green attribution. The text should be readable and not cut off."
+  optional: true
+- assertNoDefectsWithAI:
+    optional: true
+
+- takeScreenshot: "about-03-final"
+
+- stopRecording

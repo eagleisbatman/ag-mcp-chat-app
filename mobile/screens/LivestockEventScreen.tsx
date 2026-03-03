@@ -20,6 +20,7 @@ import { useToast } from '../contexts/ToastContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
+import { t } from '../constants/strings';
 import type { RootStackParamList, AnimalEventType } from '../types';
 
 interface LivestockEventScreenProps {
@@ -27,17 +28,17 @@ interface LivestockEventScreenProps {
   route: RouteProp<RootStackParamList, 'LivestockEvent'>;
 }
 
-const EVENT_TYPES: { value: AnimalEventType; label: string }[] = [
-  { value: 'vaccination', label: 'Vaccination' },
-  { value: 'calving', label: 'Calving' },
-  { value: 'health_issue', label: 'Health Issue' },
-  { value: 'treatment', label: 'Treatment' },
-  { value: 'breeding', label: 'Breeding' },
-  { value: 'weight_record', label: 'Weight Record' },
-  { value: 'milk_record', label: 'Milk Record' },
-  { value: 'deworming', label: 'Deworming' },
-  { value: 'sale', label: 'Sale' },
-  { value: 'death', label: 'Death' },
+const EVENT_TYPES: { value: AnimalEventType; labelKey: string }[] = [
+  { value: 'vaccination', labelKey: 'livestockEvent.vaccination' },
+  { value: 'calving', labelKey: 'livestockEvent.calving' },
+  { value: 'health_issue', labelKey: 'livestockEvent.healthIssue' },
+  { value: 'treatment', labelKey: 'livestockEvent.treatment' },
+  { value: 'breeding', labelKey: 'livestockEvent.breeding' },
+  { value: 'weight_record', labelKey: 'livestockEvent.weightRecord' },
+  { value: 'milk_record', labelKey: 'livestockEvent.milkRecord' },
+  { value: 'deworming', labelKey: 'livestockEvent.deworming' },
+  { value: 'sale', labelKey: 'livestockEvent.sale' },
+  { value: 'death', labelKey: 'livestockEvent.death' },
 ];
 
 export default function LivestockEventScreen({ navigation, route }: LivestockEventScreenProps) {
@@ -47,7 +48,7 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
   const { showSuccess, showError } = useToast();
 
   const animal = animals.find((a) => a.id === animalId);
-  const displayName = animal?.name || animal?.livestockName || 'Animal';
+  const displayName = animal?.name || animal?.livestockName || t('livestock.animal');
 
   const [eventType, setEventType] = useState<AnimalEventType>(initialType || 'vaccination');
   const [notes, setNotes] = useState('');
@@ -66,7 +67,7 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
       if (eventType === 'weight_record' && weight) {
         const w = parseFloat(weight);
         if (isNaN(w) || w <= 0) {
-          showError('Please enter a valid weight');
+          showError(t('livestockEvent.enterValidWeight'));
           setIsSaving(false);
           return;
         }
@@ -75,7 +76,7 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
       if (eventType === 'milk_record' && milkLiters) {
         const ml = parseFloat(milkLiters);
         if (isNaN(ml) || ml <= 0) {
-          showError('Please enter a valid milk quantity');
+          showError(t('livestockEvent.enterValidMilk'));
           setIsSaving(false);
           return;
         }
@@ -92,13 +93,13 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
       });
 
       if (event) {
-        showSuccess('Event recorded');
+        showSuccess(t('livestockEvent.eventRecorded'));
         navigation.goBack();
       } else {
-        showError('Failed to record event');
+        showError(t('livestockEvent.eventRecordFailed'));
       }
     } catch {
-      showError('Something went wrong');
+      showError(t('common.somethingWentWrong'));
     } finally {
       setIsSaving(false);
     }
@@ -111,7 +112,7 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
       keyboardShouldPersistTaps="handled"
     >
       <ScreenHeader
-        title={`Record Event`}
+        title={t('livestockEvent.recordEventTitle')}
         subtitle={displayName}
         left={
           <IconButton
@@ -119,7 +120,7 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={<View />}
@@ -127,7 +128,7 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
 
       {/* Event Type */}
       <View style={styles.section}>
-        <Text style={[styles.label, { color: theme.textMuted }]}>Event Type</Text>
+        <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestockEvent.eventType')}</Text>
         <View style={styles.chipRow}>
           {EVENT_TYPES.map((et) => {
             const selected = eventType === et.value;
@@ -149,7 +150,7 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
                     { color: selected ? theme.accent : theme.text },
                   ]}
                 >
-                  {et.label}
+                  {t(et.labelKey)}
                 </Text>
               </TouchableOpacity>
             );
@@ -160,13 +161,13 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
       {/* Vaccination-specific */}
       {eventType === 'vaccination' && (
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Vaccine Name</Text>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestockEvent.vaccineName')}</Text>
           <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
             <TextInput
               style={[styles.input, { color: theme.text }]}
               value={vaccineName}
               onChangeText={setVaccineName}
-              placeholder="e.g. FMD, Anthrax"
+              placeholder={t('livestockEvent.vaccineNamePlaceholder')}
               placeholderTextColor={theme.textMuted}
               autoCapitalize="words"
             />
@@ -177,13 +178,13 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
       {/* Weight-specific */}
       {eventType === 'weight_record' && (
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Weight (kg)</Text>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestockEvent.weightKg')}</Text>
           <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
             <TextInput
               style={[styles.input, { color: theme.text }]}
               value={weight}
               onChangeText={setWeight}
-              placeholder="e.g. 350"
+              placeholder={t('livestockEvent.weightPlaceholder')}
               placeholderTextColor={theme.textMuted}
               keyboardType="decimal-pad"
             />
@@ -194,13 +195,13 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
       {/* Milk-specific */}
       {eventType === 'milk_record' && (
         <View style={styles.section}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Milk (liters)</Text>
+          <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestockEvent.milkLiters')}</Text>
           <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
             <TextInput
               style={[styles.input, { color: theme.text }]}
               value={milkLiters}
               onChangeText={setMilkLiters}
-              placeholder="e.g. 5.5"
+              placeholder={t('livestockEvent.milkPlaceholder')}
               placeholderTextColor={theme.textMuted}
               keyboardType="decimal-pad"
             />
@@ -210,13 +211,13 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
 
       {/* Notes */}
       <View style={styles.section}>
-        <Text style={[styles.label, { color: theme.textMuted }]}>Notes (optional)</Text>
+        <Text style={[styles.label, { color: theme.textMuted }]}>{t('livestockEvent.notesOptional')}</Text>
         <View style={[styles.inputWrap, { backgroundColor: theme.surfaceVariant }]}>
           <TextInput
             style={[styles.input, styles.multilineInput, { color: theme.text }]}
             value={notes}
             onChangeText={setNotes}
-            placeholder="Add any details..."
+            placeholder={t('livestockEvent.notesPlaceholder')}
             placeholderTextColor={theme.textMuted}
             multiline
             numberOfLines={3}
@@ -236,7 +237,7 @@ export default function LivestockEventScreen({ navigation, route }: LivestockEve
           {isSaving ? (
             <ActivityIndicator color="#fff" size="small" />
           ) : (
-            <Text style={styles.saveButtonText}>Record Event</Text>
+            <Text style={styles.saveButtonText}>{t('livestockEvent.recordEventButton')}</Text>
           )}
         </TouchableOpacity>
       </View>

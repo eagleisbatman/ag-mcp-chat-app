@@ -1,0 +1,27 @@
+appId: org.digitalgreen.agmcp
+name: "A2UI - Crop Picker (WIP)"
+tags:
+  - a2ui
+  - wip
+properties:
+  testCaseId: "TC-A2UI-001"
+  priority: "High"
+---
+# [WIP] A2UI crop picker is triggered by a non-deterministic AI response.
+# Without a mock backend that guarantees the crop_picker widget is returned,
+# this flow cannot be reliably automated.
+#
+# Placeholder: sends a trigger message and screenshots whatever the AI returns.
+# Excluded from default regression run via `wip` tag.
+
+- startRecording: "a2ui-crop-picker"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "a2ui-crop-01-placeholder"
+
+- stopRecording

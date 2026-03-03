@@ -1,0 +1,35 @@
+appId: org.digitalgreen.agmcp
+tags:
+  - subflow
+---
+# Ensure app is past onboarding and on the main screen.
+# If the Welcome screen is showing, run through onboarding.
+# Otherwise wait for any main-app screen to be visible.
+#
+# NEVER uses clearState — reinstalls the app on iOS dev builds.
+
+- launchApp:
+    clearState: false
+
+# Dismiss any dev error overlays immediately after launch
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../subflows/dismiss-errors.yaml
+
+# If Welcome screen is showing, complete onboarding
+- runFlow:
+    when:
+      visible: "Get Started"
+    file: ../subflows/complete-onboarding.yaml
+
+# Dismiss any errors that appeared during/after onboarding
+- runFlow:
+    when:
+      visible: "Dismiss"
+    file: ../subflows/dismiss-errors.yaml
+
+# Wait for any main-app screen
+- extendedWaitUntil:
+    visible: ".*Message.*"
+    timeout: 20000

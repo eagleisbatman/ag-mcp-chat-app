@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View, Platform, ViewStyle, TextStyle, PressableAndroidRippleConfig } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, ViewStyle, TextStyle } from 'react-native';
 import { useApp } from '../../contexts/AppContext';
-import { SPACING, TYPOGRAPHY, ThemeColors } from '../../constants/themes';
-import { withAlpha } from '../../utils/color';
+import { SPACING, TYPOGRAPHY } from '../../constants/themes';
 
 type ButtonVariant = 'primary' | 'secondary' | 'tonal' | 'danger';
 
@@ -16,12 +15,7 @@ interface ButtonProps {
   style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle | TextStyle[];
   accessibilityLabel?: string;
-}
-
-function getRipple({ theme }: { theme: ThemeColors }): PressableAndroidRippleConfig | undefined {
-  if (Platform.OS !== 'android') return undefined;
-  const color = withAlpha(theme.text, 0.12);
-  return { color, borderless: false };
+  testID?: string;
 }
 
 export default function Button({
@@ -34,6 +28,7 @@ export default function Button({
   style,
   textStyle,
   accessibilityLabel,
+  testID,
 }: ButtonProps): JSX.Element {
   const { theme } = useApp();
 
@@ -52,16 +47,16 @@ export default function Button({
   })();
 
   return (
-    <Pressable
+    <TouchableOpacity
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
+      testID={testID}
       onPress={onPress}
       disabled={disabled}
-      android_ripple={getRipple({ theme })}
-      style={({ pressed }) => [
+      activeOpacity={0.8}
+      style={[
         styles.base,
         { backgroundColor: resolved.backgroundColor, opacity: disabled ? 0.6 : 1 },
-        Platform.OS === 'ios' && pressed && !disabled ? styles.pressedIOS : null,
         style as ViewStyle,
       ]}
     >
@@ -72,7 +67,7 @@ export default function Button({
         </Text>
         {right ? <View style={styles.side}>{right}</View> : null}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
@@ -84,9 +79,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  pressedIOS: {
-    opacity: 0.8,
   },
   content: {
     flexDirection: 'row',

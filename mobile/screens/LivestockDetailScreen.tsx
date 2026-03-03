@@ -20,6 +20,7 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import AppIcon from '../components/ui/AppIcon';
+import { t } from '../constants/strings';
 import type { RootStackParamList, AnimalEvent, AnimalEventType } from '../types';
 
 interface LivestockDetailScreenProps {
@@ -47,13 +48,26 @@ const EVENT_ICONS: Record<string, string> = {
   deworming: 'flask',
 };
 
-const QUICK_EVENTS: { type: AnimalEventType; label: string }[] = [
-  { type: 'vaccination', label: 'Vaccination' },
-  { type: 'health_issue', label: 'Health Issue' },
-  { type: 'weight_record', label: 'Weight' },
-  { type: 'milk_record', label: 'Milk Record' },
-  { type: 'breeding', label: 'Breeding' },
+const QUICK_EVENTS: { type: AnimalEventType; labelKey: string }[] = [
+  { type: 'vaccination', labelKey: 'livestockEvent.vaccination' },
+  { type: 'health_issue', labelKey: 'livestockEvent.healthIssue' },
+  { type: 'weight_record', labelKey: 'livestockEvent.weightRecord' },
+  { type: 'milk_record', labelKey: 'livestockEvent.milkRecord' },
+  { type: 'breeding', labelKey: 'livestockEvent.breeding' },
 ];
+
+const EVENT_LABEL_KEYS: Record<string, string> = {
+  vaccination: 'livestockEvent.vaccination',
+  calving: 'livestockEvent.calving',
+  health_issue: 'livestockEvent.healthIssue',
+  treatment: 'livestockEvent.treatment',
+  breeding: 'livestockEvent.breeding',
+  weight_record: 'livestockEvent.weightRecord',
+  milk_record: 'livestockEvent.milkRecord',
+  deworming: 'livestockEvent.deworming',
+  sale: 'livestockEvent.sale',
+  death: 'livestockEvent.death',
+};
 
 export default function LivestockDetailScreen({ navigation, route }: LivestockDetailScreenProps) {
   const { animalId } = route.params;
@@ -67,26 +81,26 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
     return (
       <View style={[styles.container, { backgroundColor: theme.background }]}>
         <ScreenHeader
-          title="Animal"
+          title={t('livestock.editAnimal')}
           left={
             <IconButton
               icon="arrow-back"
               onPress={() => navigation.goBack()}
               backgroundColor="transparent"
               color={theme.text}
-              accessibilityLabel="Back"
+              accessibilityLabel={t('common.back')}
             />
           }
           right={<View />}
         />
         <View style={styles.centerEmpty}>
-          <Text style={[styles.emptyText, { color: theme.textMuted }]}>Animal not found</Text>
+          <Text style={[styles.emptyText, { color: theme.textMuted }]}>{t('livestock.animalNotFound')}</Text>
         </View>
       </View>
     );
   }
 
-  const displayName = animal.name || animal.livestockName || 'Animal';
+  const displayName = animal.name || animal.livestockName || t('livestock.animal');
   const statusColor = STATUS_COLORS[animal.status] || theme.textMuted;
   const events = useMemo(
     () => [...(animal.events || [])].sort((a, b) => {
@@ -102,20 +116,20 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
 
   const handleDelete = () => {
     Alert.alert(
-      'Delete Animal',
-      `Are you sure you want to delete "${displayName}"? This will also remove all event history.`,
+      t('livestock.deleteAnimal'),
+      t('livestock.deleteAnimalConfirm', { name: displayName }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: async () => {
             const success = await deleteAnimal(animal.id);
             if (success) {
-              showSuccess('Animal deleted');
+              showSuccess(t('livestock.animalDeleted'));
               navigation.goBack();
             } else {
-              showError('Failed to delete animal');
+              showError(t('livestock.animalDeleteFailed'));
             }
           },
         },
@@ -130,7 +144,8 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
 
   const renderEventItem = (event: AnimalEvent) => {
     const iconName = EVENT_ICONS[event.eventType] || 'clock';
-    const label = event.eventType.replace(/_/g, ' ');
+    const labelKey = EVENT_LABEL_KEYS[event.eventType];
+    const label = labelKey ? t(labelKey) : event.eventType.replace(/_/g, ' ');
 
     return (
       <View key={event.id} style={[styles.eventItem, { backgroundColor: theme.surfaceVariant }]}>
@@ -139,7 +154,7 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
         </View>
         <View style={styles.eventInfo}>
           <Text style={[styles.eventLabel, { color: theme.text }]}>
-            {label.charAt(0).toUpperCase() + label.slice(1)}
+            {label}
           </Text>
           {event.notes && (
             <Text style={[styles.eventNotes, { color: theme.textMuted }]} numberOfLines={2}>
@@ -164,7 +179,7 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={
@@ -173,7 +188,7 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
             onPress={() => navigation.navigate('LivestockEdit', { animalId: animal.id })}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Edit animal"
+            accessibilityLabel={t('livestock.editAnimal')}
           />
         }
       />
@@ -185,20 +200,20 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
         {/* Summary card */}
         <View style={[styles.summaryCard, { backgroundColor: theme.surfaceVariant }]}>
           <View style={styles.summaryRow}>
-            <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>Type</Text>
+            <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>{t('livestock.type')}</Text>
             <Text style={[styles.summaryValue, { color: theme.text }]}>
               {animal.livestockName || '—'}
             </Text>
           </View>
           {animal.breed && (
             <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>Breed</Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>{t('livestock.breedLabel')}</Text>
               <Text style={[styles.summaryValue, { color: theme.text }]}>{animal.breed}</Text>
             </View>
           )}
           {animal.gender && (
             <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>Gender</Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>{t('livestock.genderLabel')}</Text>
               <Text style={[styles.summaryValue, { color: theme.text }]}>
                 {animal.gender.charAt(0).toUpperCase() + animal.gender.slice(1)}
               </Text>
@@ -206,18 +221,18 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
           )}
           {animal.trackingMode === 'herd' && animal.herdSize && (
             <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>Herd Size</Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>{t('livestock.herdSizeLabel')}</Text>
               <Text style={[styles.summaryValue, { color: theme.text }]}>{animal.herdSize}</Text>
             </View>
           )}
           {animal.weightKg && (
             <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>Weight</Text>
-              <Text style={[styles.summaryValue, { color: theme.text }]}>{animal.weightKg} kg</Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>{t('livestock.weight')}</Text>
+              <Text style={[styles.summaryValue, { color: theme.text }]}>{t('livestock.weightValue', { weight: String(animal.weightKg) })}</Text>
             </View>
           )}
           <View style={styles.summaryRow}>
-            <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>Status</Text>
+            <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>{t('livestock.status')}</Text>
             <View style={styles.statusBadge}>
               <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
               <Text style={[styles.statusText, { color: statusColor }]}>
@@ -229,7 +244,7 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
 
         {/* Quick event buttons */}
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Record Event</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('livestock.recordEvent')}</Text>
         </View>
         <View style={styles.quickEvents}>
           {QUICK_EVENTS.map((qe) => (
@@ -246,21 +261,21 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
                 size={16}
                 color={theme.accent}
               />
-              <Text style={[styles.quickEventLabel, { color: theme.text }]}>{qe.label}</Text>
+              <Text style={[styles.quickEventLabel, { color: theme.text }]}>{t(qe.labelKey)}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Event timeline */}
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Event History</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('livestock.eventHistory')}</Text>
         </View>
 
         {events.length > 0 ? (
           <View style={styles.eventList}>{events.map(renderEventItem)}</View>
         ) : (
           <Text style={[styles.noEvents, { color: theme.textMuted }]}>
-            No events recorded yet
+            {t('livestock.noEventsRecorded')}
           </Text>
         )}
 
@@ -270,7 +285,7 @@ export default function LivestockDetailScreen({ navigation, route }: LivestockDe
           style={[styles.deleteButton, { borderColor: theme.error }]}
           activeOpacity={0.7}
         >
-          <Text style={[styles.deleteButtonText, { color: theme.error }]}>Delete Animal</Text>
+          <Text style={[styles.deleteButtonText, { color: theme.error }]}>{t('livestock.deleteAnimal')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

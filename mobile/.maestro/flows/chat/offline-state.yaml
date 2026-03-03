@@ -1,0 +1,69 @@
+appId: org.digitalgreen.agmcp
+name: "Chat - Offline State (Android Only)"
+tags:
+  - chat
+  - edge-case
+properties:
+  testCaseId: "TC-CHAT-008"
+  priority: "Medium"
+---
+# TC-CHAT-008: Enable airplane mode (Android only), verify offline indicator,
+# restore network. iOS does not support programmatic airplane mode toggle.
+
+- startRecording: "chat-offline-state"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+- runFlow: ../../subflows/navigate-to-chat.yaml
+
+- takeScreenshot: "offline-01-online-state"
+
+# ── Android: full offline test ─────────────────────────────────────────────────
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - setAirplaneMode: enabled
+      - takeScreenshot: "offline-02-airplane-enabled"
+
+      - extendedWaitUntil:
+          visible: "offline|no connection|network|internet"
+          timeout: 15000
+      - takeScreenshot: "offline-03-offline-indicator"
+
+      - assertWithAI: "The app shows a clear offline indicator. The chat input should appear disabled or show an offline warning preventing message sending."
+        optional: true
+
+      # Verify chat input reacts to offline state
+      - assertVisible:
+          id: ${output.chat.input}
+          optional: true
+      - takeScreenshot: "offline-04-input-state"
+
+      # Restore network
+      - setAirplaneMode: disabled
+      - takeScreenshot: "offline-05-reconnecting"
+
+      - extendedWaitUntil:
+          notVisible: "offline|no connection"
+          timeout: 20000
+      - takeScreenshot: "offline-06-back-online"
+
+      # Verify input is re-enabled after reconnect
+      - tapOn:
+          id: ${output.chat.input}
+          optional: true
+      - inputText: "Test after reconnect"
+      - eraseText: 22
+      - takeScreenshot: "offline-07-input-re-enabled"
+
+# ── iOS: airplane mode not supported programmatically ─────────────────────────
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - takeScreenshot: "offline-ios-skipped"
+
+- stopRecording

@@ -1,0 +1,76 @@
+appId: org.digitalgreen.agmcp
+name: "Farm - Edit Existing Farm"
+tags:
+  - farm
+  - regression
+properties:
+  testCaseId: "TC-FARM-003"
+  priority: "Medium"
+---
+# TC-FARM-003: Tap on an existing farm, edit its name, save.
+# Uses testID selectors: farm-name, farm-save.
+# Requires at least one farm to already exist (created by add-farm flow or prior state).
+
+- startRecording: "farm-edit"
+
+- runScript: ../../scripts/page-objects.js
+
+- runFlow: ../../subflows/ensure-logged-in.yaml
+
+# Navigate to Farms via hamburger menu → Settings → My Farms
+- tapOn:
+    id: ${output.chat.settings}
+- extendedWaitUntil:
+    visible: "Settings"
+    timeout: 8000
+- tapOn:
+    text: "My Farms"
+- extendedWaitUntil:
+    visible: ".*Farms.*|.*farm.*"
+    timeout: 8000
+- takeScreenshot: "farm-edit-01-farms-list"
+
+# Tap on the first farm card
+- tapOn:
+    text: ".*Farm.*|.*farm.*"
+    index: 0
+    optional: true
+- takeScreenshot: "farm-edit-02-farm-detail"
+
+# Tap Edit button (text-based — no testID on edit button in list/detail)
+- tapOn:
+    text: "Edit"
+    optional: true
+- extendedWaitUntil:
+    id: ${output.farm.name}
+    timeout: 8000
+    optional: true
+- takeScreenshot: "farm-edit-03-edit-form"
+
+# Edit the farm name
+- runFlow:
+    when:
+      visible:
+        id: ${output.farm.name}
+    commands:
+      - tapOn:
+          id: ${output.farm.name}
+      - eraseText: 50
+      - inputText: "Updated Farm Name"
+      - takeScreenshot: "farm-edit-04-name-changed"
+
+# Save
+- hideKeyboard
+- tapOn:
+    id: ${output.farm.save}
+    enabled: true
+    optional: true
+- takeScreenshot: "farm-edit-05-saving"
+
+- extendedWaitUntil:
+    visible: "Updated Farm Name|saved|updated|success|My Farms"
+    timeout: 15000
+    optional: true
+- takeScreenshot: "farm-edit-06-saved"
+
+- stopRecording

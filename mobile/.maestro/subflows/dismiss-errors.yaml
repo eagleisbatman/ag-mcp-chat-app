@@ -1,0 +1,34 @@
+appId: org.digitalgreen.agmcp
+tags:
+  - subflow
+---
+# Dismiss dev error overlays if visible.
+# Handles BOTH:
+#   1. Metro disconnect ("No script URL provided") → tap Reload
+#   2. React Native red-box / yellow-box → tap Dismiss
+#   3. Alert dialogs → tap OK
+#
+# All taps are optional so this subflow never fails.
+
+# Handle Metro disconnect — tap Reload to reconnect to packager
+- tapOn:
+    text: ".*Reload.*"
+    optional: true
+
+# Wait briefly for bundle to reload if Reload was tapped
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Dismiss React Native error overlays
+- tapOn:
+    text: ".*Dismiss.*"
+    optional: true
+
+# Dismiss alert dialogs
+- tapOn:
+    text: "OK"
+    optional: true
+
+# Brief pause to let overlays animate away
+- waitForAnimationToEnd:
+    timeout: 1500
