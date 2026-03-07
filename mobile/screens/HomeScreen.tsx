@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { ScrollView, View, StyleSheet, RefreshControl, Image, Pressable, Text, ImageSourcePropType } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -158,14 +158,16 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     }
   }, [location, language, isGoogleWeatherSupported]);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  const lastLoadedRef = useRef<number>(0);
 
-  // Re-fetch when screen gains focus (e.g., after changing weather provider)
+  // Load on focus with staleness check (skip if loaded < 30s ago)
   useFocusEffect(
     useCallback(() => {
-      loadData();
+      const now = Date.now();
+      if (now - lastLoadedRef.current > 30_000) {
+        lastLoadedRef.current = now;
+        loadData();
+      }
     }, [loadData])
   );
 

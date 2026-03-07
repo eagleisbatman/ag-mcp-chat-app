@@ -88,8 +88,13 @@ const InputToolbar = forwardRef(function InputToolbar(
 
   const bottomPadding = Math.max(insets.bottom, SPACING.md);
 
+  const isSendingRef = useRef(false);
+
   const handleSendText = (): void => {
-    if (!text.trim() || disabled) return;
+    if (!text.trim() || disabled || isSendingRef.current) return;
+    isSendingRef.current = true;
+    // Reset after a short delay to allow state to propagate
+    setTimeout(() => { isSendingRef.current = false; }, 500);
 
     const messageText = text.trim();
 

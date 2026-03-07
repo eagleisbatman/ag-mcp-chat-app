@@ -71,7 +71,7 @@ export const THEMES: ThemeSystem = {
     // Text hierarchy
     text: '#000000',               // Pure black for max readability
     textSecondary: '#3C3C43',      // iOS secondary label
-    textMuted: '#8E8E93',          // iOS tertiary label
+    textMuted: '#6D6D72',          // iOS tertiary label (WCAG AA 4.5:1 on white)
     
     // Green accent - darker for better light mode visibility
     accent: '#1B8A2E',             // Darker green for better contrast
@@ -124,7 +124,7 @@ export const THEMES: ThemeSystem = {
     // Text hierarchy
     text: '#FFFFFF',               // Pure white
     textSecondary: '#EBEBF5',      // iOS dark secondary (99% opacity white)
-    textMuted: '#8E8E93',          // iOS dark tertiary
+    textMuted: '#A1A1A6',          // iOS dark tertiary (WCAG AA 4.5:1 on black)
     
     // Vibrant green accent (extra bright for dark mode)
     accent: '#30D158',             // iOS dark mode green - very vibrant
