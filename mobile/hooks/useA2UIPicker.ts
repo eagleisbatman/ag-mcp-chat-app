@@ -11,8 +11,13 @@ import { getPickerConfig } from '../components/a2ui/picker/pickerRegistry';
 import { t } from '../constants/strings';
 import { API_BASE_URL, API_KEY, ensureDeviceId } from '../services/api/core';
 import { log } from '../utils/logger';
-import type { PickerConfig, PickerItem, ProfileActions } from '../components/a2ui/picker/types';
+import type { PickerConfig, PickerItem, PickerFormField, ProfileActions } from '../components/a2ui/picker/types';
 import type { A2UIPayload, A2UIResponse } from '../types';
+import { parseContextPlots } from '../components/a2ui/picker/configs/plotSelectorConfig';
+import { parseContextFarmers } from '../components/a2ui/picker/configs/farmerPickerConfig';
+import { parseMultiSelectOptions } from '../components/a2ui/picker/configs/multiSelectConfig';
+import { parseProfileFields } from '../components/a2ui/picker/configs/profilePromptConfig';
+import { parseContextFields } from '../components/a2ui/picker/configs/formConfig';
 
 // IMPORTANT: This side-effect import registers all picker configs with the registry.
 // Removing it will cause all pickers to fall through to text-only mode silently.
@@ -78,11 +83,23 @@ export function useA2UIPicker({
     [addCropToDefaultPlot, addAnimal, onBehalfOfFarmerUserId],
   );
 
-  // Map master data into PickerItem[] based on active config
+  // Map master data into PickerItem[] based on active config.
+  // For context-driven widgets (plot_selector, farmer_picker), items come from widget.context.
   const items: PickerItem[] = useMemo(() => {
     if (!pickerState.config) return [];
+    const ctx = pickerState.widget?.context;
+    const widgetType = pickerState.config.key;
+
+    // Context-driven list widgets: items from AI payload, not master data
+    if (widgetType === 'plot_selector' && ctx?.plots) {
+      return parseContextPlots(ctx.plots);
+    }
+    if (widgetType === 'farmer_picker' && ctx?.farmers) {
+      return parseContextFarmers(ctx.farmers);
+    }
+
     return pickerState.config.mapItems({ masterCrops, masterLivestock });
-  }, [pickerState.config, masterCrops, masterLivestock]);
+  }, [pickerState.config, pickerState.widget?.context, masterCrops, masterLivestock]);
 
   // Extract suggested items from widget context
   const suggestedItems: string[] | undefined = useMemo(() => {
@@ -100,6 +117,22 @@ export function useA2UIPicker({
     (widget: A2UIPayload) => {
       const config = getPickerConfig(widget.widgetType);
       if (config) {
+        // Inject context fields into form-based configs
+        const ctx = widget.context || {};
+        if (widget.widgetType === 'multi_select' && ctx.options && config.steps[0]) {
+          config.steps[0].fields = parseMultiSelectOptions(ctx.options);
+        }
+        if (widget.widgetType === 'profile_prompt' && ctx.fields && config.steps[0]) {
+          config.steps[0].fields = parseProfileFields(ctx.fields);
+        }
+        // Date picker: inject format hint from context
+        if (widget.widgetType === 'date_picker' && ctx.format && config.steps[0]?.fields?.[0]) {
+          config.steps[0].fields[0].placeholder = String(ctx.format);
+        }
+        // Generic form: inject context fields from AI
+        if (widget.widgetType === 'form' && Array.isArray(ctx.fields) && config.steps[0]) {
+          config.steps[0].fields = parseContextFields(ctx.fields);
+        }
         setPickerState({ visible: true, widget, config });
       } else {
         // Fallback for unregistered widget types: send text directly.
