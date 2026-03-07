@@ -249,6 +249,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
             placeholder={t('profile.namePlaceholder')}
             placeholderTextColor={theme.textMuted}
             autoCapitalize="words"
+            accessibilityLabel={t('profile.name')}
           />
         </Card>
       </View>
@@ -273,6 +274,9 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
               key={g}
               testID={`profile-gender-${g}`}
               onPress={() => setGender(g)}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: gender === g }}
+              accessibilityLabel={t(`profile.${g}`)}
               style={[
                 styles.chip,
                 {
@@ -303,6 +307,9 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
               key={opt.value}
               testID={`profile-role-${opt.value}`}
               onPress={() => setRole(opt.value)}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: role === opt.value }}
+              accessibilityLabel={t(opt.labelKey)}
               style={[
                 styles.chip,
                 {
@@ -334,6 +341,9 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
               <TouchableOpacity
                 key={opt.value}
                 onPress={() => toggleFarmingType(opt.value)}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: selected }}
+                accessibilityLabel={t(opt.labelKey)}
                 style={[
                   styles.chip,
                   {
@@ -362,6 +372,9 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
           testID="profile-save"
           onPress={handleSave}
           disabled={isSaving}
+          accessibilityRole="button"
+          accessibilityLabel={t('profile.save')}
+          accessibilityState={{ disabled: isSaving }}
           style={[styles.saveButton, { backgroundColor: theme.accent }]}
           activeOpacity={0.8}
         >

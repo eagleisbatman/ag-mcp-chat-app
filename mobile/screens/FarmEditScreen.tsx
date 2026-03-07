@@ -158,6 +158,7 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
             placeholderTextColor={theme.textMuted}
             autoCapitalize="words"
             autoFocus={!isEdit}
+            accessibilityLabel={t('farm.farmName')}
           />
         </View>
       </View>
@@ -175,6 +176,7 @@ export default function FarmEditScreen({ navigation, route }: FarmEditScreenProp
             placeholder={t('farm.totalAreaPlaceholder')}
             placeholderTextColor={theme.textMuted}
             keyboardType="decimal-pad"
+            accessibilityLabel={t('farm.totalArea')}
           />
         </View>
       </View>
