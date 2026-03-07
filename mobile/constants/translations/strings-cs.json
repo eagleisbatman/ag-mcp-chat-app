@@ -851,7 +851,8 @@
     "completeProfile": "Doplňte profil",
     "selectFarmer": "Vybrat farmáře",
     "searchFarmers": "Hledat farmáře...",
-    "noFarmersFound": "Nenalezeni žádní připojení farmáři."
+    "noFarmersFound": "Nenalezeni žádní připojení farmáři.",
+    "noChartData": "Nejsou dostupná data grafu"
   },
   "categories": {
     "cereals": "Obiloviny",

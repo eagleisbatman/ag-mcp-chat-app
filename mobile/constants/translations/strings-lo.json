@@ -851,7 +851,8 @@
     "completeProfile": "ສຳເລັດໂປຣໄຟລ໌",
     "selectFarmer": "ເລືອກຊາວກະສິກອນ",
     "searchFarmers": "ຄົ້ນຫາຊາວກະສິກອນ...",
-    "noFarmersFound": "ບໍ່ພົບຊາວກະສິກອນທີ່ເຊື່ອມຕໍ່."
+    "noFarmersFound": "ບໍ່ພົບຊາວກະສິກອນທີ່ເຊື່ອມຕໍ່.",
+    "noChartData": "ບໍ່ມີຂໍ້ມູນຕາຕະລາງ"
   },
   "categories": {
     "cereals": "ຫານພືດ",

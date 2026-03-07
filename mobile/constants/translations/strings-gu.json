@@ -851,7 +851,8 @@
     "completeProfile": "તમારી પ્રોફાઇલ પૂર્ણ કરો",
     "selectFarmer": "ખેડૂત પસંદ કરો",
     "searchFarmers": "ખેડૂતો શોધો...",
-    "noFarmersFound": "કોઈ જોડાયેલા ખેડૂતો મળ્યા નથી."
+    "noFarmersFound": "કોઈ જોડાયેલા ખેડૂતો મળ્યા નથી.",
+    "noChartData": "કોઈ ચાર્ટ ડેટા ઉપલબ્ધ નથી"
   },
   "categories": {
     "cereals": "અનાજ",

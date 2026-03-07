@@ -851,7 +851,8 @@
     "completeProfile": "Kamilisha Wasifu Wako",
     "selectFarmer": "Chagua Mkulima",
     "searchFarmers": "Tafuta wakulima...",
-    "noFarmersFound": "Hakuna wakulima waliounganishwa waliopatikana."
+    "noFarmersFound": "Hakuna wakulima waliounganishwa waliopatikana.",
+    "noChartData": "Hakuna data ya chati"
   },
   "categories": {
     "cereals": "Nafaka",

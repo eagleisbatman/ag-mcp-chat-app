@@ -851,7 +851,8 @@
     "completeProfile": "프로필 완료",
     "selectFarmer": "농부 선택",
     "searchFarmers": "농부 검색...",
-    "noFarmersFound": "연결된 농부가 없습니다."
+    "noFarmersFound": "연결된 농부가 없습니다.",
+    "noChartData": "차트 데이터 없음"
   },
   "categories": {
     "cereals": "곡물",

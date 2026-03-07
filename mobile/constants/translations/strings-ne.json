@@ -851,7 +851,8 @@
     "completeProfile": "आफ्नो प्रोफाइल पूरा गर्नुहोस्",
     "selectFarmer": "किसान छान्नुहोस्",
     "searchFarmers": "किसानहरू खोज्नुहोस्...",
-    "noFarmersFound": "कुनै जोडिएका किसान भेटिएनन्।"
+    "noFarmersFound": "कुनै जोडिएका किसान भेटिएनन्।",
+    "noChartData": "चार्ट डेटा छैन"
   },
   "categories": {
     "cereals": "अन्न",

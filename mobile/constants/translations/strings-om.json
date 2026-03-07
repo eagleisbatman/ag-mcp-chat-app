@@ -851,7 +851,8 @@
     "completeProfile": "Odeeffannoo Kee Guuti",
     "selectFarmer": "Qonnaan Bulaa Filadhu",
     "searchFarmers": "Qonnaan Bultoota Barbaadi...",
-    "noFarmersFound": "Qonnaan Bultoonni walqabatan hin argamne."
+    "noFarmersFound": "Qonnaan Bultoonni walqabatan hin argamne.",
+    "noChartData": "Odeeffannoon caartii hin argamu"
   },
   "categories": {
     "cereals": "Midhaan",

@@ -851,7 +851,8 @@
     "completeProfile": "ပရိုဖိုင်ဖြည့်စွက်ပါ",
     "selectFarmer": "တောင်သူရွေးပါ",
     "searchFarmers": "တောင်သူရှာဖွေပါ...",
-    "noFarmersFound": "ဆက်သွယ်ထားသော တောင်သူများမတွေ့ပါ"
+    "noFarmersFound": "ဆက်သွယ်ထားသော တောင်သူများမတွေ့ပါ",
+    "noChartData": "ဇယားဒေတာ မရှိပါ"
   },
   "categories": {
     "cereals": "ကောက်ပဲ",

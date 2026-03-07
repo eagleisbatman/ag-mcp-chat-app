@@ -851,7 +851,8 @@
     "completeProfile": "Dhameystir Astaantaada",
     "selectFarmer": "Dooro Beeraley",
     "searchFarmers": "Raadi beeraleyda...",
-    "noFarmersFound": "Ma jiro beeraley isku xiran oo la helay."
+    "noFarmersFound": "Ma jiro beeraley isku xiran oo la helay.",
+    "noChartData": "Xog jaantus ma jiro"
   },
   "categories": {
     "cereals": "Miraha",

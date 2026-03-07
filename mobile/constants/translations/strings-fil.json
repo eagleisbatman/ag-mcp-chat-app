@@ -851,7 +851,8 @@
     "completeProfile": "Kumpletuhin ang Profile Mo",
     "selectFarmer": "Piliin ang Magsasaka",
     "searchFarmers": "Maghanap ng magsasaka...",
-    "noFarmersFound": "Walang konektadong magsasakang nakita."
+    "noFarmersFound": "Walang konektadong magsasakang nakita.",
+    "noChartData": "Walang datos sa tsart."
   },
   "categories": {
     "cereals": "Mga Butil",

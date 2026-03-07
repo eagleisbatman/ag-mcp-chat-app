@@ -851,7 +851,8 @@
     "completeProfile": "Profiel aanvullen",
     "selectFarmer": "Kies boer",
     "searchFarmers": "Zoek boeren...",
-    "noFarmersFound": "Geen gekoppelde boeren gevonden."
+    "noFarmersFound": "Geen gekoppelde boeren gevonden.",
+    "noChartData": "Geen grafiekdata beschikbaar"
   },
   "categories": {
     "cereals": "Granen",

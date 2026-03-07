@@ -851,7 +851,8 @@
     "completeProfile": "ፕሮፋይልካ ኣማልእ",
     "selectFarmer": "ገባር ምረጽ",
     "searchFarmers": "ሓረስቶት ድለይ...",
-    "noFarmersFound": "ዝተራኸቡ ሓረስቶት ኣይተረኽቡን።"
+    "noFarmersFound": "ዝተራኸቡ ሓረስቶት ኣይተረኽቡን።",
+    "noChartData": "ሓበሬታ ሰንጠቕቲ የለን"
   },
   "categories": {
     "cereals": "ኣእካል",

@@ -851,7 +851,8 @@
     "completeProfile": "మీ ప్రొఫైల్ పూర్తి చేయండి",
     "selectFarmer": "రైతును ఎంచుకోండి",
     "searchFarmers": "రైతులను వెతకండి...",
-    "noFarmersFound": "కనెక్ట్ చేయబడిన రైతులు కనబడలేదు."
+    "noFarmersFound": "కనెక్ట్ చేయబడిన రైతులు కనబడలేదు.",
+    "noChartData": "చార్ట్ డేటా లేదు"
   },
   "categories": {
     "cereals": "ధాన్యాలు",

@@ -851,7 +851,8 @@
     "completeProfile": "Lengkapkan Profil",
     "selectFarmer": "Pilih Petani",
     "searchFarmers": "Cari petani...",
-    "noFarmersFound": "Tiada petani berhubung dijumpai."
+    "noFarmersFound": "Tiada petani berhubung dijumpai.",
+    "noChartData": "Tiada data carta"
   },
   "categories": {
     "cereals": "Bijirin",

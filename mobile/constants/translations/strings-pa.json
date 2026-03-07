@@ -851,7 +851,8 @@
     "completeProfile": "ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਪੂਰੀ ਕਰੋ",
     "selectFarmer": "ਕਿਸਾਨ ਚੁਣੋ",
     "searchFarmers": "ਕਿਸਾਨ ਖੋਜੋ...",
-    "noFarmersFound": "ਕੋਈ ਜੁੜੇ ਹੋਏ ਕਿਸਾਨ ਨਹੀਂ ਮਿਲੇ।"
+    "noFarmersFound": "ਕੋਈ ਜੁੜੇ ਹੋਏ ਕਿਸਾਨ ਨਹੀਂ ਮਿਲੇ।",
+    "noChartData": "ਗ੍ਰਾਫ ਡਾਟਾ ਉਪਲਬਧ ਨਹੀਂ"
   },
   "categories": {
     "cereals": "ਅਨਾਜ",

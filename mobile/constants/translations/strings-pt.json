@@ -851,7 +851,8 @@
     "completeProfile": "Complete Seu Perfil",
     "selectFarmer": "Selecionar Produtor",
     "searchFarmers": "Buscar produtores...",
-    "noFarmersFound": "Nenhum produtor conectado encontrado."
+    "noFarmersFound": "Nenhum produtor conectado encontrado.",
+    "noChartData": "Sem dados no gráfico"
   },
   "categories": {
     "cereals": "Cereais",

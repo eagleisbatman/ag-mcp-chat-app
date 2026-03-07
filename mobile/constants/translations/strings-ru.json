@@ -851,7 +851,8 @@
     "completeProfile": "Заполнить профиль",
     "selectFarmer": "Выбрать фермера",
     "searchFarmers": "Поиск фермеров...",
-    "noFarmersFound": "Подключенных фермеров не найдено."
+    "noFarmersFound": "Подключенных фермеров не найдено.",
+    "noChartData": "Нет данных"
   },
   "categories": {
     "cereals": "Зерновые",

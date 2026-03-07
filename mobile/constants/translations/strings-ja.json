@@ -851,7 +851,8 @@
     "completeProfile": "プロフィールを完了",
     "selectFarmer": "農家を選択",
     "searchFarmers": "農家を検索...",
-    "noFarmersFound": "連携農家が見つかりません。"
+    "noFarmersFound": "連携農家が見つかりません。",
+    "noChartData": "グラフデータがありません"
   },
   "categories": {
     "cereals": "穀物",

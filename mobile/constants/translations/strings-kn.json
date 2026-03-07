@@ -851,7 +851,8 @@
     "completeProfile": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಿ",
     "selectFarmer": "ರೈತರನ್ನು ಆಯ್ಕೆಮಾಡಿ",
     "searchFarmers": "ರೈತರನ್ನು ಹುಡುಕಿ...",
-    "noFarmersFound": "ಯಾವುದೇ ಸಂಪರ್ಕಿತ ರೈತರು ಕಂಡುಬಂದಿಲ್ಲ."
+    "noFarmersFound": "ಯಾವುದೇ ಸಂಪರ್ಕಿತ ರೈತರು ಕಂಡುಬಂದಿಲ್ಲ.",
+    "noChartData": "ನಕ್ಷೆ ಮಾಹಿತಿ ಇಲ್ಲ"
   },
   "categories": {
     "cereals": "ಧಾನ್ಯಗಳು",

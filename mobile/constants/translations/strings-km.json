@@ -851,7 +851,8 @@
     "completeProfile": "បំពេញប្រវត្តិរូប",
     "selectFarmer": "ជ្រើសរើសកសិករ",
     "searchFarmers": "ស្វែងរកកសិករ...",
-    "noFarmersFound": "មិនមានកសិករតភ្ជាប់ទេ។"
+    "noFarmersFound": "មិនមានកសិករតភ្ជាប់ទេ។",
+    "noChartData": "មិនមានទិន្នន័យក្រាហ្វ"
   },
   "categories": {
     "cereals": "ធញ្ញជាតិ",

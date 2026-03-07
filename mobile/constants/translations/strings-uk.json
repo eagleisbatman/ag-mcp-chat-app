@@ -851,7 +851,8 @@
     "completeProfile": "Завершити профіль",
     "selectFarmer": "Вибрати фермера",
     "searchFarmers": "Пошук фермерів...",
-    "noFarmersFound": "Підключених фермерів не знайдено."
+    "noFarmersFound": "Підключених фермерів не знайдено.",
+    "noChartData": "Немає даних діаграми"
   },
   "categories": {
     "cereals": "Зернові",

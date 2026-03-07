@@ -851,7 +851,8 @@
     "completeProfile": "ଆପଣଙ୍କ ପ୍ରୋଫାଇଲ୍ ପୂରଣ କରନ୍ତୁ",
     "selectFarmer": "ଚାଷୀ ବାଛନ୍ତୁ",
     "searchFarmers": "ଚାଷୀ ଖୋଜନ୍ତୁ...",
-    "noFarmersFound": "କୌଣସି ସଂଯୁକ୍ତ ଚାଷୀ ମିଳିଲେ ନାହିଁ।"
+    "noFarmersFound": "କୌଣସି ସଂଯୁକ୍ତ ଚାଷୀ ମିଳିଲେ ନାହିଁ।",
+    "noChartData": "ଚାର୍ଟ ତଥ୍ୟ ଉପଲବ୍ଧ ନାହିଁ"
   },
   "categories": {
     "cereals": "ଶସ୍ୟ",

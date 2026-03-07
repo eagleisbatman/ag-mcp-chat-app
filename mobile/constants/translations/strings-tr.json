@@ -851,7 +851,8 @@
     "completeProfile": "Profilinizi Tamamlayın",
     "selectFarmer": "Çiftçi Seç",
     "searchFarmers": "Çiftçi ara...",
-    "noFarmersFound": "Bağlı çiftçi bulunamadı."
+    "noFarmersFound": "Bağlı çiftçi bulunamadı.",
+    "noChartData": "Grafik verisi yok"
   },
   "categories": {
     "cereals": "Tahıllar",

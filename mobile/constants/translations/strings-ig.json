@@ -851,7 +851,8 @@
     "completeProfile": "Mezue Profaịlụ Gị",
     "selectFarmer": "Họrọ Onye Ọrụ Ugbo",
     "searchFarmers": "Chọọ ndị ọrụ ugbo...",
-    "noFarmersFound": "Ahụghị ndị ọrụ ugbo ejikọrọ."
+    "noFarmersFound": "Ahụghị ndị ọrụ ugbo ejikọrọ.",
+    "noChartData": "Enweghị data eserese dị"
   },
   "categories": {
     "cereals": "Mkpụrụ ọka",

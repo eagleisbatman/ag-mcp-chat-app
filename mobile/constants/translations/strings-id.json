@@ -851,7 +851,8 @@
     "completeProfile": "Lengkapi Profil Anda",
     "selectFarmer": "Pilih Petani",
     "searchFarmers": "Cari petani...",
-    "noFarmersFound": "Petani terhubung tidak ditemukan."
+    "noFarmersFound": "Petani terhubung tidak ditemukan.",
+    "noChartData": "Data bagan tidak tersedia"
   },
   "categories": {
     "cereals": "Serealia",
