@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import A2UIInlineCard from './A2UIInlineCard';
+import A2UIChartCard from './A2UIChartCard';
 import type { A2UIPayload } from '../../types';
 
 interface A2UIDispatcherProps {
@@ -19,14 +20,20 @@ export default function A2UIDispatcher({ widgets, onWidgetPress, respondedWidget
 
   return (
     <View style={styles.container}>
-      {widgets.map((widget) => (
-        <A2UIInlineCard
-          key={widget.widgetId}
-          widget={widget}
-          onPress={onWidgetPress}
-          responded={respondedWidgetIds?.has(widget.widgetId)}
-        />
-      ))}
+      {widgets.map((widget) => {
+        // Chart widgets are display-only — no picker interaction needed
+        if (widget.widgetType === 'chart') {
+          return <A2UIChartCard key={widget.widgetId} widget={widget} />;
+        }
+        return (
+          <A2UIInlineCard
+            key={widget.widgetId}
+            widget={widget}
+            onPress={onWidgetPress}
+            responded={respondedWidgetIds?.has(widget.widgetId)}
+          />
+        );
+      })}
     </View>
   );
 }

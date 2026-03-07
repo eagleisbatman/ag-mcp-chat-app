@@ -115,6 +115,9 @@ export function useA2UIPicker({
   // Open a picker for a widget, or fall through to text for unregistered types
   const openPicker = useCallback(
     (widget: A2UIPayload) => {
+      // Chart widgets are display-only — rendered inline by A2UIDispatcher, no picker needed
+      if (widget.widgetType === 'chart') return;
+
       const config = getPickerConfig(widget.widgetType);
       if (config) {
         // Inject context fields into form-based configs
