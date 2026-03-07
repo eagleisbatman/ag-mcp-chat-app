@@ -20,6 +20,7 @@ const WIDGET_ICONS: Record<string, string> = {
   multi_select: 'check-circle',
   form: 'file-text',
   profile_prompt: 'user',
+  farmer_picker: 'users',
 };
 
 interface A2UIInlineCardProps {
