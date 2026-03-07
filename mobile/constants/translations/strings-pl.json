@@ -841,7 +841,17 @@
     "fieldRequired": "Wymagane",
     "fieldMustBePositive": "Musi być liczbą dodatnią",
     "fieldMaxValue": "Maksymalna",
-    "notListed": "Nie ma na liście? Wpisz nazwę"
+    "notListed": "Nie ma na liście? Wpisz nazwę",
+    "selectDate": "Wybierz Datę",
+    "date": "Data",
+    "selectOptions": "Wybierz Opcje",
+    "selectPlot": "Wybierz Działkę",
+    "searchPlots": "Szukaj działek...",
+    "noPlotsFound": "Nie znaleziono działek. Najpierw dodaj gospodarstwo w profilu.",
+    "completeProfile": "Uzupełnij Profil",
+    "selectFarmer": "Wybierz Rolnika",
+    "searchFarmers": "Szukaj rolników...",
+    "noFarmersFound": "Nie znaleziono połączonych rolników."
   },
   "categories": {
     "cereals": "Zboża",

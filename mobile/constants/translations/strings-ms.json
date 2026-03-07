@@ -841,7 +841,17 @@
     "fieldRequired": "Diperlukan",
     "fieldMustBePositive": "Mestilah nombor positif",
     "fieldMaxValue": "Maksimum",
-    "notListed": "Tiada dalam senarai? Taip nama"
+    "notListed": "Tiada dalam senarai? Taip nama",
+    "selectDate": "Pilih Tarikh",
+    "date": "Tarikh",
+    "selectOptions": "Pilih Pilihan",
+    "selectPlot": "Pilih Petak",
+    "searchPlots": "Cari petak...",
+    "noPlotsFound": "Tiada petak dijumpai. Sila tambah ladang dalam profil anda dahulu.",
+    "completeProfile": "Lengkapkan Profil",
+    "selectFarmer": "Pilih Petani",
+    "searchFarmers": "Cari petani...",
+    "noFarmersFound": "Tiada petani berhubung dijumpai."
   },
   "categories": {
     "cereals": "Bijirin",

@@ -841,7 +841,17 @@
     "fieldRequired": "ኣድላዪ",
     "fieldMustBePositive": "ቁፅሪ ልዕሊ ዜሮ ክኸውን ኣለዎ",
     "fieldMaxValue": "ዝበዝሐ",
-    "notListed": "ኣይተዘርዘረን? ስም ኣእትው"
+    "notListed": "ኣይተዘርዘረን? ስም ኣእትው",
+    "selectDate": "ዕለት ምረጽ",
+    "date": "ዕለት",
+    "selectOptions": "ምርጫታት ምረጽ",
+    "selectPlot": "ክፍሊ መሬት ምረጽ",
+    "searchPlots": "ክፍሊታት መሬት ድለይ...",
+    "noPlotsFound": "ዝኾነ ክፍሊ መሬት ኣይተረኽበን። ቅድም ኣብ ፕሮፋይልካ ሕርሻ ጨምር።",
+    "completeProfile": "ፕሮፋይልካ ኣማልእ",
+    "selectFarmer": "ገባር ምረጽ",
+    "searchFarmers": "ሓረስቶት ድለይ...",
+    "noFarmersFound": "ዝተራኸቡ ሓረስቶት ኣይተረኽቡን።"
   },
   "categories": {
     "cereals": "ኣእካል",

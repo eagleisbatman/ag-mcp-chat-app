@@ -841,7 +841,17 @@
     "fieldRequired": "Obbligatorio",
     "fieldMustBePositive": "Deve essere un numero positivo",
     "fieldMaxValue": "Massimo",
-    "notListed": "Non in lista? Scrivi un nome"
+    "notListed": "Non in lista? Scrivi un nome",
+    "selectDate": "Seleziona Data",
+    "date": "Data",
+    "selectOptions": "Seleziona Opzioni",
+    "selectPlot": "Seleziona Appezzamento",
+    "searchPlots": "Cerca appezzamenti...",
+    "noPlotsFound": "Nessun appezzamento trovato. Aggiungi prima un'azienda agricola al tuo profilo.",
+    "completeProfile": "Completa Profilo",
+    "selectFarmer": "Seleziona Agricoltore",
+    "searchFarmers": "Cerca agricoltori...",
+    "noFarmersFound": "Nessun agricoltore connesso trovato."
   },
   "categories": {
     "cereals": "Cereali",

@@ -841,7 +841,17 @@
     "fieldRequired": "الزامی",
     "fieldMustBePositive": "عدد باید مثبت باشد",
     "fieldMaxValue": "حداکثر",
-    "notListed": "در لیست نیست؟ نام را بنویسید"
+    "notListed": "در لیست نیست؟ نام را بنویسید",
+    "selectDate": "انتخاب تاریخ",
+    "date": "تاریخ",
+    "selectOptions": "انتخاب گزینه‌ها",
+    "selectPlot": "انتخاب قطعه",
+    "searchPlots": "جستجوی قطعات...",
+    "noPlotsFound": "قطعه‌ای یافت نشد. ابتدا یک مزرعه در پروفایل خود اضافه کنید.",
+    "completeProfile": "تکمیل پروفایل",
+    "selectFarmer": "انتخاب کشاورز",
+    "searchFarmers": "جستجوی کشاورزان...",
+    "noFarmersFound": "کشاورز متصلی یافت نشد."
   },
   "categories": {
     "cereals": "غلات",

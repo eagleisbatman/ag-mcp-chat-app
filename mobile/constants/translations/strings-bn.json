@@ -841,7 +841,17 @@
     "fieldRequired": "আবশ্যক",
     "fieldMustBePositive": "ধনাত্মক সংখ্যা হতে হবে",
     "fieldMaxValue": "সর্বোচ্চ",
-    "notListed": "তালিকায় নেই? একটি নাম লিখুন"
+    "notListed": "তালিকায় নেই? একটি নাম লিখুন",
+    "selectDate": "তারিখ নির্বাচন করুন",
+    "date": "তারিখ",
+    "selectOptions": "বিকল্পগুলি নির্বাচন করুন",
+    "selectPlot": "প্লট নির্বাচন করুন",
+    "searchPlots": "প্লট খুঁজুন...",
+    "noPlotsFound": "কোনো প্লট পাওয়া যায়নি। প্রথমে আপনার প্রোফাইলে একটি খামার যোগ করুন।",
+    "completeProfile": "আপনার প্রোফাইল সম্পূর্ণ করুন",
+    "selectFarmer": "কৃষক নির্বাচন করুন",
+    "searchFarmers": "কৃষক খুঁজুন...",
+    "noFarmersFound": "কোনো সংযুক্ত কৃষক পাওয়া যায়নি।"
   },
   "categories": {
     "cereals": "শস্য",

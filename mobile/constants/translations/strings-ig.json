@@ -841,7 +841,17 @@
     "fieldRequired": "Achọrọ",
     "fieldMustBePositive": "Ọ ga-abụ nọmba dị mma",
     "fieldMaxValue": "Kachasị elu",
-    "notListed": "Ọ dịghị na ndepụta? Tinye aha"
+    "notListed": "Ọ dịghị na ndepụta? Tinye aha",
+    "selectDate": "Họrọ Ụbọchị",
+    "date": "Ụbọchị",
+    "selectOptions": "Họrọ Nhọrọ",
+    "selectPlot": "Họrọ Akụkụ Ubi",
+    "searchPlots": "Chọọ akụkụ ubi...",
+    "noPlotsFound": "Ahụghị akụkụ ubi ọ bụla. Tinye ubi na profaịlụ gị mbụ.",
+    "completeProfile": "Mezue Profaịlụ Gị",
+    "selectFarmer": "Họrọ Onye Ọrụ Ugbo",
+    "searchFarmers": "Chọọ ndị ọrụ ugbo...",
+    "noFarmersFound": "Ahụghị ndị ọrụ ugbo ejikọrọ."
   },
   "categories": {
     "cereals": "Mkpụrụ ọka",

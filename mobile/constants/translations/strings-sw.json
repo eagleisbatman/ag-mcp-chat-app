@@ -841,7 +841,17 @@
     "fieldRequired": "Lazima",
     "fieldMustBePositive": "Lazima iwe namba chanya",
     "fieldMaxValue": "Upeo",
-    "notListed": "Haipo? Andika jina"
+    "notListed": "Haipo? Andika jina",
+    "selectDate": "Chagua Tarehe",
+    "date": "Tarehe",
+    "selectOptions": "Chagua Chaguo",
+    "selectPlot": "Chagua Shamba",
+    "searchPlots": "Tafuta mashamba...",
+    "noPlotsFound": "Hakuna mashamba yaliyopatikana. Ongeza shamba kwenye wasifu wako kwanza.",
+    "completeProfile": "Kamilisha Wasifu Wako",
+    "selectFarmer": "Chagua Mkulima",
+    "searchFarmers": "Tafuta wakulima...",
+    "noFarmersFound": "Hakuna wakulima waliounganishwa waliopatikana."
   },
   "categories": {
     "cereals": "Nafaka",

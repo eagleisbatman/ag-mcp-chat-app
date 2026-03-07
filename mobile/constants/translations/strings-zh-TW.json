@@ -841,7 +841,17 @@
     "fieldRequired": "必填",
     "fieldMustBePositive": "必須是正數",
     "fieldMaxValue": "最大值",
-    "notListed": "不在清單？輸入名稱"
+    "notListed": "不在清單？輸入名稱",
+    "selectDate": "選擇日期",
+    "date": "日期",
+    "selectOptions": "選擇選項",
+    "selectPlot": "選擇地塊",
+    "searchPlots": "搜尋地塊...",
+    "noPlotsFound": "找不到地塊。請先在個人資料中新增農場。",
+    "completeProfile": "完成個人資料",
+    "selectFarmer": "選擇農民",
+    "searchFarmers": "搜尋農民...",
+    "noFarmersFound": "找不到已連結的農民。"
   },
   "categories": {
     "cereals": "穀物",

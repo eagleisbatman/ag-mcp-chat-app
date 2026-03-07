@@ -841,7 +841,17 @@
     "fieldRequired": "Обов'язково",
     "fieldMustBePositive": "Має бути додатне число",
     "fieldMaxValue": "Максимум",
-    "notListed": "Немає в списку? Введіть назву"
+    "notListed": "Немає в списку? Введіть назву",
+    "selectDate": "Вибрати дату",
+    "date": "Дата",
+    "selectOptions": "Вибрати опції",
+    "selectPlot": "Вибрати ділянку",
+    "searchPlots": "Пошук ділянок...",
+    "noPlotsFound": "Ділянок не знайдено. Спершу додайте господарство у профілі.",
+    "completeProfile": "Завершити профіль",
+    "selectFarmer": "Вибрати фермера",
+    "searchFarmers": "Пошук фермерів...",
+    "noFarmersFound": "Підключених фермерів не знайдено."
   },
   "categories": {
     "cereals": "Зернові",

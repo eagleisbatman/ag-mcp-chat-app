@@ -841,7 +841,17 @@
     "fieldRequired": "ଆବଶ୍ୟକ",
     "fieldMustBePositive": "ଧନାତ୍ମକ ସଂଖ୍ୟା ହେବା ଦରକାର",
     "fieldMaxValue": "ସର୍ବାଧିକ",
-    "notListed": "ତାଲିକାରେ ନାହିଁ? ନାମ ଲେଖନ୍ତୁ"
+    "notListed": "ତାଲିକାରେ ନାହିଁ? ନାମ ଲେଖନ୍ତୁ",
+    "selectDate": "ତାରିଖ ବାଛନ୍ତୁ",
+    "date": "ତାରିଖ",
+    "selectOptions": "ବିକଳ୍ପ ବାଛନ୍ତୁ",
+    "selectPlot": "ଜମି ବାଛନ୍ତୁ",
+    "searchPlots": "ଜମି ଖୋଜନ୍ତୁ...",
+    "noPlotsFound": "କୌଣସି ଜମି ମିଳିଲା ନାହିଁ। ପ୍ରଥମେ ଆପଣଙ୍କ ପ୍ରୋଫାଇଲରେ ଏକ ଚାଷଜମି ଯୋଡ଼ନ୍ତୁ।",
+    "completeProfile": "ଆପଣଙ୍କ ପ୍ରୋଫାଇଲ୍ ପୂରଣ କରନ୍ତୁ",
+    "selectFarmer": "ଚାଷୀ ବାଛନ୍ତୁ",
+    "searchFarmers": "ଚାଷୀ ଖୋଜନ୍ତୁ...",
+    "noFarmersFound": "କୌଣସି ସଂଯୁକ୍ତ ଚାଷୀ ମିଳିଲେ ନାହିଁ।"
   },
   "categories": {
     "cereals": "ଶସ୍ୟ",

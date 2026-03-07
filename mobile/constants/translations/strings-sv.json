@@ -841,7 +841,17 @@
     "fieldRequired": "Obligatoriskt",
     "fieldMustBePositive": "Måste vara ett positivt tal",
     "fieldMaxValue": "Max",
-    "notListed": "Saknas? Skriv namn"
+    "notListed": "Saknas? Skriv namn",
+    "selectDate": "Välj Datum",
+    "date": "Datum",
+    "selectOptions": "Välj Alternativ",
+    "selectPlot": "Välj Skifte",
+    "searchPlots": "Sök skiften...",
+    "noPlotsFound": "Inga skiften hittades. Lägg till en gård i din profil först.",
+    "completeProfile": "Fyll i Profilen",
+    "selectFarmer": "Välj Bonde",
+    "searchFarmers": "Sök bönder...",
+    "noFarmersFound": "Inga anslutna bönder hittades."
   },
   "categories": {
     "cereals": "Spannmål",

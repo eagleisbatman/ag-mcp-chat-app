@@ -841,7 +841,17 @@
     "fieldRequired": "Dandan",
     "fieldMustBePositive": "Nọ́ńbà rere gbọdọ̀ jẹ́",
     "fieldMaxValue": "Tó pọ̀ jù",
-    "notListed": "Kò sí níbẹ̀? Kọ orúkọ"
+    "notListed": "Kò sí níbẹ̀? Kọ orúkọ",
+    "selectDate": "Yan Ọjọ́",
+    "date": "Ọjọ́",
+    "selectOptions": "Yan Àṣàyàn",
+    "selectPlot": "Yan Ọgbà",
+    "searchPlots": "Wa ọgbà...",
+    "noPlotsFound": "Kò sí ọgbà kankan. Kọ́kọ́ fi oko rẹ sí àkọọlẹ rẹ.",
+    "completeProfile": "Parí Àkọọlẹ Rẹ",
+    "selectFarmer": "Yan Àgbẹ̀",
+    "searchFarmers": "Wa àgbẹ̀...",
+    "noFarmersFound": "Kò sí àgbẹ̀ tí wọ́n sopọ̀ rárá."
   },
   "categories": {
     "cereals": "Ọkà",

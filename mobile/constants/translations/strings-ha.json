@@ -841,7 +841,17 @@
     "fieldRequired": "Wajibi",
     "fieldMustBePositive": "Dole ya zama sama da sifili",
     "fieldMaxValue": "Mafi Girma",
-    "notListed": "Ba a lissafa ba? Rubuta suna"
+    "notListed": "Ba a lissafa ba? Rubuta suna",
+    "selectDate": "Zaɓi Rana",
+    "date": "Rana",
+    "selectOptions": "Zaɓi Zaɓuɓɓuka",
+    "selectPlot": "Zaɓi Gona",
+    "searchPlots": "Nemi Gonaki...",
+    "noPlotsFound": "Ba a sami gonaki ba. Ƙara gona a bayanan ka da farko.",
+    "completeProfile": "Kammala Bayanan Ka",
+    "selectFarmer": "Zaɓi Manomi",
+    "searchFarmers": "Nemi Manoma...",
+    "noFarmersFound": "Ba a sami manoma masu alaƙa ba."
   },
   "categories": {
     "cereals": "Hatsi",

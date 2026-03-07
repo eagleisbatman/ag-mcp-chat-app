@@ -841,7 +841,17 @@
     "fieldRequired": "Obrigatório",
     "fieldMustBePositive": "Deve ser um número positivo",
     "fieldMaxValue": "Máximo",
-    "notListed": "Não listado? Digite um nome"
+    "notListed": "Não listado? Digite um nome",
+    "selectDate": "Selecionar Data",
+    "date": "Data",
+    "selectOptions": "Selecionar Opções",
+    "selectPlot": "Selecionar Talhão",
+    "searchPlots": "Buscar talhões...",
+    "noPlotsFound": "Nenhum talhão encontrado. Adicione uma propriedade no seu perfil primeiro.",
+    "completeProfile": "Complete Seu Perfil",
+    "selectFarmer": "Selecionar Produtor",
+    "searchFarmers": "Buscar produtores...",
+    "noFarmersFound": "Nenhum produtor conectado encontrado."
   },
   "categories": {
     "cereals": "Cereais",

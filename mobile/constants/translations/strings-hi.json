@@ -841,7 +841,17 @@
     "fieldRequired": "आवश्यक",
     "fieldMustBePositive": "संख्या धनात्मक होनी चाहिए",
     "fieldMaxValue": "अधिकतम",
-    "notListed": "सूची में नहीं? नाम लिखें"
+    "notListed": "सूची में नहीं? नाम लिखें",
+    "selectDate": "तारीख चुनें",
+    "date": "तारीख",
+    "selectOptions": "विकल्प चुनें",
+    "selectPlot": "खेत चुनें",
+    "searchPlots": "खेत खोजें...",
+    "noPlotsFound": "कोई खेत नहीं मिला। पहले अपनी प्रोफ़ाइल में खेत जोड़ें।",
+    "completeProfile": "अपनी प्रोफ़ाइल पूरी करें",
+    "selectFarmer": "किसान चुनें",
+    "searchFarmers": "किसान खोजें...",
+    "noFarmersFound": "कोई जुड़े किसान नहीं मिले।"
   },
   "categories": {
     "cereals": "अनाज",

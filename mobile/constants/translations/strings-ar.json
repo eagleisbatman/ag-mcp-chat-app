@@ -841,7 +841,17 @@
     "fieldRequired": "مطلوب",
     "fieldMustBePositive": "يجب أن يكون رقماً موجباً",
     "fieldMaxValue": "الحد الأقصى",
-    "notListed": "غير مدرج؟ اكتب اسماً"
+    "notListed": "غير مدرج؟ اكتب اسماً",
+    "selectDate": "اختيار تاريخ",
+    "date": "تاريخ",
+    "selectOptions": "اختيار الخيارات",
+    "selectPlot": "اختيار قطعة أرض",
+    "searchPlots": "ابحث عن قطع أرض...",
+    "noPlotsFound": "لم يتم العثور على قطع أرض. أضف مزرعة في ملفك الشخصي أولاً.",
+    "completeProfile": "أكمل ملفك الشخصي",
+    "selectFarmer": "اختيار مزارع",
+    "searchFarmers": "ابحث عن مزارعين...",
+    "noFarmersFound": "لم يتم العثور على مزارعين متصلين."
   },
   "categories": {
     "cereals": "حبوب",

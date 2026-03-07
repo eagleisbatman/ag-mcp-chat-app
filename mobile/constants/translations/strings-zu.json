@@ -841,7 +841,17 @@
     "fieldRequired": "Kuyadingeka",
     "fieldMustBePositive": "Kumele kube inombolo elungile",
     "fieldMaxValue": "Ubukhulu",
-    "notListed": "Ayikho ohlwini? Faka igama"
+    "notListed": "Ayikho ohlwini? Faka igama",
+    "selectDate": "Khetha Usuku",
+    "date": "Usuku",
+    "selectOptions": "Khetha Izinketho",
+    "selectPlot": "Khetha Isiza",
+    "searchPlots": "Sesha iziza...",
+    "noPlotsFound": "Azikho iziza ezitholakele. Faka ipulazi kuphrofayela yakho kuqala.",
+    "completeProfile": "Qedela Iphrofayela Yakho",
+    "selectFarmer": "Khetha Umlimi",
+    "searchFarmers": "Sesha abalimi...",
+    "noFarmersFound": "Abekho abalimi abaxhumekile abatholakele."
   },
   "categories": {
     "cereals": "Okusanhlamvu",

@@ -841,7 +841,17 @@
     "fieldRequired": "తప్పనిసరి",
     "fieldMustBePositive": "ధనాత్మక సంఖ్య అయి ఉండాలి",
     "fieldMaxValue": "గరిష్ఠం",
-    "notListed": "జాబితాలో లేదా? పేరును నమోదు చేయండి"
+    "notListed": "జాబితాలో లేదా? పేరును నమోదు చేయండి",
+    "selectDate": "తేదీ ఎంచుకోండి",
+    "date": "తేదీ",
+    "selectOptions": "ఎంపికలు ఎంచుకోండి",
+    "selectPlot": "పొలం ఎంచుకోండి",
+    "searchPlots": "పొలాలను వెతకండి...",
+    "noPlotsFound": "పొలాలు కనబడలేదు. ముందుగా మీ ప్రొఫైల్‌లో పొలాన్ని జోడించండి.",
+    "completeProfile": "మీ ప్రొఫైల్ పూర్తి చేయండి",
+    "selectFarmer": "రైతును ఎంచుకోండి",
+    "searchFarmers": "రైతులను వెతకండి...",
+    "noFarmersFound": "కనెక్ట్ చేయబడిన రైతులు కనబడలేదు."
   },
   "categories": {
     "cereals": "ధాన్యాలు",

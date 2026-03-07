@@ -841,7 +841,17 @@
     "fieldRequired": "필수",
     "fieldMustBePositive": "0보다 커야 합니다",
     "fieldMaxValue": "최대",
-    "notListed": "목록에 없나요? 이름을 입력하세요."
+    "notListed": "목록에 없나요? 이름을 입력하세요.",
+    "selectDate": "날짜 선택",
+    "date": "날짜",
+    "selectOptions": "옵션 선택",
+    "selectPlot": "필지 선택",
+    "searchPlots": "필지 검색...",
+    "noPlotsFound": "등록된 필지가 없습니다. 먼저 프로필에 농장을 추가해주세요.",
+    "completeProfile": "프로필 완료",
+    "selectFarmer": "농부 선택",
+    "searchFarmers": "농부 검색...",
+    "noFarmersFound": "연결된 농부가 없습니다."
   },
   "categories": {
     "cereals": "곡물",

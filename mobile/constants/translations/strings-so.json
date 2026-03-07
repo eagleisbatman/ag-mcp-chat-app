@@ -841,7 +841,17 @@
     "fieldRequired": "Waa Qasab",
     "fieldMustBePositive": "Waa inay noqotaa tiro togan",
     "fieldMaxValue": "Ugu badnaan",
-    "notListed": "Kuma jiro? Geli magac"
+    "notListed": "Kuma jiro? Geli magac",
+    "selectDate": "Dooro Taariikh",
+    "date": "Taariikh",
+    "selectOptions": "Dooro Xulashooyinka",
+    "selectPlot": "Dooro Beer",
+    "searchPlots": "Raadi beeraha...",
+    "noPlotsFound": "Ma jiro beer la helay. Ku dar beerta astaantaada marka hore.",
+    "completeProfile": "Dhameystir Astaantaada",
+    "selectFarmer": "Dooro Beeraley",
+    "searchFarmers": "Raadi beeraleyda...",
+    "noFarmersFound": "Ma jiro beeraley isku xiran oo la helay."
   },
   "categories": {
     "cereals": "Miraha",

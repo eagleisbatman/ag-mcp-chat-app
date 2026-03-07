@@ -841,7 +841,17 @@
     "fieldRequired": "จำเป็น",
     "fieldMustBePositive": "ต้องเป็นตัวเลขบวก",
     "fieldMaxValue": "สูงสุด",
-    "notListed": "ไม่อยู่ในรายการ? พิมพ์ชื่อ"
+    "notListed": "ไม่อยู่ในรายการ? พิมพ์ชื่อ",
+    "selectDate": "เลือกวันที่",
+    "date": "วันที่",
+    "selectOptions": "เลือกตัวเลือก",
+    "selectPlot": "เลือกแปลง",
+    "searchPlots": "ค้นหาแปลง...",
+    "noPlotsFound": "ไม่พบแปลง กรุณาเพิ่มฟาร์มในโปรไฟล์ก่อน",
+    "completeProfile": "กรอกโปรไฟล์ให้ครบ",
+    "selectFarmer": "เลือกเกษตรกร",
+    "searchFarmers": "ค้นหาเกษตรกร...",
+    "noFarmersFound": "ไม่พบเกษตรกรที่เชื่อมต่อ"
   },
   "categories": {
     "cereals": "ธัญพืช",

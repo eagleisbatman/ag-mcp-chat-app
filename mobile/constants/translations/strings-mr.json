@@ -841,7 +841,17 @@
     "fieldRequired": "आवश्यक",
     "fieldMustBePositive": "धन संख्या असावी",
     "fieldMaxValue": "कमाल",
-    "notListed": "यादीत नाही? नाव टाका"
+    "notListed": "यादीत नाही? नाव टाका",
+    "selectDate": "तारीख निवडा",
+    "date": "तारीख",
+    "selectOptions": "पर्याय निवडा",
+    "selectPlot": "शेत निवडा",
+    "searchPlots": "शेत शोधा...",
+    "noPlotsFound": "शेत सापडले नाहीत. आधी तुमच्या प्रोफाइलमध्ये शेत जोडा.",
+    "completeProfile": "प्रोफाइल पूर्ण करा",
+    "selectFarmer": "शेतकरी निवडा",
+    "searchFarmers": "शेतकरी शोधा...",
+    "noFarmersFound": "जोडलेले शेतकरी सापडले नाहीत."
   },
   "categories": {
     "cereals": "धान्य",

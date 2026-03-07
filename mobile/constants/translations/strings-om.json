@@ -841,7 +841,17 @@
     "fieldRequired": "Barbaachisaa dha",
     "fieldMustBePositive": "Lakkoofsi guddaa ta'uu qaba",
     "fieldMaxValue": "Ol'aanaa",
-    "notListed": "Tarreessamee hin jiru? Maqaa barreessi."
+    "notListed": "Tarreessamee hin jiru? Maqaa barreessi.",
+    "selectDate": "Guyyaa Filadhu",
+    "date": "Guyyaa",
+    "selectOptions": "Filannoo Filadhu",
+    "selectPlot": "Qotiisa Filadhu",
+    "searchPlots": "Qotiisoota Barbaadi...",
+    "noPlotsFound": "Qotiisni hin argamne. Duraa odeeffannoo kee irratti qotiisa dabali.",
+    "completeProfile": "Odeeffannoo Kee Guuti",
+    "selectFarmer": "Qonnaan Bulaa Filadhu",
+    "searchFarmers": "Qonnaan Bultoota Barbaadi...",
+    "noFarmersFound": "Qonnaan Bultoonni walqabatan hin argamne."
   },
   "categories": {
     "cereals": "Midhaan",

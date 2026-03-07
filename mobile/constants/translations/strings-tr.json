@@ -841,7 +841,17 @@
     "fieldRequired": "Gerekli",
     "fieldMustBePositive": "Pozitif bir sayı olmalı",
     "fieldMaxValue": "Maksimum",
-    "notListed": "Listede yok mu? Bir isim yazın"
+    "notListed": "Listede yok mu? Bir isim yazın",
+    "selectDate": "Tarih Seç",
+    "date": "Tarih",
+    "selectOptions": "Seçenekleri Seç",
+    "selectPlot": "Tarla Seç",
+    "searchPlots": "Tarla ara...",
+    "noPlotsFound": "Tarla bulunamadı. Önce profilinize bir çiftlik ekleyin.",
+    "completeProfile": "Profilinizi Tamamlayın",
+    "selectFarmer": "Çiftçi Seç",
+    "searchFarmers": "Çiftçi ara...",
+    "noFarmersFound": "Bağlı çiftçi bulunamadı."
   },
   "categories": {
     "cereals": "Tahıllar",
