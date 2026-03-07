@@ -21,6 +21,7 @@ const WIDGET_ICONS: Record<string, string> = {
   form: 'file-text',
   profile_prompt: 'user',
   farmer_picker: 'users',
+  chart: 'bar-chart-2',
 };
 
 interface A2UIInlineCardProps {

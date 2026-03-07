@@ -583,7 +583,8 @@ export type A2UIWidgetType =
   | 'multi_select'
   | 'confirmation'
   | 'form'
-  | 'profile_prompt';
+  | 'profile_prompt'
+  | 'chart';
 
 export type A2UIStatus = 'pending' | 'responded' | 'expired';
 

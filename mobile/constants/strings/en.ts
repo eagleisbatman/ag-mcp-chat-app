@@ -863,6 +863,7 @@ export const en = {
     selectFarmer: 'Select Farmer',
     searchFarmers: 'Search farmers...',
     noFarmersFound: 'No connected farmers found.',
+    noChartData: 'No chart data available',
   },
   categories: {
     cereals: 'Cereals',
