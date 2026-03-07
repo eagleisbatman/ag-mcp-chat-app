@@ -841,7 +841,17 @@
     "fieldRequired": "Povinné",
     "fieldMustBePositive": "Musí být kladné číslo",
     "fieldMaxValue": "Maximum",
-    "notListed": "Není v seznamu? Napište název"
+    "notListed": "Není v seznamu? Napište název",
+    "selectDate": "Vybrat datum",
+    "date": "Datum",
+    "selectOptions": "Vybrat možnosti",
+    "selectPlot": "Vybrat pozemek",
+    "searchPlots": "Hledat pozemky...",
+    "noPlotsFound": "Nebyly nalezeny žádné pozemky. Nejprve přidejte farmu do svého profilu.",
+    "completeProfile": "Doplňte profil",
+    "selectFarmer": "Vybrat farmáře",
+    "searchFarmers": "Hledat farmáře...",
+    "noFarmersFound": "Nenalezeni žádní připojení farmáři."
   },
   "categories": {
     "cereals": "Obiloviny",

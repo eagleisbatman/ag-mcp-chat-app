@@ -841,7 +841,17 @@
     "fieldRequired": "Bắt buộc",
     "fieldMustBePositive": "Phải là số dương",
     "fieldMaxValue": "Tối đa",
-    "notListed": "Không có trong danh sách? Nhập tên"
+    "notListed": "Không có trong danh sách? Nhập tên",
+    "selectDate": "Chọn Ngày",
+    "date": "Ngày",
+    "selectOptions": "Chọn Tùy chọn",
+    "selectPlot": "Chọn Lô đất",
+    "searchPlots": "Tìm kiếm lô đất...",
+    "noPlotsFound": "Không tìm thấy lô đất nào. Thêm nông trại vào hồ sơ của bạn trước.",
+    "completeProfile": "Hoàn tất Hồ sơ",
+    "selectFarmer": "Chọn Nông dân",
+    "searchFarmers": "Tìm kiếm nông dân...",
+    "noFarmersFound": "Không tìm thấy nông dân đã kết nối nào."
   },
   "categories": {
     "cereals": "Ngũ cốc",

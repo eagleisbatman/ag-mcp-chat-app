@@ -841,7 +841,17 @@
     "fieldRequired": "Kailangan",
     "fieldMustBePositive": "Dapat positibong numero",
     "fieldMaxValue": "Pinakamataas",
-    "notListed": "Wala sa listahan? Ilagay ang pangalan"
+    "notListed": "Wala sa listahan? Ilagay ang pangalan",
+    "selectDate": "Piliin ang Petsa",
+    "date": "Petsa",
+    "selectOptions": "Pumili ng Opsyon",
+    "selectPlot": "Piliin ang Lupa",
+    "searchPlots": "Maghanap ng lupa...",
+    "noPlotsFound": "Walang nakitang lupa. Magdagdag muna ng bukid sa iyong profile.",
+    "completeProfile": "Kumpletuhin ang Profile Mo",
+    "selectFarmer": "Piliin ang Magsasaka",
+    "searchFarmers": "Maghanap ng magsasaka...",
+    "noFarmersFound": "Walang konektadong magsasakang nakita."
   },
   "categories": {
     "cereals": "Mga Butil",

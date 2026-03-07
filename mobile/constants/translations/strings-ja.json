@@ -549,14 +549,12 @@
     "listen": "聞く",
     "watch": "見る",
     "minutesRead": "{minutes}分で読めます",
-    "content": {
-      "related": "関連"
-    },
     "share": "共有",
     "like": "いいね",
     "noContent": "コンテンツがありません",
     "loadError": "コンテンツを読み込めませんでした",
-    "notFound": "コンテンツが見つかりません"
+    "notFound": "コンテンツが見つかりません",
+    "related": "関連"
   },
   "home": {
     "quickActions": "かんたん操作",
@@ -843,7 +841,17 @@
     "fieldRequired": "必須",
     "fieldMustBePositive": "正の数のみ",
     "fieldMaxValue": "最大",
-    "notListed": "リストにない場合、名前を入力"
+    "notListed": "リストにない場合、名前を入力",
+    "selectDate": "日付を選択",
+    "date": "日付",
+    "selectOptions": "オプションを選択",
+    "selectPlot": "区画を選択",
+    "searchPlots": "区画を検索...",
+    "noPlotsFound": "区画が見つかりません。まず、プロフィールに農場を追加してください。",
+    "completeProfile": "プロフィールを完了",
+    "selectFarmer": "農家を選択",
+    "searchFarmers": "農家を検索...",
+    "noFarmersFound": "連携農家が見つかりません。"
   },
   "categories": {
     "cereals": "穀物",

@@ -841,7 +841,17 @@
     "fieldRequired": "لازمی",
     "fieldMustBePositive": "مثبت عدد ہونا چاہیے",
     "fieldMaxValue": "زیادہ سے زیادہ",
-    "notListed": "لسٹ میں نہیں؟ نام لکھیں"
+    "notListed": "لسٹ میں نہیں؟ نام لکھیں",
+    "selectDate": "تاریخ منتخب کریں",
+    "date": "تاریخ",
+    "selectOptions": "اختیارات منتخب کریں",
+    "selectPlot": "رقبہ منتخب کریں",
+    "searchPlots": "رقبے تلاش کریں...",
+    "noPlotsFound": "کوئی رقبہ نہیں ملا۔ پہلے اپنی پروفائل میں ایک کھیت شامل کریں۔",
+    "completeProfile": "اپنی پروفائل مکمل کریں",
+    "selectFarmer": "کسان منتخب کریں",
+    "searchFarmers": "کسان تلاش کریں...",
+    "noFarmersFound": "کوئی منسلک کسان نہیں ملا۔"
   },
   "categories": {
     "cereals": "اناج",

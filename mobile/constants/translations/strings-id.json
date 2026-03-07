@@ -841,7 +841,17 @@
     "fieldRequired": "Wajib",
     "fieldMustBePositive": "Harus positif",
     "fieldMaxValue": "Maksimal",
-    "notListed": "Tidak terdaftar? Ketik nama"
+    "notListed": "Tidak terdaftar? Ketik nama",
+    "selectDate": "Pilih Tanggal",
+    "date": "Tanggal",
+    "selectOptions": "Pilih Pilihan",
+    "selectPlot": "Pilih Petak",
+    "searchPlots": "Cari petak...",
+    "noPlotsFound": "Petak tidak ditemukan. Tambahkan lahan di profil Anda terlebih dahulu.",
+    "completeProfile": "Lengkapi Profil Anda",
+    "selectFarmer": "Pilih Petani",
+    "searchFarmers": "Cari petani...",
+    "noFarmersFound": "Petani terhubung tidak ditemukan."
   },
   "categories": {
     "cereals": "Serealia",

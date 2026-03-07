@@ -841,7 +841,17 @@
     "fieldRequired": "Verplicht",
     "fieldMustBePositive": "Moet een positief getal zijn",
     "fieldMaxValue": "Maximum",
-    "notListed": "Staat het er niet bij? Typ een naam"
+    "notListed": "Staat het er niet bij? Typ een naam",
+    "selectDate": "Kies datum",
+    "date": "Datum",
+    "selectOptions": "Kies opties",
+    "selectPlot": "Kies perceel",
+    "searchPlots": "Zoek percelen...",
+    "noPlotsFound": "Geen percelen gevonden. Voeg eerst een boerderij toe aan je profiel.",
+    "completeProfile": "Profiel aanvullen",
+    "selectFarmer": "Kies boer",
+    "searchFarmers": "Zoek boeren...",
+    "noFarmersFound": "Geen gekoppelde boeren gevonden."
   },
   "categories": {
     "cereals": "Granen",

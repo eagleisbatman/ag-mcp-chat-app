@@ -841,7 +841,17 @@
     "fieldRequired": "必填",
     "fieldMustBePositive": "必须是正数",
     "fieldMaxValue": "最大值",
-    "notListed": "没有列出？输入名称"
+    "notListed": "没有列出？输入名称",
+    "selectDate": "选择日期",
+    "date": "日期",
+    "selectOptions": "选择选项",
+    "selectPlot": "选择地块",
+    "searchPlots": "搜索地块...",
+    "noPlotsFound": "未找到地块。请先在个人资料中添加农场。",
+    "completeProfile": "完善个人资料",
+    "selectFarmer": "选择农户",
+    "searchFarmers": "搜索农户...",
+    "noFarmersFound": "未找到关联农户。"
   },
   "categories": {
     "cereals": "谷物",

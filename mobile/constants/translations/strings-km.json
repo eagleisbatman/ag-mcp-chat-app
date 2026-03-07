@@ -841,7 +841,17 @@
     "fieldRequired": "ចាំបាច់",
     "fieldMustBePositive": "ត្រូវតែធំជាងសូន្យ",
     "fieldMaxValue": "ច្រើនបំផុត",
-    "notListed": "មិនមានក្នុងបញ្ជី? វាយឈ្មោះ"
+    "notListed": "មិនមានក្នុងបញ្ជី? វាយឈ្មោះ",
+    "selectDate": "ជ្រើសរើសថ្ងៃខែ",
+    "date": "ថ្ងៃខែ",
+    "selectOptions": "ជ្រើសរើសជម្រើស",
+    "selectPlot": "ជ្រើសរើសក្បាលដី",
+    "searchPlots": "ស្វែងរកក្បាលដី...",
+    "noPlotsFound": "រកមិនឃើញក្បាលដីទេ។ បន្ថែមកសិដ្ឋានក្នុងប្រវត្តិរូបសិន។",
+    "completeProfile": "បំពេញប្រវត្តិរូប",
+    "selectFarmer": "ជ្រើសរើសកសិករ",
+    "searchFarmers": "ស្វែងរកកសិករ...",
+    "noFarmersFound": "មិនមានកសិករតភ្ជាប់ទេ។"
   },
   "categories": {
     "cereals": "ធញ្ញជាតិ",

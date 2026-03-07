@@ -841,7 +841,17 @@
     "fieldRequired": "Obligatoriu",
     "fieldMustBePositive": "Trebuie să fie un număr pozitiv",
     "fieldMaxValue": "Maxim",
-    "notListed": "Nu e în listă? Scrie un nume"
+    "notListed": "Nu e în listă? Scrie un nume",
+    "selectDate": "Selectează Data",
+    "date": "Data",
+    "selectOptions": "Selectează Opțiuni",
+    "selectPlot": "Selectează Parcelă",
+    "searchPlots": "Caută parcele...",
+    "noPlotsFound": "Nu s-au găsit parcele. Adaugă o fermă în profilul tău mai întâi.",
+    "completeProfile": "Completează Profilul",
+    "selectFarmer": "Selectează Fermier",
+    "searchFarmers": "Caută fermieri...",
+    "noFarmersFound": "Nu s-au găsit fermieri conectați."
   },
   "categories": {
     "cereals": "Cereale",

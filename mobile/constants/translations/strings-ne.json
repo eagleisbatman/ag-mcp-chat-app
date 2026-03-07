@@ -841,7 +841,17 @@
     "fieldRequired": "अनिवार्य",
     "fieldMustBePositive": "शून्य भन्दा बढी हुनुपर्छ",
     "fieldMaxValue": "अधिकतम",
-    "notListed": "सूचीमा छैन? नाम लेख्नुहोस्"
+    "notListed": "सूचीमा छैन? नाम लेख्नुहोस्",
+    "selectDate": "मिति छान्नुहोस्",
+    "date": "मिति",
+    "selectOptions": "विकल्पहरू छान्नुहोस्",
+    "selectPlot": "बारी छान्नुहोस्",
+    "searchPlots": "बारीहरू खोज्नुहोस्...",
+    "noPlotsFound": "कुनै बारी भेटिएन। पहिले आफ्नो प्रोफाइलमा खेत थप्नुहोस्।",
+    "completeProfile": "आफ्नो प्रोफाइल पूरा गर्नुहोस्",
+    "selectFarmer": "किसान छान्नुहोस्",
+    "searchFarmers": "किसानहरू खोज्नुहोस्...",
+    "noFarmersFound": "कुनै जोडिएका किसान भेटिएनन्।"
   },
   "categories": {
     "cereals": "अन्न",

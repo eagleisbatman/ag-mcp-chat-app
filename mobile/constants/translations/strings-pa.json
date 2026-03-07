@@ -841,7 +841,17 @@
     "fieldRequired": "ਜ਼ਰੂਰੀ",
     "fieldMustBePositive": "ਅੰਕ ਧਨਾਤਮਕ ਹੋਵੇ",
     "fieldMaxValue": "ਵੱਧ ਤੋਂ ਵੱਧ",
-    "notListed": "ਸੂਚੀ ਵਿੱਚ ਨਹੀਂ? ਨਾਮ ਲਿਖੋ"
+    "notListed": "ਸੂਚੀ ਵਿੱਚ ਨਹੀਂ? ਨਾਮ ਲਿਖੋ",
+    "selectDate": "ਤਾਰੀਖ ਚੁਣੋ",
+    "date": "ਤਾਰੀਖ",
+    "selectOptions": "ਵਿਕਲਪ ਚੁਣੋ",
+    "selectPlot": "ਖੇਤ ਚੁਣੋ",
+    "searchPlots": "ਖੇਤ ਖੋਜੋ...",
+    "noPlotsFound": "ਕੋਈ ਖੇਤ ਨਹੀਂ ਮਿਲੇ। ਪਹਿਲਾਂ ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਵਿੱਚ ਇੱਕ ਫਾਰਮ ਜੋੜੋ।",
+    "completeProfile": "ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਪੂਰੀ ਕਰੋ",
+    "selectFarmer": "ਕਿਸਾਨ ਚੁਣੋ",
+    "searchFarmers": "ਕਿਸਾਨ ਖੋਜੋ...",
+    "noFarmersFound": "ਕੋਈ ਜੁੜੇ ਹੋਏ ਕਿਸਾਨ ਨਹੀਂ ਮਿਲੇ।"
   },
   "categories": {
     "cereals": "ਅਨਾਜ",

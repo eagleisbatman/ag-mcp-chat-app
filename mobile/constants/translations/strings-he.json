@@ -841,7 +841,17 @@
     "fieldRequired": "חובה",
     "fieldMustBePositive": "חייב להיות מספר חיובי",
     "fieldMaxValue": "מקסימום",
-    "notListed": "לא ברשימה? הקלד שם"
+    "notListed": "לא ברשימה? הקלד שם",
+    "selectDate": "בחר תאריך",
+    "date": "תאריך",
+    "selectOptions": "בחר אפשרויות",
+    "selectPlot": "בחר חלקה",
+    "searchPlots": "חפש חלקות...",
+    "noPlotsFound": "לא נמצאו חלקות. הוסף משק בפרופיל שלך קודם.",
+    "completeProfile": "השלם פרופיל",
+    "selectFarmer": "בחר חקלאי",
+    "searchFarmers": "חפש חקלאים...",
+    "noFarmersFound": "לא נמצאו חקלאים מחוברים."
   },
   "categories": {
     "cereals": "דגנים",

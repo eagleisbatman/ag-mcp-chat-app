@@ -841,7 +841,17 @@
     "fieldRequired": "ያስፈልጋል",
     "fieldMustBePositive": "አዎንታዊ ቁጥር መሆን አለበት",
     "fieldMaxValue": "ከፍተኛ",
-    "notListed": "አልተዘረዘረም? ስም ይጻፉ"
+    "notListed": "አልተዘረዘረም? ስም ይጻፉ",
+    "selectDate": "ቀን ምረጥ",
+    "date": "ቀን",
+    "selectOptions": "አማራጮች ምረጥ",
+    "selectPlot": "ማሳ ምረጥ",
+    "searchPlots": "ማሳ ፈልግ...",
+    "noPlotsFound": "ምንም ማሳ አልተገኘም። መጀመሪያ ፕሮፋይልዎ ላይ እርሻ ይጨምሩ።",
+    "completeProfile": "ፕሮፋይልዎን ያጠናቅቁ",
+    "selectFarmer": "ገበሬ ምረጥ",
+    "searchFarmers": "ገበሬ ፈልግ...",
+    "noFarmersFound": "ምንም የተገናኙ ገበሬዎች አልተገኙም።"
   },
   "categories": {
     "cereals": "እህል",

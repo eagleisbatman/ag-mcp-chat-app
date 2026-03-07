@@ -841,7 +841,17 @@
     "fieldRequired": "Birakenewe",
     "fieldMustBePositive": "Agomba kuba umubare urenze ubusa",
     "fieldMaxValue": "Ntarengwa",
-    "notListed": "Ntibiri ku rutonde? Andika izina"
+    "notListed": "Ntibiri ku rutonde? Andika izina",
+    "selectDate": "Hitamo Itariki",
+    "date": "Itariki",
+    "selectOptions": "Hitamo Amahitamo",
+    "selectPlot": "Hitamo Ikibanza",
+    "searchPlots": "Shakisha ibibanza...",
+    "noPlotsFound": "Nta bibanza byabonetse. Ongera isambu kuri konte yawe mbere.",
+    "completeProfile": "Uzuza Konti Yawe",
+    "selectFarmer": "Hitamo Umuhinzi",
+    "searchFarmers": "Shakisha abahinzi...",
+    "noFarmersFound": "Nta bahinzi bafitanye isano babonetse."
   },
   "categories": {
     "cereals": "Imyaka y'intete",

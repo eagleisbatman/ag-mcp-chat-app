@@ -841,7 +841,17 @@
     "fieldRequired": "ફરજિયાત",
     "fieldMustBePositive": "ધન આંકડો હોવો જોઈએ",
     "fieldMaxValue": "મહત્તમ",
-    "notListed": "યાદીમાં નથી? નામ લખો"
+    "notListed": "યાદીમાં નથી? નામ લખો",
+    "selectDate": "તારીખ પસંદ કરો",
+    "date": "તારીખ",
+    "selectOptions": "વિકલ્પો પસંદ કરો",
+    "selectPlot": "પ્લોટ પસંદ કરો",
+    "searchPlots": "પ્લોટ શોધો...",
+    "noPlotsFound": "કોઈ પ્લોટ મળ્યા નથી. પહેલા તમારા પ્રોફાઇલમાં ખેતર ઉમેરો.",
+    "completeProfile": "તમારી પ્રોફાઇલ પૂર્ણ કરો",
+    "selectFarmer": "ખેડૂત પસંદ કરો",
+    "searchFarmers": "ખેડૂતો શોધો...",
+    "noFarmersFound": "કોઈ જોડાયેલા ખેડૂતો મળ્યા નથી."
   },
   "categories": {
     "cereals": "અનાજ",

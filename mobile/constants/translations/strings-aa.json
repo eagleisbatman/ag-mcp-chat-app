@@ -841,7 +841,17 @@
     "fieldRequired": "Qaleela",
     "fieldMustBePositive": "Nummár qeebá geyná",
     "fieldMaxValue": "Kaxxá",
-    "notListed": "Qalaloh hinnaa? Amâ katab"
+    "notListed": "Qalaloh hinnaa? Amâ katab",
+    "selectDate": "Saaku dooris",
+    "date": "Saaku",
+    "selectOptions": "Dooroow dooris",
+    "selectPlot": "Agda dooris",
+    "searchPlots": "Agdoota barbaara...",
+    "noPlotsFound": "Agdoota hin geyna. Qaleelook sin profile-lih beero qada.",
+    "completeProfile": "Sin Profile-lih duddusa",
+    "selectFarmer": "Beero-baa dooris",
+    "searchFarmers": "Beero-baxay barbaara...",
+    "noFarmersFound": "Beero-baxay hin geyna."
   },
   "categories": {
     "cereals": "Ganna",

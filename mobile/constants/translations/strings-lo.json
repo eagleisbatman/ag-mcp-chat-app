@@ -841,7 +841,17 @@
     "fieldRequired": "ຕ້ອງການ",
     "fieldMustBePositive": "ຕ້ອງເປັນຕົວເລກບວກ",
     "fieldMaxValue": "ສູງສຸດ",
-    "notListed": "ບໍ່ມີໃນລາຍຊື່? ພິມຊື່"
+    "notListed": "ບໍ່ມີໃນລາຍຊື່? ພິມຊື່",
+    "selectDate": "ເລືອກວັນທີ",
+    "date": "ວັນທີ",
+    "selectOptions": "ເລືອກຕົວເລືອກ",
+    "selectPlot": "ເລືອກແປງ",
+    "searchPlots": "ຄົ້ນຫາແປງ...",
+    "noPlotsFound": "ບໍ່ພົບແປງ. ເພີ່ມຟາມໃນໂປຣໄຟລ໌ຂອງທ່ານກ່ອນ.",
+    "completeProfile": "ສຳເລັດໂປຣໄຟລ໌",
+    "selectFarmer": "ເລືອກຊາວກະສິກອນ",
+    "searchFarmers": "ຄົ້ນຫາຊາວກະສິກອນ...",
+    "noFarmersFound": "ບໍ່ພົບຊາວກະສິກອນທີ່ເຊື່ອມຕໍ່."
   },
   "categories": {
     "cereals": "ຫານພືດ",

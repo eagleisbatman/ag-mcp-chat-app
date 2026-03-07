@@ -841,7 +841,17 @@
     "fieldRequired": "Обязательно",
     "fieldMustBePositive": "Должно быть положительным числом",
     "fieldMaxValue": "Максимум",
-    "notListed": "Нет в списке? Введите имя"
+    "notListed": "Нет в списке? Введите имя",
+    "selectDate": "Выбрать дату",
+    "date": "Дата",
+    "selectOptions": "Выбрать параметры",
+    "selectPlot": "Выбрать участок",
+    "searchPlots": "Поиск участков...",
+    "noPlotsFound": "Участков не найдено. Сначала добавьте хозяйство в профиле.",
+    "completeProfile": "Заполнить профиль",
+    "selectFarmer": "Выбрать фермера",
+    "searchFarmers": "Поиск фермеров...",
+    "noFarmersFound": "Подключенных фермеров не найдено."
   },
   "categories": {
     "cereals": "Зерновые",

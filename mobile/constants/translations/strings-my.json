@@ -841,7 +841,17 @@
     "fieldRequired": "မဖြစ်မနေ",
     "fieldMustBePositive": "အပေါင်းကိန်းဖြစ်ရမည်",
     "fieldMaxValue": "အများဆုံး",
-    "notListed": "စာရင်းမပါလျှင်၊ နာမည်ရိုက်ပါ"
+    "notListed": "စာရင်းမပါလျှင်၊ နာမည်ရိုက်ပါ",
+    "selectDate": "ရက်စွဲရွေးပါ",
+    "date": "ရက်စွဲ",
+    "selectOptions": "ရွေးချယ်စရာများရွေးပါ",
+    "selectPlot": "ကွက်လပ်ရွေးပါ",
+    "searchPlots": "ကွက်လပ်ရှာဖွေပါ...",
+    "noPlotsFound": "ကွက်လပ်များမတွေ့ပါ။ သင်၏ပရိုဖိုင်တွင် လယ်ယာထည့်ပါ။",
+    "completeProfile": "ပရိုဖိုင်ဖြည့်စွက်ပါ",
+    "selectFarmer": "တောင်သူရွေးပါ",
+    "searchFarmers": "တောင်သူရှာဖွေပါ...",
+    "noFarmersFound": "ဆက်သွယ်ထားသော တောင်သူများမတွေ့ပါ"
   },
   "categories": {
     "cereals": "ကောက်ပဲ",

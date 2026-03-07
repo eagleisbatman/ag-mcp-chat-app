@@ -841,7 +841,17 @@
     "fieldRequired": "ಕಡ್ಡಾಯ",
     "fieldMustBePositive": "ಧನಾತ್ಮಕ ಸಂಖ್ಯೆ ಇರಬೇಕು",
     "fieldMaxValue": "ಗರಿಷ್ಠ",
-    "notListed": "ಪಟ್ಟಿಯಲ್ಲಿ ಇಲ್ಲವೇ? ಹೆಸರು ನಮೂದಿಸಿ"
+    "notListed": "ಪಟ್ಟಿಯಲ್ಲಿ ಇಲ್ಲವೇ? ಹೆಸರು ನಮೂದಿಸಿ",
+    "selectDate": "ದಿನಾಂಕ ಆಯ್ಕೆಮಾಡಿ",
+    "date": "ದಿನಾಂಕ",
+    "selectOptions": "ಆಯ್ಕೆಗಳನ್ನು ಆರಿಸಿ",
+    "selectPlot": "ಜಮೀನು ಆಯ್ಕೆಮಾಡಿ",
+    "searchPlots": "ಜಮೀನುಗಳನ್ನು ಹುಡುಕಿ...",
+    "noPlotsFound": "ಯಾವುದೇ ಜಮೀನುಗಳು ಕಂಡುಬಂದಿಲ್ಲ. ಮೊದಲು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್‌ನಲ್ಲಿ ಜಮೀನು ಸೇರಿಸಿ.",
+    "completeProfile": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಿ",
+    "selectFarmer": "ರೈತರನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "searchFarmers": "ರೈತರನ್ನು ಹುಡುಕಿ...",
+    "noFarmersFound": "ಯಾವುದೇ ಸಂಪರ್ಕಿತ ರೈತರು ಕಂಡುಬಂದಿಲ್ಲ."
   },
   "categories": {
     "cereals": "ಧಾನ್ಯಗಳು",

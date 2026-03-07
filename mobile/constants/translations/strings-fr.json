@@ -841,7 +841,17 @@
     "fieldRequired": "Obligatoire",
     "fieldMustBePositive": "Doit être un nombre positif",
     "fieldMaxValue": "Maximum",
-    "notListed": "Pas listé ? Saisir un nom"
+    "notListed": "Pas listé ? Saisir un nom",
+    "selectDate": "Sélectionner la date",
+    "date": "Date",
+    "selectOptions": "Sélectionner les options",
+    "selectPlot": "Sélectionner la parcelle",
+    "searchPlots": "Rechercher des parcelles...",
+    "noPlotsFound": "Aucune parcelle trouvée. Ajoutez d'abord une ferme à votre profil.",
+    "completeProfile": "Compléter votre profil",
+    "selectFarmer": "Sélectionner l'agriculteur",
+    "searchFarmers": "Rechercher des agriculteurs...",
+    "noFarmersFound": "Aucun agriculteur connecté trouvé."
   },
   "categories": {
     "cereals": "Céréales",

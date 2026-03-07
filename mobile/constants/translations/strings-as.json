@@ -841,7 +841,17 @@
     "fieldRequired": "আৱশ্যক",
     "fieldMustBePositive": "ধনাত্মক সংখ্যা হ'ব লাগিব",
     "fieldMaxValue": "সৰ্বাধিক",
-    "notListed": "তালিকাত নাই? নাম লিখক"
+    "notListed": "তালিকাত নাই? নাম লিখক",
+    "selectDate": "তাৰিখ বাছক",
+    "date": "তাৰিখ",
+    "selectOptions": "বিকল্প বাছক",
+    "selectPlot": "প্লাট বাছক",
+    "searchPlots": "প্লাট বিচাৰক...",
+    "noPlotsFound": "কোনো প্লট পোৱা নগ'ল। প্ৰথমে আপোনাৰ প্ৰফাইলত এখন পাম যোগ কৰক।",
+    "completeProfile": "আপোনাৰ প্ৰফাইল সম্পূৰ্ণ কৰক",
+    "selectFarmer": "খেতিয়ক বাছক",
+    "searchFarmers": "খেতিয়ক বিচাৰক...",
+    "noFarmersFound": "কোনো সংযুক্ত খেতিয়ক পোৱা নগ'ল।"
   },
   "categories": {
     "cereals": "শস্য",
