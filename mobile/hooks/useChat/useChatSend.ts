@@ -7,6 +7,7 @@ import { useApp } from '../../contexts/AppContext';
 import { useToast } from '../../contexts/ToastContext';
 import { t } from '../../constants/strings';
 import { createSendImageHandler, createSendTextHandler, transcribeAudioForInput, uploadAudioInBackground } from './send/handlers';
+import { useStreamBuffer } from './send/useStreamBuffer';
 import { createConnectedSession } from '../../services/db';
 import { log } from '../../utils/logger';
 import type { A2UIResponse } from '../../types';
@@ -30,7 +31,22 @@ export default function useChatSend({
   const abortRef = useRef<(() => void) | null>(null);
   const connectedSessionCreatedRef = useRef(false);
   const interactionIdRef = useRef<string | null>(null);
+  const activeBotMsgIdRef = useRef<string | null>(null);
   const MAX_RETRIES = 1;
+
+  // Stream buffer: batches per-chunk updates into ~60ms intervals to reduce re-renders
+  const streamBuffer = useStreamBuffer({
+    flushIntervalMs: 60,
+    onFlush: (text) => {
+      if (activeBotMsgIdRef.current) {
+        updateMessage(activeBotMsgIdRef.current, {
+          text,
+          status: 'streaming',
+          thinkingText: null,
+        });
+      }
+    },
+  });
 
   const locationContext = useMemo(() => ({
     location,
@@ -71,6 +87,8 @@ export default function useChatSend({
         onBehalfOfFarmerUserId,
         abortRef,
         interactionIdRef,
+        streamBuffer,
+        activeBotMsgIdRef,
       })(text, isRetry, undefined, a2uiResponse);
     },
     [

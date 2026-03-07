@@ -89,7 +89,7 @@ export async function fetchStarterQuestions(
         },
         body: JSON.stringify(requestBody),
       },
-      15000 // 15s timeout (allow for cold starts)
+      8000 // 8s timeout (cache handles cold-start scenarios)
     );
 
     log('📋 [StarterQuestions] Response status:', response.status);

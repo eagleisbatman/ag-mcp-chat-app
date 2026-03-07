@@ -1,15 +1,14 @@
 /**
  * StarterQuestions component
  * Minimal tappable suggestions for empty chat state
- * Fetches personalized questions from API once on mount
+ * Prop-driven: receives questions and loading state from parent hook
  */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useApp } from '../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../constants/themes';
-import { fetchStarterQuestions, StarterQuestion } from '../services/api/starterQuestions';
-import { log } from '../utils/logger';
+import type { StarterQuestion } from '../services/api/starterQuestions';
 import { t } from '../constants/strings';
 
 /**
@@ -24,7 +23,7 @@ const SkeletonRow: React.FC<{ theme: any; index: number }> = ({ theme, index }) 
         Animated.timing(pulseAnim, {
           toValue: 0.7,
           duration: 600,
-          delay: index * 100, // Stagger effect
+          delay: index * 100,
           useNativeDriver: true,
         }),
         Animated.timing(pulseAnim, {
@@ -55,52 +54,29 @@ const SkeletonRow: React.FC<{ theme: any; index: number }> = ({ theme, index }) 
 };
 
 interface StarterQuestionsProps {
+  questions: StarterQuestion[];
+  isLoading: boolean;
   onQuestionTap: (question: string) => void;
 }
 
 export default function StarterQuestions({
+  questions,
+  isLoading,
   onQuestionTap,
 }: StarterQuestionsProps): JSX.Element | null {
-  const { theme, location, language, locationDetails } = useApp();
-
-  const [questions, setQuestions] = useState<StarterQuestion[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasFetched, setHasFetched] = useState(false);
+  const { theme } = useApp();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // Fetch once on mount - backend handles weather and time calculation
+  // Fade in when questions arrive
   useEffect(() => {
-    if (hasFetched) return;
-
-    async function loadQuestions() {
-      log('📋 [StarterQuestions] Component mounted, starting fetch...');
-      setIsLoading(true);
-      try {
-        const result = await fetchStarterQuestions({
-          latitude: location?.latitude,
-          longitude: location?.longitude,
-          language: language?.code,
-          country: locationDetails?.level1Country,
-        });
-        log('📋 [StarterQuestions] Got', result.length, 'questions');
-        setQuestions(result.slice(0, 3));
-
-        // Fade in when questions are loaded
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
-      } catch (error) {
-        log('❌ [StarterQuestions] Failed:', error);
-      } finally {
-        setIsLoading(false);
-        setHasFetched(true);
-      }
+    if (questions.length > 0 && !isLoading) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
     }
-
-    loadQuestions();
-  }, [hasFetched, location?.latitude, location?.longitude, language?.code, fadeAnim]);
+  }, [questions.length, isLoading, fadeAnim]);
 
   const handleTap = (question: string): void => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -108,7 +84,7 @@ export default function StarterQuestions({
   };
 
   // Show skeleton loading state
-  if (isLoading) {
+  if (isLoading && questions.length === 0) {
     return (
       <View style={styles.container}>
         <View style={styles.loadingHeader}>

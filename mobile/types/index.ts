@@ -129,6 +129,7 @@ export interface ChatMetadata {
   followUpQuestions?: string[];
   a2uiWidgets?: A2UIPayload[];
   interactionId?: string;
+  usage?: { inputTokens: number; outputTokens: number; totalTokens: number };
   [key: string]: unknown;
 }
 

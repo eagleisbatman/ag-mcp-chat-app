@@ -210,6 +210,7 @@ export const sendChatMessageStreaming = ({
               followUpQuestions?: string[];
               a2ui?: A2UIPayload;
               flowStep?: RationFlowStep;
+              usage?: { inputTokens: number; outputTokens: number; totalTokens: number };
             };
 
             if (parsed.type === 'text') {
@@ -233,6 +234,10 @@ export const sendChatMessageStreaming = ({
               // Extract follow-up questions from the complete chunk
               if (parsed.followUpQuestions && parsed.followUpQuestions.length > 0) {
                 metadata.followUpQuestions = parsed.followUpQuestions;
+              }
+              // Capture token usage for cost tracking
+              if (parsed.usage) {
+                metadata.usage = parsed.usage;
               }
             } else if (parsed.type === 'a2ui' && parsed.a2ui) {
               // Collect A2UI directives in metadata and notify callback

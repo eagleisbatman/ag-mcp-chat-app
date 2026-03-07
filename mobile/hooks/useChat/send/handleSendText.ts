@@ -9,6 +9,13 @@ import { ensureDeviceId } from '../../../services/api/core';
 import type { HistoryMessage, Message, A2UIPayload, A2UIResponse, RationFlowStep } from '../../../types';
 import type { LocationContextDeps } from './types';
 
+interface StreamBufferDeps {
+  appendChunk: (chunk: string) => void;
+  flush: () => void;
+  getText: () => string;
+  reset: () => void;
+}
+
 interface SendTextDeps {
   messages: Message[];
   addMessage: (message: Message) => void;
@@ -26,6 +33,8 @@ interface SendTextDeps {
   onBehalfOfFarmerUserId?: string;
   abortRef?: { current: (() => void) | null };
   interactionIdRef?: { current: string | null };
+  streamBuffer?: StreamBufferDeps;
+  activeBotMsgIdRef?: { current: string | null };
 }
 
 export function createSendTextHandler({
@@ -45,6 +54,8 @@ export function createSendTextHandler({
   onBehalfOfFarmerUserId,
   abortRef,
   interactionIdRef,
+  streamBuffer,
+  activeBotMsgIdRef,
 }: SendTextDeps) {
   return async (text: string, isRetry = false, existingBotMsgId?: string, a2uiResponse?: A2UIResponse): Promise<void> => {
     const userMessage: Message = {
@@ -98,6 +109,10 @@ export function createSendTextHandler({
       // Capture flow step from SSE stream (set by onFlowStep callback)
       let capturedFlowStep: RationFlowStep | undefined;
 
+      // Reset stream buffer and set active bot message ID for flushing
+      if (streamBuffer) streamBuffer.reset();
+      if (activeBotMsgIdRef) activeBotMsgIdRef.current = botMsgId;
+
       const { promise: streamPromise, abort } = sendChatMessageStreaming({
         message: text,
         latitude: locationContext.location.latitude ?? undefined,
@@ -110,11 +125,15 @@ export function createSendTextHandler({
         a2uiResponse,
         previousInteractionId: interactionIdRef?.current ?? undefined,
         onChunk: (chunk: string) => {
-          updateMessage(botMsgId, {
-            text: (prev: string) => (prev || '') + chunk,
-            status: 'streaming',
-            thinkingText: null,
-          });
+          if (streamBuffer) {
+            streamBuffer.appendChunk(chunk);
+          } else {
+            updateMessage(botMsgId, {
+              text: (prev: string) => (prev || '') + chunk,
+              status: 'streaming',
+              thinkingText: null,
+            });
+          }
         },
         onThinking: (thinking: string) => updateMessage(botMsgId, { thinkingText: thinking }),
         onFlowStep: (flowStep: RationFlowStep) => {
@@ -136,6 +155,11 @@ export function createSendTextHandler({
           }
         },
         onComplete: (fullText: string, metadata?: Record<string, unknown>) => {
+          // Flush any remaining buffered chunks immediately
+          if (streamBuffer) {
+            streamBuffer.flush();
+            streamBuffer.reset();
+          }
           setIsTyping(false);
           // Store interactionId for stateful Gemini conversation chaining
           if (interactionIdRef && metadata?.interactionId) {
@@ -187,12 +211,15 @@ export function createSendTextHandler({
               onBehalfOfFarmerUserId,
               abortRef,
               interactionIdRef,
+              streamBuffer,
+              activeBotMsgIdRef,
             })(text, true, botMsgId);
             return;
           }
 
           retryCountRef.current = 0;
           setIsTyping(false);
+          if (streamBuffer) streamBuffer.reset();
           if (abortRef) abortRef.current = null;
           updateMessage(botMsgId, {
             text: (prev: string) => prev && prev.length > 10 ? prev : t('chat.connectionErrorBot'),
@@ -221,6 +248,7 @@ export function createSendTextHandler({
     } catch (error) {
       retryCountRef.current = 0;
       setIsTyping(false);
+      if (streamBuffer) streamBuffer.reset();
       updateMessage(botMsgId, {
         text: t('chat.connectionErrorBot'),
         status: 'complete',

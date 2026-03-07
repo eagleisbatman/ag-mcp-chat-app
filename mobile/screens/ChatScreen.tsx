@@ -10,6 +10,7 @@ import { useToast } from '../contexts/ToastContext';
 import useChat from '../hooks/useChat';
 import useChatScroll from '../hooks/useChatScroll';
 import useWeatherData from '../hooks/useWeatherData';
+import useStarterQuestions from '../hooks/useStarterQuestions';
 import { useA2UIPicker } from '../hooks/useA2UIPicker';
 
 import MessageItem from '../components/MessageItem';
@@ -81,6 +82,13 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
     locationDetails,
     language?.code || 'en'
   );
+
+  const { questions: starterQuestions, isLoading: starterQuestionsLoading } = useStarterQuestions({
+    latitude: location?.latitude,
+    longitude: location?.longitude,
+    language: language?.code,
+    country: locationDetails?.level1Country,
+  });
 
   const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
 
@@ -300,7 +308,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
             renderItem={({ item, index }) => {
               // Render starter questions as a scrollable item
               if ('isStarterQuestions' in item) {
-                return <StarterQuestions onQuestionTap={handleSend} />;
+                return <StarterQuestions questions={starterQuestions} isLoading={starterQuestionsLoading} onQuestionTap={handleSend} />;
               }
 
               // Check if we need a date separator above this message

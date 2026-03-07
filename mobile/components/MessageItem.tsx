@@ -72,6 +72,45 @@ function sanitizeStreamingMarkdown(text: string): string {
   return text;
 }
 
+/**
+ * Split streaming text into completed paragraphs and the current (in-progress) line.
+ * A paragraph is "completed" if followed by a double newline AND no open markdown markers
+ * (bold, italic, code fence, link) span across the boundary.
+ */
+function splitStreamingText(text: string): { completed: string; current: string } {
+  if (!text) return { completed: '', current: '' };
+
+  // Find the last double-newline boundary
+  const lastBoundary = text.lastIndexOf('\n\n');
+  if (lastBoundary === -1) {
+    return { completed: '', current: text };
+  }
+
+  const candidate = text.slice(0, lastBoundary);
+  const tail = text.slice(lastBoundary + 2);
+
+  // Check for open code fences (``` without matching close)
+  const fenceCount = (candidate.match(/```/g) || []).length;
+  if (fenceCount % 2 !== 0) {
+    // Open code fence — don't split here
+    return { completed: '', current: text };
+  }
+
+  return { completed: candidate, current: tail };
+}
+
+/**
+ * Memoized renderer for completed (stable) paragraphs during streaming.
+ * Only re-renders when the completed text actually changes.
+ */
+const CompletedParagraphs = React.memo(
+  ({ text, markdownStyles }: { text: string; markdownStyles: any }) => {
+    if (!text) return null;
+    return <Markdown style={markdownStyles}>{text}</Markdown>;
+  },
+  (prev, next) => prev.text === next.text
+);
+
 function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onRetryMessage, onFollowUpTap, onA2UIPress, respondedA2UIWidgetIds }: MessageItemProps): JSX.Element | null {
   const { theme, language, locationDetails } = useApp();
   const { showError } = useToast();
@@ -268,20 +307,28 @@ function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onRetry
           ) : message.flowStep ? (
             <RationFlowRenderer flowStep={message.flowStep} />
           ) : message.text ? (
-            <>
-              <Markdown style={markdownStyles}>
-                {isStreaming
-                  ? sanitizeStreamingMarkdown(message.text)
-                  : message.text}
-              </Markdown>
-              {isStreaming && (
-                <Animated.Text
-                  style={{ opacity: cursorOpacity, color: theme.text, fontSize: TYPOGRAPHY.sizes.base, marginTop: -4 }}
-                >
-                  {'\u258B'}
-                </Animated.Text>
-              )}
-            </>
+            isStreaming ? (
+              (() => {
+                const { completed, current } = splitStreamingText(message.text);
+                return (
+                  <>
+                    <CompletedParagraphs text={completed} markdownStyles={markdownStyles} />
+                    {current ? (
+                      <Text style={{ color: textColor, fontSize: TYPOGRAPHY.sizes.base, lineHeight: 24 }}>
+                        {current}
+                      </Text>
+                    ) : null}
+                    <Animated.Text
+                      style={{ opacity: cursorOpacity, color: theme.text, fontSize: TYPOGRAPHY.sizes.base, marginTop: -4 }}
+                    >
+                      {'\u258B'}
+                    </Animated.Text>
+                  </>
+                );
+              })()
+            ) : (
+              <Markdown style={markdownStyles}>{message.text}</Markdown>
+            )
           ) : null}
 
           {message.diagnosisData && (
