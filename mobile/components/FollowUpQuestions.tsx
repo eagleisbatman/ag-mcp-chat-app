@@ -35,7 +35,7 @@ export default function FollowUpQuestions({
       // Fade in the container
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 200,
+        duration: 100,
         useNativeDriver: true,
       }).start();
 
@@ -43,8 +43,8 @@ export default function FollowUpQuestions({
       const staggerAnimations = slideAnims.slice(0, Math.min(questions.length, 3)).map((anim, index) =>
         Animated.timing(anim, {
           toValue: 0,
-          duration: 250,
-          delay: index * 50, // 50ms stagger between each row
+          duration: 150,
+          delay: index * 30, // 30ms stagger between each row
           useNativeDriver: true,
         })
       );
