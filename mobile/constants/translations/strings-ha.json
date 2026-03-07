@@ -851,7 +851,8 @@
     "completeProfile": "Kammala Bayanan Ka",
     "selectFarmer": "Zaɓi Manomi",
     "searchFarmers": "Nemi Manoma...",
-    "noFarmersFound": "Ba a sami manoma masu alaƙa ba."
+    "noFarmersFound": "Ba a sami manoma masu alaƙa ba.",
+    "noChartData": "Babu bayanan zane"
   },
   "categories": {
     "cereals": "Hatsi",

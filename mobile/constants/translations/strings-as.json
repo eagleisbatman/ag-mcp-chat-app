@@ -851,7 +851,8 @@
     "completeProfile": "আপোনাৰ প্ৰফাইল সম্পূৰ্ণ কৰক",
     "selectFarmer": "খেতিয়ক বাছক",
     "searchFarmers": "খেতিয়ক বিচাৰক...",
-    "noFarmersFound": "কোনো সংযুক্ত খেতিয়ক পোৱা নগ'ল।"
+    "noFarmersFound": "কোনো সংযুক্ত খেতিয়ক পোৱা নগ'ল।",
+    "noChartData": "গ্ৰাফৰ কোনো তথ্য নাই"
   },
   "categories": {
     "cereals": "শস্য",

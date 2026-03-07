@@ -851,7 +851,8 @@
     "completeProfile": "Fyll i Profilen",
     "selectFarmer": "Välj Bonde",
     "searchFarmers": "Sök bönder...",
-    "noFarmersFound": "Inga anslutna bönder hittades."
+    "noFarmersFound": "Inga anslutna bönder hittades.",
+    "noChartData": "Diagramdata saknas"
   },
   "categories": {
     "cereals": "Spannmål",

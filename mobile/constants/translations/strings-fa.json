@@ -851,7 +851,8 @@
     "completeProfile": "تکمیل پروفایل",
     "selectFarmer": "انتخاب کشاورز",
     "searchFarmers": "جستجوی کشاورزان...",
-    "noFarmersFound": "کشاورز متصلی یافت نشد."
+    "noFarmersFound": "کشاورز متصلی یافت نشد.",
+    "noChartData": "داده نموداری موجود نیست"
   },
   "categories": {
     "cereals": "غلات",

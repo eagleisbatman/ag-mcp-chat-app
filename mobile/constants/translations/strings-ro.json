@@ -851,7 +851,8 @@
     "completeProfile": "Completează Profilul",
     "selectFarmer": "Selectează Fermier",
     "searchFarmers": "Caută fermieri...",
-    "noFarmersFound": "Nu s-au găsit fermieri conectați."
+    "noFarmersFound": "Nu s-au găsit fermieri conectați.",
+    "noChartData": "Fără date grafic"
   },
   "categories": {
     "cereals": "Cereale",

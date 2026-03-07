@@ -851,7 +851,8 @@
     "completeProfile": "আপনার প্রোফাইল সম্পূর্ণ করুন",
     "selectFarmer": "কৃষক নির্বাচন করুন",
     "searchFarmers": "কৃষক খুঁজুন...",
-    "noFarmersFound": "কোনো সংযুক্ত কৃষক পাওয়া যায়নি।"
+    "noFarmersFound": "কোনো সংযুক্ত কৃষক পাওয়া যায়নি।",
+    "noChartData": "গ্রাফের তথ্য নেই"
   },
   "categories": {
     "cereals": "শস্য",

@@ -851,7 +851,8 @@
     "completeProfile": "प्रोफाइल पूर्ण करा",
     "selectFarmer": "शेतकरी निवडा",
     "searchFarmers": "शेतकरी शोधा...",
-    "noFarmersFound": "जोडलेले शेतकरी सापडले नाहीत."
+    "noFarmersFound": "जोडलेले शेतकरी सापडले नाहीत.",
+    "noChartData": "चार्ट डेटा उपलब्ध नाही"
   },
   "categories": {
     "cereals": "धान्य",

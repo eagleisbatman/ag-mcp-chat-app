@@ -851,7 +851,8 @@
     "completeProfile": "Uzupełnij Profil",
     "selectFarmer": "Wybierz Rolnika",
     "searchFarmers": "Szukaj rolników...",
-    "noFarmersFound": "Nie znaleziono połączonych rolników."
+    "noFarmersFound": "Nie znaleziono połączonych rolników.",
+    "noChartData": "Brak danych wykresu"
   },
   "categories": {
     "cereals": "Zboża",

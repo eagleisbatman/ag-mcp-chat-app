@@ -851,7 +851,8 @@
     "completeProfile": "ፕሮፋይልዎን ያጠናቅቁ",
     "selectFarmer": "ገበሬ ምረጥ",
     "searchFarmers": "ገበሬ ፈልግ...",
-    "noFarmersFound": "ምንም የተገናኙ ገበሬዎች አልተገኙም።"
+    "noFarmersFound": "ምንም የተገናኙ ገበሬዎች አልተገኙም።",
+    "noChartData": "የግራፍ መረጃ የለም"
   },
   "categories": {
     "cereals": "እህል",

@@ -851,7 +851,8 @@
     "completeProfile": "完成個人資料",
     "selectFarmer": "選擇農民",
     "searchFarmers": "搜尋農民...",
-    "noFarmersFound": "找不到已連結的農民。"
+    "noFarmersFound": "找不到已連結的農民。",
+    "noChartData": "無圖表資料"
   },
   "categories": {
     "cereals": "穀物",

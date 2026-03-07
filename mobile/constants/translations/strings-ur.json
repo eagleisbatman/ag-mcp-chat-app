@@ -851,7 +851,8 @@
     "completeProfile": "اپنی پروفائل مکمل کریں",
     "selectFarmer": "کسان منتخب کریں",
     "searchFarmers": "کسان تلاش کریں...",
-    "noFarmersFound": "کوئی منسلک کسان نہیں ملا۔"
+    "noFarmersFound": "کوئی منسلک کسان نہیں ملا۔",
+    "noChartData": "کوئی چارٹ ڈیٹا دستیاب نہیں"
   },
   "categories": {
     "cereals": "اناج",

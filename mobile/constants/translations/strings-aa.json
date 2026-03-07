@@ -851,7 +851,8 @@
     "completeProfile": "Sin Profile-lih duddusa",
     "selectFarmer": "Beero-baa dooris",
     "searchFarmers": "Beero-baxay barbaara...",
-    "noFarmersFound": "Beero-baxay hin geyna."
+    "noFarmersFound": "Beero-baxay hin geyna.",
+    "noChartData": "Giraaffii baaxó kak maay."
   },
   "categories": {
     "cereals": "Ganna",

@@ -851,7 +851,8 @@
     "completeProfile": "अपनी प्रोफ़ाइल पूरी करें",
     "selectFarmer": "किसान चुनें",
     "searchFarmers": "किसान खोजें...",
-    "noFarmersFound": "कोई जुड़े किसान नहीं मिले।"
+    "noFarmersFound": "कोई जुड़े किसान नहीं मिले।",
+    "noChartData": "चार्ट डेटा उपलब्ध नहीं है"
   },
   "categories": {
     "cereals": "अनाज",

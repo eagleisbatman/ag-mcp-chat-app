@@ -851,7 +851,8 @@
     "completeProfile": "Ολοκληρώστε το Προφίλ σας",
     "selectFarmer": "Επιλέξτε Αγρότη",
     "searchFarmers": "Αναζήτηση αγροτών...",
-    "noFarmersFound": "Δεν βρέθηκαν συνδεδεμένοι αγρότες."
+    "noFarmersFound": "Δεν βρέθηκαν συνδεδεμένοι αγρότες.",
+    "noChartData": "Δεν υπάρχουν δεδομένα διαγράμματος"
   },
   "categories": {
     "cereals": "Σιτηρά",

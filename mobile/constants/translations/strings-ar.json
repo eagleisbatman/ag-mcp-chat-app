@@ -851,7 +851,8 @@
     "completeProfile": "أكمل ملفك الشخصي",
     "selectFarmer": "اختيار مزارع",
     "searchFarmers": "ابحث عن مزارعين...",
-    "noFarmersFound": "لم يتم العثور على مزارعين متصلين."
+    "noFarmersFound": "لم يتم العثور على مزارعين متصلين.",
+    "noChartData": "لا توجد بيانات رسم بياني"
   },
   "categories": {
     "cereals": "حبوب",

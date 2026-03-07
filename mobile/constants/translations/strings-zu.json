@@ -851,7 +851,8 @@
     "completeProfile": "Qedela Iphrofayela Yakho",
     "selectFarmer": "Khetha Umlimi",
     "searchFarmers": "Sesha abalimi...",
-    "noFarmersFound": "Abekho abalimi abaxhumekile abatholakele."
+    "noFarmersFound": "Abekho abalimi abaxhumekile abatholakele.",
+    "noChartData": "Ayikho idatha yegrafu"
   },
   "categories": {
     "cereals": "Okusanhlamvu",

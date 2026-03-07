@@ -851,7 +851,8 @@
     "completeProfile": "השלם פרופיל",
     "selectFarmer": "בחר חקלאי",
     "searchFarmers": "חפש חקלאים...",
-    "noFarmersFound": "לא נמצאו חקלאים מחוברים."
+    "noFarmersFound": "לא נמצאו חקלאים מחוברים.",
+    "noChartData": "אין נתוני תרשים"
   },
   "categories": {
     "cereals": "דגנים",

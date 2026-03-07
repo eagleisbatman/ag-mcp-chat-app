@@ -851,7 +851,8 @@
     "completeProfile": "完善个人资料",
     "selectFarmer": "选择农户",
     "searchFarmers": "搜索农户...",
-    "noFarmersFound": "未找到关联农户。"
+    "noFarmersFound": "未找到关联农户。",
+    "noChartData": "无图表数据"
   },
   "categories": {
     "cereals": "谷物",

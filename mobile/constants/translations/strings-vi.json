@@ -851,7 +851,8 @@
     "completeProfile": "Hoàn tất Hồ sơ",
     "selectFarmer": "Chọn Nông dân",
     "searchFarmers": "Tìm kiếm nông dân...",
-    "noFarmersFound": "Không tìm thấy nông dân đã kết nối nào."
+    "noFarmersFound": "Không tìm thấy nông dân đã kết nối nào.",
+    "noChartData": "Không có dữ liệu biểu đồ"
   },
   "categories": {
     "cereals": "Ngũ cốc",

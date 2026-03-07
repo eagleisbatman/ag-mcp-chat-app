@@ -851,7 +851,8 @@
     "completeProfile": "Parí Àkọọlẹ Rẹ",
     "selectFarmer": "Yan Àgbẹ̀",
     "searchFarmers": "Wa àgbẹ̀...",
-    "noFarmersFound": "Kò sí àgbẹ̀ tí wọ́n sopọ̀ rárá."
+    "noFarmersFound": "Kò sí àgbẹ̀ tí wọ́n sopọ̀ rárá.",
+    "noChartData": "Kò sí àlàyé àwòrán"
   },
   "categories": {
     "cereals": "Ọkà",

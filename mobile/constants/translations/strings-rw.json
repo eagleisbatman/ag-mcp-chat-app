@@ -851,7 +851,8 @@
     "completeProfile": "Uzuza Konti Yawe",
     "selectFarmer": "Hitamo Umuhinzi",
     "searchFarmers": "Shakisha abahinzi...",
-    "noFarmersFound": "Nta bahinzi bafitanye isano babonetse."
+    "noFarmersFound": "Nta bahinzi bafitanye isano babonetse.",
+    "noChartData": "Nta makuru y'igishushanyo aboneka"
   },
   "categories": {
     "cereals": "Imyaka y'intete",

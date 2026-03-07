@@ -851,7 +851,8 @@
     "completeProfile": "Profil vervollständigen",
     "selectFarmer": "Landwirt auswählen",
     "searchFarmers": "Landwirte suchen...",
-    "noFarmersFound": "Keine verbundenen Landwirte gefunden."
+    "noFarmersFound": "Keine verbundenen Landwirte gefunden.",
+    "noChartData": "Keine Diagrammdaten verfügbar"
   },
   "categories": {
     "cereals": "Getreide",
