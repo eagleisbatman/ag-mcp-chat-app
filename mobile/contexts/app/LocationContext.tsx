@@ -31,13 +31,37 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
   const pendingLocationSyncKey = userId ? `${userId}:pendingLocationSync` : 'pendingLocationSync';
 
   useEffect(() => {
-    // Reset state when switching users
-    setLocationState({ latitude: null, longitude: null });
-    setLocationStatus('pending');
-    setLocationDetails(null);
-
     const loadLocation = async () => {
       try {
+        // When userId transitions from null → real ID (first registration),
+        // migrate un-prefixed keys saved during onboarding to user-scoped keys.
+        // This prevents the location loop where onboarding saves to 'location'
+        // but post-registration looks for '${userId}:location' (which doesn't exist).
+        if (userId) {
+          const unPrefixedLocation = await AsyncStorage.getItem('location');
+          if (unPrefixedLocation) {
+            const userScopedExists = await AsyncStorage.getItem(locationKey);
+            if (!userScopedExists) {
+              log('[Location] Migrating onboarding location to user-scoped key');
+              await AsyncStorage.setItem(locationKey, unPrefixedLocation);
+              const unPrefixedDetails = await AsyncStorage.getItem('locationDetails');
+              if (unPrefixedDetails) {
+                await AsyncStorage.setItem(locationDetailsKey, unPrefixedDetails);
+              }
+              const unPrefixedSync = await AsyncStorage.getItem('pendingLocationSync');
+              if (unPrefixedSync) {
+                await AsyncStorage.setItem(pendingLocationSyncKey, unPrefixedSync);
+              }
+            }
+            // Clean up un-prefixed keys after migration
+            await Promise.all([
+              AsyncStorage.removeItem('location'),
+              AsyncStorage.removeItem('locationDetails'),
+              AsyncStorage.removeItem('pendingLocationSync'),
+            ]);
+          }
+        }
+
         const [savedLocation, savedLocationDetails] = await Promise.all([
           AsyncStorage.getItem(locationKey),
           AsyncStorage.getItem(locationDetailsKey),
@@ -55,6 +79,12 @@ export const LocationProvider = ({ children, userId }: { children: ReactNode; us
           }
         } else if (savedLocationDetails) {
           setLocationDetails(JSON.parse(savedLocationDetails) as LocationDetails);
+        } else if (!userId) {
+          // Only reset to pending when there's genuinely no data AND no user yet.
+          // Avoids resetting location mid-onboarding when userId arrives.
+          setLocationState({ latitude: null, longitude: null });
+          setLocationStatus('pending');
+          setLocationDetails(null);
         }
       } catch (e) {
         log('Error loading location:', e);
