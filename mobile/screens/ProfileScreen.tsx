@@ -12,7 +12,6 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   Pressable,
 } from 'react-native';
 import { Image } from 'expo-image';
@@ -149,7 +148,6 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
         name: name.trim() || undefined,
         phone: formattedPhone,
         gender: (gender as 'male' | 'female' | 'other' | 'prefer_not_to_say') || undefined,
-        role,
         farmingTypes,
       });
       if (success) {
@@ -166,17 +164,6 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
   };
 
   const handleSave = () => {
-    if (role !== profile?.role) {
-      Alert.alert(
-        t('profile.roleChangeTitle'),
-        t('profile.roleChangeMessage'),
-        [
-          { text: t('common.cancel'), style: 'cancel' },
-          { text: t('common.continue'), onPress: () => doSave() },
-        ]
-      );
-      return;
-    }
     doSave();
   };
 
@@ -298,23 +285,21 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
         </View>
       </View>
 
-      {/* Role */}
+      {/* Role (read-only — set via voice conversation with EW verification) */}
       <View style={styles.section}>
         <Text style={[styles.label, { color: theme.textMuted }]}>{t('profile.role')}</Text>
         <View style={styles.chipRow}>
           {ROLE_OPTIONS.map((opt) => (
-            <TouchableOpacity
+            <View
               key={opt.value}
               testID={`profile-role-${opt.value}`}
-              onPress={() => setRole(opt.value)}
-              accessibilityRole="radio"
-              accessibilityState={{ selected: role === opt.value }}
-              accessibilityLabel={t(opt.labelKey)}
+              accessibilityRole="text"
               style={[
                 styles.chip,
                 {
                   backgroundColor: role === opt.value ? theme.accent + '20' : theme.surface,
                   borderColor: role === opt.value ? theme.accent : theme.border,
+                  opacity: role === opt.value ? 1 : 0.5,
                 },
               ]}
             >
@@ -326,9 +311,12 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
               >
                 {t(opt.labelKey)}
               </Text>
-            </TouchableOpacity>
+            </View>
           ))}
         </View>
+        <Text style={[styles.roleHint, { color: theme.textMuted }]}>
+          {t('profile.roleHint')}
+        </Text>
       </View>
 
       {/* Farming Types */}
@@ -420,6 +408,10 @@ const styles = StyleSheet.create({
   chipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.medium,
+  },
+  roleHint: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: SPACING.xs,
   },
   saveButton: {
     paddingVertical: SPACING.md,
