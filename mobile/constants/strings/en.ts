@@ -118,7 +118,7 @@ export const en = {
     analysisComplete: 'Analysis complete',
     lowAccuracy: 'Low Accuracy',
     tapToImprove: 'Tap to improve',
-    profileSaveFailed: 'Could not save to profile. Please try again.',
+    profileSaveFailed: 'Could not save to your profile, but your selection was sent.',
     // A2UI picker modals
     selectCrop: 'Select Crop',
     selectLivestockType: 'Select Livestock Type',
@@ -606,8 +606,7 @@ export const en = {
     aquaculture: 'Aquaculture',
     completeness: 'Profile Completeness',
     saveProfile: 'Save Profile',
-    roleChangeTitle: 'Change Role?',
-    roleChangeMessage: 'Changing your role will affect which features are available to you. Are you sure?',
+    roleHint: 'Role is set during your first voice conversation',
     profileUpdated: 'Profile updated',
     profileUpdateFailed: 'Failed to update profile',
     pictureUpdated: 'Profile picture updated',
