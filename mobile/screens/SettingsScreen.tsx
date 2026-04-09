@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import * as Location from 'expo-location';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
 import { useApp } from '../contexts/AppContext';
 import { useProfile } from '../contexts/app/ProfileContext';
 import { useToast } from '../contexts/ToastContext';
@@ -242,7 +241,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
             }
             onPress={() => navigation.navigate('FarmList')}
             paddingHorizontal={SPACING.md}
-            accessibilityLabel="Manage farms"
+            accessibilityLabel={t('extensionWorker.manageFarms')}
           />
         </Card>
       </View>
@@ -258,7 +257,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
                 ? (() => {
                     const byType: Record<string, number> = {};
                     for (const a of animals) {
-                      const type = a.livestockName || 'Unknown';
+                      const type = a.livestockName || t('common.unknown');
                       byType[type] = (byType[type] || 0) + (a.trackingMode === 'herd' ? (a.herdSize || 1) : 1);
                     }
                     return Object.entries(byType).map(([type, count]) => `${type}: ${count}`).join(', ');
@@ -272,7 +271,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
             }
             onPress={() => navigation.navigate('LivestockList')}
             paddingHorizontal={SPACING.md}
-            accessibilityLabel="Manage livestock"
+            accessibilityLabel={t('extensionWorker.manageLivestock')}
           />
         </Card>
       </View>
@@ -293,7 +292,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
               onPress={() => navigation.navigate('MyFarmers')}
               paddingHorizontal={SPACING.md}
               divider
-              accessibilityLabel="My farmers"
+              accessibilityLabel={t('extensionWorker.myFarmers')}
             />
             <ListRow
               title={t('extensionWorker.pendingRequests')}
@@ -305,7 +304,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
               }
               onPress={() => navigation.navigate('PendingRequests')}
               paddingHorizontal={SPACING.md}
-              accessibilityLabel="Pending requests"
+              accessibilityLabel={t('extensionWorker.pendingRequests')}
             />
           </Card>
         </View>

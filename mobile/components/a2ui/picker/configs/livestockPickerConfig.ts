@@ -1,6 +1,9 @@
 /**
  * Livestock picker configuration.
  * Two-step: searchable list → optional name + herd size form.
+ *
+ * @deprecated Prefer the generic 'picker' widget type with `context.dataSource = 'livestock'`.
+ * Kept for backward compatibility with old-format AI payloads.
  */
 
 import { t } from '../../../../constants/strings';
@@ -47,7 +50,9 @@ export function createLivestockPickerConfig(): PickerConfig {
         id: l.id,
         label: l.translatedName || l.name,
         sublabel: l.translatedName && l.translatedName !== l.name ? l.name : undefined,
-        category: t(`categories.${(l.category || 'Other').toLowerCase().replace(/\s+/g, '_')}`) || l.category || 'Other',
+        category: l.category
+          ? l.category.charAt(0).toUpperCase() + l.category.slice(1).toLowerCase()
+          : 'Other',
       })),
 
     // Livestock saves can be slow — allow 30s instead of default 10s

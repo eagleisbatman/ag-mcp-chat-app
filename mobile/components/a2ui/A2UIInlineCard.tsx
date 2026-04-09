@@ -22,6 +22,21 @@ const WIDGET_ICONS: Record<string, string> = {
   profile_prompt: 'user',
   farmer_picker: 'users',
   chart: 'bar-chart-2',
+  picker: 'list',
+};
+
+const WIDGET_FALLBACK_TITLES: Record<string, string> = {
+  crop_picker: 'Which crop are you growing?',
+  livestock_picker: 'Which animal are you raising?',
+  plot_selector: 'Select a plot',
+  confirmation: 'Confirm',
+  number_input: 'Enter a value',
+  date_picker: 'Select a date',
+  multi_select: 'Select options',
+  form: 'Fill in details',
+  profile_prompt: 'Complete your profile',
+  farmer_picker: 'Select a farmer',
+  picker: 'Select an option',
 };
 
 interface A2UIInlineCardProps {
@@ -33,6 +48,7 @@ interface A2UIInlineCardProps {
 export default function A2UIInlineCard({ widget, onPress, responded }: A2UIInlineCardProps) {
   const { theme } = useApp();
   const iconName = WIDGET_ICONS[widget.widgetType] || 'info';
+  const displayTitle = widget.title || WIDGET_FALLBACK_TITLES[widget.widgetType] || 'Select an option';
 
   return (
     <TouchableOpacity
@@ -47,7 +63,7 @@ export default function A2UIInlineCard({ widget, onPress, responded }: A2UIInlin
         },
       ]}
       accessibilityRole="button"
-      accessibilityLabel={widget.title || 'Select an option'}
+      accessibilityLabel={displayTitle}
       accessibilityHint={responded ? 'Already responded' : 'Tap to open picker'}
       accessibilityState={{ disabled: responded }}
     >
@@ -55,14 +71,12 @@ export default function A2UIInlineCard({ widget, onPress, responded }: A2UIInlin
         <AppIcon name={iconName} size={18} color={theme.accent} />
       </View>
       <View style={styles.textWrap}>
-        {widget.title && (
-          <Text
-            style={[styles.title, { color: responded ? theme.textMuted : theme.text }]}
-            numberOfLines={2}
-          >
-            {widget.title}
-          </Text>
-        )}
+        <Text
+          style={[styles.title, { color: responded ? theme.textMuted : theme.text }]}
+          numberOfLines={2}
+        >
+          {displayTitle}
+        </Text>
         {widget.description && (
           <Text style={[styles.description, { color: theme.textMuted }]} numberOfLines={1}>
             {widget.description}

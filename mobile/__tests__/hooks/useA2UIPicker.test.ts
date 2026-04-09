@@ -14,6 +14,33 @@ jest.mock('../../contexts/app/ProfileContext', () => ({
     masterLivestock: [
       { id: 'l1', name: 'Cattle', category: 'Large' },
     ],
+    farms: [
+      {
+        id: 'farm-1', name: 'My Farm', totalAreaHectares: 5, userId: 'u1',
+        plots: [
+          {
+            id: 'plot-1', farmId: 'farm-1', name: 'Main Plot', soilType: 'Loamy', areaHectares: 2,
+            cropAllocations: [
+              { id: 'ca-1', plotId: 'plot-1', cropId: 'c1', cropName: 'Maize', season: 'Rabi', status: 'planted' },
+              { id: 'ca-2', plotId: 'plot-1', cropId: 'c3', cropName: 'Tomato', season: 'Kharif', status: 'planted' },
+            ],
+            createdAt: '2026-01-01', updatedAt: '2026-01-01',
+          },
+          {
+            id: 'plot-2', farmId: 'farm-1', name: 'Side Plot', areaHectares: 3,
+            cropAllocations: [
+              { id: 'ca-3', plotId: 'plot-2', cropId: 'c1', cropName: 'Maize', season: 'Rabi', status: 'planted' },
+            ],
+            createdAt: '2026-01-01', updatedAt: '2026-01-01',
+          },
+        ],
+        createdAt: '2026-01-01', updatedAt: '2026-01-01',
+      },
+    ],
+    animals: [
+      { id: 'a1', userId: 'u1', name: 'Bessie', livestockName: 'Cattle', breed: 'Holstein', herdSize: 5, trackingMode: 'herd', status: 'active', createdAt: '2026-01-01', updatedAt: '2026-01-01' },
+      { id: 'a2', userId: 'u1', livestockName: 'Goat', herdSize: 10, trackingMode: 'herd', status: 'active', createdAt: '2026-01-01', updatedAt: '2026-01-01' },
+    ],
     addCropToDefaultPlot: jest.fn().mockResolvedValue(true),
     addAnimal: jest.fn().mockResolvedValue({ id: 'a1' }),
   })),
@@ -32,6 +59,19 @@ jest.mock('../../components/a2ui/picker/pickerRegistry', () => ({
           text: 'Selected Maize',
           saved: true,
           responseData: { cropId: 'c1' },
+        }),
+      };
+    }
+    if (type === 'picker') {
+      return {
+        key: 'picker',
+        title: 'Select',
+        steps: [{ type: 'list', searchPlaceholder: 'Search...' }],
+        mapItems: jest.fn(() => []),
+        onComplete: jest.fn().mockResolvedValue({
+          text: 'Selected',
+          saved: false,
+          responseData: {},
         }),
       };
     }
@@ -328,6 +368,113 @@ describe('useA2UIPicker', () => {
       );
 
       expect(result.current.profileActions.onBehalfOfFarmerUserId).toBe('farmer-99');
+    });
+  });
+
+  describe('user profile dataSource resolvers', () => {
+    it('resolves user_animals from profile animals', () => {
+      const { result } = renderHook(() => useA2UIPicker(createDeps()));
+
+      act(() => {
+        result.current.openPicker({
+          widgetId: 'w-animals',
+          widgetType: 'picker',
+          title: 'Select Animal',
+          context: { dataSource: 'user_animals' },
+        } as any);
+      });
+
+      expect(result.current.items).toHaveLength(2);
+      expect(result.current.items[0]).toEqual(
+        expect.objectContaining({ id: 'a1', label: 'Bessie', category: 'Cattle' })
+      );
+      expect(result.current.items[0].sublabel).toContain('Holstein');
+      expect(result.current.items[0].sublabel).toContain('5 head');
+      // Animal without a name falls back to livestockName
+      expect(result.current.items[1]).toEqual(
+        expect.objectContaining({ id: 'a2', label: 'Goat', category: 'Goat' })
+      );
+    });
+
+    it('resolves user_farms from profile farms', () => {
+      const { result } = renderHook(() => useA2UIPicker(createDeps()));
+
+      act(() => {
+        result.current.openPicker({
+          widgetId: 'w-farms',
+          widgetType: 'picker',
+          title: 'Select Farm',
+          context: { dataSource: 'user_farms' },
+        } as any);
+      });
+
+      expect(result.current.items).toHaveLength(1);
+      expect(result.current.items[0]).toEqual(
+        expect.objectContaining({ id: 'farm-1', label: 'My Farm', sublabel: '5 ha', category: 'Farm' })
+      );
+    });
+
+    it('resolves user_plots from profile farms (flattened)', () => {
+      const { result } = renderHook(() => useA2UIPicker(createDeps()));
+
+      act(() => {
+        result.current.openPicker({
+          widgetId: 'w-plots',
+          widgetType: 'picker',
+          title: 'Select Plot',
+          context: { dataSource: 'user_plots' },
+        } as any);
+      });
+
+      expect(result.current.items).toHaveLength(2);
+      expect(result.current.items[0]).toEqual(
+        expect.objectContaining({ id: 'plot-1', label: 'Main Plot', category: 'My Farm' })
+      );
+      expect(result.current.items[0].sublabel).toContain('Loamy');
+      expect(result.current.items[0].sublabel).toContain('2 ha');
+      expect(result.current.items[1]).toEqual(
+        expect.objectContaining({ id: 'plot-2', label: 'Side Plot', category: 'My Farm' })
+      );
+    });
+
+    it('resolves user_crops from profile farms (deduplicated)', () => {
+      const { result } = renderHook(() => useA2UIPicker(createDeps()));
+
+      act(() => {
+        result.current.openPicker({
+          widgetId: 'w-crops',
+          widgetType: 'picker',
+          title: 'Select Crop',
+          context: { dataSource: 'user_crops' },
+        } as any);
+      });
+
+      // Maize appears in both plots but should be deduplicated
+      expect(result.current.items).toHaveLength(2);
+      expect(result.current.items[0]).toEqual(
+        expect.objectContaining({ id: 'c1', label: 'Maize', category: 'Rabi' })
+      );
+      expect(result.current.items[1]).toEqual(
+        expect.objectContaining({ id: 'c3', label: 'Tomato', category: 'Kharif' })
+      );
+    });
+
+    it('user_plots sublabel omits soilType when not present', () => {
+      const { result } = renderHook(() => useA2UIPicker(createDeps()));
+
+      act(() => {
+        result.current.openPicker({
+          widgetId: 'w-plots2',
+          widgetType: 'picker',
+          title: 'Select Plot',
+          context: { dataSource: 'user_plots' },
+        } as any);
+      });
+
+      // Side Plot has no soilType — sublabel should only contain area
+      const sidePlot = result.current.items.find((i) => i.id === 'plot-2');
+      expect(sidePlot).toBeDefined();
+      expect(sidePlot!.sublabel).toBe('3 ha');
     });
   });
 });

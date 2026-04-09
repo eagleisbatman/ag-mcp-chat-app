@@ -1,6 +1,9 @@
 /**
  * Crop picker configuration.
  * Single-step: searchable list of crops grouped by category.
+ *
+ * @deprecated Prefer the generic 'picker' widget type with `context.dataSource = 'crops'`.
+ * Kept for backward compatibility with old-format AI payloads.
  */
 
 import { t } from '../../../../constants/strings';
@@ -24,8 +27,9 @@ export function createCropPickerConfig(): PickerConfig {
         id: c.id,
         label: c.translatedName || c.name,
         sublabel: c.translatedName && c.translatedName !== c.name ? c.name : undefined,
-        // Use i18n key for known categories, fallback to raw server value
-        category: t(`categories.${(c.category || 'Other').toLowerCase().replace(/\s+/g, '_')}`) || c.category || 'Other',
+        category: c.category
+          ? c.category.charAt(0).toUpperCase() + c.category.slice(1).toLowerCase()
+          : 'Other',
       })),
 
     onComplete: async (

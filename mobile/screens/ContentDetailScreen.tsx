@@ -60,7 +60,7 @@ interface RelatedContentItem {
 export default function ContentDetailScreen({ navigation, route }: ContentDetailScreenProps) {
   const { contentId } = route.params || {};
   const { theme, isDark } = useApp();
-  const { showSuccess, showError } = useToast();
+  const { showError } = useToast();
   const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
   const viewStartTime = useRef(Date.now());
@@ -109,13 +109,20 @@ export default function ContentDetailScreen({ navigation, route }: ContentDetail
 
   const handleLike = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const previousLiked = liked;
     setLiked(!liked);
 
     if (contentId) {
-      if (!liked) {
-        await contentService.likeContent(contentId);
-      } else {
-        await contentService.unlikeContent(contentId);
+      try {
+        if (!previousLiked) {
+          await contentService.likeContent(contentId);
+        } else {
+          await contentService.unlikeContent(contentId);
+        }
+      } catch (error) {
+        // Rollback optimistic update on failure
+        setLiked(previousLiked);
+        logError('Like/unlike failed:', error);
       }
     }
   };
@@ -139,9 +146,9 @@ export default function ContentDetailScreen({ navigation, route }: ContentDetail
   };
 
   const handleRelatedPress = (item: RelatedContentItem) => {
-    const contentId = item.id || item._id;
-    if (contentId) {
-      navigation.push('ContentDetail', { contentId });
+    const relatedId = item.id || item._id;
+    if (relatedId) {
+      navigation.push('ContentDetail', { contentId: relatedId });
     }
   };
 
@@ -344,7 +351,12 @@ export default function ContentDetailScreen({ navigation, route }: ContentDetail
         {content.sourceUrl && (
           <Pressable
             style={({ pressed }) => [styles.sourceLink, { borderColor: theme.accent }, pressed && { opacity: 0.7 }]}
-            onPress={() => Linking.openURL(content.sourceUrl!)}
+            onPress={() => {
+              const url = content.sourceUrl!;
+              if (url.startsWith('https://') || url.startsWith('http://')) {
+                Linking.openURL(url);
+              }
+            }}
           >
             <Ionicons name="open-outline" size={16} color={theme.accent} />
             <Text style={[styles.sourceLinkText, { color: theme.accent }]}>

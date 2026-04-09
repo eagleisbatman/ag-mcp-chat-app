@@ -329,34 +329,34 @@ describe('chatStreaming', () => {
     });
   });
 
-  describe('[FOLLOWUP] tag filtering', () => {
-    it('strips [FOLLOWUP]...[/FOLLOWUP] from displayed text', async () => {
+  describe('[FOLLOWUP] tag passthrough', () => {
+    // FOLLOWUP tag filtering was removed from the client — the server now
+    // strips these tags before emitting SSE chunks.  The client passes text
+    // through as-is.
+
+    it('passes text through unchanged (server handles FOLLOWUP stripping)', async () => {
       const { onChunk } = startStream();
       const xhr = await waitForXhr();
 
       xhr.simulateProgress(
-        'data: {"type":"text","text":"Visible text [FOLLOWUP]hidden[/FOLLOWUP] more visible"}\n\n'
+        'data: {"type":"text","text":"Visible text more visible"}\n\n'
       );
 
-      // onChunk should receive only the visible portions
       const received = onChunk.mock.calls.map((c: unknown[]) => c[0]).join('');
-      expect(received).not.toContain('[FOLLOWUP]');
-      expect(received).not.toContain('hidden');
       expect(received).toContain('Visible text');
       expect(received).toContain('more visible');
     });
 
-    it('handles [FOLLOWUP] tags split across multiple chunks', async () => {
+    it('passes text chunks through without client-side filtering', async () => {
       const { onChunk } = startStream();
       const xhr = await waitForXhr();
 
-      xhr.simulateProgress('data: {"type":"text","text":"Before [FOLLOWUP"}\n\n');
-      xhr.simulateProgress('data: {"type":"text","text":"]hidden content[/FOLLOWUP] After"}\n\n');
+      xhr.simulateProgress('data: {"type":"text","text":"Before "}\n\n');
+      xhr.simulateProgress('data: {"type":"text","text":"After"}\n\n');
 
       const received = onChunk.mock.calls.map((c: unknown[]) => c[0]).join('');
       expect(received).toContain('Before');
       expect(received).toContain('After');
-      expect(received).not.toContain('hidden content');
     });
   });
 
