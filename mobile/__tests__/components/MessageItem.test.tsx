@@ -271,7 +271,7 @@ describe('MessageItem', () => {
     });
 
     it('renders streaming text with sanitization', () => {
-      const { getByTestId } = render(
+      const { getByText } = render(
         <MessageItem
           message={makeMessage({
             isBot: true,
@@ -282,7 +282,9 @@ describe('MessageItem', () => {
         />
       );
 
-      expect(getByTestId('markdown-text')).toBeTruthy();
+      // During streaming, the component uses plain <Text> (not <Markdown>)
+      // and sanitizeStreamingMarkdown strips the trailing incomplete bold markers
+      expect(getByText('Partial **bold')).toBeTruthy();
     });
   });
 

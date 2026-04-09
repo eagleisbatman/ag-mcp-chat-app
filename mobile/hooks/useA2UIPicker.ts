@@ -74,7 +74,7 @@ export function useA2UIPicker({
   setRespondedA2UIWidgetIds,
   onBehalfOfFarmerUserId,
 }: UseA2UIPickerDeps) {
-  const { masterCrops, masterLivestock, addCropToDefaultPlot, addAnimal } = useProfile();
+  const { masterCrops, masterLivestock, farms, animals, addCropToDefaultPlot, addAnimal } = useProfile();
   const [pickerState, setPickerState] = useState<PickerState>(CLOSED_STATE);
 
   // Profile actions passed to picker configs (avoids hooks in configs)
@@ -84,7 +84,7 @@ export function useA2UIPicker({
   );
 
   // Map master data into PickerItem[] based on active config.
-  // For context-driven widgets (plot_selector, farmer_picker), items come from widget.context.
+  // For context-driven widgets (plot_selector, farmer_picker, picker), items come from widget.context.
   const items: PickerItem[] = useMemo(() => {
     if (!pickerState.config) return [];
     const ctx = pickerState.widget?.context;
@@ -98,15 +98,97 @@ export function useA2UIPicker({
       return parseContextFarmers(ctx.farmers);
     }
 
+    // Generic picker: items come from context (inline items or dataSource reference)
+    if (widgetType === 'picker') {
+      // Option A: inline items from AI
+      if (ctx?.items && Array.isArray(ctx.items)) {
+        return (ctx.items as Array<Record<string, unknown>>).map((item) => ({
+          id: String(item.id || item.label),
+          label: String(item.label),
+          sublabel: item.sublabel ? String(item.sublabel) : undefined,
+          category: item.category ? String(item.category) : undefined,
+        }));
+      }
+      // Option B: dataSource reference — resolve from local master data
+      if (ctx?.dataSource === 'crops') {
+        return masterCrops.map((c) => ({
+          id: c.id,
+          label: c.translatedName || c.name,
+          sublabel: c.translatedName && c.translatedName !== c.name ? c.name : undefined,
+          category: c.category
+            ? c.category.charAt(0).toUpperCase() + c.category.slice(1).toLowerCase()
+            : 'Other',
+        }));
+      }
+      if (ctx?.dataSource === 'livestock') {
+        return masterLivestock.map((l) => ({
+          id: l.id,
+          label: l.translatedName || l.name,
+          sublabel: l.translatedName && l.translatedName !== l.name ? l.name : undefined,
+          category: l.category
+            ? l.category.charAt(0).toUpperCase() + l.category.slice(1).toLowerCase()
+            : 'Other',
+        }));
+      }
+
+      // User profile data sources
+      if (ctx?.dataSource === 'user_animals') {
+        return animals.map((a) => ({
+          id: a.id,
+          label: a.name || a.livestockName || 'Unnamed',
+          sublabel: [a.breed, a.herdSize ? `${a.herdSize} head` : null].filter(Boolean).join(' · '),
+          category: a.livestockName || 'Other',
+        }));
+      }
+      if (ctx?.dataSource === 'user_farms') {
+        return farms.map((f) => ({
+          id: f.id,
+          label: f.name || 'Unnamed Farm',
+          sublabel: f.totalAreaHectares ? `${f.totalAreaHectares} ha` : undefined,
+          category: 'Farm',
+        }));
+      }
+      if (ctx?.dataSource === 'user_plots') {
+        return farms.flatMap((f) =>
+          (f.plots || []).map((p) => ({
+            id: p.id,
+            label: p.name || `Plot in ${f.name || 'Farm'}`,
+            sublabel: [p.soilType, p.areaHectares ? `${p.areaHectares} ha` : null].filter(Boolean).join(' · '),
+            category: f.name || 'Farm',
+          }))
+        );
+      }
+      if (ctx?.dataSource === 'user_crops') {
+        const seen = new Set<string>();
+        return farms.flatMap((f) =>
+          (f.plots || []).flatMap((p) =>
+            (p.cropAllocations || [])
+              .filter((ca) => {
+                if (seen.has(ca.cropId)) return false;
+                seen.add(ca.cropId);
+                return true;
+              })
+              .map((ca) => ({
+                id: ca.cropId,
+                label: ca.cropName || 'Unknown Crop',
+                sublabel: p.name || f.name,
+                category: ca.season || 'Current',
+              }))
+          )
+        );
+      }
+      return [];
+    }
+
     return pickerState.config.mapItems({ masterCrops, masterLivestock });
-  }, [pickerState.config, pickerState.widget?.context, masterCrops, masterLivestock]);
+  }, [pickerState.config, pickerState.widget?.context, masterCrops, masterLivestock, farms, animals]);
 
   // Extract suggested items from widget context
   const suggestedItems: string[] | undefined = useMemo(() => {
     const ctx = pickerState.widget?.context;
     if (!ctx) return undefined;
-    // Check both suggestedCrops and suggestedTypes keys
-    const raw = ctx.suggestedCrops || ctx.suggestedTypes;
+    // Check suggestedCrops, suggestedTypes, and generic 'suggested' keys
+    const raw = ctx.suggestedCrops || ctx.suggestedTypes || ctx.suggested;
     if (!Array.isArray(raw)) return undefined;
     const filtered = raw.filter((s): s is string => typeof s === 'string');
     return filtered.length > 0 ? filtered : undefined;
@@ -136,6 +218,21 @@ export function useA2UIPicker({
         if (widget.widgetType === 'form' && Array.isArray(ctx.fields) && config.steps[0]) {
           config.steps[0].fields = parseContextFields(ctx.fields);
         }
+        // Generic picker: inject form steps from AI context if present
+        if (widget.widgetType === 'picker' && ctx?.formSteps && Array.isArray(ctx.formSteps)) {
+          config.steps.push({
+            type: 'form',
+            fields: (ctx.formSteps as Array<Record<string, unknown>>).map((f) => ({
+              key: String(f.key),
+              label: String(f.label),
+              placeholder: f.placeholder ? String(f.placeholder) : '',
+              type: (f.type as 'text' | 'number' | 'decimal' | 'select' | 'toggle') || 'text',
+              optional: f.optional !== false,
+              maxLength: (f.maxLength as number) || 200,
+            })),
+            submitLabel: (ctx.submitLabel as string) || t('common.submit') || 'Submit',
+          });
+        }
         setPickerState({ visible: true, widget, config });
       } else {
         // Fallback for unregistered widget types: send text directly.
@@ -156,8 +253,40 @@ export function useA2UIPicker({
 
   // Called by PickerSheet when the user completes the picker flow
   const handleComplete = useCallback(
-    (text: string, responseData?: Record<string, unknown>) => {
+    async (text: string, responseData?: Record<string, unknown>) => {
       const widget = pickerState.widget;
+
+      // Generic picker: handle saveAction from widget.context before sending
+      if (widget?.widgetType === 'picker' && widget.context?.saveAction && widget.purpose === 'collect' && responseData) {
+        const saveAction = widget.context.saveAction as Record<string, unknown>;
+        try {
+          if (saveAction.type === 'addCropToDefaultPlot' && responseData.selectedId) {
+            const ok = await profileActions.addCropToDefaultPlot(String(responseData.selectedId));
+            if (ok) {
+              showSuccess(t('chat.profileSaved') || 'Saved to your profile!');
+            } else {
+              showError(t('chat.profileSaveFailed') || 'Could not save to your profile, but your selection was sent.');
+            }
+          } else if (saveAction.type === 'addAnimal' && responseData.selectedId) {
+            const animal = await profileActions.addAnimal({
+              livestockId: String(responseData.selectedId),
+              name: responseData.name ? String(responseData.name) : undefined,
+              herdSize: responseData.herdSize ? Number(responseData.herdSize) : undefined,
+              trackingMode: responseData.herdSize && Number(responseData.herdSize) > 1 ? 'herd' : 'individual',
+            });
+            if (animal) {
+              showSuccess(t('chat.profileSaved') || 'Saved to your profile!');
+            } else {
+              showError(t('chat.profileSaveFailed') || 'Could not save to your profile, but your selection was sent.');
+            }
+          }
+          // Other saveAction types: no save, just send text
+        } catch (err) {
+          log('[A2UI] Generic picker saveAction failed:', err);
+          showError(t('chat.profileSaveFailed') || 'Could not save to your profile, but your selection was sent.');
+        }
+      }
+
       const a2uiResponse: A2UIResponse | undefined = widget ? {
         widgetId: widget.widgetId,
         widgetType: widget.widgetType,
@@ -177,7 +306,7 @@ export function useA2UIPicker({
       setPickerState(CLOSED_STATE);
       scrollToBottom();
     },
-    [pickerState.widget, setRespondedA2UIWidgetIds, handleSendText, scrollToBottom],
+    [pickerState.widget, profileActions, setRespondedA2UIWidgetIds, handleSendText, scrollToBottom, showSuccess, showError],
   );
 
   // Close without completing — send dismiss signal so AI can re-prompt
@@ -192,7 +321,7 @@ export function useA2UIPicker({
   }, [pickerState.widget, setRespondedA2UIWidgetIds, handleSendText, scrollToBottom]);
 
   const handleSaveError = useCallback(() => {
-    showError(t('chat.profileSaveFailed') || 'Could not save to profile. Please try again.');
+    showError(t('chat.profileSaveFailed') || 'Could not save to your profile, but your selection was sent.');
   }, [showError]);
 
   const handleSaveSuccess = useCallback(() => {

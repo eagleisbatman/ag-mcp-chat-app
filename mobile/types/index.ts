@@ -584,12 +584,13 @@ export type A2UIWidgetType =
   | 'confirmation'
   | 'form'
   | 'profile_prompt'
-  | 'chart';
+  | 'chart'
+  | 'picker';
 
 export type A2UIStatus = 'pending' | 'responded' | 'expired';
 
 /**
- * A2UI payload sent from AI to trigger structured UI widgets.
+ * A2UI payload sent from AI to trigger structured UI widgets (legacy format).
  * Supports two purposes:
  * - 'clarify': disambiguation among existing profile entities (e.g. "which crop?")
  * - 'collect': save new data to the farmer's profile (e.g. "add your crops")
@@ -616,6 +617,115 @@ export interface A2UIResponse {
   widgetType: A2UIWidgetType;
   responseData: Record<string, unknown>;
   displayText: string; // Human-readable text sent as chat message
+}
+
+// ============================================
+// A2UI Envelope Protocol Types (new format)
+// ============================================
+
+/** Rendering surfaces where A2UI components can be placed. */
+export type A2UISurface =
+  | 'timeline'
+  | 'artifact_sheet'
+  | 'artifact_fullscreen'
+  | 'modal'
+  | 'overlay';
+
+/** Operation types for A2UI events. */
+export type A2UIOpType = 'append' | 'update' | 'remove' | 'replace';
+
+/**
+ * Component names from the A2UI Envelope Protocol.
+ * Maps to native renderers on the client side.
+ */
+export type A2UIComponentName =
+  // Chat
+  | 'StreamingMessageBubble'
+  | 'AssistantMessageBubble'
+  | 'SystemMessageBubble'
+  // Tool execution
+  | 'ToolExecutionCard'
+  | 'ToolStepList'
+  // Weather
+  | 'WeatherCard'
+  | 'ForecastTable'
+  | 'TemperatureChart'
+  | 'PrecipitationChart'
+  | 'SprayWindowTimeline'
+  // Soil
+  | 'SoilAnalysisCard'
+  | 'NutrientChart'
+  | 'PHGauge'
+  // Diagnosis
+  | 'DiagnosisCard'
+  | 'IssueList'
+  // RationSmart
+  | 'DietPlanCard'
+  | 'FeedTable'
+  | 'FeedDistributionChart'
+  | 'FeedingSchedule'
+  // Forms
+  | 'DynamicForm'
+  // Conversational UI
+  | 'SuggestionChips'
+  | 'ConfirmationCard'
+  | 'ClarificationCard'
+  // Rich content
+  | 'DataTable'
+  | 'LineChart'
+  | 'BarChart'
+  | 'PieChart'
+  | 'CollapsibleSection'
+  | 'ImageViewer'
+  | 'MapView'
+  // Workflow progress
+  | 'WorkflowTimeline'
+  | 'ToolOutputPreview'
+  // Utility
+  | 'StatGrid'
+  | 'AlertBanner'
+  | 'ActionButton';
+
+/** A renderable node in the A2UI protocol. */
+export interface A2UINode {
+  id: string;
+  component: A2UIComponentName;
+  props: Record<string, unknown>;
+  children?: A2UINode[];
+}
+
+/**
+ * A2UI Envelope Protocol operation — emitted by the farmerchat-agent SSE stream.
+ * Contains structured rendering instructions for native clients.
+ */
+export interface A2UIOperation {
+  op: A2UIOpType;
+  surface: A2UISurface;
+  node: A2UINode;
+}
+
+/**
+ * Union type for items received in the `a2ui` field of SSE events.
+ * Can be either:
+ * - Legacy A2UIPayload (widgetType-based: crop_picker, confirmation, etc.)
+ * - New A2UIOperation (component-based: WeatherCard, DiagnosisCard, etc.)
+ */
+export type A2UIEvent = A2UIPayload | A2UIOperation;
+
+/**
+ * Type guard: checks if an A2UI event is a new-format A2UIOperation.
+ * A2UIOperation has `op`, `surface`, and `node` fields.
+ * A2UIPayload has `widgetId` and `widgetType` fields.
+ */
+export function isA2UIOperation(event: A2UIEvent): event is A2UIOperation {
+  return 'op' in event && 'surface' in event && 'node' in event;
+}
+
+/**
+ * Type guard: checks if an A2UI event is a legacy A2UIPayload.
+ */
+export function isA2UIPayload(event: A2UIEvent): event is A2UIPayload {
+  return 'widgetId' in event && 'widgetType' in event;
 }
 
 /**

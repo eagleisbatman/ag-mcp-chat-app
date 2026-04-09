@@ -21,6 +21,7 @@ export const en = {
     save: 'Save',
     skipForNow: 'Skip for now',
     comingSoon: 'Coming soon',
+    unknown: 'Unknown',
   },
   tabs: {
     chat: 'Chat',
@@ -136,6 +137,10 @@ export const en = {
     addButton: 'Add',
     profileSaved: 'Saved to your profile!',
     stopGenerating: 'Stop',
+    search: 'Search...',
+    saving: 'Saving...',
+    loading: 'Loading...',
+    noResults: 'No results found',
   },
   media: {
     photoLibraryPermission:
@@ -604,6 +609,8 @@ export const en = {
     livestock: 'Livestock',
     poultry: 'Poultry',
     aquaculture: 'Aquaculture',
+    setupProfile: 'Set up your profile',
+    editProfile: 'Edit profile',
     completeness: 'Profile Completeness',
     saveProfile: 'Save Profile',
     roleHint: 'Role is set during your first voice conversation',
@@ -842,6 +849,8 @@ export const en = {
     searchFarmers: 'Search by name or phone',
     loadFarmersFailed: 'Failed to load farmers',
     loadRequestsFailed: 'Failed to load requests',
+    manageFarms: 'Manage farms',
+    manageLivestock: 'Manage livestock',
   },
   a2ui: {
     confirm: 'Confirm',

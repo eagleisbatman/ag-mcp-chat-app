@@ -8,6 +8,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useApp } from '../../contexts/AppContext';
 import { useProfile } from '../../contexts/app/ProfileContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
+import { t } from '../../constants/strings';
 import AppIcon from '../ui/AppIcon';
 
 interface ProfileCardProps {
@@ -18,7 +19,7 @@ export default function ProfileCard({ onPress }: ProfileCardProps) {
   const { theme } = useApp();
   const { profile } = useProfile();
 
-  const name = profile?.name || 'Set up your profile';
+  const name = profile?.name || t('profile.setupProfile');
   const role = profile?.role || 'farmer';
   const completeness = profile?.profileCompleteness || 0;
   const initials = profile?.name
@@ -30,7 +31,7 @@ export default function ProfileCard({ onPress }: ProfileCardProps) {
         .slice(0, 2)
     : '?';
 
-  const roleLabel = role === 'extension_worker' ? 'Extension Worker' : role.charAt(0).toUpperCase() + role.slice(1);
+  const roleLabel = role === 'extension_worker' ? t('profile.roleExtensionWorker') : t('profile.roleFarmer');
 
   return (
     <TouchableOpacity
@@ -38,7 +39,7 @@ export default function ProfileCard({ onPress }: ProfileCardProps) {
       activeOpacity={0.7}
       testID="settings-profile"
       style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.border }]}
-      accessibilityLabel="Edit profile"
+      accessibilityLabel={t('profile.editProfile')}
     >
       <View style={[styles.avatar, { backgroundColor: theme.accent + '20' }]}>
         <Text style={[styles.avatarText, { color: theme.accent }]}>{initials}</Text>

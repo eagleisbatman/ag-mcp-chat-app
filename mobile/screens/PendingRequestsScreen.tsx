@@ -23,6 +23,7 @@ import IconButton from '../components/ui/IconButton';
 import Card from '../components/ui/Card';
 import AppIcon from '../components/ui/AppIcon';
 import { getPendingMappings, respondToMapping } from '../services/db';
+import { t } from '../constants/strings';
 import type { RootStackParamList, FarmerEwMapping } from '../types';
 
 interface PendingRequestsScreenProps {
@@ -51,7 +52,7 @@ export default function PendingRequestsScreen({ navigation }: PendingRequestsScr
     if (result.success && result.data) {
       setRequests(result.data);
     } else {
-      showError(result.error || 'Failed to load requests');
+      showError(result.error || t('extensionWorker.loadRequestsFailed'));
     }
     setIsLoading(false);
   };
@@ -60,10 +61,10 @@ export default function PendingRequestsScreen({ navigation }: PendingRequestsScr
     setRespondingId(mappingId);
     const result = await respondToMapping(mappingId, status);
     if (result.success) {
-      showSuccess(status === 'approved' ? 'Connection approved' : 'Connection rejected');
+      showSuccess(status === 'approved' ? t('extensionWorker.connectionApproved') : t('extensionWorker.connectionRejected'));
       setRequests((prev) => prev.filter((r) => r.id !== mappingId));
     } else {
-      showError(result.error || 'Failed to respond');
+      showError(result.error || t('extensionWorker.respondFailed'));
     }
     setRespondingId(null);
   };
@@ -71,9 +72,9 @@ export default function PendingRequestsScreen({ navigation }: PendingRequestsScr
   const renderRequest = ({ item }: { item: FarmerEwMapping }) => {
     const isResponding = respondingId === item.id;
     const otherName = isEW
-      ? item.farmer?.name || item.farmer?.phone || 'Unknown Farmer'
-      : item.ew?.name || item.ew?.phone || 'Unknown EW';
-    const otherRole = isEW ? 'Farmer' : 'Extension Worker';
+      ? item.farmer?.name || item.farmer?.phone || t('extensionWorker.unknownFarmer')
+      : item.ew?.name || item.ew?.phone || t('extensionWorker.unknownEw');
+    const otherRole = isEW ? t('extensionWorker.farmer') : t('extensionWorker.extensionWorker');
 
     return (
       <Card style={styles.card}>
@@ -107,7 +108,7 @@ export default function PendingRequestsScreen({ navigation }: PendingRequestsScr
                   activeOpacity={0.7}
                 >
                   <AppIcon name="close" size={16} color={theme.error} />
-                  <Text style={[styles.actionText, { color: theme.error }]}>Reject</Text>
+                  <Text style={[styles.actionText, { color: theme.error }]}>{t('extensionWorker.reject')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.actionButton, styles.approveButton, { backgroundColor: theme.accent }]}
@@ -115,7 +116,7 @@ export default function PendingRequestsScreen({ navigation }: PendingRequestsScr
                   activeOpacity={0.7}
                 >
                   <AppIcon name="checkmark" size={16} color="#fff" />
-                  <Text style={[styles.actionText, { color: '#fff' }]}>Approve</Text>
+                  <Text style={[styles.actionText, { color: '#fff' }]}>{t('extensionWorker.approve')}</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -125,7 +126,7 @@ export default function PendingRequestsScreen({ navigation }: PendingRequestsScr
         {isEW && (
           <View style={styles.pendingRow}>
             <Text style={[styles.pendingText, { color: theme.warning }]}>
-              Awaiting farmer approval
+              {t('extensionWorker.awaitingApproval')}
             </Text>
           </View>
         )}
@@ -136,14 +137,14 @@ export default function PendingRequestsScreen({ navigation }: PendingRequestsScr
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ScreenHeader
-        title="Pending Requests"
+        title={t('extensionWorker.pendingRequests')}
         left={
           <IconButton
             icon="arrow-back"
             onPress={() => navigation.goBack()}
             backgroundColor="transparent"
             color={theme.text}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
           />
         }
         right={<View />}
@@ -156,9 +157,9 @@ export default function PendingRequestsScreen({ navigation }: PendingRequestsScr
       ) : requests.length === 0 ? (
         <View style={styles.centered}>
           <AppIcon name="checkmark-circle-outline" size={48} color={theme.textMuted} />
-          <Text style={[styles.emptyTitle, { color: theme.text }]}>No pending requests</Text>
+          <Text style={[styles.emptyTitle, { color: theme.text }]}>{t('extensionWorker.noPendingRequests')}</Text>
           <Text style={[styles.emptySubtitle, { color: theme.textMuted }]}>
-            All connection requests have been handled
+            {t('extensionWorker.noPendingRequestsHint')}
           </Text>
         </View>
       ) : (

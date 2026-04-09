@@ -1,6 +1,6 @@
 import './global.css';
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
-import { ActivityIndicator, View, StyleSheet, Animated, Platform } from 'react-native';
+import { View, StyleSheet, Animated, Platform } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
@@ -42,6 +42,8 @@ import MyFarmersScreen from './screens/MyFarmersScreen';
 import ConnectFarmerScreen from './screens/ConnectFarmerScreen';
 import PendingRequestsScreen from './screens/PendingRequestsScreen';
 import OtpVerificationScreen from './screens/OtpVerificationScreen';
+import HomeScreen from './screens/HomeScreen';
+import ContentDetailScreen from './screens/ContentDetailScreen';
 
 // Type safe navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -53,9 +55,14 @@ const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ['farmerchat://', 'https://farmerchat.digitalgreen.org'],
   config: {
     screens: {
+      Home: '',
       Chat: {
         path: 'chat/:sessionId?',
         parse: { sessionId: (s: string) => s },
+      },
+      ContentDetail: {
+        path: 'content/:contentId',
+        parse: { contentId: (s: string) => s },
       },
       History: 'history',
       Settings: 'settings',
@@ -82,8 +89,10 @@ function OnboardingStack() {
 function MainStack() {
   return (
     <Stack.Navigator screenOptions={noHeader}>
-      {/* Chat is the home screen */}
+      {/* Home dashboard is the initial screen */}
+      <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="ContentDetail" component={ContentDetailScreen} />
       <Stack.Screen name="History" component={HistoryScreen} />
       {/* Settings hub (accessed via hamburger menu in chat header) */}
       <Stack.Screen name="Settings" component={SettingsScreen} />
@@ -189,6 +198,35 @@ function WebContainer({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
+  // Inject global CSS to constrain RN Web modal portals to the phone container.
+  // ModalPortal.js appends plain <div>s to document.body via createPortal — they
+  // have NO inline styles, so we target them as body > div:not(#root).
+  // Setting `transform` on the portal creates a new containing block, causing
+  // inner position:fixed elements (ModalAnimation, ModalContent) to fill this
+  // container instead of the viewport.
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      /* Constrain RN Web modal portals to the phone-width container */
+      body > div:not(#root) {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 100% !important;
+        max-width: ${MAX_WEB_WIDTH}px !important;
+        pointer-events: none !important;
+      }
+      /* Re-enable pointer events on actual modal content */
+      body > div:not(#root) > * {
+        pointer-events: auto !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => { document.head.removeChild(style); };
+  }, []);
+
   return (
     <View style={styles.webOuterContainer}>
       <View style={styles.webInnerContainer}>
@@ -219,11 +257,6 @@ export default function App() {
 const MAX_WEB_WIDTH = 480; // Mobile-like width for web
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   webOuterContainer: {
     flex: 1,
     backgroundColor: '#1a1a1a', // Dark background outside the app

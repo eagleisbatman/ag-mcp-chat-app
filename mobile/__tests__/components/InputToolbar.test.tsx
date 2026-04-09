@@ -121,6 +121,7 @@ jest.mock('../../components/ui/LineIcons', () => {
     PlusIcon: ({ size }: any) => <Text testID="plus-icon">+</Text>,
     ClockIcon: ({ size }: any) => <Text testID="clock-icon">clock</Text>,
     VoiceWaveIcon: ({ size }: any) => <Text testID="voice-wave-icon">wave</Text>,
+    ImageIcon: ({ size, color }: any) => <Text testID="image-icon">image</Text>,
   };
 });
 
@@ -148,14 +149,14 @@ describe('InputToolbar', () => {
       expect(getByPlaceholderText('Type a message...')).toBeTruthy();
     });
 
-    it('renders attach/plus button', () => {
+    it('renders attach/image button', () => {
       const { getByTestId } = render(<InputToolbar {...defaultProps} />);
-      expect(getByTestId('plus-icon')).toBeTruthy();
+      expect(getByTestId('image-icon')).toBeTruthy();
     });
 
-    it('shows voice wave icon when no text', () => {
+    it('shows mic icon when no text', () => {
       const { getByTestId } = render(<InputToolbar {...defaultProps} />);
-      expect(getByTestId('voice-wave-icon')).toBeTruthy();
+      expect(getByTestId('icon-mic')).toBeTruthy();
     });
 
     it('shows send icon when text is entered', () => {

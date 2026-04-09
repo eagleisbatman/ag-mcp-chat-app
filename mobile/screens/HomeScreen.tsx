@@ -41,6 +41,22 @@ interface Alert {
   [key: string]: any;
 }
 
+// Countries where Google Weather API doesn't support current conditions/forecasts
+// Based on https://developers.google.com/maps/documentation/weather/coverage
+// Using lat/long bounding boxes for reliable detection (avoids string matching issues with diacritics)
+const GOOGLE_WEATHER_UNSUPPORTED_BOUNDS = [
+  // No support at all
+  { name: 'China', minLat: 18.0, maxLat: 54.0, minLon: 73.0, maxLon: 135.0 },
+  { name: 'Cuba', minLat: 19.5, maxLat: 23.5, minLon: -85.0, maxLon: -74.0 },
+  { name: 'Iran', minLat: 25.0, maxLat: 40.0, minLon: 44.0, maxLon: 63.5 },
+  { name: 'North Korea', minLat: 37.5, maxLat: 43.0, minLon: 124.0, maxLon: 131.0 },
+  { name: 'Syria', minLat: 32.0, maxLat: 37.5, minLon: 35.5, maxLon: 42.5 },
+  // Partial support (alerts only - no current/forecast)
+  { name: 'Japan', minLat: 24.0, maxLat: 46.0, minLon: 122.0, maxLon: 154.0 },
+  { name: 'South Korea', minLat: 33.0, maxLat: 38.5, minLon: 124.0, maxLon: 132.0 },
+  { name: 'Vietnam', minLat: 8.0, maxLat: 23.5, minLon: 102.0, maxLon: 110.0 },
+] as const;
+
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { location, locationDetails, language, theme, isDark } = useApp();
   const insets = useSafeAreaInsets();
@@ -52,22 +68,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  // Countries where Google Weather API doesn't support current conditions/forecasts
-  // Based on https://developers.google.com/maps/documentation/weather/coverage
-  // Using lat/long bounding boxes for reliable detection (avoids string matching issues with diacritics)
-  const GOOGLE_WEATHER_UNSUPPORTED_BOUNDS = [
-    // No support at all
-    { name: 'China', minLat: 18.0, maxLat: 54.0, minLon: 73.0, maxLon: 135.0 },
-    { name: 'Cuba', minLat: 19.5, maxLat: 23.5, minLon: -85.0, maxLon: -74.0 },
-    { name: 'Iran', minLat: 25.0, maxLat: 40.0, minLon: 44.0, maxLon: 63.5 },
-    { name: 'North Korea', minLat: 37.5, maxLat: 43.0, minLon: 124.0, maxLon: 131.0 },
-    { name: 'Syria', minLat: 32.0, maxLat: 37.5, minLon: 35.5, maxLon: 42.5 },
-    // Partial support (alerts only - no current/forecast)
-    { name: 'Japan', minLat: 24.0, maxLat: 46.0, minLon: 122.0, maxLon: 154.0 },
-    { name: 'South Korea', minLat: 33.0, maxLat: 38.5, minLon: 124.0, maxLon: 132.0 },
-    { name: 'Vietnam', minLat: 8.0, maxLat: 23.5, minLon: 102.0, maxLon: 110.0 },
-  ];
 
   const isGoogleWeatherSupported = useCallback(() => {
     const lat = location?.latitude;

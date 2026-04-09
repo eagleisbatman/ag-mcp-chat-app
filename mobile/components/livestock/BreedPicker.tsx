@@ -18,6 +18,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../../contexts/AppContext';
 import { SPACING, TYPOGRAPHY } from '../../constants/themes';
+import { t } from '../../constants/strings';
 import AppIcon from '../ui/AppIcon';
 import type { Breed } from '../../types';
 
@@ -59,7 +60,7 @@ export default function BreedPicker({ visible, onClose, onSelect, breeds, livest
           {/* Header */}
           <View style={styles.header}>
             <Text style={[styles.title, { color: theme.text }]}>
-              {livestockName ? `${livestockName} Breeds` : 'Select Breed'}
+              {livestockName ? t('breedPicker.titleWithLivestock', { livestock: livestockName }) : t('breedPicker.title')}
             </Text>
             <TouchableOpacity onPress={onClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
               <AppIcon name="close" size={24} color={theme.text} />
@@ -73,10 +74,11 @@ export default function BreedPicker({ visible, onClose, onSelect, breeds, livest
               style={[styles.searchInput, { color: theme.text }]}
               value={search}
               onChangeText={setSearch}
-              placeholder="Search breeds..."
+              placeholder={t('breedPicker.searchPlaceholder')}
               placeholderTextColor={theme.textMuted}
               autoCapitalize="none"
               autoCorrect={false}
+              maxLength={100}
             />
             {search.length > 0 && (
               <TouchableOpacity onPress={() => setSearch('')}>
@@ -109,7 +111,7 @@ export default function BreedPicker({ visible, onClose, onSelect, breeds, livest
             ListEmptyComponent={
               <View style={styles.emptyList}>
                 <Text style={[styles.emptyText, { color: theme.textMuted }]}>
-                  {breeds.length === 0 ? 'No breeds available' : 'No breeds found'}
+                  {breeds.length === 0 ? t('breedPicker.noBreedsAvailable') : t('breedPicker.noBreedsFound')}
                 </Text>
               </View>
             }
