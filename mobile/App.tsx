@@ -42,8 +42,7 @@ import MyFarmersScreen from './screens/MyFarmersScreen';
 import ConnectFarmerScreen from './screens/ConnectFarmerScreen';
 import PendingRequestsScreen from './screens/PendingRequestsScreen';
 import OtpVerificationScreen from './screens/OtpVerificationScreen';
-import HomeScreen from './screens/HomeScreen';
-import ContentDetailScreen from './screens/ContentDetailScreen';
+// HomeScreen and ContentDetailScreen removed — user lands directly on Chat
 
 // Type safe navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -55,14 +54,9 @@ const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ['farmerchat://', 'https://farmerchat.digitalgreen.org'],
   config: {
     screens: {
-      Home: '',
       Chat: {
-        path: 'chat/:sessionId?',
+        path: '',
         parse: { sessionId: (s: string) => s },
-      },
-      ContentDetail: {
-        path: 'content/:contentId',
-        parse: { contentId: (s: string) => s },
       },
       History: 'history',
       Settings: 'settings',
@@ -89,10 +83,8 @@ function OnboardingStack() {
 function MainStack() {
   return (
     <Stack.Navigator screenOptions={noHeader}>
-      {/* Home dashboard is the initial screen */}
-      <Stack.Screen name="Home" component={HomeScreen} />
+      {/* Chat is the home screen — user lands here directly after onboarding */}
       <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="ContentDetail" component={ContentDetailScreen} />
       <Stack.Screen name="History" component={HistoryScreen} />
       {/* Settings hub (accessed via hamburger menu in chat header) */}
       <Stack.Screen name="Settings" component={SettingsScreen} />
