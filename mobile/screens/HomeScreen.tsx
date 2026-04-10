@@ -11,13 +11,11 @@ import { SPACING, TYPOGRAPHY } from '../constants/themes';
 import ScreenHeader from '../components/ui/ScreenHeader';
 import IconButton from '../components/ui/IconButton';
 import WeatherWidget from '../components/weather/WeatherWidget';
-import ContentCarousel from '../components/content/ContentCarousel';
 import QuickActions from '../components/home/QuickActions';
 import NotificationBanner from '../components/notifications/NotificationBanner';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { weatherService } from '../services/weather';
-import { contentService } from '../services/content';
 import { error as logError, log } from '../utils/logger';
 import type { RootStackParamList, WeatherData } from '../types';
 
@@ -27,13 +25,6 @@ const logoImage: ImageSourcePropType = require('../assets/logo.png');
 
 interface HomeScreenProps {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
-}
-
-interface ContentItem {
-  id?: string;
-  _id?: string;
-  title?: string;
-  [key: string]: any;
 }
 
 interface Alert {
@@ -64,7 +55,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherProvider, setWeatherProvider] = useState<string | null>(null);
   const [weatherError, setWeatherError] = useState(false);
-  const [content, setContent] = useState<ContentItem[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -139,17 +129,9 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           setWeather(null);
         }
 
-        // Fetch other data in parallel (don't let weather failure block these)
-        const [contentData, alertsData] = await Promise.all([
-          contentService.getFeed(lat, lon, language?.code || 'en'),
-          weatherService.getAlerts(lat, lon),
-        ]);
-
-        setContent(contentData);
+        // Fetch alerts
+        const alertsData = await weatherService.getAlerts(lat, lon);
         setAlerts(alertsData);
-      } else {
-        const contentData = await contentService.getFeed(null, null, language?.code || 'en');
-        setContent(contentData);
       }
     } catch (error) {
       logError('Error loading home data:', error);
@@ -175,13 +157,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     setRefreshing(true);
     await loadData();
     setRefreshing(false);
-  };
-
-  const handleContentPress = (item: ContentItem) => {
-    const id = item.id || item._id;
-    if (id) {
-      navigation.navigate('ContentDetail', { contentId: id });
-    }
   };
 
   const handleStartChat = () => {
@@ -280,13 +255,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           onViewHistory={handleViewHistory}
         />
 
-        <ContentCarousel
-          title={t('content.forYou')}
-          items={content}
-          onItemPress={handleContentPress}
-          onSeeAll={() => {}}
-          loading={loading}
-        />
       </ScrollView>
     </View>
   );
