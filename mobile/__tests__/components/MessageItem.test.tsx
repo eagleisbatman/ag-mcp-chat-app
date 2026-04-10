@@ -51,6 +51,7 @@ jest.mock('../../constants/strings', () => ({
   t: jest.fn((key: string) => {
     const map: Record<string, string> = {
       'chat.senderAssistant': 'FarmerChat',
+      'chat.senderYou': 'You',
       'chat.thinking': 'Thinking...',
       'common.retry': 'Retry',
       'a11y.yourMessage': 'Your message',
@@ -143,12 +144,8 @@ jest.mock('../../components/message/markdownStyles', () => ({
 jest.mock('../../components/message/messageItemStyles', () => ({
   styles: {
     container: {},
-    userRow: {},
-    userBubble: {},
     image: { width: 200, height: 200 },
     messageText: {},
-    userTimestamp: {},
-    botRow: {},
     header: {},
     senderName: {},
     headerRight: {},
@@ -182,7 +179,7 @@ describe('MessageItem', () => {
   });
 
   describe('user messages', () => {
-    it('renders user text in a bubble', () => {
+    it('renders user text', () => {
       const { getByText } = render(
         <MessageItem message={makeMessage({ text: 'My question' }) as any} />
       );

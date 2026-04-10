@@ -214,50 +214,23 @@ function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onRetry
     }
   };
 
-  if (!isBot) {
-    // User message — right-aligned bubble
-    return (
-      <View style={styles.container} onLayout={handleLayout} accessible accessibilityRole="text" accessibilityLabel={`${t('a11y.yourMessage')}: ${message.text || t('a11y.imageMessage')}, ${formatTime(message.createdAt)}`}>
-        <View style={styles.userRow}>
-          <View style={[styles.userBubble, { backgroundColor: theme.userMessage }]}>
-            {message.image && (
-              <Pressable onPress={() => setImageViewerVisible(true)}>
-                <Image
-                  source={{ uri: message.image }}
-                  style={styles.image}
-                  contentFit="cover"
-                  transition={200}
-                  placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
-                  accessibilityLabel={t('a11y.attachedImage')}
-                />
-              </Pressable>
-            )}
-            {message.text && !message.text.startsWith('[Image for') && (
-              <Text style={[styles.messageText, { color: theme.userMessageText }]}>
-                {message.text}
-              </Text>
-            )}
-            <Text style={[styles.userTimestamp, { color: theme.textMuted }]}>
-              {formatTime(message.createdAt)}
-            </Text>
-          </View>
-        </View>
-        {message.image && (
-          <ImageViewerModal visible={imageViewerVisible} imageUri={message.image} onClose={() => setImageViewerVisible(false)} />
-        )}
-      </View>
-    );
-  }
-
-  // Bot message — full-width with header
   return (
-    <View style={styles.container} onLayout={handleLayout} accessibilityRole="text">
-      <View style={styles.botRow}>
-        <View style={styles.header}>
-          <Text style={[styles.senderName, { color: theme.accent }]}>
-            {t('chat.senderAssistant')}
-          </Text>
-          <View style={styles.headerRight}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: 'transparent' },
+      ]}
+      onLayout={handleLayout}
+      accessible={!isBot}
+      accessibilityRole="text"
+      accessibilityLabel={!isBot ? `${t('a11y.yourMessage')}: ${message.text || t('a11y.imageMessage')}, ${formatTime(message.createdAt)}` : undefined}
+    >
+      <View style={styles.header}>
+        <Text style={[styles.senderName, { color: isBot ? theme.accent : theme.textSecondary }]}>
+          {isBot ? t('chat.senderAssistant') : t('chat.senderYou')}
+        </Text>
+        <View style={styles.headerRight}>
+          {isBot && (
             <Pressable
               style={[
                 styles.speakButton,
@@ -282,25 +255,27 @@ function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onRetry
                 />
               )}
             </Pressable>
-            <Text style={[styles.timestamp, { color: theme.textMuted }]}>
-              {formatTime(message.createdAt)}
-            </Text>
-          </View>
+          )}
+          <Text style={[styles.timestamp, { color: theme.textMuted }]}>
+            {formatTime(message.createdAt)}
+          </Text>
         </View>
+      </View>
 
-        {message.image && (
-          <Pressable onPress={() => setImageViewerVisible(true)}>
-            <Image
-              source={{ uri: message.image }}
-              style={styles.image}
-              contentFit="cover"
-              transition={200}
-              placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
-              accessibilityLabel={t('a11y.attachedImage')}
-            />
-          </Pressable>
-        )}
+      {message.image && (
+        <Pressable onPress={() => setImageViewerVisible(true)}>
+          <Image
+            source={{ uri: message.image }}
+            style={styles.image}
+            contentFit="cover"
+            transition={200}
+            placeholder={{ blurhash: 'LJI=IA%1_4%2D*s:WBoe~pt6-ooJ' }}
+            accessibilityLabel={t('a11y.attachedImage')}
+          />
+        </Pressable>
+      )}
 
+      {isBot ? (
         <Animated.View style={[styles.markdownContainer, { opacity: fadeAnim, maxWidth: contentMaxWidth }]}>
           {isThinking ? (
             <TypingIndicator text={message.thinkingText || t('chat.thinking')} />
@@ -371,7 +346,14 @@ function MessageItem({ message, isNewMessage = false, onLayout, onRetry, onRetry
             />
           )}
         </Animated.View>
-      </View>
+      ) : (
+        message.text && !message.text.startsWith('[Image for') ? (
+          <Text style={[styles.messageText, { color: theme.text }]}>
+            {message.text}
+          </Text>
+        ) : null
+      )}
+
       {message.image && (
         <ImageViewerModal visible={imageViewerVisible} imageUri={message.image} onClose={() => setImageViewerVisible(false)} />
       )}
